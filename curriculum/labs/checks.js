@@ -24,6 +24,31 @@
   const nums = (rows, col) => rows.map((r) => r.n(col)).filter((x) => isFinite(x));
   const LY_PER_PC = 3.26;
 
+  /* Statistics for physics on two physics demos (2026-11-19). g-statistics: the Summary table (Table 2) rows A, C and D give
+     T̄ (col 4), s (col 5), n (col 3), ḡ (col 8) and s_g (col 9); the interval uses t* = 1.984 and the test the period
+     2.0061 s that g = 9.81 m/s² gives at L = 1.000 m, both as the questions state them. */
+  {
+    const v = (D, copy, col) => D.n(2, { Copy: copy }, col);
+    C['g-statistics'] = {
+      items: {
+        'analysis-2': { tol: 0.005, expect: (D) => { const m = v(D, 'A', 4), e = 1.984 * v(D, 'A', 5) / Math.sqrt(v(D, 'A', 3)); return [m - e, m + e]; } },
+        'analysis-3': { tol: 4, expect: (D) => (v(D, 'A', 4) - 2.0061) / (v(D, 'A', 5) / Math.sqrt(v(D, 'A', 3))) },
+        'analysis-4': { tol: 4, expect: (D) => { const t = (v(D, 'A', 4) - v(D, 'C', 4)) / (v(D, 'A', 5) / Math.sqrt(v(D, 'A', 3))); return { any: [t, -t] }; } },
+        'analysis-5': { tol: 4, expect: (D) => { const t = (v(D, 'A', 8) - v(D, 'D', 8)) / Math.sqrt(v(D, 'A', 9) ** 2 / v(D, 'A', 3) + v(D, 'D', 9) ** 2 / v(D, 'D', 3)); return { any: [t, -t] }; } },
+      },
+    };
+  }
+  /* counting-statistics: Table 2's last column is (O − E)²/E of its row and their sum is χ²; Table 3's e^(−Rt₀) column is
+     100 e^(−2 t₀) % at R = 2 counts/s; the slope of s against √x̄ comes from the student's own graph of Table 1. */
+  C['counting-statistics'] = {
+    items: {
+      'analysis-2': { tol: 2, expect: (D) => { const rs = D.rows(2).filter((r) => isFinite(r.n(2)) && r.n(3) > 0); return rs.length ? rs.reduce((a, r) => a + (r.n(2) - r.n(3)) ** 2 / r.n(3), 0) : NaN; } },
+      'analysis-3': { tol: 2, expect: (D) => ({ any: [D.slope(1)] }) },
+    },
+    cells: [{ table: 2, col: 4, from: (r) => (r.n(2) - r.n(3)) ** 2 / r.n(3) },
+      { table: 3, col: 4, from: (r) => 100 * Math.exp(-2 * r.n(1)) }],
+  };
+
   /* Faraday Waves (Chladni Plates, Liquid layer, 2026-11-19): k = 2π/λ with λ in mm, ω = 2π × the surface frequency; the slope
      of ω²/k against k² is σ/ρ (water, 998.2 kg/m³), given in mN/m, and the intercept is g */
   C['faraday-waves'] = {

@@ -14,8 +14,8 @@ VDI18N.add('es', 'ws/measurement-uncertainty', {
   "Longitud leída hasta",
 "Copy":
   "Copia",
-"Mean bar T (s)":
-  "Media T barra (s)",
+"Mean T̄ (s)":
+  "Media T̄ (s)",
 "Random Scatter and Bias in a Measurement of g | VirtualDemos":
   "Dispersión aleatoria y sesgo en una medición de g | VirtualDemos",
 "Random Scatter and Bias in a Measurement of g":
@@ -150,8 +150,8 @@ VDI18N.add('es', 'ws/measurement-uncertainty', {
   "Manual, {#} oscilación",
 "n, row {#}":
   "n, fila {#}",
-"Mean bar T (s), row {#}":
-  "Media T barra (s), fila {#}",
+"Mean T̄ (s), row {#}":
+  "Media T̄ (s), fila {#}",
 "s (s), row {#}":
   "s (s), fila {#}",
 "s/√n (s), row {#}":
@@ -193,5 +193,9 @@ VDI18N.add('es', 'ws/measurement-uncertainty', {
 "Prelab answers; the exported Data tables (identified as simulated data); the Summary table; the Part C and D fits with residuals; g with its uncertainty from A2, A3 and C; the bias comparisons from D and E; and answers to the Analysis items and the Questions.":
   "Respuestas del prelaboratorio; las tablas de datos exportadas (identificadas como datos simulados); la tabla Resumen; los ajustes de las Partes C y D con residuos; g con su incertidumbre de A2, A3 y C; las comparaciones de sesgo de D y E; y las respuestas a los puntos de Análisis y a las Preguntas.",
 "Measurement Uncertainty":
-  "Incertidumbre de medición"
+  "Incertidumbre de medición",
+"Mean bar T (s)":
+  "Media T barra (s)",
+"Mean bar T (s), row {#}":
+  "Media T barra (s), fila {#}"
 });

@@ -56,6 +56,8 @@ VDI18N.add('es', 'demo/radioactive-decay', {
   "Desintegración α",
 "Beta decay":
   "Desintegración β",
+"Counting":
+  "Conteo",
 "t = {#} steps":
   "t = {#} pasos",
 "{#} s = {#} step":
@@ -86,6 +88,24 @@ VDI18N.add('es', 'demo/radioactive-decay', {
   "<span>Ritmo</span>",
 "Decays a second":
   "Desintegraciones por segundo",
+"Counting: a long lived source beside a Geiger counter that counts for a fixed time again and again. Each count flashes a track into the tube; the tapes below the counter mark when each count came in the last few counting times. On the right, a histogram of the counts with the Poisson distribution and the normal curve, and below it a histogram of the waits between counts with the exponential distribution. Space plays or pauses.":
+  "Conteo: una fuente de vida larga junto a un contador Geiger que cuenta durante un tiempo fijo una y otra vez. Cada cuenta deja un destello de traza en el tubo; las cintas bajo el contador marcan cuándo llegó cada cuenta en los últimos tiempos de conteo. A la derecha, un histograma de las cuentas con la distribución de Poisson y la curva normal, y debajo un histograma de las esperas entre cuentas con la distribución exponencial. Espacio inicia o pausa.",
+"A cesium {#} source counted by a Geiger tube for Δt = {#} s again and again, at a count rate of {#} counts per second.":
+  "Una fuente de cesio {#} contada con un tubo Geiger durante Δt = {#} s una y otra vez, con una tasa de conteo de {#} cuentas por segundo.",
+"Counting is paused.":
+  "El conteo está en pausa.",
+"{#} counting times so far.":
+  "{#} tiempos de conteo hasta ahora.",
+"The Poisson distribution expects a mean of {#} and a standard deviation of {#}.":
+  "La distribución de Poisson espera una media de {#} y una desviación estándar de {#}.",
+"{#} waits between counts, mean — s; the exponential distribution expects {#} s.":
+  "{#} esperas entre cuentas, media — s; la distribución exponencial espera {#} s.",
+"Count {#} more times at once, each for the counting time Δt":
+  "Cuenta {#} veces más de una vez, cada una durante el tiempo de conteo Δt",
+"Count {#} times":
+  "Contar {#} veces",
+"Clear the counts and start this draw set again":
+  "Borra las cuentas y empieza de nuevo este conjunto de sorteos",
 "Divider between the tray and the graphs":
   "Divisor entre la bandeja y las gráficas",
 "Divider between the two graphs":
@@ -94,8 +114,12 @@ VDI18N.add('es', 'demo/radioactive-decay', {
   "<a>Hoja de trabajo {#}: Medición de una vida media</a>",
 "<a>Worksheet {#}: Parent and Daughter</a>":
   "<a>Hoja de trabajo {#}: Madre e hija</a>",
+"<a>Worksheet {#}: Alpha and Beta Decay</a>":
+  "<a>Hoja de trabajo {#}: Decaimiento alfa y beta</a>",
 "<a>Worksheet {#}: A Technetium Generator (Medical Physics)</a>":
   "<a>Hoja de trabajo {#}: Un generador de tecnecio (Física médica)</a>",
+"<a>Worksheet {#}: Counting Statistics</a>":
+  "<a>Hoja de trabajo {#}: Estadística de conteo</a>",
 "Coin flip nuclei":
   "Núcleos de volado",
 "Carbon {#} dating":
@@ -122,6 +146,24 @@ VDI18N.add('es', 'demo/radioactive-decay', {
   "Aluminio {#}: el calor temprano",
 "Each step, every parent flips a fair coin and decays on heads, so p = {#}/{#} and T½ = {#} step. About half are left after one step, a quarter after two. Which ones go is pure chance.":
   "En cada paso, cada núcleo madre lanza una moneda justa y se desintegra si sale cara, así que p = {#}/{#} y T½ = {#} paso. Queda cerca de la mitad después de un paso, un cuarto después de dos. Cuáles se van es puro azar.",
+"A long lived source counted for the same time Δt again and again (simulated). Count {#} times, and compare the counts with the Poisson distribution and the waits between counts with the exponential.":
+  "Una fuente de vida larga contada durante el mismo tiempo Δt una y otra vez (simulado). Cuenta {#} veces y compara las cuentas con la distribución de Poisson y las esperas entre cuentas con la exponencial.",
+"Count rate R":
+  "Tasa de conteo R",
+"<span>Counting time Δt</span>":
+  "<span>Tiempo de conteo Δt</span>",
+"Counting time":
+  "Tiempo de conteo",
+"Counts against the Poisson distribution":
+  "Cuentas contra la distribución de Poisson",
+"Already waited t₀":
+  "Ya esperado t₀",
+"Blind: hide the Poisson, normal and exponential predictions":
+  "A ciegas: oculta las predicciones de Poisson, normal y exponencial",
+"New random draws":
+  "Nuevos sorteos aleatorios",
+"The source is cesium {#}, half life {#} yr (NUBASE2020). Its activity falls by {#} × {#}^−{#} of itself in an hour of counting, far too little to see, so the count rate R is constant: R is the activity times the share of decays the counter registers (set by the distance and the tube). With R constant the counts form a Poisson process: each wait between counts is drawn from the exponential distribution with mean {#}/R, independently of the others, and the number of counts in Δt is then Poisson with mean μ = RΔt and standard deviation √μ (OpenStax Introductory Statistics 2e, §{#} and §{#}). For large μ the Poisson is close to the normal distribution with the same mean and σ = √μ. The counter has no dead time and there is no background. The χ² test merges neighboring counts until each cell expects at least {#} (§{#}), with df = cells − {#} since μ is known. Random draws are seeded: the same steps from the same draw set give the same counts.":
+  "La fuente es cesio {#}, vida media {#} años (NUBASE2020). Su actividad baja {#} × {#}^−{#} de sí misma en una hora de conteo, demasiado poco para notarse, así que la tasa de conteo R es constante: R es la actividad por la fracción de decaimientos que registra el contador (fijada por la distancia y el tubo). Con R constante las cuentas forman un proceso de Poisson: cada espera entre cuentas se sortea de la distribución exponencial con media {#}/R, independiente de las demás, y el número de cuentas en Δt es entonces de Poisson con media μ = RΔt y desviación estándar √μ (OpenStax Introductory Statistics 2e, §{#} y §{#}). Para μ grande la Poisson se parece a la distribución normal con la misma media y σ = √μ. El contador no tiene tiempo muerto y no hay fondo. La prueba χ² junta cuentas vecinas hasta que cada celda espera al menos {#} (§{#}), con gl = celdas − {#} porque μ es conocida. Los sorteos aleatorios tienen semilla: los mismos pasos desde el mismo conjunto de sorteos dan las mismas cuentas.",
 "Nucleus":
   "Núcleo",
 "Nuclear radius constant r₀":
@@ -260,10 +302,6 @@ VDI18N.add('es', 'demo/radioactive-decay', {
   "hijas",
 "{#} s = {#} steps":
   "{#} s = {#} pasos",
-"t = {#} step":
-  "t = {#} paso",
-"{#}% <span>of {#}; expected {#}%</span>":
-  "{#}% <span>de {#}; esperado {#}%</span>",
 "¹⁴⁶Sm":
   "¹⁴⁶Sm",
 "¹⁴⁸Gd":
@@ -372,6 +410,8 @@ VDI18N.add('es', 'demo/radioactive-decay', {
   "Media, estas desintegraciones",
 "Decays":
   "Desintegraciones",
+"{#}% <span>of {#}; expected {#}%</span>":
+  "{#}% <span>de {#}; esperado {#}%</span>",
 "Arrow lengths are the momenta (MeV/c); the nucleus takes the recoil":
   "Las longitudes de las flechas son los momentos (MeV/c); el núcleo se lleva el retroceso",
 "Electron kinetic energies, {#} decays":
@@ -398,10 +438,60 @@ VDI18N.add('es', 'demo/radioactive-decay', {
   "■ antineutrino",
 "{#} decays":
   "{#} desintegraciones",
+"{#} counts/s":
+  "{#} cuentas/s",
+"Counting times n":
+  "Tiempos de conteo n",
+"Expected mean μ = RΔt":
+  "Media esperada μ = RΔt",
+"Mean count x̄":
+  "Cuenta media x̄",
+"Standard deviation s":
+  "Desviación estándar s",
+"s²/x̄ ({#} for a Poisson)":
+  "s²/x̄ ({#} para una Poisson)",
+"Waits between counts":
+  "Esperas entre cuentas",
+"Mean wait":
+  "Espera media",
+"Expected mean wait {#}/R":
+  "Espera media esperada {#}/R",
+"Standard deviation of the waits":
+  "Desviación estándar de las esperas",
+"Waits longer than t₀":
+  "Esperas mayores que t₀",
+"Expected share e^(−Rt₀)":
+  "Fracción esperada e^(−Rt₀)",
+"Mean time still to wait after t₀":
+  "Tiempo medio que falta por esperar después de t₀",
+"Random draw set {#}":
+  "Conjunto de sorteos aleatorios {#}",
+"¹³⁷Cs":
+  "¹³⁷Cs",
+"source (simulated)":
+  "fuente (simulada)",
+"Geiger tube":
+  "tubo Geiger",
+"counts in this Δt = {#} s":
+  "cuentas en este Δt = {#} s",
+"When each count came (each line is one Δt)":
+  "Cuándo llegó cada cuenta (cada línea es un Δt)",
+"now":
+  "ahora",
+"Counts in each Δt = {#} s (n = {#})":
+  "Cuentas en cada Δt = {#} s (n = {#})",
+"Press Play, or Count {#} times.":
+  "Presiona Iniciar, o Contar {#} veces.",
+"Waits between counts (n = {#})":
+  "Esperas entre cuentas (n = {#})",
+"The waits fill in as counts come.":
+  "Las esperas se llenan conforme llegan las cuentas.",
+"t = {#} s · real time":
+  "t = {#} s · tiempo real",
 "The run is paused.":
   "La corrida está en pausa.",
-"The parents are below the expected number by {#} standard deviations.":
-  "Los padres están por debajo de lo esperado en {#} desviaciones estándar.",
+"The parents are above the expected number by {#} standard deviations.":
+  "Los padres están por encima de lo esperado en {#} desviaciones estándar.",
 "Beta minus decay of ¹⁴C into ¹⁴N, an electron and an antineutrino, with the energy spectrum of the electrons.":
   "Decaimiento beta menos del ¹⁴C en ¹⁴N, un electrón y un antineutrino, con el espectro de energía de los electrones.",
 "The Q value is {#} keV.":
@@ -414,6 +504,10 @@ VDI18N.add('es', 'demo/radioactive-decay', {
   "Los decaimientos están en pausa.",
 "Decays so far: {#}.":
   "Decaimientos hasta ahora: {#}.",
+"A graph of the number of nuclei of each kind against time on a log vertical scale, with the expected curves dashed and a one sigma band.":
+  "Una gráfica del número de núcleos de cada tipo contra el tiempo en escala vertical logarítmica, con las curvas esperadas punteadas y una banda de una sigma.",
+"t = {#} s · {#}× real time":
+  "t = {#} s · {#}× tiempo real",
 "Living things take up carbon {#} from the air. After death it is not replaced, so the fraction left tells the age. Try the dating task below.":
   "Los seres vivos toman carbono {#} del aire. Después de la muerte no se repone, así que la fracción que queda indica la edad. Prueba la tarea de datación de abajo.",
 "t = {#} yr":
@@ -434,20 +528,6 @@ VDI18N.add('es', 'demo/radioactive-decay', {
   "{#} ± {#} años es la evaluación actual (NUBASE2020). Muchos libros de texto todavía dan el valor anterior de {#} años (la vida media de Cambridge); los laboratorios de radiocarbono todavía reportan las edades con los {#} años de Libby por convención y luego las calibran. También puedes arrastrar el marcador de T½ en la gráfica de N(t).",
 "A piece of charcoal has <b>{#}%</b> of the carbon {#} a living sample has. How old is it?":
   "Un trozo de carbón tiene <b>{#}%</b> del carbono {#} que tiene una muestra viva. ¿Qué edad tiene?",
-"Half life of ¹⁴C: {#} yr.":
-  "Vida media del ¹⁴C: {#} año.",
-"Stable end product: ¹⁴N.":
-  "Producto final estable: ¹⁴N.",
-"Time {#} yr.":
-  "Tiempo {#} años.",
-"Number of ¹⁴C nuclei: {#}, expected {#}.":
-  "Número de núcleos de ¹⁴C: {#}, esperado {#}.",
-"Number of ¹⁴N nuclei: {#}, expected {#}.":
-  "Número de núcleos de ¹⁴N: {#}, esperado {#}.",
-"A graph of the number of nuclei of each kind against time on a log vertical scale, with the expected curves dashed and a one sigma band.":
-  "Una gráfica del número de núcleos de cada tipo contra el tiempo en escala vertical logarítmica, con las curvas esperadas punteadas y una banda de una sigma.",
-"Activity of ¹⁴C: {#} decays per yr.":
-  "Actividad del ¹⁴C: {#} decaimientos por año.",
 "Iodine {#} treats thyroid disease and is a fallout product. After {#} half lives, about {#} days, the activity has dropped to {#}/{#} of its start.":
   "El yodo {#} trata enfermedades de la tiroides y es un producto de la lluvia radiactiva. Después de {#} vidas medias, unos {#} días, la actividad ha bajado a {#}/{#} de la inicial.",
 "<i></i>¹³¹Xe":
@@ -526,6 +606,18 @@ VDI18N.add('es', 'demo/radioactive-decay', {
   "Vida media del ⁹⁹ᵐTc",
 "⁹⁹ᵐTc: {#} h (ENSDF {#}), an isomeric transition to ⁹⁹Tc, whose half life of {#} yr makes it stable on this scale. You can also drag the T½ marker on the N(t) plot.":
   "⁹⁹ᵐTc: {#} h (ENSDF {#}), una transición isomérica a ⁹⁹Tc, cuya vida media de {#} años lo hace estable a esta escala. También puedes arrastrar el marcador de T½ en la gráfica de N(t).",
+"Half life of ⁹⁹ᵐTc: {#} h.":
+  "Vida media del ⁹⁹ᵐTc: {#} h.",
+"Stable end product: ⁹⁹Tc.":
+  "Producto final estable: ⁹⁹Tc.",
+"Time {#} h.":
+  "Tiempo {#} h.",
+"Number of ⁹⁹ᵐTc nuclei: {#}, expected {#}.":
+  "Número de núcleos de ⁹⁹ᵐTc: {#}, esperado {#}.",
+"Number of ⁹⁹Tc nuclei: {#}, expected {#}.":
+  "Número de núcleos de ⁹⁹Tc: {#}, esperado {#}.",
+"Activity of ⁹⁹ᵐTc: {#} decays per h.":
+  "Actividad del ⁹⁹ᵐTc: {#} decaimientos por h.",
 "Fluorine {#} labels FDG, the sugar that PET scans follow. Its {#} minute half life means it is made in a cyclotron near the scanner and used the same morning: a dose made at {#}:{#} has {#}% of its activity left at {#}:{#}.":
   "El flúor {#} marca la FDG, el azúcar que siguen los estudios PET. Su vida media de {#} minutos significa que se produce en un ciclotrón cerca del escáner y se usa esa misma mañana: una dosis preparada a las {#}:{#} conserva el {#}% de su actividad a las {#}:{#}.",
 "activity in decays per min":
@@ -578,26 +670,6 @@ VDI18N.add('es', 'demo/radioactive-decay', {
   "⁹⁹Mo: {#} h; ⁹⁹ᵐTc: {#} h (ENSDF {#}). El {#}% de las desintegraciones del ⁹⁹Mo pasan por ⁹⁹ᵐTc (la fracción indicada en la información de prescripción de un generador comercial, Ultra-TechneKow V4; las compilaciones de datos nucleares dan de {#} a {#}%); el resto va directo a ⁹⁹Tc, estable a esta escala. Aquí la elución saca de la columna todos los núcleos de ⁹⁹ᵐTc; una columna real libera cerca del {#}%. También puedes arrastrar el marcador de T½ en la gráfica de N(t).",
 "The daughter lives {#} times shorter than the parent: transient equilibrium. The activity ratio settles at B λ<sub>D</sub>/(λ<sub>D</sub> − λ<sub>P</sub>) = {#}, with only a share B = {#} of the parent decays feeding the daughter, and both then fall with the parent’s half life. The dashed orange line on the N(t) plot marks the daughter peak after the last elution.":
   "La hija vive {#} veces menos que la madre: equilibrio transitorio. El cociente de actividades se estabiliza en B λ<sub>D</sub>/(λ<sub>D</sub> − λ<sub>P</sub>) = {#}, ya que solo una fracción B = {#} de las desintegraciones de la madre alimenta a la hija, y luego ambas bajan con la vida media de la madre. La línea naranja punteada en la gráfica de N(t) marca el máximo de la hija después de la última elución.",
-"Half life of ⁹⁹Mo: {#} h.":
-  "Vida media del ⁹⁹Mo: {#} h.",
-"Half life of ⁹⁹ᵐTc: {#} h.":
-  "Vida media del ⁹⁹ᵐTc: {#} h.",
-"Stable end product: ⁹⁹Tc.":
-  "Producto final estable: ⁹⁹Tc.",
-"The generator has not been eluted yet.":
-  "El generador todavía no se ha eluido.",
-"Time {#} h.":
-  "Tiempo {#} h.",
-"Number of ⁹⁹Mo nuclei: {#}, expected {#}.":
-  "Número de núcleos de ⁹⁹Mo: {#}, esperado {#}.",
-"Number of ⁹⁹ᵐTc nuclei: {#}, expected {#}.":
-  "Número de núcleos de ⁹⁹ᵐTc: {#}, esperado {#}.",
-"Number of ⁹⁹Tc nuclei: {#}, expected {#}.":
-  "Número de núcleos de ⁹⁹Tc: {#}, esperado {#}.",
-"Activity of ⁹⁹Mo: {#} decays per h.":
-  "Actividad del ⁹⁹Mo: {#} decaimientos por h.",
-"Activity of ⁹⁹ᵐTc: {#} decays per h.":
-  "Actividad del ⁹⁹ᵐTc: {#} decaimientos por h.",
 "Potassium {#} dates rocks: a melt lets the argon gas out, and once the rock sets, the argon made by the decay is trapped. The oldest rocks from the lunar highlands set about {#} billion years ago, about {#} half lives: watch how few of the starting potassium {#} nuclei would still be there.":
   "El potasio {#} fecha rocas: al fundirse, la roca deja escapar el gas argón, y una vez que se solidifica, el argón que produce la desintegración queda atrapado. Las rocas más antiguas de las tierras altas lunares se solidificaron hace unos {#} mil millones de años, unas {#} vidas medias: observa qué pocos de los núcleos de potasio {#} iniciales seguirían ahí.",
 "t = {#} Gyr":
@@ -616,18 +688,6 @@ VDI18N.add('es', 'demo/radioactive-decay', {
   "{#} <span>con Δt = {#} Gyr</span>",
 "⁴⁰K: {#} × {#}⁹ yr. {#}% of decays are β⁻ to ⁴⁰Ca and {#}% electron capture to ⁴⁰Ar, both stable; geologists measure the argon, since the calcium is too common in rock to tell apart. The grid shows both together. You can also drag the T½ marker on the N(t) plot.":
   "⁴⁰K: {#} × {#}⁹ años. El {#}% de las desintegraciones son β⁻ a ⁴⁰Ca y el {#}% captura electrónica a ⁴⁰Ar, ambos estables; los geólogos miden el argón, porque el calcio es demasiado común en la roca para distinguirlo. La cuadrícula muestra los dos juntos. También puedes arrastrar la marca T½ en la gráfica de N(t).",
-"Half life of ⁴⁰K: {#} Gyr.":
-  "Vida media del ⁴⁰K: {#} Ga.",
-"Stable end product: ⁴⁰Ca, ⁴⁰Ar.":
-  "Producto final estable: ⁴⁰Ca, ⁴⁰Ar.",
-"Time {#} Gyr.":
-  "Tiempo {#} Ga.",
-"Number of ⁴⁰K nuclei: {#}, expected {#}.":
-  "Número de núcleos de ⁴⁰K: {#}, esperado {#}.",
-"Number of ⁴⁰Ca, ⁴⁰Ar nuclei: {#}, expected {#}.":
-  "Número de núcleos de ⁴⁰Ca, ⁴⁰Ar: {#}, esperado {#}.",
-"Activity of ⁴⁰K: {#} decays per Gyr.":
-  "Actividad del ⁴⁰K: {#} decaimientos por Ga.",
 "Aluminum {#} heated the first planetesimals. With a half life under a million years it was nearly gone {#} million years after the solar system formed, so only bodies that grew early got hot enough to melt and let their iron sink to a core (Building a Solar System, Iron cores).":
   "El aluminio {#} calentó los primeros planetesimales. Con una vida media de menos de un millón de años, casi había desaparecido {#} millones de años después de formarse el sistema solar, así que solo los cuerpos que crecieron pronto se calentaron lo suficiente para fundirse y dejar que su hierro se hundiera hasta formar un núcleo (Construir un sistema solar, Núcleos de hierro).",
 "t = {#} Myr":
@@ -660,8 +720,8 @@ VDI18N.add('es', 'demo/radioactive-decay', {
   "Número de núcleos de ²⁶Mg: {#}, esperado {#}.",
 "Activity of ²⁶Al: {#} decays per Myr.":
   "Actividad del ²⁶Al: {#} decaimientos por Ma.",
-"The parents are above the expected number by {#} standard deviations.":
-  "Los padres están por encima de lo esperado en {#} desviaciones estándar.",
+"The parents are below the expected number by {#} standard deviations.":
+  "Los padres están por debajo de lo esperado en {#} desviaciones estándar.",
 "Move to a neighboring nucleus once one is picked (Shift for {#} steps)":
   "Pasa a un núcleo vecino una vez que hayas elegido uno (Shift para {#} pasos)",
 "²⁶Al {#}":
@@ -686,8 +746,18 @@ VDI18N.add('es', 'demo/radioactive-decay', {
   "La vida media del modelo es de {#} ns y la vida media medida es de {#} ns.",
 "The nucleus has not started waiting yet.":
   "El núcleo todavía no empieza a esperar.",
-"{#} yr ± {#} yr <span>true age {#} yr</span>":
-  "{#} años ± {#} años <span>edad real {#} años</span>",
+"Half life of ¹⁴C: {#} yr.":
+  "Vida media del ¹⁴C: {#} año.",
+"Stable end product: ¹⁴N.":
+  "Producto final estable: ¹⁴N.",
+"Time {#} yr.":
+  "Tiempo {#} años.",
+"Number of ¹⁴C nuclei: {#}, expected {#}.":
+  "Número de núcleos de ¹⁴C: {#}, esperado {#}.",
+"Number of ¹⁴N nuclei: {#}, expected {#}.":
+  "Número de núcleos de ¹⁴N: {#}, esperado {#}.",
+"Activity of ¹⁴C: {#} decays per yr.":
+  "Actividad del ¹⁴C: {#} decaimientos por año.",
 "Half life of ¹³¹I: {#} d.":
   "Vida media del ¹³¹I: {#} d.",
 "Stable end product: ¹³¹Xe.":
@@ -764,8 +834,30 @@ VDI18N.add('es', 'demo/radioactive-decay', {
   "Número de núcleos de ⁶⁰Ni: {#}, esperado {#}.",
 "Activity of ⁶⁰Co: {#} decays per yr.":
   "Actividad del ⁶⁰Co: {#} decaimientos por año.",
+"Half life of ⁹⁹Mo: {#} h.":
+  "Vida media del ⁹⁹Mo: {#} h.",
+"The generator has not been eluted yet.":
+  "El generador todavía no se ha eluido.",
+"Number of ⁹⁹Mo nuclei: {#}, expected {#}.":
+  "Número de núcleos de ⁹⁹Mo: {#}, esperado {#}.",
+"Activity of ⁹⁹Mo: {#} decays per h.":
+  "Actividad del ⁹⁹Mo: {#} decaimientos por h.",
+"Half life of ⁴⁰K: {#} Gyr.":
+  "Vida media del ⁴⁰K: {#} Ga.",
+"Stable end product: ⁴⁰Ca, ⁴⁰Ar.":
+  "Producto final estable: ⁴⁰Ca, ⁴⁰Ar.",
+"Time {#} Gyr.":
+  "Tiempo {#} Ga.",
+"Number of ⁴⁰K nuclei: {#}, expected {#}.":
+  "Número de núcleos de ⁴⁰K: {#}, esperado {#}.",
+"Number of ⁴⁰Ca, ⁴⁰Ar nuclei: {#}, expected {#}.":
+  "Número de núcleos de ⁴⁰Ca, ⁴⁰Ar: {#}, esperado {#}.",
+"Activity of ⁴⁰K: {#} decays per Gyr.":
+  "Actividad del ⁴⁰K: {#} decaimientos por Ga.",
 "parent: a straight line, ln N falls by λ = {#} per step":
   "madre: una línea recta, ln N baja λ = {#} por paso",
+"t = {#} step":
+  "t = {#} paso",
 "Time {#} step.":
   "Tiempo {#} paso.",
 "t (yr)":
@@ -774,6 +866,8 @@ VDI18N.add('es', 'demo/radioactive-decay', {
   "¹⁴C: una línea recta, ln N baja λ = {#} × {#}⁻⁴ por año",
 "bin = {#} yr":
   "intervalo = {#} años",
+"{#} yr ± {#} yr <span>true age {#} yr</span>":
+  "{#} años ± {#} años <span>edad real {#} años</span>",
 "¹³¹Xe {#}":
   "¹³¹Xe {#}",
 "¹³¹I: a straight line, ln N falls by λ = {#} per d":
@@ -1120,6 +1214,62 @@ VDI18N.add('es', 'demo/radioactive-decay', {
   "Energía media del positrón, espectro",
 "Beta plus decay of ¹⁸F into ¹⁸O, a positron and a neutrino, with the energy spectrum of the positrons.":
   "Decaimiento beta más del ¹⁸F en ¹⁸O, un positrón y un neutrino, con el espectro de energía de los positrones.",
+"Count at least twice first (Play, or Count {#} times), so there is a mean and a spread to record.":
+  "Primero cuenta al menos dos veces (Iniciar, o Contar {#} veces), para que haya una media y una dispersión que registrar.",
+"Wait (s)":
+  "Espera (s)",
+"Share per second ({#}/s)":
+  "Fracción por segundo ({#}/s)",
+"every wait":
+  "cada espera",
+"exponential, R e^(−Rt), mean {#}/R = {#} s":
+  "exponencial, R e^(−Rt), media {#}/R = {#} s",
+"mean wait {#} s":
+  "espera media {#} s",
+"Counting is running.":
+  "El conteo está corriendo.",
+"{#} waits between counts, mean {#} s; the exponential distribution expects {#} s.":
+  "{#} esperas entre cuentas, media {#} s; la distribución exponencial espera {#} s.",
+"Count in Δt, k":
+  "Cuenta en Δt, k",
+"Number of Δt":
+  "Número de Δt",
+"Poisson, mean μ = RΔt = {#}":
+  "Poisson, media μ = RΔt = {#}",
+"normal, mean μ, σ = √μ":
+  "normal, media μ, σ = √μ",
+"bins {#} counts wide":
+  "barras de {#} cuentas de ancho",
+"{#} counting times so far, mean count {#}, standard deviation —.":
+  "{#} tiempos de conteo hasta ahora, cuenta media {#}, desviación estándar —.",
+"Count k":
+  "Cuenta k",
+"Observed":
+  "Observado",
+"Poisson expected":
+  "Esperado por Poisson",
+"any":
+  "cualquiera",
+"{#} counting times so far, mean count {#}, standard deviation {#}.":
+  "{#} tiempos de conteo hasta ahora, cuenta media {#}, desviación estándar {#}.",
+"χ² against the Poisson":
+  "χ² contra la Poisson",
+"{#}, df {#}, p = {#}":
+  "{#}, gl {#}, p = {#}",
+"{#} or fewer":
+  "{#} o menos",
+"{#} to {#}":
+  "{#} a {#}",
+"{#} or more":
+  "{#} o más",
+"hidden (Blind)":
+  "oculto (A ciegas)",
+"{#} waits between counts, mean {#} s.":
+  "{#} esperas entre cuentas, media {#} s.",
+"Δt (s)":
+  "Δt (s)",
+"time still to wait, after waiting {#} s ({#} waits)":
+  "tiempo que falta por esperar, tras esperar {#} s ({#} esperas)",
 "parent gone":
   "la madre se acabó",
 "Describe the picture":

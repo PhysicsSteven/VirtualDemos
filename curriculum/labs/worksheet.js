@@ -1060,6 +1060,17 @@
       alt: [{ table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.setup === 'table'), cols: ['row', 'rule', 'n', 'sum'] }] },
   });
   /* ==CALCULUS END== */
+  /* ==STATS labsetups START== Statistics for physics worksheets on two physics demos (OpenStax Introductory Statistics 2e,
+     2026-11-19). g-statistics (Measurement Uncertainty, Histogram graph): Table 1 takes the 100 timings of Part A; the Summary
+     table is typed from the Analysis section. counting-statistics (Radioactive Decay, Counting view): Table 1 is
+     Reading | R | Δt | μ = RΔt | n | x̄ | s | √x̄ | s²/x̄, graphed s against √x̄; the Poisson cells and the waits tables are typed. */
+  const STATS_LABSETUPS = ['g-statistics', 'counting-statistics'];
+  ENABLED.push(...STATS_LABSETUPS); GRAPHS.push('counting-statistics');
+  Object.assign(FROM_DEMO, {
+    'g-statistics': { demo: 'Measurement Uncertainty', cols: ['row', 'L_m', 'timer', 'swings', 't_s', 'T_s', 'read_to'] },
+    'counting-statistics': { demo: 'Radioactive Decay (Counting)', cols: ['row', 'rate', 'dt', 'mu', 'n', 'mean', 'sd', 'sqrt_mean', 'var_ratio'] },
+  });
+  /* ==STATS labsetups END== */
   /* ==FORMULAS START== */
   /* Spreadsheet formulas in the data tables, and the curve fits of the graphs. Plain functions with no page access, so
      curriculum/validation/test_worksheet_formulas.cjs runs them in Node. Formulas are read by a small parser of their own (no eval):
@@ -1558,6 +1569,7 @@
     langle: '⟨', rangle: '⟩', lvert: '|', rvert: '|' };
   /* Plain text for CSV column names and answer keys: TeX between \( \) or \[ \] becomes readable Unicode. */
   const plainTeX = (t) => t.replace(/\\(?:mathrm|text|rm|mathbf|operatorname)\s*\{([^{}]*)\}/g, '$1')
+    .replace(/\\(?:bar|overline)\s*(?:\{([^{}]*)\}|([A-Za-z]))/g, (m, a, b) => (a || b) + '\u0304')
     .replace(/\\t?frac\s*\{([^{}]*)\}\s*\{([^{}]*)\}/g, '($1)/($2)').replace(/\\tfrac\s*(\d)(\d)/g, '$1/$2')
     .replace(/\\([A-Za-z]+)/g, (s, w) => GREEK[w] != null ? GREEK[w] : (w === 'rm' || w === 'left' || w === 'right' ? '' : w))
     .replace(/\\[ ,;!]/g, ' ').replace(/[{}]/g, '').replace(/\s+/g, ' ').trim();

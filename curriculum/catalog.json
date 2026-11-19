@@ -528,12 +528,14 @@
     {
      "demo": "radioactive-decay",
      "title": "Radioactive Decay",
-     "desc": "A grid of nuclei that each decay at random, and a count that halves every half life anyway. Carbon 14 dating, iodine 131 and decay chains where a daughter builds up and dies away.",
+     "desc": "A grid of nuclei that each decay at random, and a count that halves every half life anyway. Carbon 14 dating, iodine 131 and decay chains where a daughter builds up and dies away. A Counting view counts a steady source again and again: Poisson counts, √N and exponential waits.",
      "tags": [
       "half life",
       "exponential decay",
       "decay chains",
-      "statistics of small samples"
+      "statistics of small samples",
+      "Poisson distribution",
+      "exponential distribution"
      ]
     },
     {
@@ -1054,9 +1056,11 @@
     {
      "demo": "measurement-uncertainty",
      "title": "Measurement Uncertainty",
-     "desc": "Measure g with a pendulum and judge what the data can tell you: time it by hand or with a photogate, one swing or many, repeat, read the length to the right place or the wrong one, and release from small or big angles. Random scatter, resolution, bias, propagation, fits and residuals, with every instrument error simulated and labeled.",
+     "desc": "Measure g with a pendulum and judge what the data can tell you: time it by hand or with a photogate, one swing or many, repeat, read the length to the right place or the wrong one, and release from small or big angles. Random scatter, resolution, bias, propagation, fits and residuals, with every instrument error simulated and labeled. A Histogram graph shows 100 timings against the normal curve.",
      "tags": [
       "measurement uncertainty",
+      "normal distribution",
+      "histogram",
       "random error",
       "systematic error",
       "standard error",

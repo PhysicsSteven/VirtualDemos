@@ -83,4 +83,33 @@ group('allowed spectra: normalized, means against evaluated values (³H 5.68, ¹
   }
   assert(s1.fermiNR(7, 0.01, false) > 1 && s1.fermiNR(8, 0.01, true) < 1, 'Fermi function: e⁻ pulled back, e⁺ pushed away');
 });
+/* Counting (2026-11-19): a constant count rate gives Poisson counts and exponential waits; the χ² cells follow the book's rule */
+const STc = (() => { const d = {}; vm.runInNewContext(readLib('vdstats.js') + ';globalThis.M = VDSTATS;', d, { timeout: 5000 }); return d.M; })();
+const k = core('radioactive-decay', 'counterNew,counterRun,poissonCells,waitsAfter');
+group('Counting: counts in Δt have mean and variance μ = RΔt; waits are exponential with mean 1/R and the same after any wait t₀ (memoryless)', () => {
+  for (const [R, dt] of [[3, 1], [0.5, 2], [200, 2]]) {
+    const c = k.counterNew(R, STc.rng(7)), out = { counts: [], waits: [], times: [] }; k.counterRun(c, 4000 * dt, dt, out);
+    assert.strictEqual(out.counts.length, 4000); const m = STc.mean(out.counts), v = STc.variance(out.counts), mu = R * dt;
+    near(m, mu, 6 * Math.sqrt(mu / 4000) / mu, `mean count at μ = ${mu}`); near(v / m, 1, 0.08, `variance/mean at μ = ${mu}`);
+    assert.strictEqual(out.times.length, out.counts.reduce((a, b) => a + b, 0) + c.k, 'every count is in exactly one interval');
+    assert.strictEqual(out.waits.length, out.times.length - 1); near(STc.mean(out.waits), 1 / R, 0.03, 'mean wait');
+    if (R === 3) { const left = k.waitsAfter(out.waits, 0.5); near(STc.mean(left), 1 / R, 0.05, 'mean time left after 0.5 s');
+      near(left.length / out.waits.length, Math.exp(-1.5), 0.05, 'share longer than 0.5 s, e^(−Rt₀)'); }
+  }
+  /* running in pieces gives the same counts as running at once (Play and Count 100 times draw the same stream) */
+  const a = k.counterNew(3, STc.rng(5)), b = k.counterNew(3, STc.rng(5)), oa = { counts: [], waits: [], times: [] }, ob = { counts: [], waits: [], times: [] };
+  k.counterRun(a, 100, 1, oa); for (let t = 0.037; t < 100; t += 0.037) k.counterRun(b, t, 1, ob); k.counterRun(b, 100, 1, ob);
+  assert.deepStrictEqual(oa.counts, ob.counts);
+});
+group('Counting: χ² cells expect at least 5 each and add up to n; a true Poisson sample passes about 95 % of the time at α = 0.05', () => {
+  const g = k.poissonCells([0, 1, 1, 2, 2, 2, 3, 3, 4, 5, 6, 2, 3, 1, 0, 2, 3, 4, 2, 1], 2.5, STc);
+  near(g.cells.reduce((a, c) => a + c.e, 0), 20, 1e-9, 'expected add to n'); assert.strictEqual(g.cells.reduce((a, c) => a + c.o, 0), 20);
+  for (const c of g.cells) assert(c.e >= 5 - 1e-9, 'cell expects ' + c.e); assert.strictEqual(g.df, g.cells.length - 1);
+  assert.strictEqual(g.cells[g.cells.length - 1].hi, Infinity);
+  /* hand check: μ = 2.5, n = 20: cells k ≤ 1 (e = 20 × 0.287297 = 5.746), k = 2 (5.130), k ≥ 3 (9.124) */
+  near(g.cells[0].e, 20 * Math.exp(-2.5) * 3.5, 1e-9, 'k ≤ 1'); near(g.cells[1].e, 20 * Math.exp(-2.5) * 3.125, 1e-9, 'k = 2');
+  let reject = 0; const T = 400;
+  for (let s = 1; s <= T; s++) { const c = k.counterNew(4, STc.rng(1000 + s)), o = { counts: [] }; k.counterRun(c, 100, 1, o); if (k.poissonCells(o.counts, 4, STc).p < 0.05) reject++; }
+  near(reject / T, 0.05, 0.6, 'type I rate');
+});
 console.log(`${n} groups passed`);

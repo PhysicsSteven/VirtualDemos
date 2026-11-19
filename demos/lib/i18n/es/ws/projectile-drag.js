@@ -8,8 +8,8 @@ VDI18N.add('es', 'ws/projectile-drag', {
   "Ángulo θ (°)",
 "Launches n":
   "Lanzamientos n",
-"Mean range bar R (m)":
-  "Alcance medio R barra (m)",
+"Mean range R̄ (m)":
+  "Alcance medio R̄ (m)",
 "Standard deviation σ (m)":
   "Desviación estándar σ (m)",
 "Standard error σ/√ n (m)":
@@ -122,8 +122,8 @@ VDI18N.add('es', 'ws/projectile-drag', {
   "Ángulo θ (°), fila {#}",
 "Launches n, row {#}":
   "Lanzamientos n, fila {#}",
-"Mean range bar R (m), row {#}":
-  "Alcance medio R barra (m), fila {#}",
+"Mean range R̄ (m), row {#}":
+  "Alcance medio R̄ (m), fila {#}",
 "Standard deviation σ (m), row {#}":
   "Desviación estándar σ (m), fila {#}",
 "Standard error σ/√ n (m), row {#}":
@@ -198,6 +198,10 @@ VDI18N.add('es', 'ws/projectile-drag', {
   "Altura de lanzamiento",
 "Projectile Range":
   "Alcance de proyectiles",
+"Mean range bar R (m)":
+  "Alcance medio R barra (m)",
+"Mean range bar R (m), row {#}":
+  "Alcance medio R barra (m), fila {#}",
 "Prelab answers, settings and CSV, trajectory and range fits, both estimates of \\(g\\) with uncertainty, the drag comparison, the many launches table and answers to the questions. Identify simulated data.":
   "Respuestas previas al laboratorio, ajustes y CSV, ajustes de la trayectoria y del alcance, ambas estimaciones de \\(g\\) con su incertidumbre, la comparación con arrastre, la tabla de muchos lanzamientos y las respuestas a las preguntas. Identifica los datos simulados.",
 "<strong>Trajectory.</strong> Launch from a measured height with air resistance negligible. Record at least eight positions and times over the flight. Use the same launch speed and angle throughout this run.":

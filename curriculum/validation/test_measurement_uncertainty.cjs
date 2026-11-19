@@ -44,6 +44,33 @@ group('g from one length and its propagated uncertainty; the reading offset give
   assert.strictEqual(c.periodUncertainty({ n: 10, se: 0 }, 'gate', 1), 0.0005); assert.strictEqual(c.periodUncertainty({ n: 10, se: 0.01 }, 'hand', 10), 0.01);
   assert.strictEqual(c.periodDecimals('hand', 1), 2); assert.strictEqual(c.periodDecimals('hand', 10), 3); assert.strictEqual(c.periodDecimals('gate', 20), 5);
 });
+/* Many timings (2026-11-19): the histogram and normal check on the statistics library, and the separate random stream */
+const vm = require('node:vm'), { readLib } = require('./demo_source.cjs');
+const ST = (() => { const d = {}; vm.runInNewContext(readLib('vdstats.js') + ';globalThis.M = VDSTATS;', d, { timeout: 5000 }); return d.M; })();
+const h = core('measurement-uncertainty', 'normalCheck,gridHistogram,timeSwings,mulberry32,gFromPeriod,stats');
+group('Many timings: a normal sample has about 68.3 % within ±s and 95.4 % within ±2s, a straight quantile plot, and the shares are counted exactly', () => {
+  const r = ST.rng(11), xs = []; for (let i = 0; i < 20000; i++) xs.push(2 + 0.07 * r.normal());
+  const m = h.normalCheck(xs, ST); near(m.P1, 0.682689, 1e-5, 'P1'); near(m.P2, 0.954500, 1e-5, 'P2');
+  near(m.in1 / m.n, 0.6827, 0.02, 'in1'); near(m.in2 / m.n, 0.9545, 0.005, 'in2'); assert(m.r > 0.999, 'quantile plot r ' + m.r);
+  const k = h.normalCheck([1, 2, 3, 4, 5], ST); assert.strictEqual(k.in1, 3); assert.strictEqual(k.in2, 5);   /* s = 1.581: 2, 3, 4 within ±s */
+  near(k.q[0][0], ST.dist.normal().inv(0.1), 1e-12, 'first normal score Φ⁻¹(0.5/5)'); assert(Math.abs(k.q[2][0]) < 1e-9, 'middle score'); near(k.r, 0.997171, 1e-5, 'r for 1..5 (Python statistics.correlation)');
+  const u = []; for (let i = 0; i < 4000; i++) u.push(r()); assert(h.normalCheck(u, ST).r < h.normalCheck(xs.slice(0, 4000), ST).r, 'a uniform sample bends the plot more');
+});
+group('Many timings: grid histogram bins hold every value once, edges halfway between timer readings', () => {
+  const xs = [2.00, 2.01, 2.01, 2.13, 1.87, 2.05]; const b = h.gridHistogram(xs, 0.01, 30);
+  assert.strictEqual(b.counts.reduce((a, c) => a + c, 0), xs.length); near(b.width, 0.01, 1e-12); near(b.edges[0], 1.865, 1e-9, 'first edge');
+  const b5 = h.gridHistogram(xs, 0.01, 10); near(b5.width, 0.05, 1e-12, 'k = 5'); assert.strictEqual(b5.counts.reduce((a, c) => a + c, 0), xs.length);
+  for (const x of xs) { const j = b5.counts.findIndex((_, i) => x > b5.edges[i] && x < b5.edges[i + 1]); assert(j >= 0, 'inside a bin ' + x); }
+});
+group('Many timings: 100 hand timings of one swing scatter with s = √2 × 0.05 s, and the mean of g from each timing sits above 4π²L/T̄² by 3s²/T̄²', () => {
+  const o = { L: 1, th0: 5, mark: 'center', timer: 'hand', N: 1, g: 9.81 }, rr = ST.rng(0x5EED0001), Ts = [];
+  for (let i = 0; i < 20000; i++) Ts.push(h.timeSwings(o, rr).T);
+  const st = h.stats(Ts); near(st.s, Math.sqrt(2 * 0.05 ** 2 + 0.01 ** 2 / 12), 0.03, 's'); near(st.mean, c.periodExact(1, 9.81, 5 * D), 1.5e-3, 'mean (6 standard errors)');
+  /* g = 4π²L/T² is not linear in T: the mean of the g of each timing sits above 4π²L/T̄² by about 3 s²/T̄² (0.37 % here) */
+  const gs = h.stats(Ts.map((T) => h.gFromPeriod(1, T))); near(gs.mean, h.gFromPeriod(1, st.mean) * (1 + 3 * st.s ** 2 / st.mean ** 2), 1e-3, 'mean g');
+  /* the separate stream: draw set 1's own generator gives the same first timing whether or not the 100 were made */
+  const a = h.timeSwings(o, h.mulberry32(1)).t, rm = ST.rng(0x5EED0001); for (let i = 0; i < 100; i++) h.timeSwings(o, rm); assert.strictEqual(h.timeSwings(o, h.mulberry32(1)).t, a);
+});
 group('The motion for the picture keeps the exact period: θ returns to θ₀ after one period at 40°', () => {
   const T = c.periodExact(1, 9.81, 40 * D); let y = [40 * D, 0]; const n = Math.round(T / 0.001), h = T / n; for (let i = 0; i < n; i++) y = c.rk4(y, h, 9.81);
   near(y[0], 40 * D, 1e-8, 'angle'); assert(Math.abs(y[1]) < 1e-7, 'speed');
