@@ -455,7 +455,8 @@
       "taylor",
       "vector-fields",
       "rates-and-optimization",
-      "data-explorer"
+      "data-explorer",
+      "distribution-explorer"
      ]
     }
    ]

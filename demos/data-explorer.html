@@ -866,7 +866,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const d = S.d, e = (S.vals.length !== S.orig.length || S.vals.some((v, i) => v !== S.orig[i]));
     const num = (s) => Number(String(s).replace(/,/g, '').replace('−', '-'));
     return { setup: S.preset, data_set: SETS[S.preset].name, draw: SIM[S.preset] ? S.draw : '', edited: e ? 'yes' : 'no', n: st.n, mean: num(fmt(st.mean, dM())), median: num(fx(st.median, d)), sd: num(fmt(st.sd, dM())),
-      min: st.min, q1: num(fx(st.q1, d)), q3: num(fx(st.q3, d)), max: st.max, iqr: num(fx(st.iqr, d)), outliers: st.outliers.length, skew: num(fmt(st.skew, 3)) };
+      min: st.min, q1: num(fx(st.q1, d)), q3: num(fx(st.q3, d)), max: st.max, iqr: num(fx(st.iqr, d)), outliers: st.outliers.length ? st.outliers.map((v) => fx(v, d)).join('; ') : 'none', skew: num(fmt(st.skew, 3)) };
   };
   window.vdShowCols = [['data_set', 'Data set'], ['n', 'n'], ['mean', 'Mean'], ['median', 'Median'], ['sd', 's']];
   window.vdVersion = 'data-explorer@2026-11-19';

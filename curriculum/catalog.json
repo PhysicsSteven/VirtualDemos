@@ -1434,6 +1434,24 @@
       "skewness",
       "statistics"
      ]
+    },
+    {
+     "demo": "distribution-explorer",
+     "title": "Distribution Explorer",
+     "desc": "Ten probability distributions from the statistics book with sliders: binomial, geometric, hypergeometric, Poisson, uniform, exponential, normal, t, chi square and F. Shade P(a < X < b) and read it with the calculator command the book would use, find z scores and percentiles, and draw random values to watch a histogram fill against the curve. Compare t with the normal as df grows, and the binomial with its normal and Poisson approximations.",
+     "tags": [
+      "probability distribution",
+      "binomial",
+      "Poisson",
+      "normal distribution",
+      "z score",
+      "percentile",
+      "Student t",
+      "chi square",
+      "F distribution",
+      "exponential distribution",
+      "statistics"
+     ]
     }
    ]
   },

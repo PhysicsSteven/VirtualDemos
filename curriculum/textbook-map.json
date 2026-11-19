@@ -12619,6 +12619,20 @@
       ]
     },
     {
+      "demo": "distribution-explorer",
+      "course": [
+        "later"
+      ],
+      "sections": [],
+      "role": "demo",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "New 2026-11-19 (Claude, OpenStax Introductory Statistics, Steve's approved plan): ten probability distributions with shaded P(a < X < b), the book's calculator commands, percentiles, seeded draws filling a histogram and comparison curves (vdstats.js). Book sections are mapped in curriculum/statistics-map.json.",
+      "title": "Distribution Explorer",
+      "url": "demos/distribution-explorer.html",
+      "handouts": []
+    },
+    {
       "demo": "slope-fields",
       "course": [
         "later"

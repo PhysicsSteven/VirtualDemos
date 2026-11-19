@@ -105,6 +105,10 @@ window.VD_SHORTCUTS = {
     ["← →", "Move the selected value by one unit of the data's last decimal place (Shift for ten)", "on the graphs"],
     ["↑ ↓", "Select the next larger or smaller value", "on the graphs"]
   ],
+  "distribution-explorer": [
+    ["← →", "Move the end of the shaded area (between a and b: b, or a with Shift)", "on the picture"],
+    ["Space", "Play or Pause the draws", "on the picture"]
+  ],
   "integrals": [
     ["↑ ↓", "One more or one fewer piece n (Error against n)", "on the graph"],
     ["← →", "Move x along the curve (F(x), the area so far; Shift for bigger steps)", "on the graph"],
