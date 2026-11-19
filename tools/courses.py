@@ -329,6 +329,8 @@ HANDOUT_TOPIC = {
     'mp-ct-range-margins': 'CT Numbers and Proton Range: Range Errors and Margins (Medical Physics)',
     'mp-ct-reconstruction': 'CT Image Reconstruction: From Projections to an Image (Medical Physics)',
     'slope-fields-cooling': 'Slope Fields: Cooling Tea and a Growing Culture',
+    # statistics for physics, on two physics demos (2026-11-19)
+    'g-statistics': 'Is g Really 9.81? Statistics on a Pendulum', 'counting-statistics': 'Counting Statistics',
     'integrals-error-order': 'How Fast Do Riemann Sums Converge?',
     'errors-and-power': 'Type I Errors, Type II Errors and Power',
     'one-way-anova': 'One Way ANOVA: Gaps, Spreads and False Alarms',

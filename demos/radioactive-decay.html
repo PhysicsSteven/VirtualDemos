@@ -11,6 +11,7 @@
 <script src="lib/vd3.js"></script>
 <script src="lib/vd3kit.js"></script>
 <script src="lib/nubase.js"></script>
+<script src="lib/vdstats.js"></script>
 <style>
 /* projector on a short screen: the units line gives way so the lede fits on one or two lines */
 </style>
@@ -127,6 +128,15 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   :root[data-projector="on"] .stage { min-height: 440px; }
 }
 #onePane { grid-column: 1 / -1; grid-row: 1 / -1; }
+/* the Counting view (2026-11-19): one pane over the whole stage, its own section in the rail */
+#cntPane { grid-column: 1 / -1; grid-row: 1 / -1; }
+#cntCan { touch-action: manipulation; outline: none; }
+#cntCan:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+.stage.cnt > .pane:not(#cntPane) { display: none; }
+.stage.cnt + .vd-split, .stage.cnt .vd-split { display: none; }
+.rail.cnt > section:not(#cntSec):not(.vd-readings) { display: none; }
+#cntCells { margin: 6px 0 4px; }
+#cntSec .row2 { align-items: center; margin-top: 6px; }
 #oneCan { touch-action: manipulation; outline: none; }
 #oneCan:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
 .stage.one > .pane:not(#onePane) { display: none; }
@@ -148,6 +158,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   .stage { min-height: 0; grid-template-rows: 440px 300px 240px; }
   .stage.g3on { grid-template-rows: 560px 300px 240px; }
   .stage.one { grid-template-rows: 900px; }
+  .stage.cnt { grid-template-rows: 940px; }
   .rail { overflow: visible; }
 }
 </style>
@@ -175,7 +186,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       <div class="pane" id="gPane">
         <canvas id="gCan" tabindex="0" aria-label="Tray of nuclei. Parent nuclei are large balls, daughters slightly smaller balls in a second color, stable end products small gray balls. Each decay flashes and sends a short alpha or beta track out of the nucleus; the Geiger counter below counts every decay. Click a nucleus to follow it. Keys: arrows move the followed nucleus, space plays or pauses, S takes one step, R resets."></canvas>
         <div class="stage-ctl" id="manyCtl">
-          <div class="seg" role="group" aria-label="View" id="viewSeg"><button type="button" data-v="many" aria-pressed="true">Many nuclei</button><button type="button" data-v="alpha" aria-pressed="false">Alpha decay</button><button type="button" data-v="beta" aria-pressed="false">Beta decay</button></div>
+          <div class="seg" role="group" aria-label="View" id="viewSeg"><button type="button" data-v="many" aria-pressed="true">Many nuclei</button><button type="button" data-v="alpha" aria-pressed="false">Alpha decay</button><button type="button" data-v="beta" aria-pressed="false">Beta decay</button><button type="button" data-v="count" aria-pressed="false">Counting</button></div>
           <button type="button" class="btn" id="play">Pause</button>
           <button type="button" class="btn" id="stepBtn">Step</button>
           <button type="button" class="btn" id="step20Btn" title="Take 20 steps at once (each still decided step by step)">20 steps</button>
@@ -213,10 +224,20 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <span class="tclock mono" id="oneClock"></span>
         </div>
       </div>
+      <div class="pane" id="cntPane" hidden>
+        <canvas id="cntCan" tabindex="0" aria-label="Counting: a long lived source beside a Geiger counter that counts for a fixed time again and again. Each count flashes a track into the tube; the tapes below the counter mark when each count came in the last few counting times. On the right, a histogram of the counts with the Poisson distribution and the normal curve, and below it a histogram of the waits between counts with the exponential distribution. Space plays or pauses."></canvas>
+        <div class="stage-ctl" id="cntCtl">
+          <button type="button" class="btn primary" id="cntPlay" data-vd-key="play">Play</button>
+          <button type="button" class="btn" id="cnt100" title="Count 100 more times at once, each for the counting time Δt">Count 100 times</button>
+          <button type="button" class="btn" id="cntReset" data-vd-key="reset" title="Clear the counts and start this draw set again">Reset</button>
+          <div class="seg" role="group" aria-label="Speed" id="cntSpeed"><button type="button" data-s="1" aria-pressed="true">1×</button><button type="button" data-s="4" aria-pressed="false">4×</button><button type="button" data-s="16" aria-pressed="false">16×</button></div>
+          <span class="tclock mono" id="cntClock"></span>
+        </div>
+      </div>
     </div>
 
     <aside class="rail">
-      <!-- vd-handout --><details class="handout-menu"><summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handouts and worksheets</summary><ul><li><a href="../curriculum/labs/students/radioactive-decay.html" target="radioactive-decay-worksheet">Worksheet 1: Measuring a Half Life</a></li><li><a href="../curriculum/labs/students/decay-chains.html" target="decay-chains-worksheet">Worksheet 2: Parent and Daughter</a></li><li><a href="../curriculum/labs/students/mp-technetium-generator.html" target="mp-technetium-generator-worksheet">Worksheet 3: A Technetium Generator (Medical Physics)</a></li></ul></details><!-- /vd-handout -->
+      <!-- vd-handout --><details class="handout-menu"><summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handouts and worksheets</summary><ul><li><a href="../curriculum/labs/students/radioactive-decay.html" target="radioactive-decay-worksheet">Worksheet 1: Measuring a Half Life</a></li><li><a href="../curriculum/labs/students/decay-chains.html" target="decay-chains-worksheet">Worksheet 2: Parent and Daughter</a></li><li><a href="../curriculum/labs/students/alpha-and-beta-decay.html" target="alpha-and-beta-decay-worksheet">Worksheet 3: Alpha and Beta Decay</a></li><li><a href="../curriculum/labs/students/mp-technetium-generator.html" target="mp-technetium-generator-worksheet">Worksheet 4: A Technetium Generator (Medical Physics)</a></li><li><a href="../curriculum/labs/students/counting-statistics.html" target="counting-statistics-worksheet">Worksheet 5: Counting Statistics</a></li></ul></details><!-- /vd-handout -->
       <section>
         <h2>Setups</h2>
         <div class="chips" id="presets">
@@ -234,6 +255,24 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" data-p="al26" aria-pressed="false">Aluminum 26: early heat</button>
         </div>
         <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+      </section>
+
+      <section id="cntSec" hidden>
+        <h2>Counting</h2>
+        <p class="hint" id="cntIntro"></p>
+        <label class="slab" for="cntR">Count rate R <output id="cntROut" for="cntR" class="mono"></output></label>
+        <input type="range" id="cntR" min="0" max="11" step="1" value="4">
+        <div class="slab"><span>Counting time Δt</span></div>
+        <div class="seg full" role="group" aria-label="Counting time" id="cntDt"><button type="button" data-dt="1" aria-pressed="true">1 s</button><button type="button" data-dt="2" aria-pressed="false">2 s</button><button type="button" data-dt="5" aria-pressed="false">5 s</button><button type="button" data-dt="10" aria-pressed="false">10 s</button></div>
+        <dl class="readout" id="cntOut"></dl>
+        <table class="tbl" id="cntCells"><caption class="sr">Counts against the Poisson distribution</caption><thead></thead><tbody></tbody></table>
+        <label class="slab" for="cntT0">Already waited t₀ <output id="cntT0Out" for="cntT0" class="mono"></output></label>
+        <input type="range" id="cntT0" min="0" max="30" step="1" value="0">
+        <dl class="readout" id="cntWait"></dl>
+        <div class="toggles"><label><input type="checkbox" id="cntBlind"> Blind: hide the Poisson, normal and exponential predictions</label></div>
+        <div class="row2"><span class="formula mono" id="cntDraw"></span><button type="button" class="btn" id="cntNew">New random draws</button></div>
+        <details class="more"><summary>Model</summary><p class="hint" id="cntModel"></p></details>
+        <p class="sr" aria-live="polite" id="cntLive"></p>
       </section>
 
       <section id="oneSec" hidden>
@@ -564,15 +603,56 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   /* electron momentum (MeV/c) for kinetic energy T, and the neutrino's for the rest of Q (massless) */
   const pElectron = (T) => Math.sqrt(T * (T + 2 * ME_MEV));
   const BETA_SET = [{ Z: 0, A: 1, plus: false }, { Z: 1, A: 3, plus: false }, { Z: 6, A: 14, plus: false }, { Z: 15, A: 32, plus: false }, { Z: 9, A: 18, plus: true }];
+  /* Counting statistics (2026-11-19, for OpenStax Introductory Statistics §4.6 and ch 5): a long lived source counted for a fixed
+     time Δt again and again. While the count rate R (counts per second: the source's activity times the share of its decays the
+     counter registers) stays constant, the counts form a Poisson process: the waits between counts are independent and
+     exponential with mean 1/R, so the number in any Δt is Poisson with mean μ = RΔt and standard deviation √μ. The counter has
+     no dead time and there is no background. rng is a seeded generator with .exp(rate) (VDSTATS.rng, demos/lib/vdstats.js). */
+  function counterNew(rate, rng) { return { rate, rng, t: 0, start: 0, k: 0, next: rng.exp(rate), last: NaN }; }
+  /* run the clock on to time T, counting in intervals of length dt that start at t = 0: out.counts gets the count of each interval
+     that ends, out.waits each wait between two successive counts, out.times the time of each count */
+  function counterRun(c, T, dt, out) {
+    for (;;) {
+      const tb = c.start + dt;
+      if (c.next <= T && c.next < tb) {
+        if (isFinite(c.last) && out.waits) out.waits.push(c.next - c.last);
+        if (out.times) out.times.push(c.next);
+        c.last = c.next; c.k++; c.next += c.rng.exp(c.rate);
+      } else if (tb <= T) { out.counts.push(c.k); c.k = 0; c.start = tb; }
+      else break;
+    }
+    c.t = Math.max(c.t, T); return out;
+  }
+  /* cells for a chi square goodness of fit test of counts against the Poisson distribution of mean mu (Introductory Statistics
+     §11.2): from k = 0 up, neighbors are merged until each cell expects at least 5 counts; the first cell holds every k up to its
+     top and the last every k from its bottom up, so the expected numbers add up to n. ST is VDSTATS. */
+  function poissonCells(counts, mu, ST) {
+    const n = counts.length, P = ST.dist.poisson(mu), cells = [];
+    if (!n) return { cells, chi2: NaN, df: 0, p: NaN };
+    const kmax = P.inv(1 - 1e-10); let lo = 0, acc = 0;
+    for (let k = 0; k <= kmax; k++) { acc += n * P.pmf(k); if (acc >= 5) { cells.push({ lo, hi: k }); lo = k + 1; acc = 0; } }
+    if (!cells.length) cells.push({ lo: 0, hi: Infinity });
+    else if (acc > 0 || lo <= kmax) { if (n * (1 - P.cdf(lo - 1)) >= 5) cells.push({ lo, hi: Infinity }); else cells[cells.length - 1].hi = Infinity; }
+    cells[cells.length - 1].hi = Infinity;
+    for (const c of cells) {
+      c.e = n * ((c.hi === Infinity ? 1 : P.cdf(c.hi)) - (c.lo > 0 ? P.cdf(c.lo - 1) : 0));
+      c.o = counts.reduce((a, k) => a + (k >= c.lo && k <= c.hi ? 1 : 0), 0);
+    }
+    if (cells.length < 2) return { cells, chi2: NaN, df: 0, p: NaN };
+    const g = ST.chisqGOF(cells.map((c) => c.o), cells.map((c) => c.e));
+    return { cells, chi2: g.chi2, df: g.df, p: g.p };
+  }
+  /* the waits longer than t0, and how much longer each one lasted: memoryless, so w − t0 is again exponential with mean 1/R */
+  function waitsAfter(waits, t0) { const left = []; for (const w of waits) if (w > t0) left.push(w - t0); return left; }
   // ==CORE END==
 
   if (typeof document === 'undefined') {
-    globalThis.RD = { phi, fractions, cumDecays, peakTime, mulberry32, makeSim, stepSim, elute, expected };
+    globalThis.RD = { phi, fractions, cumDecays, peakTime, mulberry32, makeSim, stepSim, elute, expected, counterNew, counterRun, poissonCells, waitsAfter };
     return;
   }
   /* the single nucleus views (script below) use the same core */
   if (window.VDNUBASE) useNubase(window.VDNUBASE);
-  window.RD1 = { nb, alphaQ, gamow, alphaMeasured, gnX, ALPHA_SET, betaQ, betaTable, sampleBeta, pElectron, BETA_SET, ME_MEV };
+  window.RD1 = { nb, alphaQ, gamow, alphaMeasured, gnX, ALPHA_SET, betaQ, betaTable, sampleBeta, pElectron, BETA_SET, ME_MEV, counterNew, counterRun, poissonCells, waitsAfter };
 
   const $ = (id) => document.getElementById(id);
   /* the measuring tools: a stopwatch on the simulated clock, in the setup's unit (steps, years, days or hours) */
@@ -1917,14 +1997,16 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   window.vdVersion = 'radioactive-decay@2026-10-24';
   window.vdShowCols = [['t', 't'], ['parent', 'parents'], ['daughter', 'daughters']];
   /* How this works: a two step chain shows the Parent and Daughter video, the others Measuring a Half Life */
-  const howVid = () => (window.__rd1 && window.__rd1.O.view !== 'many' ? 'alpha-and-beta-decay' : S.preset === 'mo99' ? 'technetium-generator' : nSp() === 2 ? 'decay-chains' : 'radioactive-decay');
+  const howVid = () => (window.__rd1 && window.__rd1.O.view === 'count' ? 'counting-statistics' : window.__rd1 && window.__rd1.O.view !== 'many' ? 'alpha-and-beta-decay' : S.preset === 'mo99' ? 'technetium-generator' : nSp() === 2 ? 'decay-chains' : 'radioactive-decay');
   VD.howTo({ src: () => `media/how-this-works/${howVid()}.mp4`, poster: () => `media/how-this-works/${howVid()}.jpg` });
   /* the Alpha decay and Beta decay views (script below) record for the Alpha and Beta Decay worksheet */
   const oneView = () => (window.__rd1 && window.__rd1.O.view !== 'many' ? window.__rd1 : null);
-  window.vdWorksheet = () => oneView() ? 'alpha-and-beta-decay' : (cfg().generator && !S.custom ? 'mp-technetium-generator' : nSp() === 2 ? 'decay-chains' : 'radioactive-decay');
+  /* the Counting view (script at the end) records for the Counting Statistics worksheet */
+  window.vdWorksheet = () => oneView() ? (oneView().O.view === 'count' ? 'counting-statistics' : 'alpha-and-beta-decay') : (cfg().generator && !S.custom ? 'mp-technetium-generator' : nSp() === 2 ? 'decay-chains' : 'radioactive-decay');
   window.vdReadingRow = () => {
     if (oneView()) return oneView().reading();
     if (!sim) return null;
+    if ((window.vdRows ? window.vdRows() : []).some((r) => r.view === 'count')) return 'These readings are from the Counting view: export them to their worksheet or clear them first.';
     if ((window.vdRows ? window.vdRows() : []).some((r) => r.view)) return 'These readings are from the Alpha decay or Beta decay view: export them to their worksheet or clear them first.';
     const chain = nSp() === 2, gen = !!(cfg().generator && !S.custom), rows = window.vdRows ? window.vdRows() : [];
     const other = rows.find((r) => (r.daughter_T_half !== '') !== chain);
@@ -2238,7 +2320,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   /* ---------- drawing ---------- */
   function frame(x, y, w, h) { ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(x + 0.5, y); ctx.lineTo(x + 0.5, y + h); ctx.moveTo(x, y + 0.5); ctx.lineTo(x + w, y + 0.5); ctx.stroke(); }
   function draw() {
-    if (O.view === 'many' || !T || !L) return;
+    if ((O.view !== 'alpha' && O.view !== 'beta') || !T || !L) return;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
     frame(...L.p1); frame(...L.p2);
     if (O.view === 'alpha') { drawAlphaScene(...L.scene); drawBarrier(...L.p1); drawGN(...L.p2); }
@@ -2332,11 +2414,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   /* ---------- view switch ---------- */
   function setView(v) {
-    O.view = v; const one = v !== 'many';
+    O.view = v; const one = v === 'alpha' || v === 'beta', cnt = v === 'count';   /* count: the Counting view (script at the end) */
     for (const b of seg.querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.v === v));
     stage.classList.toggle('one', one); rail.classList.toggle('one', one); pane.hidden = !one; $('oneSec').hidden = !one;
-    (one ? $('oneCtl') : $('manyCtl')).prepend(seg);
-    if (one && window.__rd) window.__rd.setRunning(false);
+    (one ? $('oneCtl') : cnt ? $('cntCtl') : $('manyCtl')).prepend(seg);
+    if ((one || cnt) && window.__rd) window.__rd.setRunning(false);
+    if (window.__rdc) window.__rdc.show(cnt);
     $('alphaCtl').hidden = v !== 'alpha'; $('betaCtl').hidden = v !== 'beta'; $('oneRun').hidden = v !== 'beta'; $('oneRate').hidden = v !== 'beta';
     if (one) { if (v === 'beta' && !BE.tab) betaNew(); if (v === 'alpha' && !AL.tDecay) alphaNew(); chips(); readouts(); goLabel(); requestAnimationFrame(resize); }
     window.dispatchEvent(new Event('resize'));
@@ -2370,13 +2453,15 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     requestAnimationFrame(loop);
   }
   { const v = new URLSearchParams(location.search).get('view'); if (v === 'alpha' || v === 'beta') setView(v); }
+  window.addEventListener('load', () => { if (new URLSearchParams(location.search).get('view') === 'count') setView('count'); });
   /* Record reading in these views (2026-10-31, worksheet sweep): one row per emitter for the Alpha and Beta Decay worksheet. Alpha
      rows go to its first table, beta rows to the second; a series holds one view only. Half lives in seconds (partial alpha half
      life T½/branch, as plotted). */
   const sig = (v, n) => +v.toPrecision(n), secs = (v) => (v >= 1e5 || v < 1e-2 ? v.toExponential(3) : v.toPrecision(4));
   function reading() {
     const rows = window.vdRows ? window.vdRows() : [], other = rows.find((r) => r.view !== O.view);
-    if (other) return other.view ? `These readings are from the ${other.view === 'alpha' ? 'Alpha' : 'Beta'} decay view: export them or clear them first.` : 'These readings are from Many nuclei: export them to their worksheet or clear them first.';
+    if (other) return other.view === 'count' ? 'These readings are from the Counting view: export them or clear them first.' : other.view ? `These readings are from the ${other.view === 'alpha' ? 'Alpha' : 'Beta'} decay view: export them or clear them first.` : 'These readings are from Many nuclei: export them to their worksheet or clear them first.';
+    if (O.view === 'count') return window.__rdc ? window.__rdc.reading() : null;
     if (O.view === 'alpha') {
       const [Z, A] = aZA(), g = aG(), m = aM();
       window.vdShowCols = [['emitter', 'emitter'], ['r0_fm', 'r₀ (fm)'], ['T_meas_s', 'T½ measured (s)'], ['T_model_s', 'T½ model (s)']];
@@ -2390,6 +2475,292 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       mean_spec_keV: (BE.tab.mean * 1000).toFixed(2), no_neutrino: O.noNu ? 'yes' : '' };
   }
   window.__rd1 = { O, AL, BE, setView, pick, betaOne, alphaNew, reading };
+  requestAnimationFrame(loop);
+})();
+</script>
+<script>
+/* Counting (2026-11-19, OpenStax Introductory Statistics: the Poisson and exponential distributions): a long lived source counted
+   for a fixed time Δt again and again. The physics is in the CORE above (counterNew, counterRun, poissonCells, waitsAfter, via
+   window.RD1); the distributions come from demos/lib/vdstats.js. Seeded draws: draw set 1 on open, New random draws moves on. */
+(() => {
+  const C = window.RD1, ST = window.VDSTATS; if (!C || !ST || !C.counterNew) return;
+  const $ = (id) => document.getElementById(id);
+  const stage = $('stage'), rail = document.querySelector('.rail'), pane = $('cntPane'), can = $('cntCan'), ctx = can.getContext('2d');
+  const reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  /* count rates on the slider (counts per second) and the source: cesium 137, half life from NUBASE2020 (nubase.js) */
+  const RATES = [0.2, 0.5, 1, 2, 3, 4, 5, 10, 20, 50, 100, 200];
+  const CS = C.nb ? C.nb(55, 137) : null, CS_T = CS ? Math.pow(10, CS[4]) : NaN, YR = 31557600;
+  const K = { on: false, run: false, speed: 1, ri: 4, dt: 1, t0i: 0, blind: false, seed: 1, rng: null, c: null,
+    counts: [], waits: [], recent: [], flashes: [], tSim: 0 };
+  const R = () => RATES[K.ri], mu = () => R() * K.dt, t0 = () => K.t0i / 10 / R();
+  const MAXW = 500000;
+  function start() { K.c = C.counterNew(R(), K.rng); K.counts = []; K.waits = []; K.recent = []; K.flashes = []; K.tSim = 0; }
+  function restart() { K.rng = ST.rng(K.seed); start(); }
+  function take(out) {
+    for (const k of out.counts) K.counts.push(k);
+    for (const w of out.waits) if (K.waits.length < MAXW) K.waits.push(w);
+    const keep = K.c.start - 4 * K.dt; for (const t of out.times) if (t >= keep) K.recent.push(t);
+    let i = 0; while (i < K.recent.length && K.recent[i] < keep) i++; if (i) K.recent.splice(0, i);
+  }
+  function runTo(T) { const out = { counts: [], waits: [], times: [] }; C.counterRun(K.c, T, K.dt, out); take(out); return out; }
+  function count100() { setRun(false); runTo(K.c.start + 100 * K.dt); K.tSim = K.c.t; K.flashes = []; refresh(); live(`${K.counts.length} counting times so far.`); }
+
+  /* ---------- statistics of what was counted ---------- */
+  function countStats() {
+    const n = K.counts.length, m = n ? ST.mean(K.counts) : NaN, s = n > 1 ? ST.sd(K.counts) : NaN;
+    return { n, mean: m, s, root: Math.sqrt(m), ratio: s * s / m, gof: n >= 2 ? C.poissonCells(K.counts, mu(), ST) : null };
+  }
+  function waitStats() {
+    const n = K.waits.length, m = n ? ST.mean(K.waits) : NaN, s = n > 1 ? ST.sd(K.waits) : NaN, left = C.waitsAfter(K.waits, t0());
+    return { n, mean: m, s, left, nLeft: left.length, meanLeft: left.length ? ST.mean(left) : NaN };
+  }
+
+  /* ---------- formatting ---------- */
+  let T = null, W = 0, H = 0, dpr = 1, L = null;
+  const ps = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gs: g('--grid-strong'), accent: g('--accent'),
+      pos: g('--pos'), equi: g('--equi'), sp3: g('--sp3'), sp3l: g('--sp3-line'), ui: g('--font-ui') || 'sans-serif', mono: g('--font-mono') || 'monospace' };
+  }
+  const fmtR = (r) => (r < 1 ? r.toFixed(1) : String(r));
+  const fmtS = (v) => (v >= 100 ? v.toFixed(1) : v >= 10 ? v.toFixed(2) : v.toFixed(3));
+  const sig4 = (v) => (isFinite(v) ? String(+v.toPrecision(4)) : '—');
+  const fx = (v, d) => (isFinite(v) ? v.toFixed(d) : '—');
+  const int = (v) => String(v).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  function txt(s, x, y, o = {}) { ctx.font = `${o.bold ? 700 : 400} ${(o.size || 12) * ps()}px ${o.mono ? T.mono : T.ui}`; ctx.fillStyle = o.color || T.ink; ctx.textAlign = o.align || 'left'; ctx.textBaseline = o.base || 'alphabetic'; ctx.fillText(s, x, y); }
+  function niceStep(span, n) { const raw = span / n, e = Math.pow(10, Math.floor(Math.log10(raw))), m = raw / e; return (m < 1.5 ? 1 : m < 3 ? 2 : m < 7 ? 5 : 10) * e; }
+  function axes(x0, y0, w, h, o) {
+    const p = ps(), Lx = x0 + 50 * p, Rx = x0 + w - 12 * p, Ty = y0 + (o.top || 40) * p, By = y0 + h - 36 * p;
+    const X = (v) => Lx + (v - o.x0) / (o.x1 - o.x0) * (Rx - Lx), Y = (v) => By - (v - o.y0) / (o.y1 - o.y0) * (By - Ty);
+    ctx.strokeStyle = T.grid; ctx.lineWidth = 1;
+    const xs = o.xstep || niceStep(o.x1 - o.x0, Math.max(2, Math.floor((Rx - Lx) / (60 * p)))), ys = niceStep(o.y1 - o.y0, Math.max(2, Math.floor((By - Ty) / (34 * p))));
+    const xd = Math.max(0, -Math.floor(Math.log10(xs) + 1e-9)), yd = Math.max(0, -Math.floor(Math.log10(ys) + 1e-9));
+    for (let v = Math.ceil(o.x0 / xs - 1e-9) * xs; v <= o.x1 + 1e-9; v += xs) { const xx = Math.round(X(v)) + 0.5; ctx.beginPath(); ctx.moveTo(xx, Ty); ctx.lineTo(xx, By); ctx.stroke(); txt(int(+v.toFixed(xd)), xx, By + 13 * p, { size: 10, align: 'center', mono: true, color: T.muted }); }
+    for (let v = Math.ceil(o.y0 / ys - 1e-9) * ys; v <= o.y1 + 1e-9; v += ys) { const yy = Math.round(Y(v)) + 0.5; ctx.beginPath(); ctx.moveTo(Lx, yy); ctx.lineTo(Rx, yy); ctx.stroke(); txt(v.toFixed(yd), Lx - 4 * p, yy + 3 * p, { size: 10, align: 'right', mono: true, color: T.muted }); }
+    ctx.strokeStyle = T.line; ctx.strokeRect(Lx + 0.5, Ty + 0.5, Rx - Lx - 1, By - Ty - 1);
+    txt(o.xl, (Lx + Rx) / 2, By + 28 * p, { size: 11, align: 'center', color: T.muted });
+    ctx.save(); ctx.translate(x0 + 12 * p, (Ty + By) / 2); ctx.rotate(-Math.PI / 2); txt(o.yl, 0, 0, { size: 11, align: 'center', color: T.muted }); ctx.restore();
+    return { X, Y, Lx, Rx, Ty, By };
+  }
+
+  /* ---------- layout and drawing ---------- */
+  function resize() {
+    if (!K.on) return;
+    dpr = window.devicePixelRatio || 1; const r = pane.getBoundingClientRect(); W = r.width; H = r.height;
+    can.width = Math.max(1, Math.round(W * dpr)); can.height = Math.max(1, Math.round(H * dpr)); can.style.width = W + 'px'; can.style.height = H + 'px';
+    const top = ($('cntCtl').offsetHeight || 40) + 14;
+    if (W >= 760) { const lw = Math.round(W * 0.4), h1 = Math.round((H - top) * 0.52); L = { scene: [0, top, lw, H - top], p1: [lw, top, W - lw, h1], p2: [lw, top + h1, W - lw, H - top - h1] }; }
+    else { const h0 = Math.round((H - top) * 0.36), h1 = Math.round((H - top - h0) * 0.52); L = { scene: [0, top, W, h0], p1: [0, top + h0, W, h1], p2: [0, top + h0 + h1, W, H - top - h0 - h1] }; }
+    draw();
+  }
+  function draw() {
+    if (!K.on || !T || !L) return;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.beginPath();
+    if (L.p1[0] > 0) { ctx.moveTo(L.p1[0] + 0.5, L.p1[1]); ctx.lineTo(L.p1[0] + 0.5, H); } else { ctx.moveTo(0, L.p1[1] + 0.5); ctx.lineTo(W, L.p1[1] + 0.5); }
+    ctx.moveTo(L.p2[0], L.p2[1] + 0.5); ctx.lineTo(L.p2[0] + L.p2[2], L.p2[1] + 0.5); ctx.stroke();
+    for (const k of ['scene', 'p1', 'p2']) { const a = L[k]; ctx.save(); ctx.beginPath(); ctx.rect(a[0], a[1], a[2], a[3]); ctx.clip(); (k === 'scene' ? drawScene : k === 'p1' ? drawCounts : drawWaits)(...a); ctx.restore(); }
+    clock();
+  }
+  function drawScene(x0, y0, w, h) {
+    const p = ps(), now = performance.now(), hTop = Math.min(h * 0.5, 170 * p), cy = y0 + hTop * 0.5;
+    /* the source in its holder, the Geiger tube with its window toward it, and the counter */
+    const sx = x0 + Math.max(36 * p, w * 0.14), tx = x0 + w * 0.42, tw = Math.min(w * 0.36, 150 * p), th = 22 * p;
+    ctx.fillStyle = T.sp3; ctx.strokeStyle = T.sp3l; ctx.lineWidth = 1.2;
+    ctx.beginPath(); ctx.rect(sx - 16 * p, cy - 20 * p, 32 * p, 40 * p); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = T.equi; ctx.beginPath(); ctx.arc(sx + 10 * p, cy, 6 * p, 0, 7); ctx.fill();
+    txt('¹³⁷Cs', sx, cy + 36 * p, { size: 11, align: 'center', bold: true });
+    txt('source (simulated)', sx, cy + 50 * p, { size: 10, align: 'center', color: T.muted });
+    const glow = K.flashes.some((f) => now - f.at < 120);
+    ctx.fillStyle = glow && !reduce ? T.pos : T.gs; ctx.strokeStyle = T.muted; ctx.lineWidth = 1.2;
+    ctx.beginPath(); ctx.rect(tx, cy - th / 2, tw, th); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = T.ink; ctx.fillRect(tx - 3 * p, cy - th / 2 - 2 * p, 4 * p, th + 4 * p);
+    txt('Geiger tube', tx + tw / 2, cy - th / 2 - 8 * p, { size: 10, align: 'center', color: T.muted });
+    /* the tracks of the last few counts */
+    if (!reduce) for (const f of K.flashes) {
+      const a = 1 - (now - f.at) / 160; if (a <= 0) continue;
+      ctx.globalAlpha = a; ctx.strokeStyle = T.pos; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(sx + 10 * p, cy); ctx.lineTo(tx + 6 * p, cy + f.dy * th * 0.4); ctx.stroke(); ctx.globalAlpha = 1;
+    }
+    /* the counter: the count in this counting time and how much of Δt has gone */
+    const bx = tx + tw * 0.15, by = cy + th / 2 + 14 * p, bw = Math.min(tw * 0.9, 130 * p), bh = 46 * p;
+    ctx.strokeStyle = T.muted; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(tx + tw, cy); ctx.lineTo(tx + tw + 8 * p, cy); ctx.lineTo(tx + tw + 8 * p, by + bh / 2); ctx.lineTo(bx + bw, by + bh / 2); ctx.stroke();
+    ctx.fillStyle = '#3a3a3a'; ctx.fillRect(bx, by, bw, bh); ctx.fillStyle = '#dfe8d2'; ctx.fillRect(bx + 5 * p, by + 5 * p, bw - 10 * p, 24 * p);
+    txt(String(K.c.k), bx + bw - 10 * p, by + 24 * p, { size: 17, mono: true, bold: true, align: 'right', color: '#1f2a17' });
+    const fr = Math.max(0, Math.min(1, (K.tSim - K.c.start) / K.dt));
+    ctx.fillStyle = '#6a6a6a'; ctx.fillRect(bx + 5 * p, by + 34 * p, bw - 10 * p, 6 * p); ctx.fillStyle = T.accent; ctx.fillRect(bx + 5 * p, by + 34 * p, (bw - 10 * p) * fr, 6 * p);
+    txt(`counts in this Δt = ${K.dt} s`, bx + bw / 2, by + bh + 13 * p, { size: 10, align: 'center', color: T.muted });
+    /* tapes: when each count came, in the present counting time and the four before it */
+    const ty0 = Math.max(y0 + hTop + 30 * p, by + bh + 46 * p), rows = 5, rh = Math.min(26 * p, (y0 + h - ty0 - 8 * p) / rows), lx = x0 + 44 * p, rx = x0 + w - 44 * p;
+    if (rh < 10 * p) return;
+    txt('When each count came (each line is one Δt)', x0 + 12 * p, ty0 - 12 * p, { size: 11, bold: true });
+    for (let j = 0; j < rows; j++) {
+      const s0 = K.c.start - j * K.dt; if (s0 < -1e-9) break;
+      const yy = ty0 + j * rh + rh / 2, end = j === 0 ? K.tSim : s0 + K.dt;
+      ctx.strokeStyle = T.gs; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(lx, yy); ctx.lineTo(rx, yy); ctx.stroke();
+      if (j === 0) { ctx.strokeStyle = T.accent; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(lx, yy); ctx.lineTo(lx + (rx - lx) * fr, yy); ctx.stroke(); }
+      let n = 0; ctx.strokeStyle = j === 0 ? T.pos : T.ink; ctx.lineWidth = Math.max(1, 1.4 * p); ctx.beginPath();
+      for (const t of K.recent) if (t >= s0 && t < s0 + K.dt && t <= end) { const xx = lx + (t - s0) / K.dt * (rx - lx); ctx.moveTo(xx, yy - rh * 0.32); ctx.lineTo(xx, yy + rh * 0.32); n++; }
+      ctx.stroke();
+      txt(j === 0 ? 'now' : `−${j}`, lx - 6 * p, yy + 4 * p, { size: 10, align: 'right', color: T.muted, mono: true });
+      txt(String(n), rx + 6 * p, yy + 4 * p, { size: 11, mono: true, bold: j > 0, color: j === 0 ? T.pos : T.ink });
+    }
+  }
+  function drawCounts(x0, y0, w, h) {
+    const p = ps(), st = countStats(), m = mu(), sd = Math.sqrt(m);
+    txt(`Counts in each Δt = ${K.dt} s (n = ${st.n})`, x0 + 12 * p, y0 + 18 * p, { size: 13, bold: true });
+    if (!st.n) { txt('Press Play, or Count 100 times.', x0 + w / 2, y0 + h / 2, { size: 12, align: 'center', color: T.muted }); return; }
+    const kmin = Math.min(Math.floor(m - 4.5 * sd), ...K.counts), kmax = Math.max(Math.ceil(m + 4.5 * sd) + 1, ...K.counts);
+    const lo = Math.max(0, kmin), span = kmax - lo + 1; let b = 1; for (const c of [1, 2, 5, 10, 20, 50, 100]) { b = c; if (span / c <= 36) break; }
+    const k0 = Math.floor(lo / b) * b, nb = Math.ceil((kmax + 1 - k0) / b), obs = new Array(nb).fill(0);
+    for (const k of K.counts) { const i = Math.floor((k - k0) / b); if (i >= 0 && i < nb) obs[i]++; }
+    const P = ST.dist.poisson(m), ex = obs.map((_, i) => st.n * (P.cdf(k0 + (i + 1) * b - 1) - (k0 + i * b > 0 ? P.cdf(k0 + i * b - 1) : 0)));
+    const N = ST.dist.normal(m, sd), show = !K.blind, ymax = Math.max(4, ...obs, ...(show ? ex : [0])) * 1.15;
+    const ax = axes(x0, y0, w, h, { x0: k0 - 0.5, x1: k0 + nb * b - 0.5, y0: 0, y1: ymax, xl: 'Count in Δt, k', yl: 'Number of Δt', top: 52 });
+    ctx.fillStyle = T.accent; ctx.strokeStyle = T.canvas; ctx.lineWidth = 1;
+    obs.forEach((c, i) => { if (!c) return; const a = ax.X(k0 + i * b - 0.5), z = ax.X(k0 + (i + 1) * b - 0.5); ctx.globalAlpha = 0.75; ctx.fillRect(a, ax.Y(c), z - a, ax.By - ax.Y(c)); ctx.globalAlpha = 1; ctx.strokeRect(a + 0.5, ax.Y(c) + 0.5, z - a - 1, ax.By - ax.Y(c) - 1); });
+    if (show) {
+      ctx.strokeStyle = T.pos; ctx.lineWidth = 1.6 * p; ctx.setLineDash([5 * p, 4 * p]); ctx.beginPath();
+      for (let i = 0; i <= 200; i++) { const x = k0 - 0.5 + nb * b * i / 200, y = ax.Y(st.n * b * N.pdf(x)); if (i) ctx.lineTo(ax.X(x), y); else ctx.moveTo(ax.X(x), y); }
+      ctx.stroke(); ctx.setLineDash([]);
+      ctx.fillStyle = T.ink; ctx.strokeStyle = T.ink; ctx.lineWidth = 1.2;
+      ex.forEach((e, i) => { const xc = ax.X(k0 + i * b + (b - 1) / 2), r = 3.2 * p; if (e < 1e-3 * ymax) return; ctx.beginPath(); ctx.moveTo(xc, ax.By); ctx.lineTo(xc, ax.Y(e)); ctx.stroke(); ctx.beginPath(); ctx.arc(xc, ax.Y(e), r, 0, 7); ctx.fill(); });
+      const kx = x0 + 12 * p, ky = y0 + 36 * p;
+      ctx.beginPath(); ctx.arc(kx + 6 * p, ky - 4 * p, 3.2 * p, 0, 7); ctx.fill(); txt(`Poisson, mean μ = RΔt = ${fmtS(m)}`, kx + 14 * p, ky, { size: 10.5 });
+      ctx.font = `${10.5 * ps()}px ${T.ui}`; const k2 = kx + 30 * p + ctx.measureText(`Poisson, mean μ = RΔt = ${fmtS(m)}`).width;
+      if (k2 + 140 * p < x0 + w) { ctx.strokeStyle = T.pos; ctx.lineWidth = 1.6 * p; ctx.setLineDash([5 * p, 4 * p]); ctx.beginPath(); ctx.moveTo(k2, ky - 4 * p); ctx.lineTo(k2 + 16 * p, ky - 4 * p); ctx.stroke(); ctx.setLineDash([]); txt('normal, mean μ, σ = √μ', k2 + 20 * p, ky, { size: 10.5 }); }
+    }
+    txt(`x̄ = ${fx(st.mean, 3)}, s = ${fx(st.s, 3)}, √x̄ = ${fx(st.root, 3)}`, ax.Rx - 4 * p, ax.Ty + 14 * p, { size: 10.5, align: 'right', mono: true, color: T.muted });
+    if (b > 1) txt(`bins ${b} counts wide`, ax.Rx - 4 * p, ax.Ty + 28 * p, { size: 10, align: 'right', color: T.muted });
+  }
+  function drawWaits(x0, y0, w, h) {
+    const p = ps(), ws = waitStats(), r = R(), tz = t0();
+    txt(`Waits between counts (n = ${int(ws.n)})`, x0 + 12 * p, y0 + 18 * p, { size: 13, bold: true });
+    if (ws.n < 2) { txt('The waits fill in as counts come.', x0 + w / 2, y0 + h / 2, { size: 12, align: 'center', color: T.muted }); return; }
+    const X = 5 / r, nb = 25, bw = X / nb, all = new Array(nb).fill(0), aft = new Array(nb).fill(0);
+    for (const v of K.waits) { const i = Math.floor(v / bw); if (i < nb) all[i]++; }
+    for (const v of ws.left) { const i = Math.floor(v / bw); if (i < nb) aft[i]++; }
+    const dA = all.map((c) => c / (ws.n * bw)), dB = aft.map((c) => (ws.nLeft ? c / (ws.nLeft * bw) : 0));
+    const ymax = Math.max(r * 1.1, ...dA, ...(tz > 0 && ws.nLeft >= 20 ? dB : [0])) * 1.12;
+    const ax = axes(x0, y0, w, h, { x0: 0, x1: X, y0: 0, y1: ymax, xl: 'Wait (s)', yl: 'Share per second (1/s)', top: 52 });
+    ctx.fillStyle = T.accent; ctx.globalAlpha = 0.45; dA.forEach((d, i) => { const a = ax.X(i * bw), z = ax.X((i + 1) * bw); ctx.fillRect(a, ax.Y(d), z - a - 0.5, ax.By - ax.Y(d)); }); ctx.globalAlpha = 1;
+    const kx = x0 + 12 * p, ky = y0 + 36 * p;
+    ctx.fillStyle = T.accent; ctx.globalAlpha = 0.45; ctx.fillRect(kx, ky - 9 * p, 14 * p, 10 * p); ctx.globalAlpha = 1; txt('every wait', kx + 18 * p, ky, { size: 10.5 });
+    if (tz > 0 && ws.nLeft >= 2) {
+      ctx.strokeStyle = T.pos; ctx.lineWidth = 2 * p; ctx.beginPath(); let started = false;
+      dB.forEach((d, i) => { const a = ax.X(i * bw), z = ax.X((i + 1) * bw), y = ax.Y(d); if (!started) { ctx.moveTo(a, ax.By); started = true; } ctx.lineTo(a, y); ctx.lineTo(z, y); });
+      ctx.stroke();
+      ctx.font = `${10.5 * ps()}px ${T.ui}`; const k2 = kx + 30 * p + ctx.measureText('every wait').width;
+      ctx.beginPath(); ctx.moveTo(k2, ky - 4 * p); ctx.lineTo(k2 + 14 * p, ky - 4 * p); ctx.stroke();
+      txt(`time still to wait, after waiting ${fmtS(tz)} s (${int(ws.nLeft)} waits)`, k2 + 18 * p, ky, { size: 10.5, color: T.pos });
+    }
+    if (!K.blind) {
+      ctx.strokeStyle = T.ink; ctx.lineWidth = 1.6 * p; ctx.beginPath();
+      for (let i = 0; i <= 160; i++) { const x = X * i / 160, y = ax.Y(r * Math.exp(-r * x)); if (i) ctx.lineTo(ax.X(x), y); else ctx.moveTo(ax.X(x), y); }
+      ctx.stroke();
+      txt(`exponential, R e^(−Rt), mean 1/R = ${fmtS(1 / r)} s`, ax.Rx - 4 * p, ax.Ty + 14 * p, { size: 10.5, align: 'right' });
+    }
+    txt(`mean wait ${sig4(ws.mean)} s`, ax.Rx - 4 * p, ax.Ty + 28 * p, { size: 10.5, align: 'right', mono: true, color: T.muted });
+  }
+  function clock() {
+    $('cntClock').textContent = `t = ${K.tSim < 1000 ? K.tSim.toFixed(1) : int(Math.round(K.tSim))} s · ${K.speed === 1 ? 'real time' : `${K.speed}× real time`}`;
+  }
+  const live = (m) => { $('cntLive').textContent = m; };
+
+  /* ---------- the rail ---------- */
+  const dd = (a, b, wide) => `<div${wide ? ' class="wide"' : ''}><dt>${a}</dt><dd>${b}</dd></div>`;
+  function readouts() {
+    if (!K.on) return;
+    const st = countStats(), ws = waitStats(), r = R(), hid = 'hidden (Blind)';
+    $('cntROut').textContent = `${fmtR(r)} counts/s`;
+    let h = dd('Counting times n', String(st.n)) + dd('Expected mean μ = RΔt', K.blind ? hid : fmtS(mu()))
+      + dd('Mean count x̄', fx(st.mean, 3)) + dd('Standard deviation s', fx(st.s, 3)) + dd('√x̄', fx(st.root, 3)) + dd('s²/x̄ (1 for a Poisson)', fx(st.ratio, 3));
+    const g = st.gof;
+    if (g && g.df > 0) h += dd('χ² against the Poisson', K.blind ? hid : `${g.chi2.toFixed(2)}, df ${g.df}, p = ${g.p.toFixed(3)}`, true);
+    $('cntOut').innerHTML = h;
+    const tb = $('cntCells');
+    if (g && g.cells.length) {
+      const lab = (c) => (c.hi === Infinity ? (c.lo === 0 ? 'any' : `${c.lo} or more`) : c.lo === 0 && c.hi > 0 ? `${c.hi} or fewer` : c.lo === c.hi ? String(c.lo) : `${c.lo} to ${c.hi}`);
+      tb.tHead.innerHTML = `<tr><th>Count k</th><th>Observed</th><th>Poisson expected</th></tr>`;
+      tb.tBodies[0].innerHTML = g.cells.map((c) => `<tr><td>${lab(c)}</td><td>${c.o}</td><td>${K.blind ? '—' : c.e.toFixed(2)}</td></tr>`).join('');
+      tb.hidden = false;
+    } else tb.hidden = true;
+    const tz = t0();
+    $('cntT0Out').textContent = `${fmtS(tz)} s = ${(K.t0i / 10).toFixed(1)}/R`;
+    $('cntWait').innerHTML = dd('Waits between counts', int(ws.n)) + dd('Mean wait', `${sig4(ws.mean)} s`) + dd('Expected mean wait 1/R', K.blind ? hid : `${sig4(1 / r)} s`)
+      + dd('Standard deviation of the waits', `${sig4(ws.s)} s`)
+      + dd('Waits longer than t₀', ws.n ? `${int(ws.nLeft)} (${(100 * ws.nLeft / ws.n).toFixed(1)} %)` : '—') + dd('Expected share e^(−Rt₀)', K.blind ? hid : `${(100 * Math.exp(-r * tz)).toFixed(1)} %`)
+      + dd('Mean time still to wait after t₀', ws.nLeft ? `${sig4(ws.meanLeft)} s` : '—', true);
+    $('cntDraw').textContent = `Random draw set ${K.seed}`;
+  }
+  function staticText() {
+    $('cntIntro').textContent = 'A long lived source counted for the same time Δt again and again (simulated). Count 100 times, and compare the counts with the Poisson distribution and the waits between counts with the exponential.';
+    const run = 3600, drop = isFinite(CS_T) ? -Math.expm1(-Math.LN2 * run / CS_T) : NaN;
+    $('cntModel').textContent = `The source is cesium 137, half life ${isFinite(CS_T) ? (CS_T / YR).toFixed(2) : '30.0'} yr (NUBASE2020). Its activity falls by ${isFinite(drop) ? drop.toExponential(1).replace('e-', ' × 10^−') : '—'} of itself in an hour of counting, far too little to see, so the count rate R is constant: R is the activity times the share of decays the counter registers (set by the distance and the tube). With R constant the counts form a Poisson process: each wait between counts is drawn from the exponential distribution with mean 1/R, independently of the others, and the number of counts in Δt is then Poisson with mean μ = RΔt and standard deviation √μ (OpenStax Introductory Statistics 2e, §4.6 and §5.3). For large μ the Poisson is close to the normal distribution with the same mean and σ = √μ. The counter has no dead time and there is no background. The χ² test merges neighboring counts until each cell expects at least 5 (§11.2), with df = cells − 1 since μ is known. Random draws are seeded: the same steps from the same draw set give the same counts.`;
+  }
+
+  /* ---------- controls ---------- */
+  function setRun(on) { K.run = on; const b = $('cntPlay'); b.textContent = on ? 'Pause' : 'Play'; b.classList.toggle('primary', !on); }
+  function refresh() { readouts(); draw(); }
+  function changed() { setRun(false); start(); refresh(); }
+  $('cntPlay').addEventListener('click', () => { setRun(!K.run); draw(); });
+  $('cnt100').addEventListener('click', () => count100());
+  $('cntReset').addEventListener('click', () => { setRun(false); restart(); refresh(); });
+  $('cntNew').addEventListener('click', () => { K.seed += 1; setRun(false); restart(); refresh(); });
+  $('cntR').addEventListener('input', (e) => { K.ri = Math.max(0, Math.min(RATES.length - 1, +e.target.value)); changed(); });
+  $('cntT0').addEventListener('input', (e) => { K.t0i = +e.target.value; refresh(); });
+  $('cntBlind').addEventListener('change', (e) => { K.blind = e.target.checked; refresh(); });
+  for (const b of document.querySelectorAll('#cntDt button')) b.addEventListener('click', () => { K.dt = +b.dataset.dt; for (const o of document.querySelectorAll('#cntDt button')) o.setAttribute('aria-pressed', String(o === b)); changed(); });
+  for (const b of document.querySelectorAll('#cntSpeed button')) b.addEventListener('click', () => { K.speed = +b.dataset.s; for (const o of document.querySelectorAll('#cntSpeed button')) o.setAttribute('aria-pressed', String(o === b)); clock(); });
+  can.addEventListener('keydown', (e) => {
+    if (e.key === ' ') { $('cntPlay').click(); e.preventDefault(); }
+    else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') { $('cntR').value = K.ri + (e.key === 'ArrowRight' ? 1 : -1); $('cntR').dispatchEvent(new Event('input')); e.preventDefault(); }
+  });
+  function show(on) {
+    K.on = on; stage.classList.toggle('cnt', on); rail.classList.toggle('cnt', on); pane.hidden = !on; $('cntSec').hidden = !on;
+    if (!on) setRun(false); else { readouts(); requestAnimationFrame(resize); }
+  }
+
+  /* one row per Record reading: the counts and waits so far at this rate and counting time */
+  function reading() {
+    const st = countStats(), ws = waitStats();
+    if (st.n < 2) return 'Count at least twice first (Play, or Count 100 times), so there is a mean and a spread to record.';
+    window.vdShowCols = [['rate', 'R (1/s)'], ['dt', 'Δt (s)'], ['mean', 'x̄'], ['sd', 's']];
+    const g = st.gof;
+    return { view: 'count', rate: R(), dt: K.dt, mu: +mu().toPrecision(6), n: st.n, mean: st.mean.toFixed(3), sd: st.s.toFixed(3), sqrt_mean: st.root.toFixed(3), var_ratio: st.ratio.toFixed(3),
+      chi2: g && g.df > 0 ? g.chi2.toFixed(2) : '', df: g && g.df > 0 ? g.df : '', p: g && g.df > 0 ? g.p.toFixed(3) : '',
+      waits: ws.n, mean_wait_s: sig4(ws.mean), t0_s: +t0().toPrecision(6), longer: ws.nLeft, mean_left_s: ws.nLeft ? sig4(ws.meanLeft) : '', draw_set: K.seed };
+  }
+
+  tokens(); restart(); staticText();
+  $('cntR').value = K.ri;
+  new ResizeObserver(() => { if (K.on) resize(); }).observe(pane);
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { tokens(); draw(); }); } catch (_) {}
+  new MutationObserver(() => { tokens(); draw(); }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'data-projector'] });
+  let last = performance.now(), lastRd = 0;
+  function loop(now) {
+    const dtr = Math.min(0.1, Math.max(0, (now - last) / 1000)); last = now;
+    if (K.on) {
+      if (K.run) {
+        K.tSim += dtr * K.speed; const out = runTo(K.tSim), at = now;
+        for (const t of out.times.slice(-40)) K.flashes.push({ at, dy: ((t * 7919) % 1) * 2 - 1 });
+        if (K.flashes.length > 60) K.flashes.splice(0, K.flashes.length - 60);
+        if (now - lastRd > 250 || out.counts.length) { readouts(); lastRd = now; }
+      }
+      draw();
+    }
+    requestAnimationFrame(loop);
+  }
+  if (window.VD && VD.describe) VD.describe(can, () => {
+    const st = countStats(), ws = waitStats(), o = [];
+    o.push(`A cesium 137 source counted by a Geiger tube for Δt = ${K.dt} s again and again, at a count rate of ${fmtR(R())} counts per second.`);
+    o.push(K.run ? 'Counting is running.' : 'Counting is paused.');
+    o.push({ t: `${st.n} counting times so far${st.n ? `, mean count ${fx(st.mean, 3)}, standard deviation ${fx(st.s, 3)}` : ''}.`, live: false });
+    if (!K.blind) o.push({ t: `The Poisson distribution expects a mean of ${fmtS(mu())} and a standard deviation of ${fx(Math.sqrt(mu()), 3)}.`, live: false });
+    o.push({ t: `${int(ws.n)} waits between counts, mean ${sig4(ws.mean)} s${K.blind ? '' : `; the exponential distribution expects ${sig4(1 / R())} s`}.`, live: false });
+    return o;
+  });
+  window.__rdc = { K, RATES, show, reading, count100, countStats, waitStats, restart, mu, t0, setRun };
   requestAnimationFrame(loop);
 })();
 </script>

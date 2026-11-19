@@ -28,10 +28,14 @@ VDI18N.add('es', 'demo/measurement-uncertainty', {
   "Cronometra las mismas oscilaciones {#} veces más de una sola vez, como si hubieras soltado y cronometrado el péndulo {#} veces",
 "Repeat {#} times":
   "Repetir {#} veces",
+"Time the same swings {#} more times at once, with random draws of their own":
+  "Cronometra las mismas oscilaciones {#} veces más de una vez, con sorteos aleatorios propios",
 "Repeated timings":
   "Cronometrajes repetidos",
 "T² against L":
   "T² en función de L",
+"Histogram":
+  "Histograma",
 "Drag the bob to set θ₀ and L":
   "Arrastra la lenteja para fijar θ₀ y L",
 "A pendulum hanging beside a meter stick, with a timer, and a graph of your timings. Drag the bob sideways to set the release angle and up or down to set the length. Space releases or stops the pendulum, left and right arrows change the release angle by {#} degree, up and down change the length by {#} cm (with Shift, {#} cm).":
@@ -92,6 +96,10 @@ VDI18N.add('es', 'demo/measurement-uncertainty', {
   "Parte inferior de la lenteja",
 "The length runs from the pivot to the center of the bob (diameter {#} cm), read to the nearest millimeter.":
   "La longitud va del pivote al centro de la lenteja (diámetro {#} cm), leída hasta el milímetro más cercano.",
+"<a>Worksheet {#}: Random Scatter and Bias</a>":
+  "<a>Hoja de trabajo {#}: Dispersión aleatoria y sesgo</a>",
+"<a>Worksheet {#}: Is g Really {#}? Statistics on a Pendulum</a>":
+  "<a>Hoja de trabajo {#}: ¿De verdad g vale {#}? Estadística con un péndulo</a>",
 "Hand timing, one swing":
   "Cronometraje manual, una oscilación",
 "Hand timing, {#} swings":
@@ -102,6 +110,8 @@ VDI18N.add('es', 'demo/measurement-uncertainty', {
   "Longitud leída hasta la parte inferior de la lenteja",
 "Big swings, {#}°":
   "Oscilaciones grandes, {#}°",
+"Many timings: histogram":
+  "Muchos cronometrajes: histograma",
 "A hand stopwatch times one swing of a {#} m pendulum. Press Release and watch one timing, then press Repeat {#} times. The timings scatter by several hundredths of a second, because each press of the stopwatch comes a little early or late (simulated). The mean of many timings is closer to the true period than most single timings are.":
   "Un cronómetro manual mide una oscilación de un péndulo de {#} m. Pulsa Soltar y observa un cronometraje; luego pulsa Repetir {#} veces. Los cronometrajes se dispersan varias centésimas de segundo, porque cada pulsación del cronómetro llega un poco antes o un poco después (simulado). La media de muchos cronometrajes está más cerca del periodo verdadero que la mayoría de los cronometrajes individuales.",
 "Meter stick reading L":
@@ -146,10 +156,16 @@ VDI18N.add('es', 'demo/measurement-uncertainty', {
   "La regla de un metro marca hasta el milímetro más cercano; el deslizador fija la lectura en centímetros enteros. Leída hasta la parte inferior de la lenteja (diámetro {#} cm), cada lectura es {#} cm mayor que la longitud verdadera del pivote al centro de la lenteja. Los valores aleatorios provienen de un generador con semilla, así que los mismos pasos de la misma serie dan los mismos cronometrajes; Nuevos valores aleatorios pasa a la serie siguiente.",
 "The Analysis section: the mean, the standard deviation s (with n − {#}) and the standard error s/√n of the periods timed at the present setup; g = {#}π²L/T̄² with δg/g = √((δL/L)² + ({#}δT/T)²). The fit is an unweighted least squares line through every reading with a free intercept, with the usual standard errors of the slope and intercept; g = {#}π²/slope. The small angle formula is what the Analysis uses, so a big release angle shows up as a bias in g.":
   "La sección Análisis: la media, la desviación estándar s (con n − {#}) y el error estándar s/√n de los periodos cronometrados en la configuración actual; g = {#}π²L/T̄² con δg/g = √((δL/L)² + ({#}δT/T)²). El ajuste es una recta de mínimos cuadrados sin ponderar que pasa por todas las lecturas, con ordenada al origen libre, y con los errores estándar usuales de la pendiente y de la ordenada al origen; g = {#}π²/pendiente. La fórmula de ángulo pequeño es la que usa el Análisis, así que un ángulo de liberación grande aparece como un sesgo en g.",
+"Histogram (Many timings): bins are whole numbers of the timer's last digit, with edges halfway between the values it can show. The curve is the normal distribution with the mean and s of the timings at this setup, drawn as the count expected in one bin, n × bin width × the normal density. Within ±s counts the timings with |T − T̄| ≤ s. The normal quantile plot puts the i-th smallest timing against the normal score z = Φ⁻¹((i − ½)/n), with the line T̄ + s z; r is the correlation of its points. Repeat {#} times draws from a random stream of its own, so it does not change the timings of Release and Repeat {#} times. The statistics come from demos/lib/vdstats.js.":
+  "Histograma (Muchos cronometrajes): cada barra abarca un número entero de pasos del último dígito del cronómetro, con bordes a la mitad entre los valores que puede mostrar. La curva es la distribución normal con la media y la s de los cronometrajes en esta configuración, dibujada como el conteo esperado en una barra, n × ancho de barra × la densidad normal. Dentro de ±s cuenta los cronometrajes con |T − T̄| ≤ s. La gráfica de cuantiles normales pone el i-ésimo cronometraje más pequeño contra la puntuación normal z = Φ⁻¹((i − ½)/n), con la recta T̄ + s z; r es la correlación de sus puntos. Repetir {#} veces sortea de una secuencia aleatoria propia, así que no cambia los cronometrajes de Soltar y Repetir {#} veces. La estadística viene de demos/lib/vdstats.js.",
 "T² against L, every reading":
   "T² en función de L, todas las lecturas",
 "Time the swings at several lengths.":
   "Cronometra las oscilaciones en varias longitudes.",
+"Histogram of the timings at this setup":
+  "Histograma de los cronometrajes en esta configuración",
+"Press Repeat {#} times.":
+  "Presiona Repetir {#} veces.",
 "photogate, s":
   "fotocompuerta, s",
 "Simulated: the photogate times each swing exactly and rounds to {#} s.":
@@ -160,8 +176,8 @@ VDI18N.add('es', 'demo/measurement-uncertainty', {
   "La incertidumbre del periodo es el error estándar de la media, o la mitad del último dígito de la fotocompuerta dividida entre N si esa es mayor; la de la longitud es medio milímetro.",
 "A photogate times {#} swings at a time.":
   "Una fotocompuerta mide {#} oscilaciones cada vez.",
-"The graph shows T² against L for {#} readings, with the residuals below.":
-  "La gráfica muestra T² en función de L para {#} lecturas, con los residuos debajo.",
+"The histogram is empty.":
+  "El histograma está vacío.",
 "{#} swings per timing":
   "{#} oscilaciones por cronometraje",
 "to the bob's bottom":
@@ -178,12 +194,16 @@ VDI18N.add('es', 'demo/measurement-uncertainty', {
   "Cada longitud se lee hasta la parte inferior de la lenteja en lugar de su centro (equivocación simulada). Cada lectura resulta demasiado larga por la misma cantidad. Repite cuantas veces quieras: el error no se reduce. Ajusta T² en función de L con varias longitudes y observa la ordenada al origen.",
 "Released from {#}°, the pendulum takes about {#} % longer per swing than {#}π√(L/g), because sin θ is smaller than θ at large angles. Using the small angle formula then gives a g about {#} % too low, however precisely you time it.":
   "Soltado desde {#}°, el péndulo tarda alrededor de {#} % más por oscilación que {#}π√(L/g), porque sin θ es menor que θ a ángulos grandes. Entonces, usar la fórmula de ángulo pequeño da una g alrededor de {#} % demasiado baja, por muy preciso que sea tu cronometraje.",
+"One swing of a {#} m pendulum timed by hand, again and again. Press Repeat {#} times: the histogram fills, and the curve over it is the normal distribution with the same mean and standard deviation s. Count how many timings fall within ±s and ±2s of the mean, and check the normal quantile plot below: if the timings are normal, its dots lie along the straight line. Switch the timer, or where the length is read, and repeat {#} more to compare two methods.":
+  "Una oscilación de un péndulo de {#} m cronometrada a mano, una y otra vez. Presiona Repetir {#} veces: el histograma se llena, y la curva sobre él es la distribución normal con la misma media y desviación estándar s. Cuenta cuántos cronometrajes caen dentro de ±s y ±2s de la media, y revisa abajo la gráfica de cuantiles normales: si los cronometrajes son normales, sus puntos quedan a lo largo de la recta. Cambia el cronómetro, o dónde se lee la longitud, y repite {#} más para comparar dos métodos.",
 "Each timing is recorded by itself when it ends. Press Release, or Repeat {#} times, to time the swings.":
   "Cada cronometraje se registra por sí solo cuando termina. Pulsa Soltar, o Repetir {#} veces, para cronometrar las oscilaciones.",
 "Change the release angle θ₀ by {#}°":
   "Cambiar el ángulo de liberación θ₀ en {#}°",
 "Make the pendulum shorter (↑) or longer (↓) by {#} cm (Shift for {#} cm)":
   "Acortar el péndulo (↑) o alargarlo (↓) en {#} cm (Shift para {#} cm)",
+"The graph shows T² against L for {#} readings, with the residuals below.":
+  "La gráfica muestra T² en función de L para {#} lecturas, con los residuos debajo.",
 "A pendulum {#} m long as read on the meter stick, read to the bottom of the bob, released from {#}°.":
   "Un péndulo de {#} m de largo según la regla de un metro, leída hasta la parte inferior de la lenteja, soltado desde {#}°.",
 "{#} of {#} swing timed":
@@ -242,6 +262,42 @@ VDI18N.add('es', 'demo/measurement-uncertainty', {
   "verdadero {#} s, error −{#} s",
 "{#} of {#} swings timed":
   "{#} de {#} oscilaciones cronometradas",
+"n = {#}, mean {#} s, s = {#} s":
+  "n = {#}, media {#} s, s = {#} s",
+"Within ±s: {#} of {#} ({#} %); normal {#} %":
+  "Dentro de ±s: {#} de {#} ({#} %); normal {#} %",
+"Within ±2s: {#} of {#} ({#} %); normal {#} %":
+  "Dentro de ±2s: {#} de {#} ({#} %); normal {#} %",
+"normal curve":
+  "curva normal",
+"Normal score z":
+  "Puntuación normal z",
+"Normal quantile plot: straight if the timings are normal":
+  "Gráfica de cuantiles normales: recta si los cronometrajes son normales",
+"The shape of these timings":
+  "La forma de estos cronometrajes",
+"Within ±s of the mean":
+  "Dentro de ±s de la media",
+"{#} of {#} ({#} %)":
+  "{#} de {#} ({#} %)",
+"A normal distribution, within ±σ":
+  "Una distribución normal, dentro de ±σ",
+"Within ±2s of the mean":
+  "Dentro de ±2s de la media",
+"A normal distribution, within ±{#}σ":
+  "Una distribución normal, dentro de ±{#}σ",
+"Normal quantile plot, correlation r":
+  "Gráfica de cuantiles normales, correlación r",
+"g from each timing, {#}π²L/T²: mean ḡ":
+  "g de cada cronometraje, {#}π²L/T²: media ḡ",
+"Standard deviation of those g, s_g":
+  "Desviación estándar de esas g, s_g",
+"A histogram of {#} timings at this setup with the normal curve of the same mean, {#} s, and s, {#} s: {#} lie within ±s and {#} within ±2s. Below it, a normal quantile plot with correlation {#}.":
+  "Un histograma de {#} cronometrajes en esta configuración con la curva normal de la misma media, {#} s, y s, {#} s: {#} quedan dentro de ±s y {#} dentro de ±2s. Debajo, una gráfica de cuantiles normales con correlación {#}.",
+"Every timing is the same: there is no spread for a normal curve.":
+  "Todos los cronometrajes son iguales: no hay dispersión para una curva normal.",
+"A histogram of {#} timings at this setup, all the same.":
+  "Un histograma de {#} cronometrajes en esta configuración, todos iguales.",
 "Readings cleared.":
   "Lecturas borradas."
 });

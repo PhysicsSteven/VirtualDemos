@@ -30,8 +30,17 @@ module.exports = {
       const S = M.S, rs = window.vdRows().filter((r) => r.L_m === S.L.toFixed(3) && r.theta0_deg === String(S.A) && r.swings === String(S.N) && r.read_to === S.mark && r.timer === (S.timer === 'hand' ? 'stopwatch' : 'photogate'));
       if (!rs.length) return 'mean shown with no rows';
       const m = rs.reduce((a, r) => a + +r.T_s, 0) / rs.length; return Math.abs(num(t) - m) < 1e-4 * 6 ? true : 'shows ' + t + ', rows give ' + m; })()` },
+    { name: 'Histogram: the shares within ±s and ±2s and ḡ are counted from the rows at this setup', fn: `(() => { ${pre}
+      if (M.S.view !== 'hist') return true; const x = M.manyStats(); if (x.n < 2) return true;
+      const m = x.Ts.reduce((a, b) => a + b, 0) / x.n, s = Math.sqrt(x.Ts.reduce((a, t) => a + (t - m) ** 2, 0) / (x.n - 1));
+      const in1 = x.Ts.filter((t) => Math.abs(t - m) <= s).length, in2 = x.Ts.filter((t) => Math.abs(t - m) <= 2 * s).length;
+      if (in1 !== x.in1 || in2 !== x.in2) return 'within ±s ' + x.in1 + ' (count ' + in1 + '), ±2s ' + x.in2 + ' (count ' + in2 + ')';
+      const g = x.Ts.reduce((a, t) => a + 4 * Math.PI * Math.PI * M.S.L / (t * t), 0) / x.n; if (Math.abs(g - x.gMean) > 1e-9) return 'mean g ' + x.gMean + ', rows give ' + g;
+      const t = row('ana', 'g from each timing, 4π²L/T²: mean ḡ'); if (t && !/hidden/.test(t) && Math.abs(num(t) - g) > 6e-4) return 'shows ' + t + ', rows give ' + g;
+      return true; })()` },
   ],
   steps: [
+    { name: 'Many timings: Repeat 100 times twice, photogate, bottom of the bob', fn: `(() => { const M = window.__mu; M.applyPreset('many'); document.getElementById('rep100').click(); document.getElementById('rep100').click(); document.querySelector('#timerSeg [data-timer=gate]').click(); document.getElementById('rep100').click(); document.querySelector('#timerSeg [data-timer=hand]').click(); document.querySelector('#markSeg [data-mark=bottom]').click(); document.getElementById('rep100').click(); return true; })()` },
     { name: 'Repeat 10 times with the photogate at 40°', fn: `(() => { window.__mu.applyPreset('big'); document.getElementById('rep').click(); return true; })()` },
     { name: 'Bottom of the bob, 10 swings by hand, at 0.4 and 1.6 m', fn: `(() => { const M = window.__mu; M.applyPreset('bottom'); document.getElementById('rep').click(); M.S.L = 1.6; document.getElementById('rep').click(); return true; })()` },
   ],

@@ -10,6 +10,18 @@ const pre = `const R = window.__rd; if (!R || !R.sim) return true; const sim = R
 `;
 module.exports = {
   checks: [
+    { name: "counting: the readouts are the mean, s and s²/x̄ of the counts; χ² cells add up to n and each expects 5 or more; mean wait", fn: `(() => {
+      const X = window.__rdc; if (!X || !X.K.on) return true; const K = X.K, n = K.counts.length; if (n < 2) return true;
+      const m = K.counts.reduce((a, b) => a + b, 0) / n, v = K.counts.reduce((a, b) => a + (b - m) ** 2, 0) / (n - 1), st = X.countStats();
+      if (Math.abs(st.mean - m) > 1e-9 * Math.max(1, m) || Math.abs(st.s - Math.sqrt(v)) > 1e-9 * Math.max(1, v)) return 'mean or s is off';
+      const dd = [...document.querySelectorAll('#cntOut > div')].find((d) => d.querySelector('dt').textContent === 'Mean count x̄');
+      if (dd && Math.abs(parseFloat(dd.querySelector('dd').textContent.replace(/,/g, '')) - m) > 6e-4) return 'Mean count shows ' + dd.querySelector('dd').textContent + ', counts give ' + m;
+      const g = st.gof; if (g && g.cells.length > 1) { const se = g.cells.reduce((a, c) => a + c.e, 0), so = g.cells.reduce((a, c) => a + c.o, 0);
+        if (Math.abs(se - n) > 1e-6 * n || so !== n) return 'χ² cells add to ' + se + ' expected, ' + so + ' observed, n = ' + n;
+        if (g.cells.some((c) => c.e < 5 - 1e-9)) return 'a χ² cell expects under 5'; }
+      if (Math.abs(X.mu() - X.RATES[K.ri] * K.dt) > 1e-12) return 'μ is not RΔt';
+      if (K.waits.length > 50) { const mw = K.waits.reduce((a, b) => a + b, 0) / K.waits.length, R = X.RATES[K.ri]; if (Math.abs(mw * R - 1) > 8 / Math.sqrt(K.waits.length)) return 'mean wait ' + mw + ' is far from 1/R = ' + 1 / R; }
+      return true; })()` },
     { name: "species counts add up to N0 and match the nuclei", fn: `(() => { ${pre}
       let tot = 0; for (let i = 0; i < sim.counts.length; i++) { if (!(sim.counts[i] >= 0)) return 'count ' + i + ' is ' + sim.counts[i]; tot += sim.counts[i]; }
       if (tot !== sim.N0) return 'counts add to ' + tot + ', N0 = ' + sim.N0;
@@ -76,5 +88,12 @@ module.exports = {
         for (const b of document.querySelectorAll('#oneNuc button')) { b.click(); await w(40); if (v === 'beta') { for (let i = 0; i < 40; i++) X.betaOne(true); } } }
       document.getElementById('oneNoNu').click(); X.betaOne(true); document.getElementById('oneNoNu').click(); X.betaOne(true);
       document.querySelector('#viewSeg [data-v=many]').click(); await w(300); document.getElementById('play').click(); await w(400); })()` },
+    { name: "counting: every rate and counting time, Count 100 times, Play at 16×, t₀ to its end, Blind, back to many nuclei", fn: `(async () => {
+      const w = (ms) => new Promise((r) => setTimeout(r, ms)), $ = (i) => document.getElementById(i), set = (id, v) => { const e = $(id); e.value = v; e.dispatchEvent(new Event('input', { bubbles: true })); };
+      document.querySelector('#viewSeg [data-v=count]').click(); await w(200);
+      for (const dt of document.querySelectorAll('#cntDt button')) { dt.click(); for (const r of [0, 4, 11]) { set('cntR', r); $('cnt100').click(); await w(30); } }
+      document.querySelector('#cntDt button').click(); set('cntR', 6); $('cnt100').click(); document.querySelector('#cntSpeed [data-s="16"]').click(); $('cntPlay').click(); await w(1200);
+      set('cntT0', 30); await w(100); $('cntBlind').click(); await w(100); $('cntBlind').click(); $('cntNew').click(); $('cnt100').click(); await w(100);
+      document.querySelector('#viewSeg [data-v=many]').click(); await w(300); document.querySelector('#viewSeg [data-v=count]').click(); await w(200); })()` },
   ],
 };
