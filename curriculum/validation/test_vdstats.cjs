@@ -78,4 +78,8 @@ group('seeded draws: repeatable, right mean and spread', () => {
   const q = Array.from({ length: 20000 }, () => a.poisson(3)); near(S.mean(q), 3, 0.05, 'Poisson 3 mean');
   const b = Array.from({ length: 20000 }, () => a.binomial(200, 0.3)); near(S.mean(b), 60, 0.3, 'binomial mean');
 });
+group('test of a single variance (book Example 11.11: n = 25, s = 3.5, sigma0 = 7.2, left tail)', () => {
+  const v = S.chisqVar(3.5, 25, 7.2, 'left'); near(v.chi2, 5.6713, 1e-4, 'chi2'); near(v.df, 24, 0, 'df'); near(v.p, 0.000042, 0.5e-6, 'p');
+  const r = S.chisqVar(13.2, 15, 12.2); near(r.chi2, 14 * 13.2 * 13.2 / (12.2 * 12.2), 1e-12, 'right tail default'); near(r.p, 1 - S.dist.chisq(14).cdf(r.chi2), 1e-12, 'p right');
+});
 console.log(`${n} groups passed`);
