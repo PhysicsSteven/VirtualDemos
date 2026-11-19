@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
 <script src="lib/vd3.js"></script>
+<script src="lib/vdmath.js"></script>
 <style>
 /* Layout: the scene on the left; the rail on the right. */
 /* Layout: lab bench. The gas box and speed histogram fill the left, a narrow instrument rail sits on the right; stacks on phones. */
@@ -46,6 +47,15 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 }
 
 .stage canvas { touch-action: none; }
+/* the plate bounded by curves: typed curves and limits */
+.lam-in { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 6px 8px; align-items: center; margin: 8px 0 4px; }
+.lam-in label { font-size: 0.86rem; font-family: var(--font-mono); white-space: nowrap; }
+.lam-in input { min-width: 0; font-family: var(--font-mono); font-size: 0.95rem; padding: 4px 8px; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; }
+.lam-in input.bad { border-color: var(--red); }
+.lam-lim { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.lam-lim input { width: 6em; }
+#lamStatus { min-height: 1.2em; font-size: 0.84rem; color: var(--muted); margin: 0 0 6px; }
+#lamStatus.bad { color: var(--red); }
 /* folded rail sections: secondary options behind their heading (layout redesign) */
 </style>
 <link rel="stylesheet" id="vd-look" href="lib/look.css">
@@ -70,7 +80,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   <main class="bench">
     <div class="stage" id="stage">
       <canvas id="can" tabindex="0" role="img" aria-label="The current setup: masses on a plate that can be dragged, a firework that explodes into two pieces, or a person walking along a boat, with the center of mass marked."></canvas>
-      <div class="viewbar" id="runBar"><button type="button" class="spin attn" id="go">Launch</button><button type="button" class="spin" id="back">Reset</button><div class="seg" role="group" aria-label="Playback speed" id="spdSeg"><button type="button" data-s="1" aria-pressed="true">×1</button><button type="button" data-s="0.5" aria-pressed="false">×½</button></div></div>
+      <div class="viewbar" id="runBar"><button type="button" class="spin attn" id="go">Launch</button><button type="button" class="spin" id="back">Reset</button><div class="seg" role="group" aria-label="Playback speed" id="spdSeg"><button type="button" data-s="1" aria-pressed="true">×1</button><button type="button" data-s="0.5" aria-pressed="false">×½</button><button type="button" data-s="0.1" aria-pressed="false" hidden>×⅒</button></div></div>
       <div class="viewbar" id="viewBar" style="left: auto; right: 10px;"><div class="seg" role="group" aria-label="View" id="viewSeg"><button type="button" data-view="3d" aria-pressed="false">3D</button><button type="button" data-view="flat" aria-pressed="true">Flat</button></div></div>
       <span class="blindtag" id="blindTag" hidden>Blind</span>
     </div>
@@ -83,6 +93,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" data-m="plate" aria-pressed="true">Masses on a plate</button>
           <button type="button" data-m="fire" aria-pressed="false">Exploding firework</button>
           <button type="button" data-m="boat" aria-pressed="false">Walking on a boat</button>
+          <button type="button" data-m="lamina" aria-pressed="false">Plate bounded by curves</button>
         </div>
         <p class="hint" id="modeHint"></p>
       </section>
@@ -93,6 +104,28 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         <div><div class="slider-head"><label for="sMass">Selected mass</label><output id="oMass" for="sMass"></output></div><input type="range" id="sMass" min="0.1" max="5" step="0.1"></div>
         <details class="more"><summary>More about this</summary>
           <p class="hint">Drag a mass to move it (keyboard: Tab to the plate, then 1 to 4 to select, arrows to move).</p>
+        </details>
+      </section>
+
+      <section id="laminaCtl" hidden>
+        <h2>Plate bounded by curves</h2>
+        <div class="seg" role="group" aria-label="Shape of the plate" id="lamSeg">
+          <button type="button" data-l="semi" aria-pressed="false">Semicircle</button>
+          <button type="button" data-l="tri" aria-pressed="false">Triangle</button>
+          <button type="button" data-l="between" aria-pressed="true">Between y = x and y = x²</button>
+        </div>
+        <p class="hint">The plate is where g(x) ≤ y ≤ f(x): type the top curve f and the bottom curve g, in meters.</p>
+        <div class="lam-in">
+          <label for="lamF" translate="no">f(x) =</label><input type="text" id="lamF" translate="no" spellcheck="false" autocomplete="off" autocapitalize="off" autocorrect="off" aria-describedby="lamStatus" value="x">
+          <label for="lamG" translate="no">g(x) =</label><input type="text" id="lamG" translate="no" spellcheck="false" autocomplete="off" autocapitalize="off" autocorrect="off" aria-describedby="lamStatus" value="x^2">
+        </div>
+        <div class="lam-lim"><label for="lamA">From x =</label><input type="text" id="lamA" translate="no" spellcheck="false" autocomplete="off" value="0"><label for="lamB">to x =</label><input type="text" id="lamB" translate="no" spellcheck="false" autocomplete="off" value="1"></div>
+        <p id="lamStatus" role="status" aria-live="polite" translate="no"></p>
+        <div><div class="slider-head"><label for="sStrips">Strips n</label><output id="oStrips" for="sStrips"></output></div><input type="range" id="sStrips" min="1" max="60" step="1"></div>
+        <label class="check"><input type="checkbox" id="lamPappus"><span>Spin it about an axis (Pappus)</span></label>
+        <div class="seg" role="group" aria-label="Axis to spin about" id="axisSeg" hidden><button type="button" data-a="x" aria-pressed="true">x axis</button><button type="button" data-a="y" aria-pressed="false">y axis</button></div>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Type the top and bottom curves in meters, like sqrt(0.09 − x^2), 0.4(1 − x/0.6) or x^2, and the limits, like 0, 1 or pi/4. The plate is a steel sheet 1 mm thick, σ = 7.85 kg/m². Drag the pin (keyboard: Tab to the picture, then the arrows), then press Release: the plate tips toward its balance point unless the pin is under it.</p>
         </details>
       </section>
 
@@ -143,9 +176,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
         <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
         <details class="more"><summary>More about this</summary>
-          <p class="hint">Blind hides the center of mass marker, its coordinates and the predicted boat shift.</p>
+          <p class="hint">Blind hides the center of mass marker, its coordinates, the predicted boat shift, and the plate's moments, balance point and volume by Pappus.</p>
         </details>
-        <details class="more"><summary>More about this</summary><p class="hint">Model: point masses on a massless plate; the firework is a point mass launched at 20 m/s and 60° that splits in two at the top of its flight, with no air drag; the boat floats on water with no drag, and the person walks from one end to the other at 1 m/s relative to the boat (boat 4.0 m long).</p></details>
+        <details class="more"><summary>More about this</summary><p class="hint">Model: point masses on a massless plate; the firework is a point mass launched at 20 m/s and 60° that splits in two at the top of its flight, with no air drag; the boat floats on water with no drag, and the person walks from one end to the other at 1 m/s relative to the boat (boat 4.0 m long). The plate bounded by curves is a steel sheet 1 mm thick (σ = 7.85 kg/m²) cut into vertical strips, each taken at its middle; the integrals use adaptive Simpson's rule. On the pin it stays level when the balance point is within 1 mm of the pin (the size of the pin's tip); otherwise it tips about the line through the pin at right angles to the line to the balance point, θ'' = Mgd cos θ / I, with the products of inertia neglected, until it slides off at 30°.</p></details>
         </div></details>
       </section>
     </aside>
@@ -168,6 +201,57 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   // boat: a person of mass m walks a distance L along a boat of mass M (no water drag); the boat moves back by mL/(m + M)
   const boatShift = (m, M, L) => -m * L / (m + M);
+  /* A flat plate (a lamina) cut to the region g(x) ≤ y ≤ f(x), a ≤ x ≤ b, of uniform areal density σ (OpenStax Calculus Vol 1, 6.6).
+     Cut into n vertical strips, each taken at its middle x_i: strip i has area (f − g)Δx and its own center at (x_i, (f + g)/2), so
+     the moments about the axes are M_y = σΣx_i(f − g)Δx and M_x = σΣ½(f² − g²)Δx. As n grows the sums become the integrals, and the
+     balance point (the center of mass) is x̄ = M_y/M, ȳ = M_x/M with M = σA. The integrals use adaptive Simpson's rule. */
+  function adaptSimpson(h, a, b, tol) {
+    const S3 = (fa, fm, fb, w) => w / 6 * (fa + 4 * fm + fb);
+    function rec(a, b, fa, fm, fb, whole, tol, depth) {
+      const m = (a + b) / 2, lm = (a + m) / 2, rm = (m + b) / 2, flm = h(lm), frm = h(rm);
+      const L = S3(fa, flm, fm, m - a), R = S3(fm, frm, fb, b - m);
+      if (depth <= 0 || Math.abs(L + R - whole) <= 15 * tol) return L + R + (L + R - whole) / 15;
+      return rec(a, m, fa, flm, fm, L, tol / 2, depth - 1) + rec(m, b, fm, frm, fb, R, tol / 2, depth - 1);
+    }
+    if (!(b > a)) return 0;
+    const fa = h(a), fm = h((a + b) / 2), fb = h(b);
+    /* start from 16 panels, so a curve that is zero at both ends and the middle is not taken for zero */
+    let s = 0; const k = 16, w = (b - a) / k;
+    for (let i = 0; i < k; i++) { const x0 = a + i * w, x1 = x0 + w, f0 = h(x0), f1 = h((x0 + x1) / 2), f2 = h(x1); s += rec(x0, x1, f0, f1, f2, S3(f0, f1, f2, w), tol / k, 40); }
+    return isFinite(fa + fm + fb) ? s : NaN;
+  }
+  function laminaStrips(f, g, a, b, n, sigma) {
+    const dx = (b - a) / n, strips = []; let A = 0, My = 0, Mx = 0;
+    for (let i = 0; i < n; i++) {
+      const x = a + (i + 0.5) * dx, top = f(x), bot = g(x), dA = (top - bot) * dx;
+      strips.push({ x0: a + i * dx, x1: a + (i + 1) * dx, x, top, bot, dA, yc: (top + bot) / 2 });
+      A += dA; My += x * dA; Mx += 0.5 * (top * top - bot * bot) * dx;
+    }
+    return { n, dx, strips, A, M: sigma * A, My: sigma * My, Mx: sigma * Mx, xbar: My / A, ybar: Mx / A };
+  }
+  function laminaExact(f, g, a, b, sigma) {
+    const tol = 1e-12 * Math.max(1, (b - a));
+    const A = adaptSimpson((x) => f(x) - g(x), a, b, tol), My = adaptSimpson((x) => x * (f(x) - g(x)), a, b, tol), Mx = adaptSimpson((x) => 0.5 * (f(x) * f(x) - g(x) * g(x)), a, b, tol);
+    return { A, M: sigma * A, My: sigma * My, Mx: sigma * Mx, xbar: My / A, ybar: Mx / A };
+  }
+  /* Pappus' theorem: a region on one side of an axis, spun about it, sweeps a solid of volume V = 2π r̄ A, r̄ the distance from the
+     axis to its centroid. Checked against the disk (washer) method about the x axis, π∫(f² − g²) dx (needs g ≥ 0), and the shell
+     method about the y axis, 2π∫x(f − g) dx (needs a ≥ 0). */
+  function pappusVolumes(f, g, a, b, axis) {
+    const E = laminaExact(f, g, a, b, 1), tol = 1e-12 * Math.max(1, b - a);
+    if (axis === 'x') return { pappus: 2 * Math.PI * E.ybar * E.A, direct: Math.PI * adaptSimpson((x) => f(x) * f(x) - g(x) * g(x), a, b, tol), rbar: E.ybar };
+    return { pappus: 2 * Math.PI * E.xbar * E.A, direct: 2 * Math.PI * adaptSimpson((x) => x * (f(x) - g(x)), a, b, tol), rbar: E.xbar };
+  }
+  /* Balancing on a pin at (px, py): the weight Mg acts at the balance point, a distance d from the pin, so the plate tips toward it
+     about the line through the pin at right angles to the line to the balance point: θ'' = Mgd cos θ / I, I = σ∫∫s² dA with s the
+     distance from that line (products of inertia neglected). The inner integral over y is done exactly:
+     ∫ from g to f of (c + n_y y)² dy = c²(f − g) + c n_y (f² − g²) + n_y²(f³ − g³)/3, with c = n_x(x − p_x) − n_y p_y. */
+  function pinTip(f, g, a, b, px, py, sigma) {
+    const E = laminaExact(f, g, a, b, sigma), dx = E.xbar - px, dy = E.ybar - py, d = Math.hypot(dx, dy);
+    const nx = d > 0 ? dx / d : 1, ny = d > 0 ? dy / d : 0, tol = 1e-12 * Math.max(1, b - a);
+    const J = adaptSimpson((x) => { const F = f(x), G = g(x), c = nx * (x - px) - ny * py; return c * c * (F - G) + c * ny * (F * F - G * G) + ny * ny * (F * F * F - G * G * G) / 3; }, a, b, tol);
+    return { d, nx, ny, I: sigma * J, alpha0: E.M * G * d / (sigma * J), E };
+  }
   // ==CORE END==
   if (typeof document === 'undefined') return;
 
@@ -175,9 +259,15 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   let reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
   const HINT = { plate: 'Drag the masses on a 1.0 m × 0.6 m plate. Predict where the center of mass is, then turn Blind off. A heavier mass pulls it toward itself.',
     fire: 'Launch: at the top the firework splits in two. Each piece follows its own parabola, but their center of mass carries on along the original one until a piece lands.',
-    boat: 'The person walks from the back of the boat to the front. No outside horizontal force acts, so the center of mass of person and boat stays put and the boat slides back.' };
+    boat: 'The person walks from the back of the boat to the front. No outside horizontal force acts, so the center of mass of person and boat stays put and the boat slides back.',
+    lamina: 'A flat steel sheet cut to the region between two curves. Cut it into strips, add up their moments and find the balance point. Then drag the pin to where you think it is and press Release to check.' };
   const S = { mode: 'plate', ms: [{ m: 2, x: 0.25, y: 0.3 }, { m: 1, x: 0.75, y: 0.45 }, { m: 1, x: 0.6, y: 0.12 }], sel: 0, ratio: 0.5, kick: 8, ang: 0, pm: 70, bm: 150, t: 0, run: false, blind: false, speed: 1 };
   const V0 = 20, TH = 60 * Math.PI / 180, LB = 4.0, WALK = 1.0;
+  /* the plate bounded by curves: a steel sheet 1 mm thick (σ = ρt with ρ = 7850 kg/m³, the same steel as the masses' 3D cylinders) */
+  const SIGMA = 7850 * 0.001, TIP_MAX = 30 * Math.PI / 180, PIN_TIP = 0.001;
+  const LPRE = { semi: { f: 'sqrt(0.09 - x^2)', g: '0', a: '-0.3', b: '0.3', pin: [0.1, 0.05] }, tri: { f: '0.4(1 - x/0.6)', g: '0', a: '0', b: '0.6', pin: [0.3, 0.05] },
+    between: { f: 'x', g: 'x^2', a: '0', b: '1', pin: [0.3, 0.25] } };
+  const L = { pre: 'between', fT: 'x', gT: 'x^2', aT: '0', bT: '1', f: (x) => x, g: (x) => x * x, a: 0, b: 1, n: 8, pappus: false, axis: 'x', px: 0.3, py: 0.25, th: 0, om: 0, verdict: '' };
   const COLS = () => [T.m1, T.m2, T.m3, T.m4];
   const can = $('can'), ctx = can.getContext('2d'), stage = $('stage');
   let W = 0, Hh = 0, dpr = 1, T = null;
@@ -197,13 +287,21 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const RIPS = Array.from({ length: 26 }, () => [rnd(), rnd(), 0.5 + rnd()]);
   const amb = () => (reduce ? 0 : performance.now() / 1000);   // ambient clock, frozen when Reduce motion is on
   const f = (v, d = 3) => (!isFinite(v) ? '—' : (Math.abs(v) < 0.5 * 10 ** -d ? 0 : v).toFixed(d).replace('-', '−'));
+  /* four significant figures, with commas in big numbers */
+  const g4 = (v) => { if (!isFinite(v)) return '—'; if (v === 0) return '0'; const e = Math.floor(Math.log10(Math.abs(v))), d = Math.max(0, 3 - e); const s = (Math.abs(v) < 0.5 * 10 ** -d ? 0 : v).toFixed(d); return (Math.abs(v) >= 1e4 ? Number(s).toLocaleString('en-US') : s).replace('-', '−'); };
+  /* the lowest point of a curve over the plate (801 samples) */
+  const lamMin = (w) => { let m = Infinity; const h = w === 'g' ? L.g : w === '-f' ? (x) => -L.f(x) : L.f; for (let i = 0; i <= 800; i++) m = Math.min(m, h(L.a + (L.b - L.a) * i / 800)); return m; };
   const FW = () => firework(V0, TH, S.ratio, S.kick, S.ang * Math.PI / 180);
   const tEndFire = () => { const F = FW(); return F.tTop + Math.max(F.a.tLand, F.b.tLand) + 0.3; };
   const tEndBoat = () => LB / WALK + 0.5;
   function sync() {
     for (const b of document.querySelectorAll('#modeSeg button')) b.setAttribute('aria-pressed', String(b.dataset.m === S.mode));
-    $('plateCtl').hidden = S.mode !== 'plate'; $('fireCtl').hidden = S.mode !== 'fire'; $('boatCtl').hidden = S.mode !== 'boat'; $('runBar').hidden = S.mode === 'plate'; $('modeHint').textContent = HINT[S.mode]; $('viewBar').hidden = S.mode === 'fire';
-    $('go').textContent = S.run ? 'Pause' : S.mode === 'fire' ? 'Launch' : 'Walk';
+    $('plateCtl').hidden = S.mode !== 'plate'; $('fireCtl').hidden = S.mode !== 'fire'; $('boatCtl').hidden = S.mode !== 'boat'; $('laminaCtl').hidden = S.mode !== 'lamina'; $('runBar').hidden = S.mode === 'plate'; $('modeHint').textContent = HINT[S.mode]; $('viewBar').hidden = S.mode === 'fire' || S.mode === 'lamina';
+    $('go').textContent = S.run ? 'Pause' : S.mode === 'fire' ? 'Launch' : S.mode === 'lamina' ? 'Release' : 'Walk';
+    for (const b of document.querySelectorAll('#lamSeg button')) b.setAttribute('aria-pressed', String(b.dataset.l === L.pre));
+    $('sStrips').value = L.n; $('oStrips').textContent = String(L.n); $('lamPappus').checked = L.pappus; $('axisSeg').hidden = !L.pappus;
+    for (const b of document.querySelectorAll('#axisSeg button')) b.setAttribute('aria-pressed', String(b.dataset.a === L.axis));
+    document.querySelector('#spdSeg [data-s="0.1"]').hidden = S.mode !== 'lamina';
     const sm = S.ms[S.sel]; if (sm) { $('sMass').value = sm.m; $('oMass').textContent = `${sm.m.toFixed(1)} kg (mass ${S.sel + 1})`; }
     $('sRatio').value = S.ratio; $('oRatio').textContent = S.ratio.toFixed(2); $('sKick').value = S.kick; $('oKick').textContent = `${S.kick} m/s`; $('sAng').value = S.ang; $('oAng').textContent = `${S.ang}° above horizontal`;
     $('sPm').value = S.pm; $('oPm').textContent = `${S.pm} kg`; $('sBm').value = S.bm; $('oBm').textContent = `${S.bm} kg`;
@@ -211,27 +309,98 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     $('addM').disabled = S.ms.length >= 4; $('delM').disabled = S.ms.length <= 1;
   }
   const upd = () => { sync(); draw(); readouts(); };
-  const restart = () => { S.t = 0; S.run = false; upd(); };
-  $('modeSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-m]'); if (b) { S.mode = b.dataset.m; restart(); } });
+  const restart = () => { S.t = 0; S.run = false; L.th = 0; L.om = 0; L.verdict = ''; upd(); };
+  $('modeSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-m]'); if (!b) return; const was = S.mode; S.mode = b.dataset.m;
+    /* the plate tips in a tenth of a second: it opens in slow motion, and the other setups go back to real time */
+    if (S.mode === 'lamina' && was !== 'lamina') S.speed = 0.1; else if (S.mode !== 'lamina' && S.speed === 0.1) S.speed = 1;
+    if (S.mode === 'lamina' && use3()) setView('flat');
+    restart(); });
+  /* ---------- the plate bounded by curves: typed curves through VDMATH (never run as code) ---------- */
+  const LMSG = {
+    name: (e) => VDI18N.t('“{n}” is not a name I know. Use x, and functions like sin, ln, sqrt.', { n: e.name2 }),
+    char: (e) => VDI18N.t('“{n}” is not something I can read here.', { n: e.name2 }),
+    unexpected: (e) => VDI18N.t('“{n}” is out of place.', { n: e.name2 }),
+    close: () => VDI18N.t('There is a ) without a matching (.'),
+    comma: () => VDI18N.t('Functions here take one input; there is no comma form.'),
+    arg: (e) => VDI18N.t('{n} needs something to act on, like {n}(x).', { n: e.name2 }),
+    twovars: () => VDI18N.t('Use one variable, x.'),
+    end: () => VDI18N.t('Not finished yet.'),
+  };
+  const lamSay = (msg, bad) => { const e = $('lamStatus'); e.textContent = msg || ''; e.classList.toggle('bad', !!bad); };
+  function lamFn(txt) { const r = VDMATH.parse(txt, { vars: ['x'] }); return VDMATH.compile(r.node, ['x']); }
+  function lamNum(txt) { const r = VDMATH.parse(String(txt).replace(/−/g, '-'), { vars: [] }); if (VDMATH.hasV(r.node)) throw Object.assign(new Error('end'), { code: 'end' }); return VDMATH.compile(r.node, ['x'])(0); }
+  /* read the four boxes; keep the last good plate and say why when one cannot be used */
+  function lamRead() {
+    const ids = ['lamF', 'lamG', 'lamA', 'lamB']; ids.forEach((id) => $(id).classList.remove('bad'));
+    const bad = (id, msg) => { $(id).classList.add('bad'); lamSay(VDI18N.t('Still showing the last plate. ') + msg, true); return false; };
+    let f, g, a, b;
+    try { f = lamFn($('lamF').value); } catch (e) { return bad('lamF', (LMSG[e.code] || LMSG.end)(e)); }
+    try { g = lamFn($('lamG').value); } catch (e) { return bad('lamG', (LMSG[e.code] || LMSG.end)(e)); }
+    try { a = lamNum($('lamA').value); } catch (e) { return bad('lamA', VDI18N.t('Type a number for a, like 0 or pi/4.')); }
+    try { b = lamNum($('lamB').value); } catch (e) { return bad('lamB', VDI18N.t('Type a number for b, like 1 or pi/2.')); }
+    if (!isFinite(a)) return bad('lamA', VDI18N.t('Type a number for a, like 0 or pi/4.'));
+    if (!isFinite(b)) return bad('lamB', VDI18N.t('Type a number for b, like 1 or pi/2.'));
+    if (!(b > a)) return bad('lamB', VDI18N.t('b must be greater than a.'));
+    if (b - a > 20) return bad('lamB', VDI18N.t('Keep the plate within 20 m from a to b.'));
+    /* the plate is where f(x) ≥ g(x): check 801 points, and that both curves are defined there */
+    let span = 0;
+    for (let i = 0; i <= 800; i++) { const x = a + (b - a) * i / 800, F = f(x), G = g(x);
+      if (!isFinite(F)) return bad('lamF', VDI18N.t('f(x) is not defined at x = {x}.', { x: x.toFixed(3) }));
+      if (!isFinite(G)) return bad('lamG', VDI18N.t('g(x) is not defined at x = {x}.', { x: x.toFixed(3) }));
+      span = Math.max(span, Math.abs(F), Math.abs(G)); }
+    for (let i = 0; i <= 800; i++) { const x = a + (b - a) * i / 800; if (f(x) < g(x) - 1e-9 * Math.max(1, span)) return bad('lamG', VDI18N.t('g(x) is above f(x) at x = {x}: the plate is where f(x) ≥ g(x). Swap them, or change the limits.', { x: x.toFixed(3) })); }
+    if (span > 20) return bad('lamF', VDI18N.t('Keep the plate within 20 m of the axes.'));
+    const E = laminaExact(f, g, a, b, SIGMA); if (!(E.A > 1e-9)) return bad('lamF', VDI18N.t('The plate has no area: f(x) = g(x) everywhere from a to b.'));
+    Object.assign(L, { f, g, a, b, fT: $('lamF').value, gT: $('lamG').value, aT: $('lamA').value, bT: $('lamB').value });
+    lamSay('', false); return true;
+  }
+  /* the pin starts inside the plate, a third of the way across, but not at the balance point */
+  function lamPinHome() { const P = LPRE[L.pre]; if (P && L.fT === P.f && L.gT === P.g) { L.px = P.pin[0]; L.py = P.pin[1]; return; }
+    const x = L.a + (L.b - L.a) / 3; L.px = x; L.py = (L.f(x) + L.g(x)) / 2; }
+  function lamPreset(k) { const P = LPRE[k]; L.pre = k; $('lamF').value = P.f; $('lamG').value = P.g; $('lamA').value = P.a; $('lamB').value = P.b; lamRead(); lamPinHome(); restart(); }
+  $('lamSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-l]'); if (b) lamPreset(b.dataset.l); });
+  for (const id of ['lamF', 'lamG', 'lamA', 'lamB']) $(id).addEventListener('input', () => { if (lamRead()) { L.pre = ''; const inside = L.px >= L.a && L.px <= L.b; if (!inside) lamPinHome(); restart(); } });
+  $('sStrips').addEventListener('input', (e) => { L.n = +e.target.value; upd(); });
+  $('lamPappus').addEventListener('change', (e) => { L.pappus = e.target.checked; upd(); });
+  $('axisSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-a]'); if (b) { L.axis = b.dataset.a; upd(); } });
+  const lamNow = () => ({ St: laminaStrips(L.f, L.g, L.a, L.b, L.n, SIGMA), E: laminaExact(L.f, L.g, L.a, L.b, SIGMA) });
+  /* release: within the pin's tip of the balance point the plate stays level; otherwise it tips toward the balance point */
+  function lamRelease() { const P = pinTip(L.f, L.g, L.a, L.b, L.px, L.py, SIGMA); L.th = 0; L.om = 0; S.t = 0;
+    if (P.d <= PIN_TIP) { L.verdict = 'balances'; S.run = false; return false; } L.verdict = 'tips'; return true; }
+  function lamStep(dt) { const P = pinTip(L.f, L.g, L.a, L.b, L.px, L.py, SIGMA); let h = dt / 20;
+    for (let k = 0; k < 20 && L.th < TIP_MAX; k++) { L.om += P.alpha0 * Math.cos(L.th) * h; L.th += L.om * h; S.t += h; }
+    if (L.th >= TIP_MAX) { L.th = TIP_MAX; S.run = false; L.verdict = 'falls'; } }
   $('addM').addEventListener('click', () => { if (S.ms.length < 4) { S.ms.push({ m: 1, x: 0.5, y: 0.3 }); S.sel = S.ms.length - 1; upd(); } });
   $('delM').addEventListener('click', () => { if (S.ms.length > 1) { S.ms.splice(S.sel, 1); S.sel = 0; upd(); } });
   $('sMass').addEventListener('input', (e) => { S.ms[S.sel].m = +e.target.value; upd(); });
   for (const [id, k] of [['sRatio', 'ratio'], ['sKick', 'kick'], ['sAng', 'ang'], ['sPm', 'pm'], ['sBm', 'bm']]) $(id).addEventListener('input', (e) => { S[k] = +e.target.value; restart(); });
   $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; $('blindTag').hidden = !S.blind; draw(); readouts(); });
-  $('go').addEventListener('click', () => { const end = S.mode === 'fire' ? tEndFire() : tEndBoat(); if (S.t >= end) S.t = 0; if (reduce) { S.t = end; S.run = false; upd(); return; } S.run = !S.run; sync(); });
+  $('go').addEventListener('click', () => {
+    if (S.mode === 'lamina') { if (S.run) { S.run = false; sync(); return; } if (L.verdict !== 'tips' || L.th >= TIP_MAX) { if (!lamRelease()) { upd(); return; } }
+      if (reduce) { while (L.th < TIP_MAX) lamStep(0.01); upd(); return; } S.run = true; sync(); return; }
+    const end = S.mode === 'fire' ? tEndFire() : tEndBoat(); if (S.t >= end) S.t = 0; if (reduce) { S.t = end; S.run = false; upd(); return; } S.run = !S.run; sync(); });
   $('back').addEventListener('click', restart);
   /* half speed for pausing at the worksheet's 0.5 s steps; the clock and readouts stay in real seconds (student view calls, 2026-11-15) */
   $('spdSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-s]'); if (b) { S.speed = +b.dataset.s; sync(); draw(); } });
-  function tick(dt) { if (!S.run) return; const end = S.mode === 'fire' ? tEndFire() : tEndBoat(); S.t = Math.min(end, S.t + dt * S.speed); if (S.t >= end) S.run = false; sync(); draw(); readouts(); }
+  function tick(dt) { if (!S.run) return; if (S.mode === 'lamina') { lamStep(dt * S.speed); upd(); return; } const end = S.mode === 'fire' ? tEndFire() : tEndBoat(); S.t = Math.min(end, S.t + dt * S.speed); if (S.t >= end) S.run = false; sync(); draw(); readouts(); }
   // plate geometry
   function plateBox() { const p = ps(), pad = 30 * p, w = Math.min(W - 2 * pad, (Hh - 2 * pad - 40 * p) / 0.6), h = w * 0.6; return { x0: (W - w) / 2, y0: 60 * p + (Hh - 60 * p - h) / 2, w, h, sc: w / 1.0 }; }
   const toPx = (B, a) => [B.x0 + a.x * B.sc, B.y0 + B.h - a.y * B.sc];
   let drag = -1, dragOff = { x: 0, y: 0 };
-  can.addEventListener('pointerdown', (e) => { if (S.mode !== 'plate') return; if (use3()) { const i = hit3(e); if (i >= 0) { const q = plateAt(e); dragOff = q ? { x: q.x - S.ms[i].x, y: q.y - S.ms[i].y } : { x: 0, y: 0 }; drag = i; S.sel = i; can.setPointerCapture(e.pointerId); upd(); } return; } const r = can.getBoundingClientRect(), B = plateBox(), px = e.clientX - r.left, py = e.clientY - r.top;
+  can.addEventListener('pointerdown', (e) => {
+    if (S.mode === 'lamina') { const r = can.getBoundingClientRect(), V = lamView(), q = V.toPx(L.px, L.py); if (Math.hypot(e.clientX - r.left - q[0], e.clientY - r.top - q[1]) < 30 * ps()) { drag = 'pin'; can.setPointerCapture(e.pointerId); } return; }
+    if (S.mode !== 'plate') return; if (use3()) { const i = hit3(e); if (i >= 0) { const q = plateAt(e); dragOff = q ? { x: q.x - S.ms[i].x, y: q.y - S.ms[i].y } : { x: 0, y: 0 }; drag = i; S.sel = i; can.setPointerCapture(e.pointerId); upd(); } return; } const r = can.getBoundingClientRect(), B = plateBox(), px = e.clientX - r.left, py = e.clientY - r.top;
     let best = -1, bd = 30 * ps(); S.ms.forEach((a, i) => { const [x, y] = toPx(B, a), d = Math.hypot(x - px, y - py); if (d < bd) { bd = d; best = i; } }); if (best >= 0) { drag = best; S.sel = best; can.setPointerCapture(e.pointerId); upd(); } });
-  can.addEventListener('pointermove', (e) => { if (drag < 0) return; if (use3()) { const q = plateAt(e), a = S.ms[drag]; if (q) { a.x = Math.round(Math.max(0, Math.min(1, q.x - dragOff.x)) * 100) / 100; a.y = Math.round(Math.max(0, Math.min(0.6, q.y - dragOff.y)) * 100) / 100; draw(); readouts(); } return; } const r = can.getBoundingClientRect(), B = plateBox(); const a = S.ms[drag]; a.x = Math.max(0, Math.min(1, (e.clientX - r.left - B.x0) / B.sc)); a.y = Math.max(0, Math.min(0.6, (B.y0 + B.h - (e.clientY - r.top)) / B.sc)); a.x = Math.round(a.x * 100) / 100; a.y = Math.round(a.y * 100) / 100; draw(); readouts(); });
+  can.addEventListener('pointermove', (e) => {
+    if (drag === 'pin') { const r = can.getBoundingClientRect(), V = lamView(), w = V.toW(e.clientX - r.left, e.clientY - r.top); lamPinTo(w[0], w[1]); return; }
+    if (drag < 0) return; if (use3()) { const q = plateAt(e), a = S.ms[drag]; if (q) { a.x = Math.round(Math.max(0, Math.min(1, q.x - dragOff.x)) * 100) / 100; a.y = Math.round(Math.max(0, Math.min(0.6, q.y - dragOff.y)) * 100) / 100; draw(); readouts(); } return; } const r = can.getBoundingClientRect(), B = plateBox(); const a = S.ms[drag]; a.x = Math.max(0, Math.min(1, (e.clientX - r.left - B.x0) / B.sc)); a.y = Math.max(0, Math.min(0.6, (B.y0 + B.h - (e.clientY - r.top)) / B.sc)); a.x = Math.round(a.x * 100) / 100; a.y = Math.round(a.y * 100) / 100; draw(); readouts(); });
   can.addEventListener('pointerup', () => { drag = -1; });
+  /* the pin stays within the drawn area, to 1 mm */
+  function lamPinTo(x, y) { const V = lamView(); L.px = Math.round(Math.max(V.x0, Math.min(V.x1, x)) * 1000) / 1000; L.py = Math.round(Math.max(V.y0, Math.min(V.y1, y)) * 1000) / 1000; S.run = false; S.t = 0; L.th = 0; L.om = 0; L.verdict = ''; upd(); }
   can.addEventListener('keydown', (e) => {
+    if (S.mode === 'lamina') { if (e.key === ' ') { $('go').click(); e.preventDefault(); return; }
+      const d = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, 1], ArrowDown: [0, -1] }[e.key]; if (!d) return;
+      const st = e.shiftKey ? 0.001 : 0.01; lamPinTo(L.px + d[0] * st, L.py + d[1] * st); e.preventDefault(); return; }
     if (S.mode !== 'plate') { if (e.key === ' ') { $('go').click(); e.preventDefault(); } return; }
     if (/^[1-4]$/.test(e.key) && S.ms[+e.key - 1]) { S.sel = +e.key - 1; upd(); return; }
     const a = S.ms[S.sel], d = { ArrowLeft: [-0.01, 0], ArrowRight: [0.01, 0], ArrowUp: [0, 0.01], ArrowDown: [0, -0.01] }[e.key]; if (!d || !a) return;
@@ -243,6 +412,27 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (S.mode === 'plate') {
       const C = centre(S.ms); S.ms.forEach((a, i) => { h += dd(`Mass ${i + 1}`, `${a.m.toFixed(1)} kg at (${a.x.toFixed(2)}, ${a.y.toFixed(2)}) m`, true); });
       h += dd('Total mass', `${f(C.M, 1)} kg`) + (S.blind ? dd('Center of mass', 'hidden in Blind') : dd('Center of mass', `(${f(C.x, 3)}, ${f(C.y, 3)}) m`));
+    } else if (S.mode === 'lamina') {
+      const { St, E } = lamNow(), P = pinTip(L.f, L.g, L.a, L.b, L.px, L.py, SIGMA);
+      h += dd('Plate', `${VDMATH.text(VDMATH.parse(L.gT, { vars: ['x'] }).node)} ≤ y ≤ ${VDMATH.text(VDMATH.parse(L.fT, { vars: ['x'] }).node)}, ${f(L.a, 3)} ≤ x ≤ ${f(L.b, 3)} m`, true);
+      h += dd('Strips n, each Δx', `${L.n}, ${f(St.dx, 4)} m`) + dd('Area A', `${g4(St.A)} m² (strips), ${g4(E.A)} m²`);
+      h += dd('Mass M = σA', `${g4(E.M)} kg`);
+      if (S.blind) h += dd('Moments and balance point', 'hidden in Blind', true);
+      else {
+        h += dd('M<sub>y</sub> = σ∫x(f − g) dx', `${g4(St.My)} kg·m (strips), ${g4(E.My)} kg·m`, true);
+        h += dd('M<sub>x</sub> = σ∫½(f² − g²) dx', `${g4(St.Mx)} kg·m (strips), ${g4(E.Mx)} kg·m`, true);
+        h += dd('Balance point from the strips', `(${f(St.xbar, 4)}, ${f(St.ybar, 4)}) m`, true);
+        h += dd('x̄ = M<sub>y</sub>/M, ȳ = M<sub>x</sub>/M', `(${f(E.xbar, 4)}, ${f(E.ybar, 4)}) m`, true);
+      }
+      h += dd('Pin at', `(${f(L.px, 3)}, ${f(L.py, 3)}) m`) + (S.blind ? '' : dd('Pin to balance point', `${f(P.d * 1000, 1)} mm`));
+      h += dd('On the pin', L.verdict === 'balances' ? 'balances' : L.verdict === 'tips' ? `tipping, ${f(L.th * 180 / Math.PI, 1)}°` : L.verdict === 'falls' ? 'tipped over and slid off' : 'held level: press Release');
+      if (L.pappus) {
+        const ok = L.axis === 'x' ? lamMin('g') >= -1e-12 || -lamMin('-f') <= 1e-12 : L.a >= -1e-12 || L.b <= 1e-12;
+        if (!ok) h += dd('Pappus', L.axis === 'x' ? 'the plate crosses the x axis: Pappus needs it on one side' : 'the plate crosses the y axis: Pappus needs it on one side', true);
+        else if (S.blind) h += dd('Volume of the solid', 'hidden in Blind', true);
+        else { const V = pappusVolumes(L.f, L.g, L.a, L.b, L.axis);
+          h += dd(L.axis === 'x' ? 'Pappus V = 2π|ȳ|·A' : 'Pappus V = 2π|x̄|·A', `${g4(Math.abs(V.pappus))} m³`) + dd(L.axis === 'x' ? 'Washers V = π|∫(f² − g²) dx|' : 'Shells V = 2π|∫x(f − g) dx|', `${g4(Math.abs(V.direct))} m³`); }
+      }
     } else if (S.mode === 'fire') {
       const F = FW(), s = S.t - F.tTop, pa = s > 0 ? F.at(F.a, s) : F.whole(S.t), pb = s > 0 ? F.at(F.b, s) : pa, cmx = S.ratio * pa.x + (1 - S.ratio) * pb.x, cmy = S.ratio * pa.y + (1 - S.ratio) * pb.y, wh = F.whole(Math.min(S.t, F.tWhole));
       h += dd('Time', `${f(S.t, 2)} s`) + dd('Split at', `${f(F.tTop, 2)} s, ${f(F.yTop, 2)} m up`);
@@ -278,7 +468,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const G3 = { want: false, on: false, ok: false, tried: false, loading: false, key: '', w: 0, h: 0, o: { th: -Math.PI / 2 + 0.35, ph: 0.95, zoom: 1 }, ob: { th: -Math.PI / 2 + 0.3, ph: 1.36, zoom: 1 } };
   const RHO = 7850, dia = (m) => Math.cbrt(4 * m / (Math.PI * RHO));
   let g3 = null, Q3 = null;
-  const use3 = () => !!(G3.on && g3) && S.mode !== 'fire';
+  const use3 = () => !!(G3.on && g3) && (S.mode === 'plate' || S.mode === 'boat');
   const col3 = (s, fb) => { try { return new THREE.Color(s || fb); } catch (_) { return new THREE.Color(fb); } };
   function init3D() {
     G3.tried = true;
@@ -418,11 +608,100 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     draw();
   }
   $('viewSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-view]'); if (b) setView(b.dataset.view); });
+  /* the plate's picture: to scale, x and y in meters, with the origin always in view */
+  function lamView() {
+    const p = ps(), N = 200; let lo = 0, hi = 0;
+    for (let i = 0; i <= N; i++) { const x = L.a + (L.b - L.a) * i / N, F = L.f(x), G = L.g(x); if (isFinite(F)) hi = Math.max(hi, F), lo = Math.min(lo, F); if (isFinite(G)) lo = Math.min(lo, G), hi = Math.max(hi, G); }
+    let x0 = Math.min(0, L.a), x1 = Math.max(0, L.b), y0 = lo, y1 = hi;
+    if (L.pappus && L.axis === 'x') { const m = Math.max(Math.abs(y0), Math.abs(y1)); y0 = -m; y1 = m; }
+    if (L.pappus && L.axis === 'y') { const m = Math.max(Math.abs(x0), Math.abs(x1)); x0 = -m; x1 = m; }
+    const px = 0.08 * (x1 - x0 || 1), py = 0.08 * (y1 - y0 || 1); x0 -= px; x1 += px; y0 -= py; y1 += py;
+    const left = 48 * p, right = 16 * p, top = (W < 700 * p ? 170 : 64) * p, bot = 40 * p, side = 0;
+    const sc = Math.min((W - left - right - side) / (x1 - x0), (Hh - top - bot) / (y1 - y0));
+    const ox = left + ((W - left - right - side) - sc * (x1 - x0)) / 2, oy = top + ((Hh - top - bot) - sc * (y1 - y0)) / 2;
+    const X = (x) => ox + (x - x0) * sc, Y = (y) => oy + (y1 - y) * sc;
+    return { x0, x1, y0, y1, sc, X, Y, toPx: (x, y) => [X(x), Y(y)], toW: (u, v) => [x0 + (u - ox) / sc, y1 - (v - oy) / sc] };
+  }
+  const nice = (r) => { const e = 10 ** Math.floor(Math.log10(r)), m = r / e; return (m < 1.5 ? 1 : m < 3.5 ? 2 : m < 7.5 ? 5 : 10) * e; };
+  function drawLamina() {
+    const p = ps(), V = lamView(), { St, E } = lamNow(), X = V.X, Y = V.Y;
+    if (window.VDGear) window.VDGear.backdrop(ctx, W, Hh);
+    // axes and a light grid in meters
+    const st = nice((V.x1 - V.x0) / 6), sty = st;
+    ctx.lineWidth = 1; ctx.strokeStyle = T.grid; ctx.beginPath();
+    for (let x = Math.ceil(V.x0 / st) * st; x <= V.x1 + 1e-9; x += st) { ctx.moveTo(X(x), Y(V.y0)); ctx.lineTo(X(x), Y(V.y1)); }
+    for (let y = Math.ceil(V.y0 / sty) * sty; y <= V.y1 + 1e-9; y += sty) { ctx.moveTo(X(V.x0), Y(y)); ctx.lineTo(X(V.x1), Y(y)); }
+    ctx.stroke();
+    ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1.4 * p; ctx.beginPath(); ctx.moveTo(X(V.x0), Y(0)); ctx.lineTo(X(V.x1), Y(0)); ctx.moveTo(X(0), Y(V.y0)); ctx.lineTo(X(0), Y(V.y1)); ctx.stroke();
+    ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    const dec = st < 0.01 ? 3 : st < 0.1 ? 2 : st < 1 ? 1 : 0;
+    for (let x = Math.ceil(V.x0 / st) * st; x <= V.x1 + 1e-9; x += st) if (Math.abs(x) > st / 2) ctx.fillText(f(x, dec), X(x), Y(0) + 4 * p);
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    for (let y = Math.ceil(V.y0 / sty) * sty; y <= V.y1 + 1e-9; y += sty) if (Math.abs(y) > sty / 2) ctx.fillText(f(y, dec), X(0) - 5 * p, Y(y));
+    ctx.textAlign = 'right'; ctx.textBaseline = 'bottom'; ctx.fillText('x (m)', X(V.x1), Y(0) - 4 * p); ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText('y (m)', X(0) + 5 * p, Y(V.y1) + 2 * p);
+    // Pappus: the axis it spins about, the mirror image of the plate, and the circle its balance point travels (seen edge on)
+    const N = 240, path = (sx, sy) => { ctx.beginPath(); for (let i = 0; i <= N; i++) { const x = L.a + (L.b - L.a) * i / N; const q = [x * sx, L.f(x) * sy]; i ? ctx.lineTo(X(q[0]), Y(q[1])) : ctx.moveTo(X(q[0]), Y(q[1])); } for (let i = N; i >= 0; i--) { const x = L.a + (L.b - L.a) * i / N; ctx.lineTo(X(x * sx), Y(L.g(x) * sy)); } ctx.closePath(); };
+    if (L.pappus) { const sx = L.axis === 'y' ? -1 : 1, sy = L.axis === 'x' ? -1 : 1;
+      ctx.strokeStyle = T.muted; ctx.lineWidth = 1.2 * p; ctx.setLineDash([5 * p, 4 * p]); path(sx, sy); ctx.stroke(); ctx.setLineDash([]);
+      ctx.strokeStyle = T.accent; ctx.lineWidth = 2.4 * p; ctx.beginPath(); if (L.axis === 'x') { ctx.moveTo(X(V.x0), Y(0)); ctx.lineTo(X(V.x1), Y(0)); } else { ctx.moveTo(X(0), Y(V.y0)); ctx.lineTo(X(0), Y(V.y1)); } ctx.stroke();
+      if (!S.blind) { const cx = X(E.xbar), cy = Y(E.ybar), ex = L.axis === 'y' ? X(-E.xbar) : cx, ey = L.axis === 'x' ? Y(-E.ybar) : cy;
+        ctx.strokeStyle = T.cm; ctx.lineWidth = 1.4 * p; ctx.setLineDash([2 * p, 3 * p]); ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(ex, ey); ctx.stroke(); ctx.setLineDash([]);
+        ctx.fillStyle = T.cm; ctx.font = `700 ${10.5 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(L.axis === 'x' ? 'the balance point travels 2π|ȳ|' : 'the balance point travels 2π|x̄|', ex, ey + 8 * p);
+        ctx.beginPath(); ctx.arc(ex, ey, 3 * p, 0, 7); ctx.fill(); } }
+    // the plate, tipping about the line through the pin: seen from above, its width toward the balance point shrinks by cos θ
+    const P = pinTip(L.f, L.g, L.a, L.b, L.px, L.py, SIGMA), c = Math.cos(L.th), k = 1 - c, nx = P.nx, ny = -P.ny;   /* ny flipped: the screen's y runs down */
+    const ux = X(L.px), uy = Y(L.py);
+    ctx.save();
+    if (L.th > 0) { ctx.translate(ux, uy); ctx.transform(1 - k * nx * nx, -k * nx * ny, -k * nx * ny, 1 - k * ny * ny, 0, 0); ctx.translate(-ux, -uy); }
+    if (window.VDGear) { ctx.save(); ctx.shadowColor = 'rgba(0,0,0,0.25)'; ctx.shadowBlur = 14 * p; ctx.shadowOffsetY = (5 + 30 * Math.sin(L.th)) * p; ctx.fillStyle = T.plate; path(1, 1); ctx.fill(); ctx.restore(); }
+    const pg = ctx.createLinearGradient(X(L.a), Y(V.y1), X(L.b), Y(V.y0)); pg.addColorStop(0, T.plateHi); pg.addColorStop(1, T.plate); ctx.fillStyle = pg; path(1, 1); ctx.fill();
+    // the strips: each outlined, with its own center (x_i, (f + g)/2) as a dot; clipped to the plate
+    ctx.save(); path(1, 1); ctx.clip();
+    ctx.strokeStyle = T.plateGrid; ctx.lineWidth = 1 * p;
+    for (const q of St.strips) { ctx.beginPath(); ctx.moveTo(X(q.x1), Y(V.y0)); ctx.lineTo(X(q.x1), Y(V.y1)); ctx.stroke(); }
+    ctx.restore();
+    ctx.strokeStyle = T.m1; ctx.globalAlpha = 0.9; ctx.lineWidth = 1.2 * p;
+    for (const q of St.strips) if (Math.abs(q.top - q.bot) * V.sc > 1) ctx.strokeRect(X(q.x0), Y(Math.max(q.top, q.bot)), X(q.x1) - X(q.x0), Math.abs(q.top - q.bot) * V.sc);
+    ctx.globalAlpha = 1; ctx.fillStyle = T.m1;
+    if (L.n <= 40) for (const q of St.strips) { ctx.beginPath(); ctx.arc(X(q.x), Y(q.yc), 2.6 * p, 0, 7); ctx.fill(); }
+    ctx.strokeStyle = T.ink; ctx.lineWidth = 2 * p; path(1, 1); ctx.stroke();
+    if (!S.blind) { cross(X(E.xbar), Y(E.ybar), T.cm); }
+    ctx.restore();
+    // the pin under the plate: a dot with a ring, dragged with the pointer
+    ctx.fillStyle = T.m2; ctx.strokeStyle = T.canvas; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.arc(ux, uy, 6 * p, 0, 7); ctx.fill(); ctx.stroke();
+    ctx.strokeStyle = T.m2; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.arc(ux, uy, 11 * p, 0, 7); ctx.stroke();
+    ctx.fillStyle = T.m2; ctx.font = `700 ${11 * p}px ${T.ui}`; ctx.textAlign = 'right'; ctx.textBaseline = 'top'; ctx.fillText('pin', ux - 12 * p, uy + 6 * p);
+    // the same plate seen from the side, along the line through the pin at right angles to the line to the balance point
+    { const bw = Math.min(200 * p, W * 0.46), bh = 96 * p, bx = W - bw - 10 * p, by = (W < 700 * p ? 70 : 50) * p;
+      let s0 = 0, s1 = 0; for (let i = 0; i <= 120; i++) { const x = L.a + (L.b - L.a) * i / 120; for (const y of [L.f(x), L.g(x)]) { const sv = P.nx * (x - L.px) + P.ny * (y - L.py); s0 = Math.min(s0, sv); s1 = Math.max(s1, sv); } }
+      ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.88; ctx.fillRect(bx, by, bw, bh); ctx.globalAlpha = 1; ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.strokeRect(bx, by, bw, bh);
+      ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText('seen from the side', bx + 6 * p, by + 4 * p);
+      const ss = (bw - 24 * p) / Math.max(1e-9, s1 - s0), cxp = bx + 12 * p - s0 * ss, cyp = by + bh * 0.6, ct = Math.cos(L.th), sn = Math.sin(L.th);
+      const at = (sv) => [cxp + sv * ct * ss, cyp + sv * sn * ss];
+      ctx.strokeStyle = T.m2; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(cxp, cyp + 2 * p); ctx.lineTo(cxp, by + bh - 6 * p); ctx.stroke();
+      ctx.fillStyle = T.m2; ctx.beginPath(); ctx.moveTo(cxp - 6 * p, by + bh - 4 * p); ctx.lineTo(cxp + 6 * p, by + bh - 4 * p); ctx.lineTo(cxp, by + bh - 10 * p); ctx.closePath(); ctx.fill();
+      const q0 = at(s0), q1 = at(s1); ctx.strokeStyle = T.ink; ctx.lineWidth = 4 * p; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(q0[0], q0[1]); ctx.lineTo(q1[0], q1[1]); ctx.stroke(); ctx.lineCap = 'butt';
+      if (!S.blind) { const q = at(P.d); ctx.fillStyle = T.cm; ctx.beginPath(); ctx.arc(q[0], q[1] - 6 * p, 3.5 * p, 0, 7); ctx.fill(); ctx.strokeStyle = T.cm; ctx.lineWidth = 1.4 * p; ctx.beginPath(); ctx.moveTo(q[0], q[1] - 2 * p); ctx.lineTo(q[0], q[1] + 14 * p); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(q[0] - 3 * p, q[1] + 10 * p); ctx.lineTo(q[0], q[1] + 15 * p); ctx.lineTo(q[0] + 3 * p, q[1] + 10 * p); ctx.stroke(); }
+      ctx.fillStyle = T.muted; ctx.textAlign = 'right'; ctx.textBaseline = 'top'; ctx.fillText(`θ = ${f(L.th * 180 / Math.PI, 1)}°`, bx + bw - 6 * p, by + 4 * p); }
+    // what happened, and the strips' sum against the integral
+    ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.font = `700 ${12 * p}px ${T.ui}`;
+    const msg = L.verdict === 'balances' ? 'It balances: the pin is under the balance point.' : L.verdict === 'tips' ? 'It tips toward the balance point.' : L.verdict === 'falls' ? 'It tipped toward the balance point and slid off the pin.' : '';
+    /* a label kept within the canvas width: the type shrinks for a long translation on a phone */
+    const fitFont = (txt, size, weight) => { ctx.font = `${weight || ''} ${size}px ${T.ui}`; const w = ctx.measureText(txt).width, room = W - 20 * p; if (w > room) ctx.font = `${weight || ''} ${Math.max(7 * p, size * room / w)}px ${T.ui}`; };
+    ctx.textBaseline = 'bottom';
+    if (msg) { fitFont(msg, 12 * p, 700); ctx.fillStyle = L.verdict === 'balances' ? T.m3 : T.m2; ctx.fillText(msg, 10 * p, Hh - 38 * p); }
+    const sums = S.blind ? `${L.n} strips` : `${L.n} strips: balance point (${f(St.xbar, 3)}, ${f(St.ybar, 3)}) m; integrals (${f(E.xbar, 3)}, ${f(E.ybar, 3)}) m`;
+    fitFont(sums, 10 * p); ctx.fillStyle = T.muted; ctx.textAlign = 'right';
+    ctx.fillText(sums, W - 10 * p, Hh - 22 * p); ctx.font = `${10 * p}px ${T.ui}`;
+    if (S.t > 0) clockTag(); else ctx.fillText('drag the pin; Release lets go', W - 10 * p, Hh - 8 * p);
+  }
   function draw() {
     if (!T || !W) return;
     if (g3 && !use3()) g3.el.hidden = true;
     if (use3()) { ctx.setTransform(dpr, 0, 0, dpr, 0, 0); draw3D(); return; }
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, Hh); const p = ps();
+    if (S.mode === 'lamina') { drawLamina(); return; }
     if (S.mode === 'plate') {
       const B = plateBox();
       if (window.VDGear) { window.VDGear.backdrop(ctx, W, Hh); ctx.save(); ctx.shadowColor = 'rgba(0,0,0,0.25)'; ctx.shadowBlur = 18 * p; ctx.shadowOffsetY = 6 * p; ctx.fillStyle = T.plate; ctx.fillRect(B.x0, B.y0, B.w, B.h); ctx.restore(); }
@@ -503,7 +782,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
      total mass in mass 2 (plate, two masses), in the front piece (firework) or in the person (boat). Positions in meters to 1 mm. */
   window.vdVersion = CM_VERSION;
   const SHOW = { plate: [['setup', 'setup'], ['f', 'f'], ['x_cm_m', 'x_cm'], ['y_cm_m', 'y_cm']], fire: [['t_s', 't (s)'], ['x_cm_m', 'x_cm'], ['y_cm_m', 'y_cm'], ['x_whole_m', 'unexploded x']],
-    boat: [['f', 'f'], ['walked_m', 'walked (m)'], ['boat_m', 'boat moved (m)'], ['x_cm_m', 'x_cm']] };
+    boat: [['f', 'f'], ['walked_m', 'walked (m)'], ['boat_m', 'boat moved (m)'], ['x_cm_m', 'x_cm']],
+    lamina: [['n', 'n'], ['x_strips_m', 'x̄ strips'], ['x_cm_m', 'x̄'], ['y_cm_m', 'ȳ']] };
   const mm = (v) => f(v, 3).replace('−', '-');
   window.vdShowCols = SHOW.plate;
   $('modeSeg').addEventListener('click', () => { if (!(window.vdRows && window.vdRows().length)) { window.vdShowCols = SHOW[S.mode]; window.dispatchEvent(new Event('load')); } });   /* the Readings section redraws its headings on load */
@@ -515,6 +795,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       return { setup: 'plate', masses: S.ms.map((a) => `${a.m.toFixed(1)} kg (${a.x.toFixed(2)}, ${a.y.toFixed(2)})`).join(', '), M_kg: f(C.M, 1), f: S.ms.length === 2 ? f(m2 / C.M, 4) : '', t_s: '',
         x_cm_m: mm(C.x), y_cm_m: mm(C.y), x_whole_m: '', y_whole_m: '', walked_m: '', boat_m: '' };
     }
+    if (S.mode === 'lamina') {
+      const { St, E } = lamNow();
+      return { setup: 'plate bounded by curves', masses: `${L.gT} <= y <= ${L.fT}, ${L.aT} <= x <= ${L.bT}`, M_kg: g4(E.M).replace(/,/g, ''), f: '', t_s: '', n: L.n,
+        A_m2: g4(E.A), x_strips_m: f(St.xbar, 4).replace('−', '-'), y_strips_m: f(St.ybar, 4).replace('−', '-'), x_cm_m: f(E.xbar, 4).replace('−', '-'), y_cm_m: f(E.ybar, 4).replace('−', '-'),
+        x_whole_m: '', y_whole_m: '', walked_m: '', boat_m: '' };
+    }
     if (S.mode === 'fire') {
       const F = FW(), s = S.t - F.tTop, pa = s > 0 ? F.at(F.a, s) : F.whole(S.t), pb = s > 0 ? F.at(F.b, s) : pa, wh = F.whole(Math.min(S.t, F.tWhole));
       return { setup: `firework, ${S.kick} m/s at ${S.ang}°`, masses: '', M_kg: '', f: S.ratio.toFixed(2), t_s: f(S.t, 2),
@@ -525,7 +811,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     return { setup: 'boat', masses: `person ${S.pm} kg, boat ${S.bm} kg`, M_kg: M, f: f(S.pm / M, 4), t_s: f(S.t, 2), x_cm_m: mm((S.pm * b.xp + S.bm * b.xb) / M), y_cm_m: '',
       x_whole_m: '', y_whole_m: '', walked_m: f(b.s, 2), boat_m: mm(b.xb) };
   };
-  window.__cm = { S, upd, FW, q3: (a) => Q3 && Q3(a.x - 0.5, a.y - 0.3, dia(a.m) / 2) };   /* for the worksheet key's capture script */
+  window.__cm = { S, L, upd, FW, lamNow, lamPreset, lamRead, lamPinTo, pinTip: (x, y) => pinTip(L.f, L.g, L.a, L.b, x, y, SIGMA), q3: (a) => Q3 && Q3(a.x - 0.5, a.y - 0.3, dia(a.m) / 2) };   /* for the worksheet key's capture script */
   function init() { sync(); readouts(); }
   function resize() { dpr = window.devicePixelRatio || 1; const r = stage.getBoundingClientRect(); W = r.width; Hh = r.height; can.width = Math.round(W * dpr); can.height = Math.round(Hh * dpr); can.style.width = W + 'px'; can.style.height = Hh + 'px'; draw(); }
   const retheme = () => { tokens(); draw(); };
@@ -545,6 +831,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       S.ms.forEach((a, i) => out.push(`Mass ${i + 1} is ${a.m.toFixed(1)} kg at x = ${a.x.toFixed(2)} m, y = ${a.y.toFixed(2)} m.`));
       out.push(`Mass ${S.sel + 1} is selected.`, `Total mass ${f(C.M, 1)} kg.`);
       out.push(S.blind ? hid : `Center of mass at x = ${f(C.x, 3)} m, y = ${f(C.y, 3)} m.`);
+    } else if (S.mode === 'lamina') {
+      const { St, E } = lamNow();
+      const tx = (t) => { try { return VDMATH.text(VDMATH.parse(t, { vars: ['x'] }).node); } catch (_) { return t; } };
+      out.push(VDI18N.t('A flat steel plate between the curves y = {g} and y = {f}, from x = {a} m to x = {b} m, cut into {n} strips.', { g: tx(L.gT), f: tx(L.fT), a: f(L.a, 3), b: f(L.b, 3), n: L.n }), `Area ${g4(E.A)} square meters, mass ${g4(E.M)} kg.`);
+      out.push(S.blind ? hid : `From the strips the balance point is at x = ${f(St.xbar, 3)} m, y = ${f(St.ybar, 3)} m; the integrals give x = ${f(E.xbar, 3)} m, y = ${f(E.ybar, 3)} m.`);
+      out.push(`The pin is at x = ${f(L.px, 3)} m, y = ${f(L.py, 3)} m.`);
+      if (L.verdict === 'balances') out.push('The plate balances on the pin.'); else if (L.verdict === 'tips') out.push({ t: `The plate is tipping, ${f(L.th * 180 / Math.PI, 0)} degrees.`, live: false }); else if (L.verdict === 'falls') out.push('The plate tipped toward its balance point and slid off the pin.');
     } else if (S.mode === 'fire') {
       const F = FW(), s = S.t - F.tTop, pa = s > 0 ? F.at(F.a, s) : F.whole(S.t), pb = s > 0 ? F.at(F.b, s) : pa, wh = F.whole(Math.min(S.t, F.tWhole));
       const cx = S.ratio * pa.x + (1 - S.ratio) * pb.x, cy = S.ratio * pa.y + (1 - S.ratio) * pb.y;

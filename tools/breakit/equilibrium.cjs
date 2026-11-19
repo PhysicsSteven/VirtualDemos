@@ -9,7 +9,7 @@ const pre = `const E = window.__eq; if (!E || E.S.blind) return true;
   const R = rd(), num = (k) => { const key = Object.keys(R).find((q) => q.startsWith(k)); return key === undefined ? NaN : parseFloat(R[key]); };
   const bad = (k, want, tol) => { const got = num(k); return !(Math.abs(got - want) <= tol) ? k + ' shows ' + got + ', physics gives ' + want : null; };
   const D = Math.PI / 180;
-  for (const k of Object.keys(v)) if (!isFinite(v[k])) return 'S.v.' + k + ' = ' + v[k];
+  for (const k of Object.keys(v)) if (k !== 'part' && !isFinite(v[k])) return 'S.v.' + k + ' = ' + v[k];   /* part is the Body levers choice, arm or back */
 `;
 module.exports = {
   checks: [
@@ -41,6 +41,18 @@ module.exports = {
       if (sup.length >= 2) { const a = sup[0], b = sup[sup.length - 1], F2 = W * (xc - a) / (b - a), F1 = W - F2;
         if (F1 >= -1e-9 && F2 >= -1e-9) { m = bad('Left support', F1, 0.0501) || bad('Right support', F2, 0.0501); if (m) return m; if (/−|-/.test(R[Object.keys(R).find((q) => q.startsWith('Left support'))] || '') && F1 > 0.06) return 'negative support force shown'; } }
       return true; })()` },
+    { name: "Body levers: biceps and elbow forces from the torques about the elbow; back muscles and vertebrae (OpenStax 9.6 distances)", fn: `(() => { ${pre}
+      if (S.preset !== 'body') return true;
+      if (v.part === 'back') {
+        const s61 = Math.sin(61 * D), Lc = 0.35 / s61, Ls = 0.5 / s61, a = v.lean * D, FB = (v.mub * Lc + v.mbox * Ls) * G * Math.sin(a) / 0.08;
+        const FVx = FB * Math.sin(a), FVy = (v.mub + v.mbox) * G + FB * Math.cos(a);
+        if (v.lean === 61 && v.mub === 55 && v.mbox === 30 && Math.round(FB / 10) !== 420) return 'book case: F_B ' + FB;
+        return bad('Back muscle force', FB, 0.0501) || bad('Vertebrae push', Math.hypot(FVx, FVy), 0.0501) || bad('F_V above', Math.atan2(FVy, FVx) / D, 0.0501) || true;
+      }
+      const a = v.el * D, r1 = v.r1 / 100, Ix = r1 * Math.sin(a), Iy = r1 * Math.cos(a), L = Math.hypot(Ix, 0.33 - Iy), FB = (v.ma * 0.16 + v.mb * 0.38) * G * L / (r1 * 0.33);
+      const FEx = FB * Ix / L, FEy = (v.ma + v.mb) * G - FB * (0.33 - Iy) / L;
+      if (v.el < 30 || v.el > 150) return 'elbow angle ' + v.el + ' outside 30 to 150';
+      return bad('Biceps force', FB, 0.0501) || bad('Elbow joint force', Math.hypot(FEx, FEy), 0.0501) || bad('F_E, downward', -FEy, 0.0501) || bad('Biceps taken vertical', (v.ma * 0.16 + v.mb * 0.38) * G / r1, 0.0501) || true; })()` },
   ],
   steps: [
     { name: 'Sandbox: every rig, add the heaviest mass again and again, add supports past two, delete everything, let go', fn: `(async () => {
@@ -58,8 +70,18 @@ module.exports = {
     { name: 'ladder to the steepest and flattest angle and the smallest friction, plank supports together, sign cable almost flat', fn: `(async () => {
       const pause = (ms) => new Promise((r) => setTimeout(r, ms));
       const set = (e, v) => { e.value = v; e.dispatchEvent(new Event('input', { bubbles: true })); };
-      for (const p of ['ladder', 'plank', 'sign', 'seesaw']) { document.querySelector('#presets [data-p=' + p + ']').click(); await pause(150);
+      for (const p of ['ladder', 'plank', 'sign', 'body', 'seesaw']) { document.querySelector('#presets [data-p=' + p + ']').click(); await pause(150);
         for (const e of document.querySelectorAll('#ctl input[type=range]')) for (const w of [e.min, e.max, e.min]) { set(e, w); await pause(30); } }
+    })()` },
+    { name: 'Body levers: both parts, every slider to its ends, the arm and back dragged past their stops by keys', fn: `(async () => {
+      const pause = (ms) => new Promise((r) => setTimeout(r, ms));
+      const set = (e, v) => { e.value = v; e.dispatchEvent(new Event('input', { bubbles: true })); };
+      document.querySelector('#presets [data-p=body]').click(); await pause(150);
+      for (const part of ['back', 'arm']) { document.querySelector('#partSeg [data-q=' + part + ']').click(); await pause(100);
+        for (const e of document.querySelectorAll('#ctl input[type=range]')) for (const w of [e.min, e.max]) { set(e, w); await pause(30); }
+        const c = document.getElementById('can'); c.focus();
+        for (let i = 0; i < 40; i++) c.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', shiftKey: true, bubbles: true }));
+        await pause(50); for (let i = 0; i < 40; i++) c.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', shiftKey: true, bubbles: true })); await pause(50); }
     })()` },
   ],
 };

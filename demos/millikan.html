@@ -127,6 +127,7 @@
         <div class="btnrow">
           <button type="button" class="btn" id="newRow">New row for this drop</button>
           <button type="button" class="btn" id="copyRows">Copy table</button>
+          <button type="button" class="btn" id="expWs">Export to worksheet</button>
           <button type="button" class="btn" id="clearRows">Clear</button>
         </div>
         <p class="status" id="recStatus" aria-live="polite"></p>
@@ -135,6 +136,7 @@
       <section>
         <details class="fold"><summary>Lab</summary><div class="foldbody">
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide r, q and the lines at whole numbers of e (work them out first)</span></label>
+        <label class="check"><input type="checkbox" id="cHideE"><span>Hide q/e and the lines at whole numbers of e (find e yourself)</span></label>
         <label class="check"><input type="checkbox" id="cNoSlip"><span>Work out r and q with plain Stokes drag (no slip correction)</span></label>
         <label class="check"><input type="checkbox" id="cTrue"><span>Show the followed drop's true charge (to check your work)</span></label>
         <label class="check"><input type="checkbox" id="cGauss"><span>Show the plain Stokes radius beside each row</span></label>
@@ -209,7 +211,7 @@
     brown: { pol: 0, V: 0, T: 23, p: 101.3, L: 0.5, auto: true, ion: false, spd: 1, n: 1, rFix: 0.36e-6, seed: 17, hint: 'One small drop, radius 0.36 µm: it falls only about 17 µm/s and jiggles as air molecules knock it about (Brownian motion). Time it over 0.5 mm several times and see how the times scatter.' },
   };
   const S = { preset: 'fall', pol: 0, V: 0, T: 23, p: 101.3, rho: 886, L: 1, auto: true, ion: false, spd: 4, run: false, t: 0, drops: [], pick: -1, rnd: mkRng(1), seq: 0,
-    sw: { on: false, t0: 0, t: 0, y0: 0, pick: -1 }, gate: null, last: null, rows: [], cur: -1, blind: false, noslip: false, showTrue: false, showStokes: false };
+    sw: { on: false, t0: 0, t: 0, y0: 0, pick: -1 }, gate: null, last: null, rows: [], cur: -1, blind: false, hideE: false, noslip: false, showTrue: false, showStokes: false };
   let air = mkAir(23, 101300);
   const can = $('can'), ctx = can.getContext('2d');
   let W = 0, H = 0, dpr = 1, T = null;
@@ -323,7 +325,7 @@
   function renderRows() {
     const th = (s) => `<th>${s}</th>`;
     $('rowsTbl').querySelector('thead').innerHTML = '<tr>' + th('Drop') + th('Fall t (s)') + th('V') + th('Plates on t (s)') + th('v_f (µm/s)') + th('v_E (µm/s)')
-      + (S.blind ? '' : th('r (µm)') + (S.showStokes ? th('Stokes r (µm)') : '') + th('q (10⁻¹⁹ C)') + th('q/e')) + th('<span class="sr">Delete</span>') + '</tr>';
+      + (S.blind ? '' : th('r (µm)') + (S.showStokes ? th('Stokes r (µm)') : '') + th('q (10⁻¹⁹ C)') + (S.hideE ? '' : th('q/e'))) + th('<span class="sr">Delete</span>') + '</tr>';
     const tb = $('rowsTbl').querySelector('tbody');
     tb.innerHTML = S.rows.map((row, i) => {
       const c = rowCalc(row), tf = row.fall.length ? `${f(mean(row.fall, 't'), 2)} (${row.fall.length})` : '—';
@@ -331,9 +333,9 @@
       const tE = row.fld.length ? `${mean(row.fld, 'v') >= 0 ? '↑' : '↓'} ${f(mean(row.fld, 't'), 2)} (${row.fld.length})` : row.hold ? 'held still' : '—';
       const name = row.id + (row.sub ? String.fromCharCode(97 + Math.min(25, row.sub)) : '');
       return `<tr class="${i === S.cur ? 'on' : ''}"><td>${name}</td><td>${tf}</td><td>${fl}</td><td>${tE}</td><td>${c ? f(c.vf * 1e6, 2) : '—'}</td><td>${c && c.vE !== undefined ? f(c.vE * 1e6, 2) : '—'}</td>`
-        + (S.blind ? '' : `<td>${c ? f(c.r * 1e6, 3) : '—'}</td>` + (S.showStokes ? `<td>${c ? f(c.r0 * 1e6, 3) : '—'}</td>` : '') + `<td>${c && c.q !== undefined ? f(c.q * 1e19, 2) : '—'}</td><td>${c && c.q !== undefined ? f(c.q / MK_E, 2) : '—'}</td>`)
+        + (S.blind ? '' : `<td>${c ? f(c.r * 1e6, 3) : '—'}</td>` + (S.showStokes ? `<td>${c ? f(c.r0 * 1e6, 3) : '—'}</td>` : '') + `<td>${c && c.q !== undefined ? f(c.q * 1e19, 2) : '—'}</td>` + (S.hideE ? '' : `<td>${c && c.q !== undefined ? f(c.q / MK_E, 2) : '—'}</td>`))
         + `<td><button type="button" data-del="${i}" aria-label="Delete row ${name}">✕</button></td></tr>`;
-    }).join('') || `<tr><td colspan="${S.blind ? 7 : 10}" class="hint">No drops recorded yet.</td></tr>`;
+    }).join('') || `<tr><td colspan="${S.blind ? 7 : 10 - (S.hideE ? 1 : 0) + (S.showStokes ? 1 : 0)}" class="hint">No drops recorded yet.</td></tr>`;
     draw();
   }
   const say = (s) => { $('status').textContent = s; };
@@ -539,7 +541,7 @@
     ctx.strokeStyle = T.ink; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(x0, yb); ctx.lineTo(x1, yb); ctx.stroke();
     ctx.textAlign = 'center'; ctx.font = `${10 * p}px ${T.mono}`;
     for (let q = 0; q <= qmax; q += 2) { ctx.beginPath(); ctx.moveTo(X(q), yb); ctx.lineTo(X(q), yb + 4); ctx.stroke(); ctx.fillText(String(q), X(q), yb + 6 * p); }
-    if (!S.blind) { ctx.strokeStyle = T.accent; ctx.setLineDash([3, 4]); ctx.globalAlpha = 0.7;
+    if (!S.blind && !S.hideE) { ctx.strokeStyle = T.accent; ctx.setLineDash([3, 4]); ctx.globalAlpha = 0.7;
       for (let n = 1; n * MK_E * 1e19 <= qmax; n++) { ctx.beginPath(); ctx.moveTo(X(n * MK_E * 1e19), yt); ctx.lineTo(X(n * MK_E * 1e19), yb); ctx.stroke(); } ctx.setLineDash([]); ctx.globalAlpha = 1; }
     const stack = {}; ctx.fillStyle = T.pick;
     for (const q of qs) { const k = Math.round(X(q) / (7 * p)); stack[k] = (stack[k] || 0) + 1; ctx.beginPath(); ctx.arc(X(q), yb - 6 * p - (stack[k] - 1) * 9 * p, 4 * p, 0, 7); ctx.fill(); }
@@ -613,7 +615,40 @@
   });
   $('rowsTbl').addEventListener('click', (e) => { const b = e.target.closest('[data-del]'); if (!b) return; S.rows.splice(+b.dataset.del, 1); S.cur = -1; renderRows(); });
   $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; readouts(); renderRows(); });
+  $('cHideE').addEventListener('change', (e) => { S.hideE = e.target.checked; renderRows(); });
   $('cNoSlip').addEventListener('change', (e) => { S.noslip = e.target.checked; renderRows(); });
+  /* Export to worksheet (worksheet millikan, 2026-11-19): each row as the table shows it, the mean times and speeds and the r and
+     |q| the table works out (left blank while Blind is on), never q/e: finding e is the student's job */
+  function wsCsv() {
+    const L = ['# Millikan Oil Drop (simulated drops)', `# air,${f(S.T, 1)} °C ${f(S.p, 1)} kPa`, `# blind,${S.blind ? 'on' : 'off'}`, `# slip correction,${S.noslip ? 'off' : 'on'}`,
+      'drop,t_fall_s,V_volts,top_plate,t_E_s,vf_um_s,vE_um_s,r_um,abs_q_1e19_C'];
+    S.rows.forEach((row) => {
+      const c = rowCalc(row), on = row.fld.length ? row.fld[0] : row.hold, name = row.id + (row.sub ? String.fromCharCode(97 + Math.min(25, row.sub)) : '');
+      const num = (v, d) => (v === undefined || v === null || !isFinite(v) ? '' : v.toFixed(d));
+      L.push([name, row.fall.length ? num(mean(row.fall, 't'), 2) : '', on ? on.V : '', on ? (on.pol > 0 ? '+' : '−') : '',
+        row.fld.length ? num(mean(row.fld, 't'), 2) : row.hold ? 'held' : '', c ? num(c.vf * 1e6, 2) : '', c && c.vE !== undefined ? num(c.vE * 1e6, 2) : '',
+        c && !S.blind ? num(c.r * 1e6, 3) : '', c && c.q !== undefined && !S.blind ? num(Math.abs(c.q) * 1e19, 2) : ''].join(','));
+    });
+    return L.join('\n') + '\n';
+  }
+  $('expWs').addEventListener('click', () => {
+    const slug = VD.ws ? VD.ws('millikan') : 'millikan', el = $('recStatus');
+    if (!S.rows.length) { recSay('Record some drops first.'); return; }
+    const txt = wsCsv(), lines = txt.trim().split('\n'), data = lines.filter((l) => l[0] !== '#'), meta = {};
+    lines.filter((l) => l[0] === '#').forEach((l) => { const c = l.replace(/^#\s*/, '').split(','); if (c.length > 1) meta[c[0]] = c[1]; });
+    const hand = { v: 1, demo: 'millikan', sent: new Date().toISOString(), columns: data[0].split(','), rows: data.slice(1).map((l) => l.split(',')), meta,
+      note: `Simulated drops from the Millikan Oil Drop demo, air at ${f(S.T, 1)} °C and ${f(S.p, 1)} kPa${S.blind ? ', Blind on' : ''}. Mean times; r and |q| as the readings table works them out.`, csv: txt, csvName: `${slug}-readings.csv` };
+    try { localStorage.setItem('vd-handoff:' + slug, JSON.stringify(hand)); }
+    catch (_) {
+      try { const u = URL.createObjectURL(new Blob([txt], { type: 'text/csv' })), a = document.createElement('a'); a.href = u; a.download = hand.csvName; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 1000); } catch (_) {}
+      recSay('This browser blocks storage, so the readings were saved as a CSV file instead.'); return;
+    }
+    const n = hand.rows.length, url = `../curriculum/labs/students/${slug}.html`;
+    recSay(n === 1 ? '1 row sent to the worksheet. ' : `${n} rows sent to the worksheet. `);
+    fetch(url, { method: 'HEAD' }).then((r) => {
+      if (r.ok) { const a = document.createElement('a'); a.href = url; a.target = `${slug}-worksheet`; a.textContent = 'Open the worksheet'; a.style.color = 'var(--accent)'; el.appendChild(a); }
+    }).catch(() => {});
+  });
   $('cTrue').addEventListener('change', (e) => { S.showTrue = e.target.checked; readouts(); });
   $('cGauss').addEventListener('change', (e) => { S.showStokes = e.target.checked; renderRows(); });
   can.addEventListener('pointerdown', (e) => {
@@ -686,6 +721,7 @@
     const n = S.rows.filter((r) => { const c = rowCalc(r); return c && c.q !== undefined; }).length;
     o.push(S.rows.length === 1 ? 'There is 1 recorded row.' : `There are ${S.rows.length} recorded rows.`, n === 1 ? '1 charge has been worked out.' : `${n} charges have been worked out.`);
     if (S.blind) o.push('The radii, the charges and the lines at whole numbers of e are hidden.');
+    else if (S.hideE) o.push('The charges in units of e and the lines at whole numbers of e are hidden.');
     return o;
   });
   if (window.VD3K) view3 = VD3K.view({ seg: '#dimSeg', init: init3D, change: (on) => { if (g3) g3.S3.el.hidden = !on; draw(); }, status: say });

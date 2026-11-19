@@ -40,6 +40,8 @@ VDI18N.add('es', 'demo/equilibrium', {
   "Escalera contra una pared",
 "Sandbox":
   "Caja de arena",
+"Body levers":
+  "Palancas del cuerpo",
 "A {#} kg child at {#} m and a {#} kg child: where must the lighter one sit? Torques balance when m₁x₁ = m₂x₂, so {#} m. The pivot pushes up with the whole weight.":
   "Un niño de {#} kg a {#} m y un niño de {#} kg: ¿dónde debe sentarse el más ligero? Las torcas se equilibran cuando m₁x₁ = m₂x₂, así que a {#} m. El pivote empuja hacia arriba con todo el peso.",
 "Let go":
@@ -68,6 +70,12 @@ VDI18N.add('es', 'demo/equilibrium', {
   "Sobre la imagen: [ y ] eligen una parte, las flechas la mueven (Shift para pasos más grandes), Supr la quita, y Espacio suelta o sostiene la viga.",
 "Settings":
   "Ajustes",
+"Body lever":
+  "Palanca del cuerpo",
+"Forearm":
+  "Antebrazo",
+"Bent back":
+  "Espalda inclinada",
 "Beam mass":
   "Masa de la viga",
 "Left child m₁":
@@ -208,54 +216,100 @@ VDI18N.add('es', 'demo/equilibrium', {
   "Fuerza del soporte",
 "if let go: none steady: it tips left side down":
   "si se suelta: ninguna estable: se inclina con el lado izquierdo hacia abajo",
-"Two posts hold the beam level. Let go to see if it balances.":
-  "Dos postes sostienen la viga horizontal. Suéltala para ver si se equilibra.",
-"A beam {#} m long, mass {#} kg, built on a tray of parts.":
-  "Una viga de {#} m de largo y masa {#} kg, armada con piezas de la bandeja.",
-"{#} supports, at {#} m.":
-  "{#} apoyos, en {#} m.",
-"{#} masses on the beam.":
-  "{#} masas sobre la viga.",
-"Two posts hold the beam level.":
-  "Dos postes mantienen la viga nivelada.",
-"The results below are for when the beam is let go.":
-  "Los resultados siguientes son para cuando se suelta la viga.",
-"Total weight {#} N.":
-  "Peso total {#} N.",
-"The center of mass is {#} m from the left end.":
-  "El centro de masa está a {#} m del extremo izquierdo.",
-"The beam tips left side down.":
-  "La viga se inclina con el lado izquierdo hacia abajo.",
-"if let go: {#} N":
-  "si se suelta: {#} N",
-"The support pushes up with {#} N, and the beam balances.":
-  "El apoyo empuja hacia arriba con {#} N y la viga queda en equilibrio.",
-"Left support F₁ (at {#} m)":
-  "Soporte izquierdo F₁ (en {#} m)",
-"Right support F₂ (at {#} m)":
-  "Soporte derecho F₂ (en {#} m)",
-"Held level by two posts. Add supports, then let go.":
-  "Sostenida horizontal por dos postes. Agrega soportes y luego suéltala.",
-"Supports":
-  "Soportes",
-"none: if let go, it falls":
-  "ninguno: si se suelta, cae",
-"Added a support at {#} m: the arrow keys on the picture move it.":
-  "Se agregó un soporte en {#} m: las flechas sobre la imagen lo mueven.",
-"Added a {#} kg mass at {#} m: the arrow keys on the picture move it.":
-  "Se agregó una masa de {#} kg en {#} m: las flechas sobre la imagen la mueven.",
-"Removed the selected part.":
-  "Se quitó la parte seleccionada.",
-"The Sandbox is for exploring: pick one of the other setups to record readings for the worksheet.":
-  "La Caja de arena es para explorar: elige una de las otras configuraciones para registrar lecturas para la hoja de trabajo.",
-"Balanced: the center of mass is right over the support.":
-  "Equilibrada: el centro de masa está justo sobre el soporte.",
+"The biceps pulls {#} N, {#} times the {#} N it holds up.":
+  "El bíceps jala con {#} N, {#} veces los {#} N que sostiene.",
+"biceps = {#} N":
+  "bíceps = {#} N",
+"elbow joint = {#} N":
+  "articulación del codo = {#} N",
+"forearm = {#} N":
+  "antebrazo = {#} N",
+"load = {#} N":
+  "carga = {#} N",
+"Muscles pull close to the joint, so they pull far harder than the load. A {#} kg load in the hand, {#} m from the elbow, held by a biceps attached {#} cm from the elbow, takes a pull of {#} N, {#} times the weight of the forearm and load; the elbow joint pushes down with {#} N. Change the elbow angle, or switch to Bent back: lifting a {#} kg box with the back bent {#}° takes {#} N from the back muscles, {#} cm behind the pivot, {#} times the weight held up, and the vertebrae push back with {#} N.":
+  "Los músculos jalan cerca de la articulación, así que jalan con mucha más fuerza que la carga. Una carga de {#} kg en la mano, a {#} m del codo, sostenida por un bíceps unido a {#} cm del codo, requiere un jalón de {#} N, {#} veces el peso del antebrazo y la carga; la articulación del codo empuja hacia abajo con {#} N. Cambia el ángulo del codo, o cambia a Espalda inclinada: levantar una caja de {#} kg con la espalda inclinada {#}° requiere {#} N de los músculos de la espalda, {#} cm detrás del pivote, {#} veces el peso sostenido, y las vértebras empujan de vuelta con {#} N.",
+"Load in the hand":
+  "Carga en la mano",
+"Elbow angle":
+  "Ángulo del codo",
+"Biceps attached from the elbow":
+  "Distancia del codo al bíceps",
+"Forearm mass":
+  "Masa del antebrazo",
+"Biceps force F_B":
+  "Fuerza del bíceps F_B",
+"F_B over the weight held":
+  "F_B entre el peso sostenido",
+"Elbow joint force F_E":
+  "Fuerza en la articulación del codo F_E",
+"F_E, downward part":
+  "F_E, componente hacia abajo",
+"Forearm and load weight":
+  "Peso del antebrazo y la carga",
+"Torque of the weights about the elbow":
+  "Torca de los pesos respecto al codo",
+"Lever arm of the biceps":
+  "Brazo de palanca del bíceps",
+"Biceps from vertical":
+  "Bíceps respecto a la vertical",
+"Biceps taken vertical, as in the book":
+  "Bíceps tomado vertical, como en el libro",
+"A forearm of {#} kg at an elbow angle of {#}° holds {#} kg in the hand, {#} m from the elbow.":
+  "Un antebrazo de {#} kg con el codo a {#}° sostiene {#} kg en la mano, a {#} m del codo.",
+"The biceps is attached {#} cm from the elbow and runs up to the shoulder.":
+  "El bíceps está unido a {#} cm del codo y sube hasta el hombro.",
+"The biceps pulls with {#} N, {#} times the weight held up.":
+  "El bíceps jala con {#} N, {#} veces el peso sostenido.",
+"The elbow joint pushes with {#} N.":
+  "La articulación del codo empuja con {#} N.",
+"The back muscles pull {#} N, {#} times the {#} N held up.":
+  "Los músculos de la espalda jalan con {#} N, {#} veces los {#} N sostenidos.",
+"back muscles = {#} N":
+  "músculos de la espalda = {#} N",
+"vertebrae = {#} N":
+  "vértebras = {#} N",
+"upper body = {#} N":
+  "parte superior del cuerpo = {#} N",
+"box = {#} N":
+  "caja = {#} N",
+"{#}° from vertical":
+  "{#}° respecto a la vertical",
+"Box mass":
+  "Masa de la caja",
+"Trunk lean from vertical":
+  "Inclinación del tronco respecto a la vertical",
+"Upper body mass":
+  "Masa de la parte superior del cuerpo",
+"Back muscle force F_B":
+  "Fuerza de los músculos de la espalda F_B",
+"Vertebrae push F_V":
+  "Empuje de las vértebras F_V",
+"F_V above the horizontal":
+  "F_V sobre la horizontal",
+"Upper body weight":
+  "Peso de la parte superior del cuerpo",
+"Box weight":
+  "Peso de la caja",
+"Lever arms: upper body, box":
+  "Brazos de palanca: parte superior del cuerpo, caja",
+"Torque of the weights about the pivot":
+  "Torca de los pesos respecto al pivote",
+"Lever arm of the back muscles":
+  "Brazo de palanca de los músculos de la espalda",
+"A person bent {#}° from upright lifts a {#} kg box; the upper body is {#} kg.":
+  "Una persona inclinada {#}° respecto a la vertical levanta una caja de {#} kg; la parte superior del cuerpo tiene {#} kg.",
+"The back muscles pull along the spine {#} cm behind the pivot at the hips.":
+  "Los músculos de la espalda jalan a lo largo de la columna, {#} cm detrás del pivote en la cadera.",
+"The back muscles pull with {#} N, {#} times the weight held up.":
+  "Los músculos de la espalda jalan con {#} N, {#} veces el peso sostenido.",
+"The vertebrae push with {#} N at {#}° above the horizontal.":
+  "Las vértebras empujan con {#} N a {#}° sobre la horizontal.",
+"bent back":
+  "espalda inclinada",
 "Hold it level again":
   "Sostenerla horizontal de nuevo",
 "Let go.":
   "Soltar.",
-"The beam has been let go.":
-  "Se soltó la viga.",
 "A plank {#} m long, mass {#} kg, rests on two supports.":
   "Una tabla de {#} m de largo y masa {#} kg descansa sobre dos apoyos.",
 "The left support is at {#} m and the right support at {#} m.":
@@ -266,6 +320,8 @@ VDI18N.add('es', 'demo/equilibrium', {
   "El apoyo izquierdo empuja hacia arriba con {#} N.",
 "The right support pushes up with {#} N.":
   "El apoyo derecho empuja hacia arriba con {#} N.",
+"Total weight {#} N.":
+  "Peso total {#} N.",
 "A strut {#} m long, mass {#} kg, is hinged to a wall and held level by a cable.":
   "Un puntal de {#} m de largo y masa de {#} kg está articulado a una pared y se mantiene horizontal con un cable.",
 "A sign of {#} kg hangs {#} m from the wall.":
@@ -294,14 +350,92 @@ VDI18N.add('es', 'demo/equilibrium', {
   "Resbala por debajo de {#}° con la persona aquí.",
 "The ladder holds: static friction is enough.":
   "La escalera se sostiene: la fricción estática basta.",
+"A beam {#} m long, mass {#} kg, built on a tray of parts.":
+  "Una viga de {#} m de largo y masa {#} kg, armada con piezas de la bandeja.",
+"{#} supports, at {#} m.":
+  "{#} apoyos, en {#} m.",
+"{#} masses on the beam.":
+  "{#} masas sobre la viga.",
+"Two posts hold the beam level.":
+  "Dos postes mantienen la viga nivelada.",
+"The results below are for when the beam is let go.":
+  "Los resultados siguientes son para cuando se suelta la viga.",
+"The center of mass is {#} m from the left end.":
+  "El centro de masa está a {#} m del extremo izquierdo.",
+"The beam tips left side down.":
+  "La viga se inclina con el lado izquierdo hacia abajo.",
+"The Sandbox is for exploring: pick one of the other setups to record readings for the worksheet.":
+  "La Caja de arena es para explorar: elige una de las otras configuraciones para registrar lecturas para la hoja de trabajo.",
+"Added a support at {#} m: the arrow keys on the picture move it.":
+  "Se agregó un soporte en {#} m: las flechas sobre la imagen lo mueven.",
+"Left support F₁ (at {#} m)":
+  "Soporte izquierdo F₁ (en {#} m)",
+"Right support F₂ (at {#} m)":
+  "Soporte derecho F₂ (en {#} m)",
+"{#} supports, at {#} and {#} m.":
+  "{#} apoyos, en {#} y {#} m.",
+"Added a {#} kg mass at {#} m: the arrow keys on the picture move it.":
+  "Se agregó una masa de {#} kg en {#} m: las flechas sobre la imagen la mueven.",
+"Removed the selected part.":
+  "Se quitó la parte seleccionada.",
+"The beam has been let go.":
+  "Se soltó la viga.",
+"Two posts hold the beam level. Let go to see if it balances.":
+  "Dos postes sostienen la viga horizontal. Suéltala para ver si se equilibra.",
+"It tips left side down: the center of mass is not over the support.":
+  "Se inclina con el lado izquierdo hacia abajo: el centro de masa no está sobre el soporte.",
+"none steady: it tips left side down":
+  "ninguno estable: se inclina con el lado izquierdo hacia abajo",
+"if let go: {#} N":
+  "si se suelta: {#} N",
+"The support pushes up with {#} N, and the beam balances.":
+  "El apoyo empuja hacia arriba con {#} N y la viga queda en equilibrio.",
+"Balanced: the center of mass is right over the support.":
+  "Equilibrada: el centro de masa está justo sobre el soporte.",
+"Two supports at most: drag one back to the tray first.":
+  "Dos soportes como máximo: primero arrastra uno de vuelta a la bandeja.",
+"Held level by two posts. Add supports, then let go.":
+  "Sostenida horizontal por dos postes. Agrega soportes y luego suéltala.",
+"Supports":
+  "Soportes",
+"none: if let go, it falls":
+  "ninguno: si se suelta, cae",
 "No supports.":
   "Sin apoyos.",
 "No masses on the beam.":
   "Sin masas en la viga.",
 "With no support it falls.":
   "Sin apoyo, se cae.",
-"{#} supports, at {#} and {#} m.":
-  "{#} apoyos, en {#} y {#} m.",
+"Nothing holds it up: it falls.":
+  "Nada lo sostiene: se cae.",
+"none: it falls":
+  "ninguno: se cae",
+"How hard must the biceps pull?":
+  "¿Con cuánta fuerza debe jalar el bíceps?",
+"biceps":
+  "bíceps",
+"elbow joint":
+  "articulación del codo",
+"forearm":
+  "antebrazo",
+"load":
+  "carga",
+"Forces, torques and the verdict":
+  "Fuerzas, torcas y el veredicto",
+"hidden in Blind: work them out":
+  "ocultas en A ciegas: calcúlalas",
+"The forces are hidden.":
+  "Las fuerzas están ocultas.",
+"How hard must the back muscles pull?":
+  "¿Con cuánta fuerza deben jalar los músculos de la espalda?",
+"back muscles":
+  "músculos de la espalda",
+"vertebrae":
+  "vértebras",
+"upper body":
+  "parte superior del cuerpo",
+"box":
+  "caja",
 "Describe the picture":
   "Describir la imagen",
 "Skip to the picture":

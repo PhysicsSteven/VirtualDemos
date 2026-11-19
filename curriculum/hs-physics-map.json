@@ -1,0 +1,1026 @@
+{
+ "schema_version": 1,
+ "book": {
+  "title": "Physics",
+  "publisher": "OpenStax",
+  "url": "https://openstax.org/details/books/physics",
+  "toc_source": "github.com/openstax/osbooks-physics, collections/physics.collection.xml (read 2026-11-19)"
+ },
+ "policy": "Each section lists the demos that serve it, then the worksheets that fit it best, intro level first. A section with no demo shows \"no activity yet\". Built 2026-11-19 from the OpenStax collection files and the 2026-11-19 scan of the site (openstax-books-2026-11-19). Edit this file and rerun tools/courses.py.",
+ "parts": [
+  {
+   "id": "hs-motion",
+   "title": "Motion, forces and energy",
+   "chapters": [
+    1,
+    10
+   ]
+  },
+  {
+   "id": "hs-heat-waves",
+   "title": "Heat, waves, sound and light",
+   "chapters": [
+    11,
+    17
+   ]
+  },
+  {
+   "id": "hs-em",
+   "title": "Electricity and magnetism",
+   "chapters": [
+    18,
+    20
+   ]
+  },
+  {
+   "id": "hs-modern",
+   "title": "Quanta, atoms and particles",
+   "chapters": [
+    21,
+    23
+   ]
+  }
+ ],
+ "chapters": [
+  {
+   "chapter": 1,
+   "title": "What is Physics?",
+   "sections": [
+    {
+     "sec": "1.1",
+     "title": "Physics: Definitions and Applications",
+     "demos": []
+    },
+    {
+     "sec": "1.2",
+     "title": "The Scientific Methods",
+     "demos": []
+    },
+    {
+     "sec": "1.3",
+     "title": "The Language of Physics: Physical Quantities and Units",
+     "demos": [
+      "units"
+     ],
+     "worksheets": [
+      "measurement-and-units",
+      "intro-scale"
+     ]
+    }
+   ]
+  },
+  {
+   "chapter": 2,
+   "title": "Motion in One Dimension",
+   "sections": [
+    {
+     "sec": "2.1",
+     "title": "Relative Motion, Distance, and Displacement",
+     "demos": [
+      "motion-graphs",
+      "cart-launch",
+      "vectors"
+     ],
+     "worksheets": [
+      "motion-graphs",
+      "relative-motion"
+     ]
+    },
+    {
+     "sec": "2.2",
+     "title": "Speed and Velocity",
+     "demos": [
+      "motion-graphs"
+     ],
+     "worksheets": [
+      "motion-graphs"
+     ]
+    },
+    {
+     "sec": "2.3",
+     "title": "Position vs. Time Graphs",
+     "demos": [
+      "motion-graphs"
+     ],
+     "worksheets": [
+      "motion-graphs"
+     ]
+    },
+    {
+     "sec": "2.4",
+     "title": "Velocity vs. Time Graphs",
+     "demos": [
+      "motion-graphs"
+     ],
+     "worksheets": [
+      "motion-graphs"
+     ]
+    }
+   ]
+  },
+  {
+   "chapter": 3,
+   "title": "Acceleration",
+   "sections": [
+    {
+     "sec": "3.1",
+     "title": "Acceleration",
+     "demos": [
+      "motion-graphs"
+     ],
+     "worksheets": [
+      "motion-graphs"
+     ]
+    },
+    {
+     "sec": "3.2",
+     "title": "Representing Acceleration with Equations and Graphs",
+     "demos": [
+      "motion-graphs",
+      "projectile-drag"
+     ],
+     "worksheets": [
+      "motion-graphs"
+     ]
+    }
+   ]
+  },
+  {
+   "chapter": 4,
+   "title": "Forces and Newton’s Laws of Motion",
+   "sections": [
+    {
+     "sec": "4.1",
+     "title": "Force",
+     "demos": [
+      "forces",
+      "vectors"
+     ],
+     "worksheets": [
+      "force-table"
+     ]
+    },
+    {
+     "sec": "4.2",
+     "title": "Newton's First Law of Motion: Inertia",
+     "demos": [
+      "forces",
+      "cart-launch",
+      "elevator"
+     ],
+     "worksheets": [
+      "relative-motion"
+     ]
+    },
+    {
+     "sec": "4.3",
+     "title": "Newton's Second Law of Motion",
+     "demos": [
+      "forces",
+      "elevator"
+     ],
+     "worksheets": [
+      "atwood",
+      "apparent-weight",
+      "forces"
+     ]
+    },
+    {
+     "sec": "4.4",
+     "title": "Newton's Third Law of Motion",
+     "demos": [
+      "forces",
+      "force-lab",
+      "collisions"
+     ]
+    }
+   ]
+  },
+  {
+   "chapter": 5,
+   "title": "Motion in Two Dimensions",
+   "sections": [
+    {
+     "sec": "5.1",
+     "title": "Vector Addition and Subtraction: Graphical Methods",
+     "demos": [
+      "vectors"
+     ],
+     "worksheets": [
+      "force-table"
+     ]
+    },
+    {
+     "sec": "5.2",
+     "title": "Vector Addition and Subtraction: Analytical Methods",
+     "demos": [
+      "vectors"
+     ],
+     "worksheets": [
+      "force-table",
+      "vectors"
+     ]
+    },
+    {
+     "sec": "5.3",
+     "title": "Projectile Motion",
+     "demos": [
+      "projectile-drag",
+      "cart-launch"
+     ],
+     "worksheets": [
+      "hs-projectiles",
+      "projectile-drag",
+      "relative-motion"
+     ]
+    },
+    {
+     "sec": "5.4",
+     "title": "Inclined Planes",
+     "demos": [
+      "forces"
+     ],
+     "worksheets": [
+      "forces"
+     ]
+    },
+    {
+     "sec": "5.5",
+     "title": "Simple Harmonic Motion",
+     "demos": [
+      "springs",
+      "pendulum"
+     ],
+     "worksheets": [
+      "springs",
+      "pendulum"
+     ]
+    }
+   ]
+  },
+  {
+   "chapter": 6,
+   "title": "Circular and Rotational Motion",
+   "sections": [
+    {
+     "sec": "6.1",
+     "title": "Angle of Rotation and Angular Velocity",
+     "demos": [
+      "rotation",
+      "circular-motion"
+     ],
+     "worksheets": [
+      "rotation"
+     ]
+    },
+    {
+     "sec": "6.2",
+     "title": "Uniform Circular Motion",
+     "demos": [
+      "circular-motion"
+     ],
+     "worksheets": [
+      "circular-motion"
+     ]
+    },
+    {
+     "sec": "6.3",
+     "title": "Rotational Motion",
+     "demos": [
+      "rotation",
+      "rotational-dynamics"
+     ],
+     "worksheets": [
+      "rotation",
+      "rotational-dynamics"
+     ]
+    }
+   ]
+  },
+  {
+   "chapter": 7,
+   "title": "Newton's Law of Gravitation",
+   "sections": [
+    {
+     "sec": "7.1",
+     "title": "Kepler's Laws of Planetary Motion",
+     "demos": [
+      "kepler-orbits"
+     ],
+     "worksheets": [
+      "intro-kepler",
+      "kepler-orbits"
+     ]
+    },
+    {
+     "sec": "7.2",
+     "title": "Newton's Law of Universal Gravitation and Einstein's Theory of General Relativity",
+     "demos": [
+      "force-lab",
+      "cavendish",
+      "gravity-near-earth",
+      "equivalence-gravity"
+     ],
+     "worksheets": [
+      "intro-gravity",
+      "cavendish",
+      "equivalence-principle"
+     ]
+    }
+   ]
+  },
+  {
+   "chapter": 8,
+   "title": "Momentum",
+   "sections": [
+    {
+     "sec": "8.1",
+     "title": "Linear Momentum, Force, and Impulse",
+     "demos": [
+      "impulse",
+      "collisions"
+     ],
+     "worksheets": [
+      "impulse"
+     ]
+    },
+    {
+     "sec": "8.2",
+     "title": "Conservation of Momentum",
+     "demos": [
+      "collisions"
+     ],
+     "worksheets": [
+      "collisions"
+     ]
+    },
+    {
+     "sec": "8.3",
+     "title": "Elastic and Inelastic Collisions",
+     "demos": [
+      "collisions"
+     ],
+     "worksheets": [
+      "collisions"
+     ]
+    }
+   ]
+  },
+  {
+   "chapter": 9,
+   "title": "Work, Energy, and Simple Machines",
+   "sections": [
+    {
+     "sec": "9.1",
+     "title": "Work, Power, and the Work–Energy Theorem",
+     "demos": [
+      "forces",
+      "energy-track",
+      "energy-sources"
+     ],
+     "worksheets": [
+      "hs-energy-skate",
+      "forces"
+     ]
+    },
+    {
+     "sec": "9.2",
+     "title": "Mechanical Energy and Conservation of Energy",
+     "demos": [
+      "energy-track",
+      "pendulum"
+     ],
+     "worksheets": [
+      "hs-energy-skate"
+     ]
+    },
+    {
+     "sec": "9.3",
+     "title": "Simple Machines",
+     "demos": [
+      "forces",
+      "equilibrium"
+     ],
+     "worksheets": [
+      "hs-simple-machines"
+     ]
+    }
+   ]
+  },
+  {
+   "chapter": 10,
+   "title": "Special Relativity",
+   "sections": [
+    {
+     "sec": "10.1",
+     "title": "Postulates of Special Relativity",
+     "demos": [
+      "spacetime",
+      "relativistic-motion"
+     ],
+     "worksheets": [
+      "spacetime"
+     ]
+    },
+    {
+     "sec": "10.2",
+     "title": "Consequences of Special Relativity",
+     "demos": [
+      "spacetime",
+      "relativistic-motion",
+      "gps-clocks",
+      "binding-energy"
+     ],
+     "worksheets": [
+      "gps-clocks",
+      "spacetime"
+     ]
+    }
+   ]
+  },
+  {
+   "chapter": 11,
+   "title": "Thermal Energy, Heat, and Work",
+   "sections": [
+    {
+     "sec": "11.1",
+     "title": "Temperature and Thermal Energy",
+     "demos": [
+      "temperature",
+      "ideal-gas"
+     ],
+     "worksheets": [
+      "thermal-equilibrium",
+      "gas-thermometer",
+      "thermal-expansion"
+     ]
+    },
+    {
+     "sec": "11.2",
+     "title": "Heat, Specific Heat, and Heat Transfer",
+     "demos": [
+      "temperature",
+      "states-of-matter",
+      "blackbody"
+     ],
+     "worksheets": [
+      "thermal-equilibrium",
+      "heat-conduction",
+      "convection"
+     ]
+    },
+    {
+     "sec": "11.3",
+     "title": "Phase Change and Latent Heat",
+     "demos": [
+      "states-of-matter"
+     ],
+     "worksheets": [
+      "heating-curve",
+      "bonds-and-latent-heat"
+     ]
+    }
+   ]
+  },
+  {
+   "chapter": 12,
+   "title": "Thermodynamics",
+   "sections": [
+    {
+     "sec": "12.1",
+     "title": "Zeroth Law of Thermodynamics: Thermal Equilibrium",
+     "demos": [
+      "temperature"
+     ],
+     "worksheets": [
+      "thermal-equilibrium"
+     ]
+    },
+    {
+     "sec": "12.2",
+     "title": "First law of Thermodynamics: Thermal Energy and Work",
+     "demos": [
+      "heat-engines",
+      "gas-heat-capacity"
+     ],
+     "worksheets": [
+      "hs-heat-engines",
+      "heat-capacities-of-gases"
+     ]
+    },
+    {
+     "sec": "12.3",
+     "title": "Second Law of Thermodynamics: Entropy",
+     "demos": [
+      "entropy",
+      "galton-board"
+     ],
+     "worksheets": [
+      "second-law",
+      "free-expansion"
+     ]
+    },
+    {
+     "sec": "12.4",
+     "title": "Applications of Thermodynamics: Heat Engines, Heat Pumps, and Refrigerators",
+     "demos": [
+      "heat-engines",
+      "entropy"
+     ],
+     "worksheets": [
+      "hs-heat-engines",
+      "heat-engines",
+      "second-law"
+     ]
+    }
+   ]
+  },
+  {
+   "chapter": 13,
+   "title": "Waves and Their Properties",
+   "sections": [
+    {
+     "sec": "13.1",
+     "title": "Types of Waves",
+     "demos": [
+      "sound-waves",
+      "standing-waves",
+      "ripple-tank"
+     ]
+    },
+    {
+     "sec": "13.2",
+     "title": "Wave Properties: Speed, Amplitude, Frequency, and Period",
+     "demos": [
+      "standing-waves",
+      "string-density",
+      "wave-power",
+      "ripple-tank"
+     ],
+     "worksheets": [
+      "string-density",
+      "wave-power",
+      "ripple-tank"
+     ]
+    },
+    {
+     "sec": "13.3",
+     "title": "Wave Interaction: Superposition and Interference",
+     "demos": [
+      "standing-waves",
+      "ripple-tank",
+      "two-speaker"
+     ],
+     "worksheets": [
+      "standing-waves",
+      "two-speaker"
+     ]
+    }
+   ]
+  },
+  {
+   "chapter": 14,
+   "title": "Sound",
+   "sections": [
+    {
+     "sec": "14.1",
+     "title": "Speed of Sound, Frequency, and Wavelength",
+     "demos": [
+      "sound-waves",
+      "resonators"
+     ],
+     "worksheets": [
+      "sound-waves",
+      "resonators"
+     ]
+    },
+    {
+     "sec": "14.2",
+     "title": "Sound Intensity and Sound Level",
+     "demos": [
+      "sound-intensity",
+      "hearing"
+     ],
+     "worksheets": [
+      "sound-intensity"
+     ]
+    },
+    {
+     "sec": "14.3",
+     "title": "Doppler Effect and Sonic Booms",
+     "demos": [
+      "doppler"
+     ],
+     "worksheets": [
+      "doppler"
+     ]
+    },
+    {
+     "sec": "14.4",
+     "title": "Sound Interference and Resonance",
+     "demos": [
+      "two-speaker",
+      "resonators",
+      "standing-waves",
+      "string-density"
+     ],
+     "worksheets": [
+      "two-speaker",
+      "resonators",
+      "standing-waves"
+     ]
+    }
+   ]
+  },
+  {
+   "chapter": 15,
+   "title": "Light",
+   "sections": [
+    {
+     "sec": "15.1",
+     "title": "The Electromagnetic Spectrum",
+     "demos": [
+      "em-waves",
+      "blackbody"
+     ],
+     "worksheets": [
+      "intro-em-spectrum"
+     ]
+    },
+    {
+     "sec": "15.2",
+     "title": "The Behavior of Electromagnetic Radiation",
+     "demos": [
+      "polarization",
+      "optics-bench",
+      "em-waves"
+     ],
+     "worksheets": [
+      "polarization"
+     ]
+    }
+   ]
+  },
+  {
+   "chapter": 16,
+   "title": "Mirrors and Lenses",
+   "sections": [
+    {
+     "sec": "16.1",
+     "title": "Reflection",
+     "demos": [
+      "optics-bench"
+     ],
+     "worksheets": [
+      "intro-mirrors",
+      "mirrors-refraction"
+     ]
+    },
+    {
+     "sec": "16.2",
+     "title": "Refraction",
+     "demos": [
+      "optics-bench",
+      "huygens"
+     ],
+     "worksheets": [
+      "mirrors-refraction",
+      "dispersion"
+     ]
+    },
+    {
+     "sec": "16.3",
+     "title": "Lenses",
+     "demos": [
+      "optics-bench",
+      "the-eye"
+     ],
+     "worksheets": [
+      "lenses-instruments",
+      "camera",
+      "the-eye"
+     ]
+    }
+   ]
+  },
+  {
+   "chapter": 17,
+   "title": "Diffraction and Interference",
+   "sections": [
+    {
+     "sec": "17.1",
+     "title": "Understanding Diffraction and Interference",
+     "demos": [
+      "double-slit",
+      "diffraction-grating",
+      "ripple-tank"
+     ],
+     "worksheets": [
+      "double-slit",
+      "single-slit",
+      "diffraction-grating"
+     ]
+    },
+    {
+     "sec": "17.2",
+     "title": "Applications of Diffraction, Interference, and Coherence",
+     "demos": [
+      "diffraction-grating",
+      "thin-films",
+      "holography",
+      "resolution"
+     ],
+     "worksheets": [
+      "thin-films",
+      "diffraction-grating",
+      "intro-resolution"
+     ]
+    }
+   ]
+  },
+  {
+   "chapter": 18,
+   "title": "Static Electricity",
+   "sections": [
+    {
+     "sec": "18.1",
+     "title": "Electrical Charges, Conservation of Charge, and Transfer of Charge",
+     "demos": [
+      "induction"
+     ],
+     "worksheets": [
+      "induction"
+     ]
+    },
+    {
+     "sec": "18.2",
+     "title": "Coulomb's law",
+     "demos": [
+      "force-lab",
+      "coulomb-sandbox"
+     ],
+     "worksheets": [
+      "coulomb-sandbox"
+     ]
+    },
+    {
+     "sec": "18.3",
+     "title": "Electric Field",
+     "demos": [
+      "coulomb-sandbox"
+     ],
+     "worksheets": [
+      "coulomb-sandbox"
+     ]
+    },
+    {
+     "sec": "18.4",
+     "title": "Electric Potential",
+     "demos": [
+      "coulomb-sandbox",
+      "capacitors"
+     ],
+     "worksheets": [
+      "capacitors"
+     ]
+    },
+    {
+     "sec": "18.5",
+     "title": "Capacitors and Dielectrics",
+     "demos": [
+      "capacitors"
+     ],
+     "worksheets": [
+      "capacitors"
+     ]
+    }
+   ]
+  },
+  {
+   "chapter": 19,
+   "title": "Electrical Circuits",
+   "sections": [
+    {
+     "sec": "19.1",
+     "title": "Ohm's law",
+     "demos": [
+      "circuits",
+      "resistivity"
+     ],
+     "worksheets": [
+      "resistivity"
+     ]
+    },
+    {
+     "sec": "19.2",
+     "title": "Series Circuits",
+     "demos": [
+      "circuits"
+     ],
+     "worksheets": [
+      "hs-series-parallel",
+      "dc-circuits"
+     ]
+    },
+    {
+     "sec": "19.3",
+     "title": "Parallel Circuits",
+     "demos": [
+      "circuits",
+      "household-wiring"
+     ],
+     "worksheets": [
+      "hs-series-parallel",
+      "dc-circuits",
+      "household-wiring"
+     ]
+    },
+    {
+     "sec": "19.4",
+     "title": "Electric Power",
+     "demos": [
+      "circuits",
+      "household-wiring"
+     ],
+     "worksheets": [
+      "household-wiring"
+     ]
+    }
+   ]
+  },
+  {
+   "chapter": 20,
+   "title": "Magnetism",
+   "sections": [
+    {
+     "sec": "20.1",
+     "title": "Magnetic Fields, Field Lines, and Force",
+     "demos": [
+      "currents-fields",
+      "magnetic-force",
+      "wire-force"
+     ],
+     "worksheets": [
+      "magnets-oersted",
+      "magnetic-force",
+      "wire-force"
+     ]
+    },
+    {
+     "sec": "20.2",
+     "title": "Motors, Generators, and Transformers",
+     "demos": [
+      "wire-force",
+      "faraday",
+      "transformers"
+     ],
+     "worksheets": [
+      "transformers",
+      "wire-force"
+     ]
+    },
+    {
+     "sec": "20.3",
+     "title": "Electromagnetic Induction",
+     "demos": [
+      "faraday",
+      "induction-at-work"
+     ],
+     "worksheets": [
+      "faraday-mutual-induction",
+      "faraday"
+     ]
+    }
+   ]
+  },
+  {
+   "chapter": 21,
+   "title": "The Quantum Nature of Light",
+   "sections": [
+    {
+     "sec": "21.1",
+     "title": "Planck and Quantum Nature of Light",
+     "demos": [
+      "blackbody"
+     ],
+     "worksheets": [
+      "intro-blackbody",
+      "blackbody"
+     ]
+    },
+    {
+     "sec": "21.2",
+     "title": "Einstein and the Photoelectric Effect",
+     "demos": [
+      "photoelectric"
+     ],
+     "worksheets": [
+      "photoelectric"
+     ]
+    },
+    {
+     "sec": "21.3",
+     "title": "The Dual Nature of Light",
+     "demos": [
+      "double-slit",
+      "electron-diffraction",
+      "compton"
+     ],
+     "worksheets": [
+      "electron-diffraction"
+     ]
+    }
+   ]
+  },
+  {
+   "chapter": 22,
+   "title": "The Atom",
+   "sections": [
+    {
+     "sec": "22.1",
+     "title": "The Structure of the Atom",
+     "demos": [
+      "rutherford",
+      "spectra"
+     ],
+     "worksheets": [
+      "rutherford",
+      "spectra",
+      "intro-spectra"
+     ]
+    },
+    {
+     "sec": "22.2",
+     "title": "Nuclear Forces and Radioactivity",
+     "demos": [
+      "radioactive-decay",
+      "binding-energy"
+     ]
+    },
+    {
+     "sec": "22.3",
+     "title": "Half Life and Radiometric Dating",
+     "demos": [
+      "radioactive-decay"
+     ],
+     "worksheets": [
+      "hs-half-life",
+      "decay-chains",
+      "radioactive-decay"
+     ]
+    },
+    {
+     "sec": "22.4",
+     "title": "Nuclear Fission and Fusion",
+     "demos": [
+      "binding-energy",
+      "nuclear-reactions"
+     ],
+     "worksheets": [
+      "critical-mass"
+     ]
+    },
+    {
+     "sec": "22.5",
+     "title": "Medical Applications of Radioactivity: Diagnostic Imaging and Radiation",
+     "demos": [
+      "nuclear-reactions",
+      "photon-interactions",
+      "ct-reconstruction",
+      "radiobiology"
+     ]
+    }
+   ]
+  },
+  {
+   "chapter": 23,
+   "title": "Particle Physics",
+   "sections": [
+    {
+     "sec": "23.1",
+     "title": "The Four Fundamental Forces",
+     "demos": [
+      "particles"
+     ]
+    },
+    {
+     "sec": "23.2",
+     "title": "Quarks",
+     "demos": [
+      "particles"
+     ]
+    },
+    {
+     "sec": "23.3",
+     "title": "The Unification of Forces",
+     "demos": []
+    },
+    {
+     "sec": "23.4",
+     "title": "Reference Tables",
+     "demos": []
+    }
+   ]
+  }
+ ]
+}

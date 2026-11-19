@@ -11,4 +11,13 @@ module.exports = async (page, grab) => {
   await page.waitForTimeout(700);
   await page.evaluate(() => { const d = document.getElementById('dropBtn'); if (d) d.click(); }).catch(() => {});
   await page.waitForTimeout(500); await grab(page);
+  /* the Roots setups: the complex pair, the double root, two real roots, b = 0 driven at ω₀, Blind and an unknown spring */
+  const roots = async (js) => { await page.evaluate(js).catch(() => {}); await page.waitForTimeout(400); await grab(page); };
+  await roots(() => { document.querySelector('[data-p="roots"]').click(); });
+  await roots(() => { const P = window.__sp; P.setParam('b', 2 * Math.sqrt(P.S.p.k * P.S.p.m)); });
+  await roots(() => { window.__sp.setParam('b', 20); });
+  await roots(() => { document.querySelector('[data-p="rootsDriven"]').click(); const P = window.__sp; P.setParam('b', 0); P.setParam('w', Math.sqrt(P.S.p.k / P.S.p.m)); });
+  await roots(() => { document.querySelector('[data-p="rootsDriven"]').click(); const b = document.getElementById('labBlind'); if (b) b.click(); });
+  await roots(() => { const b = document.getElementById('labBlind'); if (b) b.click(); const u = document.getElementById('labUnknown'); if (u) u.click(); });
+  await roots(() => { const u = document.getElementById('labUnknown'); if (u && u.checked) u.click(); });
 };

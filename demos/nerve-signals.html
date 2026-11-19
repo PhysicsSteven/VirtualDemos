@@ -1,0 +1,998 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="lib/theme.js"></script>
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
+<title>Nerve Signals and the ECG</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css: the membrane's colors, the myelin, the electrodes, the ions, the ECG paper,
+   and the stage with its strip, Set up card and picture */
+:root { --rest: #5d3f86; --hot: #f2b134; --myelin: #f3e3c0; --myelin-edge: #a98b55; --elA: #0d7a5f; --elB: #a1561a; --stim: #b4232c;
+  --na: #d9661f; --k: #6c3fb5; --cl: #2f8f46; --fluid-out: #f1ebe1; --fluid-in: #ebe2f0; --lipid: #c9a87a; --scope: #fbf8f3; --scope-grid: #e7dfd2;
+  --paper-ecg: #fff6f3; --ecg-minor: #f6d3cd; --ecg-major: #e9a197; --ecg-ink: #231915; --skin: #f0e3d4; --skin-edge: #cdb69c; --heart: #b8443a;
+  --leadI: #c2410c; --leadII: #0d7a5f; --leadIII: #7c3aed; --dip: #9f1d1d; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --rest: #8c68c4; --hot: #ffd166; --myelin: #e9dfca; --myelin-edge: #9c8a68; --elA: #3dd6a3; --elB: #f0a65a; --stim: #ff6b6b;
+  --na: #ff9a52; --k: #b392f0; --cl: #6fcf87; --fluid-out: #1d1913; --fluid-in: #211a26; --lipid: #7d6747; --scope: #12100c; --scope-grid: #2a241b;
+  --paper-ecg: #1b1413; --ecg-minor: #34221f; --ecg-major: #5a3430; --ecg-ink: #f6e9df; --skin: #33291f; --skin-edge: #5d4c3a; --heart: #d9645a;
+  --leadI: #ff8a4c; --leadII: #3dd6a3; --leadIII: #b79bff; --dip: #ff6b5b; } }
+:root[data-theme="dark"] { --rest: #8c68c4; --hot: #ffd166; --myelin: #e9dfca; --myelin-edge: #9c8a68; --elA: #3dd6a3; --elB: #f0a65a; --stim: #ff6b6b;
+  --na: #ff9a52; --k: #b392f0; --cl: #6fcf87; --fluid-out: #1d1913; --fluid-in: #211a26; --lipid: #7d6747; --scope: #12100c; --scope-grid: #2a241b;
+  --paper-ecg: #1b1413; --ecg-minor: #34221f; --ecg-major: #5a3430; --ecg-ink: #f6e9df; --skin: #33291f; --skin-edge: #5d4c3a; --heart: #d9645a;
+  --leadI: #ff8a4c; --leadII: #3dd6a3; --leadIII: #b79bff; --dip: #ff6b5b; }
+.stage { position: relative; display: grid; grid-template-columns: 268px minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); grid-template-areas: "ctl ctl" "card main";
+  border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage-ctl { grid-area: ctl; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.stage-ctl select { font: inherit; font-size: 0.82rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 3px 6px; }
+.pane { grid-area: main; position: relative; min-width: 0; min-height: 0; }
+.pane canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; outline: none; touch-action: none; }
+.pane canvas:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+.setup-card { grid-area: card; display: flex; flex-direction: column; gap: 7px; padding: 9px 10px; font-size: 0.86rem; border-right: 1px solid var(--line); background: var(--surface); min-width: 0; }
+.setup-card .card-title { text-transform: uppercase; letter-spacing: 0.07em; }
+.setup-card hr { border: 0; border-top: 1px solid var(--line); margin: 3px 0; width: 100%; }
+.setup-card .seg { flex-wrap: wrap; }
+.setup-card .seg button { font-size: 0.78rem; padding: 3px 7px; }
+.setup-card .btnrow .btn { font-size: 0.8rem; padding: 4px 8px; }
+.slider-head { display: flex; justify-content: space-between; gap: 8px; font-size: 0.82rem; line-height: 1.25; }
+.slider-head output { font-family: var(--font-mono); font-size: 0.82rem; color: var(--muted); }
+input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+.formula { font-family: var(--font-mono); font-size: 0.8rem; overflow-wrap: anywhere; margin: 0 0 6px; }
+.srcs { margin: 0; padding-left: 18px; font-size: 0.8rem; color: var(--muted); }
+.blindtag { position: absolute; right: 10px; bottom: 8px; z-index: 3; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--canvas); background: var(--ink); border-radius: 5px; padding: 3px 8px; }
+.plotbox { position: relative; height: 200px; }
+.plotbox canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.rail .hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
+.stage[data-v="rest"] .vd-tg { display: none; }
+@media (min-width: 821px) { .bench > .stage { align-self: start; min-height: max(520px, 100%); } :root[data-projector="on"] .bench > .stage { min-height: max(460px, 100%); } }
+@media (max-width: 820px) {
+  html, body { height: auto; }
+  .app { height: auto; }
+  .stage { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto auto auto; grid-template-areas: "ctl" "main" "card"; }
+  .pane { height: 600px; }
+  .stage[data-v="ecg"] .pane { height: 760px; }
+  .stage[data-v="rest"] .pane { height: 640px; }
+  .setup-card { border-right: 0; border-top: 1px solid var(--line); }
+  .chips button, .btn, .seg button, .proj, .spin { min-height: 36px; }
+  input[type="range"] { min-height: 28px; }
+}
+</style>
+<link rel="stylesheet" id="vd-paper" href="lib/paper.css">
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Nerve Signals and the ECG</h1>
+      <p>A nerve fiber is a leaky cable: a small kick of charge fades, but a kick past threshold fires an action potential that runs the whole length. Time it between two electrodes and see myelin make it jump from node to node. Then watch the heart, a turning dipole, draw ECG leads I, II and III.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">mV · ms · µm</div>
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/nerve-signals.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/nerve-signals.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM12 2h1v1h-1zM19 2h2v1h-2zM22 2h2v1h-2zM25 2h1v1h-1zM30 2h1v1h-1zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM14 3h2v1h-2zM18 3h1v1h-1zM20 3h2v1h-2zM23 3h2v1h-2zM26 3h2v1h-2zM29 3h2v1h-2zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h2v1h-2zM13 4h2v1h-2zM18 4h1v1h-1zM21 4h3v1h-3zM28 4h1v1h-1zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h3v1h-3zM15 5h2v1h-2zM19 5h1v1h-1zM21 5h1v1h-1zM24 5h1v1h-1zM27 5h4v1h-4zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h4v1h-4zM15 6h1v1h-1zM21 6h2v1h-2zM25 6h1v1h-1zM27 6h2v1h-2zM30 6h1v1h-1zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h2v1h-2zM18 7h1v1h-1zM20 7h1v1h-1zM23 7h2v1h-2zM29 7h2v1h-2zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h1v1h-1zM12 9h1v1h-1zM15 9h3v1h-3zM21 9h4v1h-4zM26 9h1v1h-1zM28 9h1v1h-1zM2 10h1v1h-1zM4 10h5v1h-5zM15 10h2v1h-2zM20 10h1v1h-1zM22 10h1v1h-1zM24 10h2v1h-2zM27 10h4v1h-4zM32 10h5v1h-5zM2 11h5v1h-5zM9 11h1v1h-1zM11 11h3v1h-3zM16 11h3v1h-3zM25 11h1v1h-1zM30 11h1v1h-1zM33 11h1v1h-1zM36 11h2v1h-2zM2 12h5v1h-5zM8 12h1v1h-1zM10 12h1v1h-1zM14 12h2v1h-2zM19 12h2v1h-2zM22 12h2v1h-2zM26 12h1v1h-1zM28 12h3v1h-3zM32 12h3v1h-3zM36 12h3v1h-3zM3 13h3v1h-3zM9 13h1v1h-1zM13 13h2v1h-2zM16 13h1v1h-1zM18 13h1v1h-1zM20 13h1v1h-1zM23 13h1v1h-1zM26 13h1v1h-1zM29 13h2v1h-2zM32 13h3v1h-3zM38 13h1v1h-1zM2 14h2v1h-2zM5 14h2v1h-2zM8 14h2v1h-2zM12 14h5v1h-5zM19 14h1v1h-1zM22 14h1v1h-1zM24 14h5v1h-5zM30 14h9v1h-9zM4 15h2v1h-2zM7 15h1v1h-1zM11 15h3v1h-3zM15 15h1v1h-1zM18 15h2v1h-2zM22 15h1v1h-1zM24 15h2v1h-2zM30 15h1v1h-1zM33 15h1v1h-1zM4 16h1v1h-1zM6 16h3v1h-3zM13 16h1v1h-1zM15 16h1v1h-1zM17 16h3v1h-3zM22 16h3v1h-3zM27 16h5v1h-5zM33 16h3v1h-3zM38 16h1v1h-1zM4 17h2v1h-2zM14 17h1v1h-1zM17 17h7v1h-7zM25 17h1v1h-1zM28 17h1v1h-1zM33 17h2v1h-2zM37 17h1v1h-1zM2 18h2v1h-2zM5 18h8v1h-8zM15 18h4v1h-4zM21 18h1v1h-1zM23 18h1v1h-1zM26 18h4v1h-4zM31 18h2v1h-2zM34 18h1v1h-1zM36 18h1v1h-1zM38 18h1v1h-1zM2 19h1v1h-1zM4 19h1v1h-1zM6 19h2v1h-2zM10 19h1v1h-1zM14 19h1v1h-1zM16 19h2v1h-2zM20 19h1v1h-1zM22 19h2v1h-2zM25 19h1v1h-1zM37 19h1v1h-1zM2 20h1v1h-1zM4 20h1v1h-1zM8 20h1v1h-1zM10 20h1v1h-1zM12 20h4v1h-4zM17 20h2v1h-2zM21 20h1v1h-1zM23 20h2v1h-2zM26 20h1v1h-1zM28 20h3v1h-3zM33 20h3v1h-3zM37 20h2v1h-2zM2 21h6v1h-6zM10 21h1v1h-1zM16 21h2v1h-2zM20 21h6v1h-6zM28 21h3v1h-3zM32 21h1v1h-1zM38 21h1v1h-1zM2 22h3v1h-3zM7 22h3v1h-3zM13 22h2v1h-2zM17 22h1v1h-1zM19 22h1v1h-1zM21 22h1v1h-1zM24 22h6v1h-6zM31 22h2v1h-2zM34 22h3v1h-3zM3 23h2v1h-2zM6 23h2v1h-2zM10 23h2v1h-2zM18 23h1v1h-1zM21 23h1v1h-1zM25 23h1v1h-1zM27 23h2v1h-2zM30 23h2v1h-2zM35 23h1v1h-1zM37 23h1v1h-1zM4 24h5v1h-5zM10 24h2v1h-2zM14 24h2v1h-2zM17 24h1v1h-1zM20 24h1v1h-1zM22 24h1v1h-1zM24 24h1v1h-1zM26 24h10v1h-10zM37 24h2v1h-2zM2 25h2v1h-2zM11 25h4v1h-4zM17 25h2v1h-2zM21 25h2v1h-2zM25 25h1v1h-1zM29 25h1v1h-1zM31 25h4v1h-4zM37 25h1v1h-1zM4 26h1v1h-1zM8 26h2v1h-2zM12 26h1v1h-1zM14 26h1v1h-1zM17 26h1v1h-1zM20 26h9v1h-9zM31 26h4v1h-4zM36 26h2v1h-2zM2 27h3v1h-3zM7 27h1v1h-1zM9 27h1v1h-1zM13 27h1v1h-1zM17 27h2v1h-2zM23 27h1v1h-1zM25 27h2v1h-2zM30 27h2v1h-2zM33 27h1v1h-1zM2 28h1v1h-1zM4 28h1v1h-1zM6 28h5v1h-5zM12 28h3v1h-3zM16 28h1v1h-1zM22 28h1v1h-1zM27 28h3v1h-3zM33 28h2v1h-2zM37 28h2v1h-2zM2 29h1v1h-1zM4 29h4v1h-4zM9 29h1v1h-1zM11 29h1v1h-1zM13 29h2v1h-2zM18 29h1v1h-1zM23 29h1v1h-1zM25 29h2v1h-2zM30 29h5v1h-5zM37 29h2v1h-2zM2 30h1v1h-1zM5 30h1v1h-1zM8 30h3v1h-3zM12 30h3v1h-3zM16 30h1v1h-1zM19 30h1v1h-1zM26 30h13v1h-13zM10 31h3v1h-3zM14 31h2v1h-2zM17 31h7v1h-7zM25 31h2v1h-2zM29 31h2v1h-2zM34 31h2v1h-2zM2 32h7v1h-7zM14 32h2v1h-2zM17 32h1v1h-1zM19 32h1v1h-1zM22 32h2v1h-2zM26 32h1v1h-1zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM36 32h3v1h-3zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h2v1h-2zM13 33h3v1h-3zM17 33h4v1h-4zM23 33h3v1h-3zM28 33h1v1h-1zM30 33h1v1h-1zM34 33h2v1h-2zM37 33h2v1h-2zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h3v1h-3zM14 34h1v1h-1zM18 34h1v1h-1zM21 34h1v1h-1zM23 34h1v1h-1zM25 34h1v1h-1zM27 34h8v1h-8zM36 34h2v1h-2zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h1v1h-1zM12 35h6v1h-6zM20 35h1v1h-1zM22 35h1v1h-1zM24 35h2v1h-2zM30 35h3v1h-3zM34 35h1v1h-1zM36 35h1v1h-1zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM10 36h3v1h-3zM17 36h2v1h-2zM20 36h2v1h-2zM24 36h1v1h-1zM26 36h1v1h-1zM28 36h2v1h-2zM31 36h1v1h-1zM37 36h2v1h-2zM2 37h1v1h-1zM8 37h1v1h-1zM11 37h2v1h-2zM15 37h1v1h-1zM17 37h1v1h-1zM21 37h3v1h-3zM28 37h1v1h-1zM30 37h1v1h-1zM32 37h1v1h-1zM34 37h1v1h-1zM38 37h1v1h-1zM2 38h7v1h-7zM10 38h4v1h-4zM15 38h1v1h-1zM17 38h1v1h-1zM19 38h1v1h-1zM21 38h1v1h-1zM24 38h5v1h-5zM34 38h5v1h-5z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage" data-v="axon">
+      <div class="stage-ctl" id="strip">
+        <button type="button" class="btn attn" id="play">Play</button>
+        <button type="button" class="btn" id="reset">Reset</button>
+        <span id="speedBox"><select id="speed" aria-label="Slow motion: simulated time per second"></select></span>
+        <span class="mono" id="tclock" aria-live="off"></span>
+        <div class="seg" role="group" aria-label="View" id="viewSeg">
+          <button type="button" data-v="rest" aria-pressed="false">Resting potential</button>
+          <button type="button" data-v="axon" aria-pressed="true">Axon</button>
+          <button type="button" data-v="ecg" aria-pressed="false">Heart and ECG</button>
+        </div>
+      </div>
+      <div class="setup-card" id="setupCard" role="group" aria-label="Set up the view">
+        <div id="axonBox">
+          <span class="card-title">Axon</span>
+          <div class="seg" role="group" aria-label="Myelin" id="myelinSeg"><button type="button" data-my="1" aria-pressed="true">Myelinated</button><button type="button" data-my="0" aria-pressed="false">Bare</button></div>
+          <div><div class="slider-head"><label for="sD">Axon diameter d</label><output id="oD" for="sD"></output></div><input type="range" id="sD" min="0" max="1000" step="1"></div>
+          <div id="damageBox"><div class="slider-head"><span>Myelin on internodes 12 to 14</span></div>
+            <div class="seg" role="group" aria-label="Myelin on internodes 12 to 14" id="damageSeg"><button type="button" data-dmg="none" aria-pressed="true">Healthy</button><button type="button" data-dmg="thin" aria-pressed="false">Thinned</button><button type="button" data-dmg="lost" aria-pressed="false">Lost</button></div></div>
+          <label class="check"><input type="checkbox" id="race"><span>Race a second axon of the other kind</span></label>
+          <hr>
+          <span class="card-title">Stimulus</span>
+          <div><div class="slider-head"><label for="sV">Kick ΔV at the left end</label><output id="oV" for="sV"></output></div><input type="range" id="sV" min="0" max="80" step="0.5"></div>
+          <div class="btnrow"><button type="button" class="btn" id="stimBtn">Stimulate again</button></div>
+          <hr>
+          <span class="card-title">Recording electrodes</span>
+          <div><div class="slider-head"><label for="sA">Electrode A at</label><output id="oA" for="sA"></output></div><input type="range" id="sA" min="0.05" max="0.95" step="0.005"></div>
+          <div><div class="slider-head"><label for="sB">Electrode B at</label><output id="oB" for="sB"></output></div><input type="range" id="sB" min="0.05" max="0.95" step="0.005"></div>
+          <p class="note">Drag the electrodes along the axon, or focus the picture and use the arrow keys (A and B pick one).</p>
+        </div>
+        <div id="restBox" hidden>
+          <span class="card-title">Cell</span>
+          <div class="seg" role="group" aria-label="Cell" id="cellSeg"><button type="button" data-cell="human" aria-pressed="true">Human nerve cell</button><button type="button" data-cell="squid" aria-pressed="false">Squid giant axon</button></div>
+          <div><div class="slider-head"><label for="sT">Temperature</label><output id="oT" for="sT"></output></div><input type="range" id="sT" min="0" max="45" step="0.5"></div>
+          <div><div class="slider-head"><label for="sK">K⁺ outside</label><output id="oK" for="sK"></output></div><input type="range" id="sK" min="1" max="60" step="0.5"></div>
+          <div><div class="slider-head"><label for="sP">Sodium permeability P_Na/P_K</label><output id="oP" for="sP"></output></div><input type="range" id="sP" min="-3" max="1.5" step="0.01"></div>
+          <div class="btnrow"><button type="button" class="btn" id="pRest">Resting (0.04)</button><button type="button" class="btn" id="pPeak">Sodium channels open (20)</button></div>
+          <p class="note">Each dot stands for a fixed concentration; the + and − signs on the membrane grow with the voltage across it.</p>
+        </div>
+        <div id="ecgBox" hidden>
+          <span class="card-title">Heart</span>
+          <div><div class="slider-head"><label for="sR">Heart rate</label><output id="oR" for="sR"></output></div><input type="range" id="sR" min="40" max="180" step="1"></div>
+          <div><div class="slider-head"><label for="sX">Mean QRS axis</label><output id="oX" for="sX"></output></div><input type="range" id="sX" min="-90" max="180" step="1"></div>
+          <label class="check"><input type="checkbox" id="aug"><span>Also show aVR, aVL and aVF</span></label>
+          <label class="check"><input type="checkbox" id="loop" checked><span>Trace the dipole's loop</span></label>
+          <p class="note">Paper runs at 25 mm/s and 10 mm/mV, in real time: one small box is 0.04 s and 0.1 mV.</p>
+        </div>
+      </div>
+      <div class="pane" id="pane">
+        <canvas id="can" tabindex="0" role="application" aria-label="An axon seen from the side with a stimulating electrode at its left end and two recording electrodes, A and B, above it; the membrane's color shows its voltage, and an oscilloscope below records the voltage at A and B against time. Drag an electrode, or use the arrow keys; A and B pick which one moves."></canvas>
+        <span class="blindtag" id="blindTag" hidden>Blind</span>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="race" data-view="axon" aria-pressed="true">Myelinated against bare</button>
+          <button type="button" data-p="below" data-view="axon" aria-pressed="false">Below threshold</button>
+          <button type="button" data-p="above" data-view="axon" aria-pressed="false">Just above threshold</button>
+          <button type="button" data-p="twice" data-view="axon" aria-pressed="false">Two stimuli close together</button>
+          <button type="button" data-p="cfiber" data-view="axon" aria-pressed="false">Thin bare fiber (C fiber)</button>
+          <button type="button" data-p="thick" data-view="axon" aria-pressed="false">Thick myelinated fiber</button>
+          <button type="button" data-p="squid" data-view="axon" aria-pressed="false">Squid giant axon</button>
+          <button type="button" data-p="thin" data-view="axon" aria-pressed="false">Thinned myelin</button>
+          <button type="button" data-p="lost" data-view="axon" aria-pressed="false">Myelin lost</button>
+          <button type="button" data-p="human" data-view="rest" aria-pressed="false" hidden>Human nerve cell at rest</button>
+          <button type="button" data-p="squidRest" data-view="rest" aria-pressed="false" hidden>Squid axon at rest</button>
+          <button type="button" data-p="hyperK" data-view="rest" aria-pressed="false" hidden>High potassium outside</button>
+          <button type="button" data-p="peak" data-view="rest" aria-pressed="false" hidden>Peak of the impulse</button>
+          <button type="button" data-p="normal" data-view="ecg" aria-pressed="false" hidden>Normal heart</button>
+          <button type="button" data-p="lad" data-view="ecg" aria-pressed="false" hidden>Left axis deviation</button>
+          <button type="button" data-p="rad" data-view="ecg" aria-pressed="false" hidden>Right axis deviation</button>
+          <button type="button" data-p="fast" data-view="ecg" aria-pressed="false" hidden>Fast heart rate</button>
+          <button type="button" data-p="slow" data-view="ecg" aria-pressed="false" hidden>Slow heart rate</button>
+        </div>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+      </section>
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+      </section>
+      <section id="speedSec">
+        <h2>Speed against diameter</h2>
+        <div class="plotbox"><canvas id="vplot" role="img" aria-label="Recorded conduction speeds against axon diameter on logarithmic axes, bare and myelinated, with a power law fit through each and the ranges of typical human nerve fibers."></canvas></div>
+        <dl class="readout" id="fitOut"></dl>
+        <details class="more"><summary>More about this</summary><p class="hint">Record a reading after each run to add a point. Both axes are logarithmic, so v ∝ dⁿ is a straight line of slope n. The shaded boxes are typical human fibers at body temperature; the model runs at 18.5 °C, so its speeds come out lower (the HH squid membrane fails to fire at 37 °C), while the slopes are what to compare.</p></details>
+      </section>
+      <!-- vd-readings --><section class="vd-readings" data-ws="nerve-signals" data-title="Nerve Signals and the ECG" data-demo="nerve-signals">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings ('+(typeof window.vdDataNote==='function'&&window.vdDataNote()?'catalog data':'simulated data')+')','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:(typeof window.vdDataNote==='function'&&window.vdDataNote())||'Simulated data from '+(/^The /.test(title)?'':'the ')+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions</span></label>
+        <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
+        <details class="more"><summary>The model and its formulas</summary>
+          <p class="hint">Blind hides the threshold of this axon and the speed the model predicts, the resting voltage the Goldman equation gives, and the heart's axis and dipole angle. Predict first, then measure.</p>
+          <p class="formula">E = (kT/ze) ln(c_out/c_in) · V = (kT/e) ln[(P_K K_out + P_Na Na_out + P_Cl Cl_in)/(P_K K_in + P_Na Na_in + P_Cl Cl_out)]</p>
+          <p class="hint">Resting potential: the Nernst potential of each ion and the Goldman-Hodgkin-Katz voltage, with k_B and e exact (2019 SI). Concentrations from Purves et al., Neuroscience, 6th ed. (2018), Table 2.1; where it gives a range (human Na⁺ inside 5 to 15 mM, Cl⁻ inside 4 to 30 mM; squid Cl⁻ inside 40 to 150 mM) the demo uses 12, 10 and 40 mM. Permeability ratios P_K : P_Na : P_Cl = 1 : 0.04 : 0.45 at rest and 1 : 20 : 0.45 at the peak of the impulse (Hodgkin and Katz 1949, squid axon). The field across the membrane uses its 8 nm thickness (OpenStax College Physics 2e, 20.7).</p>
+          <p class="formula">C_m ∂V/∂t = (d/4R_i) ∂²V/∂x² − g_Na m³h (V − E_Na) − g_K n⁴ (V − E_K) − g_L (V − E_L)</p>
+          <p class="hint">Axon: the Hodgkin-Huxley membrane (Hodgkin and Huxley 1952, J. Physiol. 117, 500) on a cable, at 18.5 °C, the temperature of their propagated action potential, with the rates scaled by 3^((T − 6.3 °C)/10): g_Na = 120, g_K = 36, g_L = 0.3 mS/cm², E_Na = 50, E_K = −77, E_L = −54.4 mV, C_m = 1 µF/cm², R_i = 35.4 Ω cm. The cable is cut into 600 pieces (bare) or into nodes 1 µm long and ten pieces per internode (myelinated) and stepped implicitly, 4 µs (bare) or 1 µs (myelinated) at a time; the speeds are within 1 % of a much finer grid. Hodgkin and Huxley computed 18.8 m/s for their 476 µm squid axon, and measured 21.2 m/s; this grid gives 18.6 m/s.</p>
+          <p class="hint">Myelin: the axon is 0.7 of the fiber's outer diameter (g-ratio), internodes are 100 fiber diameters long, nodes are 1 µm long, and the myelin's lamellae are 16 nm apart. Each lamella puts two more membranes in series, so an internode has 1/(2N) of the bare membrane's capacitance and conductance per area, with N lamellae. The nodes carry five times the squid membrane's channel density, a chosen value: with the squid density alone the impulse dies in the first internode, and real nodes of Ranvier pack sodium channels several times more densely. Thinned myelin keeps a tenth of the lamellae on internodes 12 to 14; lost myelin leaves them bare and without channels. Nodes are drawn wider than to scale and the axon thicker; lengths along the axon are to scale.</p>
+          <p class="hint">Stimulus: the electrode charges the membrane under it by ΔV at once. It covers half a bare length constant λ = √(R_m d/4R_i) (R_m from the resting conductance, 0.677 mS/cm²), or the first node and two internodes of a myelinated axon. The electrodes time the impulse where the voltage rises through 0 mV.</p>
+          <p class="hint">Speeds of real fibers (shaded on the graph): Erlanger and Gasser's classes as tabulated in Purves et al. (2018): C 0.2 to 1.5 µm and 0.5 to 2 m/s; Aδ 1 to 5 µm and 5 to 35 m/s; Aβ 6 to 12 µm and 35 to 75 m/s; Aα 13 to 20 µm and 80 to 120 m/s, fiber diameters with the myelin, drawn at 0.7 of that for the axon. Hursh (1939) found about 6 m/s per µm of fiber diameter in myelinated fibers.</p>
+          <p class="formula">I = p_x · II = p_x/2 + (√3/2) p_y · III = −p_x/2 + (√3/2) p_y · II = I + III</p>
+          <p class="hint">Heart: the heart's electrical activity as one dipole in the frontal plane (Einthoven's model), angles measured from the patient's left (lead I) toward the feet. P, Q, R, S and T are Gaussian pulses in time, each pointing its own way, so the dipole turns and traces a loop: P at +55°, the QRS turned so its area points along the mean axis you set, and T 15° from the R wave. Times are for 75 beats per minute; the T wave moves with Bazett's rule, QT ∝ √RR. The sizes and directions are a schematic choice that gives textbook shapes, not a recording. Each limb lead is the dipole's component along one side of Einthoven's triangle.</p>
+          <p class="hint">Simulated data: every trace is computed by the model.</p>
+        </details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  /* Nerve Signals and the ECG. Runnable in Node (curriculum/validation/test_nerve-signals.cjs).
+     Constants as in demos/lib/constants.js: k_B and e (exact, 2019 SI), 0 °C = 273.15 K. */
+  const NS_VERSION = 'nerve-signals@2026-11-19';
+  const KB = 1.380649e-23, QE = 1.602176634e-19, T0 = 273.15;
+
+  /* ---- Resting potential: Nernst and Goldman-Hodgkin-Katz ---- */
+  /* thermal voltage kT/e in mV at Tc degrees Celsius */
+  const thermalMV = (Tc) => 1000 * KB * (Tc + T0) / QE;
+  /* Nernst potential (mV, inside relative to outside) of an ion of charge z with concentrations out and in */
+  const nernst = (z, cOut, cIn, Tc) => (thermalMV(Tc) / z) * Math.log(cOut / cIn);
+  /* Goldman-Hodgkin-Katz voltage (mV) from relative permeabilities P = { K, Na, Cl } and concentrations c = { K: [out, in], ... } */
+  function ghk(P, c, Tc) {
+    const num = P.K * c.K[0] + P.Na * c.Na[0] + P.Cl * c.Cl[1], den = P.K * c.K[1] + P.Na * c.Na[1] + P.Cl * c.Cl[0];
+    return thermalMV(Tc) * Math.log(num / den);
+  }
+  /* concentrations in mM, [outside, inside]: Purves et al., Neuroscience, 6th ed. (2018), Table 2.1. Where the table gives a range
+     (mammal Na⁺ inside 5 to 15, Cl⁻ inside 4 to 30; squid Cl⁻ inside 40 to 150) a value inside it is chosen. */
+  const IONS = {
+    human: { name: 'Human nerve cell', T: 37, c: { K: [5, 140], Na: [145, 12], Cl: [110, 10] } },
+    squid: { name: 'Squid giant axon', T: 18.5, c: { K: [20, 400], Na: [440, 50], Cl: [560, 40] } }
+  };
+  /* resting permeability ratios P_K : P_Na : P_Cl = 1 : 0.04 : 0.45 and at the peak of the action potential 1 : 20 : 0.45
+     (Hodgkin and Katz 1949, J. Physiol. 108, 37, squid axon) */
+  const P_REST = { K: 1, Na: 0.04, Cl: 0.45 }, P_PEAK = { K: 1, Na: 20, Cl: 0.45 };
+  const MEMBRANE = 8e-9;   /* membrane thickness, m (OpenStax College Physics 2e, 20.7) */
+
+  /* ---- The axon: Hodgkin-Huxley membrane on a cable ---- */
+  /* Hodgkin and Huxley 1952 (J. Physiol. 117, 500) in today's sign convention: V in mV (rest −65), t in ms, rates in 1/ms at
+     6.3 °C, conductances mS/cm², capacitance µF/cm², axial resistivity 35.4 Ω cm. The rates are multiplied by 3^((T − 6.3)/10). */
+  const HH = { ENa: 50, EK: -77, EL: -54.387, gNa: 120, gK: 36, gL: 0.3, Cm: 1, Ri: 35.4, Vr: -65, T: 18.5 };
+  const phiT = (T) => Math.pow(3, (T - 6.3) / 10);
+  function rates(V) {
+    const xm = V + 40, xn = V + 55;
+    return [Math.abs(xm) < 1e-7 ? 1 : 0.1 * xm / (1 - Math.exp(-xm / 10)), 4 * Math.exp(-(V + 65) / 18),
+      0.07 * Math.exp(-(V + 65) / 20), 1 / (1 + Math.exp(-(V + 35) / 10)),
+      Math.abs(xn) < 1e-7 ? 0.1 : 0.01 * xn / (1 - Math.exp(-xn / 10)), 0.125 * Math.exp(-(V + 65) / 80)];
+  }
+  /* the resting gates and the membrane's resting conductance (mS/cm²) */
+  const REST = (() => { const r = rates(HH.Vr), m = r[0] / (r[0] + r[1]), h = r[2] / (r[2] + r[3]), n = r[4] / (r[4] + r[5]);
+    return { m, h, n, g: HH.gL + HH.gNa * m * m * m * h + HH.gK * n * n * n * n }; })();
+  /* length constant of bare membrane, cm, for an axon of diameter d (cm): λ = √(R_m d / (4 R_i)) */
+  const lambdaBare = (d) => Math.sqrt((1000 / REST.g) * d / (4 * HH.Ri));
+  /* myelin: g-ratio 0.7 (axon diameter / fiber diameter), internode 100 fiber diameters, node 1 µm long, lamellae 16 nm apart.
+     Each lamella adds two membranes in series, so the internode's capacitance and conductance per area are 1/(2N) of bare membrane.
+     Nodes carry five times the squid membrane's channel density (a chosen value: with the squid density alone the impulse dies
+     in the first internode; nodes of Ranvier pack sodium channels several times more densely than the squid axon does). */
+  const MY = { g: 0.7, Lr: 100, node: 1e-4, lam: 1.6e-6, dens: 5, nSeg: 10 };
+  const fiberD = (d) => d / MY.g;
+  const internode = (d) => MY.Lr * fiberD(d);
+  const lamellae = (d) => (fiberD(d) - d) / 2 / MY.lam;
+  const MAX_MYELIN_UM = 20;
+  /* the length of axon shown, cm: 30 internodes for fibers up to 20 µm, and 40 bare length constants beyond that */
+  const viewLength = (d) => (d <= MAX_MYELIN_UM * 1e-4 + 1e-12 ? 30 * internode(d) : 40 * lambdaBare(d));
+  /* damage: 'none', 'thin' (myelin on internodes 12 to 14 thinned to a tenth) or 'lost' (those internodes bare and without channels) */
+  function makeAxon(o) {
+    const d = o.d, L = o.L || viewLength(d), a = d / 2, comps = [];
+    if (!o.myelin) { const N = o.N || 600, dx = L / N; for (let i = 0; i < N; i++) comps.push({ len: dx, dens: 1, cm: HH.Cm, gl: 0, node: false }); }
+    else {
+      const Li = internode(d), nI = Math.max(1, Math.floor((L - MY.node) / (Li + MY.node))), twoN = 2 * lamellae(d);
+      for (let k = 0; k <= nI; k++) {
+        comps.push({ len: MY.node, dens: MY.dens, cm: HH.Cm, gl: 0, node: true, k });
+        if (k === nI) break;
+        const hurt = o.damage && o.damage !== 'none' && k >= 12 && k <= 14, f = hurt ? (o.damage === 'thin' ? 10 / twoN : 1) : 1 / twoN;
+        for (let j = 0; j < MY.nSeg; j++) comps.push({ len: Li / MY.nSeg, dens: 0, cm: HH.Cm * Math.min(1, f), gl: REST.g * Math.min(1, f), node: false, k, hurt });
+      }
+    }
+    const n = comps.length, ax = { n, d, myelin: !!o.myelin, L, x: new Float64Array(n), len: new Float64Array(n), A: new Float64Array(n), C: new Float64Array(n),
+      dens: new Float64Array(n), gl: new Float64Array(n), G: new Float64Array(n), node: new Uint8Array(n), hurt: new Uint8Array(n),
+      V: new Float64Array(n), m: new Float64Array(n), h: new Float64Array(n), nn: new Float64Array(n), ina: new Float64Array(n),
+      ta: new Float64Array(n), tb: new Float64Array(n), tc: new Float64Array(n), td: new Float64Array(n), t: 0 };
+    let x = 0;
+    for (let i = 0; i < n; i++) { const c = comps[i]; ax.len[i] = c.len; ax.x[i] = x + c.len / 2; x += c.len; ax.A[i] = Math.PI * d * c.len; ax.C[i] = c.cm * ax.A[i];
+      ax.dens[i] = c.dens; ax.gl[i] = c.gl * ax.A[i]; ax.node[i] = c.node ? 1 : 0; ax.hurt[i] = c.hurt ? 1 : 0; }
+    ax.L = x;
+    for (let i = 0; i < n - 1; i++) ax.G[i] = 1000 / (HH.Ri * (ax.len[i] + ax.len[i + 1]) / 2 / (Math.PI * a * a));   /* mS */
+    restAxon(ax); return ax;
+  }
+  function restAxon(ax) { for (let i = 0; i < ax.n; i++) { ax.V[i] = HH.Vr; ax.m[i] = REST.m; ax.h[i] = REST.h; ax.nn[i] = REST.n; ax.ina[i] = 0; } ax.t = 0; }
+  /* one implicit (backward Euler) step of dt ms: gates by the exact exponential, then the cable with the conductances held */
+  function stepAxon(ax, dt) {
+    const n = ax.n, phi = phiT(HH.T), V = ax.V, a = ax.ta, b = ax.tb, c = ax.tc, r = ax.td;
+    for (let i = 0; i < n; i++) {
+      let g = ax.gl[i], ge = ax.gl[i] * HH.Vr;
+      if (ax.dens[i]) {
+        const q = rates(V[i]), ex = (al, be, x) => { const inf = al / (al + be); return inf + (x - inf) * Math.exp(-(al + be) * phi * dt); };
+        ax.m[i] = ex(q[0], q[1], ax.m[i]); ax.h[i] = ex(q[2], q[3], ax.h[i]); ax.nn[i] = ex(q[4], q[5], ax.nn[i]);
+        const s = ax.dens[i] * ax.A[i], m = ax.m[i], nn = ax.nn[i], gna = HH.gNa * m * m * m * ax.h[i] * s, gk = HH.gK * nn * nn * nn * nn * s, gl = HH.gL * s;
+        g += gna + gk + gl; ge += gna * HH.ENa + gk * HH.EK + gl * HH.EL; ax.ina[i] = gna * (V[i] - HH.ENa) / ax.A[i];
+      }
+      const cd = ax.C[i] / dt, gl = i > 0 ? ax.G[i - 1] : 0, gr = i < n - 1 ? ax.G[i] : 0;
+      a[i] = -gl; c[i] = -gr; b[i] = cd + g + gl + gr; r[i] = cd * V[i] + ge;
+    }
+    for (let i = 1; i < n; i++) { const w = a[i] / b[i - 1]; b[i] -= w * c[i - 1]; r[i] -= w * r[i - 1]; }
+    V[n - 1] = r[n - 1] / b[n - 1];
+    for (let i = n - 2; i >= 0; i--) V[i] = (r[i] - c[i] * V[i + 1]) / b[i];
+    ax.t += dt;
+  }
+  /* the stimulus: the electrode at the left end charges the membrane under it by dV (mV) at once. It covers half a bare length
+     constant, or the first node and two internodes of a myelinated axon */
+  const stimLength = (ax) => (ax.myelin ? MY.node + 2 * (internode(ax.d) + MY.node) : lambdaBare(ax.d) / 2);
+  function stimulate(ax, dV) { const X = stimLength(ax); for (let i = 0; i < ax.n; i++) if (ax.x[i] - ax.len[i] / 2 < X) ax.V[i] += dV; }
+  /* voltage at position x (cm), linear between compartment centers */
+  function vAt(ax, x) {
+    if (x <= ax.x[0]) return ax.V[0]; if (x >= ax.x[ax.n - 1]) return ax.V[ax.n - 1];
+    let lo = 0, hi = ax.n - 1; while (hi - lo > 1) { const m = (lo + hi) >> 1; if (ax.x[m] <= x) lo = m; else hi = m; }
+    const f = (x - ax.x[lo]) / (ax.x[hi] - ax.x[lo]); return ax.V[lo] + f * (ax.V[hi] - ax.V[lo]);
+  }
+  /* the time step (ms) the demo uses: fine enough that the speed is within 1 % of the converged value */
+  const DT = (ax) => (ax.myelin ? 0.001 : 0.004);
+  const CROSS = 0;   /* an electrode times the impulse when its voltage rises through 0 mV */
+  /* run an axon until the impulse passes x2 and return the speed (m/s) between x1 and x2, or null when it never arrives */
+  function measureSpeed(o, x1f = 1 / 3, x2f = 2 / 3, dV = 60) {
+    const ax = makeAxon(o), x1 = x1f * ax.L, x2 = x2f * ax.L, dt = o.dt || DT(ax); stimulate(ax, dV);
+    let t1 = null, t2 = null, p1 = vAt(ax, x1), p2 = vAt(ax, x2);
+    const tMax = 3 + 1.2 * ax.L / 100 / 0.2 * 1000;   /* at least 0.2 m/s */
+    while (ax.t < tMax && t2 === null) {
+      stepAxon(ax, dt); const v1 = vAt(ax, x1), v2 = vAt(ax, x2);
+      if (t1 === null && p1 < CROSS && v1 >= CROSS) t1 = ax.t - dt * (v1 - CROSS) / (v1 - p1);
+      if (t2 === null && p2 < CROSS && v2 >= CROSS) t2 = ax.t - dt * (v2 - CROSS) / (v2 - p2);
+      p1 = v1; p2 = v2;
+    }
+    return t1 === null || t2 === null ? null : ((x2 - x1) / 100) / ((t2 - t1) / 1000);
+  }
+  /* least squares line through (log d, log v): the exponent n of v ∝ dⁿ */
+  function powerFit(ds, vs) {
+    const X = ds.map(Math.log), Y = vs.map(Math.log), k = X.length; if (k < 2) return null;
+    const mx = X.reduce((s, x) => s + x, 0) / k, my = Y.reduce((s, y) => s + y, 0) / k;
+    let sxx = 0, sxy = 0; for (let i = 0; i < k; i++) { sxx += (X[i] - mx) ** 2; sxy += (X[i] - mx) * (Y[i] - my); }
+    if (sxx < 1e-12) return null; const n = sxy / sxx; return { n, A: Math.exp(my - n * mx) };
+  }
+  /* typical human nerve fibers at body temperature (Erlanger and Gasser classes, as tabulated in Purves et al., Neuroscience,
+     6th ed., 2018): fiber diameter range µm and speed range m/s */
+  const FIBERS = [
+    { name: 'C (pain, temperature)', myelin: false, d: [0.2, 1.5], v: [0.5, 2] },
+    { name: 'Aδ (sharp pain, cold)', myelin: true, d: [1, 5], v: [5, 35] },
+    { name: 'Aβ (touch)', myelin: true, d: [6, 12], v: [35, 75] },
+    { name: 'Aα (muscle sense)', myelin: true, d: [13, 20], v: [80, 120] }
+  ];
+
+  /* ---- The heart as a turning dipole ---- */
+  /* the heart's electric dipole in the frontal plane, in mV of lead I for a vector along lead I. Angles in degrees, 0° toward the
+     patient's left arm and +90° toward the feet (the hexaxial convention). Each wave is a Gaussian pulse in time along its own
+     direction, so where pulses overlap the vector turns and traces a loop. Times (s) are from the start of the P wave at 75 beats
+     per minute; the T wave moves with Bazett's rule (QT ∝ √RR). A schematic model chosen to give the textbook shapes. */
+  const RR0 = 0.8, deg = Math.PI / 180;
+  const WAVES = [
+    { id: 'P', t: 0.06, s: 0.022, A: 0.17, rel: null, ang: 55 },
+    { id: 'Q', t: 0.185, s: 0.010, A: 0.16, rel: 150 },
+    { id: 'R', t: 0.215, s: 0.013, A: 1.5, rel: 0 },
+    { id: 'S', t: 0.245, s: 0.012, A: 0.38, rel: -150 },
+    { id: 'T', t: 0.45, s: 0.05, A: 0.32, rel: -15, qt: true }
+  ];
+    /* the R wave points rDir(axis), turned so that the QRS area vector, the mean electrical axis, points exactly along axis */
+  const QRS_TURN = (() => { let x = 0, y = 0; for (const w of WAVES) if (w.rel !== null && !w.qt) { x += w.A * w.s * Math.cos(w.rel * deg); y += w.A * w.s * Math.sin(w.rel * deg); } return Math.atan2(y, x) / deg; })();
+  const rDir = (axis) => axis - QRS_TURN;
+  function waveTime(w, rr) { return w.qt ? WAVES[2].t + (w.t - WAVES[2].t) * Math.sqrt(rr / RR0) : w.t; }
+  /* the dipole [x, y] at time t (s) for a heart rate (beats per minute) and mean QRS axis (degrees) */
+  function dipole(t, rate, axis) {
+    const rr = 60 / rate; let x = 0, y = 0;
+    const k0 = Math.floor(t / rr);
+    for (let k = k0 - 1; k <= k0; k++) {
+      if (k < 0) continue; const tb = t - k * rr;
+      for (const w of WAVES) {
+        const g = w.A * Math.exp(-0.5 * ((tb - waveTime(w, rr)) / w.s) ** 2); if (g < 1e-9) continue;
+        const a = (w.rel === null ? w.ang : rDir(axis) + w.rel) * deg; x += g * Math.cos(a); y += g * Math.sin(a);
+      }
+    }
+    return [x, y];
+  }
+  /* the limb leads are the dipole's components along the sides of Einthoven's triangle: I at 0°, II at +60°, III at +120°;
+     the augmented leads follow from them. II = I + III holds exactly (Einthoven's law). */
+  function leads(p) {
+    const I = p[0], II = p[0] * 0.5 + p[1] * Math.sqrt(3) / 2, III = -p[0] * 0.5 + p[1] * Math.sqrt(3) / 2;
+    return { I, II, III, aVR: -(I + II) / 2, aVL: (I - III) / 2, aVF: (II + III) / 2 };
+  }
+  /* the mean electrical axis (degrees) from the net QRS deflections in leads I and aVF (aVF = (√3/2) y) */
+  const axisFrom = (I, aVF) => Math.atan2(aVF * 2 / Math.sqrt(3), I) / deg;
+  /* net QRS deflection of a lead over the QRS window of one beat starting at tb (max + min, mV) */
+  function qrsNet(rate, axis, lead, tb = 0) {
+    let hi = -1e9, lo = 1e9; for (let t = 0.14; t <= 0.30; t += 0.0005) { const v = leads(dipole(tb + t, rate, axis))[lead]; hi = Math.max(hi, v); lo = Math.min(lo, v); }
+    return hi + lo;
+  }
+  /* the mean QRS axis from the area under the dipole over the QRS window (degrees) */
+  function qrsAreaAxis(rate, axis) { let x = 0, y = 0; for (let t = 0.12; t <= 0.32; t += 0.0005) { const p = dipole(t, rate, axis); x += p[0]; y += p[1]; } return Math.atan2(y, x) / deg; }
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  /* ---------------- the page ---------------- */
+  const $ = (id) => document.getElementById(id);
+  const tr = (s, o) => (typeof VDI18N === 'object' && VDI18N.t ? VDI18N.t(s, o) : s.replace(/\{(\w+)\}/g, (_, k) => (o && k in o ? o[k] : '')));
+  const can = $('can'), ctx = can.getContext('2d'), vplot = $('vplot'), vctx = vplot.getContext('2d');
+  let W = 0, H = 0, dpr = 1, T = null;
+  let reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  const fmt = (v, d = 2) => (v == null || !isFinite(v) ? '—' : v.toFixed(d).replace('-', '−'));
+  const comma = (v, d = 0) => (v == null || !isFinite(v) ? '—' : v.toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d }).replace('-', '−'));
+  const sig = (v, n = 3) => { if (!isFinite(v)) return '—'; const p = Math.max(0, n - 1 - Math.floor(Math.log10(Math.abs(v) || 1))); return comma(v, Math.min(p, 4)); };
+  const proj = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.25 : 1);
+
+  /* diameter slider: logarithmic from 0.5 µm to 500 µm */
+  const D_MIN = 0.5, D_MAX = 500;
+  const sliderToD = (v) => { const d = D_MIN * Math.pow(D_MAX / D_MIN, v / 1000); return d < 10 ? Math.round(d * 10) / 10 : d < 100 ? Math.round(d) : Math.round(d); };
+  const dToSlider = (d) => Math.round(1000 * Math.log(d / D_MIN) / Math.log(D_MAX / D_MIN));
+  const RATES = [0.05, 0.1, 0.25, 0.5, 1, 2, 5, 10];
+  /* the speed the model gives (m/s), from its scaling: bare v = 0.854 √d, myelinated v = 3.64 d (d in µm); test_nerve-signals.cjs checks it */
+  const vModel = (dUm, my) => (my ? 3.64 * dUm : 0.854 * Math.sqrt(dUm));
+
+  const PRESETS = {
+    race: { view: 'axon', my: true, d: 10, damage: 'none', race: true, dV: 50, ea: 0.3, eb: 0.7, sched: [0.02],
+      hint: 'Two axons 10 µm across, one myelinated and one bare, kicked at the same moment. Press Play: the myelinated impulse jumps from node to node and crosses the 4.1 cm in about 1.3 ms, while the bare one has crawled only about 3 mm. Read the speed of each between electrodes A and B.' },
+    below: { view: 'axon', my: false, d: 10, damage: 'none', race: false, dV: 10, ea: 0.1, eb: 0.3, sched: [0.02],
+      hint: 'A bare axon given a kick of 10 mV, below its threshold. The bump spreads a little way and dies out, as charge on a leaky RC cable does: it falls by a factor e over the length constant λ. Raise the kick a few millivolts at a time and press Reset and Play again to find the threshold.' },
+    above: { view: 'axon', my: false, d: 10, damage: 'none', race: false, dV: 16, ea: 0.1, eb: 0.3, sched: [0.02],
+      hint: 'The same axon with a kick just over its threshold. The bump hesitates, then grows into a full action potential that runs on at full height. A bigger kick gives the same impulse: it is all or none.' },
+    twice: { view: 'axon', my: false, d: 10, damage: 'none', race: false, dV: 40, ea: 0.2, eb: 0.45, sched: [0.02, 2],
+      hint: 'Two kicks 2 ms apart. The second one comes while the membrane is still refractory (sodium gates shut, potassium gates open), so it dies out. Press Stimulate again later in the run, at 3 ms or 5 ms, to find when a second impulse can start.' },
+    cfiber: { view: 'axon', my: false, d: 1, damage: 'none', race: false, dV: 50, ea: 0.3, eb: 0.7, sched: [0.02],
+      hint: 'A bare fiber 1 µm across, like the C fibers that carry slow pain. Time the impulse and compare its speed with the 10 µm bare axon: ten times the diameter gives about √10 = 3.2 times the speed.' },
+    thick: { view: 'axon', my: true, d: 14, damage: 'none', race: false, dV: 50, ea: 0.3, eb: 0.7, sched: [0.02],
+      hint: 'A thick myelinated axon, 14 µm across (a 20 µm fiber with its myelin), like those that report muscle stretch. Its speed is proportional to its diameter: compare it with the 10 µm myelinated axon.' },
+    squid: { view: 'axon', my: false, d: 476, damage: 'none', race: false, dV: 50, ea: 0.3, eb: 0.7, sched: [0.02],
+      hint: 'The squid giant axon of Hodgkin and Huxley, 476 µm across, bare. Their own numerical solution gave 18.8 m/s at 18.5 °C, and they measured 21.2 m/s. Time it between A and B. A squid needs an axon this thick to be fast without myelin.' },
+    thin: { view: 'axon', my: true, d: 10, damage: 'thin', race: false, dV: 50, ea: 0.3, eb: 0.6, sched: [0.02],
+      hint: 'Internodes 12 to 14 keep only a tenth of their myelin, as after damage that has partly healed. Move A and B to either side of the damage, and then both onto healthy myelin: the impulse slows down where the myelin is thin.' },
+    lost: { view: 'axon', my: true, d: 10, damage: 'lost', race: false, dV: 50, ea: 0.3, eb: 0.6, sched: [0.02],
+      hint: 'Internodes 12 to 14 have lost their myelin entirely and have no channels of their own, as in a lesion of multiple sclerosis. The bare membrane soaks up the charge from node 12, and the impulse stops: conduction block.' },
+    human: { view: 'rest', cell: 'human', T: 37, Kout: 5, pr: 0.04,
+      hint: 'A human nerve cell at 37 °C. Potassium leaks out far more easily than sodium leaks in, so the resting voltage sits near E_K: about −67 mV. OpenStax quotes −70 to −90 mV for nerve cells.' },
+    squidRest: { view: 'rest', cell: 'squid', T: 18.5, Kout: 20, pr: 0.04,
+      hint: 'The squid giant axon in seawater at 18.5 °C, the cell the Hodgkin-Huxley model describes. Compare E_K and E_Na here with the −77 mV and +50 mV of the model.' },
+    hyperK: { view: 'rest', cell: 'human', T: 37, Kout: 10, pr: 0.04,
+      hint: 'Potassium outside doubled to 10 mM, as in severe hyperkalemia. E_K rises by (kT/e) ln 2 = 18.5 mV and the resting voltage follows it up toward threshold, which is why high blood potassium is dangerous for the heart.' },
+    peak: { view: 'rest', cell: 'human', T: 37, Kout: 5, pr: 20,
+      hint: 'The sodium channels open: P_Na is now 20 times P_K, as at the peak of an action potential. The voltage swings toward E_Na, and the inside turns positive.' },
+    normal: { view: 'ecg', rate: 72, axis: 60, aug: false,
+      hint: 'A normal heart at 72 beats per minute with its mean QRS axis at +60°, along lead II, so lead II shows the tallest R wave. Check Einthoven\'s law: at every instant lead II equals lead I plus lead III.' },
+    lad: { view: 'ecg', rate: 72, axis: -45, aug: true,
+      hint: 'Left axis deviation, −45°. The net QRS turns negative in leads II and III and stays positive in lead I. Find the axis from the net QRS in lead I and aVF.' },
+    rad: { view: 'ecg', rate: 72, axis: 120, aug: true,
+      hint: 'Right axis deviation, +120°, along lead III. Lead I now shows a net negative QRS.' },
+    fast: { view: 'ecg', rate: 150, axis: 60, aug: false,
+      hint: '150 beats per minute: two big boxes (0.40 s) between R waves. The T wave comes sooner (QT shrinks as √RR) and the next P wave sits just after it.' },
+    slow: { view: 'ecg', rate: 45, axis: 60, aug: false,
+      hint: '45 beats per minute: more than six big boxes (1.33 s) between R waves. Measure the time between R waves and work out the rate.' }
+  };
+  const S = { view: 'axon', preset: 'race', my: true, d: 10, damage: 'none', race: true, dV: 50, ea: 0.3, eb: 0.7, sched: [0.02], rate: 0.25,
+    cell: 'human', T: 37, Kout: 5, pr: 0.04, hr: 72, axis: 60, aug: false, loop: true, blind: false, sel: 'B',
+    run: false, t: 0, tE: 0, lanes: [], thr: {}, Tw: 3, ecgRate: 1 };
+
+  /* ---------------- the axon run ---------------- */
+  const dCm = () => S.d * 1e-4;
+  const canMyelin = () => S.d <= MAX_MYELIN_UM;
+  function buildLanes() {
+    const L = viewLength(dCm()), my = S.my && canMyelin(), kinds = [my];
+    if (S.race && canMyelin()) kinds.push(!my);
+    S.lanes = kinds.map((k) => ({ my: k, ax: makeAxon({ d: dCm(), myelin: k, damage: k ? S.damage : 'none', L }), cross: { A: null, B: null }, prev: { A: HH.Vr, B: HH.Vr }, tr: { A: [], B: [] } }));
+    S.L = S.lanes[0].ax.L; S.t = 0; S.next = 0;
+    const vs = S.lanes.map((ln) => vModel(S.d, ln.my)), transit = Math.min(...vs.map((v) => S.L / 100 / v * 1000));
+    const slow = S.L / 100 / Math.min(...vs) * 1000;
+    S.Tw = Math.max(3, Math.min(slow, 8 * transit) * 1.1 + 3, ...S.sched.map((s) => s + 6));
+  }
+  function autoRate() { const transit = S.L / 100 / vModel(S.d, S.lanes[0].my) * 1000; let r = RATES[0]; for (const q of RATES) if (q <= transit / 3.5) r = q; S.rate = r; syncSpeed(); }
+  function resetRun() { buildLanes(); setRun(false); trace(); draw(); readouts(); }
+  function record(ln, key, x, v) {
+    const p = ln.prev[key];
+    if (ln.cross[key] === null && p < CROSS && v >= CROSS && S.t > S.lastStim) ln.cross[key] = S.t - (S.dtUsed || 0) * (v - CROSS) / (v - p || 1);
+    ln.prev[key] = v;
+  }
+  function kick() { S.lastStim = S.t; for (const ln of S.lanes) { stimulate(ln.ax, S.dV); ln.cross = { A: null, B: null }; } S.flash = 1; }
+  function advance(ms) {
+    let left = ms, guard = 0;
+    while (left > 1e-9 && guard++ < 4000) {
+      const dt = Math.min(left, Math.min(...S.lanes.map((ln) => DT(ln.ax))));
+      if (S.next < S.sched.length && S.t + dt >= S.sched[S.next] - 1e-9) { S.t = Math.max(S.t, S.sched[S.next]); S.next++; kick(); }
+      for (const ln of S.lanes) { const ax = ln.ax; ax.t = S.t; stepAxon(ax, dt); }
+      S.t += dt; S.dtUsed = dt; left -= dt;
+      for (const ln of S.lanes) for (const k of ['A', 'B']) {
+        const v = vAt(ln.ax, (k === 'A' ? S.ea : S.eb) * S.L); record(ln, k, 0, v);
+        const a = ln.tr[k], last = a[a.length - 1];
+        if (!last || S.t - last[0] >= S.Tw / 1500) a.push([S.t, v]);
+      }
+    }
+    if (S.t >= S.Tw) { setRun(false); S.over = true; }
+  }
+  function trace() { for (const ln of S.lanes) for (const k of ['A', 'B']) { ln.tr[k] = [[0, HH.Vr]]; ln.prev[k] = HH.Vr; ln.cross[k] = null; } S.lastStim = -1; S.over = false; }
+  /* the threshold kick of this axon (mV), found by halving on a short piece of it; computed after a pause so sliding stays smooth */
+  function thresholdOf(dum, my) {
+    const key = dum + (my ? 'm' : 'b'); if (key in S.thr) return S.thr[key];
+    const d = dum * 1e-4, Lfull = viewLength(d), L = my ? 8 * (internode(d) + MY.node) + MY.node : 10 * lambdaBare(d), N = Math.max(60, Math.round(600 * L / Lfull));
+    const vv = vModel(dum, my), tEnd = 0.7 * L / 100 / vv * 1000 + 2.5;
+    const fires = (dV) => { const ax = makeAxon({ d, myelin: my, L, N }); stimulate(ax, dV); const xs = 0.7 * ax.L, dt = DT(ax); while (ax.t < tEnd) { stepAxon(ax, dt); if (vAt(ax, xs) > 0) return true; } return false; };
+    let lo = 0, hi = 120; if (!fires(hi)) return (S.thr[key] = null);
+    for (let k = 0; k < 11; k++) { const m = (lo + hi) / 2; if (fires(m)) hi = m; else lo = m; }
+    return (S.thr[key] = (lo + hi) / 2);
+  }
+  let thrTimer = 0;
+  function wantThreshold() { clearTimeout(thrTimer); thrTimer = setTimeout(() => { for (const ln of S.lanes) thresholdOf(S.d, ln.my); readouts(); }, 400); }
+
+  /* ---------------- colors ---------------- */
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = {}; for (const k of ['canvas', 'surface', 'ink', 'muted', 'line', 'accent', 'rest', 'hot', 'myelin', 'myelin-edge', 'elA', 'elB', 'stim', 'na', 'k', 'cl', 'fluid-out', 'fluid-in', 'lipid', 'scope', 'scope-grid',
+      'paper-ecg', 'ecg-minor', 'ecg-major', 'ecg-ink', 'skin', 'skin-edge', 'heart', 'leadI', 'leadII', 'leadIII', 'dip', 'font-mono', 'font-ui']) T[k] = g('--' + k);
+    T.restRGB = rgb(T.rest); T.hotRGB = rgb(T.hot); T.midRGB = rgb(dark() ? '#ff5d8f' : '#d6336c');
+  }
+  const dark = () => { const t = document.documentElement.getAttribute('data-theme'); return t === 'dark' || (t !== 'light' && matchMedia('(prefers-color-scheme: dark)').matches); };
+  function rgb(c) { const x = document.createElement('canvas').getContext('2d'); x.fillStyle = c; x.fillRect(0, 0, 1, 1); return [...x.getImageData(0, 0, 1, 1).data].slice(0, 3); }
+  /* membrane voltage to color: rest (plum) through rose to gold at the peak */
+  function vColor(v, alpha = 1) {
+    const u = Math.max(0, Math.min(1, (v - HH.Vr) / 100)), a = u < 0.4 ? T.restRGB : T.midRGB, b = u < 0.4 ? T.midRGB : T.hotRGB, f = u < 0.4 ? u / 0.4 : (u - 0.4) / 0.6;
+    return `rgba(${Math.round(a[0] + (b[0] - a[0]) * f)},${Math.round(a[1] + (b[1] - a[1]) * f)},${Math.round(a[2] + (b[2] - a[2]) * f)},${alpha})`;
+  }
+  const font = (px, w = '') => `${w} ${Math.round(px * proj())}px ${T['font-ui']}`.trim();
+  const mono = (px) => `${Math.round(px * proj())}px ${T['font-mono']}`;
+  function rr(x, y, w, h, r) { ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); }
+
+  /* ---------------- drawing: axon ---------------- */
+  const SPL_AX = !(window.VD && VD.split) ? { f: () => 0.58, place() {}, set() {} } : VD.split(can, { key: 'axon', axis: () => (S.view === 'axon' && W && H ? 'y' : null), def: 0.58, min: 0.4, max: 0.75, snaps: [0.5, 2 / 3], label: 'Divider between the axon and the oscilloscope', onChange: () => draw() });
+  const SPL_ECG = !(window.VD && VD.split) ? { f: () => 0.42, place() {}, set() {} } : VD.split(can, { key: 'ecg', axis: () => (S.view === 'ecg' && W && H ? (W > 640 ? 'x' : 'y') : null), def: (a) => (a === 'x' ? 0.42 : 0.44), min: 0.3, max: 0.65, snaps: [0.5], label: 'Divider between the heart and the ECG paper', onChange: () => draw() });
+  let geo = null;
+  function axonGeo() {
+    const p = proj(), top = 8 * p, split = Math.round(H * SPL_AX.f()), x0 = 70 * p, x1 = W - 22 * p, nL = S.lanes.length;
+    const laneH = (split - top - 40 * p) / nL, lanes = S.lanes.map((ln, i) => { const y = top + i * laneH; return { y, plotY: y + 34 * p, plotH: Math.max(28, laneH - 86 * p), axY: y + laneH - 26 * p }; });
+    return { p, x0, x1, split, lanes, rulerY: split - 30 * p, X: (x) => x0 + (x / S.L) * (x1 - x0), Xinv: (px) => (px - x0) / (x1 - x0) * S.L };
+  }
+  function drawAxon() {
+    const G = geo = axonGeo(), p = G.p;
+    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    S.lanes.forEach((ln, i) => drawLane(ln, G.lanes[i], G, i));
+    /* ruler */
+    const ry = G.rulerY; ctx.strokeStyle = T.muted; ctx.fillStyle = T.muted; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(G.x0, ry); ctx.lineTo(G.x1, ry); ctx.stroke();
+    const Lmm = S.L * 10, step = niceStep(Lmm / 8); ctx.font = mono(10.5); ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    for (let m = 0; m <= Lmm + 1e-9; m += step) { const x = G.X(m / 10); ctx.beginPath(); ctx.moveTo(x, ry); ctx.lineTo(x, ry + 5 * p); ctx.stroke(); ctx.fillText(comma(m, step < 1 ? Math.min(3, Math.ceil(-Math.log10(step) - 1e-9)) : 0), x, ry + 7 * p); }
+    ctx.textAlign = 'right'; ctx.fillText(tr('mm'), G.x0 - 22 * p, ry + 7 * p);
+    /* electrodes over every lane */
+    for (const k of ['A', 'B']) {
+      const x = G.X((k === 'A' ? S.ea : S.eb) * S.L), col = k === 'A' ? T.elA : T.elB, yT = G.lanes[0].y + 20 * p, yB = G.lanes[G.lanes.length - 1].axY;
+      ctx.strokeStyle = col; ctx.lineWidth = 2 * p; ctx.setLineDash([]); ctx.beginPath(); ctx.moveTo(x, yT + 12 * p); ctx.lineTo(x, yB - 8 * p); ctx.stroke();
+      ctx.fillStyle = col; ctx.beginPath(); ctx.moveTo(x - 4 * p, yB - 10 * p); ctx.lineTo(x + 4 * p, yB - 10 * p); ctx.lineTo(x, yB - 4 * p); ctx.fill();
+      ctx.beginPath(); ctx.arc(x, yT + 6 * p, 9 * p, 0, 7); ctx.fill(); if (S.sel === k) { ctx.strokeStyle = T.ink; ctx.lineWidth = 1.5; ctx.stroke(); }
+      ctx.fillStyle = T.canvas; ctx.font = font(11, 700); ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(k, x, yT + 6.5 * p);
+    }
+    drawScope(G);
+    /* time scale */
+    ctx.fillStyle = T.muted; ctx.font = font(11.5); ctx.textAlign = 'right'; ctx.textBaseline = 'top';
+    ctx.fillText(tr('Slow motion: 1 s = {r} ms', { r: String(S.rate) }), W - 12 * p, G.split + 8 * p);
+  }
+  function niceStep(x) { const e = Math.pow(10, Math.floor(Math.log10(x))), m = x / e; return (m < 1.5 ? 1 : m < 3.5 ? 2 : m < 7.5 ? 5 : 10) * e; }
+  function drawLane(ln, g, G, i) {
+    const p = G.p, ax = ln.ax, r = 7 * p, y = g.axY;
+    ctx.fillStyle = T.ink; ctx.font = font(12, 700); ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    const vv = vModel(S.d, ln.my), name = ln.my ? tr('Myelinated axon') : tr('Bare axon');
+    ctx.fillText(name + ', d = ' + sig(S.d, 3) + ' µm', 10 * p, g.y);
+    /* V(x) profile */
+    const py = g.plotY, ph = g.plotH, Vy = (v) => py + ph - (v - (-80)) / 130 * ph;
+    ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.font = mono(9.5); ctx.fillStyle = T.muted; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    for (const v of (ph < 56 ? [-65, 40] : [-65, 0, 40])) { ctx.beginPath(); ctx.setLineDash(v === 0 ? [3, 3] : []); ctx.moveTo(G.x0, Vy(v)); ctx.lineTo(G.x1, Vy(v)); ctx.stroke(); ctx.fillText(String(v).replace('-', '−'), G.x0 - 6 * p, Vy(v)); }
+    ctx.setLineDash([]); ctx.save(); ctx.translate(14 * p, py + ph / 2); ctx.rotate(-Math.PI / 2); ctx.textAlign = 'center'; ctx.fillText(tr('V (mV)'), 0, 0); ctx.restore();
+    ctx.beginPath(); for (let j = 0; j < ax.n; j++) { const x = G.X(ax.x[j]), yy = Vy(Math.max(-80, Math.min(50, ax.V[j]))); if (j) ctx.lineTo(x, yy); else ctx.moveTo(x, yy); }
+    ctx.strokeStyle = T.ink; ctx.lineWidth = 1.6 * p; ctx.stroke();
+    /* the stimulating electrode */
+    const sx = G.X(stimLength(ax)), flash = S.flash > 0;
+    ctx.fillStyle = flash ? T.stim : T.muted; ctx.globalAlpha = 0.25; ctx.fillRect(G.x0, y - r - 5 * p, sx - G.x0, 2 * r + 10 * p); ctx.globalAlpha = 1;
+    ctx.strokeStyle = T.stim; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(G.x0 - 30 * p, y - 18 * p); ctx.lineTo(G.x0 - 4 * p, y - 3 * p); ctx.stroke();
+    ctx.fillStyle = T.stim; ctx.beginPath(); ctx.arc(G.x0 - 30 * p, y - 18 * p, 5 * p, 0, 7); ctx.fill();
+    if (flash) { ctx.font = font(15, 700); ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('⚡', G.x0 - 44 * p, y - 22 * p); }
+    /* the membrane: one strip per piece, colored by its voltage */
+    ctx.save(); rr(G.x0, y - r, G.x1 - G.x0, 2 * r, r); ctx.clip();
+    for (let j = 0; j < ax.n; j++) { const a = G.X(ax.x[j] - ax.len[j] / 2), b = G.X(ax.x[j] + ax.len[j] / 2); ctx.fillStyle = vColor(ax.V[j]); ctx.fillRect(a, y - r, Math.max(1, b - a + 0.6), 2 * r); }
+    const gl = ctx.createLinearGradient(0, y - r, 0, y + r); gl.addColorStop(0, 'rgba(255,255,255,0.35)'); gl.addColorStop(0.45, 'rgba(255,255,255,0)'); gl.addColorStop(1, 'rgba(0,0,0,0.25)');
+    ctx.fillStyle = gl; ctx.fillRect(G.x0, y - r, G.x1 - G.x0, 2 * r); ctx.restore();
+    /* myelin sheaths, with the nodes drawn 4 px wide */
+    if (ln.my) {
+      const nodes = []; for (let j = 0; j < ax.n; j++) if (ax.node[j]) nodes.push(j);
+      const gap = 2.2 * p, R = r + 4 * p;
+      for (let q = 0; q < nodes.length - 1; q++) {
+        const a = G.X(ax.x[nodes[q]]) + gap, b = G.X(ax.x[nodes[q + 1]]) - gap; if (b - a < 2) continue;
+        const hurt = ax.hurt[nodes[q] + 1];
+        ctx.globalAlpha = S.damage === 'lost' && hurt ? 0 : S.damage === 'thin' && hurt ? 0.35 : 0.9;
+        const gm = ctx.createLinearGradient(0, y - R, 0, y + R); gm.addColorStop(0, T.myelin); gm.addColorStop(0.5, T['myelin-edge']); gm.addColorStop(1, T.myelin);
+        ctx.fillStyle = gm; const rad = Math.min(R, (b - a) / 2); rr(a, y - R, b - a, 2 * R, rad); ctx.fill(); ctx.strokeStyle = T['myelin-edge']; ctx.lineWidth = 0.8; ctx.stroke();
+        ctx.globalAlpha = 1; if (hurt && S.damage !== 'none') { ctx.strokeStyle = T.stim; ctx.setLineDash([3, 3]); ctx.lineWidth = 1; rr(a, y - R, b - a, 2 * R, rad); ctx.stroke(); ctx.setLineDash([]); }
+      }
+      /* the nodes glow with their own voltage */
+      for (const j of nodes) { const x = G.X(ax.x[j]); ctx.fillStyle = vColor(ax.V[j]); ctx.fillRect(x - gap, y - r - 1, 2 * gap, 2 * r + 2); }
+    }
+    /* sodium rushing in where the channels are open */
+    const ph2 = performance.now() / 1000;
+    for (let j = 0; j < ax.n; j++) {
+      const I = -ax.ina[j] * (ax.dens[j] ? 1 : 0); if (I < 150) continue;
+      const x = G.X(ax.x[j]), n = Math.min(3, Math.floor(I / 400) + 1);
+      ctx.fillStyle = T.na;
+      for (let q = 0; q < n; q++) { const s = reduce ? 0.5 : ((ph2 * 1.7 + q / n + j * 0.137) % 1), off = (1 - s) * 16 * p + r; const side = (j + q) % 2 ? 1 : -1;
+        ctx.globalAlpha = 0.85 * s; ctx.beginPath(); ctx.arc(x + ((j * 7 + q * 3) % 5 - 2) * p, y + side * off, 2.2 * p, 0, 7); ctx.fill(); }
+      ctx.globalAlpha = 1;
+    }
+  }
+  /* the oscilloscope's time span: wide enough for the fastest impulse to cross, growing with the run up to the whole window */
+  function scopeSpan() { const fast = S.L / 100 / Math.max(...S.lanes.map((ln) => vModel(S.d, ln.my))) * 1000; return Math.min(S.Tw, Math.max(niceStep(fast * 1.6 + 1.5) * 2, S.t * 1.15, (S.sched[S.sched.length - 1] || 0) + 4)); }
+  function drawScope(G) {
+    const p = G.p, x0 = G.x0, x1 = G.x1, y0 = G.split + 30 * p, y1 = H - 30 * p;
+    ctx.fillStyle = T.scope; rr(x0 - 4 * p, y0 - 6 * p, x1 - x0 + 8 * p, y1 - y0 + 12 * p, 8 * p); ctx.fill();
+    ctx.strokeStyle = T['scope-grid']; ctx.lineWidth = 1;
+    const Tx = scopeSpan(), Y = (v) => y1 - (v + 80) / 130 * (y1 - y0), X = (t) => x0 + t / Tx * (x1 - x0);
+    ctx.font = mono(9.5); ctx.fillStyle = T.muted;
+    for (const v of [-80, -65, -40, 0, 40]) { ctx.beginPath(); ctx.moveTo(x0, Y(v)); ctx.lineTo(x1, Y(v)); ctx.stroke(); ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.fillText(String(v).replace('-', '−'), x0 - 8 * p, Y(v)); }
+    const ts = niceStep(Tx / (W < 600 ? 5 : 8)); ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    for (let t = 0; t <= Tx + 1e-9; t += ts) { ctx.beginPath(); ctx.moveTo(X(t), y0); ctx.lineTo(X(t), y1); ctx.stroke(); ctx.fillText(comma(t, ts < 1 ? Math.min(3, Math.ceil(-Math.log10(ts) - 1e-9)) : 0), X(t), y1 + 6 * p); }
+    ctx.textAlign = 'right'; ctx.fillText(tr('t (ms)'), x0 - 18 * p, y1 + 6 * p);
+    ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillStyle = T.ink; ctx.font = font(11.5, 700);
+    ctx.fillText(tr('Oscilloscope: voltage at A and B'), x0 + 6 * p, y0 - 2 * p);
+    S.lanes.forEach((ln, i) => {
+      for (const k of ['A', 'B']) {
+        const a = ln.tr[k]; if (a.length < 2) continue; ctx.strokeStyle = k === 'A' ? T.elA : T.elB; ctx.lineWidth = (i ? 1.4 : 2) * p; ctx.setLineDash(i ? [5, 4] : []);
+        ctx.beginPath(); a.forEach((q, j) => { const x = X(q[0]), y = Y(Math.max(-80, Math.min(50, q[1]))); if (j) ctx.lineTo(x, y); else ctx.moveTo(x, y); }); ctx.stroke();
+      }
+      ctx.setLineDash([]);
+      const cA = ln.cross.A, cB = ln.cross.B;
+      for (const [k, c] of [['A', cA], ['B', cB]]) if (c !== null) { ctx.strokeStyle = k === 'A' ? T.elA : T.elB; ctx.lineWidth = 1; ctx.setLineDash([2, 3]); ctx.beginPath(); ctx.moveTo(X(c), y0); ctx.lineTo(X(c), y1); ctx.stroke(); ctx.setLineDash([]); }
+      if (cA !== null && cB !== null && i === 0) {
+        const ya = Y(20); ctx.strokeStyle = T.ink; ctx.fillStyle = T.ink; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(X(cA), ya); ctx.lineTo(X(cB), ya); ctx.stroke();
+        ctx.font = mono(11); ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.fillText('Δt = ' + sig(Math.abs(cB - cA), 3) + ' ms', (X(cA) + X(cB)) / 2, ya - 3 * p);
+      }
+    });
+    if (S.lanes.length > 1) { ctx.font = font(10.5); ctx.fillStyle = T.muted; ctx.textAlign = 'right'; ctx.textBaseline = 'top'; ctx.fillText(tr('solid: first axon · dashed: second axon'), x1 - 6 * p, y0 + 14 * p); }
+    if (Tx < S.Tw - 1e-9) { ctx.font = font(10.5); ctx.fillStyle = T.muted; ctx.textAlign = 'right'; ctx.textBaseline = 'bottom'; ctx.fillText(tr('the time axis stretches as the run goes on'), x1 - 6 * p, y1 - 4 * p); }
+    ctx.font = mono(11.5); ctx.fillStyle = T.ink; ctx.textAlign = 'right'; ctx.textBaseline = 'top'; ctx.fillText('t = ' + sig(S.t, 3) + ' ms', x1 - 6 * p, y0 + (W < 600 ? 28 : -2) * p);
+  }
+
+  /* ---------------- drawing: resting potential ---------------- */
+  const SEEDS = Array.from({ length: 400 }, (_, i) => { const s = Math.sin(i * 12.9898) * 43758.5453; return s - Math.floor(s); });
+  function restNow() {
+    const c = IONS[S.cell].c, cc = { K: [S.Kout, c.K[1]], Na: c.Na, Cl: c.Cl };
+    return { c: cc, EK: nernst(1, cc.K[0], cc.K[1], S.T), ENa: nernst(1, cc.Na[0], cc.Na[1], S.T), ECl: nernst(-1, cc.Cl[0], cc.Cl[1], S.T), V: ghk({ K: 1, Na: S.pr, Cl: P_REST.Cl }, cc, S.T) };
+  }
+  function drawRest() {
+    const p = proj(), R = restNow(), wide = W > 620, split = wide ? W * 0.6 : W, hP = wide ? H : H * 0.6;
+    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    const mx = 18 * p, mw = split - 2 * mx, my = 30 * p, mh = hP - 50 * p, memT = my + mh * 0.47, memB = my + mh * 0.53;
+    ctx.fillStyle = T['fluid-out']; rr(mx, my, mw, memT - my, 10 * p); ctx.fill();
+    ctx.fillStyle = T['fluid-in']; rr(mx, memB, mw, my + mh - memB, 10 * p); ctx.fill();
+    ctx.fillStyle = T.muted; ctx.font = font(12, 700); ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText(tr('Outside the cell'), mx + 10 * p, my + 8 * p); ctx.textBaseline = 'bottom'; ctx.fillText(tr('Inside the cell'), mx + 10 * p, my + mh - 8 * p);
+    /* the lipid bilayer */
+    const heads = Math.floor(mw / (9 * p)); ctx.fillStyle = T.lipid;
+    for (let i = 0; i < heads; i++) { const x = mx + (i + 0.5) * mw / heads; ctx.beginPath(); ctx.arc(x, memT + 3 * p, 3.4 * p, 0, 7); ctx.fill(); ctx.beginPath(); ctx.arc(x, memB - 3 * p, 3.4 * p, 0, 7); ctx.fill(); }
+    ctx.strokeStyle = T.lipid; ctx.lineWidth = 1; for (let i = 0; i < heads; i++) { const x = mx + (i + 0.5) * mw / heads; ctx.beginPath(); ctx.moveTo(x - 1.5, memT + 6 * p); ctx.lineTo(x - 1.5, (memT + memB) / 2); ctx.moveTo(x + 1.5, memB - 6 * p); ctx.lineTo(x + 1.5, (memT + memB) / 2); ctx.stroke(); }
+    /* channels: potassium open, sodium open as far as P_Na allows */
+    const naOpen = Math.min(1, Math.log10(S.pr / 0.04 + 1) / Math.log10(501));
+    const chan = [['K', 0.2, 1], ['Na', 0.45, naOpen], ['Cl', 0.7, 0.6], ['K', 0.88, 1]];
+    for (const [ion, f, o] of chan) {
+      const x = mx + f * mw, w = 16 * p; ctx.fillStyle = T[ion.toLowerCase()]; ctx.globalAlpha = 0.85;
+      rr(x - w, memT - 6 * p, w * 0.8, memB - memT + 12 * p, 4 * p); ctx.fill(); rr(x + w * 0.2, memT - 6 * p, w * 0.8, memB - memT + 12 * p, 4 * p); ctx.fill();
+      ctx.globalAlpha = 1; ctx.fillStyle = T.canvas; ctx.fillRect(x - w * 0.2, memT - 6 * p, w * 0.4 * o, memB - memT + 12 * p);
+      ctx.fillStyle = T.ink; ctx.font = font(9.5, 700); ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(ion + (ion === 'Cl' ? '⁻' : '⁺'), x, memB + 8 * p);
+    }
+    /* charge layers on the membrane */
+    const nq = Math.min(30, Math.round(Math.abs(R.V) / 4)), pos = R.V < 0;
+    ctx.font = font(12, 700); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    for (let i = 0; i < nq; i++) { const x = mx + (i + 0.5) * mw / nq; ctx.fillStyle = pos ? T.na : T.k; ctx.fillText(pos ? '+' : '−', x, memT - 11 * p); ctx.fillStyle = pos ? T.k : T.na; ctx.fillText(pos ? '−' : '+', x, memB + 22 * p); }
+    /* ions, one dot for each 5 mM (human) or 15 mM (squid) */
+    const per = S.cell === 'squid' ? 15 : 5, tt = reduce ? 0 : performance.now() / 1000; let s = 0;
+    const dots = (ion, cnt, ya, yb) => { const n = Math.round(cnt / per); ctx.fillStyle = T[ion.toLowerCase()];
+      for (let i = 0; i < n; i++, s++) { const u = SEEDS[s % 400], v = SEEDS[(s * 7 + 3) % 400]; const x = mx + 14 * p + (u + 0.02 * Math.sin(tt * 1.3 + s)) % 1 * (mw - 28 * p), y = ya + 22 * p + (v * 0.96 + 0.02 * Math.cos(tt * 1.1 + s * 2)) * (yb - ya - 40 * p);
+        ctx.beginPath(); ctx.arc(x, y, 3.2 * p, 0, 7); ctx.fill(); } };
+    dots('Na', R.c.Na[0], my, memT); dots('K', R.c.K[0], my, memT); dots('Cl', R.c.Cl[0], my, memT);
+    dots('Na', R.c.Na[1], memB + 18 * p, my + mh); dots('K', R.c.K[1], memB + 18 * p, my + mh); dots('Cl', R.c.Cl[1], memB + 18 * p, my + mh);
+    ctx.fillStyle = T.muted; ctx.font = font(10.5); ctx.textAlign = 'right'; ctx.textBaseline = 'top'; ctx.fillText(tr('one dot = {n} mM', { n: per }), mx + mw - 10 * p, my + 8 * p);
+    /* the voltage scale */
+    const vx = wide ? split + 40 * p : 70 * p, vw = wide ? W - split - 70 * p : W - 120 * p, vy0 = wide ? 40 * p : hP + 24 * p, vy1 = wide ? H - 40 * p : H - 20 * p;
+    if (wide) {
+      const Yv = (v) => vy1 - (v + 110) / 190 * (vy1 - vy0);
+      ctx.strokeStyle = T.line; ctx.fillStyle = T.muted; ctx.font = mono(10); ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.lineWidth = 1;
+      for (let v = -100; v <= 80; v += 20) { ctx.beginPath(); ctx.moveTo(vx, Yv(v)); ctx.lineTo(vx + vw, Yv(v)); ctx.stroke(); ctx.fillText(String(v).replace('-', '−'), vx - 6 * p, Yv(v)); }
+      ctx.save(); ctx.translate(vx - 32 * p, (vy0 + vy1) / 2); ctx.rotate(-Math.PI / 2); ctx.textAlign = 'center'; ctx.fillText(tr('voltage inside, mV'), 0, 0); ctx.restore();
+      markers(R, (v) => Yv(v), vx, vw, p, true);
+    } else {
+      const Xv = (v) => vx + (v + 110) / 190 * vw, yy = (vy0 + vy1) / 2;
+      ctx.strokeStyle = T.line; ctx.fillStyle = T.muted; ctx.font = mono(10); ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(vx, yy); ctx.lineTo(vx + vw, yy); ctx.stroke();
+      for (let v = -100; v <= 80; v += 40) { ctx.beginPath(); ctx.moveTo(Xv(v), yy - 4); ctx.lineTo(Xv(v), yy + 4); ctx.stroke(); ctx.fillText(String(v).replace('-', '−'), Xv(v), yy + 6 * p); }
+      ctx.fillText(tr('voltage inside, mV'), vx + vw / 2, yy + 22 * p);
+      markers(R, (v) => Xv(v), yy, 0, p, false);
+    }
+  }
+  function markers(R, at, a, w, p, vertical) {
+    const list = [['E_K', R.EK, T.k], ['E_Na', R.ENa, T.na], ['E_Cl', R.ECl, T.cl]];
+    if (!S.blind) list.push(['V', R.V, T.ink]);
+    const placed = [];
+    for (const [lab, v, col] of list) {
+      const q = at(Math.max(-108, Math.min(78, v))); ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = (lab === 'V' ? 3 : 2) * p;
+      let lq = q; while (placed.some((z) => Math.abs(z - lq) < 15 * p)) lq += (vertical ? 15 : 15) * p; placed.push(lq);
+      ctx.font = lab === 'V' ? font(12.5, 700) : font(11.5, 700);
+      const txt = (lab === 'V' ? tr('resting V') : lab) + ' ' + fmt(v, 1);
+      if (vertical) { ctx.beginPath(); ctx.moveTo(a, q); ctx.lineTo(a + w * 0.45, q); ctx.stroke(); ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText(txt, a + w * 0.48, lq); }
+      else { ctx.beginPath(); ctx.moveTo(q, a - 14 * p); ctx.lineTo(q, a); ctx.stroke(); ctx.save(); ctx.translate(q, a - 18 * p); ctx.rotate(-Math.PI / 3); ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText(txt, 0, 0); ctx.restore(); }
+    }
+  }
+
+  /* ---------------- drawing: heart and ECG ---------------- */
+  const LEADS = () => (S.aug ? ['I', 'II', 'III', 'aVR', 'aVL', 'aVF'] : ['I', 'II', 'III']);
+  const hist = { t: [], v: [] };
+  function ecgSample(t) { const pD = dipole(t, S.hr, S.axis); return { p: pD, L: leads(pD) }; }
+  function drawECG() {
+    const p = proj(), wide = W > 640, f = SPL_ECG.f(); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    const hb = wide ? { x: 0, y: 0, w: W * f, h: H } : { x: 0, y: 0, w: W, h: H * f }, pb = wide ? { x: W * f, y: 0, w: W * (1 - f), h: H } : { x: 0, y: H * f, w: W, h: H * (1 - f) };
+    drawTorso(hb, p); drawPaper(pb, p);
+  }
+  function drawTorso(b, p) {
+    const cx = b.x + b.w / 2, s = Math.min(b.w / 340, (b.h - 44) / 420), cy = b.y + 40 + 236 * s;
+    const P = (x, y) => [cx + x * s, cy + y * s];
+    /* body: shoulders, arms out, legs down */
+    ctx.fillStyle = T.skin; ctx.strokeStyle = T['skin-edge']; ctx.lineWidth = 2;
+    ctx.beginPath(); const pts = [[-40, -170], [40, -170], [55, -140], [150, -120], [160, -95], [70, -95], [72, 60], [60, 175], [20, 175], [5, 85], [-5, 85], [-20, 175], [-60, 175], [-72, 60], [-70, -95], [-160, -95], [-150, -120], [-55, -140]];
+    pts.forEach((q, i) => { const [x, y] = P(...q); if (i) ctx.lineTo(x, y); else ctx.moveTo(x, y); }); ctx.closePath(); ctx.fill(); ctx.stroke();
+    const [hx, hy] = P(0, -200); ctx.beginPath(); ctx.arc(hx, hy, 30 * s, 0, 7); ctx.fill(); ctx.stroke();
+    /* electrodes: right arm on the left of the picture (the patient faces us) */
+    const RA = P(-145, -108), LA = P(145, -108), LL = P(40, 160);
+    /* the heart, a little left of center */
+    const H0 = P(14, -40);
+    ctx.save(); ctx.translate(H0[0], H0[1]); ctx.rotate(-0.5); ctx.fillStyle = T.heart; ctx.globalAlpha = 0.85;
+    ctx.beginPath(); ctx.moveTo(0, 30 * s); ctx.bezierCurveTo(-34 * s, 4 * s, -36 * s, -26 * s, -14 * s, -28 * s); ctx.bezierCurveTo(-4 * s, -29 * s, 0, -20 * s, 0, -14 * s);
+    ctx.bezierCurveTo(0, -20 * s, 6 * s, -30 * s, 18 * s, -27 * s); ctx.bezierCurveTo(38 * s, -22 * s, 32 * s, 6 * s, 0, 30 * s); ctx.fill(); ctx.restore(); ctx.globalAlpha = 1;
+    /* Einthoven's triangle and the lead axes along its sides */
+    const L = ecgSample(S.tE).L, kv = 34 * s;
+    const side = (a, b2, val, col, name, out) => {
+      ctx.strokeStyle = T.muted; ctx.lineWidth = 1.2; ctx.setLineDash([5, 4]); ctx.beginPath(); ctx.moveTo(...a); ctx.lineTo(...b2); ctx.stroke(); ctx.setLineDash([]);
+      const dx = b2[0] - a[0], dy = b2[1] - a[1], len = Math.hypot(dx, dy), ux = dx / len, uy = dy / len, nx = out[0], ny = out[1];
+      const mxp = (a[0] + b2[0]) / 2 + nx * 16 * s, myp = (a[1] + b2[1]) / 2 + ny * 16 * s, h = val * kv;
+      ctx.strokeStyle = col; ctx.lineWidth = 5 * p; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(mxp, myp); ctx.lineTo(mxp + ux * h, myp + uy * h); ctx.stroke(); ctx.lineCap = 'butt';
+      ctx.fillStyle = col; ctx.font = font(13, 700); ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(name, mxp + nx * 18 * s, myp + ny * 18 * s);
+      ctx.font = font(10, 700); ctx.fillText('+', b2[0] - ux * 14 * s + nx * 10 * s, b2[1] - uy * 14 * s + ny * 10 * s); ctx.fillText('−', a[0] + ux * 14 * s + nx * 10 * s, a[1] + uy * 14 * s + ny * 10 * s);
+    };
+    side(RA, LA, L.I, T.leadI, 'I', [0, -1]); side(RA, LL, L.II, T.leadII, 'II', [-0.87, 0.5]); side(LA, LL, L.III, T.leadIII, 'III', [0.87, 0.5]);
+    for (const [q, nm] of [[RA, 'RA'], [LA, 'LA'], [LL, 'LL']]) { ctx.fillStyle = T.ink; ctx.beginPath(); ctx.arc(q[0], q[1], 7 * p, 0, 7); ctx.fill(); ctx.fillStyle = T.canvas; ctx.font = font(7.5, 700); ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(nm, q[0], q[1] + 0.5); }
+    /* the dipole's loop over the last beat, then the dipole itself */
+    const k = 46 * s, rrS = 60 / S.hr;
+    if (S.loop) { ctx.strokeStyle = T.dip; ctx.globalAlpha = 0.35; ctx.lineWidth = 1.4; ctx.beginPath();
+      const t0 = Math.max(0, S.tE - rrS); for (let t = t0, j = 0; t <= S.tE; t += 0.002, j++) { const q = dipole(t, S.hr, S.axis); const x = H0[0] + q[0] * k, y = H0[1] + q[1] * k; if (j) ctx.lineTo(x, y); else ctx.moveTo(x, y); }
+      ctx.stroke(); ctx.globalAlpha = 1; }
+    const q = ecgSample(S.tE).p, ex = H0[0] + q[0] * k, ey = H0[1] + q[1] * k, mag = Math.hypot(q[0], q[1]);
+    if (mag > 0.02) { ctx.strokeStyle = T.dip; ctx.fillStyle = T.dip; ctx.lineWidth = 3 * p; ctx.beginPath(); ctx.moveTo(H0[0], H0[1]); ctx.lineTo(ex, ey); ctx.stroke();
+      const an = Math.atan2(ey - H0[1], ex - H0[0]), hl = Math.min(12 * p, mag * k * 0.5); ctx.beginPath(); ctx.moveTo(ex, ey); ctx.lineTo(ex - hl * Math.cos(an - 0.4), ey - hl * Math.sin(an - 0.4)); ctx.lineTo(ex - hl * Math.cos(an + 0.4), ey - hl * Math.sin(an + 0.4)); ctx.fill(); }
+    ctx.fillStyle = T.dip; ctx.beginPath(); ctx.arc(H0[0], H0[1], 3 * p, 0, 7); ctx.fill();
+    ctx.fillStyle = T.muted; ctx.font = font(11); ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText(tr('Heart dipole (the patient faces you)'), b.x + 10 * p, b.y + 8 * p);
+    if (!S.blind) { const ang = Math.atan2(q[1], q[0]) * 180 / Math.PI; ctx.font = mono(11); ctx.fillText(mag > 0.02 ? tr('dipole {m} mV at {a}°', { m: fmt(mag, 2), a: fmt(ang, 0) }) : tr('dipole near zero'), b.x + 10 * p, b.y + 24 * p); }
+  }
+  function drawPaper(b, p) {
+    const names = LEADS(), n = names.length, pad = 8 * p, x0 = b.x + pad + 30 * p, x1 = b.x + b.w - pad, y0 = b.y + pad + 4 * p, y1 = b.y + b.h - pad - 22 * p;
+    ctx.fillStyle = T['paper-ecg']; rr(b.x + pad, b.y + pad, b.w - 2 * pad, b.h - 2 * pad, 6 * p); ctx.fill();
+    const rowH = (y1 - y0) / n, pxmV = rowH / 2.6, pxs = pxmV * 2.5, win = (x1 - x0) / pxs;
+    /* the grid: 1 mm boxes (0.04 s, 0.1 mV), heavier every 5 */
+    ctx.lineWidth = 1; const mm = pxs * 0.04;
+    if (mm > 2.5) { ctx.strokeStyle = T['ecg-minor']; ctx.beginPath(); for (let x = x0; x <= x1 + 0.5; x += mm) { ctx.moveTo(x, y0); ctx.lineTo(x, y1); } for (let y = y0; y <= y1 + 0.5; y += mm) { ctx.moveTo(x0, y); ctx.lineTo(x1, y); } ctx.stroke(); }
+    ctx.strokeStyle = T['ecg-major']; ctx.beginPath(); for (let x = x0; x <= x1 + 0.5; x += 5 * mm) { ctx.moveTo(x, y0); ctx.lineTo(x, y1); } for (let y = y0; y <= y1 + 0.5; y += 5 * mm) { ctx.moveTo(x0, y); ctx.lineTo(x1, y); } ctx.stroke();
+    /* sweep: the trace is written left to right and wraps, with a gap ahead of the pen */
+    const tNow = S.tE, tStart = Math.floor(tNow / win) * win, pen = x0 + (tNow - tStart) * pxs, gap = 0.12;
+    names.forEach((nm, i) => {
+      const base = y0 + rowH * (i + 0.62), col = { I: T.leadI, II: T.leadII, III: T.leadIII }[nm] || T['ecg-ink'];
+      ctx.fillStyle = col; ctx.font = font(13, 700); ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText(nm, x0 + 5 * p, y0 + rowH * i + 4 * p);
+      ctx.strokeStyle = T['ecg-ink']; ctx.lineWidth = 1.6 * p; ctx.beginPath(); let on = false;
+      const dt = 1 / pxs;
+      for (let x = x0; x <= x1; x += 1) {
+        const tt = (x - x0) / pxs; let t = tStart + tt; if (t > tNow) t -= win; if (t < 0 || (t > tNow - win && t < tNow - win + gap)) { on = false; continue; }
+        if (t > tNow) { on = false; continue; }
+        const v = leads(dipole(t, S.hr, S.axis))[nm], y = base - v * pxmV;
+        if (on) ctx.lineTo(x, y); else { ctx.moveTo(x, y); on = true; }
+      }
+      ctx.stroke();
+      /* 1 mV calibration pulse at the left */
+      ctx.strokeStyle = T['ecg-ink']; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(x0 - 26 * p, base); ctx.lineTo(x0 - 22 * p, base); ctx.lineTo(x0 - 22 * p, base - pxmV); ctx.lineTo(x0 - 16 * p, base - pxmV); ctx.lineTo(x0 - 16 * p, base); ctx.lineTo(x0 - 12 * p, base); ctx.stroke();
+    });
+    ctx.strokeStyle = T.accent; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(pen, y0); ctx.lineTo(pen, y1); ctx.stroke();
+    ctx.fillStyle = T.muted; ctx.font = font(11); ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText(tr('25 mm/s · 10 mm/mV · {s}', { s: S.ecgRate === 1 ? tr('real time: 1 s = 1 s') : tr('slow motion: 1 s = {r} s', { r: String(S.ecgRate) }) }), x0, y1 + 6 * p);
+  }
+
+  function draw() {
+    if (!T || !W) return;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    if (S.view === 'axon') drawAxon(); else if (S.view === 'rest') drawRest(); else drawECG();
+    if (S.flash > 0) S.flash -= 0.05;
+  }
+
+  /* ---------------- readouts ---------------- */
+  const dd = (a, b, cls) => `<div${cls ? ' class="' + cls + '"' : ''}><dt>${a}</dt><dd>${b}</dd></div>`;
+  function laneSpeed(ln) { const a = ln.cross.A, b = ln.cross.B; if (a === null || b === null || Math.abs(b - a) < 1e-9) return null; return (S.eb - S.ea) * S.L / 100 / ((b - a) / 1000); }
+  function readouts() {
+    let h = '';
+    if (S.view === 'axon') {
+      const dx = Math.abs(S.eb - S.ea) * S.L * 10;
+      h += dd(tr('Time t'), sig(S.t, 3) + ' ms') + dd(tr('Electrode gap Δx (A to B)'), sig(dx, 3) + ' mm');
+      S.lanes.forEach((ln, i) => {
+        const nm = ln.my ? tr('myelinated') : tr('bare'), dt = ln.cross.A !== null && ln.cross.B !== null ? ln.cross.B - ln.cross.A : null, v = laneSpeed(ln);
+        h += dd(tr('Delay Δt, {n}', { n: nm }), dt === null ? tr('waiting for the impulse') : sig(dt, 3) + ' ms', dt === null ? 'note' : '');
+        h += dd(tr('Speed Δx/Δt, {n}', { n: nm }), v === null ? '—' : sig(Math.abs(v), 3) + ' m/s');
+        if (!S.blind) { const th = S.thr[S.d + (ln.my ? 'm' : 'b')]; h += dd(tr('Threshold kick, {n}', { n: nm }), th === undefined ? tr('working it out…') : th === null ? '—' : fmt(th, 1) + ' mV');
+          h += dd(tr('Model speed for this axon, {n}', { n: nm }), (ln.my && S.damage !== 'none') ? tr('slower at the damage') : sig(vModel(S.d, ln.my), 3) + ' m/s'); }
+      });
+      if (!S.blind) h += dd(tr('Length constant λ of bare membrane'), sig(lambdaBare(dCm()) * 10, 3) + ' mm');
+      if (S.lanes[0].my) h += dd(tr('Internode length'), sig(internode(dCm()) * 10, 3) + ' mm') + dd(tr('Myelin lamellae'), comma(lamellae(dCm()), 0));
+    } else if (S.view === 'rest') {
+      const R = restNow();
+      h += dd('E_K', fmt(R.EK, 1) + ' mV') + dd('E_Na', fmt(R.ENa, 1) + ' mV') + dd('E_Cl', fmt(R.ECl, 1) + ' mV') + dd('kT/e', fmt(thermalMV(S.T), 2) + ' mV');
+      h += S.blind ? dd(tr('Resting voltage V'), tr('hidden: predict it'), 'note') : dd(tr('Resting voltage V (Goldman)'), fmt(R.V, 1) + ' mV') + dd(tr('Field across the 8 nm membrane'), sig(Math.abs(R.V) * 1e-3 / MEMBRANE / 1e6, 3) + ' MV/m');
+    } else {
+      const now = ecgSample(S.tE).L;
+      h += dd(tr('Heart rate'), S.hr + ' ' + tr('beats/min')) + dd(tr('Time between beats RR'), fmt(60 / S.hr, 3) + ' s');
+      h += dd(tr('Lead I now'), fmt(now.I, 3) + ' mV') + dd(tr('Lead II now'), fmt(now.II, 3) + ' mV') + dd(tr('Lead III now'), fmt(now.III, 3) + ' mV') + dd(tr('I + III − II'), fmt(now.I + now.III - now.II, 3) + ' mV');
+      const nI = qrsNet(S.hr, S.axis, 'I'), nII = qrsNet(S.hr, S.axis, 'II'), nIII = qrsNet(S.hr, S.axis, 'III');
+      h += dd(tr('Net QRS, I · II · III'), fmt(nI, 2) + ' · ' + fmt(nII, 2) + ' · ' + fmt(nIII, 2) + ' mV');
+      h += S.blind ? dd(tr('Mean QRS axis'), tr('hidden: find it from I and aVF'), 'note') : dd(tr('Mean QRS axis'), fmt(S.axis, 0) + '°');
+    }
+    $('out').innerHTML = h;
+  }
+
+  /* ---------------- the speed graph ---------------- */
+  function plotSpeeds() {
+    const r = vplot.getBoundingClientRect(); if (!r.width || !T) return;
+    const d2 = window.devicePixelRatio || 1; vplot.width = Math.round(r.width * d2); vplot.height = Math.round(r.height * d2); const g = vctx; g.setTransform(d2, 0, 0, d2, 0, 0);
+    const w = r.width, h = r.height, l = 40, b = 26, t = 8, rt = 8, X = (d) => l + (Math.log10(d) + 1) / 3.8 * (w - l - rt), Y = (v) => h - b - (Math.log10(v) + 1) / 3.3 * (h - b - t);
+    g.fillStyle = T.canvas; g.fillRect(0, 0, w, h); g.strokeStyle = T.line; g.fillStyle = T.muted; g.font = `10px ${T['font-mono']}`; g.lineWidth = 1;
+    for (const d of [0.1, 1, 10, 100, 1000]) { g.beginPath(); g.moveTo(X(d), t); g.lineTo(X(d), h - b); g.stroke(); g.textAlign = 'center'; g.textBaseline = 'top'; if (X(d) <= w - rt + 1) g.fillText(comma(d, d < 1 ? 1 : 0), X(d), h - b + 3); }
+    for (const v of [0.1, 1, 10, 100]) { g.beginPath(); g.moveTo(l, Y(v)); g.lineTo(w - rt, Y(v)); g.stroke(); g.textAlign = 'right'; g.textBaseline = 'middle'; g.fillText(comma(v, v < 1 ? 1 : 0), l - 4, Y(v)); }
+    g.textAlign = 'right'; g.textBaseline = 'bottom'; g.fillText(tr('d (µm)'), w - rt, h - b - 2); g.save(); g.translate(10, t + 4); g.textAlign = 'left'; g.textBaseline = 'top'; g.fillText(tr('v (m/s)'), 2, 0); g.restore();
+    for (const F of FIBERS) { g.fillStyle = F.myelin ? T.myelin : T.rest; g.globalAlpha = F.myelin ? 0.5 : 0.22; const dA = F.d.map((x) => (F.myelin ? MY.g * x : x)); g.fillRect(X(dA[0]), Y(F.v[1]), X(dA[1]) - X(dA[0]), Y(F.v[0]) - Y(F.v[1])); g.globalAlpha = 1; }
+    const rows = (window.vdRows ? window.vdRows() : []).filter((q) => q.view === 'axon' && isFinite(+q.v_m_s));
+    let out = '';
+    for (const my of [false, true]) {
+      const pts = rows.filter((q) => (q.fiber === 'myelinated') === my).map((q) => [+q.d_um, +q.v_m_s]), col = my ? T['myelin-edge'] : T.rest;
+      g.fillStyle = col; for (const [d, v] of pts) { g.beginPath(); g.arc(X(d), Y(v), 3.5, 0, 7); g.fill(); }
+      const fit = powerFit(pts.map((q) => q[0]), pts.map((q) => q[1]));
+      if (fit && pts.length >= 2) { g.strokeStyle = col; g.lineWidth = 1.5; g.beginPath(); g.moveTo(X(0.1), Y(fit.A * Math.pow(0.1, fit.n))); g.lineTo(X(600), Y(fit.A * Math.pow(600, fit.n))); g.stroke();
+        out += dd(tr('Fit v ∝ dⁿ, {k}', { k: my ? tr('myelinated') : tr('bare') }), 'n = ' + fmt(fit.n, 3) + ' (' + pts.length + ' ' + tr('points') + ')'); }
+    }
+    $('fitOut').innerHTML = out || dd(tr('Fit'), tr('record two or more speeds of one kind'), 'note');
+  }
+
+  /* ---------------- controls ---------------- */
+  function syncSpeed() {
+    const sel = $('speed');
+    const list = S.view === 'ecg' ? [[1, 'Real time'], [0.5, '1 s = 0.5 s'], [0.25, '1 s = 0.25 s'], [0.1, '1 s = 0.1 s']] : RATES.map((r) => [r, '1 s = ' + r + ' ms']);
+    const want = S.view === 'ecg' ? S.ecgRate : S.rate, key = list.map((q) => q[0]).join();
+    if (sel.dataset.k !== key) { sel.innerHTML = list.map((q) => `<option value="${q[0]}">${q[1]}</option>`).join(''); sel.dataset.k = key; }
+    sel.value = String(want);
+  }
+  function sync() {
+    const my = S.my && canMyelin();
+    for (const b of document.querySelectorAll('#myelinSeg button')) { b.setAttribute('aria-pressed', String(b.dataset.my === (my ? '1' : '0'))); b.disabled = b.dataset.my === '1' && !canMyelin(); }
+    for (const b of document.querySelectorAll('#damageSeg button')) b.setAttribute('aria-pressed', String(b.dataset.dmg === S.damage));
+    $('damageBox').hidden = !my; $('race').checked = S.race; $('race').disabled = !canMyelin();
+    $('sD').value = dToSlider(S.d); $('oD').textContent = sig(S.d, 3) + ' µm';
+    $('sV').value = S.dV; $('oV').textContent = fmt(S.dV, 1) + ' mV';
+    $('sA').value = S.ea; $('sB').value = S.eb; const L = S.L || viewLength(dCm());
+    $('oA').textContent = sig(S.ea * L * 10, 3) + ' mm'; $('oB').textContent = sig(S.eb * L * 10, 3) + ' mm';
+    for (const b of document.querySelectorAll('#cellSeg button')) b.setAttribute('aria-pressed', String(b.dataset.cell === S.cell));
+    $('sT').value = S.T; $('oT').textContent = fmt(S.T, 1) + ' °C'; $('sK').value = S.Kout; $('oK').textContent = fmt(S.Kout, 1) + ' mM';
+    $('sP').value = Math.log10(S.pr); $('oP').textContent = sig(S.pr, 2);
+    $('sR').value = S.hr; $('oR').textContent = S.hr + ' ' + tr('beats/min'); $('sX').value = S.axis; $('oX').textContent = (S.axis > 0 ? '+' : '') + String(S.axis).replace('-', '−') + '°';
+    $('aug').checked = S.aug; $('loop').checked = S.loop;
+    for (const b of document.querySelectorAll('#presets button')) { b.setAttribute('aria-pressed', String(b.dataset.p === S.preset)); b.hidden = b.dataset.view !== S.view; }
+    for (const b of document.querySelectorAll('#viewSeg button')) b.setAttribute('aria-pressed', String(b.dataset.v === S.view));
+    $('axonBox').hidden = S.view !== 'axon'; $('restBox').hidden = S.view !== 'rest'; $('ecgBox').hidden = S.view !== 'ecg'; $('speedSec').hidden = S.view !== 'axon';
+    $('stage').dataset.v = S.view; syncSpeed();
+    const lab = { axon: 'An axon seen from the side with a stimulating electrode at its left end and two recording electrodes, A and B, above it; the membrane\'s color shows its voltage, and an oscilloscope below records the voltage at A and B against time. Drag an electrode, or use the arrow keys; A and B pick which one moves.',
+      rest: 'A patch of cell membrane with the ions on each side drawn as dots, and a voltage scale marking the Nernst potentials of potassium, sodium and chloride and the resting voltage.',
+      ecg: 'A body with electrodes on the right arm, left arm and left leg forming Einthoven\'s triangle, the heart\'s dipole turning inside it with its components along the three sides, and ECG paper recording leads I, II and III.' };
+    can.setAttribute('aria-label', lab[S.view]);
+  }
+  const card = VD.setupCard ? VD.setupCard($('setupCard')) : { away() {} };
+  function setRun(on) { S.run = on; const b = $('play'); b.textContent = on ? 'Pause' : 'Play'; b.classList.toggle('attn', !on); }
+  function changedAxon() { S.preset = null; buildLanes(); trace(); setRun(false); sync(); draw(); readouts(); wantThreshold(); }
+  function applyPreset(k) {
+    const c = PRESETS[k]; S.preset = k; S.view = c.view; $('presetHint').textContent = c.hint; setRun(false);
+    if (c.view === 'axon') { Object.assign(S, { my: c.my, d: c.d, damage: c.damage, race: c.race, dV: c.dV, ea: c.ea, eb: c.eb, sched: c.sched.slice() }); buildLanes(); autoRate(); trace(); wantThreshold(); }
+    else if (c.view === 'rest') Object.assign(S, { cell: c.cell, T: c.T, Kout: c.Kout, pr: c.pr });
+    else { Object.assign(S, { hr: c.rate, axis: c.axis, aug: c.aug }); S.tE = 0; }
+    sync(); resize(); readouts();
+  }
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  const FIRST = { axon: 'race', rest: 'human', ecg: 'normal' };
+  for (const b of document.querySelectorAll('#viewSeg button')) b.addEventListener('click', () => { if (b.dataset.v === S.view) return; S.view = b.dataset.v; applyPreset(FIRST[S.view]); });
+  for (const b of document.querySelectorAll('#myelinSeg button')) b.addEventListener('click', () => { S.my = b.dataset.my === '1'; changedAxon(); });
+  for (const b of document.querySelectorAll('#damageSeg button')) b.addEventListener('click', () => { S.damage = b.dataset.dmg; changedAxon(); });
+  $('race').addEventListener('change', (e) => { S.race = e.target.checked; changedAxon(); });
+  $('sD').addEventListener('input', (e) => { S.d = sliderToD(+e.target.value); if (!canMyelin()) S.my = false; S.sched = [0.02]; changedAxon(); autoRate(); });
+  $('sV').addEventListener('input', (e) => { S.dV = +e.target.value; S.preset = null; resetRunKeep(); });
+  function resetRunKeep() { for (const ln of S.lanes) restAxon(ln.ax); S.t = 0; S.next = 0; trace(); setRun(false); sync(); draw(); readouts(); }
+  $('sA').addEventListener('input', (e) => { S.ea = +e.target.value; S.sel = 'A'; S.preset = null; resetCross(); });
+  $('sB').addEventListener('input', (e) => { S.eb = +e.target.value; S.sel = 'B'; S.preset = null; resetCross(); });
+  function resetCross() { for (const ln of S.lanes) { ln.cross = { A: null, B: null }; for (const k of ['A', 'B']) { ln.tr[k] = [[S.t, vAt(ln.ax, (k === 'A' ? S.ea : S.eb) * S.L)]]; ln.prev[k] = ln.tr[k][0][1]; } } S.lastStim = S.t > 0 ? S.lastStim : -1; sync(); draw(); readouts(); }
+  $('stimBtn').addEventListener('click', () => { if (S.view !== 'axon') return; if (S.over) { S.Tw = S.t + 8; S.over = false; } kick(); if (!S.run) setRun(true); readouts(); });
+  for (const b of document.querySelectorAll('#cellSeg button')) b.addEventListener('click', () => { const c = IONS[b.dataset.cell]; Object.assign(S, { cell: b.dataset.cell, T: c.T, Kout: c.c.K[0] }); S.preset = null; sync(); draw(); readouts(); });
+  $('sT').addEventListener('input', (e) => { S.T = +e.target.value; S.preset = null; sync(); draw(); readouts(); });
+  $('sK').addEventListener('input', (e) => { S.Kout = +e.target.value; S.preset = null; sync(); draw(); readouts(); });
+  $('sP').addEventListener('input', (e) => { S.pr = Math.pow(10, +e.target.value); S.preset = null; sync(); draw(); readouts(); });
+  $('pRest').addEventListener('click', () => { S.pr = 0.04; S.preset = null; sync(); draw(); readouts(); });
+  $('pPeak').addEventListener('click', () => { S.pr = 20; S.preset = null; sync(); draw(); readouts(); });
+  $('sR').addEventListener('input', (e) => { S.hr = +e.target.value; S.preset = null; sync(); draw(); readouts(); });
+  $('sX').addEventListener('input', (e) => { S.axis = +e.target.value; S.preset = null; sync(); draw(); readouts(); });
+  $('aug').addEventListener('change', (e) => { S.aug = e.target.checked; draw(); });
+  $('loop').addEventListener('change', (e) => { S.loop = e.target.checked; draw(); });
+  $('speed').addEventListener('change', (e) => { if (S.view === 'ecg') S.ecgRate = +e.target.value; else S.rate = +e.target.value; draw(); });
+  $('play').addEventListener('click', () => {
+    if (S.view === 'rest') return;
+    if (!S.run && S.view === 'axon' && S.over) { for (const ln of S.lanes) restAxon(ln.ax); S.t = 0; S.next = 0; trace(); }
+    setRun(!S.run); if (S.run) card.away(false); draw();
+  });
+  $('reset').addEventListener('click', () => { if (S.view === 'axon') { for (const ln of S.lanes) restAxon(ln.ax); S.t = 0; S.next = 0; trace(); } else S.tE = 0; setRun(false); draw(); readouts(); });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; $('blindTag').hidden = !S.blind; draw(); readouts(); });
+  $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; draw(); });
+
+  /* electrodes: drag, or arrow keys on the picture */
+  let drag = null;
+  const near = (e) => { if (S.view !== 'axon' || !geo) return null; const r = can.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top; if (y > geo.split) return null;
+    let best = null, bd = 16; for (const k of ['A', 'B']) { const d = Math.abs(geo.X((k === 'A' ? S.ea : S.eb) * S.L) - x); if (d < bd) { bd = d; best = k; } } return best; };
+  can.addEventListener('pointerdown', (e) => { const k = near(e); if (!k) return; drag = k; S.sel = k; can.setPointerCapture(e.pointerId); e.preventDefault(); });
+  can.addEventListener('pointermove', (e) => {
+    if (!drag) { can.style.cursor = near(e) ? 'ew-resize' : 'default'; return; }
+    const r = can.getBoundingClientRect(), f = Math.max(0.05, Math.min(0.95, geo.Xinv(e.clientX - r.left) / S.L));
+    if (drag === 'A') S.ea = f; else S.eb = f; S.preset = null; resetCross();
+  });
+  const up = () => { drag = null; }; can.addEventListener('pointerup', up); can.addEventListener('pointercancel', up);
+  can.addEventListener('keydown', (e) => {
+    if (S.view !== 'axon') return;
+    if (e.key === 'a' || e.key === 'A') { S.sel = 'A'; draw(); e.preventDefault(); return; }
+    if (e.key === 'b' || e.key === 'B') { S.sel = 'B'; draw(); e.preventDefault(); return; }
+    const step = e.shiftKey ? 0.05 : 0.005, dir = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0; if (!dir) return;
+    const f = Math.max(0.05, Math.min(0.95, (S.sel === 'A' ? S.ea : S.eb) + dir * step)); if (S.sel === 'A') S.ea = f; else S.eb = f; S.preset = null; resetCross(); e.preventDefault();
+  });
+
+  /* readings */
+  window.vdVersion = NS_VERSION;
+  window.vdReadingRow = () => {
+    if (S.view === 'axon') {
+      const ln = S.lanes[0], v = laneSpeed(ln);
+      if (v === null) return tr('Fire an impulse past both electrodes first: press Play.');
+      return { view: 'axon', fiber: ln.my ? 'myelinated' : 'bare', d_um: +sig(S.d, 3).replace(/,/g, ''), myelin: ln.my ? S.damage : '', dx_mm: +(Math.abs(S.eb - S.ea) * S.L * 10).toPrecision(4), dt_ms: +Math.abs(ln.cross.B - ln.cross.A).toPrecision(4), v_m_s: +Math.abs(v).toPrecision(4) };
+    }
+    if (S.view === 'rest') { const R = restNow(); const row = { view: 'rest', cell: S.cell, T_C: S.T, K_out_mM: S.Kout, PNa_PK: +S.pr.toPrecision(3), E_K_mV: +R.EK.toFixed(1), E_Na_mV: +R.ENa.toFixed(1) }; if (!S.blind) row.V_rest_mV = +R.V.toFixed(1); return row; }
+    const row = { view: 'ecg', rate_bpm: S.hr, I_mV: +qrsNet(S.hr, S.axis, 'I').toFixed(3), II_mV: +qrsNet(S.hr, S.axis, 'II').toFixed(3), III_mV: +qrsNet(S.hr, S.axis, 'III').toFixed(3), aVF_mV: +qrsNet(S.hr, S.axis, 'aVF').toFixed(3) };
+    if (!S.blind) row.axis_deg = S.axis; return row;
+  };
+  const COLS = { axon: [['fiber', 'Fiber'], ['d_um', 'd (µm)'], ['dt_ms', 'Δt (ms)'], ['v_m_s', 'v (m/s)']], rest: [['cell', 'Cell'], ['K_out_mM', 'K⁺ out (mM)'], ['PNa_PK', 'P_Na/P_K'], ['V_rest_mV', 'V (mV)']], ecg: [['rate_bpm', 'Rate'], ['I_mV', 'I (mV)'], ['II_mV', 'II (mV)'], ['III_mV', 'III (mV)']] };
+  window.vdShowCols = COLS.axon;
+  document.addEventListener('click', (e) => { if (e.target.closest && e.target.closest('.vd-readings')) setTimeout(plotSpeeds, 0); }, true);
+  new MutationObserver(() => { window.vdShowCols = COLS[S.view]; }).observe($('stage'), { attributes: true, attributeFilter: ['data-v'] });
+
+  /* ---------------- loop ---------------- */
+  let last = performance.now();
+  function frame(now) {
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    if (S.run) {
+      if (S.view === 'axon') { advance(S.rate * dt); readouts(); }
+      else if (S.view === 'ecg') { S.tE += dt * S.ecgRate; if (Math.floor(now / 250) !== Math.floor((now - dt * 1000) / 250)) readouts(); }
+      draw();
+    } else if (S.view === 'rest' && !reduce) draw();
+    else if (S.flash > 0 || (S.view === 'axon' && S.lanes.some((ln) => ln.ax.ina.some((x) => x < -150)))) draw();
+    requestAnimationFrame(frame);
+  }
+  function resize() {
+    dpr = window.devicePixelRatio || 1; const r = $('pane').getBoundingClientRect(); W = r.width; H = r.height;
+    can.width = Math.round(W * dpr); can.height = Math.round(H * dpr); SPL_AX.place(); SPL_ECG.place(); draw(); plotSpeeds();
+  }
+  const retheme = () => { tokens(); draw(); plotSpeeds(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  VD.projector({ onChange: resize });
+  tokens(); applyPreset('race'); new ResizeObserver(resize).observe($('pane')); new ResizeObserver(plotSpeeds).observe(vplot); resize();
+  if (window.VD && VD.panel) VD.panel({ play: '#play', reset: '#reset', speed: '#speedBox', speedLabel: 'Speed', clock: '#tclock', end: ['#viewSeg'],
+    step: { label: 'Step', title: 'Advance a little and pause', run: () => { if (S.view === 'axon') advance(S.rate * 0.1); else if (S.view === 'ecg') S.tE += 0.02; draw(); readouts(); } } });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  setInterval(() => { $('tclock').textContent = S.view === 'axon' ? 't = ' + sig(S.t, 3) + ' ms' : S.view === 'ecg' ? 't = ' + fmt(S.tE, 2) + ' s' : ''; }, 100);
+  window.__ns = { S, PRESETS, laneSpeed, thresholdOf, restNow, vModel, applyPreset, advance, draw };
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

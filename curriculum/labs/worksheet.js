@@ -421,6 +421,7 @@
   MODERN.push('velocity-addition', 'relativistic-momentum', 'relativistic-energy' /* Velocity, Momentum and Energy Near c demo, one per view */);
   MODERN.push('photoelectric', 'compton', 'franck-hertz', 'spacetime', 'speed-of-light', 'rutherford', 'spectra', 'wave-particle-duality' /* Double Slit demo */, 'relativity-em',
     'doppler-light' /* Doppler demo, Light (Vol. 3 §5.7, 2026-10-24); Record reading takes light readings since 2026-11-16 */, 'e-over-m' /* e/m of the Electron, 2026-10-24 */);
+  MODERN.push('millikan'); /* Millikan Oil Drop, 2026-11-19 */
   Object.assign(FROM_DEMO, {
     /* Reading | Launch speed u′ (c) | Probe time A to B Δt (s) | Ground speed u (c) | u − u′ (c) | 1 − uu′/c² | Rocket time A to B (s) */
     'velocity-addition': { demo: 'Velocity, Momentum and Energy Near c (Adding velocities)', cols: ['row', 'u_prime_c', 'probe_dt_s', null, null, null, 'rocket_dt_s'] },
@@ -448,6 +449,8 @@
     /* Reading | Setup | Electron drift βᵥ | Charge speed βᵤ | F in the lab (N) | F′ in the charge's frame (N) | Net λ′ in the charge's frame (µC/m) | γᵤ | γᵤβᵤβᵥ | F′/F */
     /* Trial | U (V) | I (A) | r left (mm) | r right (mm) | r (mm) | B (mT) | e/m (C/kg) | % error | B²r² | 2U; the demo's scale reads in cm */
     'e-over-m': { demo: 'e/m of the Electron', cols: ['row', 'V_volts', 'I_amps', (r) => (10 * r.r_left_cm).toFixed(1), (r) => (10 * r.r_right_cm).toFixed(1), null, null, null, null, null, null] },
+    /* Drop | t_f | V | Top plate | t_E | v_f | v_E | r | q (size) | n | q/n; n and q/n are the student's */
+    millikan: { demo: 'Millikan Oil Drop', cols: ['drop', 't_fall_s', 'V_volts', 'top_plate', 't_E_s', 'vf_um_s', 'vE_um_s', 'r_um', 'abs_q_1e19_C', null, null] },
     'relativity-em': { demo: 'Magnetism from Relativity', cols: ['row', (r) => `${r.charge}, r = ${r.r_cm} cm`, 'v', 'u', 'F_N', 'Fp_N', 'lamp_uC_m', null, null, null] },
     spectra: { demo: 'Spectra Explorer', cols: ['row', (r) => (r.ion ? `${r.source} ${r.ion}` : r.source), 'lambda_nm', null, null, null, null] },
   });
@@ -1007,6 +1010,24 @@
     'vector-fields-work': { demo: 'Vector Fields, Work and Curl', cols: ['row', 'field', 'path', 'W'],
       alt: [{ table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.closed === 'yes'), cols: ['row', 'field', 'path', 'circulation', 'curl_sum'] }] },
   });
+  /* ==ALGEBRA BASED (2026-11-19)== worksheets for OpenStax high school Physics and College Physics 2e, on existing demos. Each
+     demo's Export sends here while ?ws=<slug> is in its address (VD.ws). hs-energy-skate is typed by hand (Energy on a Track has no
+     Export). Every copy of the first table gets a graph, except on the circuits sheet. */
+  const ALGEBRA = ['hs-simple-machines', 'hs-series-parallel', 'hs-energy-skate', 'hs-projectiles', 'hs-half-life', 'hs-heat-engines'];
+  ENABLED.push(...ALGEBRA);
+  Object.assign(FROM_DEMO, {
+    /* Reading | Machine and setting | m | μ | F_in | d_in | F_out | d_out | IMA, AMA, efficiency (typed) */
+    'hs-simple-machines': { demo: 'Forces and Friction, Simple machines', cols: ['row', (r) => `${r.machine}, ${r.setting}`, 'm_kg', 'mu', 'F_in_N', 'd_in_m', 'F_out_N', 'd_out_m', null, null, null] },
+    /* Reading, setup and part values | Meter | I | V; the Results table is typed */
+    'hs-series-parallel': { demo: 'Circuits', cols: [(r) => [r.reading, r.setup, parts(r)].filter(Boolean).join(', '), 'meter', 'I_A', 'V_V'] },
+    /* the projectile-drag columns, then t² and the drop y₀ − y (typed) */
+    'hs-projectiles': { demo: 'Projectile Range', cols: ['shot', 'v0_m_per_s', 'launch_angle_deg', 'launch_height_m', 'air_resistance', 't_s', 'x_m', 'y_m', 'range_m', null, null] },
+    /* Reading | Setup and N₀ | t | parents left | N/N₀, t/T½ (typed) */
+    'hs-half-life': { demo: 'Radioactive Decay', cols: ['row', (r) => `${r.setup}, N₀ = ${r.N0}, t in ${r.unit}`, 't', 'parent', null, null] },
+    /* Reading | Cycle and gas | Temperatures (T_h and T_c, or the rectangle's lowest and highest) | Q_in | Q_out | W_net | η or COP, Carnot limit (typed) */
+    'hs-heat-engines': { demo: 'Heat Engine Cycles', cols: ['row', (r) => `${r.cycle}, ${r.gas}${r.run === 'backward' ? ', backward' : ''}`,
+      (r) => (r.T_h_K !== '' && r.T_h_K != null ? `T_h ${r.T_h_K} K, T_c ${r.T_c_K} K` : `lowest ${r.T_min_K} K, highest ${r.T_max_K} K`), 'Q_in_J', 'Q_out_J', 'W_net_J', null, null] },
+  });
   /* Worksheets with a live graph under each copy of the first data table. The student chooses which column goes on each axis; the
      graph shows the points, a least squares line (free intercept, equal weights), its residuals, and the slope and intercept with
      their standard errors. The student may choose a quadratic instead (y = a + bx + cx², all three coefficients free), for data
@@ -1045,20 +1066,31 @@
   const CURVE_TABLES = { 'franck-hertz': [0], 'intro-retrograde': [0], 'intro-retrograde-venus': [0] };
   CURVE_TABLES['mp-radiobiology'] = [1]; CURVE_TABLES['mp-radiobiology-fractionation'] = [0];   /* the oxygen curve and EQD2 against n: curves, read rather than fitted */
   CURVE_TABLES['color-vision'] = [0];
+  CURVE_TABLES['hs-half-life'] = [0];   /* the number left against time: a decay curve, read by hand (no logs at this level) */
   CURVE_TABLES['slope-fields-cooling'] = [2];   /* the culture's S curve, read for its steepest stretch */
   for (const [k, v] of CURVE_TABLES_LATER) CURVE_TABLES[k] = v;   /* Y and the cone signals against wavelength: the eye's sensitivity curve, read rather than fitted */
   GRAPHS.push(...PHYSICS_II, ...ACOUSTICS, ...THERMO, ...MODERN, ...ASTRO, ...INTRO_GRAPHS, ...MEDPHYS); GRAPHS.push('mp-photon-interactions', 'mp-photon-interactions-beams', 'mp-radiobiology', 'mp-radiobiology-fractionation'); /* Physics II: the same graph on every worksheet (list in the PHYSICS II block above) */
   GRAPHS.push(...MED_CP);
   GRAPHS.push('slope-fields-cooling'); GRAPH_EVERY_TABLE.push('slope-fields-cooling');   /* dy/dt against y: a line for the cup, a parabola for the culture; Euler's error against h */
   /* ==CALCULUS START== Calculus for physics worksheets (OpenStax Calculus, 2026-11-19). */
-  const CALCULUS = ['integrals-error-order' /* Riemann Sums and Integrals demo, error against n and a table of force readings, 2026-11-19 */];
+  const CALCULUS = ['integrals-error-order' /* Riemann Sums and Integrals demo, error against n and a table of force readings, 2026-11-19 */,
+    'derivatives-reading-graphs' /* Functions and Their Derivatives demo: f′ and f″ from the graph of f, a dropped ball, a damped oscillation, 2026-11-19 */];
   ENABLED.push(...CALCULUS); GRAPHS.push(...CALCULUS);
   Object.assign(FROM_DEMO, {
     /* Table 1: Reading | Rule | n | Sum | Error, sum − integral | Size of the error; a series where every row is from a data table
        goes to Table 2: Reading | Rule | Intervals | Impulse J */
     'integrals-error-order': { demo: 'Riemann Sums and Integrals', cols: ['row', 'rule', 'n', 'sum', 'error', 'abs_error'],
       alt: [{ table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.setup === 'table'), cols: ['row', 'rule', 'n', 'sum'] }] },
+    /* Table 1: Reading | Setup | x | f(x) | f′(x) | f″(x) (the cubic and the corner); the dropped ball goes to Table 2: Reading | t |
+       height | velocity | acceleration; Secant to tangent rows to Table 3: Reading | h | average velocity | f′(1) | average − instantaneous;
+       the damped oscillation to Table 4: Reading | t | f | f′ | f″ | f″/f */
+    'derivatives-reading-graphs': { demo: 'Functions and Their Derivatives', cols: ['row', 'setup', 'x', 'f', 'd1', 'd2'],
+      alt: [{ table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.mode === 'graph' && r.setup === 'drop'), cols: ['row', 'x', 'f', 'd1', 'd2'] },
+      { table: 2, when: (rows) => rows.length > 0 && rows.every((r) => r.mode === 'secant'), cols: ['row', 'h', 'secant', 'tangent', 'diff'] },
+      { table: 3, when: (rows) => rows.length > 0 && rows.every((r) => r.mode === 'graph' && r.setup === 'damped'), cols: ['row', 'x', 'f', 'd1', 'd2', 'ratio'] }] },
   });
+  GRAPH_EVERY_TABLE.push('derivatives-reading-graphs');   /* Table 2: the ball's velocity against t (a line of slope −g) and its height (a parabola) */
+  CURVE_TABLES['derivatives-reading-graphs'] = [3];   /* the damped oscillation in Table 4: a curve, read rather than fitted */
   /* ==CALCULUS END== */
   /* ==STATS tests START== Statistics for physics worksheets (OpenStax Introductory Statistics, 2026-11-19), in no course yet.
      Hypothesis Tests, errors-and-power: Tables 1 to 3 have one set of columns (Reading | α | n | True effect | Studies | Rejections |
@@ -1100,6 +1132,7 @@
     'regression-fit': { demo: 'Linear Regression and Correlation', cols: ['row', 'set', 'n', 'b', 'se_b', 'a', 'se_a', 'r', 's'] },
   });
   /* ==STATS regression END== */
+  GRAPHS.push(...ALGEBRA.filter((w) => w !== 'hs-series-parallel'));   /* the circuits sheet compares readings in a typed table, no graph */
   /* ==FORMULAS START== */
   /* Spreadsheet formulas in the data tables, and the curve fits of the graphs. Plain functions with no page access, so
      curriculum/validation/test_worksheet_formulas.cjs runs them in Node. Formulas are read by a small parser of their own (no eval):
@@ -1533,7 +1566,7 @@
     'mp-radiobiology-fractionation': 'mp-radiobiology', 'energy-bands-periodic': 'energy-bands', 'hcl-spectrum-light': 'hcl-spectrum',
     'capacitors-spheres': 'capacitors', 'coulomb-sandbox-energy': 'coulomb-sandbox', 'faraday-mutual-induction': 'faraday',
     'lenses-instruments-scopes': 'lenses-instruments', 'magnetic-force-hall': 'magnetic-force', 'straight-wire-fields-ampere': 'straight-wire-fields',
-    'springs-driven': 'springs', 'springs-series-parallel': 'springs', 'integrals-error-order': 'integrals' };
+    'springs-driven': 'springs', 'springs-series-parallel': 'springs', 'integrals-error-order': 'integrals', 'derivatives-reading-graphs': 'derivatives' };
   /* worksheets with no How this works video (tools/rules.cjs NO_VIDEO): no probe, so the console shows no missing file */
   const NO_HOWTO = new Set(['intro-stellarium-sky']);
   /* QoL sweep (2026-11-08): the theme's site title ("VirtualDemos", a second h1 above the worksheet's own) becomes a plain link

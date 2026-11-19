@@ -54,6 +54,10 @@ dl.formulas { display: grid; grid-template-columns: max-content minmax(0, 1fr); 
 dl.formulas dt { font-family: var(--font-mono); font-weight: 600; white-space: nowrap; }
 dl.formulas dd { margin: 0; font-family: var(--font-mono); font-size: 0.88rem; overflow-wrap: anywhere; }
 dl.formulas .f { color: var(--fg-f); } dl.formulas .d1 { color: var(--fg-d1); } dl.formulas .d2 { color: var(--fg-d2); } dl.formulas .d3 { color: var(--fg-d3); } dl.formulas .int { color: var(--fg-int); }
+.rail .ptrow { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; margin-bottom: 8px; font-size: 0.86rem; }
+.rail .ptrow input { width: 7.5em; font: inherit; font-family: var(--font-mono); padding: 3px 6px; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; }
+.vd-readings .twrap { overflow-x: auto; }
+.vd-readings table.rows td { font-family: var(--font-mono); font-size: 0.8rem; white-space: nowrap; }
 .rail ul.typing { margin: 6px 0 0; padding-left: 1.2em; font-size: 0.86rem; color: var(--muted); }
 .rail ul.typing code { font-family: var(--font-mono); color: var(--ink); }
 @media (min-width: 821px) { .bench > .stage { align-self: start; min-height: max(760px, 100%); } }
@@ -135,6 +139,7 @@ dl.formulas .f { color: var(--fg-f); } dl.formulas .d1 { color: var(--fg-d1); } 
     </div>
 
     <aside class="rail">
+      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/derivatives-reading-graphs.html" target="derivatives-reading-graphs-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
       <section>
         <h2>Setups</h2>
         <div class="chips" id="presets">
@@ -161,6 +166,7 @@ dl.formulas .f { color: var(--fg-f); } dl.formulas .d1 { color: var(--fg-d1); } 
       </section>
       <section>
         <h2>At the point</h2>
+        <div class="ptrow"><label for="pxIn">Move the point to</label><input type="number" id="pxIn" step="any" data-vd-noshare></div>
         <dl class="readout" id="out"></dl>
       </section>
       <section id="toolSec" hidden>
@@ -173,6 +179,27 @@ dl.formulas .f { color: var(--fg-f); } dl.formulas .d1 { color: var(--fg-d1); } 
         <h2>Formulas</h2>
         <dl class="formulas" id="formulas" translate="no"></dl>
       </section>
+      <!-- vd-readings --><section class="vd-readings" data-ws="derivatives-reading-graphs" data-title="Functions and Their Derivatives" data-demo="derivatives">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings ('+(typeof window.vdDataNote==='function'&&window.vdDataNote()?'catalog data':'simulated data')+')','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:(typeof window.vdDataNote==='function'&&window.vdDataNote())||'Simulated data from '+(/^The /.test(title)?'':'the ')+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
       <section>
         <details class="fold"><summary>Lab</summary><div class="foldbody">
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the derivative formulas and values, to sketch them first</span></label>
@@ -1063,6 +1090,7 @@ dl.formulas .f { color: var(--fg-f); } dl.formulas .d1 { color: var(--fg-d1); } 
       h += `<div class="wide"><dt>${VDI18N.t('Shape')}</dt><dd class="ok">${rise}${bend ? '<br>' + bend : ''}</dd></div>`;
     }
     $('out').innerHTML = h;
+    if (document.activeElement !== $('pxIn')) $('pxIn').value = Number(x.toPrecision(6));
     toolReadouts();
   }
   function viewInputs() {
@@ -1131,6 +1159,9 @@ dl.formulas .f { color: var(--fg-f); } dl.formulas .d1 { color: var(--fg-d1); } 
   for (const id of ['showF', 'showD1', 'showD2', 'showD3', 'showInt', 'showTan', 'showArea', 'ownScale']) $(id).addEventListener('change', () => { formulas(); need = true; });
   $('aLow').addEventListener('input', () => { const v = parseFloat($('aLow').value); if (isFinite(v)) { S.a = v; formulas(); need = true; } });
   $('aHere').addEventListener('click', () => { S.a = Number(S.px.toPrecision(6)); $('aLow').value = S.a; if (!$('showInt').checked) $('showInt').checked = true; formulas(); need = true; });
+  /* Move the point to: a typed x (or t) for the point, so a reading can be taken at an exact place */
+  $('pxIn').addEventListener('change', () => { const v = parseFloat($('pxIn').value); if (!isFinite(v)) return; setRun(false); S.px = v; if (S.mode === 'newton') S.nwN = 0;
+    if (v < S.x0 || v > S.x1) { const w = S.x1 - S.x0; S.x0 = v - w / 2; S.x1 = v + w / 2; if (S.autoY) fitY(); viewInputs(); } need = true; lastRead = ''; });
   $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; formulas(); need = true; });
   function setView(x0, x1, y0, y1) {
     if (!(x1 > x0) || !(y1 > y0) || !isFinite(x0 + x1 + y0 + y1)) return;
@@ -1223,11 +1254,32 @@ dl.formulas .f { color: var(--fg-f); } dl.formulas .d1 { color: var(--fg-d1); } 
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'data-vd-look'] });
   VD.projector({ onChange: resize });
   if (window.VD && VD.panel) VD.panel({ play: '#play', reset: '#reset' });
+  VD.howTo({ src: 'media/how-this-works/derivatives.mp4', poster: 'media/how-this-works/derivatives.jpg' });
   /* Copy link carries the function in the box */
   if (window.VD && VD.share && VD.share.picture) VD.share.picture('f', {
     get: () => (S.preset === 'custom' ? $('fx').value : ''),
     set: (s) => { if (s) { $('fx').value = s; $('fx').dispatchEvent(new Event('input')); } },
   });
+  /* Record reading (the worksheet derivatives-reading-graphs): in Derivatives, the point with f, f′, f″ and f″/f there; in Secant
+     to tangent, h with the secant slope, the tangent slope and their difference. Blind hides the derivatives, so nothing is recorded. */
+  const r7 = (v) => (isFinite(v) ? (Math.abs(v) < 1e-12 ? 0 : Number(v.toPrecision(7))) : '');
+  const SHOW = { graph: [['x', 'x'], ['f', 'f'], ['d1', 'f′'], ['d2', 'f″']], secant: [['h', 'h'], ['secant', 'Δf/h'], ['tangent', 'f′'], ['diff', 'Δf/h − f′']] };
+  window.vdShowCols = SHOW.graph;
+  window.vdReadingRow = () => {
+    if (!S.fns) return VDI18N.t('Type a function first.');
+    if (S.blind) return VDI18N.t('Turn off Blind (under Lab) to record the derivatives.');
+    if (S.mode === 'newton') return VDI18N.t('Switch to Derivatives or Secant to tangent to record a reading.');
+    const x = S.px, f = S.fns.f(x), d1 = S.fns.d1(x), setup = S.preset === 'custom' ? text(S.node, S.v) : S.preset;
+    if (!isFinite(f)) return VDI18N.t('f has no value at the point.');
+    window.vdShowCols = S.mode === 'secant' ? SHOW.secant : [['x', S.v]].concat(SHOW.graph.slice(1));
+    if (S.mode === 'secant') {
+      const m = diffQuot(S.fns.f, x, S.h);
+      return { setup, mode: 'secant', x: r7(x), h: r7(S.h), secant: r7(m), tangent: r7(d1), diff: isFinite(m - d1) ? Number((m - d1).toPrecision(5)) : '' };
+    }
+    const d2 = S.fns.d2(x);
+    return { setup, mode: 'graph', x: r7(x), f: r7(f), d1: r7(d1), d2: r7(d2), ratio: f !== 0 && isFinite(d2) ? Number((d2 / f).toPrecision(4)) : '' };
+  };
+  window.vdVersion = 'derivatives@2026-11-19';
   /* what the graph shows now, for a screen reader (VD.describe): the function, the curves drawn, the point and its readings, the view */
   if (window.VD && VD.describe) VD.describe(can, () => {
     if (!S.fns) return [];

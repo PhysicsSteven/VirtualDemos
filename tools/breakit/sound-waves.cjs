@@ -54,8 +54,29 @@ module.exports = {
         const g = G[m[1]]; if (g && Math.abs(v - gasV(g, tC)) > step + 1e-9) return m[1] + ' speed ' + v + ' but the gas model gives ' + gasV(g, tC).toFixed(2) + ' at ' + tC + ' C';
       }
       return true; })()` },
+    { name: 'slinkies: period 1/f, wavelength or pulse length v/f, the front at vt (at most 4 m), the marked coil within A of its rest place', fn: `(() => { ${pre}
+      if (document.getElementById('stage').dataset.view !== 'slinky') return true;
+      const f = num(row[key('Hand frequency')]), v = num(row[key('Wave speed')]), A = num(row[key('Amplitude A')]) / 100, t = num(row[key('Time t')]); let r;
+      if (!(f > 0 && v > 0 && A > 0 && t >= 0)) return 'slinky readouts ' + JSON.stringify(row);
+      if ((r = ab(num(row[key('Period')]), 1 / f, 0.0051, 'period')) !== true) return r;
+      const lk = key('Wavelength') || key('Pulse length'); if ((r = ab(num(row[lk]), v / f, 0.0051, lk)) !== true) return r;
+      if ((r = ab(num(row[key('The wave has gone')]), Math.min(4, v * t), 0.006 * v + 0.0051, 'front')) !== true) return r;
+      const um = num(row[key('Marked coil')]) / 100; if (Math.abs(um) > A + 0.0006) return 'marked coil ' + um + ' m beyond A = ' + A;
+      if (/pulse/.test(row[key('Wave')]) && v * t < 1.5 - 1e-9 && Math.abs(um) > 0.0006) return 'the marked coil moved before the pulse reached it: ' + um;
+      const kf = /pulse/.test(row[key('Wave')]) ? Math.PI : 2 * Math.PI; if (A * kf * f / v > 0.8 + 1e-9) return 'amplitude ' + A + ' lets the coils of the pushed slinky touch';
+      return true; })()` },
   ],
   steps: [
+    { name: 'slinkies: pulse and periodic wave, every slider at its limits, pulses sent fast, pause and play', fn: `(async () => {
+      const pause = (ms) => new Promise((r) => setTimeout(r, ms)), $ = (id) => document.getElementById(id);
+      const set = (id, v) => { const e = $(id); e.value = v; e.dispatchEvent(new Event('input', { bubbles: true })); e.dispatchEvent(new Event('change', { bubbles: true })); };
+      document.querySelector('#presets [data-p=slinky]').click(); await pause(600);
+      for (let i = 0; i < 4; i++) { $('slPulse').click(); await pause(150); }
+      for (const k of ['periodic', 'pulse']) { document.querySelector('#slKind [data-k=' + k + ']').click(); await pause(150);
+        for (const [f, a, v] of [[0.5, 25, 1], [2.5, 25, 1], [2.5, 2, 5], [1, 15, 2]]) { set('sSF', f); set('sSA', a); set('sSV', v); await pause(200); } }
+      $('play').click(); await pause(150); $('play').click(); await pause(150);
+      document.querySelector('#presets [data-p=slinky]').click(); await pause(300);
+    })()` },
     { name: 'wave view: every gas, f and s_max at their limits, T at -20 and 40, with Blind on and off', fn: `(async () => {
       const pause = (ms) => new Promise((r) => setTimeout(r, ms)), $ = (id) => document.getElementById(id);
       const set = (id, v) => { const e = $(id); e.value = v; e.dispatchEvent(new Event('input', { bubbles: true })); e.dispatchEvent(new Event('change', { bubbles: true })); };

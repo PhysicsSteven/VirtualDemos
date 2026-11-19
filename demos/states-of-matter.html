@@ -68,6 +68,8 @@ table.rows td input { width: 7ch; font: inherit; font-family: var(--font-mono); 
         <div class="seg" role="group" aria-label="View" id="viewSeg">
           <button type="button" data-v="atoms" aria-pressed="true">Atoms</button>
           <button type="button" data-v="beaker" aria-pressed="false">Beaker</button>
+          <button type="button" data-v="phase" aria-pressed="false">Phase diagram</button>
+          <button type="button" data-v="vapor" aria-pressed="false">Vapor</button>
         </div>
         <button type="button" class="spin attn" id="go">Play</button>
         <button type="button" class="btn" id="restart">Reset</button>
@@ -137,6 +139,56 @@ table.rows td input { width: 7ch; font: inherit; font-family: var(--font-mono); 
             <input type="range" id="sT0" min="-40" max="-5" step="1" value="-20">
           </div>
         </div>
+        <div class="shelf-card" id="cardPhase" role="group" aria-label="The substance and its pressure" hidden>
+          <span class="card-title">Substance and pressure</span>
+          <div class="wide">
+            <span class="lab">Substance</span>
+            <div class="seg" role="group" aria-label="Substance on the phase diagram" id="phSub">
+              <button type="button" data-sub="water" aria-pressed="true">Water</button>
+              <button type="button" data-sub="co2" aria-pressed="false">Carbon dioxide</button>
+            </div>
+            <span class="lab">Play</span>
+            <div class="seg" role="group" aria-label="Play heats or cools at this pressure" id="phHeat">
+              <button type="button" data-h="1" aria-pressed="true">Heat</button>
+              <button type="button" data-h="-1" aria-pressed="false">Cool</button>
+            </div>
+          </div>
+          <div class="wide">
+            <span class="lab">Pressure</span>
+            <div class="chips" id="phP" role="group" aria-label="Pressure presets">
+              <button type="button" data-h="8849">Top of Everest</button>
+              <button type="button" data-h="0">Sea level, 1 atm</button>
+              <button type="button" data-h="cooker">Pressure cooker</button>
+            </div>
+          </div>
+          <p class="lab wide">Drag the dot on the diagram, or use the arrow keys on it (Shift for bigger steps).</p>
+        </div>
+        <div class="shelf-card" id="cardVapor" role="group" aria-label="The jar of water and the air around it" hidden>
+          <span class="card-title">Water and air</span>
+          <div class="wide">
+            <span class="lab">Jar</span>
+            <div class="seg" role="group" aria-label="Jar" id="vapJar">
+              <button type="button" data-j="sealed" aria-pressed="true">Sealed jar</button>
+              <button type="button" data-j="open" aria-pressed="false">Open pot</button>
+            </div>
+          </div>
+          <div>
+            <div class="slider-head"><label for="sTset">Thermostat</label><output id="oTset" class="mono" for="sTset"></output></div>
+            <input type="range" id="sTset" min="0" max="130" step="1" value="20">
+          </div>
+          <div>
+            <div class="slider-head"><label for="sPout">Outside pressure</label><output id="oPout" class="mono" for="sPout"></output></div>
+            <input type="range" id="sPout" min="20" max="220" step="0.1" value="101.3">
+          </div>
+          <div class="wide">
+            <div class="chips" id="vapP" role="group" aria-label="Outside pressure presets">
+              <button type="button" data-h="0">Sea level</button>
+              <button type="button" data-h="1609">Denver (1,609 m)</button>
+              <button type="button" data-h="8849">Top of Everest</button>
+              <button type="button" data-h="cooker">Pressure cooker</button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -150,6 +202,8 @@ table.rows td input { width: 7ch; font: inherit; font-family: var(--font-mono); 
           <button type="button" data-p="vapor" aria-pressed="false">Cool a vapor</button>
           <button type="button" data-p="ice" aria-pressed="false">Ice to steam</button>
           <button type="button" data-p="ethanol" aria-pressed="false">Boil ethanol</button>
+          <button type="button" data-p="phase" aria-pressed="false">Phase diagram</button>
+          <button type="button" data-p="vpress" aria-pressed="false">Vapor pressure</button>
         </div>
         <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
@@ -174,6 +228,8 @@ table.rows td input { width: 7ch; font: inherit; font-family: var(--font-mono); 
         <details class="more"><summary>About the demo</summary>
           <p class="hint" id="aboutAtoms"></p>
           <p class="hint" id="aboutBeaker"></p>
+          <p class="hint" id="aboutPhase">Phase diagram view: each line is where two phases can sit together, drawn from the international reference equations for the measured boundaries. Water: the vapor pressure of the liquid from W. Wagner and A. Pruss (1993), and the sublimation and melting (ordinary ice, ice Ih) pressures from W. Wagner, T. Riethmann, R. Feistel and A. H. Harvey (2011), both adopted by IAPWS; triple point 273.16 K and 611.657 Pa, critical point 647.096 K and 22.064 MPa. Ice Ih melts down to 251.165 K at 208.566 MPa, where ice III takes over; the denser ices at higher pressures are left out, and the diagram stops at 200 MPa. Carbon dioxide: R. Span and W. Wagner (1996); triple point 216.592 K and 0.51795 MPa, critical point 304.1282 K and 7.3773 MPa. On these scales water boils at 99.97 °C at 1 atm (373.12 K); textbooks round it to 100 °C, as the Beaker view does. The pressure axis is logarithmic: each grid line is ten times the one below. Play heats (or cools) the sample at the dot's pressure: T moves at a steady rate between the lines and holds for 3 s at each line while the phase changes; the hold stands for the latent heat, and its length is not to scale. The molecule sketch beside the diagram is a picture of the arrangement, not a simulation; the Atoms view simulates argon atoms through the same changes. Pressure presets: the top of Everest (8,849 m) in the US Standard Atmosphere 1976, 31.4 kPa; a pressure cooker held 1 atm above sea level air, 202.65 kPa.</p>
+          <p class="hint" id="aboutVapor">Vapor view: water in a sealed jar of air, or in an open pot. The saturation vapor pressure of water, p_sat(T), is from W. Wagner and A. Pruss (1993), adopted by IAPWS (2.339 kPa at 20 °C; 101.42 kPa at 100 °C). The vapor is an ideal gas, so its density is ρ = pM/(RT) with M = 18.015 g/mol. Molecules leave the water at a rate set by its temperature and come back at a rate in proportion to the vapor pressure, so p rises toward p_sat as 1 − e^(−t/2.5 s); the time constant is chosen so the jar saturates in seconds, where a real jar takes minutes to hours because the vapor has to diffuse through the air. Relative humidity is p/p_sat(T); the dew point is the temperature at which p_sat equals p. Cooled below it, the vapor above p_sat condenses at once on the glass as dew (in a real jar some fog can form first), so the relative humidity stays at 100 %. The thermostat moves the temperature of the water and the air together, at most 2 °C per second. In the open pot the water boils when its vapor pressure reaches the outside pressure, and the temperature then stays at that boiling point while the heat boils the water away. The sealed jar keeps the air it was closed with, so the pressure inside is the air's pressure (in proportion to the kelvin temperature) plus the vapor's, always above p_sat: it never boils. Outside pressures for Denver (1,609 m) and the top of Everest (8,849 m) are from the US Standard Atmosphere 1976 (83.4 and 31.4 kPa); a pressure cooker holds 1 atm above sea level air, 202.65 kPa. The arrows at the water's surface are in proportion to the rates at which molecules leave (p_sat) and return (p). Each drawn vapor molecule stands for 0.5 g/m³ of vapor, at most 260 drawn.</p>
         </details>
         </div></details>
       </section>
@@ -375,6 +431,81 @@ table.rows td input { width: 7ch; font: inherit; font-family: var(--font-mono); 
     return r;
   }
 
+  /* Phase diagram (College Physics 2e §13.5). The phase boundaries of water and carbon dioxide from the international reference
+     equations, which reproduce the measured points to the figures shown:
+       water: IAPWS. Triple point 273.16 K, 611.657 Pa; critical point 647.096 K, 22.064 MPa. Vapor pressure of the liquid,
+         W. Wagner and A. Pruss, J. Phys. Chem. Ref. Data 22, 783 (1993) (IAPWS SR1-86, revised 1992); sublimation and melting
+         (ice Ih) pressures, W. Wagner, T. Riethmann, R. Feistel and A. H. Harvey, J. Phys. Chem. Ref. Data 40, 043103 (2011)
+         (IAPWS R14-08, 2011). Ice Ih melts down to 251.165 K at 208.566 MPa, where ice III takes over; higher pressure ices
+         are left out, and the diagram stops at 200 MPa.
+       carbon dioxide: R. Span and W. Wagner, J. Phys. Chem. Ref. Data 25, 1509 (1996). Triple point 216.592 K, 0.51795 MPa;
+         critical point 304.1282 K, 7.3773 MPa; vapor pressure (their eq. 3.13), sublimation (3.12) and melting (3.10).
+     Each boundary gives the pressure at which two phases can sit together at temperature T (K); pressures in Pa. */
+  const PHASE = {
+    water: { name: 'Water', Tt: 273.16, pt: 611.657, Tc: 647.096, pc: 22.064e6, Tmin: 200, Tmax: 700, Pmin: 0.1, Pmax: 2e8, Tice: 251.165,
+      sat(T) { const t = 1 - T / 647.096; return 22.064e6 * Math.exp(647.096 / T * (-7.85951783 * t + 1.84408259 * t ** 1.5 - 11.7866497 * t ** 3 + 22.6807411 * t ** 3.5 - 15.9618719 * t ** 4 + 1.80122502 * t ** 7.5)); },
+      sub(T) { const th = T / 273.16; return 611.657 * Math.exp((-21.2144006 * th ** 0.00333333333 + 27.3203819 * th ** 1.20666667 - 6.1059813 * th ** 1.70333333) / th); },
+      melt(T) { const th = T / 273.16; return 611.657 * (1 + 0.119539337e7 * (1 - th ** 3) + 0.808183159e5 * (1 - th ** 25.75) + 0.33382686e4 * (1 - th ** 103.75)); } },
+    co2: { name: 'Carbon dioxide', Tt: 216.592, pt: 0.51795e6, Tc: 304.1282, pc: 7.3773e6, Tmin: 150, Tmax: 350, Pmin: 100, Pmax: 1e9,
+      sat(T) { const t = 1 - T / 304.1282; return 7.3773e6 * Math.exp(304.1282 / T * (-7.0602087 * t + 1.9391218 * t ** 1.5 - 1.6463597 * t ** 2 - 3.2995634 * t ** 4)); },
+      sub(T) { const u = 1 - T / 216.592; return 0.51795e6 * Math.exp(216.592 / T * (-14.740846 * u + 2.4327015 * u ** 1.9 - 5.3061778 * u ** 2.9)); },
+      melt(T) { const u = T / 216.592 - 1; return 0.51795e6 * (1 + 1955.539 * u + 2055.4593 * u * u); } },
+  };
+  /* the phase at (T K, P Pa): 'solid', 'liquid', 'gas' or 'super' (supercritical fluid, above both critical values). Water's ice
+     melts under pressure (its melting curve leans left), carbon dioxide's solid needs more pressure to melt when hotter. */
+  function phaseAt(sub, T, P) {
+    const s = PHASE[sub];
+    if (T < s.Tt) {
+      if (P < s.sub(T)) return 'gas';
+      return sub === 'water' && T >= s.Tice && P > s.melt(T) ? 'liquid' : 'solid';
+    }
+    if (sub === 'co2' && P > s.melt(T)) return 'solid';
+    if (T >= s.Tc) return P >= s.pc ? 'super' : 'gas';
+    return P >= s.sat(T) ? 'liquid' : 'gas';
+  }
+  /* the temperature where f(T) = P between a and b (f monotonic there), by bisection */
+  function solveT(f, P, a, b) { let fa = f(a) - P; for (let i = 0; i < 100; i++) { const m = (a + b) / 2, fm = f(m) - P; if ((fm < 0) === (fa < 0)) { a = m; fa = fm; } else b = m; } return (a + b) / 2; }
+  /* what happens on heating at a fixed pressure P (Pa): the temperatures (K) where the sample melts, boils or sublimes; null
+     where it does not (above the critical pressure the liquid turns into a supercritical fluid with no boiling) */
+  function transitions(sub, P) {
+    const s = PHASE[sub], out = { melt: null, boil: null, subl: null };
+    if (P < s.pt) out.subl = solveT(s.sub, P, 40, s.Tt);
+    else {
+      if (sub === 'water') { if (P <= s.melt(s.Tice)) out.melt = solveT(s.melt, P, s.Tice, s.Tt); }
+      else out.melt = solveT(s.melt, P, s.Tt, 2000);
+      if (P <= s.pc) out.boil = solveT(s.sat, P, s.Tt, s.Tc);
+    }
+    return out;
+  }
+  /* Vapor pressure (College Physics 2e §13.6): water in a closed jar of air, or in an open pot. Saturation vapor pressure p_sat(T)
+     from Wagner and Pruss (above); the vapor is an ideal gas, so its density is ρ = pM/(RT), M = 18.015 g/mol (CIAAW). Molecules
+     leave the water at a rate set by T alone and come back at a rate in proportion to the vapor pressure p, so the net
+     evaporation goes as p_sat − p (Hertz–Knudsen): p relaxes toward p_sat with a time constant VAP_TAU, chosen so the jar
+     saturates in seconds (a real jar takes minutes to hours, held back by diffusion through the air). The air sealed in at
+     temperature Ts and pressure Ps keeps its amount in the rigid jar: p_air = Ps T/Ts. Relative humidity p/p_sat(T); the dew point
+     is the temperature at which p_sat equals p. Water boils when its vapor pressure reaches the pressure on it: in an open pot
+     the outside pressure, so T stops at the boiling point while the heat boils the water away; in the sealed jar the air adds to
+     the vapor, so the pressure inside is always above p_sat and it never boils. The thermostat moves T toward the set value at
+     most VAP_RATE per second. When the jar cools below the dew point, the vapor above p_sat condenses at once on the glass as
+     dew (cond), so the relative humidity never passes 100 %. */
+  const VAP_TAU = 2.5, VAP_RATE = 2, M_H2O = 0.018015, R_GAS = NA * KB;   /* s, K/s, kg/mol, J/(mol K) */
+  const psat = (T) => (T >= 273.16 ? PHASE.water.sat(T) : PHASE.water.sub(T));   /* Pa, over water (over ice below the triple point) */
+  const vaporDensity = (p, T) => p * M_H2O / (R_GAS * T);                         /* kg/m³ */
+  const dewPoint = (p) => (p <= 0 ? NaN : p >= 611.657 ? solveT(PHASE.water.sat, p, 273.16, 647.096) : solveT(PHASE.water.sub, p, 150, 273.16));
+  const boilingPoint = (P) => solveT(PHASE.water.sat, P, 273.16, 647.096);
+  /* the outside pressure at height h (m) in the standard atmosphere (US Standard Atmosphere 1976, troposphere) */
+  const isaPressure = (h) => 101325 * Math.pow(1 - 0.0065 * h / 288.15, 9.80665 * 0.0289644 / (8.31432 * 0.0065));
+  /* one step dt (s) of the jar or pot: st { T (K), Tset, p (Pa), boil (true while boiling) }; env { sealed, Pout, Ts, Ps } */
+  function vaporStep(st, dt, env) {
+    const dT = Math.max(-VAP_RATE * dt, Math.min(VAP_RATE * dt, st.Tset - st.T));
+    st.T += dT; st.boil = false; st.cond = false;
+    if (!env.sealed) { const Tb = boilingPoint(env.Pout); if (st.T >= Tb) { st.T = Tb; st.boil = st.Tset > Tb; } }
+    const ps = psat(st.T);
+    if (env.sealed && st.p > ps) { st.p = ps; st.cond = dT < 0; } else st.p = env.sealed ? ps + (st.p - ps) * Math.exp(-dt / VAP_TAU) : ps;
+    return st;
+  }
+  const airPressure = (env, T) => env.Ps * T / env.Ts;
+
   const SM_VERSION = '2026-10-24';
   const csvCell = (v) => { const s = v == null ? '' : String(v); return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s; };
   /* readings from the Beaker view: rows { t, T, m } as shown (strings) */
@@ -401,7 +532,7 @@ table.rows td input { width: 7ch; font: inherit; font-family: var(--font-mono); 
   const $ = (id) => document.getElementById(id);
   /* the measuring tools: a stopwatch on the simulated clock (nanoseconds for the atoms, seconds for the beaker) */
   VD.tools({ el: $('can'), time: () => (S.view === 'atoms' ? S.md.t * TAU_PS / 1000 : null), timeUnit: 'ns' });
-  VD.tools({ el: $('can'), time: () => (S.view === 'atoms' ? null : S.bk.t) });
+  VD.tools({ el: $('can'), time: () => (S.view === 'beaker' ? S.bk.t : S.view === 'phase' ? ph.t : S.view === 'vapor' ? vp.t : null) });
   let reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
   const NM = AR.sigmaNm, KJK = KJMOL / AR.epsK;   /* σ in nm; kJ/mol per kelvin of kT (= R/1000) */
   const PRESETS = {
@@ -415,11 +546,15 @@ table.rows td input { width: 7ch; font: inherit; font-family: var(--font-mono); 
       hint: '200 g of ice at −20 °C in an open beaker on a 500 W hot plate, all standing on a balance (tared, so it reads the sample only). Record the temperature and the balance reading as the ice warms, melts, the water warms, and then boils away.' },
     ethanol: { view: 'beaker', sub: 'ethanol', m: 200, W: 500, T0: 20,
       hint: '200 g of ethanol at 20 °C on the same hot plate. It boils at 78.3 °C, and its latent heat of vaporization is 854 kJ/kg, less than half of water\'s 2256 kJ/kg, so it boils away much sooner.' },
+    phase: { view: 'phase', sub: 'water', T: 263.15, P: 101325, heat: 1,
+      hint: 'The phase diagram of water, drawn from the measured boundaries: each line is where two phases can sit together. The dot is ice at −10 °C and 1 atm. Press Play to heat it at this pressure: it melts at 0 °C and boils at 99.97 °C, holding at each line. Drag the dot below the triple point (611.657 Pa) and heat again: the ice turns straight to vapor. Squeeze ice just below 0 °C to high pressure and it melts, because water\'s melting line leans to the left. Above the critical point (647.096 K, 22.064 MPa) liquid and vapor are no longer different. Switch to carbon dioxide: at 1 atm dry ice sublimes at −78.5 °C and never melts.' },
+    vpress: { view: 'vapor', jar: 'sealed', T: 293.15, Pout: 101325,
+      hint: 'Dry air sealed in a jar over water at 20 °C. Press Play: molecules leave the water and the vapor pressure climbs until as many come back as leave, at the saturation vapor pressure, 2.34 kPa at 20 °C (relative humidity 100 %). Then lower the Thermostat: below the dew point the air holds less vapor than it has, and dew forms on the glass. Switch to the open pot and heat it: water boils when its vapor pressure reaches the outside pressure, at 99.97 °C at sea level, about 70 °C on top of Everest, and about 120 °C in a pressure cooker. The sealed jar never boils: its air adds to the pressure on the water.' },
   };
   const S = { view: 'atoms', preset: 'crystal', run: false, cover2: true, speed: 4, dim: 'flat', heat: 1, pow: 4, Patm: 17, bonds: true, color: 'speed', blind: false,
     md: null, kind: 'crystal', T0: 40, base: null, W: 0, avg: null, hist: [], ph: null, phAvg: [1, 0, 0], frame: 0, lastHist: 0, perStep: 0.5,
     bk: { sub: 'water', m: 200, W: 500, T0: -20, t: 0, hist: [] }, rows: { atoms: [], beaker: [] }, series: { atoms: 0, beaker: 0 } };
-  const speedOf = { atoms: S.speed, beaker: 1 };   /* each view's own speed (setView) */
+  const speedOf = { atoms: S.speed, beaker: 1, phase: 1, vapor: 1 };   /* each view's own speed (setView) */
   let nsRate = 0;                                   /* measured ns of atom time per real second (clock) */
   const can = $('can'), ctx = can.getContext('2d'), cur = $('curve'), cctx = cur.getContext('2d');
   let W = 0, H = 0, dpr = 1, CW = 0, CH = 0, T = null;
@@ -460,6 +595,8 @@ table.rows td input { width: 7ch; font: inherit; font-family: var(--font-mono); 
   // ---------- readouts ----------
   function readouts() {
     const dd = (a, b, c = '') => `<div class="${c}"><dt>${a}</dt><dd>${b}</dd></div>`;
+    if (S.view === 'phase') { $('out').innerHTML = phaseReadouts(dd); return; }
+    if (S.view === 'vapor') { $('out').innerHTML = vaporReadouts(dd); return; }
     if (S.view === 'atoms') {
       const md = S.md, av = S.avg, p = S.phAvg.map((v) => Math.round(100 * v));
       $('out').innerHTML = dd('Temperature T', `${f(av.T * AR.epsK, 1)} K`) + dd('Heat added Q', `${f(md.Q / md.N * KJMOL, 2)} kJ/mol`)
@@ -474,6 +611,37 @@ table.rows td input { width: 7ch; font: inherit; font-family: var(--font-mono); 
         + dd('In the beaker', what, 'wide') + dd('Substance', s.name) + dd('Heater power P', `${b.W} W`)
         + (S.cover2 ? dd('Covered beaker', `${f(b.m, 1)} g · ${f(coveredState(b.sub, b.m / 1000, b.T0, b.W * b.t).T, 1)} °C`, 'wide') : '');
     }
+  }
+  function phaseReadouts(dd) {
+    const s = PHASE[ph.sub], tr = transitions(ph.sub, ph.P), now = phaseAt(ph.sub, ph.T, ph.P), HID = '<span class="ok">hidden in Blind</span>';
+    const both = ph.at ? { subl: 'solid and vapor together', melt: 'solid and liquid together', boil: 'liquid and vapor together' }[ph.at.k] : null;
+    let h = dd('Substance', s.name) + dd('Temperature T', fmtTK(ph.T)) + dd('Pressure P', `${fmtP(ph.P)} = ${ph.P >= 1e4 ? f(ph.P / 101325, ph.P >= 1e6 ? 0 : 2) : f(ph.P / 101325, 5)} atm`, 'wide')
+      + dd('Phase', both ? `${both} (${phKind(ph.at.k, ph.at.up)})` : PHASE_NAME[now], 'wide');
+    if (tr.subl != null) h += dd('Sublimes at this pressure', S.blind ? HID : fmtTK(tr.subl), 'wide') + dd('Melts · boils', '<span class="ok">no liquid below the triple point pressure</span>', 'wide');
+    else {
+      h += dd('Melts at this pressure', S.blind ? HID : tr.melt == null ? '<span class="ok">above 200 MPa (other ices)</span>' : fmtTK(tr.melt), 'wide');
+      h += dd('Boils at this pressure', S.blind ? HID : tr.boil == null ? '<span class="ok">never: above the critical pressure the liquid turns smoothly into a supercritical fluid</span>' : fmtTK(tr.boil), 'wide');
+    }
+    h += dd('Triple point', `${f(s.Tt, ph.sub === 'water' ? 2 : 3)} K, ${fmtP(s.pt)}`) + dd('Critical point', `${f(s.Tc, ph.sub === 'water' ? 3 : 2)} K, ${fmtP(s.pc)}`);
+    return h;
+  }
+  function vaporReadouts(dd) {
+    const sealed = vp.jar === 'sealed', ps = psat(vp.T), Tb = boilingPoint(vp.Pout), HID = '<span class="ok">hidden in Blind</span>';
+    let h = dd('Temperature T', `${f(vp.T - 273.15, 1)} °C`) + dd('Thermostat set to', `${f(vp.Tset - 273.15, 0)} °C`);
+    if (sealed) {
+      const td = dewPoint(vp.p);
+      h += dd('Vapor pressure p', `${f(vp.p / 1000, 3)} kPa`) + dd('Saturation vapor pressure', S.blind ? HID : `${f(ps / 1000, 3)} kPa`)
+        + dd('Relative humidity p/p_sat', S.blind ? HID : `${f(100 * vp.p / ps, 1)} %`) + dd('Vapor density ρ = pM/RT', `${f(vaporDensity(vp.p, vp.T) * 1000, 2)} g/m³`)
+        + dd('Dew point', S.blind ? HID : vp.p < 1 ? '<span class="ok">none: the air is dry</span>' : `${f(td - 273.15, 1)} °C`)
+        + dd('Pressure inside (air + vapor)', `${f((airPressure(vEnv(), vp.T) + vp.p) / 1000, 1)} kPa`)
+        + dd('In the jar', vp.cond ? 'condensing: dew forms on the glass' : vp.p >= ps * 0.995 ? 'saturated: as many molecules return as leave' : 'evaporating', 'wide')
+        + dd('Boiling', '<span class="ok">never in the sealed jar: the air adds to the pressure on the water, so it stays above the vapor pressure</span>', 'wide');
+    } else {
+      h += dd('Vapor pressure of the water', `${f(ps / 1000, 3)} kPa`) + dd('Outside pressure', `${f(vp.Pout / 1000, 1)} kPa`)
+        + dd('Boiling point at this pressure', S.blind ? HID : `${f(Tb - 273.15, 1)} °C`)
+        + dd('In the pot', vp.boil ? 'boiling: the vapor pressure equals the outside pressure, so bubbles of vapor can grow' : vp.T >= Tb - 1e-6 ? 'at the boiling point' : 'evaporating from the surface', 'wide');
+    }
+    return h;
   }
   function beakerWhat(st) {
     const s = SUBSTANCES[S.bk.sub];
@@ -711,10 +879,274 @@ table.rows td input { width: 7ch; font: inherit; font-family: var(--font-mono); 
     if (window.VDGear) VDGear.label(ctx, W > 760 ? (covered ? 'covered: the vapor stays in' : 'open: the vapor escapes') : (covered ? 'covered' : 'open'), mx - 10 * p, meterY + 17 * p, { a: 'right', s: Math.max(10, 10.5 * p) });
   }
 
+  // ---------- the phase diagram ----------
+  /* Play heats (or cools) the sample at the pressure of the dot. Between boundaries T changes at PH_RATE kelvin per second of
+     the clock; at a boundary it holds for PH_HOLD s while the sample changes phase (the hold stands for the latent heat; its
+     length is not to scale). */
+  const PH_RATE = { water: 20, co2: 8 }, PH_HOLD = 3;
+  const ph = { sub: 'water', T: 263.15, P: 101325, heat: 1, t: 0, hold: 0, at: null, hist: [{ t: 0, T: 263.15 }], done: [], T0: 263.15, P0: 101325 };
+  const fmtP = (P) => (P >= 1e9 ? `${f(P / 1e9, 2)} GPa` : P >= 1e6 ? `${f(P / 1e6, P >= 1e8 ? 0 : P >= 1e7 ? 1 : 2)} MPa` : P >= 1e3 ? `${f(P / 1e3, P >= 1e5 ? 1 : 2)} kPa` : `${f(P, P >= 100 ? 0 : P >= 1 ? 1 : 2)} Pa`);
+  const fmtTK = (T) => `${f(T, 2)} K (${f(T - 273.15, 2)} °C)`;
+  const PHASE_NAME = { solid: 'solid', liquid: 'liquid', gas: 'gas (vapor)', super: 'supercritical fluid' };
+  /* the transition temperatures on the way from T in the direction of the heater, in order */
+  function phStops() { const tr = transitions(ph.sub, ph.P), all = []; for (const k of ['subl', 'melt', 'boil']) if (tr[k] != null) all.push({ k, T: tr[k] }); return all.sort((a, b) => a.T - b.T); }
+  const phKind = (k, up) => ({ subl: up ? 'subliming' : 'depositing, vapor straight to solid', melt: up ? 'melting' : 'freezing', boil: up ? 'boiling' : 'condensing' }[k]);
+  function phNew() { ph.t = 0; ph.hold = 0; ph.at = null; ph.done = []; ph.T0 = ph.T; ph.P0 = ph.P; ph.hist = [{ t: 0, T: ph.T }]; }
+  function phAdvance(dt) {
+    const s = PHASE[ph.sub], up = ph.heat > 0;
+    ph.t += dt;
+    if (ph.at) { ph.hold += dt; if (ph.hold >= PH_HOLD) { ph.done.push(ph.at); ph.at = null; ph.hold = 0; } }
+    else {
+      const T1 = Math.max(s.Tmin, Math.min(s.Tmax, ph.T + ph.heat * PH_RATE[ph.sub] * dt));
+      const hit = phStops().filter((q) => (up ? q.T > ph.T + 1e-9 && q.T <= T1 : q.T < ph.T - 1e-9 && q.T >= T1)).sort((a, b) => (up ? a.T - b.T : b.T - a.T))[0];
+      if (hit) { ph.T = hit.T; ph.at = Object.assign({ up }, hit); ph.hold = 0; } else ph.T = T1;
+      if ((up && ph.T >= s.Tmax) || (!up && ph.T <= s.Tmin)) setRun(false);
+    }
+    ph.hist.push({ t: ph.t, T: ph.T, at: ph.at ? ph.at.k : null });
+    if (ph.hist.length > 4000) ph.hist.splice(1, 2);
+  }
+  /* where the diagram sits in the pane */
+  function phFrame() {
+    const p = proj(), side = W > 760 ? 190 * p : 0, L = 72 * p, R = 24 * p + side, Tp = 22 * p, B = 46 * p, s = PHASE[ph.sub];
+    const pw = W - L - R, phh = H - Tp - B, lo = Math.log10(s.Pmin), hi = Math.log10(s.Pmax);
+    return { p, side, L, Tp, pw, phh, X: (T) => L + (T - s.Tmin) / (s.Tmax - s.Tmin) * pw, Y: (P) => Tp + phh - (Math.log10(P) - lo) / (hi - lo) * phh,
+      T: (x) => s.Tmin + (x - L) / pw * (s.Tmax - s.Tmin), P: (y) => Math.pow(10, lo + (Tp + phh - y) / phh * (hi - lo)) };
+  }
+  let phCache = null;
+  const PH_FILL = { solid: '--solid', liquid: '--liquid', gas: '--vapor', super: '--pe' };
+  function drawPhase() {
+    const F = phFrame(), p = F.p, s = PHASE[ph.sub], I = typeof VDI18N === 'object';
+    if (window.VDGear) VDGear.backdrop(ctx, W, H, { horizon: 0.9 }); else { ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H); }
+    if (F.pw < 60 || F.phh < 60) return;
+    /* the regions, colored by phase on a coarse grid, kept until the size, substance or theme changes */
+    const key = [W, H, dpr, ph.sub, dark(), p].join();
+    if (!phCache || phCache.key !== key) {
+      const c = document.createElement('canvas'), cw = Math.ceil(F.pw / 3), chh = Math.ceil(F.phh / 3); c.width = cw; c.height = chh;
+      const x = c.getContext('2d'), cs = getComputedStyle(document.documentElement), col = {};
+      for (const k in PH_FILL) col[k] = cs.getPropertyValue(PH_FILL[k]).trim();
+      for (let j = 0; j < chh; j++) for (let i = 0; i < cw; i++) { x.fillStyle = col[phaseAt(ph.sub, F.T(F.L + (i + 0.5) * 3), F.P(F.Tp + (j + 0.5) * 3))]; x.fillRect(i, j, 1, 1); }
+      phCache = { key, c };
+    }
+    ctx.save(); ctx.globalAlpha = dark() ? 0.22 : 0.16; ctx.imageSmoothingEnabled = true; ctx.drawImage(phCache.c, F.L, F.Tp, F.pw, F.phh); ctx.restore();
+    /* grid and axes: T every 50 K (25 K for carbon dioxide), P every factor of 10 */
+    ctx.strokeStyle = T.grid; ctx.lineWidth = 1; ctx.fillStyle = T.muted; ctx.font = `${10.5 * p}px ${T.mono}`;
+    const dT = ph.sub === 'water' ? 50 : 25, small = W < 600;
+    ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    for (let t = Math.ceil(s.Tmin / dT) * dT; t <= s.Tmax; t += dT) { const x = F.X(t); ctx.beginPath(); ctx.moveTo(x, F.Tp); ctx.lineTo(x, F.Tp + F.phh); ctx.stroke(); if (!small || t % (2 * dT) === 0) ctx.fillText(String(t), x, F.Tp + F.phh + 5 * p); }
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    const UN = ['Pa', '10 Pa', '100 Pa', 'kPa', '10 kPa', '100 kPa', 'MPa', '10 MPa', '100 MPa', 'GPa'];
+    for (let e = Math.ceil(Math.log10(s.Pmin)); e <= Math.log10(s.Pmax) + 1e-9; e++) { const y = F.Y(10 ** e); ctx.beginPath(); ctx.moveTo(F.L, y); ctx.lineTo(F.L + F.pw, y); ctx.stroke(); if (!small || e % 2 === 0) ctx.fillText(e >= 0 && e <= 9 ? (e % 3 === 0 ? '1 ' : '') + UN[e] : e === -1 ? '0.1 Pa' : `10^${e} Pa`, F.L - 5 * p, y); }
+    ctx.font = `${11 * p}px ${T.ui}`; ctx.fillStyle = T.ink; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+    ctx.fillText('temperature T (K)', F.L + F.pw / 2, H - 6 * p);
+    ctx.save(); ctx.translate(14 * p, F.Tp + F.phh / 2); ctx.rotate(-Math.PI / 2); ctx.textBaseline = 'middle'; ctx.fillText('pressure P (log scale)', 0, 0); ctx.restore();
+    ctx.strokeStyle = T.line; ctx.strokeRect(F.L + 0.5, F.Tp + 0.5, F.pw, F.phh);
+    /* 1 atm, and the pressures of the presets on the right edge */
+    for (const [P0, lab] of [[101325, '1 atm'], [isaPressure(8849), 'Everest'], [2 * 101325, 'cooker']]) { if (P0 < s.Pmin || P0 > s.Pmax) continue; const y = F.Y(P0);
+      ctx.strokeStyle = T.muted; ctx.globalAlpha = 0.6; ctx.setLineDash([2, 4]); ctx.beginPath(); ctx.moveTo(F.L, y); ctx.lineTo(F.L + F.pw, y); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1;
+      if (!small || lab === '1 atm') { ctx.fillStyle = T.muted; ctx.font = `${9 * p}px ${T.ui}`; ctx.textAlign = 'right'; ctx.textBaseline = lab === 'cooker' ? 'bottom' : 'top'; ctx.fillText(lab, F.L + F.pw - 4 * p, y + (lab === 'cooker' ? -2 : 2) * p); } }
+    /* the boundaries */
+    ctx.save(); ctx.beginPath(); ctx.rect(F.L, F.Tp, F.pw, F.phh); ctx.clip(); ctx.strokeStyle = T.curve; ctx.lineWidth = 2.2 * p; ctx.lineJoin = 'round';
+    const curve = (fn, a, b) => { ctx.beginPath(); for (let i = 0; i <= 240; i++) { const t = a + (b - a) * i / 240, P = fn(t), y = F.Y(Math.max(P, s.Pmin / 10)); i ? ctx.lineTo(F.X(t), y) : ctx.moveTo(F.X(t), y); } ctx.stroke(); };
+    curve(s.sub, s.Tmin, s.Tt); curve(s.sat, s.Tt, s.Tc);
+    if (ph.sub === 'water') curve(s.melt, s.Tt, solveT(s.melt, Math.min(s.Pmax, s.melt(s.Tice)), s.Tice, s.Tt));
+    else curve(s.melt, s.Tt, Math.min(s.Tmax, solveT(s.melt, s.Pmax, s.Tt, 2000)));
+    ctx.restore();
+    /* triple and critical points */
+    const pt = (T0, P0, lab, below) => { const x = F.X(T0), y = F.Y(P0); ctx.fillStyle = T.curve; ctx.beginPath(); ctx.arc(x, y, 4.5 * p, 0, 7); ctx.fill();
+      if (window.VDGear) VDGear.label(ctx, lab, below ? x - 8 * p : x + 8 * p, y + (below ? 12 : -12) * p, { a: below ? 'right' : 'left', s: 10 * p, w: 700, c: T.ink }); };
+    pt(s.Tt, s.pt, I ? VDI18N.t('triple point') : 'triple point', false); pt(s.Tc, s.pc, I ? VDI18N.t('critical point') : 'critical point', true);
+    /* region names */
+    const RL = ph.sub === 'water' ? [['solid (ice)', 228, 3e6], ['liquid', 420, 3e6], ['gas (vapor)', 520, 30], ['supercritical fluid', 640, 1.2e8]]
+      : [['solid', 175, 3e6], ['liquid', 265, 3e7], ['gas', 300, 1e4], ['supercritical fluid', 330, 2.5e7], ['solid', 300, 7e8]];
+    for (const [lab, t, P0] of RL) { ctx.font = `700 ${(small ? 10 : 12) * p}px ${T.ui}`; ctx.fillStyle = T.ink; ctx.globalAlpha = 0.7; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(lab, Math.min(F.X(t), F.L + F.pw - 50 * p), F.Y(P0)); ctx.globalAlpha = 1; }
+    /* the isobar through the dot, with the transitions on it */
+    const y = F.Y(ph.P), tr = phStops();
+    ctx.strokeStyle = T.accent; ctx.lineWidth = 1.4 * p; ctx.setLineDash([6, 4]); ctx.beginPath(); ctx.moveTo(F.L, y); ctx.lineTo(F.L + F.pw, y); ctx.stroke(); ctx.setLineDash([]);
+    tr.forEach((q, i) => { const x = F.X(q.T); ctx.strokeStyle = T.accent; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.arc(x, y, 5 * p, 0, 7); ctx.stroke();
+      const lab = `${{ subl: 'sublimes', melt: 'melts', boil: 'boils' }[q.k]} ${f(q.T - 273.15, 2)} °C`;
+      /* kept inside the plot: a long label (or a longer language) beside a line near the edge would run over the axis */
+      ctx.font = `700 ${10 * p}px ${T.ui}`; const w = ctx.measureText(lab).width + 8 * p;
+      const lx = Math.max(F.L + 3 * p, Math.min(F.L + F.pw - w - 3 * p, i % 2 ? x + 6 * p : x - 6 * p - w));
+      if (window.VDGear) VDGear.label(ctx, lab, lx, y + (i % 2 ? 14 : -14) * p, { a: 'left', s: 10 * p, w: 700, c: T.accent }); });
+    /* the dot */
+    const x = F.X(ph.T), cn = { solid: T.solid, liquid: T.liquid, gas: T.vapor, super: T.pe }[phaseAt(ph.sub, ph.T, ph.P)];
+    ctx.fillStyle = cn; ctx.strokeStyle = T.canvas; ctx.lineWidth = 2.5 * p; ctx.beginPath(); ctx.arc(x, y, 8 * p, 0, 7); ctx.fill(); ctx.stroke();
+    ctx.strokeStyle = T.ink; ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.arc(x, y, 10.5 * p, 0, 7); ctx.stroke();
+    if (ph.at && window.VDGear) VDGear.label(ctx, `${phKind(ph.at.k, ph.at.up)}: T holds (hold not to scale)`, F.L + 8 * p, F.Tp + 12 * p, { s: 11 * p, w: 700, c: T.ink });
+    if (F.side) drawSample(F.L + F.pw + 24 * p, F.Tp, F.side - 10 * p, Math.min(F.phh, 300 * p));
+  }
+  /* a sketch of the molecules in the sample at the dot (not to scale): a lattice, a packed jumble, a few fast ones far apart, or
+     a uniform fluid in between; during a hold, the two phases side by side */
+  function drawSample(x0, y0, w, h) {
+    const p = proj(), now = reduce ? 0 : performance.now() / 1000, cur = phaseAt(ph.sub, ph.T, ph.P);
+    if (window.VDGear) VDGear.panel(ctx, x0, y0, w, h, { r: 8 * p });
+    ctx.fillStyle = T.ink; ctx.font = `700 ${10.5 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(PHASE_NAME[cur], x0 + w / 2, y0 + 8 * p);
+    const bx = x0 + 14 * p, bw = w - 28 * p, by = y0 + 50 * p, bh = h - 86 * p;
+    if (bh < 40 * p) return;
+    ctx.fillStyle = dark() ? '#6c6358' : '#9a9083'; ctx.fillRect(bx - 4 * p, by - 12 * p, bw + 8 * p, 10 * p); if (window.VDGear) VDGear.rod(ctx, bx + bw / 2, y0 + 28 * p, bx + bw / 2, by - 12 * p, 3 * p);
+    ctx.strokeStyle = T.muted; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.moveTo(bx, by - 2 * p); ctx.lineTo(bx, by + bh); ctx.lineTo(bx + bw, by + bh); ctx.lineTo(bx + bw, by - 2 * p); ctx.stroke();
+    /* during a hold the new phase grows from 0 to all of the sample */
+    let parts = [[cur, 1]];
+    if (ph.at) { const fr = Math.min(1, ph.hold / PH_HOLD), lowT = { subl: ['solid', 'gas'], melt: ['solid', 'liquid'], boil: ['liquid', 'gas'] }[ph.at.k];
+      const from = ph.at.up ? lowT[0] : lowT[1], to = ph.at.up ? lowT[1] : lowT[0]; parts = [[from, 1 - fr], [to, fr]]; }
+    const col = { solid: T.solid, liquid: T.liquid, gas: T.vapor, super: T.pe }, r = 3.2 * p, nTot = 48;
+    let k = 0;
+    const rnd = (i, j) => { const v = Math.sin(i * 12.9898 + j * 78.233) * 43758.5453; return v - Math.floor(v); };
+    const cond = parts.filter(([q]) => q === 'solid' || q === 'liquid'), gasN = parts.filter(([q]) => q === 'gas' || q === 'super');
+    let yb = by + bh;   /* condensed phases sit at the bottom, solid below liquid */
+    for (const [q, fr] of cond.sort((a) => (a[0] === 'solid' ? -1 : 1))) {
+      const n = Math.round(nTot * fr), per = Math.max(1, Math.floor(bw / (2.3 * r))), rows = Math.ceil(n / per);
+      for (let i = 0; i < n; i++) { const row = Math.floor(i / per), c = i % per; let x = bx + 1.4 * r + c * 2.3 * r + (row % 2) * 1.15 * r, y = yb - 1.4 * r - row * 2.1 * r;
+        if (q === 'liquid') { x += (rnd(i, 1) - 0.5) * 1.6 * r + Math.sin(now * 3 + i) * 0.6 * r; y += (rnd(i, 2) - 0.5) * 1.2 * r; } else { x += Math.sin(now * 9 + i) * 0.25 * r; }
+        ctx.fillStyle = col[q]; ctx.beginPath(); ctx.arc(Math.min(bx + bw - r, x), y, r, 0, 7); ctx.fill(); k++; }
+      yb -= rows * 2.1 * r + 0.6 * r;
+    }
+    for (const [q, fr] of gasN) {
+      const n = Math.round((q === 'super' ? nTot : 12) * fr), top = by + r, hh = Math.max(4 * r, yb - top - r);
+      for (let i = 0; i < n; i++) { const u = (rnd(i, 3) + now * (0.15 + 0.2 * rnd(i, 4))) % 1, v = (rnd(i, 5) + now * (0.12 + 0.2 * rnd(i, 6))) % 1;
+        const tri = (z) => 1 - Math.abs(2 * z - 1); ctx.fillStyle = col[q]; ctx.beginPath(); ctx.arc(bx + r + tri(u) * (bw - 2 * r), top + tri(v) * hh, r, 0, 7); ctx.fill(); }
+    }
+    ctx.fillStyle = T.muted; ctx.font = `${9 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+    ctx.fillText('sketch of the molecules', x0 + w / 2, y0 + h - 18 * p); ctx.fillText(`at ${fmtP(ph.P)}`, x0 + w / 2, y0 + h - 6 * p);
+  }
+  /* drag the dot, or move it with the arrow keys */
+  let phDrag = false;
+  function phAt(e) { const r = can.getBoundingClientRect(), F = phFrame(), s = PHASE[ph.sub];
+    ph.T = Math.max(s.Tmin, Math.min(s.Tmax, F.T(e.clientX - r.left))); ph.P = Math.max(s.Pmin, Math.min(s.Pmax, F.P(e.clientY - r.top))); custom(); phNew(); setRun(false); }
+  can.addEventListener('pointerdown', (e) => { if (S.view !== 'phase') return; phDrag = true; can.setPointerCapture(e.pointerId); phAt(e); e.preventDefault(); });
+  can.addEventListener('pointermove', (e) => { if (phDrag) phAt(e); });
+  for (const ev of ['pointerup', 'pointercancel']) can.addEventListener(ev, () => { phDrag = false; });
+  can.addEventListener('keydown', (e) => {
+    if (S.view !== 'phase') return; const s = PHASE[ph.sub], big = e.shiftKey ? 10 : 1;
+    const dx = { ArrowLeft: -1, ArrowRight: 1 }[e.key], dy = { ArrowDown: -1, ArrowUp: 1 }[e.key]; if (!dx && !dy) return;
+    if (dx) ph.T = Math.max(s.Tmin, Math.min(s.Tmax, ph.T + dx * big));
+    if (dy) ph.P = Math.max(s.Pmin, Math.min(s.Pmax, ph.P * Math.pow(10, dy * 0.02 * big)));
+    custom(); phNew(); setRun(false); e.preventDefault();
+  });
+
+  // ---------- the jar of water ----------
+  const vp = { jar: 'sealed', T: 293.15, Tset: 293.15, p: 0, boil: false, Pout: 101325, Ts: 293.15, Ps: 101325, t: 0, hist: [], dew: 0, T0: 293.15, p0: 0 };
+  const VAPOR_DOTS = [];
+  { let sd = 11; const r = () => ((sd = (sd * 16807) % 2147483647) / 2147483647); for (let i = 0; i < 260; i++) VAPOR_DOTS.push([r(), r(), r() * 6.28, 0.3 + r()]); }
+  const vEnv = () => ({ sealed: vp.jar === 'sealed', Pout: vp.Pout, Ts: vp.Ts, Ps: vp.Ps });
+  function vpNew() { vp.t = 0; vp.dew = 0; vp.T = vp.T0; vp.p = vp.p0; vp.boil = false; vp.Ts = vp.T0; vp.Ps = vp.Pout; if (vp.jar === 'open') vp.p = psat(vp.T); vp.hist = [{ t: 0, T: vp.T, p: vp.p }]; }
+  function vpAdvance(dt) {
+    vaporStep(vp, dt, vEnv()); vp.t += dt;
+    /* dew: water condensing out of the air onto the glass while the jar cools below its dew point; it dries off again below saturation */
+    if (vp.jar === 'sealed') vp.dew = Math.max(0, Math.min(1, vp.dew + (vp.cond ? 0.25 * dt : vp.p < psat(vp.T) * 0.97 ? -0.15 * dt : 0)));
+    vp.hist.push({ t: vp.t, T: vp.T, p: vp.p }); if (vp.hist.length > 4000) vp.hist.splice(1, 2);
+  }
+  function drawVapor() {
+    const p = Math.min(proj(), 1.25), sealed = vp.jar === 'sealed', I = typeof VDI18N === 'object', ps = psat(vp.T), Tb = boilingPoint(vp.Pout), tC = vp.T - 273.15;
+    if (window.VDGear) { VDGear.backdrop(ctx, W, H, { horizon: 0.8 }); VDGear.bench(ctx, 0, H - 40 * p, W, 12 * p, 14 * p); } else { ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H); }
+    const narrow = W < 600, jw = Math.min(220 * p, W * (narrow ? 0.5 : 0.3)), jh = Math.min(300 * p, H - 150 * p), cx = narrow ? W * 0.32 : W * 0.3, benchY = H - 40 * p;
+    const plH = 26 * p, jb = benchY - plH, jt = jb - jh, jx = cx - jw / 2, wl = jb - jh * 0.32;   /* water level */
+    /* the plate under the jar: warm when the thermostat heats, cool when it cools */
+    const dir = Math.sign(vp.Tset - vp.T) * (Math.abs(vp.Tset - vp.T) > 0.01 ? 1 : 0) || (vp.boil ? 1 : 0);
+    if (window.VDGear) { VDGear.box(ctx, cx - jw / 2 - 20 * p, jb, jw + 40 * p, plH, { color: dark() ? '#50473c' : '#63594c', r: 5, shadow: false });
+      VDGear.lcd(ctx, cx - jw / 2 - 12 * p, jb + 5 * p, 64 * p, 16 * p, `${f(vp.Tset - 273.15, 0)} °C`, { color: '#ffb36b' }); VDGear.plate(ctx, 'thermostat', cx + 30 * p, jb + 13 * p, { s: 8 * p }); }
+    if (dir) { ctx.fillStyle = dir > 0 ? 'rgba(255,110,60,0.85)' : 'rgba(80,150,255,0.85)'; ctx.fillRect(jx, jb - 3 * p, jw, 3 * p); }
+    /* water */
+    const wg = ctx.createLinearGradient(0, wl, 0, jb); wg.addColorStop(0, 'rgba(120,180,235,0.6)'); wg.addColorStop(1, 'rgba(60,130,210,0.8)'); ctx.fillStyle = wg; ctx.fillRect(jx + 3 * p, wl, jw - 6 * p, jb - wl - 3 * p);
+    ctx.fillStyle = 'rgba(255,255,255,0.55)'; ctx.fillRect(jx + 3 * p, wl, jw - 6 * p, 1.5 * p);
+    /* the vapor molecules: one dot for every 0.5 g/m³ of vapor in the air (at most 260 drawn) */
+    const rho = vaporDensity(sealed ? vp.p : ps, vp.T) * 1000, nd = Math.min(VAPOR_DOTS.length, Math.round(rho / 0.5)), now = vp.t, top = sealed ? jt + 10 * p : jt - 40 * p;
+    ctx.fillStyle = T.vapor;
+    for (let i = 0; i < (sealed ? nd : Math.min(nd, 60)); i++) { const d = VAPOR_DOTS[i], tri = (z) => 1 - Math.abs(2 * (((z % 1) + 1) % 1) - 1);
+      const u = tri(d[0] + now * 0.11 * d[3]), v = sealed ? tri(d[1] + now * 0.09 * d[3]) : ((d[1] + now * 0.15 * d[3]) % 1);
+      const x = jx + 6 * p + u * (jw - 12 * p), y = sealed ? top + v * (wl - top - 6 * p) : wl - 6 * p - v * (wl - top);
+      ctx.globalAlpha = sealed ? 0.85 : 0.85 * (1 - v * 0.8); ctx.beginPath(); ctx.arc(x, y, 2.4 * p, 0, 7); ctx.fill(); }
+    ctx.globalAlpha = 1;
+    if (sealed && nd >= VAPOR_DOTS.length && window.VDGear) VDGear.label(ctx, 'more vapor than drawn', cx, top + 8 * p, { a: 'center', s: 9 * p });
+    /* bubbles while it boils */
+    if (vp.boil) for (let i = 0; i < 18; i++) { const d = VAPOR_DOTS[i + 100], z = ((d[1] + (reduce ? 0 : performance.now() / 1000) * 0.5 * d[3]) % 1);
+      ctx.strokeStyle = 'rgba(255,255,255,0.85)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(jx + 10 * p + d[0] * (jw - 20 * p), jb - 6 * p - z * (jb - wl - 10 * p), (1.5 + 2.5 * d[3]) * p, 0, 7); ctx.stroke(); }
+    /* molecules leaving the water and coming back: arrows in proportion to the rates, p_sat(T) and p */
+    const ret = sealed ? vp.p : 0, mx = Math.max(ps, ret, 1e-9), aL = 54 * p;
+    const arrow = (x, y0, len, up, c, lab) => { if (len < 2 * p) return; const y1 = y0 + (up ? -len : len); ctx.strokeStyle = c; ctx.fillStyle = c; ctx.lineWidth = 3 * p; ctx.beginPath(); ctx.moveTo(x, y0); ctx.lineTo(x, y1); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(x, y1 + (up ? -5 : 5) * p); ctx.lineTo(x - 5 * p, y1 + (up ? 3 : -3) * p); ctx.lineTo(x + 5 * p, y1 + (up ? 3 : -3) * p); ctx.closePath(); ctx.fill();
+      if (window.VDGear) VDGear.label(ctx, lab, x + 8 * p, (y0 + y1) / 2, { s: 10 * p, w: 700, c }); };
+    arrow(jx + jw * 0.22, wl - 2 * p, aL * ps / mx, true, T.vapor, I ? VDI18N.t('leaving') : 'leaving');
+    if (sealed) arrow(jx + jw * 0.62, wl - 2 * p - aL * ret / mx, aL * ret / mx, false, T.liquid, I ? VDI18N.t('returning') : 'returning');
+    /* dew on the glass */
+    if (sealed && vp.dew > 0.02) { ctx.fillStyle = dark() ? 'rgba(200,225,250,0.7)' : 'rgba(120,170,220,0.75)';
+      for (let i = 0; i < Math.round(40 * vp.dew); i++) { const d = VAPOR_DOTS[i + 150], side = i % 2; ctx.beginPath(); ctx.ellipse(side ? jx + jw - 5 * p : jx + 5 * p, jt + 14 * p + d[1] * (wl - jt - 20 * p), 1.8 * p, 2.6 * p, 0, 0, 7); ctx.fill(); }
+      if (window.VDGear) VDGear.label(ctx, 'dew', jx - 8 * p, jt + 24 * p, { a: 'right', s: 10 * p, w: 700, c: T.liquid }); }
+    /* the glass, and the lid of the sealed jar */
+    const ink = dark() ? 'rgba(200,220,240,0.78)' : 'rgba(126,103,74,0.85)';
+    ctx.strokeStyle = ink; ctx.lineWidth = 2.2 * p; ctx.beginPath(); ctx.moveTo(jx, jt); ctx.lineTo(jx, jb); ctx.lineTo(jx + jw, jb); ctx.lineTo(jx + jw, jt); ctx.stroke();
+    if (sealed) { ctx.fillStyle = dark() ? '#8a8072' : '#a59a8c'; ctx.beginPath(); ctx.roundRect(jx - 8 * p, jt - 10 * p, jw + 16 * p, 10 * p, 3 * p); ctx.fill(); }
+    else if (window.VDGear) VDGear.label(ctx, I ? VDI18N.t('open to the air') : 'open to the air', cx, jt - 50 * p, { a: 'center', s: 10 * p });
+    /* the instruments: thermometer, vapor pressure, and the pressure inside or outside */
+    const ix = narrow ? jx + jw + 14 * p : jx + jw + 40 * p, iw = Math.min(150 * p, W - ix - 10 * p);
+    const meter = (y, name, val) => { if (!window.VDGear || iw < 70 * p) return; VDGear.box(ctx, ix, y, iw, 40 * p, { color: '#50473c', r: 5 }); VDGear.lcd(ctx, ix + 6 * p, y + 5 * p, iw - 12 * p, 20 * p, val); VDGear.plate(ctx, name, ix + iw / 2, y + 33 * p, { s: 7.5 * p }); };
+    let my = jt - (sealed ? 0 : 20 * p);
+    meter(my, 'temperature', `${f(tC, 1)} °C`); my += 50 * p;
+    meter(my, sealed ? 'vapor pressure' : 'vapor pressure of water', `${f((sealed ? vp.p : ps) / 1000, 2)} kPa`); my += 50 * p;
+    if (sealed) { meter(my, 'relative humidity', `${f(100 * vp.p / ps, 0)} %`); my += 50 * p; meter(my, 'pressure inside', `${f((airPressure(vEnv(), vp.T) + vp.p) / 1000, 1)} kPa`); }
+    else meter(my, 'outside pressure', `${f(vp.Pout / 1000, 1)} kPa`);
+    if (window.VDGear) { const st = sealed ? (vp.cond ? 'dew forming: the air is saturated' : vp.p >= ps * 0.995 ? 'saturated: as many molecules return as leave' : 'evaporating: more leave than return')
+      : vp.boil ? `boiling at ${f(Tb - 273.15, 1)} °C: vapor pressure = outside pressure` : `evaporating; boils at ${f(Tb - 273.15, 1)} °C at this pressure`;
+      VDGear.label(ctx, st, narrow ? 12 * p : jx, H - 16 * p, { s: 11 * p, w: 700, c: T.ink });
+    }
+  }
+
   // ---------- the heating curve ----------
+  /* the curve pane in the phase diagram view: T against time while Play heats or cools at the dot's pressure */
+  function drawCurvePhase(p) {
+    const L = 52 * p, R = 20 * p, Tp = 12 * p, B = 30 * p, pw = CW - L - R, phh = CH - Tp - B, pts = ph.hist, s = PHASE[ph.sub];
+    if (pw < 40) return;
+    const x1 = Math.max(10, ...pts.map((q) => q.t)), y0 = s.Tmin, y1 = s.Tmax, px = (v) => L + v / x1 * pw, py = (v) => Tp + phh - (v - y0) / (y1 - y0) * phh;
+    cctx.strokeStyle = T.grid; cctx.lineWidth = 1; cctx.fillStyle = T.muted; cctx.font = `${10.5 * p}px ${T.mono}`; cctx.textAlign = 'right'; cctx.textBaseline = 'middle';
+    const dT = ph.sub === 'water' ? 100 : 50;
+    for (let v = Math.ceil(y0 / dT) * dT; v <= y1; v += dT) { cctx.beginPath(); cctx.moveTo(L, py(v)); cctx.lineTo(L + pw, py(v)); cctx.stroke(); cctx.fillText(String(v), L - 5 * p, py(v)); }
+    const xs = x1 > 60 ? 20 : x1 > 20 ? 5 : 2; cctx.textAlign = 'center'; cctx.textBaseline = 'top';
+    for (let v = 0; v <= x1 + 1e-9; v += xs) { cctx.beginPath(); cctx.moveTo(px(v), Tp); cctx.lineTo(px(v), Tp + phh); cctx.stroke(); cctx.fillText(String(v), px(v), Tp + phh + 4 * p); }
+    cctx.font = `${11 * p}px ${T.ui}`; cctx.fillText('time t (s)', L + pw / 2, Tp + phh + 16 * p);
+    cctx.save(); cctx.translate(12 * p, Tp + phh / 2); cctx.rotate(-Math.PI / 2); cctx.fillStyle = T.curve; cctx.fillText('T (K)', 0, -4 * p); cctx.restore();
+    /* the holds shaded */
+    cctx.save(); cctx.globalAlpha = dark() ? 0.14 : 0.1; for (let i = 1; i < pts.length; i++) if (pts[i].at) { cctx.fillStyle = pts[i].at === 'melt' ? T.solid : T.vapor; cctx.fillRect(px(pts[i - 1].t), Tp, px(pts[i].t) - px(pts[i - 1].t) + 0.5, phh); } cctx.restore();
+    cctx.strokeStyle = T.curve; cctx.lineWidth = 2.2 * p; cctx.lineJoin = 'round'; cctx.beginPath(); pts.forEach((q, i) => (i ? cctx.lineTo(px(q.t), py(q.T)) : cctx.moveTo(px(q.t), py(q.T)))); cctx.stroke();
+    const q = pts[pts.length - 1]; cctx.fillStyle = T.curve; cctx.beginPath(); cctx.arc(px(q.t), py(q.T), 3.5 * p, 0, 7); cctx.fill();
+    cctx.fillStyle = T.muted; cctx.font = `${9.5 * p}px ${T.ui}`; cctx.textAlign = 'left'; cctx.textBaseline = 'top';
+    cctx.fillText(CW < 600 ? `at ${fmtP(ph.P)}; holds not to scale` : `at ${fmtP(ph.P)}: T climbs ${PH_RATE[ph.sub]} K/s, holds ${PH_HOLD} s at each change of phase (not to scale)`, L + 4 * p, Tp + 3 * p);
+  }
+  /* the curve pane in the vapor view: the saturation vapor pressure of water against temperature (log scale), with the state of
+     the jar, its dew point, and the outside pressure where the water boils */
+  function drawCurveVapor(p) {
+    const L = 60 * p, R = 20 * p, Tp = 12 * p, B = 30 * p, pw = CW - L - R, phh = CH - Tp - B, lo = Math.log10(500), hi = Math.log10(400e3);
+    if (pw < 40) return;
+    const px = (tC) => L + tC / 130 * pw, py = (P) => Tp + phh - (Math.log10(Math.max(P, 1)) - lo) / (hi - lo) * phh;
+    cctx.strokeStyle = T.grid; cctx.lineWidth = 1; cctx.fillStyle = T.muted; cctx.font = `${10.5 * p}px ${T.mono}`; cctx.textAlign = 'right'; cctx.textBaseline = 'middle';
+    for (const P of [1e3, 3e3, 1e4, 3e4, 1e5, 3e5]) { cctx.beginPath(); cctx.moveTo(L, py(P)); cctx.lineTo(L + pw, py(P)); cctx.stroke(); cctx.fillText(`${P / 1000}`, L - 5 * p, py(P)); }
+    cctx.textAlign = 'center'; cctx.textBaseline = 'top';
+    for (let v = 0; v <= 130; v += CW < 500 ? 20 : 10) { cctx.beginPath(); cctx.moveTo(px(v), Tp); cctx.lineTo(px(v), Tp + phh); cctx.stroke(); cctx.fillText(String(v), px(v), Tp + phh + 4 * p); }
+    cctx.font = `${11 * p}px ${T.ui}`; cctx.fillText('temperature (°C)', L + pw / 2, Tp + phh + 16 * p);
+    cctx.save(); cctx.translate(12 * p, Tp + phh / 2); cctx.rotate(-Math.PI / 2); cctx.fillStyle = T.curve; cctx.fillText(phh < 200 * p ? 'p (kPa, log)' : 'pressure (kPa, log scale)', 0, -2 * p); cctx.restore();
+    cctx.save(); cctx.beginPath(); cctx.rect(L, Tp, pw, phh); cctx.clip();
+    cctx.strokeStyle = T.curve; cctx.lineWidth = 2.2 * p; cctx.beginPath(); for (let i = 0; i <= 130; i++) { const y = py(psat(273.15 + i)); i ? cctx.lineTo(px(i), y) : cctx.moveTo(px(i), y); } cctx.stroke();
+    /* the outside pressure, and where the curve reaches it: the boiling point */
+    const Tb = boilingPoint(vp.Pout) - 273.15, yo = py(vp.Pout);
+    cctx.strokeStyle = T.accent; cctx.lineWidth = 1.4 * p; cctx.setLineDash([6, 4]); cctx.beginPath(); cctx.moveTo(L, yo); cctx.lineTo(L + pw, yo); cctx.stroke(); cctx.setLineDash([]);
+    cctx.beginPath(); cctx.arc(px(Tb), yo, 5 * p, 0, 7); cctx.stroke();
+    /* the path of the state so far, and the dew point */
+    const sealed = vp.jar === 'sealed';
+    if (sealed) { cctx.strokeStyle = T.vapor; cctx.lineWidth = 1.6 * p; cctx.beginPath(); vp.hist.forEach((q, i) => (i ? cctx.lineTo(px(q.T - 273.15), py(q.p)) : cctx.moveTo(px(q.T - 273.15), py(q.p)))); cctx.stroke(); }
+    const yv = py(sealed ? vp.p : psat(vp.T)), xv = px(vp.T - 273.15), td = sealed ? dewPoint(vp.p) - 273.15 : NaN;
+    if (sealed && td > -1 && td < vp.T - 273.15 - 0.05) { cctx.strokeStyle = T.liquid; cctx.lineWidth = 1.4 * p; cctx.setLineDash([3, 3]); cctx.beginPath(); cctx.moveTo(xv, yv); cctx.lineTo(px(td), yv); cctx.stroke(); cctx.setLineDash([]);
+      cctx.fillStyle = T.liquid; cctx.beginPath(); cctx.arc(px(td), yv, 4 * p, 0, 7); cctx.fill(); }
+    cctx.fillStyle = T.vapor; cctx.strokeStyle = T.canvas; cctx.lineWidth = 2 * p; cctx.beginPath(); cctx.arc(xv, yv, 5.5 * p, 0, 7); cctx.fill(); cctx.stroke();
+    cctx.restore();
+    cctx.font = `${9.5 * p}px ${T.ui}`; cctx.textBaseline = 'bottom'; cctx.textAlign = 'left'; cctx.fillStyle = T.curve;
+    const ls = 62; cctx.textAlign = 'left'; cctx.textBaseline = 'top'; cctx.fillText('saturated: 100 % humidity', px(ls) + 4 * p, py(psat(273.15 + ls)) + 4 * p);
+    cctx.fillStyle = T.accent; cctx.textAlign = 'left'; cctx.textBaseline = 'top'; cctx.fillText(`outside ${f(vp.Pout / 1000, 1)} kPa: boils at ${f(Tb, 1)} °C`, L + 4 * p, yo + 3 * p);
+    if (sealed && td > -1 && td < vp.T - 273.15 - 0.05) { cctx.fillStyle = T.liquid; cctx.textAlign = 'left'; cctx.textBaseline = 'top'; cctx.fillText(`dew point ${f(td, 1)} °C`, px(td) + 4 * p, yv + 6 * p); }
+  }
   function drawCurve() {
     const p = proj(); cctx.setTransform(dpr, 0, 0, dpr, 0, 0); cctx.fillStyle = T.canvas; cctx.fillRect(0, 0, CW, CH);
     if (S.blind) { cctx.fillStyle = T.muted; cctx.font = `${12 * p}px ${T.ui}`; cctx.textAlign = 'center'; cctx.textBaseline = 'middle'; cctx.fillText('Heating curve hidden (Blind mode in the Lab section)', CW / 2, CH / 2); return; }
+    if (S.view === 'phase') { drawCurvePhase(p); return; }
+    if (S.view === 'vapor') { drawCurveVapor(p); return; }
     let pts, xl, yl, y2l = null, X, Y, Y2;
     if (S.view === 'atoms') { pts = S.hist; X = (q) => q.Q; Y = (q) => q.T; Y2 = (q) => q.U; xl = 'heat added Q (kJ/mol)'; yl = 'T (K)'; y2l = 'bond energy U (kJ/mol)'; }
     else {
@@ -894,12 +1326,12 @@ table.rows td input { width: 7ch; font: inherit; font-family: var(--font-mono); 
         else VDGear.label(ctx, I ? VDI18N.t('shaded: height squeezed above the dashed line · piston {n} nm up', { n }) : `shaded: height squeezed above the dashed line · piston ${n} nm up`, 14 * q, 16 * q, { s: 11 * q }); } }
       else drawAtomsFlat();
       if (nsRate > 0 && window.VDGear) { const q = proj(); VDGear.label(ctx, typeof VDI18N === 'object' ? VDI18N.t('slow motion: 1 s here = {n} ns', { n: f(nsRate, 3) }) : `slow motion: 1 s here = ${f(nsRate, 3)} ns`, 14 * q, H - 16 * q, { s: 11 * q }); }
-    } else drawBeaker();
+    } else if (S.view === 'phase') drawPhase(); else if (S.view === 'vapor') drawVapor(); else drawBeaker();
     drawCurve(); readouts(); clock();
   }
   /* The atoms' pace depends on how many steps this computer manages per frame, so the stage shows the measured rate once it has run
      (student view, 2026-11-15). */
-  function clock() { $('clock').textContent = S.view === 'atoms' ? `t = ${f(S.md.t * TAU_PS / 1000, 3)} ns` : `t = ${f(S.bk.t, 0)} s`; }
+  function clock() { $('clock').textContent = S.view === 'atoms' ? `t = ${f(S.md.t * TAU_PS / 1000, 3)} ns` : S.view === 'phase' ? `t = ${f(ph.t, 1)} s` : S.view === 'vapor' ? `t = ${f(vp.t, 1)} s` : `t = ${f(S.bk.t, 0)} s`; }
   let last = performance.now();
   function frame(now) {
     const dt = Math.min(0.1, (now - last) / 1000); last = now;
@@ -910,7 +1342,9 @@ table.rows td input { width: 7ch; font: inherit; font-family: var(--font-mono); 
         if (dt > 0) { const r = (S.md.t - md0) * TAU_PS / 1000 / dt; nsRate = nsRate ? nsRate + (r - nsRate) * 0.05 : r; }
         if (++S.frame % 8 === 0) { S.ph = mdPhases(S.md); const sh = shares(S.ph); S.phAvg = S.phAvg.map((v, k) => v + (sh[k] - v) * 0.25); }
         S.nb = mdBonds(S.md);
-      } else {
+      } else if (S.view === 'phase') phAdvance(dt * S.speed);
+      else if (S.view === 'vapor') vpAdvance(dt * S.speed);
+      else {
         const b = S.bk, end = stages(b.sub, b.m / 1000, b.T0).slice(-1)[0].Q1 / b.W;
         b.t = Math.min(end, b.t + dt * BEAKER_SPEED[S.speed]);
         for (const u of bub) u.y -= u.v * dt;
@@ -918,11 +1352,12 @@ table.rows td input { width: 7ch; font: inherit; font-family: var(--font-mono); 
       }
       redraw();
     } else if (S.view === 'beaker' && bub.length) { bub.length = 0; redraw(); }
+    else if (S.view === 'phase' && !reduce && ++S.frame % 2 === 0) redraw();   /* the molecule sketch keeps moving */
     requestAnimationFrame(frame);
   }
   const BEAKER_SPEED = { 1: 5, 2: 20, 4: 50 };
   function speedLabels() {
-    for (const b of document.querySelectorAll('#speedSeg button')) b.textContent = S.view === 'atoms' ? `${b.dataset.s}×` : `${BEAKER_SPEED[b.dataset.s]}×`;
+    for (const b of document.querySelectorAll('#speedSeg button')) b.textContent = S.view === 'beaker' ? `${BEAKER_SPEED[b.dataset.s]}×` : `${b.dataset.s}×`;
   }
 
   // ---------- controls ----------
@@ -934,9 +1369,13 @@ table.rows td input { width: 7ch; font: inherit; font-family: var(--font-mono); 
     for (const x of document.querySelectorAll('#speedSeg button')) x.setAttribute('aria-pressed', String(+x.dataset.s === S.speed));
     S.view = v; for (const b of document.querySelectorAll('#viewSeg button')) b.setAttribute('aria-pressed', String(b.dataset.v === v));
     $('cardAtoms').hidden = v !== 'atoms'; $('cardBeaker').hidden = v !== 'beaker'; $('dimSeg').hidden = v !== 'atoms';
-    $('units').textContent = v === 'atoms' ? 'T in K · heat in kJ/mol · time in ns' : 'T in °C · mass in g · time in s';
-    can.setAttribute('aria-label', v === 'atoms' ? 'Argon atoms in a column under a weighted piston, with a heater in the floor. Space starts or pauses.'
-      : 'A beaker on a hot plate standing on a balance, with a thermometer in the sample. Space starts or pauses.');
+    $('cardPhase').hidden = v !== 'phase'; $('cardVapor').hidden = v !== 'vapor';
+    $('units').textContent = { atoms: 'T in K · heat in kJ/mol · time in ns', beaker: 'T in °C · mass in g · time in s', phase: 'T in K · P in Pa (log scale) · time in s', vapor: 'T in °C · pressure in kPa · time in s' }[v];
+    can.setAttribute('aria-label', { atoms: 'Argon atoms in a column under a weighted piston, with a heater in the floor. Space starts or pauses.',
+      beaker: 'A beaker on a hot plate standing on a balance, with a thermometer in the sample. Space starts or pauses.',
+      phase: 'The phase diagram, pressure against temperature, with a dot for the sample. Drag the dot or move it with the arrow keys; Space heats or cools it at that pressure.',
+      vapor: 'A jar of water and air on a thermostat plate, with the vapor molecules and meters for temperature and pressure. Space starts or pauses.' }[v]);
+    can.style.cursor = v === 'phase' ? 'crosshair' : ''; can.style.touchAction = v === 'phase' ? 'none' : '';
     setRun(false); speedLabels(); setDim(S.dim); renderRows(); legend();
   }
   function legend() {
@@ -954,14 +1393,21 @@ table.rows td input { width: 7ch; font: inherit; font-family: var(--font-mono); 
     for (const x of document.querySelectorAll('#speedSeg button')) x.setAttribute('aria-pressed', String(+x.dataset.s === S.speed));
     for (const x of document.querySelectorAll('#presets button')) x.setAttribute('aria-pressed', String(x.dataset.p === S.preset));
     $('showBonds').checked = S.bonds;
+    for (const x of document.querySelectorAll('#phSub button')) x.setAttribute('aria-pressed', String(x.dataset.sub === ph.sub));
+    for (const x of document.querySelectorAll('#phHeat button')) x.setAttribute('aria-pressed', String(+x.dataset.h === ph.heat));
+    for (const x of document.querySelectorAll('#vapJar button')) x.setAttribute('aria-pressed', String(x.dataset.j === vp.jar));
+    $('sTset').value = Math.round(vp.Tset - 273.15); $('oTset').textContent = `${f(vp.Tset - 273.15, 0)} °C`;
+    $('sPout').value = (vp.Pout / 1000).toFixed(1); $('oPout').textContent = `${f(vp.Pout / 1000, 1)} kPa`;
   }
   function applyPreset(k) {
     const c = PRESETS[k]; S.preset = k; $('presetHint').textContent = c.hint;
     if (c.view === 'atoms') { Object.assign(S, { kind: c.kind, T0: c.T0, Patm: c.Patm, heat: c.heat, pow: c.pow }); newSample(); }
+    else if (c.view === 'phase') { Object.assign(ph, { sub: c.sub, T: c.T, P: c.P, heat: c.heat }); phNew(); }
+    else if (c.view === 'vapor') { Object.assign(vp, { jar: c.jar, T0: c.T, Tset: c.T, Pout: c.Pout, p0: 0 }); vpNew(); }
     else { Object.assign(S.bk, { sub: c.sub, m: c.m, W: c.W, T0: c.T0, t: 0 }); }
     sync(); setView(c.view);
   }
-  function restart() { if (S.view === 'atoms') newSample(); else S.bk.t = 0; bub.length = 0; setRun(false); }
+  function restart() { if (S.view === 'atoms') newSample(); else if (S.view === 'phase') { ph.T = ph.T0; ph.P = ph.P0; phNew(); } else if (S.view === 'vapor') vpNew(); else S.bk.t = 0; bub.length = 0; setRun(false); }
   const custom = () => { S.preset = 'custom'; sync(); };
   for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
   $('viewSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-v]'); if (b && b.dataset.v !== S.view) setView(b.dataset.v); });
@@ -977,6 +1423,18 @@ table.rows td input { width: 7ch; font: inherit; font-family: var(--font-mono); 
   $('sMass').addEventListener('input', (e) => { S.bk.m = +e.target.value; S.bk.t = 0; custom(); setRun(false); });
   $('sWatt').addEventListener('input', (e) => { S.bk.W = +e.target.value; S.bk.t = 0; custom(); setRun(false); });
   $('sT0').addEventListener('input', (e) => { S.bk.T0 = +e.target.value; S.bk.t = 0; custom(); setRun(false); });
+  /* the phase diagram card */
+  const presetP = (h) => (h === 'cooker' ? 2 * 101325 : isaPressure(+h));   /* a pressure cooker holds 1 atm above sea level air */
+  $('phSub').addEventListener('click', (e) => { const b = e.target.closest('[data-sub]'); if (!b || b.dataset.sub === ph.sub) return; ph.sub = b.dataset.sub;
+    const s = PHASE[ph.sub]; ph.T = Math.max(s.Tmin, Math.min(s.Tmax, ph.sub === 'co2' ? 173.15 : 263.15)); ph.P = 101325; phCache = null; custom(); phNew(); setRun(false); });
+  $('phHeat').addEventListener('click', (e) => { const b = e.target.closest('[data-h]'); if (b) { ph.heat = +b.dataset.h; custom(); phNew(); setRun(false); } });
+  $('phP').addEventListener('click', (e) => { const b = e.target.closest('[data-h]'); if (!b) return; const s = PHASE[ph.sub]; ph.P = Math.max(s.Pmin, Math.min(s.Pmax, presetP(b.dataset.h))); custom(); phNew(); setRun(false); });
+  /* the jar card */
+  $('vapJar').addEventListener('click', (e) => { const b = e.target.closest('[data-j]'); if (!b || b.dataset.j === vp.jar) return; vp.jar = b.dataset.j; vp.T0 = vp.T; vp.p0 = vp.jar === 'sealed' ? 0 : vp.p; custom(); vpNew(); setRun(false); });
+  $('sTset').addEventListener('input', (e) => { vp.Tset = +e.target.value + 273.15; custom(); redraw(); });
+  const setPout = (P) => { vp.Pout = Math.max(20e3, Math.min(220e3, P)); if (vp.jar === 'open') vp.Ps = vp.Pout; custom(); redraw(); };
+  $('sPout').addEventListener('input', (e) => setPout(+e.target.value * 1000));
+  $('vapP').addEventListener('click', (e) => { const b = e.target.closest('[data-h]'); if (b) setPout(presetP(b.dataset.h)); });
   $('go').addEventListener('click', () => setRun(!S.run));
   $('restart').addEventListener('click', restart);
   can.addEventListener('keydown', (e) => { if (e.key === ' ') { $('go').click(); e.preventDefault(); } });
@@ -985,11 +1443,17 @@ table.rows td input { width: 7ch; font: inherit; font-family: var(--font-mono); 
 
   // ---------- readings ----------
   function capStatus(m) { $('capStatus').textContent = m; }
-  const COLS = { atoms: ['#', 'Q (kJ/mol)', 'T (K)', 'U (kJ/mol)', 'S·L·V %'], beaker: ['#', 't (s)', 'T (°C)', 'm (g)'] };
+  const COLS = { atoms: ['#', 'Q (kJ/mol)', 'T (K)', 'U (kJ/mol)', 'S·L·V %'], beaker: ['#', 't (s)', 'T (°C)', 'm (g)'], phase: ['#', 'T (K)', 'P (kPa)', 'phase'], vapor: ['#', 'T (°C)', 'p (kPa)', 'RH (%)'] };
+  S.rows.phase = []; S.rows.vapor = []; S.series.phase = 0; S.series.vapor = 0;
   $('capture').addEventListener('click', () => {
     if (S.view === 'atoms') {
       const md = S.md, p = S.phAvg.map((v) => String(Math.round(100 * v)));
       S.rows.atoms.push({ t: f(md.t * TAU_PS / 1000, 3), Q: f(md.Q / md.N * KJMOL, 2), T: f(S.avg.T * AR.epsK, 1), U: f(S.avg.pe * KJMOL, 2), s: p[0], l: p[1], v: p[2], P: S.Patm });
+    } else if (S.view === 'phase') {
+      S.rows.phase.push({ T: f(ph.T, 2), P: f(ph.P / 1000, 4), ph: ph.at ? phKind(ph.at.k, ph.at.up) : PHASE_NAME[phaseAt(ph.sub, ph.T, ph.P)], sub: ph.sub });
+    } else if (S.view === 'vapor') {
+      const p = vp.jar === 'sealed' ? vp.p : psat(vp.T);
+      S.rows.vapor.push({ t: f(vp.t, 1), T: f(vp.T - 273.15, 1), p: f(p / 1000, 3), rh: vp.jar === 'sealed' ? f(100 * p / psat(vp.T), 1) : '—', jar: vp.jar });
     } else {
       const b = S.bk, st = beakerState(b.sub, b.m / 1000, b.T0, b.W * b.t);
       S.rows.beaker.push({ t: f(b.t, 0), T: f(st.T, 1), m: f((st.mS + st.mL) * 1000, 1), sub: b.sub, m0: b.m, W: b.W, T0: b.T0 });
@@ -997,11 +1461,18 @@ table.rows td input { width: 7ch; font: inherit; font-family: var(--font-mono); 
     renderRows(); capStatus(`Row ${S.rows[S.view].length} captured.`);
   });
   $('clearRows').addEventListener('click', () => { S.rows[S.view] = []; S.series[S.view] = Date.now(); renderRows(); capStatus('Readings cleared.'); });
-  window.vdReadings = () => S.rows.atoms.length + S.rows.beaker.length;
+  window.vdReadings = () => S.rows.atoms.length + S.rows.beaker.length + S.rows.phase.length + S.rows.vapor.length;
   const SHEET = { atoms: 'bonds-and-latent-heat', beaker: 'heating-curve' };
   $('exportCsv').addEventListener('click', () => {
     const v = S.view, rows = S.rows[v]; if (!rows.length) { capStatus('No readings to export.'); return; }
     let txt, note;
+    if (v === 'phase' || v === 'vapor') {   /* no worksheet reads these yet: the readings are saved as a CSV file */
+      const head = v === 'phase' ? ['# States of Matter, Phase diagram view: recorded points (from the cited phase boundary equations)', `# demo version,${SM_VERSION}`, 'row,substance,T_K,P_kPa,phase']
+        : ['# States of Matter, Vapor view: recorded readings (simulated data)', `# demo version,${SM_VERSION}`, '# model,"saturation vapor pressure of water from Wagner and Pruss 1993; vapor relaxes toward it with a chosen time constant"', 'row,jar,t_s,T_C,p_kPa,RH_pct'];
+      txt = head.concat(rows.map((r, i) => (v === 'phase' ? [i + 1, r.sub, r.T, r.P, r.ph] : [i + 1, r.jar, r.t, r.T, r.p, r.rh]).map(csvCell).join(','))).join('\n') + '\n';
+      try { const u = URL.createObjectURL(new Blob([txt], { type: 'text/csv' })), a = document.createElement('a'); a.href = u; a.download = `states-of-matter-${v}.csv`; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 1000); } catch (_) {}
+      capStatus('No worksheet reads this view yet, so the readings were saved as a CSV file.'); return;
+    }
     if (v === 'atoms') { txt = atomsCSV(rows, { N: S.md.N, P: [...new Set(rows.map((r) => r.P))].join(' and ') }); note = `Simulated data from the States of Matter demo, Atoms view (${S.md.N} argon atoms).`; }
     else { const r0 = rows[rows.length - 1], s = SUBSTANCES[r0.sub]; txt = beakerCSV(rows, { substance: s.name, m0: r0.m0, P: r0.W, T0: r0.T0 }); note = `Simulated data from the States of Matter demo, Beaker view (${s.name}, ${r0.m0} g, ${r0.W} W).`; }
     const lines = txt.trim().split('\n').filter((l) => l[0] !== '#'), split = (l) => l.split(',');
@@ -1018,7 +1489,7 @@ table.rows td input { width: 7ch; font: inherit; font-family: var(--font-mono); 
   function renderRows() {
     const v = S.view, rows = S.rows[v], tb = $('rowsTbl').querySelector('tbody');
     $('rowsTbl').querySelector('thead').innerHTML = `<tr>${COLS[v].map((c) => `<th>${c}</th>`).join('')}<th><span class="sr">Delete</span></th></tr>`;
-    tb.innerHTML = rows.length ? rows.map((r, i) => `<tr><td>${i + 1}</td>${(v === 'atoms' ? [r.Q, r.T, r.U, `${r.s} · ${r.l} · ${r.v}`] : [r.t, r.T, r.m]).map((c) => `<td class="mono">${c}</td>`).join('')}<td><button type="button" data-del="${i}" aria-label="Delete row ${i + 1}">×</button></td></tr>`).join('')
+    tb.innerHTML = rows.length ? rows.map((r, i) => `<tr><td>${i + 1}</td>${(v === 'atoms' ? [r.Q, r.T, r.U, `${r.s} · ${r.l} · ${r.v}`] : v === 'phase' ? [r.T, r.P, r.ph] : v === 'vapor' ? [r.T, r.p, r.rh] : [r.t, r.T, r.m]).map((c) => `<td class="mono">${c}</td>`).join('')}<td><button type="button" data-del="${i}" aria-label="Delete row ${i + 1}">×</button></td></tr>`).join('')
       : `<tr><td class="empty" colspan="${COLS[v].length + 1}">No readings yet. Start the run and record a reading every so often.</td></tr>`;
   }
   $('rowsTbl').addEventListener('click', (e) => { const b = e.target.closest('[data-del]'); if (b) { S.rows[S.view].splice(+b.dataset.del, 1); renderRows(); } });
@@ -1045,6 +1516,20 @@ table.rows td input { width: 7ch; font: inherit; font-family: var(--font-mono); 
   /* what the picture shows now, for a screen reader (VD.describe): the atoms under the piston or the beaker on the hot plate; Blind hides the heating curve and the energy split */
   const smSay = () => {
     const out = [], mv = (t) => (S.run ? { t, live: false } : t);
+    if (S.view === 'phase') {
+      const s = PHASE[ph.sub], tr = transitions(ph.sub, ph.P);
+      out.push(`The phase diagram of ${s.name.toLowerCase()}: pressure on a log scale against temperature.`, `The dot is at ${f(ph.T, 1)} K and ${fmtP(ph.P)}.`, `The sample is ${ph.at ? phKind(ph.at.k, ph.at.up) : phaseAt(ph.sub, ph.T, ph.P) === 'super' ? 'a supercritical fluid' : PHASE_NAME[phaseAt(ph.sub, ph.T, ph.P)]}.`,
+        S.blind ? '' : tr.subl != null ? `At this pressure it sublimes at ${f(tr.subl, 1)} K.` : `At this pressure it melts at ${tr.melt == null ? 'no temperature shown' : f(tr.melt, 1) + ' K'} and ${tr.boil == null ? 'does not boil' : 'boils at ' + f(tr.boil, 1) + ' K'}.`,
+        S.run ? (ph.heat > 0 ? 'Heating.' : 'Cooling.') : 'Paused.');
+      return out;
+    }
+    if (S.view === 'vapor') {
+      const ps = psat(vp.T), sealed = vp.jar === 'sealed';
+      out.push(sealed ? 'A sealed jar of air over water.' : 'An open pot of water.', mv(`Temperature ${f(vp.T - 273.15, 1)} °C.`),
+        sealed ? mv(`Vapor pressure ${f(vp.p / 1000, 3)} kPa, ${S.blind ? '' : f(100 * vp.p / ps, 0) + ' percent relative humidity'}.`) : mv(`The vapor pressure of the water is ${f(ps / 1000, 2)} kPa; outside ${f(vp.Pout / 1000, 1)} kPa.`),
+        vp.boil ? 'The water is boiling.' : '', S.run ? 'Running.' : 'Paused.');
+      return out;
+    }
     if (S.view === 'atoms') {
       const md = S.md, av = S.avg, p = S.phAvg.map((v) => Math.round(100 * v));
       out.push(`${md.N} argon atoms in a column under a weighted piston, with a heater in the floor.`, `The piston presses down with ${S.Patm} atm.`,
@@ -1068,7 +1553,7 @@ table.rows td input { width: 7ch; font: inherit; font-family: var(--font-mono); 
   if (q.get('view') === '3d' || (q.get('view') !== 'flat' && window.VD3 && !VD3.lowPower())) setDim('3d');
   /* test hook: run the atoms n steps without drawing (phases refreshed every 200 steps), then draw once */
   const fast = (n) => { for (let k = 0; k < n; k += 200) { advanceAtoms(Math.min(200, n - k)); S.ph = mdPhases(S.md); const sh = shares(S.ph); S.phAvg = S.phAvg.map((v, j) => v + (sh[j] - v) * 0.5); } S.nb = mdBonds(S.md); redraw(); };
-  window.__sm = { S, mdStep, setView, applyPreset, setRun, redraw, setDim, fast };
+  window.__sm = { S, mdStep, setView, applyPreset, setRun, redraw, setDim, fast, ph, vp, phAdvance, vpAdvance, phNew, vpNew, PHASE, phaseAt, transitions, psat, boilingPoint, dewPoint, airPressure, vEnv };
   requestAnimationFrame(frame);
 })();
 </script>

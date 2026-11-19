@@ -136,6 +136,8 @@ VDI18N.add('es', 'demo/millikan', {
   "Aún no hay gotas registradas.",
 "<span>Blind: hide r, q and the lines at whole numbers of e (work them out first)</span>":
   "<span>A ciegas: ocultar r, q y las líneas en números enteros de e (calcúlalos primero)</span>",
+"<span>Hide q/e and the lines at whole numbers of e (find e yourself)</span>":
+  "<span>Ocultar q/e y las líneas en números enteros de e (encuentra e por tu cuenta)</span>",
 "<span>Work out r and q with plain Stokes drag (no slip correction)</span>":
   "<span>Calcular r y q con el arrastre de Stokes simple (sin corrección por deslizamiento)</span>",
 "<span>Show the followed drop's true charge (to check your work)</span>":

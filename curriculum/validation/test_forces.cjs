@@ -2,7 +2,7 @@
 // Forces and Friction: Newton's second law on a ramp with Coulomb friction, a hanging mass, the timer and the μk fit.
 const assert = require('node:assert');
 const { core } = require('./demo_source.cjs');
-const c = core('forces', 'G,LEN,GATE_D,FF_VERSION,forces,step,workStep,gateTime,slipAngle,fitLine,readingsCSV,C_WOOD,frictionPower,warmBound,heatPic,tackle,tackleSheaves');
+const c = core('forces', 'G,LEN,GATE_D,FF_VERSION,forces,step,workStep,gateTime,slipAngle,fitLine,readingsCSV,C_WOOD,frictionPower,warmBound,heatPic,tackle,tackleSheaves,machine,machineCSV,frictionCircle,PIN_R,SHEAVE_R,MACH_RISE,LEVER_SWING');
 let n = 0;
 const near = (a, b, tol, w) => assert(Math.abs(a - b) <= tol, `${w || ''}: expected ${b}, got ${a}`);
 function group(name, f) { f(); n++; console.log('PASS', name); }
@@ -106,6 +106,32 @@ group('block and tackle: n strands at tension F lift n F; mg/n holds it; work in
   for (let k = 1; k <= 6; k++) { const s = c.tackleSheaves(k); assert.equal(s.up.length + s.lo.length, k); assert.equal(s.tied, k % 2 ? 'lower' : 'upper'); }
   assert.deepEqual(c.tackleSheaves(4), { up: [[0, 1], [2, 3]], lo: [[1, 2], [3, 4]], tied: 'upper' });
   assert.deepEqual(c.tackleSheaves(1), { up: [[0, 1]], lo: [], tied: 'lower' });
+});
+
+group('simple machines: IMA from geometry, AMA = mg/F_in, efficiency = AMA/IMA = W_out/W_in; ideal when frictionless', () => {
+  const q = { m: 10, n: 4, Lin: 1.2, Lout: 0.3, ra: 20, R: 0.4, r: 0.1, mu: 0 };
+  const L = c.machine('lever', q); near(L.IMA, 4, 1e-12); near(L.AMA, 4, 1e-12); near(L.Fin, 98.1 / 4, 1e-12); near(L.dout, 0.3 * 0.4, 1e-15); near(L.din, 1.2 * 0.4, 1e-15);
+  const P = c.machine('pulleys', q); near(P.IMA, 4, 1e-12); near(P.AMA, 4, 1e-12); near(P.din, 4 * c.MACH_RISE, 1e-12);
+  const th = 20 * Math.PI / 180, R = c.machine('ramp', q); near(R.IMA, 1 / Math.sin(th), 1e-12); near(R.Fin, 98.1 * Math.sin(th), 1e-12); near(R.eff, 1, 1e-12);
+  const Wh = c.machine('wheel', q); near(Wh.IMA, 4, 1e-12); near(Wh.Fin, 98.1 / 4, 1e-12);
+  for (const k of ['lever', 'pulleys', 'ramp', 'wheel']) { const M = c.machine(k, { ...q, mu: 0.3 }); near(M.Win, M.Wout + M.heat, 1e-9); near(M.eff, M.Wout / M.Win, 1e-12); assert(M.eff <= 1 + 1e-12 && M.heat >= -1e-12, k); near(M.AMA, M.Fout / M.Fin, 1e-12); }
+  near(c.machine('lever', { ...q, mu: 0.5 }).eff, 1, 1e-12, 'knife edge: no friction');
+});
+group('simple machines with friction: ramp F = mg(sin θ + μ cos θ); pulley and wheel heat = pin friction torque × turn', () => {
+  const q = { m: 10, n: 4, Lin: 1.2, Lout: 0.3, ra: 20, R: 0.4, r: 0.1, mu: 0.3 }, th = 20 * Math.PI / 180;
+  const R = c.machine('ramp', q); near(R.Fin, 98.1 * (Math.sin(th) + 0.3 * Math.cos(th)), 1e-12); near(R.heat, 0.3 * 98.1 * Math.cos(th) * c.LEN, 1e-9, 'μ N × distance');
+  near(R.eff, Math.sin(th) / (Math.sin(th) + 0.3 * Math.cos(th)), 1e-12);
+  const rf = c.frictionCircle(0.3); near(rf, c.PIN_R * 0.3 / Math.sqrt(1.09), 1e-15);
+  for (const n of [1, 2, 3, 4, 5, 6]) {
+    const P = c.machine('pulleys', { ...q, n }), r = (c.SHEAVE_R - rf) / (c.SHEAVE_R + rf), T = (j) => P.Fin * Math.pow(r, j);
+    let up = 0; for (let j = 1; j <= n; j++) up += T(j); near(up, 98.1, 1e-9, 'strands hold the load');
+    /* sheave j (between strands j − 1 and j) is reached n − j + 1 turns from the tied end, so the rope runs over it (n − j + 1) d_out */
+    let heat = 0; for (let j = 1; j <= n; j++) heat += rf * (T(j - 1) + T(j)) * (n - j + 1) * P.dout / c.SHEAVE_R;
+    near(heat, P.heat, 1e-9, 'pulley heat, n = ' + n);
+  }
+  const Wh = c.machine('wheel', q); near(Wh.Fin * q.R, 98.1 * q.r + rf * (Wh.Fin + 98.1), 1e-9, 'torques'); near(Wh.heat, rf * (Wh.Fin + 98.1) * Wh.dout / q.r, 1e-9, 'bearing heat');
+  const L = c.machineCSV([{ kind: 'ramp', set: 'θ = 20.0°, L = 3.0 m', m: '10.0', mu: '0.30', Fin: '61.20', din: '3.000', Fout: '98.10', dout: '1.026' }], { version: 'x' }).trim().split('\n');
+  assert.match(L[0], /\(simulated data\)$/); const h = L.indexOf('row,machine,setting,m_kg,mu,F_in_N,d_in_m,F_out_N,d_out_m'); assert(h > 0); assert.equal(L[h + 1], '1,Ramp,"θ = 20.0°, L = 3.0 m",10.0,0.30,61.20,3.000,98.10,1.026');
 });
 
 console.log(`${n} forces test groups passed`);

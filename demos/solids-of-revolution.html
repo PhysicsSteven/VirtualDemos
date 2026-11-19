@@ -1,0 +1,780 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="lib/theme.js"></script>
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
+<script src="lib/vdmath.js"></script>
+<script src="lib/vd3.js"></script>
+<script src="lib/vd3kit.js"></script>
+<title>Solids of Revolution</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css: the curve and slice colors, the formula boxes, the 3D view beside the region */
+:root { --fg-f: #8f5000; --fg-g: #0f766e; --slice: #c2410c; --slice2: #ea7a2f; --axisline: #be123c; --ghost: #a8a29e; --exact: #7c3aed; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --fg-f: #e8a440; --fg-g: #5eead4; --slice: #fb923c; --slice2: #fdba74; --axisline: #fb7185; --ghost: #78716c; --exact: #c4b5fd; } }
+:root[data-theme="dark"] { --fg-f: #e8a440; --fg-g: #5eead4; --slice: #fb923c; --slice2: #fdba74; --axisline: #fb7185; --ghost: #78716c; --exact: #c4b5fd; }
+.stage { position: relative; display: flex; flex-direction: column; min-height: min-content; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.stage-ctl .note { flex: 1 1 100%; font-size: 0.8rem; color: var(--muted); }
+.stage-ctl .nrow { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: 0.86rem; }
+.stage-ctl input[type="number"], .fbar input.num { width: 5.4em; font: inherit; font-size: 0.86rem; font-family: var(--font-mono); padding: 3px 6px; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; }
+.fbar { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; padding: 10px 12px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.fbar .frow { flex: 1 1 100%; display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; font-size: 0.88rem; }
+.fbar .frow[hidden], .fbar [hidden] { display: none; }
+.fbar label.fn { font-family: var(--font-mono); font-weight: 600; font-size: 1.05rem; white-space: nowrap; }
+.fbar label.fn.f { color: var(--fg-f); } .fbar label.fn.g { color: var(--fg-g); }
+.fbar input[type="text"] { flex: 1 1 200px; min-width: 0; font-family: var(--font-mono); font-size: 1.05rem; padding: 6px 10px; color: var(--ink); background: var(--canvas); border: 2px solid var(--line2, var(--line)); border-radius: 8px; }
+.fbar input.lim { flex: 0 0 6.5em; width: 6.5em; font-size: 0.95rem; }
+.fbar select { font: inherit; font-size: 0.86rem; padding: 3px 6px; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; }
+.fbar input:focus { outline: none; border-color: var(--fg-f); }
+.fbar .bad { border-color: var(--red) !important; }
+.fbar .status { flex: 1 1 100%; font-size: 0.84rem; color: var(--muted); min-height: 1.3em; }
+.fbar .status.bad { color: var(--red); border: 0; }
+.views { position: relative; flex: 1 1 auto; display: flex; min-height: 300px; }
+.scene3, .pane { position: relative; flex: 1 1 50%; min-width: 0; }
+.scene3 { border-right: 1px solid var(--line); }
+.scene3[hidden] { display: none; }
+.scene3 canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; outline: none; }
+.scene3 .cap { position: absolute; left: 10px; top: 8px; z-index: 2; font: 600 0.8rem var(--font-mono); color: var(--ink); pointer-events: none; text-shadow: 0 0 3px var(--canvas), 0 0 3px var(--canvas); }
+.scene3 .hint3 { position: absolute; left: 10px; bottom: 8px; z-index: 2; font-size: 0.75rem; color: var(--muted); pointer-events: none; }
+.pane canvas, .lower canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; outline: none; touch-action: none; cursor: grab; }
+.lower { position: relative; flex: none; height: 200px; border-top: 1px solid var(--line); background: var(--canvas); }
+.status3 { font-size: 0.8rem; color: var(--muted); }
+dl.formulas { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 6px 10px; margin: 0; }
+dl.formulas dt { font-family: var(--font-mono); font-weight: 600; white-space: nowrap; }
+dl.formulas dd { margin: 0; font-family: var(--font-mono); font-size: 0.88rem; overflow-wrap: anywhere; }
+.chips .chips-label { flex: 1 1 100%; font-size: 0.78rem; font-weight: 700; color: var(--muted); margin-top: 4px; }
+.rail ul.typing { margin: 6px 0 0; padding-left: 1.2em; font-size: 0.86rem; color: var(--muted); }
+.rail ul.typing code { font-family: var(--font-mono); color: var(--ink); }
+.seg.wrap { flex-wrap: wrap; }
+@media (min-width: 821px) { .bench > .stage { align-self: start; min-height: max(700px, 100%); } }
+@media (max-width: 820px) { .views { flex-direction: column; min-height: 0; flex: none; } .scene3 { height: 300px; flex: none; border-right: 0; border-bottom: 1px solid var(--line); } .pane { height: 280px; flex: none; } .lower { height: 190px; } }
+</style>
+<link rel="stylesheet" id="vd-paper" href="lib/paper.css">
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Solids of Revolution</h1>
+      <p>Spin a region under any curve around an axis and slice the solid into disks, washers or shells you can count. Raise n and the sum closes in on the integral. Stand squares or semicircles on a base, lay a chain along a curve for its length and bands for its surface area, and add up a cone's or a sphere's moment of inertia slice by slice.</p>
+    </div>
+    <div class="bar-right">
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/solids-of-revolution.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/solids-of-revolution.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM12 2h1v1h-1zM14 2h7v1h-7zM23 2h3v1h-3zM30 2h1v1h-1zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM14 3h4v1h-4zM20 3h1v1h-1zM23 3h2v1h-2zM27 3h1v1h-1zM29 3h2v1h-2zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h1v1h-1zM14 4h1v1h-1zM16 4h2v1h-2zM22 4h2v1h-2zM28 4h3v1h-3zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h2v1h-2zM13 5h1v1h-1zM16 5h4v1h-4zM21 5h1v1h-1zM24 5h1v1h-1zM27 5h2v1h-2zM30 5h1v1h-1zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h1v1h-1zM12 6h2v1h-2zM15 6h1v1h-1zM18 6h2v1h-2zM21 6h3v1h-3zM25 6h1v1h-1zM27 6h2v1h-2zM30 6h1v1h-1zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h1v1h-1zM14 7h1v1h-1zM16 7h2v1h-2zM19 7h1v1h-1zM23 7h2v1h-2zM27 7h4v1h-4zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h3v1h-3zM15 9h2v1h-2zM18 9h6v1h-6zM26 9h1v1h-1zM28 9h1v1h-1zM2 10h1v1h-1zM4 10h5v1h-5zM13 10h2v1h-2zM16 10h1v1h-1zM18 10h1v1h-1zM24 10h2v1h-2zM27 10h3v1h-3zM32 10h5v1h-5zM2 11h1v1h-1zM6 11h1v1h-1zM9 11h3v1h-3zM13 11h2v1h-2zM17 11h1v1h-1zM20 11h3v1h-3zM25 11h1v1h-1zM31 11h1v1h-1zM33 11h1v1h-1zM36 11h2v1h-2zM5 12h1v1h-1zM7 12h2v1h-2zM14 12h7v1h-7zM22 12h2v1h-2zM26 12h1v1h-1zM28 12h3v1h-3zM32 12h3v1h-3zM36 12h3v1h-3zM2 13h6v1h-6zM12 13h1v1h-1zM14 13h4v1h-4zM20 13h1v1h-1zM22 13h2v1h-2zM32 13h3v1h-3zM38 13h1v1h-1zM2 14h4v1h-4zM7 14h4v1h-4zM13 14h5v1h-5zM19 14h1v1h-1zM21 14h2v1h-2zM24 14h15v1h-15zM4 15h4v1h-4zM9 15h3v1h-3zM13 15h1v1h-1zM15 15h2v1h-2zM18 15h1v1h-1zM22 15h1v1h-1zM24 15h2v1h-2zM30 15h1v1h-1zM33 15h1v1h-1zM2 16h1v1h-1zM4 16h1v1h-1zM8 16h1v1h-1zM13 16h1v1h-1zM16 16h3v1h-3zM20 16h1v1h-1zM22 16h2v1h-2zM27 16h4v1h-4zM32 16h4v1h-4zM38 16h1v1h-1zM2 17h1v1h-1zM9 17h2v1h-2zM17 17h2v1h-2zM21 17h5v1h-5zM31 17h1v1h-1zM33 17h2v1h-2zM37 17h1v1h-1zM3 18h1v1h-1zM5 18h1v1h-1zM7 18h2v1h-2zM10 18h4v1h-4zM15 18h3v1h-3zM20 18h2v1h-2zM24 18h1v1h-1zM26 18h2v1h-2zM29 18h4v1h-4zM34 18h1v1h-1zM36 18h1v1h-1zM38 18h1v1h-1zM13 19h2v1h-2zM17 19h2v1h-2zM21 19h3v1h-3zM25 19h1v1h-1zM30 19h1v1h-1zM37 19h1v1h-1zM3 20h1v1h-1zM5 20h2v1h-2zM8 20h1v1h-1zM16 20h1v1h-1zM23 20h2v1h-2zM28 20h2v1h-2zM33 20h3v1h-3zM37 20h2v1h-2zM3 21h1v1h-1zM6 21h1v1h-1zM9 21h1v1h-1zM11 21h2v1h-2zM14 21h1v1h-1zM16 21h1v1h-1zM18 21h1v1h-1zM20 21h1v1h-1zM22 21h4v1h-4zM28 21h3v1h-3zM32 21h1v1h-1zM38 21h1v1h-1zM2 22h1v1h-1zM7 22h3v1h-3zM11 22h1v1h-1zM13 22h1v1h-1zM15 22h2v1h-2zM19 22h1v1h-1zM24 22h6v1h-6zM31 22h2v1h-2zM34 22h3v1h-3zM3 23h3v1h-3zM9 23h1v1h-1zM12 23h1v1h-1zM18 23h2v1h-2zM21 23h1v1h-1zM25 23h1v1h-1zM27 23h2v1h-2zM30 23h2v1h-2zM35 23h1v1h-1zM37 23h1v1h-1zM5 24h2v1h-2zM8 24h3v1h-3zM12 24h1v1h-1zM14 24h2v1h-2zM17 24h1v1h-1zM19 24h1v1h-1zM22 24h1v1h-1zM24 24h1v1h-1zM26 24h1v1h-1zM28 24h4v1h-4zM33 24h3v1h-3zM37 24h2v1h-2zM3 25h1v1h-1zM5 25h1v1h-1zM10 25h2v1h-2zM14 25h12v1h-12zM28 25h2v1h-2zM31 25h1v1h-1zM33 25h2v1h-2zM37 25h1v1h-1zM2 26h4v1h-4zM8 26h2v1h-2zM17 26h2v1h-2zM21 26h2v1h-2zM24 26h5v1h-5zM31 26h4v1h-4zM36 26h2v1h-2zM2 27h2v1h-2zM5 27h3v1h-3zM12 27h3v1h-3zM17 27h1v1h-1zM20 27h4v1h-4zM25 27h1v1h-1zM28 27h1v1h-1zM30 27h1v1h-1zM33 27h1v1h-1zM2 28h1v1h-1zM7 28h4v1h-4zM12 28h1v1h-1zM17 28h2v1h-2zM26 28h5v1h-5zM33 28h2v1h-2zM37 28h2v1h-2zM2 29h1v1h-1zM4 29h2v1h-2zM7 29h1v1h-1zM11 29h4v1h-4zM17 29h1v1h-1zM23 29h1v1h-1zM25 29h1v1h-1zM29 29h1v1h-1zM31 29h4v1h-4zM38 29h1v1h-1zM2 30h1v1h-1zM4 30h1v1h-1zM6 30h5v1h-5zM13 30h1v1h-1zM17 30h1v1h-1zM19 30h1v1h-1zM21 30h1v1h-1zM26 30h3v1h-3zM30 30h8v1h-8zM10 31h2v1h-2zM13 31h2v1h-2zM16 31h3v1h-3zM20 31h3v1h-3zM25 31h2v1h-2zM29 31h2v1h-2zM34 31h2v1h-2zM2 32h7v1h-7zM11 32h1v1h-1zM17 32h1v1h-1zM20 32h1v1h-1zM22 32h1v1h-1zM24 32h1v1h-1zM26 32h2v1h-2zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM36 32h3v1h-3zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h5v1h-5zM17 33h2v1h-2zM23 33h1v1h-1zM25 33h1v1h-1zM30 33h1v1h-1zM34 33h2v1h-2zM37 33h2v1h-2zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h5v1h-5zM16 34h1v1h-1zM20 34h2v1h-2zM25 34h1v1h-1zM27 34h8v1h-8zM36 34h2v1h-2zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h1v1h-1zM12 35h1v1h-1zM17 35h2v1h-2zM21 35h2v1h-2zM25 35h1v1h-1zM30 35h3v1h-3zM34 35h1v1h-1zM36 35h1v1h-1zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM10 36h2v1h-2zM13 36h1v1h-1zM16 36h1v1h-1zM20 36h1v1h-1zM24 36h1v1h-1zM28 36h2v1h-2zM31 36h1v1h-1zM37 36h2v1h-2zM2 37h1v1h-1zM8 37h1v1h-1zM11 37h3v1h-3zM15 37h1v1h-1zM18 37h1v1h-1zM21 37h3v1h-3zM28 37h4v1h-4zM34 37h1v1h-1zM38 37h1v1h-1zM2 38h7v1h-7zM10 38h1v1h-1zM12 38h3v1h-3zM19 38h1v1h-1zM21 38h1v1h-1zM24 38h1v1h-1zM26 38h3v1h-3zM32 38h1v1h-1zM34 38h5v1h-5z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl" id="strip">
+        <button type="button" class="spin attn" id="play" data-vd-key="play">Play</button>
+        <button type="button" class="btn" id="reset" title="Put n back where this setup started">Reset</button>
+        <div class="seg wrap" role="group" aria-label="Method" id="methodSeg">
+          <button type="button" data-m="disks" aria-pressed="true">Disks and washers</button>
+          <button type="button" data-m="shells" aria-pressed="false">Shells</button>
+          <button type="button" data-m="cross" aria-pressed="false">Cross sections</button>
+          <button type="button" data-m="arc" aria-pressed="false">Arc length</button>
+          <button type="button" data-m="surface" aria-pressed="false">Surface area</button>
+        </div>
+        <div class="nrow"><label for="nIn">Slices n</label><input type="number" id="nIn" min="1" max="256" step="1" value="6">
+          <button type="button" class="btn" id="nDown" aria-label="One slice fewer">−1</button><button type="button" class="btn" id="nUp" aria-label="One more slice">+1</button><button type="button" class="btn" id="nTwice">× 2</button></div>
+        <div class="seg" role="group" aria-label="Add up" id="whatSeg">
+          <button type="button" data-w="vol" aria-pressed="true">Volume</button>
+          <button type="button" data-w="inertia" aria-pressed="false">Moment of inertia</button>
+        </div>
+        <div class="seg dimseg" role="group" aria-label="Perspective" id="dimSeg"><button type="button" data-dim="3d" aria-pressed="false">3D</button><button type="button" data-dim="flat" aria-pressed="true">Flat</button></div>
+        <span class="note" id="note"></span>
+      </div>
+      <div class="fbar">
+        <div class="frow">
+          <label for="fx" class="fn f" translate="no">f(x) =</label>
+          <input type="text" id="fx" translate="no" spellcheck="false" autocomplete="off" autocapitalize="off" autocorrect="off" aria-describedby="fxStatus" value="4 + 1.5sin(x/2.5)">
+        </div>
+        <div class="frow" id="rowG">
+          <label for="gx" class="fn g" translate="no">g(x) =</label>
+          <input type="text" id="gx" translate="no" spellcheck="false" autocomplete="off" autocapitalize="off" autocorrect="off" aria-describedby="fxStatus" value="0">
+        </div>
+        <div class="frow">
+          <label for="aIn">From a =</label><input type="text" class="lim" id="aIn" value="0" translate="no" spellcheck="false" autocomplete="off">
+          <label for="bIn">to b =</label><input type="text" class="lim" id="bIn" value="25" translate="no" spellcheck="false" autocomplete="off">
+          <label for="axisSel">Turn about</label>
+          <select id="axisSel"><option value="h">the line y = k</option><option value="v">the line x = k</option></select>
+          <label for="kIn" translate="no">k =</label><input type="text" class="num" id="kIn" value="0" translate="no" spellcheck="false" autocomplete="off">
+          <span id="shapeWrap" hidden><label for="shapeSel">Cross section</label>
+            <select id="shapeSel"><option value="square">Square</option><option value="semi">Semicircle</option><option value="tri">Equilateral triangle</option></select></span>
+          <span id="massWrap" hidden><label for="mIn">Mass M (kg) =</label><input type="text" class="num" id="mIn" value="2" translate="no" spellcheck="false" autocomplete="off"></span>
+        </div>
+        <div class="status" id="fxStatus" role="status" aria-live="polite"></div>
+      </div>
+      <div class="views" id="views">
+        <div class="scene3" id="scene3" hidden><div class="cap" id="cap3" aria-hidden="true"></div><div class="hint3" id="hint3" aria-hidden="true">Drag to turn, scroll to zoom</div></div>
+        <div class="pane" id="pane">
+          <canvas id="can" tabindex="0" role="img" aria-label="The region between f and g, the axis it turns about and the slices, drawn in the plane. Up and down arrows change n; plus and minus zoom; Space plays or pauses."></canvas>
+        </div>
+      </div>
+      <div class="lower" id="lower">
+        <canvas id="low" tabindex="0" role="img" aria-label="The sum of n slices against n on a log axis, closing in on the integral. Up and down arrows change n; plus and minus magnify the sums about the integral."></canvas>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+        <p class="status3" id="status3"></p>
+      </section>
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <span class="chips-label">In physics</span>
+          <button type="button" data-p="vase" aria-pressed="true">The volume of a vase</button>
+          <button type="button" data-p="bowl" aria-pressed="false">Water in a round bowl</button>
+          <button type="button" data-p="coneI" aria-pressed="false">Moment of inertia of a solid cone</button>
+          <button type="button" data-p="sphereI" aria-pressed="false">Moment of inertia of a solid sphere</button>
+          <button type="button" data-p="coneShellI" aria-pressed="false">The cone again, by shells</button>
+          <button type="button" data-p="catenary" aria-pressed="false">Length of a hanging cable</button>
+          <span class="chips-label">Volumes</span>
+          <button type="button" data-p="diskSqrt" aria-pressed="false">Disks: √x about the x axis</button>
+          <button type="button" data-p="washer" aria-pressed="false">Washers: between x and x²</button>
+          <button type="button" data-p="aroundLine" aria-pressed="false">Washers about the line y = −1</button>
+          <button type="button" data-p="shellsY" aria-pressed="false">Shells: 2x − x² about the y axis</button>
+          <button type="button" data-p="shellsLine" aria-pressed="false">Shells about the line x = −1</button>
+          <button type="button" data-p="crossSq" aria-pressed="false">Squares on a disk</button>
+          <button type="button" data-p="crossSemi" aria-pressed="false">Semicircles on a disk: a hemisphere</button>
+          <button type="button" data-p="crossTri" aria-pressed="false">Triangles on a parabola</button>
+          <span class="chips-label">Length and area</span>
+          <button type="button" data-p="arc" aria-pressed="false">Arc length of x^(3/2)</button>
+          <button type="button" data-p="coneSurf" aria-pressed="false">Surface of a cone: bands are exact</button>
+          <button type="button" data-p="sphereArea" aria-pressed="false">Surface of a sphere: 4πR²</button>
+          <button type="button" data-p="horn" aria-pressed="false">Gabriel's horn: finite volume, endless surface</button>
+        </div>
+        <details class="more" open><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+      </section>
+      <section>
+        <h2>Formulas</h2>
+        <dl class="formulas" id="formulas" translate="no"></dl>
+      </section>
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the integral and the errors, to predict them first</span></label>
+        <details class="more"><summary>What you can type</summary>
+          <ul class="typing">
+            <li>Use <code>x</code> as the variable; <code>+ − * / ^</code> and parentheses; <code>2x</code> and <code>3sin(x)</code> multiply.</li>
+            <li><code>sin cos tan</code>, <code>exp</code> or <code>e^x</code>, <code>ln</code>, <code>sqrt</code>, <code>cosh</code>, <code>abs</code>, <code>pi</code></li>
+            <li>The limits and k take a number or an expression: <code>pi</code>, <code>sqrt(84)</code>, <code>-1</code>.</li>
+          </ul>
+        </details>
+        <details class="more"><summary>How it works</summary>
+          <p class="hint">The boxes are read by a small parser (demos/lib/vdmath.js); nothing you type is run as code. The interval from a to b is cut into n slices of width Δx = (b − a)/n. A disk or washer takes its radii at the middle of its slice, R and r measured from the line y = k: π(R² − r²)Δx. A shell around the line x = k takes its radius and height at the middle: 2π r h Δx. A cross section takes its side s = f − g at the middle: s², πs²/8 or (√3/4)s², times Δx.</p>
+          <p class="hint">The arc length chain joins the points of the curve at the ends of the slices, Σ √(Δx² + Δy²). Each surface band is the frustum of a cone through two neighboring points, π(r₁ + r₂) times the chord. The integrals they close in on are computed by 10 point Gauss–Legendre quadrature on 400 pieces, good to about 12 significant figures for smooth curves.</p>
+          <p class="hint">Moment of inertia about the axis: a uniform solid of mass M has density ρ = M/V. A thin washer adds ½ρπ(R⁴ − r⁴)Δx and a thin shell 2πρ r³ h Δx. A sphere's or cone's I is then compared with MR², R its largest radius.</p>
+          <p class="hint">Disks and washers here turn about a horizontal line y = k, and shells about a vertical line x = k, so each slice stays a function of x.</p>
+        </details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  /* Volumes by slicing, disks, washers and shells, arc length, surface area and moments of inertia, runnable in Node
+     (curriculum/validation/test_solids_of_revolution.cjs). OpenStax Calculus Vol 1 6.2, 6.3 and 6.4; University Physics Vol 1 10.5.
+     P = { f, g, fp, axis: 'h' (the line y = k) or 'v' (the line x = k), k, shape, a, b }: f the top curve, g the bottom one,
+     fp the slope of f. Each method adds n slices, sampled at the middle of each (the chain and the bands use the end points). */
+  const SHAPES = { square: (s) => s * s, semi: (s) => Math.PI * s * s / 8, tri: (s) => Math.sqrt(3) / 4 * s * s };
+  /* the outer and inner radius of the washer at x, turning about y = k: no hole when the region reaches across the axis */
+  function radii(P, x) {
+    const u = P.f(x) - P.k, w = P.g(x) - P.k, R = Math.max(Math.abs(u), Math.abs(w));
+    return { R, r: u * w >= 0 ? Math.min(Math.abs(u), Math.abs(w)) : 0 };
+  }
+  /* what one slice adds per unit of x (the integrand), at x: the method's cross section, or the moment of inertia per unit
+     density and unit x (½π(R⁴ − r⁴) for a washer, 2π r³ h for a shell) */
+  function density(method, P, x) {
+    if (method === 'disks') { const q = radii(P, x); return Math.PI * (q.R * q.R - q.r * q.r); }
+    if (method === 'shells') return 2 * Math.PI * Math.abs(x - P.k) * (P.f(x) - P.g(x));
+    if (method === 'cross') { const s = Math.abs(P.f(x) - P.g(x)); return SHAPES[P.shape](s); }
+    if (method === 'arc') { const d = P.fp(x); return Math.sqrt(1 + d * d); }
+    if (method === 'surface') { const d = P.fp(x); return 2 * Math.PI * (P.axis === 'h' ? Math.abs(P.f(x) - P.k) : Math.abs(x - P.k)) * Math.sqrt(1 + d * d); }
+    if (method === 'Idisks') { const q = radii(P, x); return Math.PI / 2 * (Math.pow(q.R, 4) - Math.pow(q.r, 4)); }
+    if (method === 'Ishells') { const r = Math.abs(x - P.k); return 2 * Math.PI * r * r * r * (P.f(x) - P.g(x)); }
+    return NaN;
+  }
+  /* the sum of n slices from a to b */
+  function sliceSum(method, P, n) {
+    const a = P.a, b = P.b, h = (b - a) / n; let s = 0;
+    if (method === 'arc' || method === 'surface') {
+      let x0 = a, y0 = P.f(a);
+      for (let i = 1; i <= n; i++) {
+        const x1 = i === n ? b : a + i * h, y1 = P.f(x1), L = Math.hypot(x1 - x0, y1 - y0);
+        if (method === 'arc') s += L;
+        else { const r0 = P.axis === 'h' ? Math.abs(y0 - P.k) : Math.abs(x0 - P.k), r1 = P.axis === 'h' ? Math.abs(y1 - P.k) : Math.abs(x1 - P.k); s += Math.PI * (r0 + r1) * L; }
+        x0 = x1; y0 = y1;
+      }
+      return s;
+    }
+    for (let i = 0; i < n; i++) s += density(method, P, a + (i + 0.5) * h) * h;
+    return s;
+  }
+  /* the integral the sums close in on: 10 point Gauss–Legendre on 400 pieces (no end points are used, so an infinite slope at an
+     end, as for a sphere's edge, does no harm) */
+  const GX = [0.1488743389816312, 0.4333953941292472, 0.6794095682990244, 0.8650633666889845, 0.9739065285171717];
+  const GW = [0.2955242247147529, 0.2692667193099963, 0.2190863625159820, 0.1494513491505806, 0.0666713443086881];
+  function integral(method, P, pieces) {
+    const m = pieces || 400, h = (P.b - P.a) / m; let s = 0;
+    for (let i = 0; i < m; i++) {
+      const c = P.a + (i + 0.5) * h, r = h / 2;
+      for (let j = 0; j < 5; j++) s += GW[j] * (density(method, P, c - r * GX[j]) + density(method, P, c + r * GX[j])) * r;
+    }
+    return s;
+  }
+  /* the largest radius of the solid, for I in units of MR² (a point where f is not defined, like √(0.01 − x²) just past the
+     rounded end x = 0.1, is skipped) */
+  function maxRadius(method, P) {
+    let R = 0;
+    for (let i = 0; i <= 2000; i++) { const x = P.a + (P.b - P.a) * i / 2000, r = method === 'Ishells' || P.axis === 'v' ? Math.abs(x - P.k) : radii(P, x).R; if (isFinite(r)) R = Math.max(R, r); }
+    return R;
+  }
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  const VDI18N = window.VDI18N || { t: (s, o) => s.replace(/\{(\w+)\}/g, (m, k) => (o && k in o ? o[k] : m)) };
+  const M = VDMATH, fmt = M.fmt, sup = M.sup, PI = Math.PI;
+  /* every setup: the curves, limits, axis, method and n, the exact value of its sum (v, and how it reads), and its units */
+  const PRESETS = {
+    vase: { f: '4 + 1.5sin(x/2.5)', g: '0', a: '0', b: '25', axis: 'h', k: '0', m: 'disks', n: 6, units: { L: 'cm', V: 'cm³', what: 'A vase lying on its side: its radius f(x) in cm along its 25 cm length. The volume in cm³ is its capacity in mL.' },
+      ex: { v: PI * (400 + 30 * (1 - Math.cos(10)) + 2.25 * (12.5 - 2.5 * Math.sin(20) / 4)), t: null },
+      hint: 'A vase on its side, its profile f(x) = 4 + 1.5 sin(x/2.5) cm turned about its axis. Each slice is a disk of radius f at the middle of the slice, volume πf²Δx. Press Play to double the number of disks: the sum closes in on V = π∫f² dx = 1,514 cm³, so the vase holds about 1.51 L.' },
+    bowl: { f: '6', g: '10 - sqrt(100 - x^2)', a: '0', b: 'sqrt(84)', axis: 'v', k: '0', m: 'shells', n: 4, units: { L: 'cm', V: 'cm³', what: 'A hemispherical bowl of radius 10 cm filled 6 cm deep. Each shell is a ring of water around the center.' },
+      ex: { v: 288 * PI, t: 'πh²(R − h/3) = 288π' },
+      hint: 'A bowl shaped like half a sphere of radius R = 10 cm, filled to a depth h = 6 cm. The water is the region between the bowl, y = 10 − √(100 − x²), and the surface, y = 6, turned about the vertical center line: cylindrical shells of radius x and height 6 − g(x). They add to πh²(R − h/3) = 288π = 904.8 cm³, about 0.905 L.' },
+    coneI: { f: '0.1(1 - x/0.3)', g: '0', a: '0', b: '0.3', axis: 'h', k: '0', m: 'disks', what: 'inertia', n: 4, mass: '2', units: { L: 'm', V: 'm³', what: 'A uniform solid cone, radius R = 0.1 m and height 0.3 m, mass 2 kg, spinning about its axis.' },
+      exI: { v: 0.3, t: '3/10' },
+      hint: 'A solid cone spinning about its axis is a stack of thin disks. A disk of radius r and mass dm has I = ½ dm r², so the cone\'s I adds ½ρπr⁴Δx over the slices. The sum closes in on I = (3/10)MR² = 0.006 kg·m² for M = 2 kg and R = 0.1 m: less than a cylinder\'s ½MR², because the narrow slices near the tip put much of the mass at small radius.' },
+    sphereI: { f: 'sqrt(0.01 - x^2)', g: '0', a: '-0.1', b: '0.1', axis: 'h', k: '0', m: 'disks', what: 'inertia', n: 4, mass: '2', units: { L: 'm', V: 'm³', what: 'A uniform solid sphere of radius 0.1 m and mass 2 kg, spinning about a diameter.' },
+      exI: { v: 0.4, t: '2/5' },
+      hint: 'A solid sphere sliced into disks perpendicular to a diameter: the disk at x has radius √(R² − x²) and adds ½ρπ(R² − x²)²Δx to I. The sum closes in on I = (2/5)MR² = 0.008 kg·m² for M = 2 kg and R = 0.1 m, the value in every table of moments of inertia.' },
+    coneShellI: { f: '0.3(1 - x/0.1)', g: '0', a: '0', b: '0.1', axis: 'v', k: '0', m: 'shells', what: 'inertia', n: 4, mass: '2', units: { L: 'm', V: 'm³', what: 'The same cone, standing on its base: radius 0.1 m, height 0.3 m, mass 2 kg, spinning about its vertical axis.' },
+      exI: { v: 0.3, t: '3/10' },
+      hint: 'The same cone standing on its base, sliced into nested cylindrical shells instead. A shell of radius r, height h and thickness Δr has all its mass at distance r, so it adds r² dm = 2πρ r³ h Δr. Disks and shells cut the cone differently, and both close in on I = (3/10)MR².' },
+    catenary: { f: '10cosh(x/10) - 10', g: '0', a: '-10', b: '10', axis: 'h', k: '0', m: 'arc', n: 4, units: { L: 'm', V: 'm³', what: 'A cable hanging between two posts 20 m apart takes the shape of a catenary, y = c cosh(x/c), here with c = 10 m.' },
+      ex: { v: 20 * Math.sinh(1), t: '2c sinh(10/c)' },
+      hint: 'A flexible cable or chain hanging under its own weight takes the shape of a catenary, y = c cosh(x/c). Its length from −10 m to 10 m with c = 10 m is ∫√(1 + sinh²(x/10)) dx = 20 sinh 1 = 23.50 m. The chain of straight segments is always a bit short; doubling n cuts the shortfall by about 4.' },
+    diskSqrt: { f: 'sqrt(x)', g: '0', a: '0', b: '4', axis: 'h', k: '0', m: 'disks', n: 4, ex: { v: 8 * PI, t: '8π' },
+      hint: 'Turn the region under y = √x from 0 to 4 about the x axis. The disk at x has radius √x, so its area is πx: the disks grow linearly and their volumes add to π∫x dx = 8π = 25.13. Midpoint disks are exact here for every n, because π(√x)² is a straight line in x.' },
+    washer: { f: 'x', g: 'x^2', a: '0', b: '1', axis: 'h', k: '0', m: 'disks', n: 4, ex: { v: 2 * PI / 15, t: '2π/15' },
+      hint: 'The region between y = x and y = x² turned about the x axis leaves a hole: each slice is a washer with outer radius x and inner radius x². Its volume is π(R² − r²)Δx, not π(R − r)²Δx. They add to π∫(x² − x⁴) dx = 2π/15 = 0.4189.' },
+    aroundLine: { f: 'x^2', g: '0', a: '0', b: '1', axis: 'h', k: '-1', m: 'disks', n: 4, ex: { v: 13 * PI / 15, t: '13π/15' },
+      hint: 'Turn the region under y = x² about the line y = −1 instead of the x axis. Radii are now measured from y = −1: R = x² + 1 and r = 1, so every slice is a washer with a hole of radius 1. V = π∫((x² + 1)² − 1) dx = 13π/15 = 2.723.' },
+    shellsY: { f: '2x - x^2', g: '0', a: '0', b: '2', axis: 'v', k: '0', m: 'shells', n: 4, ex: { v: 8 * PI / 3, t: '8π/3' },
+      hint: 'Turn the arch y = 2x − x² about the y axis. Disks would need x as a function of y, which takes two branches; shells do not. The shell at x has radius x, height 2x − x² and thickness Δx: V = ∫2πx(2x − x²) dx = 8π/3 = 8.378.' },
+    shellsLine: { f: '2x - x^2', g: '0', a: '0', b: '2', axis: 'v', k: '-1', m: 'shells', n: 4, ex: { v: 16 * PI / 3, t: '16π/3' },
+      hint: 'The same arch turned about the line x = −1: each shell\'s radius is now x + 1, so the solid is wider and the volume doubles, to ∫2π(x + 1)(2x − x²) dx = 16π/3 = 16.76.' },
+    crossSq: { f: 'sqrt(1 - x^2)', g: '-sqrt(1 - x^2)', a: '-1', b: '1', axis: 'h', k: '0', m: 'cross', shape: 'square', n: 6, ex: { v: 16 / 3, t: '16/3' },
+      hint: 'A solid whose base is the unit disk and whose cross sections perpendicular to the x axis are squares. Each square has side s = 2√(1 − x²) and area 4(1 − x²), so V = ∫4(1 − x²) dx from −1 to 1 = 16/3. Nothing is turned here: slicing works for any solid whose cross sections you know.' },
+    crossSemi: { f: 'sqrt(1 - x^2)', g: '-sqrt(1 - x^2)', a: '-1', b: '1', axis: 'h', k: '0', m: 'cross', shape: 'semi', n: 6, ex: { v: 2 * PI / 3, t: '2π/3' },
+      hint: 'The same disk as the base, with semicircles standing on it: the semicircle at x has diameter 2√(1 − x²), so area π(1 − x²)/2. The volume is 2π/3, half the volume of a unit sphere. The solid is a hemisphere: the semicircles are its slices.' },
+    crossTri: { f: '1 - x^2', g: '0', a: '-1', b: '1', axis: 'h', k: '0', m: 'cross', shape: 'tri', n: 6, ex: { v: 4 * Math.sqrt(3) / 15, t: '4√3/15' },
+      hint: 'Equilateral triangles standing on the region under the parabola y = 1 − x². The triangle of side s has area (√3/4)s², so V = (√3/4)∫(1 − x²)² dx = 4√3/15 = 0.4619.' },
+    arc: { f: 'x^(3/2)', g: '0', a: '0', b: '4', axis: 'h', k: '0', m: 'arc', n: 2, ex: { v: 8 / 27 * (Math.pow(10, 1.5) - 1), t: '(8/27)(10^(3/2) − 1)' },
+      hint: 'The length of a curve is the limit of a chain of straight segments. Each link is √(Δx² + Δy²) = √(1 + (Δy/Δx)²)Δx, and as n grows Δy/Δx becomes f′(x): L = ∫√(1 + f′²) dx. For y = x^(3/2) from 0 to 4 that integral can be done by hand: (8/27)(10^(3/2) − 1) = 9.073.' },
+    coneSurf: { f: 'x/2', g: '0', a: '0', b: '2', axis: 'h', k: '0', m: 'surface', n: 1, ex: { v: PI * Math.sqrt(5), t: 'πR√(R² + H²) = π√5' },
+      hint: 'Turn the line y = x/2 from 0 to 2 about the x axis: a cone of radius R = 1 and height H = 2. Each surface band is a frustum, a slice of a cone, so here the bands are the surface exactly, even for n = 1: A = πR√(R² + H²) = π√5 = 7.025.' },
+    sphereArea: { f: 'sqrt(1 - x^2)', g: '0', a: '-1', b: '1', axis: 'h', k: '0', m: 'surface', n: 4, ex: { v: 4 * PI, t: '4π' },
+      hint: 'A semicircle turned about the x axis is a sphere. Each band is a frustum through two points of the circle, area π(r₁ + r₂)·(chord). The integrand 2πf√(1 + f′²) is exactly 2π for every x, so equal widths of a sphere have equal areas (Archimedes), and A = 4πR² = 12.57.' },
+    horn: { f: '1/x', g: '0', a: '1', b: '10', axis: 'h', k: '0', m: 'surface', n: 4, ex: null,
+      hint: 'Gabriel\'s horn: turn y = 1/x from 1 to b about the x axis. Its volume is π∫dx/x² = π(1 − 1/b), never more than π, while its surface area is more than 2π ln b, which grows without bound. Switch to Disks and washers for the volume, and change b to 100 or 1000.' },
+  };
+  const NLIST = [1, 2, 3, 4, 5, 6, 8, 10, 12, 16, 20, 24, 32, 48, 64, 96, 128, 192, 256];
+  const S = { preset: 'vase', lz: 1, method: 'disks', what: 'vol', n: 6, P: null, a: 0, b: 25, k: 0, axis: 'h', shape: 'square', mass: 2, units: null, ex: null, exI: null,
+    blind: false, run: false, view: null, manual: false, exact: null, series: null, node: null, nodeG: null };
+  const can = $('can'), ctx = can.getContext('2d'), low = $('low'), lctx = low.getContext('2d');
+  let W = 0, H = 0, LW = 0, LH = 0, dpr = 1, T = null, need = true, need3 = true, clock = 0;
+  const f6 = (v) => (isFinite(v) ? fmt(Math.abs(v) < 1e-300 ? 0 : Number(v.toPrecision(7))) : VDI18N.t('undefined'));
+  const sci = (v, d = 3) => {
+    if (!isFinite(v)) return VDI18N.t('undefined');
+    if (v === 0) return '0';
+    const e = Math.floor(Math.log10(Math.abs(v)));
+    if (e >= -3 && e < 6) return fmt(Number(v.toPrecision(d)));
+    let m = Number((v / Math.pow(10, e)).toPrecision(d)); let ee = e; if (Math.abs(m) >= 10) { m /= 10; ee++; }
+    return fmt(m) + '×10' + sup(ee);
+  };
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), mono: g('--font-mono') || 'monospace', red: g('--red'),
+      f: g('--fg-f'), g: g('--fg-g'), slice: g('--slice'), slice2: g('--slice2'), axis: g('--axisline'), ghost: g('--ghost'), exact: g('--exact') };
+  }
+  const proj = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.35 : 1);
+  const kind = () => (S.method === 'disks' || S.method === 'shells') && S.what === 'inertia' ? (S.method === 'disks' ? 'Idisks' : 'Ishells') : S.method;
+  /* which methods work with which axis: disks about a horizontal line, shells about a vertical one */
+  const fits = () => !((S.method === 'disks' && S.axis === 'v') || (S.method === 'shells' && S.axis === 'h'));
+
+  /* ---------- reading the boxes ---------- */
+  const MSG = {
+    name: (e) => VDI18N.t('“{n}” is not a name I know. Use x, and functions like sin, ln, sqrt.', { n: e.name2 }),
+    char: (e) => VDI18N.t('“{n}” is not something I can read here.', { n: e.name2 }),
+    unexpected: (e) => VDI18N.t('“{n}” is out of place.', { n: e.name2 }),
+    close: () => VDI18N.t('There is a ) without a matching (.'),
+    comma: () => VDI18N.t('Functions here take one input; there is no comma form.'),
+    arg: (e) => VDI18N.t('{n} needs something to act on, like {n}(x).', { n: e.name2 }),
+    end: () => VDI18N.t('Not finished yet.'),
+    twovars: () => VDI18N.t('Use one variable, x.'),
+    empty: () => VDI18N.t('Type a function of x, like sqrt(x).'),
+  };
+  const XV = { vars: ['x'] };
+  function status(msg, bad) { const st = $('fxStatus'); st.textContent = msg; st.classList.toggle('bad', !!bad); }
+  function num(id) {
+    const el = $(id), s = el.value.trim(); let v = NaN;
+    if (/^[-+]?(\d+\.?\d*|\.\d+)(e[-+]?\d+)?$/i.test(s)) v = Number(s);
+    else { try { const r = M.parse(s, { vars: [] }); if (!M.hasV(r.node)) v = M.compile(r.node, ['x'])(0); } catch (_) { v = NaN; } }
+    el.classList.toggle('bad', !isFinite(v)); return v;
+  }
+  function read() {
+    const r = M.parseLive($('fx').value, XV), q = M.parseLive($('gx').value || '0', XV);
+    $('fx').classList.toggle('bad', !r.node && !r.empty); $('gx').classList.toggle('bad', !q.node);
+    const a = num('aIn'), b = num('bIn'), k = num('kIn'), m = num('mIn');
+    if (r.empty) { status(MSG.empty(), false); return; }
+    if (!r.node) { status((S.P ? VDI18N.t('Still showing the last solid. ') : '') + (MSG[r.error.code] || MSG.end)(r.error), true); return; }
+    if (!q.node) { status((MSG[q.error.code] || MSG.end)(q.error), true); return; }
+    if (!(isFinite(a) && isFinite(b) && b > a)) { status(VDI18N.t('The limits need a < b.'), true); return; }
+    if (!isFinite(k)) { status(VDI18N.t('k is a number, like 0 or −1.'), true); return; }
+    S.node = r.node; S.nodeG = q.node; S.a = a; S.b = b; S.k = k; if (isFinite(m) && m > 0) S.mass = m;
+    const fp = M.derivative(r.node, 'x');
+    /* at an end point rounding can put a root just out of reach (0.1² is a hair over 0.01): there, use a point 10⁻¹² of the
+       width inside */
+    const inside = (fn) => (x) => { const y = fn(x); if (isFinite(y)) return y; const e = 1e-12 * (b - a); return x <= a + e ? fn(a + e) : x >= b - e ? fn(b - e) : y; };
+    S.P = { f: inside(M.compile(r.node, ['x'])), g: inside(M.compile(q.node, ['x'])), fp: M.compile(fp, ['x']), axis: S.axis, k, shape: S.shape, a, b };
+    S.exact = null; S.series = null; need3 = true;
+    let msg = r.partial ? VDI18N.t('Drawing what is finished so far, while you type.') : '';
+    let bad = false;
+    for (let i = 0; i <= 200; i++) { const x = a + (b - a) * (i + 0.5) / 201; if (!isFinite(S.P.f(x)) || !isFinite(S.P.g(x))) { msg = VDI18N.t('f or g is not defined everywhere between a and b.'); bad = true; break; } }
+    if (!bad && S.method !== 'arc' && S.method !== 'surface') { let below = false; for (let i = 0; i <= 200; i++) { const x = a + (b - a) * i / 200; if (S.P.f(x) < S.P.g(x) - 1e-12) below = true; } if (below) msg = VDI18N.t('f dips below g somewhere: the slices use f − g, which is then negative there.'); }
+    if (!bad && S.method === 'shells' && S.axis === 'v' && S.k > a && S.k < b) msg = VDI18N.t('The region reaches across the axis x = k: the shells on the two sides overlap and the volume counts the overlap twice.');
+    status(msg, bad);
+  }
+  function exactNow() {
+    if (!S.P || !fits()) return null;
+    if (!S.exact) {
+      const kd = kind(), V = integral(S.method === 'cross' || S.method === 'arc' || S.method === 'surface' ? S.method : S.method, S.P);
+      const I = kd[0] === 'I' ? integral(kd, S.P) : NaN, R = kd[0] === 'I' ? maxRadius(kd, S.P) : NaN;
+      S.exact = { V, I, R };
+      S.series = NLIST.map((n) => ({ n, s: sliceSum(kd, S.P, n) }));
+    }
+    return S.exact;
+  }
+  const rho = () => { const e = exactNow(); return e ? S.mass / e.V : NaN; };
+  /* the sum of the slices now and the integral it closes in on, in the units shown (I in kg·m², from ρ = M/V) */
+  function values() {
+    const e = exactNow(); if (!e) return null;
+    const kd = kind(), s = sliceSum(kd, S.P, S.n);
+    if (kd[0] === 'I') return { sum: rho() * s, exact: rho() * e.I, R: e.R };
+    return { sum: s, exact: e.V };
+  }
+
+  /* ---------- the plane picture ---------- */
+  function niceStep(span, px) {
+    const raw = span / Math.max(2, px), p10 = Math.pow(10, Math.floor(Math.log10(raw))), m = raw / p10;
+    return (m <= 1 ? 1 : m <= 2 ? 2 : m <= 5 ? 5 : 10) * p10;
+  }
+  function tick(v, step) {
+    if (Math.abs(v) < step * 1e-6) return '0';
+    return fmt(Number(v.toFixed(Math.max(0, -Math.floor(Math.log10(step)) + 1))));
+  }
+  const labelOn = (c, t, x, y) => { c.save(); c.strokeStyle = T.canvas; c.lineWidth = 4; c.lineJoin = 'round'; c.strokeText(t, x, y); c.restore(); c.fillText(t, x, y); };
+  /* the view that holds the region and its mirror image across the axis, with equal scales on x and y */
+  function fitView() {
+    if (!S.P || !W) return;
+    let x0 = Math.min(S.a, S.axis === 'v' ? S.k : S.a), x1 = Math.max(S.b, S.axis === 'v' ? S.k : S.b), y0 = Infinity, y1 = -Infinity;
+    for (let i = 0; i <= 300; i++) {
+      const x = S.a + (S.b - S.a) * i / 300, ys = [S.P.f(x)]; if (S.method !== 'arc' && S.method !== 'surface') ys.push(S.P.g(x)); else ys.push(S.axis === 'h' ? S.k : S.P.f(x));
+      for (const y of ys) if (isFinite(y)) { y0 = Math.min(y0, y); y1 = Math.max(y1, y); if (S.axis === 'h' && S.method !== 'cross') { y0 = Math.min(y0, 2 * S.k - y); y1 = Math.max(y1, 2 * S.k - y); } }
+      if (S.axis === 'v' && S.method !== 'cross') { x0 = Math.min(x0, 2 * S.k - x); x1 = Math.max(x1, 2 * S.k - x); }
+    }
+    if (!isFinite(y0)) { y0 = -1; y1 = 1; }
+    y0 = Math.min(y0, 0); y1 = Math.max(y1, 0);
+    const pad = 0.08, cx = (x0 + x1) / 2, cy = (y0 + y1) / 2;
+    let sx = (x1 - x0) * (1 + 2 * pad) || 1, sy = (y1 - y0) * (1 + 2 * pad) || 1;
+    if (sx / W > sy / H) sy = sx * H / W; else sx = sy * W / H;
+    S.view = { x0: cx - sx / 2, x1: cx + sx / 2, y0: cy - sy / 2, y1: cy + sy / 2 };
+  }
+  function draw() {
+    if (!T || !W) return;
+    const p = proj(), c = ctx;
+    c.setTransform(dpr, 0, 0, dpr, 0, 0); c.fillStyle = T.canvas; c.fillRect(0, 0, W, H);
+    if (!S.P) return;
+    if (!S.view) fitView();
+    const v = S.view, X = (x) => (x - v.x0) / (v.x1 - v.x0) * W, Y = (y) => H - (y - v.y0) / (v.y1 - v.y0) * H;
+    /* grid */
+    const st = niceStep(v.x1 - v.x0, W / (80 * p));
+    c.lineWidth = 1; c.strokeStyle = T.line; c.beginPath();
+    for (let x = Math.ceil(v.x0 / st) * st; x <= v.x1; x += st) { const u = Math.round(X(x)) + 0.5; c.moveTo(u, 0); c.lineTo(u, H); }
+    for (let y = Math.ceil(v.y0 / st) * st; y <= v.y1; y += st) { const u = Math.round(Y(y)) + 0.5; c.moveTo(0, u); c.lineTo(W, u); }
+    c.stroke();
+    c.strokeStyle = T.muted; c.lineWidth = 1.4; c.beginPath(); c.moveTo(0, Y(0)); c.lineTo(W, Y(0)); c.moveTo(X(0), 0); c.lineTo(X(0), H); c.stroke();
+    c.fillStyle = T.muted; c.font = `${11 * p}px ${T.mono}`; c.textAlign = 'center'; c.textBaseline = 'top';
+    const ay = Math.min(H - 16 * p, Math.max(2, Y(0) + 3 * p));
+    for (let x = Math.ceil(v.x0 / st) * st; x <= v.x1; x += st) { if (Math.abs(x) < st / 2) continue; const u = X(x); if (u < 12 || u > W - 30 * p) continue; labelOn(c, tick(x, st), u, ay); }
+    c.textAlign = 'left'; c.textBaseline = 'middle'; const ax = Math.min(W - 40 * p, Math.max(2, X(0) + 4 * p));
+    for (let y = Math.ceil(v.y0 / st) * st; y <= v.y1; y += st) { if (Math.abs(y) < st / 2) continue; const u = Y(y); if (u < 14 || u > H - 14) continue; labelOn(c, tick(y, st), ax, u); }
+    const P = S.P, m = Math.max(100, Math.round(Math.abs(X(S.b) - X(S.a)))), xs = []; for (let i = 0; i <= m; i++) xs.push(S.a + (S.b - S.a) * i / m);
+    const twoCurves = S.method !== 'arc' && S.method !== 'surface';
+    const mirror = S.method !== 'cross';
+    const mx = (x) => (S.axis === 'v' && mirror ? 2 * S.k - x : x), my = (y) => (S.axis === 'h' && mirror ? 2 * S.k - y : y);
+    /* the region (and its mirror image across the axis, faint: the solid's outline in this plane) */
+    const region = (fx, fy, alpha) => {
+      c.beginPath(); xs.forEach((x, i) => { const px = X(fx(x)), py = Y(fy(P.f(x))); if (i) c.lineTo(px, py); else c.moveTo(px, py); });
+      for (let i = xs.length - 1; i >= 0; i--) { const x = xs[i]; c.lineTo(X(fx(x)), Y(fy(twoCurves ? P.g(x) : (S.axis === 'h' ? S.k : P.f(x))))); }
+      c.closePath(); c.globalAlpha = alpha; c.fillStyle = T.f; c.fill(); c.globalAlpha = 1;
+    };
+    if (twoCurves || S.axis === 'h') { region((x) => x, (y) => y, 0.13); if (mirror) region(mx, my, 0.06); }
+    /* the slices */
+    const n = S.n, h = (S.b - S.a) / n, kd = kind();
+    c.lineWidth = 1.2 * p;
+    const rectXY = (xa, xb, ya, yb, i, faint) => { const L = Math.min(X(xa), X(xb)), R = Math.max(X(xa), X(xb)), Tp = Math.min(Y(ya), Y(yb)), B = Math.max(Y(ya), Y(yb)); c.globalAlpha = faint ? 0.18 : 0.42; c.fillStyle = i % 2 ? T.slice2 : T.slice; c.fillRect(L, Tp, R - L, B - Tp); c.globalAlpha = faint ? 0.4 : 1; c.strokeStyle = T.slice; if (R - L > 3) c.strokeRect(L, Tp, R - L, B - Tp); c.globalAlpha = 1; };
+    if (fits()) {
+      if (S.method === 'disks') for (let i = 0; i < n; i++) { const xa = S.a + i * h, xm = xa + h / 2, q = radii(P, xm); rectXY(xa, xa + h, S.k + q.r, S.k + q.R, i); rectXY(xa, xa + h, S.k - q.r, S.k - q.R, i, true); }
+      else if (S.method === 'shells') for (let i = 0; i < n; i++) { const xa = S.a + i * h, xm = xa + h / 2; rectXY(xa, xa + h, P.g(xm), P.f(xm), i); rectXY(2 * S.k - xa, 2 * S.k - xa - h, P.g(xm), P.f(xm), i, true); }
+      else if (S.method === 'cross') for (let i = 0; i < n; i++) { const xa = S.a + i * h, xm = xa + h / 2; rectXY(xa, xa + h, P.g(xm), P.f(xm), i); }
+      else {   /* the chain of segments (and for the surface its mirror image) */
+        for (const mir of S.method === 'surface' ? [false, true] : [false]) {
+          c.strokeStyle = T.slice; c.lineWidth = (mir ? 1.4 : 2.6) * p; c.globalAlpha = mir ? 0.45 : 1; c.beginPath();
+          for (let i = 0; i <= n; i++) { const x = i === n ? S.b : S.a + i * h, y = P.f(x), px = X(mir ? mx(x) : x), py = Y(mir ? my(y) : y); if (i) c.lineTo(px, py); else c.moveTo(px, py); }
+          c.stroke(); c.globalAlpha = 1;
+          if (!mir && n <= 64) { c.fillStyle = T.slice; for (let i = 0; i <= n; i++) { const x = i === n ? S.b : S.a + i * h; c.beginPath(); c.arc(X(x), Y(P.f(x)), 3.2 * p, 0, 7); c.fill(); } }
+        }
+      }
+    }
+    /* the curves */
+    const curve = (fn, color, w, fx, fy, alpha) => { c.strokeStyle = color; c.lineWidth = w; c.globalAlpha = alpha || 1; c.beginPath(); let pen = false; for (const x of xs) { const y = fn(x); if (!isFinite(y)) { pen = false; continue; } const px = X(fx(x)), py = Y(fy(y)); if (pen) c.lineTo(px, py); else c.moveTo(px, py); pen = true; } c.stroke(); c.globalAlpha = 1; };
+    if (twoCurves) curve(P.g, T.g, 2.4 * p, (x) => x, (y) => y);
+    curve(P.f, T.f, 2.8 * p, (x) => x, (y) => y);
+    if (mirror) { curve(P.f, T.f, 1.2 * p, mx, my, 0.5); if (twoCurves) curve(P.g, T.g, 1.2 * p, mx, my, 0.5); }
+    /* the axis of revolution */
+    if (S.method !== 'cross' && S.method !== 'arc') {
+      c.strokeStyle = T.axis; c.lineWidth = 1.8 * p; c.setLineDash([8 * p, 5 * p]); c.beginPath();
+      if (S.axis === 'h') { c.moveTo(0, Y(S.k)); c.lineTo(W, Y(S.k)); } else { c.moveTo(X(S.k), 0); c.lineTo(X(S.k), H); }
+      c.stroke(); c.setLineDash([]);
+      c.fillStyle = T.axis; c.font = `600 ${12 * p}px ${T.mono}`; c.textBaseline = 'bottom'; c.textAlign = 'left';
+      if (S.axis === 'h') labelOn(c, VDI18N.t('axis y = {k}', { k: f6(S.k) }), 8 * p, Y(S.k) - 4 * p); else labelOn(c, VDI18N.t('axis x = {k}', { k: f6(S.k) }), X(S.k) + 5 * p, H - 8 * p);  /* at the foot, clear of the labels in the top corner */
+    }
+    c.font = `${12 * p}px ${T.mono}`; c.textAlign = 'right'; c.textBaseline = 'top'; c.fillStyle = T.slice;
+    const name = { disks: VDI18N.t('{n} disks or washers'), shells: VDI18N.t('{n} shells'), cross: VDI18N.t('{n} slabs on the base'), arc: VDI18N.t('a chain of {n} segments'), surface: VDI18N.t('{n} bands') }[S.method];
+    labelOn(c, fits() ? name.replace('{n}', n) : VDI18N.t('switch the axis for this method'), W - 8 * p, 8 * p);
+    if (S.units) { c.fillStyle = T.muted; labelOn(c, VDI18N.t('x and y in {u}', { u: S.units.L }), W - 8 * p, 24 * p); }
+  }
+
+  /* ---------- the lower graph: the sum against n ---------- */
+  function drawLow() {
+    if (!T || !LW) return;
+    const p = proj(), c = lctx;
+    c.setTransform(dpr, 0, 0, dpr, 0, 0); c.fillStyle = T.canvas; c.fillRect(0, 0, LW, LH);
+    const vv = values(); if (!vv || !S.series) { c.fillStyle = T.muted; c.font = `${13 * p}px ${T.mono}`; c.textAlign = 'center'; c.textBaseline = 'middle'; labelOn(c, fits() ? '' : VDI18N.t('Disks need a horizontal axis and shells a vertical one: switch the axis.'), LW / 2, LH / 2); return; }
+    const sc = kind()[0] === 'I' ? rho() : 1, pts = S.series.map((q) => ({ n: q.n, s: q.s * sc }));
+    let lo = vv.exact, hi = vv.exact; for (const q of pts) if (isFinite(q.s)) { lo = Math.min(lo, q.s); hi = Math.max(hi, q.s); }
+    if (hi - lo < 1e-12 * (1 + Math.abs(hi))) { lo -= 0.05 * (Math.abs(hi) || 1); hi += 0.05 * (Math.abs(hi) || 1); }
+    const v = { x0: -0.15, x1: Math.log10(256) + 0.15, y0: lo - 0.12 * (hi - lo), y1: hi + 0.3 * (hi - lo) };
+    /* the wheel and + − magnify the sums about the integral, to watch the last few close in */
+    v.y0 = vv.exact + (v.y0 - vv.exact) / S.lz; v.y1 = vv.exact + (v.y1 - vv.exact) / S.lz;
+    const X = (x) => 46 * p + (x - v.x0) / (v.x1 - v.x0) * (LW - 54 * p), Y = (y) => LH - 18 * p - (y - v.y0) / (v.y1 - v.y0) * (LH - 26 * p);
+    c.strokeStyle = T.line; c.lineWidth = 1; c.beginPath();
+    for (const n of [1, 2, 4, 8, 16, 32, 64, 128, 256]) { const u = Math.round(X(Math.log10(n))) + 0.5; c.moveTo(u, 0); c.lineTo(u, LH - 18 * p); }
+    c.stroke();
+    c.fillStyle = T.muted; c.font = `${11 * p}px ${T.mono}`; c.textAlign = 'center'; c.textBaseline = 'bottom';
+    for (const n of [1, 2, 4, 8, 16, 32, 64, 128, 256]) labelOn(c, String(n), X(Math.log10(n)), LH - 3 * p);
+    c.textAlign = 'right'; c.textBaseline = 'bottom'; c.fillStyle = T.ink; c.font = `600 ${12 * p}px ${T.mono}`; labelOn(c, VDI18N.t('n (log)'), LW - 6 * p, LH - 20 * p);
+    c.textAlign = 'left'; c.textBaseline = 'top'; labelOn(c, VDI18N.t('sum of n slices'), 6 * p, 6 * p);
+    if (!S.blind) {
+      c.strokeStyle = T.exact; c.lineWidth = 1.6 * p; c.setLineDash([7 * p, 5 * p]); c.beginPath(); c.moveTo(40 * p, Y(vv.exact)); c.lineTo(LW, Y(vv.exact)); c.stroke(); c.setLineDash([]);
+      c.fillStyle = T.exact; c.font = `${12 * p}px ${T.mono}`; c.textAlign = 'right'; c.textBaseline = 'bottom'; labelOn(c, VDI18N.t('the integral, {v}', { v: f6(vv.exact) }), LW - 8 * p, Y(vv.exact) - 3 * p);
+    }
+    c.save(); c.beginPath(); c.rect(0, 0, LW, LH - 18 * p); c.clip();
+    c.strokeStyle = T.slice; c.fillStyle = T.slice; c.lineWidth = 2 * p; c.beginPath(); pts.forEach((q, i) => { const px = X(Math.log10(q.n)), py = Y(q.s); if (i) c.lineTo(px, py); else c.moveTo(px, py); }); c.globalAlpha = 0.5; c.stroke(); c.globalAlpha = 1;
+    for (const q of pts) { c.beginPath(); c.arc(X(Math.log10(q.n)), Y(q.s), (q.n <= S.n ? 3.4 : 2.2) * p, 0, 7); if (q.n <= S.n) c.fill(); else { c.lineWidth = 1.2 * p; c.stroke(); } }
+    const u = X(Math.log10(S.n)), y = Y(vv.sum); c.strokeStyle = T.ink; c.lineWidth = 2 * p; c.beginPath(); c.arc(u, y, 7 * p, 0, 7); c.stroke();
+    c.restore();
+    if (S.lz !== 1) { c.fillStyle = T.muted; c.font = `${11 * p}px ${T.mono}`; c.textAlign = 'left'; c.textBaseline = 'top'; labelOn(c, VDI18N.t('sums magnified × {z}', { z: fmt(Number(S.lz.toPrecision(3))) }), 6 * p, 22 * p); }
+  }
+
+  /* ---------- the 3D view ---------- */
+  let G = null, view3 = null;
+  const o3 = { th: -Math.PI / 2 + 0.55, ph: 1.12, zoom: 1 };
+  const use3 = () => !!(view3 && view3.is3d() && G);
+  function init3D() {
+    const S3 = VD3K.stage($('scene3'), { fov: 30 }); if (!S3) return false;
+    G = { S3, root: null, mats: {} };
+    const mat = (o, c) => VD3K.material(S3, o, c);
+    G.mats.a = mat({ roughness: 0.55, metalness: 0.05 }, ['#c2410c', '#fb923c']);
+    G.mats.b = mat({ roughness: 0.55, metalness: 0.05 }, ['#ea7a2f', '#fdba74']);
+    G.mats.ghost = mat({ transparent: true, opacity: 0.16, depthWrite: false, side: THREE.DoubleSide }, ['#8f5000', '#e8a440']);
+    G.mats.base = mat({ transparent: true, opacity: 0.35, depthWrite: false, side: THREE.DoubleSide }, ['#0f766e', '#5eead4']);
+    G.mats.axis = mat({ roughness: 0.6 }, ['#be123c', '#fb7185']);
+    G.mats.line = mat({ roughness: 0.6 }, ['#57534e', '#d6d3d1']);
+    G.mats.a.side = THREE.DoubleSide; G.mats.b.side = THREE.DoubleSide;
+    VD3.orbit(S3.el, o3, () => { if (G) G.dirty = true; }, { active: () => use3(), phMin: 0.2, phMax: 2.9, zMin: 0.5, zMax: 3 });
+    S3.el.tabIndex = 0;
+    return true;
+  }
+  /* math (x, y) to the scene: the plane of the region is the scene's x–z plane (y up); for cross sections the base lies flat */
+  function build3() {
+    if (!G) return;
+    const { S3 } = G; if (G.root) S3.dispose(G.root);
+    const root = new THREE.Group(); G.root = root; S3.scene.add(root);
+    if (!S.P || !fits()) return;
+    const P = S.P, n = S.n, h = (S.b - S.a) / n, V2 = (a, b) => new THREE.Vector2(Math.max(0, a), b), seg = n > 96 ? 24 : 48;
+    /* a lathe about the axis: local Y along the axis, local radius out from it */
+    const lathe = (pts, matl) => {
+      const m = new THREE.Mesh(new THREE.LatheGeometry(pts, seg), matl);
+      if (S.axis === 'h') { m.rotation.z = -Math.PI / 2; m.position.set(0, 0, S.k); } else { m.rotation.x = Math.PI / 2; m.position.set(S.k, 0, 0); }
+      root.add(m); return m;
+    };
+    const span = Math.max(S.view ? S.view.x1 - S.view.x0 : S.b - S.a, 1e-9);
+    const rod = (a, b, r, matl) => root.add(VD3K.rod(a, b, r, matl));
+    const thin = 0.004 * span;
+    const xs = []; for (let i = 0; i <= 120; i++) xs.push(S.a + (S.b - S.a) * i / 120);
+    /* a curve that is not defined, or runs off to huge values (1/0, x^1000), has no solid to draw */
+    if (xs.some((x) => !(Math.abs(P.f(x)) < 1e9 && Math.abs(P.g(x)) < 1e9))) return;
+    if (S.method === 'disks' || S.method === 'surface' || S.method === 'shells') {
+      /* the smooth solid, faint */
+      let pts;
+      if (S.method === 'shells') pts = xs.map((x) => V2(Math.abs(x - S.k), P.f(x))).concat(xs.slice().reverse().map((x) => V2(Math.abs(x - S.k), P.g(x))));
+      else if (S.method === 'surface') pts = S.axis === 'h' ? xs.map((x) => V2(Math.abs(P.f(x) - S.k), x)) : xs.map((x) => V2(Math.abs(x - S.k), P.f(x)));
+      else pts = xs.map((x) => V2(radii(P, x).R, x)).concat(xs.slice().reverse().map((x) => V2(radii(P, x).r, x)));
+      lathe(pts, G.mats.ghost);
+    }
+    for (let i = 0; i < n; i++) {
+      const x0 = S.a + i * h, x1 = i === n - 1 ? S.b : x0 + h, xm = (x0 + x1) / 2, matl = i % 2 ? G.mats.b : G.mats.a;
+      if (S.method === 'disks') { const q = radii(P, xm); lathe([V2(q.r, x0), V2(q.R, x0), V2(q.R, x1), V2(q.r, x1), V2(q.r, x0)], matl); }
+      else if (S.method === 'shells') { const r0 = Math.min(Math.abs(x0 - S.k), Math.abs(x1 - S.k)), r1 = Math.max(Math.abs(x0 - S.k), Math.abs(x1 - S.k)), lo = P.g(xm), hi = P.f(xm); lathe([V2(r0, lo), V2(r1, lo), V2(r1, hi), V2(r0, hi), V2(r0, lo)], matl); }
+      else if (S.method === 'surface') { const y0 = P.f(x0), y1 = P.f(x1); lathe(S.axis === 'h' ? [V2(Math.abs(y0 - S.k), x0), V2(Math.abs(y1 - S.k), x1)] : [V2(Math.abs(x0 - S.k), y0), V2(Math.abs(x1 - S.k), y1)], matl); }
+      else if (S.method === 'arc') rod([x0, 0, P.f(x0)], [x1, 0, P.f(x1)], 2.2 * thin, matl);
+      else if (S.method === 'cross') {
+        const s = Math.abs(P.f(xm) - P.g(xm)), g0 = Math.min(P.f(xm), P.g(xm)), sh = new THREE.Shape();
+        if (S.shape === 'square') { sh.moveTo(0, 0); sh.lineTo(s, 0); sh.lineTo(s, s); sh.lineTo(0, s); }
+        else if (S.shape === 'tri') { sh.moveTo(0, 0); sh.lineTo(s, 0); sh.lineTo(s / 2, s * Math.sqrt(3) / 2); }
+        else { sh.moveTo(0, 0); sh.absarc(s / 2, 0, s / 2, 0, Math.PI, false); }
+        if (s < 1e-9) continue;
+        const m = new THREE.Mesh(new THREE.ExtrudeGeometry(sh, { depth: x1 - x0, bevelEnabled: false, curveSegments: 24 }), matl);
+        m.setRotationFromMatrix(new THREE.Matrix4().makeBasis(new THREE.Vector3(0, 1, 0), new THREE.Vector3(0, 0, 1), new THREE.Vector3(1, 0, 0)));
+        m.position.set(x0, g0, 0); root.add(m);
+      }
+    }
+    if (S.method === 'cross') {   /* the base, flat on the x–y plane */
+      const sh = new THREE.Shape(); xs.forEach((x, i) => (i ? sh.lineTo(x, P.f(x)) : sh.moveTo(x, P.f(x)))); xs.slice().reverse().forEach((x) => sh.lineTo(x, P.g(x)));
+      root.add(new THREE.Mesh(new THREE.ShapeGeometry(sh), G.mats.base));
+    } else {
+      /* the curve itself, and the axis of revolution */
+      for (let i = 0; i < xs.length - 1; i += 1) rod([xs[i], 0, P.f(xs[i])], [xs[i + 1], 0, P.f(xs[i + 1])], thin, G.mats.line);
+      if (S.method !== 'arc') { const L = 0.65 * span; if (S.axis === 'h') rod([S.a - 0.15 * L, 0, S.k], [S.b + 0.15 * L, 0, S.k], 1.5 * thin, G.mats.axis); else { let lo = Infinity, hi = -Infinity; for (const x of xs) { lo = Math.min(lo, P.g(x), P.f(x)); hi = Math.max(hi, P.f(x), P.g(x)); } rod([S.k, 0, lo - 0.15 * L], [S.k, 0, hi + 0.15 * L], 1.5 * thin, G.mats.axis); } }
+    }
+    /* center the solid and scale its box to a diagonal of 1.1, so a squat solid (the slabs on a disk) fits as well as a long one */
+    const box = new THREE.Box3().setFromObject(root), c = box.getCenter(new THREE.Vector3()), sz = box.getSize(new THREE.Vector3());
+    const k = 1.1 / (sz.length() || 1);
+    root.scale.setScalar(k); root.position.set(-c.x * k, -c.y * k, -c.z * k);
+    /* an extreme interval (b = 10¹²) can still give points three.js cannot place: then draw nothing rather than a broken mesh */
+    let bad = !isFinite(k) || !isFinite(c.x + c.y + c.z);
+    root.traverse((o) => { const q = o.geometry && o.geometry.attributes.position; if (!bad && q) for (let i = 0; i < q.array.length; i++) if (!isFinite(q.array[i])) { bad = true; break; } });
+    if (bad) { S3.dispose(root); G.root = null; }
+  }
+  function render3() {
+    if (!use3()) return;
+    const { S3 } = G, el = $('scene3'); S3.size(el.clientWidth, el.clientHeight);
+    S3.place(o3, [0, 0, 0], S3.fit(2, 1.1)); S3.render();
+  }
+
+  /* ---------- the rail ---------- */
+  const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
+  function formulas() {
+    const dl = $('formulas'); if (!S.node) { dl.innerHTML = ''; return; }
+    let h = `<dt>f(x)</dt><dd>${esc(M.text(S.node))}</dd>`;
+    if (S.method !== 'arc' && S.method !== 'surface') h += `<dt>g(x)</dt><dd>${esc(M.text(S.nodeG))}</dd>`;
+    const kd = kind(), r = S.axis === 'h' ? `|f − ${f6(S.k)}|` : `|x − ${f6(S.k)}|`;
+    const F = {
+      disks: [['V', '∫ π(R² − r²) dx ≈ Σ π(R² − r²)Δx'], ['R, r', VDI18N.t('distances of f and g from y = k')]],
+      shells: [['V', '∫ 2π r h dx ≈ Σ 2π r h Δx'], ['r, h', `|x − k|, f − g`]],
+      cross: [['V', '∫ A(x) dx ≈ Σ A Δx'], ['A', { square: 's², s = f − g', semi: 'πs²/8', tri: '(√3/4)s²' }[S.shape]]],
+      arc: [['L', '∫ √(1 + f′²) dx ≈ Σ √(Δx² + Δy²)'], ["f′(x)", esc(M.text(M.derivative(S.node, 'x')))]],
+      surface: [['A', '∫ 2π r √(1 + f′²) dx ≈ Σ π(r₁ + r₂)·chord'], ['r', r]],
+      Idisks: [['I', '∫ ½ρπ(R⁴ − r⁴) dx'], ['ρ', 'M/V']],
+      Ishells: [['I', '∫ 2πρ r³ h dx'], ['ρ', 'M/V']],
+    }[kd];
+    for (const [a, b] of F) h += `<dt>${esc(a)}</dt><dd>${b}</dd>`;
+    dl.innerHTML = h;
+  }
+  function unitOf() {
+    const u = S.units; if (!u) return '';
+    const kd = kind();
+    return kd[0] === 'I' ? ' kg·m²' : S.method === 'arc' ? ' ' + u.L : S.method === 'surface' ? ' ' + u.L + '²' : ' ' + u.V;
+  }
+  function readouts() {
+    const dd = (a, b, cls) => `<div${cls ? ` class="${cls}"` : ''}><dt>${a}</dt><dd translate="no">${b}</dd></div>`;
+    const wide = (a, b) => `<div class="wide"><dt>${a}</dt><dd class="ok">${b}</dd></div>`;
+    if (!S.P) { $('out').innerHTML = ''; return; }
+    if (!fits()) { $('out').innerHTML = wide(VDI18N.t('Method'), S.method === 'disks' ? VDI18N.t('Disks and washers turn about a horizontal line y = k here. Choose “the line y = k”, or use Shells.') : VDI18N.t('Shells turn about a vertical line x = k here. Choose “the line x = k”, or use Disks and washers.')); return; }
+    const vv = values(), kd = kind(), u = unitOf(), hide = S.blind;
+    const what = kd[0] === 'I' ? VDI18N.t('Moment of inertia I') : { disks: VDI18N.t('Volume'), shells: VDI18N.t('Volume'), cross: VDI18N.t('Volume'), arc: VDI18N.t('Length'), surface: VDI18N.t('Surface area') }[S.method];
+    let h = dd('n', String(S.n)) + dd('Δx', f6((S.b - S.a) / S.n) + (S.units ? ' ' + S.units.L : ''));
+    h += dd(VDI18N.t('Sum of n slices'), f6(vv.sum) + u);
+    const pre = PRESETS[S.preset], ex = S.preset !== 'custom' && pre ? (kd[0] === 'I' ? null : pre.ex) : null;
+    h += dd(what + VDI18N.t(', the integral'), hide ? '?' : (ex && ex.t ? esc(ex.t) + ' = ' : '') + f6(vv.exact) + u, 'wide');
+    if (!hide) h += dd(VDI18N.t('Error, sum − integral'), sci(vv.sum - vv.exact) + u) + dd(VDI18N.t('Error ratio, n to 2n'), (() => { const e1 = vv.sum - vv.exact, e2 = (kd[0] === 'I' ? rho() : 1) * sliceSum(kd, S.P, 2 * S.n) - vv.exact; return Math.abs(e2) > 1e-12 * Math.abs(vv.exact) ? fmt(Number((e1 / e2).toPrecision(3))) : VDI18N.t('— (exact)'); })());
+    if (kd[0] === 'I') {
+      const e = exactNow();
+      h += dd(VDI18N.t('Volume V'), f6(e.V) + (S.units ? ' ' + S.units.V : '')) + dd(VDI18N.t('Mass M'), f6(S.mass) + ' kg') + dd(VDI18N.t('Density ρ = M/V'), f6(rho()) + (S.units ? ' kg/m³' : ''));
+      h += dd(VDI18N.t('Largest radius R'), f6(vv.R) + (S.units ? ' ' + S.units.L : ''));
+      h += dd(VDI18N.t('Sum ÷ MR²'), f6(vv.sum / (S.mass * vv.R * vv.R))) + dd(VDI18N.t('I ÷ MR²'), hide ? '?' : (pre && pre.exI && S.preset !== 'custom' ? pre.exI.t + ' = ' : '') + f6(vv.exact / (S.mass * vv.R * vv.R)));
+    }
+    if (S.preset === 'vase' && !hide) h += wide(VDI18N.t('Capacity'), VDI18N.t('{v} L (1 cm³ = 1 mL)', { v: f6(vv.exact / 1000) }));
+    if (S.preset === 'bowl' && !hide) h += wide(VDI18N.t('Water'), VDI18N.t('{v} L (1 cm³ = 1 mL)', { v: f6(vv.exact / 1000) }));
+    if (S.preset === 'horn' && !hide) { const Vh = PI * (1 - 1 / S.b); h += wide(VDI18N.t('Volume to b'), `π(1 − 1/b) = ${f6(Vh)} < π`); }
+    if (S.units && S.units.what) h += wide(VDI18N.t('In physics'), esc(VDI18N.t(S.units.what)));
+    $('out').innerHTML = h;
+    $('cap3').textContent = (kd[0] === 'I' ? 'I' : { disks: 'V', shells: 'V', cross: 'V', arc: 'L', surface: 'A' }[S.method]) + ' ≈ ' + f6(vv.sum) + u + '  (n = ' + S.n + ')';
+  }
+  function noteText() {
+    const t = { disks: 'Each slice is a disk, or a washer with a hole, perpendicular to the axis. Play doubles n.', shells: 'Each slice is a cylindrical shell around the axis, parallel to it. Play doubles n.',
+      cross: 'Each slice stands on the base region, its cross section a square, semicircle or triangle of side f − g. Play doubles n.', arc: 'A chain of straight segments along the curve. Play doubles n.',
+      surface: 'Each band is a frustum, a slice of a cone, between two points of the curve turned about the axis. Play doubles n.' }[S.method];
+    $('note').textContent = VDI18N.t(t);
+  }
+  function syncControls() {
+    for (const b of document.querySelectorAll('#methodSeg button')) b.setAttribute('aria-pressed', String(b.dataset.m === S.method));
+    for (const b of document.querySelectorAll('#whatSeg button')) b.setAttribute('aria-pressed', String(b.dataset.w === S.what));
+    $('whatSeg').hidden = !(S.method === 'disks' || S.method === 'shells');
+    $('rowG').hidden = S.method === 'arc' || S.method === 'surface';
+    $('shapeWrap').hidden = S.method !== 'cross';
+    $('massWrap').hidden = kind()[0] !== 'I';
+    $('axisSel').value = S.axis; $('axisSel').disabled = S.method === 'cross' || S.method === 'arc';
+    $('shapeSel').value = S.shape;
+    if (document.activeElement !== $('nIn')) $('nIn').value = S.n;
+    noteText();
+  }
+  function refresh() { syncControls(); formulas(); need = true; need3 = true; }
+  const pressPreset = (k) => { for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === k)); };
+  function custom() { if (S.preset !== 'custom') { S.preset = 'custom'; S.units = null; pressPreset(''); $('presetHint').textContent = VDI18N.t('Your own solid. Every setup above can be edited, too.'); } }
+  function applyPreset(k) {
+    const c = PRESETS[k]; S.preset = k; setRun(false);
+    $('fx').value = c.f; $('gx').value = c.g; $('aIn').value = c.a; $('bIn').value = c.b; $('kIn').value = c.k; $('mIn').value = c.mass || '2';
+    S.axis = c.axis; S.method = c.m; S.what = c.what || 'vol'; S.shape = c.shape || 'square'; S.n = c.n; S.units = c.units || null;
+    $('presetHint').textContent = c.hint; pressPreset(k);
+    S.P = null; S.lz = 1; read(); S.view = null; fitView(); refresh();
+  }
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  for (const id of ['fx', 'gx', 'aIn', 'bIn', 'kIn']) $(id).addEventListener('input', () => { custom(); read(); S.view = null; fitView(); refresh(); });
+  $('mIn').addEventListener('input', () => { read(); refresh(); });
+  $('axisSel').addEventListener('change', () => { custom(); S.axis = $('axisSel').value; read(); S.view = null; fitView(); refresh(); });
+  $('shapeSel').addEventListener('change', () => { custom(); S.shape = $('shapeSel').value; read(); refresh(); });
+  for (const b of document.querySelectorAll('#methodSeg button')) b.addEventListener('click', () => {
+    setRun(false); S.method = b.dataset.m;
+    if (S.method === 'disks' && S.axis === 'v') { S.axis = 'h'; }
+    if (S.method === 'shells' && S.axis === 'h') { S.axis = 'v'; }
+    if (S.method === 'cross' || S.method === 'arc') S.axis = 'h';
+    if (!(S.method === 'disks' || S.method === 'shells')) S.what = 'vol';
+    read(); S.view = null; fitView(); refresh();
+  });
+  for (const b of document.querySelectorAll('#whatSeg button')) b.addEventListener('click', () => { S.what = b.dataset.w; S.exact = null; read(); refresh(); });
+  const setN = (n) => { n = Math.round(n); S.n = Math.max(1, Math.min(256, n || 1)); refresh(); };
+  $('nIn').addEventListener('input', () => { const n = +$('nIn').value; if (n >= 1) setN(n); });
+  $('nIn').addEventListener('change', () => syncControls());
+  $('nUp').addEventListener('click', () => setN(S.n + 1));
+  $('nDown').addEventListener('click', () => setN(S.n - 1));
+  $('nTwice').addEventListener('click', () => setN(S.n * 2));
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; refresh(); });
+  function setRun(on) { S.run = on; clock = 0; $('play').textContent = on ? VDI18N.t('Pause') : VDI18N.t('Play'); $('play').classList.toggle('attn', !on); }
+  $('play').addEventListener('click', () => { if (!S.run && S.n >= 256) S.n = 1; setRun(!S.run); refresh(); });
+  $('reset').addEventListener('click', () => { setRun(false); const c = PRESETS[S.preset]; S.n = c ? c.n : 4; S.view = null; fitView(); o3.zoom = 1; refresh(); });
+  /* the plane picture: drag pans, wheel, pinch, + and − zoom about the center */
+  function zoom(f) { if (!S.view) return; const v = S.view, cx = (v.x0 + v.x1) / 2, cy = (v.y0 + v.y1) / 2, sx = (v.x1 - v.x0) * f, sy = (v.y1 - v.y0) * f; if (sx > 1e7 || sx < 1e-7) return; S.view = { x0: cx - sx / 2, x1: cx + sx / 2, y0: cy - sy / 2, y1: cy + sy / 2 }; need = true; }
+  const ptrs = new Map(); let drag = null;
+  can.addEventListener('pointerdown', (e) => {
+    const r = can.getBoundingClientRect(); ptrs.set(e.pointerId, { x: e.clientX - r.left, y: e.clientY - r.top }); can.setPointerCapture(e.pointerId);
+    if (ptrs.size === 2) { const [a, b] = [...ptrs.values()]; drag = { pinch: Math.hypot(a.x - b.x, a.y - b.y), v: Object.assign({}, S.view) }; return; }
+    drag = { x: e.clientX - r.left, y: e.clientY - r.top, v: Object.assign({}, S.view) };
+  });
+  can.addEventListener('pointermove', (e) => {
+    if (!ptrs.has(e.pointerId) || !drag || !drag.v) return;
+    const r = can.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top; ptrs.set(e.pointerId, { x, y });
+    if (drag.pinch) { const [a, b] = [...ptrs.values()], d = Math.hypot(a.x - b.x, a.y - b.y); if (d < 10) return; const f = drag.pinch / d, v = drag.v, cx = (v.x0 + v.x1) / 2, cy = (v.y0 + v.y1) / 2; S.view = { x0: cx - (cx - v.x0) * f, x1: cx + (v.x1 - cx) * f, y0: cy - (cy - v.y0) * f, y1: cy + (v.y1 - cy) * f }; need = true; return; }
+    const v = drag.v, dx = (x - drag.x) / W * (v.x1 - v.x0), dy = (y - drag.y) / H * (v.y1 - v.y0);
+    S.view = { x0: v.x0 - dx, x1: v.x1 - dx, y0: v.y0 + dy, y1: v.y1 + dy }; need = true;
+  });
+  const up = (e) => { ptrs.delete(e.pointerId); if (!ptrs.size) drag = null; else if (drag && drag.pinch) drag = null; };
+  can.addEventListener('pointerup', up); can.addEventListener('pointercancel', up);
+  can.addEventListener('wheel', (e) => { e.preventDefault(); const d = e.deltaY * (e.deltaMode === 1 ? 33 : e.deltaMode === 2 ? 400 : 1); zoom(Math.exp(Math.max(-100, Math.min(100, d)) * 0.0018)); }, { passive: false });
+  /* the graph of the sums: magnify about the integral, in steps that undo each other */
+  const lzoom = (f) => { const z = S.lz * f; if (z < 1e-3 || z > 1e6) return; S.lz = Math.abs(Math.log(z)) < 1e-9 ? 1 : z; need = true; };
+  low.addEventListener('wheel', (e) => { e.preventDefault(); const d = e.deltaY * (e.deltaMode === 1 ? 33 : e.deltaMode === 2 ? 400 : 1); lzoom(1 / Math.exp(Math.max(-100, Math.min(100, d)) * 0.0018)); }, { passive: false });
+  const keys = (e) => {
+    if (e.key === 'ArrowUp' || e.key === 'ArrowRight') { setRun(false); setN(S.n + 1); e.preventDefault(); }
+    else if (e.key === 'ArrowDown' || e.key === 'ArrowLeft') { setRun(false); setN(S.n - 1); e.preventDefault(); }
+    else if (e.key === '+' || e.key === '=') { if (e.currentTarget === low) lzoom(1.5); else zoom(1 / 1.5); e.preventDefault(); }
+    else if (e.key === '-' || e.key === '_') { if (e.currentTarget === low) lzoom(1 / 1.5); else zoom(1.5); e.preventDefault(); }
+    else if (e.key === ' ') { $('play').click(); e.preventDefault(); }
+  };
+  can.addEventListener('keydown', keys); low.addEventListener('keydown', keys);
+  low.addEventListener('pointerdown', (e) => { const r = low.getBoundingClientRect(), p = proj(), x = e.clientX - r.left, lx = -0.15 + (x - 46 * p) / (LW - 54 * p) * (Math.log10(256) + 0.3); setRun(false); setN(Math.pow(2, Math.max(0, Math.min(8, Math.round(lx / Math.log10(2)))))); });
+
+  /* Play: n doubles every second, from 1 to 256 */
+  let last = performance.now(), lastRead = '';
+  function frame(now) {
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    if (S.run) { clock += dt; if (clock >= 1) { clock = 0; if (S.n >= 256) setRun(false); else { S.n = Math.min(256, S.n * 2); refresh(); } } }
+    if (need) {
+      need = false; draw(); drawLow();
+      const k = `${S.n},${S.method},${S.what},${S.preset},${$('fx').value},${$('gx').value},${S.a},${S.b},${S.k},${S.axis},${S.shape},${S.mass},${S.blind},${S.lz}`;
+      if (k !== lastRead) { lastRead = k; readouts(); }
+    }
+    if (need3 && use3()) { need3 = false; build3(); render3(); }
+    else if (use3() && G && G.dirty) { G.dirty = false; render3(); }
+    requestAnimationFrame(frame);
+  }
+  function resize() {
+    dpr = window.devicePixelRatio || 1;
+    const r = $('pane').getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr);
+    const q = $('lower').getBoundingClientRect(); LW = q.width; LH = q.height; low.width = Math.round(LW * dpr); low.height = Math.round(LH * dpr);
+    S.view = null; fitView(); need = true; if (G) G.dirty = true;
+  }
+  const retheme = () => { tokens(); need = true; if (G) G.dirty = true; };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'data-vd-look'] });
+  VD.projector({ onChange: resize });
+  if (window.VD && VD.panel) VD.panel({ play: '#play', reset: '#reset' });
+  if (window.VD && VD.splitPanes) VD.splitPanes($('views'), $('lower'), { key: 'lower', label: 'Divider between the solid and the graph of the sums' });
+  view3 = VD3K.view({ seg: '#dimSeg', init: init3D, status: (m) => { $('status3').textContent = m; },
+    change: (on) => { $('scene3').hidden = !on; if (G) G.S3.el.hidden = !on; need3 = true; resize(); } });
+  /* Copy link carries what was typed */
+  if (window.VD && VD.share && VD.share.picture) VD.share.picture('r', {
+    get: () => (S.preset === 'custom' ? VD.share.pack({ f: $('fx').value, g: $('gx').value, a: $('aIn').value, b: $('bIn').value, k: $('kIn').value, ax: S.axis, m: S.method, s: S.shape }) : ''),
+    set: (s) => {
+      const o = s && VD.share.unpack(s); if (!o) return;
+      $('fx').value = o.f || 'sqrt(x)'; $('gx').value = o.g || '0'; $('aIn').value = o.a || '0'; $('bIn').value = o.b || '1'; $('kIn').value = o.k || '0';
+      if (o.ax === 'h' || o.ax === 'v') S.axis = o.ax; if (['disks', 'shells', 'cross', 'arc', 'surface'].includes(o.m)) S.method = o.m; if (SHAPES[o.s]) S.shape = o.s;
+      custom(); read(); S.view = null; fitView(); refresh();
+    },
+  });
+  window.vdVersion = 'solids-of-revolution@2026-11-19';
+  if (window.VD && VD.describe) VD.describe(can, () => {
+    if (!S.P) return [];
+    const t = VDI18N.t, vv = values(), out = [];
+    out.push(t('f(x) = {f} from x = {a} to {b}.', { f: M.text(S.node), a: f6(S.a), b: f6(S.b) }));
+    if (vv) { out.push({ t: t('{n} slices add to {s}.', { n: S.n, s: f6(vv.sum) }), live: !S.run }); if (!S.blind) out.push(t('The integral is {v}.', { v: f6(vv.exact) })); }
+    return out;
+  });
+  tokens(); new ResizeObserver(resize).observe($('pane')); new ResizeObserver(resize).observe($('lower')); resize(); applyPreset('vase');
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  window.__sol = { S, applyPreset, sliceSum, integral, radii, density, maxRadius, values, setN, setRun, view3: () => view3, draw: () => { need = true; need3 = true; } };
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

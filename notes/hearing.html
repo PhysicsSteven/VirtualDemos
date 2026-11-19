@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="../demos/lib/theme.js"></script>
+<title>Hearing and the Ear: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+@media screen { :root[data-theme="dark"] {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; overflow-wrap: break-word; }   /* a long file name breaks instead of pushing a phone sideways */
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+<link rel="stylesheet" id="vd-paper" href="../demos/lib/paper.css">
+</head>
+<body class="notes">
+<header class="top" aria-label="Site"><a class="brand" href="../index.html"><svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><ellipse cx="16" cy="16" rx="13" ry="6" fill="none" stroke="currentColor" stroke-width="1.8" transform="rotate(-30 16 16)"/><ellipse cx="16" cy="16" rx="13" ry="6" fill="none" stroke="currentColor" stroke-width="1.8" transform="rotate(30 16 16)"/><circle cx="16" cy="16" r="2.6" fill="currentColor"/></svg>Virtual Physics Demos</a><nav class="tabs" aria-label="Library"><a class="tab" href="../index.html#topics">Demos</a><a class="tab" href="../openstax.html">OpenStax</a><a class="tab" href="index.html" aria-current="page">Notes</a></nav><span class="hfind"></span><span data-vd-theme></span><a class="courses" href="../courses.html"><b>For a class</b> Courses</a></header>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Hearing and the Ear</h1><ul class="meta"><li><a href="../demos/hearing.html">Open the demo</a></li><li>Algebra based intro physics (sound; OpenStax College Physics 2e 17.6 and 17.7, also the AP edition; University Physics 17.3); Acoustics; Medical Physics</li><li>15 to 35 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>The cochlea sorts sound by frequency. A tone makes a traveling wave on the basilar membrane that grows toward one place and dies just past it: high tones near the stiff, narrow base, low tones near the floppy, wide apex. Greenwood's map puts 1 kHz about 21 mm from the base, and each octave takes a few millimeters.</li>
+<li>Loudness is not intensity. The sound level β = 10 log(I/I₀), with I₀ = 10⁻¹² W/m², measures intensity; the loudness level in phons is the level of a 1 kHz tone that sounds just as loud. The equal loudness contours show how many decibels each frequency needs.</li>
+<li>The ear is most sensitive near 3 to 4 kHz, where the threshold of hearing dips below 0 dB, and far less sensitive to bass: a 50 Hz tone at 60 dB is only about 15 phons.</li>
+<li>Above about 40 phons, every 10 phons sounds about twice as loud (one sone at 40 phons). Twice as loud takes ten times the intensity.</li>
+<li>An audiogram plots hearing level against frequency. Noise wears out the hair cells near 4 kHz first and leaves a notch; age takes the highest frequencies first, more and more toward the top.</li>
+</ul>
+<h2>Before class</h2>
+<p>Three views, chosen above the picture: <strong>Cochlea</strong> (Frequency f, Play the tone (quiet), Hair cells damaged by noise), <strong>Loudness</strong> (Frequency f and Sound level β on the equal loudness contours, Play this tone, Play 1 kHz, then this tone) and <strong>Your audiogram</strong> (Right ear or Left ear, Start the test, Heard them, Not heard, Play again, Subtract the normal threshold curve). The traveling wave is slowed so one cycle takes 1 s at every frequency. Blind, in the Lab fold, hides the place of the tone, the phons and sones and the hearing level bands. The sound is quiet by design: the demo never plays above 20 dB below full scale, and the audiogram needs headphones with the volume at about half and the box I am wearing headphones ticked. The audiogram is relative to the listener's own threshold at 1 kHz, not calibrated in dB HL and not a hearing test; the three preset audiograms are illustrative, not measurements.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>1 kHz tone.</strong> The opening setup. Press Play: the wave runs from the base toward the apex and peaks about 21 mm from the base. Then <strong>Middle C (262 Hz)</strong>, <strong>Top of hearing (16 kHz)</strong> and <strong>Lowest pitch (20 Hz)</strong> (Q1).</li>
+<li><strong>4 kHz, where noise does damage.</strong> Point at the damaged hair cells; keep this picture for step 6.</li>
+<li>Switch to <strong>Loudness.</strong> <strong>OpenStax example (a): 100 Hz at 80 dB</strong>, <strong>OpenStax example (b): 4 kHz at 70 phons</strong> and <strong>OpenStax example (c): 200 Hz at 60 dB</strong> (Q2, Q3, Q4).</li>
+<li><strong>Most sensitive: 3 to 4 kHz</strong> (Q5), then <strong>Quiet bass, 50 Hz</strong> with Play 1 kHz, then this tone (Q6).</li>
+<li>Switch to <strong>Your audiogram.</strong> <strong>Normal hearing</strong>, <strong>Noise damage: the 4 kHz notch</strong> and <strong>Hearing loss with age</strong> (Q7).</li>
+<li><strong>Your own test</strong> works best done alone, with headphones, in a quiet room: assign it rather than running it on the room's speakers.</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> Greenwood's map gives the frequency at a fraction x of the basilar membrane's 35 mm length, measured from the apex: f = 165.4 (10^(2.1x) − 0.88) Hz. How far from the base does a 1 kHz tone peak? A 262 Hz tone? A 16 kHz tone? Do the octaves 250 to 500 Hz and 4 to 8 kHz take the same length of membrane?</p></div>
+
+<div class="q"><p><strong>Q2.</strong> OpenStax example (a): a 100 Hz tone at 80 dB. What is its intensity in W/m²? Read its loudness level in phons from the contours. The book's answer is 75 phons: why does the demo give a different value?</p></div>
+
+<div class="q"><p><strong>Q3.</strong> OpenStax example (b): what sound level at 4 kHz is as loud as 70 phons? Why is it a little less than 70 dB?</p></div>
+
+<div class="q"><p><strong>Q4.</strong> OpenStax example (c): a 200 Hz tone at 60 dB. Find its loudness level in phons, then the sound level of an 8 kHz tone that sounds just as loud.</p></div>
+
+<div class="q"><p><strong>Q5.</strong> Read the Threshold of hearing at f at 3.5 kHz and at 100 Hz. How many times the intensity of a just audible 3.5 kHz tone does a 100 Hz tone need to be just heard? Take the ear canal as a tube 2.5 cm long, open at the outer end and closed by the eardrum, with sound at 343.2 m/s: what is its lowest resonance, and what does that explain?</p></div>
+
+<div class="q"><p><strong>Q6.</strong> A 1 kHz tone at 60 dB and a 50 Hz tone at 60 dB have the same intensity. How loud is each in phons? How many sones is the 1 kHz tone, and what sound level at 1 kHz sounds twice as loud? By what factor must the intensity grow?</p></div>
+
+<div class="q"><p><strong>Q7.</strong> Compare the three preset audiograms. Where is the noise damaged ear worst, and why does its hearing recover at 8 kHz while the aging ear's does not? Where on the basilar membrane are the hair cells that noise wears out first?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"Decibels measure loudness."</strong> They measure intensity on a log scale. How loud a tone sounds depends on its frequency too: phons do that job, and sones say how many times louder.</li>
+<li><strong>"Twice the intensity sounds twice as loud."</strong> Twice the intensity is only 3 dB more. Twice as loud needs about 10 dB more, ten times the intensity.</li>
+<li><strong>"Each hair cell vibrates at its own frequency, like a piano string."</strong> The basilar membrane carries a traveling wave; its stiffness and width change along it, so each frequency's wave peaks at one place.</li>
+<li><strong>"0 dB is silence."</strong> 0 dB is the reference intensity, 10⁻¹² W/m², near the threshold at 1 kHz. Near 3.5 kHz most young listeners hear tones below 0 dB.</li>
+<li><strong>"Hearing loss means everything gets quieter."</strong> It usually starts at high frequencies, so speech sounds muffled: the consonants (s, f, th) fade before the vowels.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<p>Decibels: β = 10 log(I/I₀) with I₀ = 10⁻¹² W/m² from constants.js; sound at 343.2 m/s at 20 °C gives the wavelength readout. Cochlea: Greenwood's place map for the human cochlea (Greenwood 1990, J. Acoust. Soc. Am. 87, 2592), f = 165.4 (10^(2.1x) − 0.88) Hz with x the fraction from the apex and a length of 35 mm. The traveling wave is drawn schematically, its amplitude growing toward the tone's place and dying within about 3 mm past it, with its phase lagging more and more on the way, as Békésy observed; its shape is not computed from the mechanics. Damaged hair cells are drawn where the map puts 3 to 6 kHz.</p>
+<p>Loudness: the equal loudness contours of ISO 226:2003 (pure tones, free field, listeners 18 to 25 years old), from its Table 1 and equations (1) and (2), for 20 to 90 phons and its threshold of hearing; between the standard's 29 frequencies the parameters are interpolated linearly in log f. Its two equations are not exact inverses: at 1 kHz they agree within 0.04 dB. OpenStax reads its examples from the older curves of Robinson and Dadson (1956), so at low frequencies its answers differ from ISO 226 by several phons. Sones: N = 2^((L_N − 40)/10), valid above about 40 phons.</p>
+<p>Audiogram: hearing level in dB HL, 0 dB being the normal threshold at each frequency. Your own test cannot calibrate headphones, so thresholds are on the demo's own scale, plotted relative to the threshold at 1 kHz; Subtract the normal threshold curve also removes the ISO 226 threshold shape, which assumes flat headphones. The search is a simplified Hughson-Westlake method (down 10 dB after a tone is heard, up 5 dB after it is missed, two responses on the way up). The preset audiograms are illustrative, shaped like OpenStax College Physics 2e Figure 17.37. Bands of hearing level after Clark (1981).</p>
+<h2>Going further</h2>
+<ul>
+<li>Sweep the frequency in Cochlea and note the place every octave from 125 Hz to 16 kHz. Plot place against log f: above about 1 kHz each octave takes nearly the same length, so Greenwood's map is nearly a straight line there.</li>
+<li>Why does music played quietly sound thin? Use the 40 phon contour at 50 Hz and 1 kHz.</li>
+<li>A worker hears 85 dB for 8 hours a day. How many times the intensity of a 60 dB conversation is that?</li>
+<li>Why is the 4 kHz notch a sign of noise and not of age? Compare the two preset audiograms at 6 and 8 kHz.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>. © 2026 Steven Anderson. All rights reserved; see the <a href="../LICENSE.html">terms of use</a>.</footer>
+</main>
+</body>
+</html>

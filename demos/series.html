@@ -1,0 +1,977 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="lib/theme.js"></script>
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
+<script src="lib/vdmath.js"></script>
+<title>Sequences and Series</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css: the term, sum and test colors, the formula boxes and the two graphs */
+:root { --term: #b45309; --sum: #8f5000; --bseries: #0f766e; --lim: #be123c; --sband: #7c3aed; --root: #0e7490; --area: #c2410c; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --term: #fbbf24; --sum: #e8a440; --bseries: #5eead4; --lim: #fb7185; --sband: #c4b5fd; --root: #67e8f9; --area: #fb923c; } }
+:root[data-theme="dark"] { --term: #fbbf24; --sum: #e8a440; --bseries: #5eead4; --lim: #fb7185; --sband: #c4b5fd; --root: #67e8f9; --area: #fb923c; }
+.stage { position: relative; display: flex; flex-direction: column; min-height: min-content; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.stage-ctl .note { flex: 1 1 100%; font-size: 0.8rem; color: var(--muted); }
+.stage-ctl .nrow { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: 0.86rem; }
+.stage-ctl input[type="number"], .shelf-card input[type="number"] { width: 6.4em; font: inherit; font-size: 0.86rem; font-family: var(--font-mono); padding: 3px 6px; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; }
+.fbar { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; padding: 10px 12px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.fbar .frow { flex: 1 1 100%; display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; }
+.fbar .frow[hidden] { display: none; }
+.fbar label.fn { font-family: var(--font-mono); font-weight: 600; font-size: 1.05rem; white-space: nowrap; }
+.fbar label.fn.a { color: var(--term); } .fbar label.fn.b { color: var(--bseries); }
+.fbar input[type="text"] { flex: 1 1 220px; min-width: 0; font-family: var(--font-mono); font-size: 1.05rem; padding: 6px 10px; color: var(--ink); background: var(--canvas); border: 2px solid var(--line2, var(--line)); border-radius: 8px; }
+.fbar input.n0 { flex: 0 0 4.2em; width: 4.2em; }
+.fbar input:focus { outline: none; border-color: var(--term); }
+.fbar input:focus-visible { box-shadow: 0 0 0 1px var(--term); }
+.fbar .bad { border-color: var(--red) !important; }
+.fbar .status { flex: 1 1 100%; font-size: 0.84rem; color: var(--muted); min-height: 1.3em; }
+.fbar .status.bad { color: var(--red); border: 0; }
+.pane { position: relative; flex: 1 1 auto; min-height: 220px; }
+.lower { position: relative; flex: none; height: 250px; border-top: 1px solid var(--line); background: var(--canvas); }
+.pane canvas, .lower canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; outline: none; touch-action: none; cursor: grab; }
+.shelf { flex: none; display: flex; flex-wrap: wrap; align-items: stretch; gap: 12px; padding: 10px; border-top: 1px solid var(--line); background: var(--surface); }
+.shelf-card { flex: 1 1 230px; display: grid; grid-template-columns: minmax(0, 1fr); align-content: start; gap: 7px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--canvas); }
+.shelf-card[hidden] { display: none; }
+.shelf-card > .card-title { font-size: 0.78rem; font-weight: 700; color: var(--muted); }
+.shelf-card .row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; font-size: 0.86rem; }
+.shelf-card input[type="range"] { width: 100%; }
+.seg.wrap { flex-wrap: wrap; }
+dl.formulas { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 6px 10px; margin: 0; }
+dl.formulas dt { font-family: var(--font-mono); font-weight: 600; white-space: nowrap; }
+dl.formulas dd { margin: 0; font-family: var(--font-mono); font-size: 0.88rem; overflow-wrap: anywhere; }
+.chips .chips-label { flex: 1 1 100%; font-size: 0.78rem; font-weight: 700; color: var(--muted); margin-top: 4px; }
+.rail ul.typing { margin: 6px 0 0; padding-left: 1.2em; font-size: 0.86rem; color: var(--muted); }
+.rail ul.typing code { font-family: var(--font-mono); color: var(--ink); }
+.rail .seealso a { color: var(--accent); }
+@media (min-width: 821px) { .bench > .stage { align-self: start; min-height: max(700px, 100%); } }
+@media (max-width: 820px) { .pane { min-height: 0; height: 330px; flex: none; } .lower { height: 240px; } .shelf-card { flex: 1 1 100%; } }
+</style>
+<link rel="stylesheet" id="vd-paper" href="lib/paper.css">
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Sequences and Series</h1>
+      <p>Type the terms a(n) of any series and add them up one at a time: the terms as bars above, the running total below. A bouncing ball that stops in finite time, a harmonic sum that passes every bound, a crystal's Madelung constant, and the tests that tell you which sums settle.</p>
+    </div>
+    <div class="bar-right">
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/series.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 37 37" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/series.html" shape-rendering="crispEdges"><rect width="37" height="37" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM11 2h2v1h-2zM15 2h3v1h-3zM20 2h6v1h-6zM28 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM13 3h1v1h-1zM16 3h5v1h-5zM25 3h2v1h-2zM28 3h1v1h-1zM34 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM11 4h2v1h-2zM14 4h1v1h-1zM16 4h2v1h-2zM19 4h1v1h-1zM21 4h2v1h-2zM25 4h2v1h-2zM28 4h1v1h-1zM30 4h3v1h-3zM34 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM12 5h1v1h-1zM16 5h1v1h-1zM20 5h1v1h-1zM24 5h1v1h-1zM28 5h1v1h-1zM30 5h3v1h-3zM34 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM13 6h1v1h-1zM16 6h4v1h-4zM25 6h2v1h-2zM28 6h1v1h-1zM30 6h3v1h-3zM34 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h2v1h-2zM13 7h1v1h-1zM15 7h3v1h-3zM19 7h3v1h-3zM26 7h1v1h-1zM28 7h1v1h-1zM34 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h7v1h-7zM11 9h1v1h-1zM13 9h2v1h-2zM16 9h2v1h-2zM19 9h1v1h-1zM21 9h1v1h-1zM23 9h1v1h-1zM2 10h1v1h-1zM5 10h1v1h-1zM7 10h2v1h-2zM10 10h1v1h-1zM12 10h1v1h-1zM15 10h2v1h-2zM18 10h1v1h-1zM23 10h1v1h-1zM25 10h3v1h-3zM29 10h1v1h-1zM3 11h1v1h-1zM5 11h2v1h-2zM9 11h1v1h-1zM12 11h2v1h-2zM19 11h1v1h-1zM22 11h3v1h-3zM26 11h4v1h-4zM33 11h2v1h-2zM2 12h1v1h-1zM4 12h3v1h-3zM8 12h1v1h-1zM10 12h1v1h-1zM12 12h4v1h-4zM19 12h3v1h-3zM24 12h1v1h-1zM29 12h2v1h-2zM32 12h1v1h-1zM34 12h1v1h-1zM2 13h1v1h-1zM4 13h1v1h-1zM10 13h4v1h-4zM15 13h2v1h-2zM21 13h1v1h-1zM23 13h1v1h-1zM25 13h1v1h-1zM27 13h2v1h-2zM30 13h2v1h-2zM33 13h1v1h-1zM2 14h2v1h-2zM7 14h3v1h-3zM16 14h1v1h-1zM19 14h1v1h-1zM23 14h1v1h-1zM27 14h2v1h-2zM31 14h1v1h-1zM33 14h2v1h-2zM2 15h5v1h-5zM9 15h3v1h-3zM13 15h1v1h-1zM15 15h1v1h-1zM19 15h1v1h-1zM21 15h4v1h-4zM26 15h1v1h-1zM30 15h5v1h-5zM5 16h5v1h-5zM11 16h6v1h-6zM18 16h1v1h-1zM22 16h4v1h-4zM27 16h4v1h-4zM32 16h2v1h-2zM2 17h1v1h-1zM4 17h4v1h-4zM11 17h1v1h-1zM13 17h1v1h-1zM15 17h3v1h-3zM19 17h2v1h-2zM22 17h3v1h-3zM26 17h1v1h-1zM28 17h2v1h-2zM33 17h1v1h-1zM2 18h1v1h-1zM6 18h3v1h-3zM10 18h4v1h-4zM15 18h3v1h-3zM19 18h1v1h-1zM22 18h4v1h-4zM28 18h1v1h-1zM30 18h2v1h-2zM33 18h1v1h-1zM7 19h1v1h-1zM10 19h1v1h-1zM13 19h1v1h-1zM16 19h1v1h-1zM18 19h2v1h-2zM23 19h4v1h-4zM29 19h1v1h-1zM31 19h1v1h-1zM34 19h1v1h-1zM4 20h1v1h-1zM6 20h3v1h-3zM11 20h1v1h-1zM13 20h3v1h-3zM20 20h1v1h-1zM22 20h1v1h-1zM27 20h2v1h-2zM32 20h3v1h-3zM2 21h1v1h-1zM4 21h1v1h-1zM6 21h1v1h-1zM9 21h1v1h-1zM11 21h1v1h-1zM13 21h3v1h-3zM17 21h1v1h-1zM19 21h5v1h-5zM25 21h1v1h-1zM29 21h1v1h-1zM33 21h2v1h-2zM3 22h1v1h-1zM5 22h1v1h-1zM8 22h5v1h-5zM14 22h1v1h-1zM18 22h1v1h-1zM23 22h1v1h-1zM26 22h2v1h-2zM33 22h2v1h-2zM3 23h1v1h-1zM5 23h1v1h-1zM7 23h1v1h-1zM12 23h2v1h-2zM15 23h1v1h-1zM18 23h1v1h-1zM23 23h1v1h-1zM26 23h3v1h-3zM31 23h1v1h-1zM33 23h2v1h-2zM2 24h2v1h-2zM5 24h4v1h-4zM14 24h1v1h-1zM16 24h1v1h-1zM20 24h2v1h-2zM23 24h1v1h-1zM27 24h3v1h-3zM34 24h1v1h-1zM3 25h1v1h-1zM5 25h2v1h-2zM10 25h1v1h-1zM13 25h2v1h-2zM16 25h1v1h-1zM18 25h1v1h-1zM20 25h1v1h-1zM22 25h3v1h-3zM26 25h3v1h-3zM31 25h1v1h-1zM33 25h1v1h-1zM2 26h1v1h-1zM4 26h6v1h-6zM13 26h1v1h-1zM15 26h1v1h-1zM17 26h1v1h-1zM19 26h1v1h-1zM23 26h1v1h-1zM25 26h7v1h-7zM33 26h1v1h-1zM10 27h4v1h-4zM15 27h1v1h-1zM19 27h4v1h-4zM26 27h1v1h-1zM30 27h2v1h-2zM34 27h1v1h-1zM2 28h7v1h-7zM13 28h1v1h-1zM15 28h1v1h-1zM18 28h2v1h-2zM22 28h1v1h-1zM26 28h1v1h-1zM28 28h1v1h-1zM30 28h3v1h-3zM2 29h1v1h-1zM8 29h1v1h-1zM10 29h1v1h-1zM12 29h2v1h-2zM15 29h1v1h-1zM17 29h1v1h-1zM19 29h6v1h-6zM26 29h1v1h-1zM30 29h1v1h-1zM34 29h1v1h-1zM2 30h1v1h-1zM4 30h3v1h-3zM8 30h1v1h-1zM11 30h1v1h-1zM13 30h1v1h-1zM16 30h2v1h-2zM19 30h1v1h-1zM21 30h1v1h-1zM23 30h2v1h-2zM26 30h6v1h-6zM2 31h1v1h-1zM4 31h3v1h-3zM8 31h1v1h-1zM10 31h1v1h-1zM14 31h2v1h-2zM20 31h1v1h-1zM23 31h1v1h-1zM28 31h1v1h-1zM30 31h2v1h-2zM2 32h1v1h-1zM4 32h3v1h-3zM8 32h1v1h-1zM11 32h1v1h-1zM13 32h1v1h-1zM16 32h1v1h-1zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM11 33h2v1h-2zM14 33h1v1h-1zM16 33h1v1h-1zM18 33h2v1h-2zM21 33h7v1h-7zM2 34h7v1h-7zM10 34h1v1h-1zM14 34h1v1h-1zM16 34h1v1h-1zM18 34h1v1h-1zM21 34h1v1h-1zM23 34h1v1h-1zM26 34h2v1h-2zM30 34h1v1h-1zM33 34h1v1h-1z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl" id="strip">
+        <button type="button" class="spin attn" id="play" data-vd-key="play">Play</button>
+        <button type="button" class="btn" id="reset" title="Put N back where this setup started">Reset</button>
+        <div class="seg wrap" role="group" aria-label="Picture" id="viewSeg">
+          <button type="button" data-v="sum" aria-pressed="true">Terms and sums</button>
+          <button type="button" data-v="seq" aria-pressed="false">A sequence</button>
+          <button type="button" data-v="integral" aria-pressed="false">Integral test</button>
+          <button type="button" data-v="compare" aria-pressed="false">Comparison</button>
+          <button type="button" data-v="ratio" aria-pressed="false">Ratio and root</button>
+        </div>
+        <div class="nrow"><label for="nIn">Last term N</label><input type="number" id="nIn" min="0" max="1000000" step="1" value="3">
+          <button type="button" class="btn" id="nDown" aria-label="One term fewer">−1</button><button type="button" class="btn" id="nUp" aria-label="One more term">+1</button><button type="button" class="btn" id="nTen">× 10</button></div>
+        <span class="note" id="note"></span>
+      </div>
+      <div class="fbar">
+        <div class="frow" id="rowA">
+          <label for="an" class="fn a" translate="no">a(n) =</label>
+          <input type="text" id="an" translate="no" spellcheck="false" autocomplete="off" autocapitalize="off" autocorrect="off" aria-describedby="anStatus" value="2(0.64)^n">
+          <label for="n0" class="fn">from n =</label>
+          <input type="text" class="n0" id="n0" translate="no" spellcheck="false" autocomplete="off" inputmode="numeric" value="1">
+        </div>
+        <div class="frow" id="rowB" hidden>
+          <label for="bn" class="fn b" translate="no">b(n) =</label>
+          <input type="text" id="bn" translate="no" spellcheck="false" autocomplete="off" autocapitalize="off" autocorrect="off" aria-describedby="anStatus" value="1/n^2">
+        </div>
+        <div class="status" id="anStatus" role="status" aria-live="polite"></div>
+      </div>
+      <div class="pane" id="pane">
+        <canvas id="can" tabindex="0" role="img" aria-label="The terms a(n) as bars, or the sequence, the integral test rectangles, the comparison or the ratios. Up and down arrows change N; plus and minus zoom the n axis; Space plays or pauses."></canvas>
+      </div>
+      <div class="lower" id="lower">
+        <canvas id="low" tabindex="0" role="img" aria-label="The partial sums S_N against N, with the sum S when the series converges."></canvas>
+      </div>
+      <div class="shelf" id="shelf">
+        <div class="shelf-card" role="group" aria-label="Terms">
+          <span class="card-title">Terms</span>
+          <input type="range" id="nSlide" min="0" max="60" step="1" value="3" aria-label="Last term N, from the first to 1,000,000">
+          <span class="hint" id="nNote"></span>
+        </div>
+        <div class="shelf-card" role="group" aria-label="Pass a total" id="boundCard">
+          <span class="card-title">Pass a total</span>
+          <div class="row"><label for="bound">How many terms until S_N passes</label><input type="number" id="bound" step="any" value=""></div>
+          <span class="hint" id="boundNote"></span>
+        </div>
+        <div class="shelf-card" role="group" aria-label="Within epsilon" id="epsCard" hidden>
+          <span class="card-title">Within ε of the limit</span>
+          <input type="range" id="epsSlide" min="0" max="12" step="1" value="4" aria-label="Epsilon, from 1 to 0.0001">
+          <span class="hint" id="epsNote"></span>
+        </div>
+        <div class="shelf-card" role="group" aria-label="The view">
+          <span class="card-title">The view</span>
+          <div class="seg" role="group" aria-label="n axis" id="axisSeg">
+            <button type="button" data-ax="lin" aria-pressed="true">n axis linear</button>
+            <button type="button" data-ax="log" aria-pressed="false">Log</button>
+          </div>
+          <div class="row"><button type="button" class="btn" id="zin">Zoom in</button><button type="button" class="btn" id="zout">Zoom out</button><button type="button" class="btn" id="homeView">Reset view</button></div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+      </section>
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <span class="chips-label">In physics</span>
+          <button type="button" data-p="bounce" aria-pressed="true">Bouncing ball: total distance</button>
+          <button type="button" data-p="bounceT" aria-pressed="false">Bouncing ball: total time</button>
+          <button type="button" data-p="zeno" aria-pressed="false">Zeno: half the rest each time</button>
+          <button type="button" data-p="books" aria-pressed="false">Stacking books past the edge</button>
+          <button type="button" data-p="madelung" aria-pressed="false">Madelung constant of an ion chain</button>
+          <button type="button" data-p="partition" aria-pressed="false">Partition function of an oscillator</button>
+          <span class="chips-label">Series</span>
+          <button type="button" data-p="harmonic" aria-pressed="false">Harmonic: past 10 and beyond</button>
+          <button type="button" data-p="divTest" aria-pressed="false">Terms that do not go to 0</button>
+          <button type="button" data-p="altHarm" aria-pressed="false">Alternating harmonic: ln 2</button>
+          <button type="button" data-p="leibniz" aria-pressed="false">Leibniz: π/4</button>
+          <span class="chips-label">Tests</span>
+          <button type="button" data-p="basel" aria-pressed="false">Integral test: 1/n², π²/6</button>
+          <button type="button" data-p="nlogn" aria-pressed="false">Integral test: 1/(n ln n) diverges</button>
+          <button type="button" data-p="telescope" aria-pressed="false">Comparison: 1/(n(n + 1)) and 1/n²</button>
+          <button type="button" data-p="oddHarm" aria-pressed="false">Comparison: 1/(2n − 1) and 1/(2n)</button>
+          <button type="button" data-p="factorial" aria-pressed="false">Ratio test: 1/n! = e</button>
+          <button type="button" data-p="nOver2n" aria-pressed="false">Ratio test: n/2ⁿ</button>
+          <button type="button" data-p="ratioOne" aria-pressed="false">Ratio test says nothing: 1/n²</button>
+          <span class="chips-label">Sequences</span>
+          <button type="button" data-p="seqE" aria-pressed="false">(1 + 1/n)ⁿ → e</button>
+          <button type="button" data-p="seqBounce" aria-pressed="false">Bounce heights → 0</button>
+          <button type="button" data-p="seqRoot" aria-pressed="false">n^(1/n) → 1</button>
+          <button type="button" data-p="seqOsc" aria-pressed="false">(−1)ⁿ n/(n + 1): no limit</button>
+        </div>
+        <details class="more" open><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+      </section>
+      <section>
+        <h2>Formulas</h2>
+        <dl class="formulas" id="formulas" translate="no"></dl>
+        <p class="hint seealso">Power series, where each term holds an x (Σ cₙxⁿ, the radius of convergence, eˣ and sin x as sums), are in <a href="taylor.html">Taylor Polynomials and Series</a>.</p>
+      </section>
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the sum, the verdict and the limits, to predict them first</span></label>
+        <details class="more"><summary>What you can type</summary>
+          <ul class="typing">
+            <li>Use <code>n</code> for the index: <code>1/n^2</code>, <code>(-1)^n/(2n+1)</code>, <code>n/2^n</code>.</li>
+            <li><code>n!</code> or <code>(2n)!</code> for factorials; <code>+ − * / ^</code> and parentheses; <code>2n</code> and <code>3sin(n)</code> multiply.</li>
+            <li><code>sin cos tan</code>, <code>exp</code> or <code>e^n</code>, <code>ln</code>, <code>log</code> (base 10), <code>sqrt</code>, <code>abs</code> or <code>|n|</code>, <code>pi</code></li>
+            <li>The first index, <code>from n =</code>, is a whole number from 0 to 1,000.</li>
+          </ul>
+        </details>
+        <details class="more"><summary>How it works</summary>
+          <p class="hint">The box is read by a small parser (demos/lib/vdmath.js); nothing you type is run as code. The partial sums S_N = a(n₀) + … + a(N) are added in double precision with compensated (Kahan) summation, up to N = 1,000,000.</p>
+          <p class="hint">For a setup the sum S is the closed form named in the readout. For a series you type, the demo applies the tests in this order and says which one decided: the divergence test (the largest |a(n)| near n = 10⁹ and 10¹² is not shrinking), the ratio test (|a(n+1)/a(n)| at the largest n whose terms are still normal numbers, extrapolated as 2ρ(n) − ρ(n/2)), the alternating series test (signs alternate and |a(n)| falls), then the integral test on ∫ a(x) dx out to x = 10³⁰⁰. Sums found by the ratio test are added directly; alternating sums are accelerated (Cohen, Rodriguez Villegas and Zagier, 2000); sums by the integral test add 1,000 terms and the Euler–Maclaurin tail. When no test decides, the readout says so.</p>
+          <p class="hint">A sequence's limit is read from short windows of terms at n = 10⁴, 10⁶ and 10⁸; it is given when the windows agree to about 10⁻⁵. N(ε) is checked term by term up to n = 1,000,000.</p>
+        </details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  /* Sequences and infinite series, runnable in Node (curriculum/validation/test_series.cjs). OpenStax Calculus Vol 2 5.1 to 5.6.
+     a(n) is any compiled function of n. Partial sums are added with Kahan's compensated sum, so a million terms keep 15 figures. */
+  const NMAX = 1000000;
+  /* S[i] = a(n0) + … + a(n0 + i), i = 0 … count − 1 */
+  function partialSums(f, n0, count) {
+    const S = new Float64Array(count); let s = 0, c = 0;
+    for (let i = 0; i < count; i++) { const y = f(n0 + i) - c, t = s + y; c = (t - s) - y; s = t; S[i] = s; }
+    return S;
+  }
+  /* Σ (−1)ᵏ b(k), k = 0, 1, 2, …, by Cohen, Rodriguez Villegas and Zagier's acceleration (Experimental Math. 9, 2000, algorithm 1):
+     for b(k) like 1/(k + 1) the error is about 5.8⁻ᵐ, so m = 40 terms give the sum to rounding */
+  function cvz(b, m) {
+    let d = Math.pow(3 + Math.sqrt(8), m); d = (d + 1 / d) / 2;
+    let bb = -1, c = -d, s = 0;
+    for (let k = 0; k < m; k++) { c = bb - c; s += c * b(k); bb = (k + m) * (k - m) * bb / ((k + 0.5) * (k + 1)); }
+    return s / d;
+  }
+  /* ∫ f from a to b (a ≥ 0) by 10 point Gauss–Legendre on short pieces: in x up to 1, then in u = ln x, where a tail like 1/x²
+     is smooth (e^(−u)); good to rounding for the smooth terms of a series */
+  const GX = [0.1488743389816312, 0.4333953941292472, 0.6794095682990244, 0.8650633666889845, 0.9739065285171717];
+  const GW = [0.2955242247147529, 0.2692667193099963, 0.2190863625159820, 0.1494513491505806, 0.0666713443086881];
+  function gauss(g, a, b) {
+    if (!(b > a)) return 0;
+    const m = Math.max(1, Math.ceil((b - a) / 0.25)), h = (b - a) / m; let s = 0;
+    for (let i = 0; i < m; i++) {
+      const c = a + (i + 0.5) * h, r = h / 2;
+      for (let j = 0; j < 5; j++) s += GW[j] * (g(c - r * GX[j]) + g(c + r * GX[j])) * r;
+    }
+    return s;
+  }
+  function integ(f, a, b) {
+    if (!(b > a)) return 0;
+    let s = 0;
+    if (a < 1) { s += gauss(f, a, Math.min(1, b)); a = 1; if (b <= 1) return s; }
+    return s + gauss((u) => { const x = Math.exp(u); return f(x) * x; }, Math.log(a), Math.log(b));
+  }
+  /* ∫ f from N to infinity, in u = ln x over blocks that double in length, up to x = 10³⁰⁰: 'converges' with its value once a
+     block adds less than 10⁻¹³ of the total; 'diverges' when the blocks stop shrinking (1/x adds the same per unit of u, 1/(x ln x)
+     the same ln 2 per doubling); 'unknown' when it is still shrinking at 10³⁰⁰ (1/x^1.01) */
+  function tailIntegral(f, N) {
+    const g = (u) => { const x = Math.exp(u); return f(x) * x; };
+    let u = Math.log(N), w = 1, I = 0, prev = Infinity, grow = 0;
+    const U = Math.log(1e300);
+    while (u < U) {
+      const v = Math.min(U, u + w), d = gauss(g, u, v);
+      if (!isFinite(d)) return { status: 'undefined', value: NaN };
+      I += d;
+      if (Math.abs(d) <= 1e-13 * Math.abs(I) && v - u >= 1) return { status: 'converges', value: I };
+      if (Math.abs(d) >= 0.5 * Math.abs(prev) * (v - u) / Math.max(1e-9, w / 2)) grow++; else grow = 0;
+      prev = d; u = v; w *= 2;
+    }
+    return { status: grow >= 3 ? 'diverges' : 'unknown', value: I };
+  }
+  /* what the terms do far out: the largest |a| over a short window at n = 10⁹ and 10¹² (whole numbers, so (−1)ⁿ is ±1) */
+  function farMax(f, m) { let big = 0; for (let k = 0; k <= 24; k++) { const v = Math.abs(f(m + k)); if (!isFinite(v)) return NaN; big = Math.max(big, v); } return big; }
+  /* the sum of the series from n0 and how we know: the divergence test, the ratio test, the alternating series test or the
+     integral test, in that order. d1 and d3 are a′ and a‴ (for the Euler–Maclaurin tail), or null.
+     status 'converges' (S is the sum, err its rough uncertainty), 'diverges', 'unknown' or 'undefined' (a(n) is not a number at n = at) */
+  function analyze(f, n0, d1, d3) {
+    const K = 100000;
+    let kmax = n0 - 1;
+    for (let k = n0; k <= n0 + K; k++) { if (!isFinite(f(k))) break; kmax = k; }
+    if (kmax < n0 + 30) return { status: 'undefined', at: kmax + 1 };
+    /* the divergence test */
+    const t9 = farMax(f, 1e9), t12 = farMax(f, 1e12);
+    if (isFinite(t9) && isFinite(t12) && t12 > 1e-6 && t12 >= 0.9 * t9) return { status: 'diverges', test: 'divergence', lim: t12 };
+    /* signs over the last stretch */
+    const lo = Math.max(n0, kmax - 2000);
+    let pos = 0, neg = 0, alt = true, dec = true;
+    for (let k = lo; k <= kmax; k++) {
+      const v = f(k); if (v > 0) pos++; else if (v < 0) neg++;
+      if (k > lo) { const p = f(k - 1); if (!(v * p < 0)) alt = false; if (Math.abs(v) > Math.abs(p)) dec = false; }
+    }
+    /* the ratio test, with ρ(k) = |a(k + 1)/a(k)| at the largest k where the terms are still normal numbers, extrapolated as
+       2ρ(k) − ρ(k/2), since ρ(k) ≈ ρ + c/k (exact for n/2ⁿ, and gives 1 for every p series) */
+    let ks = kmax - 1; while (ks > n0 + 4 && !(Math.abs(f(ks)) > 1e-280 && Math.abs(f(ks + 1)) > 1e-280)) ks = Math.floor(n0 + (ks - n0) * 0.9);
+    const rk = (k) => Math.abs(f(k + 1) / f(k)), kh = Math.max(n0, Math.floor(n0 + (ks - n0) / 2));
+    const kq = Math.max(n0, Math.floor(n0 + (ks - n0) / 4)), r1 = rk(ks), r2 = rk(kh), r3 = rk(kq), rho = Math.max(0, 2 * r1 - r2);
+    const steady = Math.abs(rho - Math.max(0, 2 * r2 - r3)) <= 0.05 * (1 + rho);   /* the ratios settle (not sin(n)/n²) */
+    const sum = () => {   /* direct sum until the terms no longer change it */
+      let s = 0, c = 0, quiet = 0, k = n0;
+      for (; k <= kmax; k++) { const v = f(k), y = v - c, t = s + y; c = (t - s) - y; s = t; if (Math.abs(v) <= 1e-18 * Math.abs(s)) { if (++quiet > 20) break; } else quiet = 0; }
+      return s;
+    };
+    if (steady && isFinite(rho) && rho < 0.99 && isFinite(r1)) return { status: 'converges', test: 'ratio', rho, S: sum(), err: 1e-15 };
+    if (steady && isFinite(rho) && rho > 1.01 && r1 > 1) return { status: 'diverges', test: 'ratio', rho };
+    if (r1 > 1.01 && r2 > 1.01 && r3 > 1.01 && r1 >= r2 && r2 >= r3) return { status: 'diverges', test: 'ratio', rho: Infinity };   /* ratios that keep growing (n!/2ⁿ) */
+    if (alt && dec) {   /* the alternating series test: signs alternate, |a| falls to zero */
+      const s0 = Math.sign(f(n0)), S = s0 * cvz((k) => Math.abs(f(n0 + k)), 40);
+      const PS = partialSums(f, n0, kmax - n0 + 1), last = PS[PS.length - 1], bound = Math.abs(f(kmax + 1));
+      const ok = Math.abs(S - last) <= bound * 1.000001 + 1e-15;
+      return { status: 'converges', test: 'alternating', rho, S: ok ? S : (last + PS[PS.length - 2]) / 2, err: ok ? 1e-14 : bound };
+    }
+    if ((pos === 0 || neg === 0) && dec) {   /* the integral test, on |a| */
+      const sg = pos ? 1 : -1, g = (x) => sg * f(x);
+      const N = Math.min(kmax, n0 + 1000), tail = tailIntegral(g, N);
+      if (tail.status === 'diverges') return { status: 'diverges', test: 'integral', rho };
+      if (tail.status !== 'converges') return { status: 'unknown', test: 'integral', rho, why: tail.status };
+      const PS = partialSums(f, n0, N - n0 + 1);
+      let S = PS[PS.length - 1] + sg * (tail.value - g(N) / 2), err = 1e-13 * Math.abs(S);
+      /* Euler–Maclaurin: Σ from N+1 of g = ∫ from N of g − g(N)/2 − g′(N)/12 + g‴(N)/720 − … */
+      const a1 = d1 ? d1(N) : NaN, a3 = d3 ? d3(N) : NaN;
+      if (isFinite(a1) && isFinite(a3)) S += -a1 / 12 + a3 / 720; else err = Math.abs(g(N)) / N + 1e-13 * Math.abs(S);
+      return { status: 'converges', test: 'integral', rho, S, err, tail: tail.value };
+    }
+    return { status: 'unknown', test: alt ? 'alternating' : 'none', rho };
+  }
+  /* the first N whose partial sum passes B (B above the starting sum), adding up to max terms; null beyond */
+  function firstPast(f, n0, B, max) {
+    let s = 0, c = 0;
+    for (let k = n0; k < n0 + max; k++) { const y = f(k) - c, t = s + y; c = (t - s) - y; s = t; if (s > B) return { N: k, S: s }; }
+    return null;
+  }
+  /* a sequence's limit, from short windows of terms at n = 10⁴, 10⁶ and 10⁸: 'converges' (L), 'infinite' (grows without bound),
+     'none' (keeps jumping: two or more limit points), 'slow' (still drifting at 10⁸) or 'undefined' */
+  function seqLimit(f) {
+    const win = (m) => { let lo = Infinity, hi = -Infinity, s = 0; for (let k = 0; k <= 20; k++) { const v = f(m + k); if (!isFinite(v)) return null; lo = Math.min(lo, v); hi = Math.max(hi, v); s += v; } return { lo, hi, mean: s / 21 }; };
+    const w4 = win(1e4), w6 = win(1e6), w8 = win(1e8);
+    if (!w4 || !w6 || !w8) {
+      const a = Math.abs(f(1e4)), b = Math.abs(f(1e6));
+      return a === Infinity || b === Infinity || (isFinite(a) && b > 1e6 * Math.max(1, a)) ? { status: 'infinite' } : { status: 'undefined' };
+    }
+    const sc = 1 + Math.abs(w8.mean);
+    if (w8.hi - w8.lo > 1e-3 * sc) return { status: 'none', lo: w8.lo, hi: w8.hi };
+    if (Math.abs(w8.mean - w6.mean) <= 1e-5 * sc && Math.abs(w6.mean - w4.mean) <= 1e-2 * sc) {
+      let L = f(1e8); const top = Math.max(Math.abs(f(1)), Math.abs(f(2)), Math.abs(w4.mean), 1e-300);
+      if (Math.abs(L) < 1e-6 * top && Math.abs(w8.mean) <= Math.abs(w6.mean)) L = 0;
+      return { status: 'converges', L };
+    }
+    if (Math.abs(w8.mean) > 1e6 && Math.abs(w8.mean) > Math.abs(w6.mean) && Math.abs(w6.mean) > Math.abs(w4.mean)) return { status: 'infinite', sign: Math.sign(w8.mean) };
+    return { status: 'slow' };
+  }
+  /* the N past which every term up to max stays within eps of L (null when terms near max still stray) */
+  function nEps(f, n0, L, eps, max) {
+    let last = n0 - 1;
+    for (let k = n0; k <= n0 + max; k++) { const v = f(k); if (!(Math.abs(v - L) < eps)) last = k; }
+    return last >= n0 + max - 1 ? null : last + 1;
+  }
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  const VDI18N = window.VDI18N || { t: (s, o) => s.replace(/\{(\w+)\}/g, (m, k) => (o && k in o ? o[k] : m)) };
+  const M = VDMATH, fmt = M.fmt, sup = M.sup, PI = Math.PI;
+  const G = 9.81;   /* m/s², VDC.g */
+  /* each setup: the terms, the first index, N to start at, the picture, and the exact sum where there is one (v, and how it reads) */
+  const PRESETS = {
+    bounce: { src: '2(0.64)^n', n0: 1, N: 3, view: 'sum', ex: { v: 2 * 0.64 / 0.36, t: '2(0.64)/(1 − 0.64) = 32/9' }, rho: '0.64',
+      units: { y: 'm', what: 'A ball dropped from 1 m with a coefficient of restitution of 0.8 rises to 0.64 of its height each bounce. Bounce n takes it up and back down: a(n) = 2(0.64)ⁿ m.', add: 1, addWhat: 'Total distance, with the first 1 m drop' },
+      hint: 'Each bounce reaches 0.8² = 0.64 of the last height, so bounce n travels up and down 2(0.64)ⁿ m. Infinitely many bounces, yet a geometric series with ratio r = 0.64 adds to a(1)/(1 − r) = 3.556 m; with the first 1 m drop the ball travels 4.556 m in all. Press Play to add bounces.' },
+    bounceT: { src: '2sqrt(2/9.81) 0.8^n', n0: 1, N: 3, view: 'sum', ex: { v: 8 * Math.sqrt(2 / G), t: '8√(2/g)' }, rho: '0.8',
+      units: { y: 's', what: 'Bounce n reaches h = 0.64ⁿ m and lasts 2√(2h/g) = 2√(2/g)(0.8)ⁿ s, with g = 9.81 m/s².', add: Math.sqrt(2 / G), addWhat: 'Total time, with the first 0.4515 s fall' },
+      hint: 'The time in the air shrinks with the square root of the height, by 0.8 each bounce. The times form a geometric series too: infinitely many bounces in 8√(2/g) = 3.612 s, or 4.064 s counting the first fall. A real ball does stop bouncing, in finite time: Zeno\'s paradox in a lab.' },
+    zeno: { src: '1/2^n', n0: 1, N: 3, view: 'sum', ex: { v: 1, t: '1' }, rho: '1/2', units: { y: 'm', what: 'A runner covers half of the 1 m left, then half of what remains, and so on.' },
+      hint: 'To cross 1 m you first cover ½ m, then ¼ m, then ⅛ m: infinitely many steps. Zeno argued you never arrive. The partial sums are 1 − 1/2ᴺ, which close in on 1 m, and at a steady speed the times halve too, so the total time is finite as well.' },
+    books: { src: '1/(2n)', n0: 1, N: 4, view: 'sum', bound: 2, ex: null, units: { y: 'book lengths', what: 'With n books stacked so each one balances on the ones below, book k from the top sticks out 1/(2k) of a book length past the one under it.' },
+      hint: 'Stack books so the center of mass of the top k books sits right over the edge of the book below: book k then sticks out 1/(2k) book lengths. The total overhang is half the harmonic series, so it grows without bound: 4 books reach past one whole length, and 31 books reach two lengths past the table.' },
+    madelung: { src: '2(-1)^(n+1)/n', n0: 1, N: 6, view: 'sum', ex: { v: 2 * Math.LN2, t: '2 ln 2' }, units: { y: '', what: 'In a line of alternating + and − ions a distance d apart, the energy of one ion is −M ke²/d with M = 2(1 − ½ + ⅓ − …).' },
+      hint: 'One ion in a long chain of alternating charges: its two nearest neighbors (distance d) attract, the next two (2d) repel, and so on. The Madelung constant M = 2(1 − 1/2 + 1/3 − …) = 2 ln 2 = 1.386. It is alternating: each partial sum is within the next term of the limit, and the sums zigzag in.' },
+    partition: { src: 'e^(-n/2)', n0: 0, N: 3, view: 'sum', ex: { v: 1 / (1 - Math.exp(-0.5)), t: '1/(1 − e^(−1/2))' }, rho: 'e^(−1/2) = 0.6065', units: { y: '', what: 'A quantum oscillator has energies nħω. At temperature T, state n has weight e^(−nħω/kT); here ħω/kT = 1/2.' },
+      hint: 'Statistical physics adds a Boltzmann weight e^(−E/kT) over every state. For a quantum oscillator E = nħω, so the partition function Z = Σ e^(−nħω/kT) is a geometric series: Z = 1/(1 − e^(−ħω/kT)) = 2.541 for ħω/kT = 1/2. Change the 2 in the box to see a colder (bigger number) or hotter oscillator.' },
+    harmonic: { src: '1/n', n0: 1, N: 10, view: 'sum', bound: 10, ex: null, axis: 'lin',
+      hint: 'The terms 1/n go to zero, yet the sum grows without bound, like ln N + 0.5772. It passes 10 only at N = 12,367: press Play and the n axis switches to log, where the sums climb a straight line. Terms going to zero is necessary for a sum to settle, but not enough.' },
+    divTest: { src: 'n/(n+1)', n0: 1, N: 8, view: 'sum', ex: null,
+      hint: 'The divergence test: the terms close in on 1, not 0, so each one adds nearly 1 and the partial sums grow without bound. If a(n) does not go to 0, the series diverges; that is all this test can say.' },
+    altHarm: { src: '(-1)^(n+1)/n', n0: 1, N: 6, view: 'sum', ex: { v: Math.LN2, t: 'ln 2' },
+      hint: 'The same terms as the harmonic series with every other sign flipped: now the sum settles, at ln 2 = 0.6931. The partial sums zigzag over and under ln 2, and the alternating series bound holds at every N: the error |S − S_N| is less than the next term, 1/(N + 1).' },
+    leibniz: { src: '(-1)^n/(2n+1)', n0: 0, N: 6, view: 'sum', ex: { v: PI / 4, t: 'π/4' },
+      hint: 'Leibniz\'s series 1 − 1/3 + 1/5 − … = π/4. It converges, but slowly: the error after N terms is about 1/(4N), so a million terms give π/4 to only about six figures. Watch the error bound against the actual error in the readouts.' },
+    basel: { src: '1/n^2', n0: 1, N: 5, view: 'integral', ex: { v: PI * PI / 6, t: 'π²/6' },
+      hint: 'The integral test: each bar of height a(n) on [n, n + 1] stands above the curve 1/x², so S_N is more than the area under the curve; slide each bar one step left and it fits under the curve. So ∫ from 1 to ∞ of dx/x² = 1 < S < 1 + 1 = 2. Euler found the sum: π²/6 = 1.6449. The readouts bound the leftover S − S_N by two integrals.' },
+    nlogn: { src: '1/(n ln(n))', n0: 2, N: 10, view: 'integral', ex: null,
+      hint: 'The integral of 1/(x ln x) is ln(ln x), which grows without bound, so by the integral test the series diverges, though so slowly that a million terms add only about 3.4. No computer could ever see this sum pass 10: the integral test proves what adding cannot.' },
+    telescope: { src: '1/(n(n+1))', b: '1/n^2', n0: 1, N: 5, view: 'compare', ex: { v: 1, t: '1' }, exB: { v: PI * PI / 6, t: 'π²/6' },
+      hint: 'Direct comparison: 1/(n(n + 1)) < 1/n² for every n, and Σ 1/n² converges, so Σ 1/(n(n + 1)) does too, to less than π²/6. In fact it telescopes: 1/(n(n + 1)) = 1/n − 1/(n + 1), so S_N = 1 − 1/(N + 1) and S = 1. Limit comparison: a(n)/b(n) → 1.' },
+    oddHarm: { src: '1/(2n-1)', b: '1/(2n)', n0: 1, N: 6, view: 'compare', ex: null, exB: null,
+      hint: 'Comparison the other way: 1/(2n − 1) > 1/(2n) for every n, and Σ 1/(2n) is half the harmonic series, which diverges. So Σ 1/(2n − 1) diverges too. A comparison only helps in one direction: being bigger than a convergent series or smaller than a divergent one proves nothing.' },
+    factorial: { src: '1/n!', n0: 0, N: 4, view: 'ratio', ex: { v: Math.E, t: 'e' }, rho: '0',
+      hint: 'The ratio test: a(n + 1)/a(n) = n!/(n + 1)! = 1/(n + 1), which goes to 0 < 1, so the series converges, fast. The sum is e = 2.71828…, which is e^x at x = 1 from its Taylor series. The nth root |a(n)|^(1/n) goes to 0 too, but much more slowly.' },
+    nOver2n: { src: 'n/2^n', n0: 1, N: 6, view: 'ratio', ex: { v: 2, t: '2' }, rho: '1/2',
+      hint: 'a(n + 1)/a(n) = (n + 1)/(2n), which goes to 1/2, so the ratio test says the series converges, like a geometric series of ratio 1/2 once n is large. The root test agrees: n^(1/n)/2 → 1/2. The sum is 2.' },
+    ratioOne: { src: '1/n^2', n0: 1, N: 10, view: 'ratio', ex: { v: PI * PI / 6, t: 'π²/6' }, rho: '1',
+      hint: 'For 1/n² the ratio (n/(n + 1))² goes to 1, and for 1/n it goes to 1 as well. One series converges and the other diverges, so a limit of 1 tells you nothing: use the integral test or a comparison instead.' },
+    seqE: { src: '(1+1/n)^n', n0: 1, N: 10, view: 'seq', L: { v: Math.E, t: 'e' },
+      hint: 'Interest of 100% a year compounded n times grows money by (1 + 1/n)ⁿ. More and more compounding does not grow it without bound: the sequence climbs to e = 2.71828. Narrow ε and see how far out you must go for every later term to stay within ε of e.' },
+    seqBounce: { src: '0.64^n', n0: 0, N: 8, view: 'seq', L: { v: 0, t: '0' }, units: { y: 'm', what: 'The height the ball reaches after bounce n, dropped from 1 m with a coefficient of restitution of 0.8.' },
+      hint: 'The bounce heights form a sequence, 0.64ⁿ m, which goes to 0. The total distance is a series built from it: a sequence is a list, a series is the running total of a list. Switch to Terms and sums to see the series.' },
+    seqRoot: { src: 'n^(1/n)', n0: 1, N: 12, view: 'seq', L: { v: 1, t: '1' },
+      hint: 'n grows without bound and 1/n shrinks to 0; which wins in n^(1/n)? It rises to its largest value at n = 3, then falls back to 1, since ln(n^(1/n)) = (ln n)/n → 0. This limit is why the root test reads n/2ⁿ the same as 1/2ⁿ.' },
+    seqOsc: { src: '(-1)^n n/(n+1)', n0: 1, N: 12, view: 'seq', L: null,
+      hint: 'The terms near 1 for even n and near −1 for odd n: two subsequences with different limits, so the sequence has no limit. No ε band smaller than 1 can hold every term from some N on.' },
+  };
+  const NLIST = (() => { const a = []; for (let n = 0; n <= 30; n++) a.push(n); for (const n of [40, 50, 60, 80, 100, 150, 200, 300, 500, 700, 1000, 1500, 2000, 3000, 5000, 7000, 10000, 12367, 15000, 20000, 30000, 50000, 70000, 100000, 200000, 500000, 1000000]) a.push(n); return a; })();
+  const EPS = [1, 0.5, 0.2, 0.1, 0.05, 0.02, 0.01, 0.005, 0.002, 0.001, 0.0005, 0.0002, 0.0001];
+  const S = { preset: 'bounce', view: 'sum', node: null, f: null, d1: null, d3: null, nodeB: null, fB: null, n0: 1, N: 3, axis: 'lin', manual: null,
+    ex: null, exB: null, an: null, anB: null, seq: null, cache: null, cacheB: null, bound: NaN, past: undefined, eps: 0.05, units: null, blind: false, run: false };
+  const can = $('can'), ctx = can.getContext('2d'), low = $('low'), lctx = low.getContext('2d');
+  let W = 0, H = 0, LW = 0, LH = 0, dpr = 1, T = null, need = true, clock = 0;
+  const f6 = (v) => (isFinite(v) ? fmt(Math.abs(v) < 1e-300 ? 0 : Number(v.toPrecision(7))) : VDI18N.t('undefined'));
+  const sci = (v, d = 3) => {
+    if (!isFinite(v)) return VDI18N.t('undefined');
+    if (v === 0) return '0';
+    const e = Math.floor(Math.log10(Math.abs(v)));
+    if (e >= -3 && e < 6) return fmt(Number(v.toPrecision(d)));
+    let m = Number((v / Math.pow(10, e)).toPrecision(d)); let ee = e; if (Math.abs(m) >= 10) { m /= 10; ee++; }
+    return fmt(m) + '×10' + sup(ee);
+  };
+  const big = (n) => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  const uY = () => (S.units && S.units.y ? ' ' + VDI18N.t(S.units.y) : '');
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), mono: g('--font-mono') || 'monospace', red: g('--red'),
+      term: g('--term'), sum: g('--sum'), b: g('--bseries'), lim: g('--lim'), band: g('--sband'), root: g('--root'), area: g('--area') };
+  }
+  const proj = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.35 : 1);
+
+  /* ---------- reading the boxes ---------- */
+  const MSG = {
+    name: (e) => VDI18N.t('“{n}” is not a name I know. Use n, and functions like sin, ln, sqrt.', { n: e.name2 }),
+    char: (e) => VDI18N.t('“{n}” is not something I can read here.', { n: e.name2 }),
+    unexpected: (e) => VDI18N.t('“{n}” is out of place.', { n: e.name2 }),
+    close: () => VDI18N.t('There is a ) without a matching (.'),
+    comma: () => VDI18N.t('Functions here take one input; there is no comma form.'),
+    arg: (e) => VDI18N.t('{n} needs something to act on, like {n}(n).', { n: e.name2 }),
+    end: () => VDI18N.t('Not finished yet.'),
+    empty: () => VDI18N.t('Type the terms a(n), like 1/n^2.'),
+  };
+  const NV = { vars: ['n'] };
+  function status(msg, bad) { const st = $('anStatus'); st.textContent = msg; st.classList.toggle('bad', !!bad); }
+  function compileTerms(node) {
+    const f = M.compile(node, ['n']);
+    let d1 = null, d3 = null;
+    try { const t1 = M.derivative(node, 'n'), t3 = M.derivative(M.derivative(t1, 'n'), 'n'); d1 = M.compile(t1, ['n']); d3 = M.compile(t3, ['n']); } catch (_) { d1 = d3 = null; }
+    return { f, d1, d3 };
+  }
+  function read() {
+    const r = M.parseLive($('an').value, NV);
+    $('an').classList.toggle('bad', !r.node && !r.empty);
+    const t = $('n0').value.trim(), n0 = /^\d+$/.test(t) ? +t : NaN;
+    $('n0').classList.toggle('bad', !(n0 <= 1000));
+    if (n0 <= 1000) S.n0 = n0;
+    if (r.empty) { status(MSG.empty(), false); return; }
+    if (!r.node) { status((S.node ? VDI18N.t('Still showing the last series. ') : '') + (MSG[r.error.code] || MSG.end)(r.error), true); return; }
+    status(r.partial ? VDI18N.t('Adding up what is finished so far, while you type.') : !(n0 <= 1000) ? VDI18N.t('The first index is a whole number from 0 to 1,000.') : '', !(n0 <= 1000));
+    S.node = r.node; Object.assign(S, compileTerms(r.node));
+    if (S.view === 'compare') {
+      const q = M.parseLive($('bn').value, NV);
+      $('bn').classList.toggle('bad', !q.node);
+      if (q.node) { S.nodeB = q.node; S.fB = M.compile(q.node, ['n']); S.dB = compileTerms(q.node); }
+      else if (!q.empty) status((MSG[q.error.code] || MSG.end)(q.error), true);
+    }
+    if (S.N < S.n0) S.N = S.n0;
+    S.an = null; S.anB = null; S.seq = null; S.cache = null; S.cacheB = null; S.past = undefined;
+  }
+  /* the terms and partial sums from n0, kept for as far as N has gone (they grow by doubling) */
+  function sums(B) {
+    const f = B ? S.fB : S.f; if (!f) return null;
+    const key = B ? 'cacheB' : 'cache', want = Math.min(NMAX + 2, S.N - S.n0 + 3);
+    let c = S[key];
+    if (!c || c.n < want) {
+      const n = Math.min(NMAX + 2, Math.max(want, c ? 2 * c.n : 64));
+      const A = new Float64Array(n); for (let i = 0; i < n; i++) A[i] = f(S.n0 + i);
+      c = S[key] = { n, A, P: partialSums(f, S.n0, n) };
+    }
+    return c;
+  }
+  const termAt = (k, B) => { const c = sums(B); const i = k - S.n0; return c && i >= 0 && i < c.n ? c.A[i] : (B ? S.fB : S.f)(k); };
+  const sumTo = (N, B) => { const c = sums(B); const i = N - S.n0; return c && i >= 0 && i < c.n ? c.P[i] : NaN; };
+  function work() {
+    if (!S.f) return;
+    if (!S.an) S.an = analyze(S.f, S.n0, S.d1, S.d3);
+    if (S.view === 'compare' && S.fB && !S.anB) S.anB = analyze(S.fB, S.n0, S.dB.d1, S.dB.d3);
+    if (S.view === 'seq' && !S.seq) S.seq = seqLimit(S.f);
+  }
+  /* the sum: the setup's closed form, else what analyze found */
+  function sumOf(B) {
+    const ex = B ? S.exB : S.ex, an = B ? S.anB : S.an;
+    if (ex) return { v: ex.v, t: ex.t, exact: true };
+    if (an && an.status === 'converges') return { v: an.S, t: null, exact: false, err: an.err };
+    return null;
+  }
+
+  /* ---------- the n axis: linear, or log10 n ---------- */
+  const lg = () => S.axis === 'log';
+  function autoView() {
+    const n0 = S.n0, top = Math.max(S.N, n0 + 6);
+    if (lg()) { const a = Math.max(1, n0); return [Math.log10(a) - 0.2, Math.log10(Math.max(top * 1.6, a + 4)) + 0.05]; }
+    const w = top - n0 + 1; return [n0 - 1.1 - 0.04 * w, n0 + w * 1.18 + 0.6];
+  }
+  const view = () => S.manual || autoView();
+  const U = (n) => (lg() ? Math.log10(n) : n);   /* n to the axis coordinate */
+  const Ui = (u) => (lg() ? Math.pow(10, u) : u);
+  function niceStep(span, px) {
+    const raw = span / Math.max(2, px), p10 = Math.pow(10, Math.floor(Math.log10(raw))), m = raw / p10;
+    return (m <= 1 ? 1 : m <= 2 ? 2 : m <= 5 ? 5 : 10) * p10;
+  }
+  function tick(v, step) {
+    if (Math.abs(v) < step * 1e-6) return '0';
+    if (step >= 1e5 || step < 1e-3) { const e = Math.floor(Math.log10(Math.abs(v))), m = Number((v / Math.pow(10, e)).toPrecision(3)); return (m === 1 ? '' : m === -1 ? '−' : fmt(m) + '×') + '10' + sup(e); }
+    return fmt(Number(v.toFixed(Math.max(0, -Math.floor(Math.log10(step)) + 1))));
+  }
+  const labelOn = (c, t, x, y) => { c.save(); c.strokeStyle = T.canvas; c.lineWidth = 4; c.lineJoin = 'round'; c.strokeText(t, x, y); c.restore(); c.fillText(t, x, y); };
+  /* a grid with ticks for the view v = {x0, x1, y0, y1} of size w × h; the x axis is n (log10 n on a log axis) */
+  function grid(c, v, w, h, p, xName, yName) {
+    const XX = (x) => (x - v.x0) / (v.x1 - v.x0) * w, YY = (y) => h - (y - v.y0) / (v.y1 - v.y0) * h;
+    const L = lg(), sx = L ? 1 : Math.max(1, niceStep(v.x1 - v.x0, w / (70 * p))), sy = niceStep(v.y1 - v.y0, h / (46 * p));
+    c.lineWidth = 1; c.strokeStyle = T.line; c.beginPath();
+    for (let x = Math.ceil(v.x0 / sx) * sx; x <= v.x1; x += sx) { const u = Math.round(XX(x)) + 0.5; c.moveTo(u, 0); c.lineTo(u, h); }
+    for (let y = Math.ceil(v.y0 / sy) * sy; y <= v.y1; y += sy) { const u = Math.round(YY(y)) + 0.5; c.moveTo(0, u); c.lineTo(w, u); }
+    c.stroke();
+    const ax = Math.min(Math.max(YY(0), 0), h);
+    c.strokeStyle = T.muted; c.lineWidth = 1.5; c.beginPath();
+    if (YY(0) >= 0 && YY(0) <= h) { c.moveTo(0, YY(0)); c.lineTo(w, YY(0)); }
+    c.stroke();
+    c.fillStyle = T.muted; c.font = `${11 * p}px ${T.mono}`;
+    const below = ax + 16 * p < h; c.textAlign = 'center'; c.textBaseline = below ? 'top' : 'bottom';
+    for (let x = Math.ceil(v.x0 / sx) * sx; x <= v.x1; x += sx) { const u = XX(x); if (u < 14 * p || u > w - 40 * p) continue; labelOn(c, L ? (x === 0 ? '1' : x === 1 ? '10' : '10' + sup(Math.round(x))) : tick(x, sx), u, below ? ax + 4 * p : ax - 4 * p); }
+    c.textAlign = 'left'; c.textBaseline = 'middle';
+    for (let y = Math.ceil(v.y0 / sy) * sy; y <= v.y1; y += sy) { if (Math.abs(y) < sy / 2) continue; const u = YY(y); if (u < 22 * p || u > h - 12 * p) continue; labelOn(c, tick(y, sy), 5 * p, u); }
+    c.font = `600 ${12 * p}px ${T.mono}`; c.fillStyle = T.ink;
+    c.textAlign = 'right'; c.textBaseline = 'bottom'; labelOn(c, xName, w - 6 * p, below ? ax - 4 * p : ax - 20 * p);
+    c.textAlign = 'left'; c.textBaseline = 'top'; labelOn(c, yName, 6 * p, 6 * p);
+  }
+  /* the y range that holds every value in vals (and 0), with room at the top for labels */
+  function yFit(vals, extra) {
+    let lo = 0, hi = 0;
+    for (const y of vals) if (isFinite(y)) { lo = Math.min(lo, y); hi = Math.max(hi, y); }
+    for (const y of extra || []) if (isFinite(y)) { lo = Math.min(lo, y); hi = Math.max(hi, y); }
+    if (hi - lo < 1e-12) { hi += 1; }
+    const pad = 0.1 * (hi - lo);
+    return [lo - (lo < 0 ? pad : 0.09 * (hi - lo)), hi + 2.2 * pad];
+  }
+  /* the whole numbers n shown in the view, one per pixel column at most: { n, x } with the range of n each column covers */
+  function columns(v, w, upTo) {
+    const out = [], [x0, x1] = v, lo = Math.max(S.n0, lg() ? 1 : S.n0), hi = Math.min(upTo, Math.floor(Ui(x1)));
+    if (hi < lo) return out;
+    if (!lg() && (x1 - x0) / w < 0.5) { for (let n = Math.max(lo, Math.ceil(x0)); n <= hi; n++) out.push({ a: n, b: n, n }); return out; }
+    let prev = Math.max(lo, Math.ceil(Ui(x0))) - 1;
+    for (let px = 0; px <= w; px++) {
+      const end = Math.min(hi, Math.floor(Ui(x0 + (px + 1) / w * (x1 - x0))));
+      if (end > prev) { out.push({ a: prev + 1, b: end, n: end }); prev = end; }
+      if (prev >= hi) break;
+    }
+    return out;
+  }
+  const zoneN = () => Math.min(NMAX, Math.max(S.N, Math.floor(Ui(view()[1]))));
+
+  /* ---------- the upper graph ---------- */
+  function draw() {
+    if (!T || !W) return;
+    const p = proj(), c = ctx, [x0, x1] = view();
+    c.setTransform(dpr, 0, 0, dpr, 0, 0); c.fillStyle = T.canvas; c.fillRect(0, 0, W, H);
+    if (!S.f) return;
+    work();
+    const XX = (u) => (u - x0) / (x1 - x0) * W;
+    const ahead = Math.min(zoneN(), NMAX);
+    const cols = columns([x0, x1], W, ahead);
+    const cA = sums(false), cB = S.fB && S.view === 'compare' ? sums(true) : null;
+    const vOf = (col, B) => {   /* the smallest and largest term in a column, from the cached terms where they reach */
+      const c = B ? cB : cA; let lo = Infinity, hi = -Infinity;
+      for (let k = col.a; k <= col.b; k++) { const i = k - S.n0, y = c && i < c.n ? c.A[i] : termAt(k, B); if (y === y && y !== Infinity && y !== -Infinity) { if (y < lo) lo = y; if (y > hi) hi = y; } }
+      return [lo, hi];
+    };
+    const yn = S.units && S.units.y ? `a(n) (${VDI18N.t(S.units.y)})` : 'a(n)';
+    const xn = lg() ? 'n (log)' : 'n';
+    if (S.view === 'ratio') {
+      const pts = cols.map((col) => { const n = col.n, a = termAt(n), a1 = termAt(n + 1); return { n, r: Math.abs(a1 / a), q: Math.pow(Math.abs(a), 1 / n) }; });
+      const vals = []; for (const q of pts) { if (q.n <= S.N) { vals.push(Math.min(q.r, 3), Math.min(q.q, 3)); } }
+      const [y0, y1] = yFit(vals, [1.15]), v = { x0, x1, y0, y1 }, YY = (y) => H - (y - y0) / (y1 - y0) * H;
+      grid(c, v, W, H, p, xn, VDI18N.t('ratio and root'));
+      c.strokeStyle = T.ink; c.lineWidth = 1.4 * p; c.setLineDash([6 * p, 5 * p]); c.beginPath(); c.moveTo(0, YY(1)); c.lineTo(W, YY(1)); c.stroke(); c.setLineDash([]);
+      c.fillStyle = T.ink; c.font = `${12 * p}px ${T.mono}`; c.textAlign = 'right'; c.textBaseline = 'bottom'; labelOn(c, VDI18N.t('1: the test says nothing here'), W - 8 * p, YY(1) - 3 * p);
+      const rho = S.an && S.an.rho;
+      if (!S.blind && isFinite(rho) && Math.abs(rho - 1) > 0.02 && rho < y1) { c.strokeStyle = T.lim; c.setLineDash([3 * p, 4 * p]); c.beginPath(); c.moveTo(0, YY(rho)); c.lineTo(W, YY(rho)); c.stroke(); c.setLineDash([]); c.fillStyle = T.lim; c.textAlign = 'left'; labelOn(c, VDI18N.t('limit ρ'), 60 * p, YY(rho) - 3 * p); }
+      for (const [key, col, r] of [['q', T.root, 3], ['r', T.term, 3.6]]) {
+        c.fillStyle = col; c.strokeStyle = col; c.lineWidth = 1.5 * p;
+        for (const q of pts) { const y = q[key]; if (!isFinite(y)) continue; const X = XX(U(q.n)), Yv = YY(Math.min(y, y1)); c.beginPath(); c.arc(X, Yv, r * p * (cols.length > 80 ? 0.6 : 1), 0, 7); if (q.n <= S.N) c.fill(); else { c.globalAlpha = 0.35; c.fill(); c.globalAlpha = 1; } }
+      }
+      c.font = `${12 * p}px ${T.mono}`; c.textAlign = 'right'; c.textBaseline = 'top';
+      c.fillStyle = T.term; labelOn(c, VDI18N.t('ratio |a(n+1)/a(n)|'), W - 8 * p, 8 * p);
+      c.fillStyle = T.root; labelOn(c, VDI18N.t('root |a(n)|^(1/n)'), W - 8 * p, 24 * p);
+      return;
+    }
+    const shown = []; for (const col of cols) { const [lo, hi] = vOf(col); shown.push(lo, hi); if (S.view === 'compare' && S.fB) { const [l2, h2] = vOf(col, true); shown.push(l2, h2); } }
+    let extra = [];
+    const Lx = S.view === 'seq' ? limitOf() : null;
+    if (S.view === 'seq' && Lx && !S.blind) extra = [Lx.v + S.eps, Lx.v - S.eps];
+    if (S.view === 'seq') { let a = Infinity, b = -Infinity; for (const y of shown) if (isFinite(y)) { a = Math.min(a, y); b = Math.max(b, y); } if (b - a < 1e-9) extra.push(a - 1, b + 1); }
+    let [y0, y1] = S.view === 'seq' ? yFitSeq(shown, extra) : yFit(shown, extra);
+    const v = { x0, x1, y0, y1 }, YY = (y) => H - (y - y0) / (y1 - y0) * H, Y0 = Math.max(-2, Math.min(H + 2, YY(0)));
+    grid(c, v, W, H, p, xn, S.view === 'seq' ? yn : yn);
+    const halfOf = (n) => Math.max(0.6, Math.min(0.36 * (XX(U(n + 1)) - XX(U(n))), 40 * p));   /* each bar 72% of its own step */
+    if (S.view === 'integral') {
+      /* the curve a(x) and the rectangles on [n, n + 1] (S_N, above a falling curve) and their outlines moved to [n − 1, n] (under it) */
+      const m = Math.min(1600, Math.ceil(W)); c.strokeStyle = T.area; c.lineWidth = 2.6 * p; c.beginPath(); let pen = false;
+      for (let i = 0; i <= m; i++) { const u = x0 + (x1 - x0) * i / m, x = Ui(u); if (x < S.n0) { pen = false; continue; } const y = S.f(x); if (!isFinite(y)) { pen = false; continue; } const Yv = Math.max(-H, Math.min(2 * H, YY(y))); if (pen) c.lineTo(XX(u), Yv); else c.moveTo(XX(u), Yv); pen = true; }
+      c.stroke();
+      const wide = XX(U(S.n0 + 1)) - XX(U(S.n0)) >= 3;
+      if (wide) {
+        for (let k = S.n0; k <= Math.min(S.N, S.n0 + 4000); k++) {
+          const a = termAt(k), xa = XX(U(Math.max(k, lg() ? 1 : k))), xb = XX(U(k + 1)); if (xb < -2 || xa > W + 2 || !isFinite(a)) continue;
+          c.globalAlpha = 0.3; c.fillStyle = T.term; c.fillRect(xa, Math.min(YY(a), Y0), xb - xa, Math.abs(YY(a) - Y0)); c.globalAlpha = 1;
+          c.strokeStyle = T.term; c.lineWidth = 1.2 * p; c.strokeRect(xa, Math.min(YY(a), Y0), xb - xa, Math.abs(YY(a) - Y0));
+          if (k > S.n0 && (!lg() || k > 1)) { const xc = XX(U(k - 1)); c.setLineDash([4 * p, 3 * p]); c.strokeStyle = T.band; c.strokeRect(xc, Math.min(YY(a), Y0), xa - xc, Math.abs(YY(a) - Y0)); c.setLineDash([]); }
+        }
+      }
+      c.font = `${12 * p}px ${T.mono}`; c.textAlign = 'right'; c.textBaseline = 'top';
+      c.fillStyle = T.term; labelOn(c, VDI18N.t('bars on [n, n+1]: S_N, above the curve'), W - 8 * p, 8 * p);
+      c.fillStyle = T.band; labelOn(c, VDI18N.t('moved to [n−1, n]: under it'), W - 8 * p, 24 * p);
+      c.fillStyle = T.area; labelOn(c, VDI18N.t('curve a(x)'), W - 8 * p, 40 * p);
+      markN(c, XX, p);
+      return;
+    }
+    if (S.view === 'seq') {
+      if (Lx && !S.blind) {
+        c.globalAlpha = 0.16; c.fillStyle = T.band; c.fillRect(0, YY(Lx.v + S.eps), W, YY(Lx.v - S.eps) - YY(Lx.v + S.eps)); c.globalAlpha = 1;
+        c.strokeStyle = T.lim; c.lineWidth = 1.6 * p; c.setLineDash([7 * p, 5 * p]); c.beginPath(); c.moveTo(0, YY(Lx.v)); c.lineTo(W, YY(Lx.v)); c.stroke(); c.setLineDash([]);
+        c.fillStyle = T.lim; c.font = `${12 * p}px ${T.mono}`; c.textAlign = 'left'; c.textBaseline = 'bottom'; labelOn(c, VDI18N.t('L = {L}', { L: Lx.t || f6(Lx.v) }), 60 * p, YY(Lx.v) - 3 * p);
+        const Ne = epsN(); if (Ne && Ne.N != null) { const u = XX(U(Math.max(Ne.N, lg() ? 1 : Ne.N))); c.strokeStyle = T.band; c.lineWidth = 1.5 * p; c.beginPath(); c.moveTo(u, 0); c.lineTo(u, H); c.stroke(); c.fillStyle = T.band; c.textAlign = u > W - 90 * p ? 'right' : 'left'; c.textBaseline = 'top'; labelOn(c, `N(ε) = ${big(Ne.N)}`, u + (u > W - 90 * p ? -5 : 5) * p, 44 * p); }
+      }
+      for (const col of cols) {
+        const [lo, hi] = vOf(col), X = XX(U(col.n)), on = col.a <= S.N;
+        c.fillStyle = T.term; c.strokeStyle = T.term; c.globalAlpha = on ? 1 : 0.3;
+        if (col.a === col.b) { c.beginPath(); c.arc(X, YY(hi), (cols.length > 80 ? 2 : 4) * p, 0, 7); c.fill(); }
+        else { c.lineWidth = 1.2; c.beginPath(); c.moveTo(X, YY(lo)); c.lineTo(X, YY(hi)); c.stroke(); }
+      }
+      c.globalAlpha = 1; markN(c, XX, p);
+      c.font = `${12 * p}px ${T.mono}`; c.textAlign = 'right'; c.textBaseline = 'top'; c.fillStyle = T.term; labelOn(c, VDI18N.t('the sequence a(n)'), W - 8 * p, 8 * p);
+      return;
+    }
+    /* the terms as bars (and b(n) beside them), faint past N: the terms Play will add next */
+    for (const col of cols) {
+      const on = col.a <= S.N, X = XX(U(col.n)), halfW = halfOf(col.n);
+      for (const B of S.view === 'compare' && S.fB ? [false, true] : [false]) {
+        const [lo, hi] = vOf(col, B), color = B ? T.b : T.term, off = S.view === 'compare' ? (B ? 0.5 : -0.5) * halfW : 0;
+        c.globalAlpha = on ? 1 : 0.28; c.fillStyle = color; c.strokeStyle = color;
+        if (halfW >= 2.5 && col.a === col.b) {
+          const w = S.view === 'compare' ? halfW : 2 * halfW, y = hi, top = Math.min(YY(y), Y0), ht = Math.abs(YY(y) - Y0);
+          if (B) { c.lineWidth = 1.8 * p; c.strokeRect(X + off - w / 2, top, w, ht); } else { c.globalAlpha *= 0.75; c.fillRect(X + off - w / 2, top, w, Math.max(1, ht)); }
+        } else { c.lineWidth = Math.max(1, Math.min(2, halfW * 2)); c.beginPath(); c.moveTo(X + off, YY(Math.min(0, lo))); c.lineTo(X + off, YY(Math.max(0, hi))); c.stroke(); }
+      }
+    }
+    c.globalAlpha = 1; markN(c, XX, p);
+    c.font = `${12 * p}px ${T.mono}`; c.textAlign = 'right'; c.textBaseline = 'top'; c.fillStyle = T.term;
+    labelOn(c, S.view === 'compare' ? VDI18N.t('a(n), filled') : VDI18N.t('the terms a(n); faint: not added yet'), W - 8 * p, 8 * p);
+    if (S.view === 'compare' && S.fB) { c.fillStyle = T.b; labelOn(c, VDI18N.t('b(n), outlined'), W - 8 * p, 24 * p); }
+  }
+  function yFitSeq(vals, extra) {
+    let lo = Infinity, hi = -Infinity;
+    for (const y of vals.concat(extra)) if (isFinite(y)) { lo = Math.min(lo, y); hi = Math.max(hi, y); }
+    if (!isFinite(lo)) return [-1, 1];
+    if (hi - lo < 1e-12) { lo -= 1; hi += 1; }
+    if (lo > 0 && lo < 0.25 * (hi - lo)) lo = 0; if (hi < 0 && -hi < 0.25 * (hi - lo)) hi = 0;
+    const pad = 0.1 * (hi - lo); return [lo - pad, hi + 2.2 * pad];
+  }
+  /* the line at N: the last term added */
+  function markN(c, XX, p) {
+    if (lg() && S.N < 1) return;
+    const u = XX(U(S.N)); if (u < -2 || u > W + 2) return;
+    c.strokeStyle = T.ink; c.lineWidth = 1.2 * p; c.setLineDash([3 * p, 4 * p]); c.beginPath(); c.moveTo(u, 0); c.lineTo(u, H); c.stroke(); c.setLineDash([]);
+    c.fillStyle = T.ink; c.font = `700 ${12 * p}px ${T.mono}`; c.textBaseline = 'top'; c.textAlign = u > W - 70 * p ? 'right' : 'left';
+    labelOn(c, `N = ${big(S.N)}`, u + (u > W - 70 * p ? -5 : 5) * p, 26 * p);
+  }
+  function limitOf() {
+    const c = PRESETS[S.preset];
+    if (c && S.preset !== 'custom' && 'L' in c) return c.L;
+    if (S.seq && S.seq.status === 'converges') return { v: S.seq.L, t: null };
+    return null;
+  }
+  let epsCache = null;
+  function epsN() {
+    const L = limitOf(); if (!L || !S.f) return null;
+    const k = `${S.preset},${S.n0},${$('an').value},${S.eps}`;
+    if (!epsCache || epsCache.k !== k) epsCache = { k, N: nEps(S.f, S.n0, L.v, S.eps, NMAX) };
+    return epsCache;
+  }
+
+  /* ---------- the lower graph: partial sums ---------- */
+  function drawLow() {
+    if (!T || !LW) return;
+    const p = proj(), c = lctx, [x0, x1] = view();
+    c.setTransform(dpr, 0, 0, dpr, 0, 0); c.fillStyle = T.canvas; c.fillRect(0, 0, LW, LH);
+    if (!S.f) return;
+    work();
+    const XX = (u) => (u - x0) / (x1 - x0) * LW;
+    const cols = columns([x0, x1], LW, S.N), both = S.view === 'compare' && S.fB;
+    const sm = sumOf(false), smB = both ? sumOf(true) : null;
+    const vals = []; for (const col of cols) { vals.push(sumTo(col.n)); if (both) vals.push(sumTo(col.n, true)); }
+    const extra = []; if (sm && !S.blind) extra.push(sm.v); if (smB && !S.blind) extra.push(smB.v);
+    if (S.view === 'sum' && isFinite(S.bound) && S.bound > 0) extra.push(S.bound);
+    const alt = S.an && S.an.test === 'alternating' && S.an.status === 'converges';
+    const nextA = termAt(S.N + 1), SN = sumTo(S.N);
+    if (alt) extra.push(SN + nextA);
+    const [y0, y1] = yFit(vals, extra), YY = (y) => LH - (y - y0) / (y1 - y0) * LH;
+    grid(c, { x0, x1, y0, y1 }, LW, LH, p, lg() ? 'N (log)' : 'N', S.units && S.units.y ? `S_N (${VDI18N.t(S.units.y)})` : 'S_N');
+    c.font = `${12 * p}px ${T.mono}`;
+    for (const [s, col, B] of [[sm, T.lim, false], [smB, T.b, true]]) {
+      if (!s || S.blind) continue;
+      c.strokeStyle = col; c.lineWidth = 1.5 * p; c.setLineDash([7 * p, 5 * p]); c.beginPath(); c.moveTo(0, YY(s.v)); c.lineTo(LW, YY(s.v)); c.stroke(); c.setLineDash([]);
+      c.fillStyle = col; c.textAlign = 'left'; c.textBaseline = B ? 'top' : 'bottom'; labelOn(c, (B ? 'Σ b = ' : 'S = ') + (s.t || f6(s.v)), 60 * p, YY(s.v) + (B ? 3 : -3) * p);
+    }
+    if (S.view === 'sum' && isFinite(S.bound) && S.bound > 0) {
+      c.strokeStyle = T.band; c.lineWidth = 1.4 * p; c.setLineDash([2 * p, 4 * p]); c.beginPath(); c.moveTo(0, YY(S.bound)); c.lineTo(LW, YY(S.bound)); c.stroke(); c.setLineDash([]);
+      c.fillStyle = T.band; c.textAlign = 'center'; c.textBaseline = 'bottom'; labelOn(c, VDI18N.t('pass {B}', { B: f6(S.bound) }), LW * 0.42, YY(S.bound) - 3 * p);
+    }
+    /* the integral test bounds on S at N: S_N + ∫ from N+1 to ∞ ≤ S ≤ S_N + ∫ from N to ∞ */
+    if (S.view === 'integral') { const b = intBounds(); if (b && b.ok) { const u = XX(U(S.N)); c.fillStyle = T.band; c.globalAlpha = 0.35; const ya = YY(SN + b.lo), yb = YY(SN + b.hi); c.fillRect(u - 7 * p, Math.min(ya, yb), 14 * p, Math.max(2, Math.abs(ya - yb))); c.globalAlpha = 1; } }
+    for (const B of both ? [false, true] : [false]) {
+      const color = B ? T.b : T.sum; c.strokeStyle = color; c.fillStyle = color; c.lineWidth = 2.2 * p;
+      c.beginPath(); let pen = false;
+      for (const col of cols) { const y = sumTo(col.n, B); if (!isFinite(y)) { pen = false; continue; } const X = XX(U(col.n)), Yv = Math.max(-LH, Math.min(2 * LH, YY(y))); if (pen) c.lineTo(X, Yv); else c.moveTo(X, Yv); pen = true; }
+      c.globalAlpha = 0.55; c.stroke(); c.globalAlpha = 1;
+      if (cols.length && cols.length <= 120) for (const col of cols) { const y = sumTo(col.n, B); if (!isFinite(y)) continue; c.beginPath(); c.arc(XX(U(col.n)), YY(y), 3.4 * p, 0, 7); c.fill(); }
+    }
+    /* where S_N is now; for an alternating series the next sum, a(N+1) away, brackets S */
+    const u = XX(U(Math.max(S.N, lg() ? 1 : S.N)));
+    if (isFinite(SN)) { c.fillStyle = T.sum; c.strokeStyle = T.canvas; c.lineWidth = 2; c.beginPath(); c.arc(u, YY(SN), 6 * p, 0, 7); c.fill(); c.stroke(); }
+    if (alt && isFinite(nextA) && !S.blind) {
+      const ya = YY(SN), yb = YY(SN + nextA); c.strokeStyle = T.band; c.lineWidth = 2.4 * p; c.beginPath(); c.moveTo(u + 12 * p, ya); c.lineTo(u + 12 * p, yb); c.moveTo(u + 7 * p, ya); c.lineTo(u + 17 * p, ya); c.moveTo(u + 7 * p, yb); c.lineTo(u + 17 * p, yb); c.stroke();
+      c.fillStyle = T.band; c.font = `600 ${12 * p}px ${T.mono}`; const lab = VDI18N.t('S is in here: |S − S_N| ≤ |a(N+1)|'), tw = c.measureText(lab).width; c.textAlign = 'left'; c.textBaseline = 'bottom'; labelOn(c, lab, Math.max(6 * p, Math.min(LW - 6 * p - tw, u + 12 * p - tw / 2)), Math.min(ya, yb) - 5 * p); c.font = `${12 * p}px ${T.mono}`;
+    }
+    c.textAlign = 'right'; c.textBaseline = 'top'; c.fillStyle = T.sum; labelOn(c, both ? VDI18N.t('S_N of a, and of b (teal)') : VDI18N.t('partial sums S_N = a(n₀) + … + a(N)'), LW - 8 * p, 8 * p);
+  }
+  let boundsCache = null;
+  function intBounds() {
+    if (!S.f || S.N < S.n0 || S.N < 1) return null;
+    const k = `${$('an').value},${S.n0},${S.N}`;
+    if (boundsCache && boundsCache.k === k) return boundsCache;
+    const g = S.f, a = tailIntegral(g, S.N + 1), b = tailIntegral(g, Math.max(S.N, 1e-9));
+    boundsCache = { k, lo: a.value, hi: b.value, ok: a.status === 'converges' && b.status === 'converges', status: b.status };
+    return boundsCache;
+  }
+
+  /* ---------- the rail ---------- */
+  const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
+  function formulas() {
+    const dl = $('formulas'); if (!S.node) { dl.innerHTML = ''; return; }
+    const n0 = S.n0;
+    let h = `<dt>a(n)</dt><dd>${esc(M.text(S.node))}</dd><dt>S_N</dt><dd>a(${n0}) + a(${n0 + 1}) + … + a(N)</dd>`;
+    if (S.view === 'compare' && S.nodeB) h += `<dt>b(n)</dt><dd>${esc(M.text(S.nodeB))}</dd>`;
+    const F = {
+      sum: [['S', 'lim S_N as N → ∞'], [VDI18N.t('geometric'), 'a + ar + ar² + … = a/(1 − r), |r| < 1'], [VDI18N.t('alternating'), '|S − S_N| ≤ |a(N+1)|']],
+      seq: [['L', 'lim a(n): |a(n) − L| < ε for all n ≥ N(ε)'], [VDI18N.t('divergence'), 'a(n) ↛ 0 ⇒ Σ a(n) diverges']],
+      integral: [[VDI18N.t('integral test'), '∫ₙ₀^∞ a(x) dx finite ⇔ Σ a(n) converges'], [VDI18N.t('remainder'), '∫_{N+1}^∞ a ≤ S − S_N ≤ ∫_N^∞ a']],
+      compare: [[VDI18N.t('direct'), '0 ≤ a(n) ≤ b(n), Σ b converges ⇒ Σ a converges'], [VDI18N.t('limit'), 'a(n)/b(n) → L, 0 < L < ∞: both or neither']],
+      ratio: [['ρ', 'lim |a(n+1)/a(n)| = lim |a(n)|^(1/n)'], [VDI18N.t('test'), 'ρ < 1 converges, ρ > 1 diverges, ρ = 1 no verdict']],
+    }[S.view];
+    for (const [a, b] of F) h += `<dt>${esc(a)}</dt><dd>${b}</dd>`;
+    dl.innerHTML = h;
+  }
+  function verdict(an, B) {
+    if (!an) return '';
+    const rho = an.rho, rs = rho === Infinity ? '∞' : isFinite(rho) ? (rho < 1e-6 ? '0' : fmt(Number(rho.toPrecision(3)))) : '';
+    const c = PRESETS[S.preset], rt = c && S.preset !== 'custom' && c.rho && !B ? c.rho : rs;
+    if (an.status === 'undefined') return VDI18N.t('a(n) is not a number at n = {n}', { n: an.at });
+    if (an.status === 'converges') return an.test === 'ratio' ? VDI18N.t('converges: ratio test, ρ = {r} < 1', { r: rt }) : an.test === 'alternating' ? VDI18N.t('converges: alternating series test') : VDI18N.t('converges: integral test, ∫ a(x) dx is finite');
+    if (an.status === 'diverges') return an.test === 'divergence' ? VDI18N.t('diverges: the terms do not go to 0') : an.test === 'ratio' ? VDI18N.t('diverges: ratio test, ρ = {r} > 1', { r: rt }) : VDI18N.t('diverges: integral test, ∫ a(x) dx grows without bound');
+    return an.test === 'integral' ? VDI18N.t('not decided: ∫ a(x) dx still changing at x = 10³⁰⁰') : VDI18N.t('not decided by these tests (try a comparison)');
+  }
+  function readouts() {
+    if (!S.f) return;
+    work();
+    const dd = (a, b, cls) => `<div${cls ? ` class="${cls}"` : ''}><dt>${a}</dt><dd translate="no">${b}</dd></div>`;
+    const wide = (a, b) => `<div class="wide"><dt>${a}</dt><dd class="ok">${b}</dd></div>`;
+    const hide = S.blind, N = S.N, SN = sumTo(N), sm = sumOf(false);
+    let h = '';
+    if (S.view === 'seq') {
+      const L = limitOf(), sq = S.seq;
+      h += dd('N', big(N)) + dd('a(N)', f6(termAt(N)) + uY());
+      let lt;
+      if (hide) lt = '?';
+      else if (L) lt = (L.t && L.t !== f6(L.v) ? `${L.t} = ` : '') + f6(L.v) + (S.preset === 'custom' ? ' ' + VDI18N.t('(from n = 10⁸)') : '');
+      else lt = !sq ? '' : sq.status === 'none' ? VDI18N.t('none: the terms keep jumping between {a} and {b}', { a: f6(sq.lo), b: f6(sq.hi) }) : sq.status === 'infinite' ? VDI18N.t('none: the terms grow without bound') : sq.status === 'slow' ? VDI18N.t('not found: still changing at n = 10⁸') : VDI18N.t('a(n) is not a number far out');
+      h += wide(VDI18N.t('Limit L'), lt);
+      if (L && !hide) {
+        const e = epsN(); h += dd('ε', fmt(S.eps)) + dd('|a(N) − L|', sci(Math.abs(termAt(N) - L.v)));
+        h += wide(VDI18N.t('Every term stays within ε from'), e && e.N != null ? `N(ε) = ${big(e.N)}` : VDI18N.t('beyond n = 1,000,000'));
+      }
+      h += wide(VDI18N.t('The series Σ a(n)'), L && Math.abs(L.v) > 1e-12 ? VDI18N.t('diverges: the terms go to {L}, not 0', { L: f6(L.v) }) : VDI18N.t('can converge only if a(n) → 0: switch to Terms and sums'));
+    } else {
+      h += dd('N', big(N)) + dd('a(N)', f6(termAt(N)) + uY()) + dd(`S_N`, f6(SN) + uY());
+      h += dd(VDI18N.t('Sum S'), hide ? '?' : sm ? (sm.t && sm.t !== f6(sm.v) ? `${esc(sm.t)} = ` : '') + f6(sm.v) + uY() : S.an && S.an.status === 'diverges' ? VDI18N.t('none: diverges') : '—', 'wide');
+      if (sm && !hide) h += dd('S − S_N', sci(sm.v - SN) + uY());
+      h += wide(VDI18N.t('Verdict'), hide ? '?' : esc(verdict(S.an)) + (sm && !sm.exact ? ' ' + VDI18N.t('(sum computed: about 13 figures)') : ''));
+      if (S.an && S.an.test === 'alternating' && S.an.status === 'converges' && !hide && sm) {
+        const nx = Math.abs(termAt(N + 1)), er = Math.abs(sm.v - SN);
+        h += dd(VDI18N.t('Bound |a(N+1)|'), sci(nx)) + dd(VDI18N.t('Actual |S − S_N|'), sci(er) + (er <= nx * (1 + 1e-12) ? ' ≤' : ' >'));
+      }
+      if (S.view === 'integral') {
+        const b = intBounds();
+        if (b && b.ok) { h += dd(VDI18N.t('∫ from N+1 to ∞'), sci(b.lo)) + dd(VDI18N.t('∫ from N to ∞'), sci(b.hi)); h += wide(VDI18N.t('So S is between'), `${f6(SN + b.lo)} ${VDI18N.t('and')} ${f6(SN + b.hi)}`); }
+        else if (b) h += wide(VDI18N.t('∫ from N to ∞'), b.status === 'diverges' ? VDI18N.t('infinite: the area under a(x) grows without bound') : VDI18N.t('not found out to x = 10³⁰⁰'));
+      }
+      if (S.view === 'compare' && S.fB) {
+        const bN = termAt(N, true), smB = sumOf(true);
+        let fail = null; for (let k = S.n0; k <= Math.min(N, S.n0 + 100000); k++) if (!(termAt(k) <= termAt(k, true))) { fail = k; break; }
+        h += dd('b(N)', f6(bN)) + dd(VDI18N.t('Σ b to N'), f6(sumTo(N, true)));
+        h += dd('a(N)/b(N)', f6(termAt(N) / bN));
+        h += wide(VDI18N.t('a(n) ≤ b(n) up to N'), fail == null ? VDI18N.t('yes, for every n checked') : VDI18N.t('no: a(n) > b(n) at n = {n}', { n: big(fail) }));
+        const vb = !S.anB ? '' : S.anB.status === 'converges' ? VDI18N.t('converges') : S.anB.status === 'diverges' ? VDI18N.t('diverges') : VDI18N.t('not decided');
+        h += wide(VDI18N.t('Σ b(n)'), hide ? '?' : (smB ? (smB.t && smB.t !== f6(smB.v) ? smB.t + ' = ' : '') + f6(smB.v) + ', ' : '') + vb);
+      }
+      if (S.view === 'ratio') {
+        const r = Math.abs(termAt(N + 1) / termAt(N)), q = N > 0 ? Math.pow(Math.abs(termAt(N)), 1 / N) : NaN;
+        h += dd('|a(N+1)/a(N)|', f6(r)) + dd('|a(N)|^(1/N)', f6(q));
+        const c = PRESETS[S.preset];
+        h += dd(VDI18N.t('Limit ρ'), hide ? '?' : c && S.preset !== 'custom' && c.rho ? c.rho : S.an && isFinite(S.an.rho) ? '≈ ' + f6(S.an.rho < 1e-6 ? 0 : S.an.rho) : '—');
+      }
+      if (S.view === 'sum' && isFinite(S.bound)) {
+        const P = pastB();
+        h += wide(VDI18N.t('S_N first passes {B}', { B: f6(S.bound) }), P === null ? VDI18N.t('not within 10,000,000 terms') : P === 'start' ? VDI18N.t('already at the first term') : VDI18N.t('at N = {N} (S_N = {s})', { N: big(P.N), s: f6(P.S) }));
+      }
+      if (S.units && S.units.add != null && sm && !hide) h += dd(VDI18N.t(S.units.addWhat), f6(S.units.add + sm.v) + uY(), 'wide');
+    }
+    if (S.units && S.units.what) h += wide(VDI18N.t('In physics'), esc(VDI18N.t(S.units.what)));
+    $('out').innerHTML = h;
+  }
+  function pastB() {
+    if (S.past !== undefined) return S.past;
+    if (!(isFinite(S.bound)) || !S.f) return (S.past = null);
+    if (S.f(S.n0) > S.bound) return (S.past = 'start');
+    return (S.past = firstPast(S.f, S.n0, S.bound, 1e7));
+  }
+  function noteText() {
+    const t = { sum: 'Play adds terms: one at a time, then faster on a log axis. The bars are the terms, the dots below the running total.',
+      seq: 'A sequence is a list a(n); does it settle on a limit? Narrow ε with the slider under the graphs.',
+      integral: 'Each bar has width 1 and height a(n), so its area is a(n): compare the bars with the area under the curve.',
+      compare: 'Type b(n), a series you know, and compare term by term.',
+      ratio: 'Dots: the ratio of each term to the one before, and the nth root of each term, against the line at 1.' }[S.view];
+    $('note').textContent = VDI18N.t(t);
+    $('nNote').textContent = VDI18N.t('N = {N}: the sum of the terms from n = {a} to {N}.', { N: big(S.N), a: S.n0 });
+    $('boundCard').hidden = S.view !== 'sum';
+    $('epsCard').hidden = S.view !== 'seq';
+    $('rowB').hidden = S.view !== 'compare';
+    $('epsNote').textContent = VDI18N.t('ε = {e}: the band around L holds every term from N(ε) on.', { e: fmt(S.eps) });
+    $('boundNote').textContent = VDI18N.t('Type a total; the readouts give the first N whose sum passes it.');
+  }
+  function syncControls() {
+    for (const b of document.querySelectorAll('#viewSeg button')) b.setAttribute('aria-pressed', String(b.dataset.v === S.view));
+    for (const b of document.querySelectorAll('#axisSeg button')) b.setAttribute('aria-pressed', String(b.dataset.ax === S.axis));
+    if (document.activeElement !== $('nIn')) $('nIn').value = S.N;
+    $('nIn').min = S.n0;
+    let k = 0; for (let i = 0; i < NLIST.length; i++) if (NLIST[i] <= S.N) k = i; $('nSlide').max = NLIST.length - 1; $('nSlide').value = k;
+    $('epsSlide').value = Math.max(0, EPS.indexOf(S.eps));
+    if (document.activeElement !== $('bound')) $('bound').value = isFinite(S.bound) ? S.bound : '';
+    noteText();
+  }
+  function refresh() { syncControls(); formulas(); need = true; }
+
+  /* ---------- controls ---------- */
+  const pressPreset = (k) => { for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === k)); };
+  function custom() { if (S.preset !== 'custom') { S.preset = 'custom'; S.ex = null; S.exB = null; S.units = null; pressPreset(''); $('presetHint').textContent = VDI18N.t('Your own series. Every setup above can be edited, too.'); } }
+  function applyPreset(k) {
+    const c = PRESETS[k]; S.preset = k; setRun(false);
+    $('an').value = c.src; $('n0').value = String(c.n0); if (c.b) $('bn').value = c.b;
+    S.view = c.view; S.N = c.N; S.axis = c.axis || 'lin'; S.manual = null; S.ex = c.ex || null; S.exB = c.exB || null; S.units = c.units || null;
+    S.bound = c.bound != null ? c.bound : NaN; S.eps = 0.05;
+    $('presetHint').textContent = c.hint; pressPreset(k);
+    S.node = null; read(); refresh();
+  }
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  $('an').addEventListener('input', () => { custom(); read(); refresh(); });
+  $('n0').addEventListener('input', () => { custom(); S.manual = null; read(); refresh(); });
+  $('bn').addEventListener('input', () => { S.exB = null; read(); refresh(); });
+  for (const b of document.querySelectorAll('#viewSeg button')) b.addEventListener('click', () => { setRun(false); S.view = b.dataset.v; read(); refresh(); });
+  for (const b of document.querySelectorAll('#axisSeg button')) b.addEventListener('click', () => { S.axis = b.dataset.ax; S.manual = null; refresh(); });
+  const setN = (n) => { n = Math.round(n); if (!(n >= S.n0)) n = S.n0; S.N = Math.min(NMAX, n); S.manual = null; refresh(); };
+  $('nIn').addEventListener('input', () => { const n = +$('nIn').value; if (n >= S.n0) setN(n); });
+  $('nIn').addEventListener('change', () => syncControls());
+  $('nSlide').addEventListener('input', () => { setRun(false); const n = NLIST[+$('nSlide').value]; if (n > 150 && S.axis === 'lin') S.axis = 'log'; setN(Math.max(S.n0, n)); });
+  $('nUp').addEventListener('click', () => setN(S.N + 1));
+  $('nDown').addEventListener('click', () => setN(S.N - 1));
+  $('nTen').addEventListener('click', () => { const n = Math.max(1, S.N) * 10; if (n > 150 && S.axis === 'lin') S.axis = 'log'; setN(n); });
+  $('bound').addEventListener('input', () => { const v = parseFloat($('bound').value); S.bound = isFinite(v) ? v : NaN; S.past = undefined; need = true; lastRead = ''; });
+  $('epsSlide').addEventListener('input', () => { S.eps = EPS[+$('epsSlide').value]; refresh(); });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; refresh(); });
+  function setRun(on) { S.run = on; clock = 0; $('play').textContent = on ? VDI18N.t('Pause') : VDI18N.t('Play'); $('play').classList.toggle('attn', !on); }
+  $('play').addEventListener('click', () => { if (!S.run && S.N >= NMAX) S.N = PRESETS[S.preset] ? PRESETS[S.preset].N : S.n0; setRun(!S.run); S.manual = null; refresh(); });
+  $('reset').addEventListener('click', () => { setRun(false); const c = PRESETS[S.preset]; S.N = c ? c.N : Math.max(S.n0, S.n0 + 3); S.axis = c && c.axis ? c.axis : 'lin'; S.manual = null; refresh(); });
+  function zoom(fct) {
+    const [a, b] = view(), cx = (a + b) / 2, span = b - a;
+    const ns = Math.min(lg() ? 8 : 4e6, Math.max(lg() ? 0.3 : 3, span * fct));
+    S.manual = [cx - ns / 2, cx + ns / 2]; need = true;
+  }
+  $('zin').addEventListener('click', () => zoom(1 / 1.5));
+  $('zout').addEventListener('click', () => zoom(1.5));
+  $('homeView').addEventListener('click', () => { S.manual = null; need = true; });
+  /* both graphs: drag pans the n axis, wheel, pinch, + and − zoom about the center */
+  for (const el of [can, low]) {
+    const ptrs = new Map(); let drag = null;
+    el.addEventListener('pointerdown', (e) => {
+      const r = el.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
+      ptrs.set(e.pointerId, { x, y }); el.setPointerCapture(e.pointerId);
+      if (ptrs.size === 2) { const [p1, p2] = [...ptrs.values()]; drag = { pinch: Math.abs(p1.x - p2.x) + 1, view: view() }; return; }
+      drag = { x, view: view() };
+    });
+    el.addEventListener('pointermove', (e) => {
+      if (!ptrs.has(e.pointerId) || !drag) return;
+      const r = el.getBoundingClientRect(), x = e.clientX - r.left; ptrs.set(e.pointerId, { x, y: e.clientY - r.top });
+      const w = el === can ? W : LW, [a, b] = drag.view;
+      if (drag.pinch) { const [p1, p2] = [...ptrs.values()], d = Math.abs(p1.x - p2.x) + 1, f = Math.min(10, Math.max(0.1, drag.pinch / d)), cx = (a + b) / 2, ns = Math.min(lg() ? 8 : 4e6, Math.max(lg() ? 0.3 : 3, (b - a) * f)); S.manual = [cx - ns / 2, cx + ns / 2]; need = true; return; }
+      if (Math.abs(x - drag.x) < 3 && !S.manual) return;
+      const dx = (x - drag.x) / w * (b - a); S.manual = [a - dx, b - dx]; need = true;
+    });
+    const up = (e) => { ptrs.delete(e.pointerId); if (!ptrs.size) drag = null; else if (drag && drag.pinch) drag = null; };
+    el.addEventListener('pointerup', up); el.addEventListener('pointercancel', up);
+    el.addEventListener('wheel', (e) => { e.preventDefault(); const d = e.deltaY * (e.deltaMode === 1 ? 33 : e.deltaMode === 2 ? 400 : 1); zoom(Math.exp(Math.max(-100, Math.min(100, d)) * 0.0018)); }, { passive: false });
+    el.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowUp' || e.key === 'ArrowRight') { setRun(false); setN(S.N + (e.shiftKey ? 10 : 1)); e.preventDefault(); }
+      else if (e.key === 'ArrowDown' || e.key === 'ArrowLeft') { setRun(false); setN(S.N - (e.shiftKey ? 10 : 1)); e.preventDefault(); }
+      else if (e.key === '+' || e.key === '=') { zoom(1 / 1.5); e.preventDefault(); }
+      else if (e.key === '-' || e.key === '_') { zoom(1.5); e.preventDefault(); }
+      else if (e.key === ' ') { $('play').click(); e.preventDefault(); }
+    });
+  }
+
+  /* Play: one term every 0.4 s up to 30 terms, then N grows tenfold every 2.5 s (on a log axis past 150), up to 1,000,000 */
+  let last = performance.now(), lastRead = '';
+  function frame(now) {
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    if (S.run) {
+      clock += dt;
+      if (S.N - S.n0 < 30) { if (clock >= 0.4) { clock = 0; S.N++; S.manual = null; syncControls(); need = true; } }
+      else {
+        const n = Math.min(NMAX, Math.max(S.N + 1, Math.round(S.N * Math.pow(10, dt / 2.5))));
+        if (n > 150 && S.axis === 'lin') S.axis = 'log';
+        S.N = n; S.manual = null; if (n >= NMAX) setRun(false); syncControls(); need = true;
+      }
+    }
+    if (need) {
+      need = false; draw(); drawLow();
+      const k = `${S.N},${S.view},${S.preset},${$('an').value},${$('bn').value},${S.n0},${S.blind},${S.eps},${S.bound}`;
+      if (k !== lastRead) { lastRead = k; readouts(); }
+    }
+    requestAnimationFrame(frame);
+  }
+  function resize() {
+    dpr = window.devicePixelRatio || 1;
+    const r = $('pane').getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr);
+    const q = $('lower').getBoundingClientRect(); LW = q.width; LH = q.height; low.width = Math.round(LW * dpr); low.height = Math.round(LH * dpr);
+    need = true;
+  }
+  const retheme = () => { tokens(); need = true; };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'data-vd-look'] });
+  VD.projector({ onChange: resize });
+  if (window.VD && VD.panel) VD.panel({ play: '#play', reset: '#reset' });
+  if (window.VD && VD.splitPanes) VD.splitPanes($('pane'), $('lower'), { key: 'lower', label: 'Divider between the terms and the partial sums' });
+  /* Copy link carries what was typed: a(n), the first index and b(n) */
+  if (window.VD && VD.share && VD.share.picture) VD.share.picture('s', {
+    get: () => (S.preset === 'custom' ? VD.share.pack({ a: $('an').value, n0: $('n0').value, b: S.view === 'compare' ? $('bn').value : '', v: S.view }) : ''),
+    set: (s) => {
+      const o = s && VD.share.unpack(s); if (!o) return;
+      $('an').value = o.a || '1/n^2'; $('n0').value = o.n0 || '1'; if (o.b) $('bn').value = o.b; if (o.v && ['sum', 'seq', 'integral', 'compare', 'ratio'].includes(o.v)) S.view = o.v;
+      custom(); S.N = 10; S.manual = null; read(); refresh();
+    },
+  });
+  window.vdVersion = 'series@2026-11-19';
+  /* what the graphs show now, for a screen reader (VD.describe) */
+  if (window.VD && VD.describe) VD.describe(can, () => {
+    if (!S.f) return [];
+    work(); const t = VDI18N.t, out = [], sm = sumOf(false);
+    out.push(t('The terms are a(n) = {e}, from n = {a}.', { e: M.text(S.node), a: S.n0 }));
+    out.push({ t: t('After N = {N}, the partial sum is {s}.', { N: S.N, s: f6(sumTo(S.N)) }), live: !S.run });
+    if (!S.blind && sm) out.push(t('The series converges to {s}.', { s: f6(sm.v) }));
+    if (!S.blind && S.an) out.push(verdict(S.an));
+    return out;
+  });
+  tokens(); new ResizeObserver(resize).observe($('pane')); new ResizeObserver(resize).observe($('lower')); resize(); applyPreset('bounce');
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  window.__ser = { S, applyPreset, analyze, partialSums, seqLimit, firstPast, nEps, cvz, tailIntegral, sumTo, termAt, sumOf, setN, setRun, view, draw: () => { need = true; } };
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

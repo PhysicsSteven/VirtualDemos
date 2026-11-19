@@ -28,6 +28,8 @@ VDI18N.add('es', 'demo/gauss-law', {
   "Cualquier superficie",
 "Symmetry":
   "Simetría",
+"Typed field":
+  "Campo escrito",
 "Slice":
   "Corte",
 "Draw a surface":
@@ -74,8 +76,48 @@ VDI18N.add('es', 'demo/gauss-law', {
   "Línea de carga",
 "Plane of charge":
   "Plano de carga",
+"Uniform divergence":
+  "Divergencia uniforme",
+"Zero divergence":
+  "Divergencia nula",
+"Varying divergence":
+  "Divergencia variable",
+"Open hemisphere":
+  "Hemisferio abierto",
+"Inverse square field":
+  "Campo del inverso del cuadrado",
 "One charge inside a Gaussian sphere. The charge wanders: the field lines piercing the surface rearrange, but the flux stays q/ε₀, and the numerical surface integral agrees. Drag the charge, or drag the sphere around it.":
   "Una carga dentro de una esfera gaussiana. La carga se mueve al azar: las líneas de campo que atraviesan la superficie se reacomodan, pero el flujo se mantiene en q/ε₀, y la integral de superficie numérica coincide. Arrastra la carga, o arrastra la esfera a su alrededor.",
+"Field F(x, y, z)":
+  "Campo F(x, y, z)",
+"<span>Open surface: leave one piece out</span>":
+  "<span>Superficie abierta: deja fuera una pieza</span>",
+"Type each component as a formula in x, y and z, in cm, such as x*z, y^{#}, sin(x) or exp(-z^{#}/{#}); an empty box counts as {#}. F has a unit of your choice, called u here, so a flux and ∫∫∫ div F dV are both in u·cm². The demo finds div F exactly from your formulas, then integrates F·n over each piece of the surface and div F over the inside with adaptive Gauss–Kronrod quadrature. Nothing here uses charges or ε₀.":
+  "Escribe cada componente como una fórmula en x, y y z, en cm, por ejemplo x*z, y^{#}, sin(x) o exp(-z^{#}/{#}); una casilla vacía cuenta como {#}. F tiene la unidad que elijas, aquí llamada u, así que un flujo y ∫∫∫ div F dV están ambos en u·cm². La demo halla div F exactamente a partir de tus fórmulas y luego integra F·n sobre cada pieza de la superficie y div F sobre el interior con cuadratura adaptativa de Gauss–Kronrod. Nada aquí usa cargas ni ε₀.",
+"Divergence theorem":
+  "Teorema de la divergencia",
+"div F = ∂F<sub>x</sub>/∂x + ∂F<sub>y</sub>/∂y + ∂F<sub>z</sub>/∂z":
+  "div F = ∂F<sub>x</sub>/∂x + ∂F<sub>y</sub>/∂y + ∂F<sub>z</sub>/∂z",
+"Flux ∮F·dA out of the closed surface":
+  "Flujo ∮F·dA hacia afuera de la superficie cerrada",
+"∫∫∫ div F dV over the inside":
+  "∫∫∫ div F dV sobre el interior",
+"Flux out":
+  "Flujo saliente",
+"Flux in":
+  "Flujo entrante",
+"Flux through the open surface":
+  "Flujo a través de la superficie abierta",
+"Flux through the piece left out":
+  "Flujo a través de la pieza que se deja fuera",
+"Flux through each piece":
+  "Flujo a través de cada pieza",
+"Flux of F through each piece of the closed surface, in u·cm²":
+  "Flujo de F a través de cada pieza de la superficie cerrada, en u·cm²",
+"Piece":
+  "Pieza",
+"∬F·dA":
+  "∬F·dA",
 "Gaussian surface":
   "Superficie gaussiana",
 "Surface shape":
@@ -126,12 +168,8 @@ VDI18N.add('es', 'demo/gauss-law', {
   "Q<sub>enc</sub>/ε₀",
 "Numerical ∮E·dA over the 3D sphere":
   "∮E·dA numérica sobre la esfera 3D",
-"{#} N·m²/C<span>agrees with Q<sub>enc</sub>/ε₀ to every digit of double precision</span>":
-  "{#} N·m²/C<span>coincide con Q<sub>enc</sub>/ε₀ en todas las cifras de doble precisión</span>",
-"Flux out":
-  "Flujo saliente",
-"Flux in":
-  "Flujo entrante",
+"{#} N·m²/C<span>differs from Q<sub>enc</sub>/ε₀ by {#}×{#}⁻¹⁴ N·m²/C, a fraction {#}×{#}⁻¹⁶</span>":
+  "{#} N·m²/C<span>difiere de Q<sub>enc</sub>/ε₀ en {#}×{#}⁻¹⁴ N·m²/C, una fracción de {#}×{#}⁻¹⁶</span>",
 "Field lines crossing the slice: out, in, net":
   "Líneas de campo que cruzan el corte: salen, entran, neto",
 "{#} out, {#} in, net {#}<span>{#} per nC × Q<sub>enc</sub> = {#}, a match</span>":
@@ -150,6 +188,8 @@ VDI18N.add('es', 'demo/gauss-law', {
   "Capturar congela en una fila la superficie, las cargas y el flujo numérico (flujo en N·m²/C). El CSV contiene cada fila en unidades SI, con la distancia de la carga más cercana y el estado de la cuadratura.",
 "Field lines":
   "Líneas de campo",
+"Field arrows":
+  "Flechas del campo",
 "E on surface":
   "E sobre la superficie",
 "Crossings":
@@ -160,8 +200,10 @@ VDI18N.add('es', 'demo/gauss-law', {
   "Parches de flujo",
 "Field lines per nC":
   "Líneas de campo por nC",
-"<span><i></i>Surface where E points out, E·n > {#}</span> <span><i></i>Surface where E points in, E·n &lt; {#}</span> <span><i></i>Field line in the slice</span> <span><i></i><i></i>A line crossing out or in</span> <span><i></i>Grip: drag to move or resize</span> <span><i></i>Flux patch (3D): an area element colored by its E·dA</span>":
-  "<span><i></i>Superficie donde E apunta hacia afuera, E·n > {#}</span> <span><i></i>Superficie donde E apunta hacia adentro, E·n &lt; {#}</span> <span><i></i>Línea de campo en el corte</span> <span><i></i><i></i>Una línea que sale o entra</span> <span><i></i>Control: arrastra para mover o cambiar el tamaño</span> <span><i></i>Parche de flujo (3D): un elemento de área coloreado según su E·dA</span>",
+"<span><i></i>Surface where E points out, E·n > {#}</span> <span><i></i>Surface where E points in, E·n &lt; {#}</span> <span><i></i>Field line in the slice</span> <span><i></i><i></i>A line crossing out or in</span> <span><i></i>Surface where F points out, F·n > {#}</span> <span><i></i>Surface where F points in, F·n &lt; {#}</span> <span><i></i>Field arrow: F at that point of the slice z = {#}</span> <span><i></i>Grip: drag to move or resize</span> <span><i></i>Flux patch (3D): an area element colored by its E·dA</span> <span><i></i>Flux patch (3D): an area element colored by its F·dA</span>":
+  "<span><i></i>Superficie donde E apunta hacia afuera, E·n > {#}</span> <span><i></i>Superficie donde E apunta hacia adentro, E·n &lt; {#}</span> <span><i></i>Línea de campo en el corte</span> <span><i></i><i></i>Una línea que sale o entra</span> <span><i></i>Superficie donde F apunta hacia afuera, F·n > {#}</span> <span><i></i>Superficie donde F apunta hacia adentro, F·n &lt; {#}</span> <span><i></i>Flecha del campo: F en ese punto del corte z = {#}</span> <span><i></i>Control: arrastra para mover o cambiar el tamaño</span> <span><i></i>Parche de flujo (3D): un elemento de área coloreado según su E·dA</span> <span><i></i>Parche de flujo (3D): un elemento de área coloreado según su F·dA</span>",
+"Field arrows show (F<sub>x</sub>, F<sub>y</sub>) in the slice z = {#}; in 3D they show all of F there. Arrow length grows with |F| and levels off. With the surface open, the piece left out is drawn plain in the slice and blanked out in 3D. Play slides the surface slowly around, so you can watch the flux and ∫∫∫ div F dV change together.":
+  "Las flechas del campo muestran (F<sub>x</sub>, F<sub>y</sub>) en el corte z = {#}; en 3D muestran todo F allí. La longitud de la flecha crece con |F| y luego se estabiliza. Con la superficie abierta, la pieza que se deja fuera se dibuja sin color en el corte y tapada en 3D. Reproducir desliza la superficie despacio, para que veas cambiar juntos el flujo y ∫∫∫ div F dV.",
 "3D view: the whole closed surface, with its area elements drawn as tiles. Field lines leave each charge evenly in all directions, three times as many per nC as set above, so lines out minus lines in follows Q<sub>enc</sub>. Drag empty space to turn the view.":
   "Vista 3D: toda la superficie cerrada, con sus elementos de área dibujados como mosaicos. Las líneas de campo salen de cada carga de manera uniforme en todas direcciones, tres veces más por nC que lo fijado arriba, así que las líneas que salen menos las que entran siguen a Q<sub>enc</sub>. Arrastra en un espacio vacío para girar la vista.",
 "Model: point charges in empty space, all in the plane z = {#}, which is the slice you see. Their field lines in that plane stay in the plane, so the drawn lines are exact field lines. Lines are drawn in proportion to charge, but in a slice the spacing of lines does not show the field strength the way it does in 3D. The surface color fades where E·n is small. Arrows on the surface show the direction of E; their length grows with E and levels off for strong fields.":
@@ -208,10 +250,12 @@ VDI18N.add('es', 'demo/gauss-law', {
   "Vista 3D: los puntos de carga dentro de la superficie gaussiana son brillantes, el resto tenues. Con los parches de flujo activados, las tapas del cilindro de la línea y el costado del pastillero se quedan grises: E corre a lo largo de ellos, así que E·dA = {#}.",
 "Model: ideal charge distributions. The line and the plane are infinitely long and wide; the drawing shows only a piece. Arrows on the Gaussian surface have a length proportional to E, capped close to a point or line charge. The ball is an insulator with its charge spread evenly through its volume; its field lines are drawn from the center for simplicity, although in the ball they begin all through the charged volume.":
   "Modelo: distribuciones de carga ideales. La línea y el plano son infinitamente largos y anchos; el dibujo muestra solo una parte. Las flechas sobre la superficie gaussiana tienen una longitud proporcional a E, limitada cerca de una carga puntual o lineal. La esfera maciza es un aislante con su carga repartida uniformemente en su volumen; sus líneas de campo se dibujan desde el centro por simplicidad, aunque en la esfera empiezan en todo el volumen cargado.",
+"{#} N·m²/C<span>agrees with Q<sub>enc</sub>/ε₀ to every digit of double precision</span>":
+  "{#} N·m²/C<span>coincide con Q<sub>enc</sub>/ε₀ en todas las cifras de doble precisión</span>",
 "The numerical flux through the surface is {#} N·m²/C.":
   "El flujo numérico a través de la superficie es {#} N·m²/C.",
-"{#} N·m²/C<span>differs from Q<sub>enc</sub>/ε₀ by {#}×{#}⁻¹⁴ N·m²/C, a fraction {#}×{#}⁻¹⁶</span>":
-  "{#} N·m²/C<span>difiere de Q<sub>enc</sub>/ε₀ en {#}×{#}⁻¹⁴ N·m²/C, una fracción de {#}×{#}⁻¹⁶</span>",
+"{#} N·m²/C<span>differs from Q<sub>enc</sub>/ε₀ by {#}×{#}⁻¹² N·m²/C, a fraction {#}×{#}⁻¹⁵</span>":
+  "{#} N·m²/C<span>difiere de Q<sub>enc</sub>/ε₀ en {#}×{#}⁻¹² N·m²/C, una fracción de {#}×{#}⁻¹⁵</span>",
 "<b>Use the symmetry</b>Seen from its center, the ball looks the same in every direction. So E points straight out or in, and has the same size everywhere on a sphere around the center. Choose that sphere, radius r = {#} cm, as the Gaussian surface.":
   "<b>Usa la simetría</b>Vista desde su centro, la esfera se ve igual en todas direcciones. Así que E apunta directamente hacia afuera o hacia adentro, y tiene la misma magnitud en todos los puntos de una esfera alrededor del centro. Elige esa esfera, de radio r = {#} cm, como superficie gaussiana.",
 "<b>Flux through it</b>E is perpendicular to the sphere and the same size everywhere on it, so the integral is E times the area.<span>Φ = ∮E·dA = E·{#}πr² = E × {#}π({#} m)² = E × {#} m²</span>":
@@ -234,34 +278,54 @@ VDI18N.add('es', 'demo/gauss-law', {
   "Gráfica de E_r en función de r para una esfera aislante con carga uniforme Q = {#} nC y radio R = {#} cm. La superficie gaussiana está en r = {#} cm, donde E = {#} kN/C. Arrastra el marcador o usa las flechas izquierda y derecha para mover la superficie gaussiana. Mostrar la tabla de datos, en el panel, lista los valores graficados.",
 "(kN/C) against r (cm)":
   "(kN/C) en función de r (cm)",
-"A uniformly charged ball of total charge +{#} nC and radius {#} cm, with a Gaussian sphere around it.":
-  "Una bola con carga uniforme de carga total +{#} nC y radio {#} cm, con una esfera gaussiana a su alrededor.",
-"The Gaussian sphere has radius {#} cm.":
-  "La esfera gaussiana tiene radio {#} cm.",
-"The flux is {#} N·m²/C.":
-  "El flujo es {#} N·m²/C.",
-"The field E is {#} kN/C.":
-  "El campo E es {#} kN/C.",
-"E points outward.":
-  "E apunta hacia afuera.",
-"A plot of the field E against the distance r, with the Gaussian surface marked.":
-  "Una gráfica del campo E contra la distancia r, con la superficie gaussiana marcada.",
-"E rises in proportion to r inside the ball, up to R = {#} cm, then falls as {#} over r squared.":
-  "E crece en proporción a r dentro de la bola, hasta R = {#} cm, y luego decae como {#} sobre r al cuadrado.",
-"The marker is at {#} cm, where E is {#} kN/C.":
-  "El marcador está en {#} cm, donde E es {#} kN/C.",
-"<i></i><span>+{#} nC</span><span>—</span><span>at (−{#}, {#}) cm, inside, q/ε₀ = {#}</span>":
-  "<i></i><span>+{#} nC</span><span>—</span><span>en (−{#}, {#}) cm, adentro, q/ε₀ = {#}</span>",
+"F = (x, y, z) points away from the origin and has div F = {#} everywhere. So ∫∫∫ div F dV is {#} times the volume, wherever the sphere sits, and the flux out of the sphere is the same. Press Play to slide the sphere around: neither number changes.":
+  "F = (x, y, z) apunta alejándose del origen y tiene div F = {#} en todas partes. Así que ∫∫∫ div F dV es {#} veces el volumen, esté donde esté la esfera, y el flujo hacia afuera de la esfera es el mismo. Pulsa Reproducir para deslizar la esfera: ningún número cambia.",
+"∮F·dA = —<small>integrating</small>":
+  "∮F·dA = —<small>integrando</small>",
+"F on surface":
+  "F en la superficie",
+"Flux ∮F·dA out of the closed sphere":
+  "Flujo ∮F·dA hacia afuera de la esfera cerrada",
+"none selected":
+  "ninguna seleccionada",
+"u·cm²<span>agrees with the flux to within rounding</span>":
+  "u·cm²<span>coincide con el flujo salvo redondeo</span>",
+"upper half (z > {#})":
+  "mitad superior (z > {#})",
+"lower half (z < {#})":
+  "mitad inferior (z < {#})",
+"<b>Closed surface, sum</b>":
+  "<b>Superficie cerrada, suma</b>",
+"{#} evaluations of F and div F, {#} ms. The flux is a sum of surface integrals, one per piece; ∫∫∫ div F dV is a separate volume integral in spherical coordinates. Neither uses the other.":
+  "{#} evaluaciones de F y div F, {#} ms. El flujo es una suma de integrales de superficie, una por pieza; ∫∫∫ div F dV es una integral de volumen aparte en coordenadas esféricas. Ninguna usa la otra.",
+"∮F·dA =":
+  "∮F·dA =",
+"∫∫∫ div F dV =":
+  "∫∫∫ div F dV =",
+"A slice through a closed surface in a typed field F, with arrows of F.":
+  "Un corte de una superficie cerrada en un campo F escrito, con flechas de F.",
+"A sphere of radius {#} cm.":
+  "Una esfera de radio {#} cm.",
+"div F = {#}.":
+  "div F = {#}.",
+"The flux out of the closed surface is {#} u·cm².":
+  "El flujo hacia afuera de la superficie cerrada es {#} u·cm².",
+"The integral of div F over the inside is {#} u·cm².":
+  "La integral de div F sobre el interior es {#} u·cm².",
+"The surface is sliding around.":
+  "La superficie se está deslizando.",
 "Slice z = {#} through the 3D surface · grid {#} cm":
   "Corte z = {#} a través de la superficie 3D · cuadrícula {#} cm",
+"{#} out, {#} in, net {#}<span>{#} per nC × Q<sub>enc</sub> = {#}. In a slice a negative charge can collect more lines than its share, so the count is only a picture of the flux</span>":
+  "{#} salen, {#} entran, neto {#}<span>{#} por nC × Q<sub>enc</sub> = {#}. En un corte una carga negativa puede recibir más líneas de las que le tocan, así que la cuenta es solo una ilustración del flujo</span>",
+"<i></i><span>+{#} nC</span><span>—</span><span>at (−{#}, {#}) cm, inside, q/ε₀ = {#}</span>":
+  "<i></i><span>+{#} nC</span><span>—</span><span>en (−{#}, {#}) cm, adentro, q/ε₀ = {#}</span>",
 "The charge is outside. Field lines enter the sphere on one side (purple) and leave on the other (green), and the flux in and out cancel exactly: Φ = {#}. Drag the charge inside and Φ jumps to q/ε₀.":
   "La carga está afuera. Las líneas de campo entran a la esfera por un lado (morado) y salen por el otro (verde), y el flujo entrante y el saliente se anulan exactamente: Φ = {#}. Arrastra la carga adentro y Φ salta a q/ε₀.",
 "{#} nC<span> {#} of {#} inside</span>":
   "{#} nC<span> {#} de {#} adentro</span>",
 "{#} N·m²/C<span>differs from Q<sub>enc</sub>/ε₀ by {#} N·m²/C</span>":
   "{#} N·m²/C<span>difiere de Q<sub>enc</sub>/ε₀ en {#} N·m²/C</span>",
-"{#} out, {#} in, net {#}<span>{#} per nC × Q<sub>enc</sub> = {#}. In a slice a negative charge can collect more lines than its share, so the count is only a picture of the flux</span>":
-  "{#} salen, {#} entran, neto {#}<span>{#} por nC × Q<sub>enc</sub> = {#}. En un corte una carga negativa puede recibir más líneas de las que le tocan, así que la cuenta es solo una ilustración del flujo</span>",
 "Q<sub>enc</sub> = {#} nC · Φ<sub>E</sub> = {#} N·m²/C<small>numerical ∮E·dA = {#} N·m²/C</small>":
   "Q<sub>enc</sub> = {#} nC · Φ<sub>E</sub> = {#} N·m²/C<small>∮E·dA numérica = {#} N·m²/C</small>",
 "<i></i><span>+{#} nC</span><span>—</span><span>at ({#}, {#}) cm, outside, q/ε₀ = {#}</span>":
@@ -282,12 +346,26 @@ VDI18N.add('es', 'demo/gauss-law', {
   "<i></i><span>−{#} nC</span><span>—</span><span>en ({#}, {#}) cm, adentro, q/ε₀ = −{#}</span>",
 "Box {#} × {#} × {#} cm":
   "Caja de {#} × {#} × {#} cm",
+"{#}×{#}⁻¹⁴ N·m²/C <span>≈ {#}</span><span>differs from Q<sub>enc</sub>/ε₀ by {#}×{#}⁻¹⁴ N·m²/C</span>":
+  "{#}×{#}⁻¹⁴ N·m²/C <span>≈ {#}</span><span>difiere de Q<sub>enc</sub>/ε₀ en {#}×{#}⁻¹⁴ N·m²/C</span>",
+"<i></i><span>+{#} nC</span><span>{#}</span><span>at (−{#}, −{#}) cm, inside, q/ε₀ = {#}</span>":
+  "<i></i><span>+{#} nC</span><span>{#}</span><span>en (−{#}, −{#}) cm, adentro, q/ε₀ = {#}</span>",
+"<i></i><span>−{#} nC</span><span>−{#}</span><span>at ({#}, {#}) cm, inside, q/ε₀ = −{#}</span>":
+  "<i></i><span>−{#} nC</span><span>−{#}</span><span>en ({#}, {#}) cm, adentro, q/ε₀ = −{#}</span>",
+"A Gaussian box {#} cm wide, {#} cm tall and {#} cm deep.":
+  "Una caja gaussiana de {#} cm de ancho, {#} cm de alto y {#} cm de profundidad.",
+"{#} charges.":
+  "{#} cargas.",
+"Charge {#} is +{#} nC at (−{#}, −{#}) cm.":
+  "La carga {#} es +{#} nC en (−{#}, −{#}) cm.",
+"Charge {#} is −{#} nC at ({#}, {#}) cm.":
+  "La carga {#} es −{#} nC en ({#}, {#}) cm.",
+"The enclosed charge is {#} nC.":
+  "La carga encerrada es {#} nC.",
+"−{#}×{#}⁻¹⁵ N·m²/C <span>≈ {#}</span><span>differs from Q<sub>enc</sub>/ε₀ by {#}×{#}⁻¹⁵ N·m²/C</span>":
+  "−{#}×{#}⁻¹⁵ N·m²/C <span>≈ {#}</span><span>difiere de Q<sub>enc</sub>/ε₀ en {#}×{#}⁻¹⁵ N·m²/C</span>",
 "A uniformly charged insulating ball. Inside, the Gaussian sphere encloses only the fraction (r/R)³ of the charge, so E grows in proportion to r. Outside, E = kQ/r², as if all the charge sat at the center.":
   "Una esfera aislante con carga uniforme. Adentro, la esfera gaussiana encierra solo la fracción (r/R)³ de la carga, así que E crece en proporción a r. Afuera, E = kQ/r², como si toda la carga estuviera en el centro.",
-"<i></i><span>+{#} nC</span><span>—</span><span>at (−{#}, −{#}) cm, inside, q/ε₀ = {#}</span>":
-  "<i></i><span>+{#} nC</span><span>—</span><span>en (−{#}, −{#}) cm, adentro, q/ε₀ = {#}</span>",
-"none selected":
-  "ninguna seleccionada",
 "An infinite line of charge. All the flux leaves through the curved side of the cylinder; the field runs along the end caps. The length L cancels, so E = λ/({#}πε₀r) falls off as {#}/r.":
   "Una línea de carga infinita. Todo el flujo sale por el costado curvo del cilindro; el campo corre a lo largo de las tapas. La longitud L se cancela, así que E = λ/({#}πε₀r) decae como {#}/r.",
 "<b>Use the symmetry</b>An infinite straight line looks the same from every point along it and from every direction around it. So E points straight away from (or toward) the line and depends only on the distance r. Choose a cylinder of radius r = {#} cm and length L = {#} cm around the line.":
@@ -306,6 +384,8 @@ VDI18N.add('es', 'demo/gauss-law', {
   "= λL = +{#} nC",
 "caps: E runs along them, no flux":
   "tapas: E corre a lo largo de ellas, sin flujo",
+"Plot of E_r against r for an infinite line of charge, λ = {#} nC/m. The Gaussian surface is at r = {#} cm, where E = {#} kN/C. Drag the marker or use the left and right arrow keys to move the Gaussian surface. Show data table in the rail lists the plotted values.":
+  "Gráfica de E_r frente a r para una línea de carga infinita, λ = {#} nC/m. La superficie gaussiana está en r = {#} cm, donde E = {#} kN/C. Arrastra el marcador o usa las flechas izquierda y derecha para mover la superficie gaussiana. Mostrar tabla de datos, en el panel, lista los valores graficados.",
 "An infinite sheet of charge. Flux leaves through both caps of the pillbox and none through its side. The cap distance h cancels: E = σ/({#}ε₀) is the same at every distance from the sheet.":
   "Una lámina de carga infinita. El flujo sale por ambas tapas del pastillero y nada por su costado. La distancia h de las tapas se cancela: E = σ/({#}ε₀) es igual a cualquier distancia de la lámina.",
 "<b>Use the symmetry</b>An infinite flat sheet looks the same from every point on it, and the same from both sides. So E is perpendicular to the sheet, the same size at equal distances on the two sides, and points away from it on both sides (toward it if σ &lt; {#}). Choose a pillbox: a cylinder through the sheet with caps of radius a = {#} cm at a distance h = {#} cm on each side.":
@@ -332,44 +412,98 @@ VDI18N.add('es', 'demo/gauss-law', {
   "costado: E corre a lo largo de él, sin flujo",
 "(kN/C) against x (cm), x measured from the sheet":
   "(kN/C) en función de x (cm), x medida desde la lámina",
-"Plot of E_x against x, measured from the sheet, for an infinite plane of charge, σ = {#} nC/m². The Gaussian surface is at h = {#} cm, where E = {#} kN/C. Drag the marker or use the left and right arrow keys to move the Gaussian surface. Show data table in the rail lists the plotted values.":
-  "Gráfica de E_x en función de x, medida desde la lámina, para un plano de carga infinito, σ = {#} nC/m². La superficie gaussiana está en h = {#} cm, donde E = {#} kN/C. Arrastra el marcador o usa las flechas izquierda y derecha para mover la superficie gaussiana. Mostrar la tabla de datos, en el panel, lista los valores graficados.",
+"F = (x² − y², −2xy, {#}) has div F = 2x − 2x = {#}. Flux goes in through part of the box and out through the rest, and the two cancel: the net flux is {#} for any closed surface, just like a charge outside a Gaussian surface.":
+  "F = (x² − y², −2xy, {#}) tiene div F = 2x − 2x = {#}. El flujo entra por una parte de la caja y sale por el resto, y ambos se cancelan: el flujo neto es {#} para cualquier superficie cerrada, igual que con una carga fuera de una superficie gaussiana.",
+"Flux ∮F·dA out of the closed box":
+  "Flujo ∮F·dA hacia afuera de la caja cerrada",
+"u·cm² <span>to within rounding</span>":
+  "u·cm² <span>salvo redondeo</span>",
+"face at +x":
+  "cara en +x",
+"face at −x":
+  "cara en −x",
+"face at +y":
+  "cara en +y",
+"face at −y":
+  "cara en −y",
+"lid (z = +d/{#})":
+  "tapa (z = +d/{#})",
+"base (z = −d/{#})":
+  "base (z = −d/{#})",
+"{#} evaluations of F and div F, {#} ms. The flux is a sum of surface integrals, one per piece; ∫∫∫ div F dV is a separate volume integral. Neither uses the other.":
+  "{#} evaluaciones de F y div F, {#} ms. El flujo es una suma de integrales de superficie, una por pieza; ∫∫∫ div F dV es una integral de volumen aparte. Ninguna usa la otra.",
+"F = (x², y², z²)/{#} has div F = (x + y + z)/{#}, a source that grows with distance and changes sign. Slide the cylinder to the right or up and both the flux and ∫∫∫ div F dV grow; at the origin both are {#}.":
+  "F = (x², y², z²)/{#} tiene div F = (x + y + z)/{#}, una fuente que crece con la distancia y cambia de signo. Desliza el cilindro hacia la derecha o hacia arriba y crecen tanto el flujo como ∫∫∫ div F dV; en el origen ambos valen {#}.",
 "A cylinder lying in the slice with its axis along x: the rectangle you see is its cross section. Drag its edges to change the length and the diameter.":
   "Un cilindro acostado en el corte con su eje a lo largo de x: el rectángulo que ves es su corte transversal. Arrastra sus bordes para cambiar la longitud y el diámetro.",
+"Flux ∮F·dA out of the closed cylinder":
+  "Flujo ∮F·dA hacia afuera del cilindro cerrado",
+"Length (along x)":
+  "Longitud (a lo largo de x)",
+"Diameter":
+  "Diámetro",
+"Cylinder: length {#} cm, diameter {#} cm":
+  "Cilindro: longitud {#} cm, diámetro {#} cm",
+"curved side":
+  "lado curvo",
+"left end cap":
+  "tapa izquierda",
+"right end cap":
+  "tapa derecha",
+"{#} evaluations of F and div F, {#} ms. The flux is a sum of surface integrals, one per piece; ∫∫∫ div F dV is a separate volume integral in cylindrical coordinates about the axis. Neither uses the other.":
+  "{#} evaluaciones de F y div F, {#} ms. El flujo es una suma de integrales de superficie, una por pieza; ∫∫∫ div F dV es una integral de volumen aparte en coordenadas cilíndricas alrededor del eje. Ninguna usa la otra.",
+"An open surface: the upper half of a sphere, a dome over the slice z = {#} (turn the 3D view to see it). Its flux is hard to find directly, but div F = z + {#} is easy. Close the surface with the lower half, use ∫∫∫ div F dV for the closed surface, and take away the flux through the lower half.":
+  "Una superficie abierta: la mitad superior de una esfera, una cúpula sobre el corte z = {#} (gira la vista 3D para verla). Su flujo es difícil de hallar directamente, pero div F = z + {#} es fácil. Cierra la superficie con la mitad inferior, usa ∫∫∫ div F dV para la superficie cerrada y resta el flujo a través de la mitad inferior.",
+"Flux through the open surface: the sphere without its lower half (z < {#})":
+  "Flujo a través de la superficie abierta: la esfera sin su mitad inferior (z < {#})",
+"Flux through the lower half (z < {#}), left out":
+  "Flujo a través de la mitad inferior (z < {#}), que se deja fuera",
+"Open: the lower half (z < {#}) is left out, below this slice (see 3D)":
+  "Abierta: la mitad inferior (z < {#}) se deja fuera, bajo este corte (ver 3D)",
+"u·cm²<span>the same as ∫∫∫ div F dV less the flux through the lower half (z &lt; {#})</span>":
+  "u·cm²<span>igual a ∫∫∫ div F dV menos el flujo a través de la mitad inferior (z &lt; {#})</span>",
+"lower half (z < {#}) (left out)":
+  "mitad inferior (z < {#}) (fuera)",
+"Open sphere: ∬F·dA =":
+  "Esfera abierta: ∬F·dA =",
+"closed: ∮F·dA = ∫∫∫ div F dV =":
+  "cerrada: ∮F·dA = ∫∫∫ div F dV =",
+"F = r̂/r², the shape of a point charge's field. div F = {#} everywhere except the origin, where F blows up. With the origin inside, the flux is {#}π = {#} u·cm² but ∫∫∫ div F dV = {#}: all the source sits at one point, and that is why Gauss's law counts the charge enclosed. Slide the sphere off the origin and both are {#}.":
+  "F = r̂/r², la forma del campo de una carga puntual. div F = {#} en todas partes excepto en el origen, donde F diverge. Con el origen dentro, el flujo es {#}π = {#} u·cm² pero ∫∫∫ div F dV = {#}: toda la fuente está en un solo punto, y por eso la ley de Gauss cuenta la carga encerrada. Desliza la esfera fuera del origen y ambos valen {#}.",
+"u·cm² <span>to within rounding</span><span>differs from the flux by {#} u·cm²</span>":
+  "u·cm² <span>salvo redondeo</span><span>difiere del flujo en {#} u·cm²</span>",
+"The flux and ∫∫∫ div F dV disagree.<span>The divergence theorem needs F and its derivatives to be smooth everywhere inside. This F blows up or jumps somewhere inside the surface, so all of its source sits where the integral of div F cannot see it. Move the surface off that point and the two agree again.</span>":
+  "El flujo y ∫∫∫ div F dV no coinciden.<span>El teorema de la divergencia necesita que F y sus derivadas sean suaves en todo el interior. Este F diverge o salta en algún punto dentro de la superficie, así que toda su fuente está donde la integral de div F no la ve. Aleja la superficie de ese punto y ambos vuelven a coincidir.</span>",
+"div F = {#}/(x² + y² + z²)^({#}/{#}) − 3x²·√(x² + y² + z²)/((x² + y² + z²)^({#}/{#}))² − 3y²·√(x² + y² + z²)/((x² + y² + z²)^({#}/{#}))² − 3z²·√(x² + y² + z²)/((x² + y² + z²)^({#}/{#}))².":
+  "div F = {#}/(x² + y² + z²)^({#}/{#}) − 3x²·√(x² + y² + z²)/((x² + y² + z²)^({#}/{#}))² − 3y²·√(x² + y² + z²)/((x² + y² + z²)^({#}/{#}))² − 3z²·√(x² + y² + z²)/((x² + y² + z²)^({#}/{#}))².",
+"A box {#} cm wide, {#} cm tall and {#} cm deep.":
+  "Una caja de {#} cm de ancho, {#} cm de alto y {#} cm de profundidad.",
 "Any closed shape: the curve you see, extended ± half the depth above and below the slice, with flat top and bottom faces. Drag the control points, double click the curve to add one, select one and press Delete to remove it, or draw a new surface.":
   "Cualquier forma cerrada: la curva que ves, extendida ± la mitad de la profundidad arriba y abajo del corte, con caras superior e inferior planas. Arrastra los puntos de control, haz doble clic en la curva para agregar uno, selecciona uno y pulsa Supr para quitarlo, o dibuja una superficie nueva.",
-"An infinite sheet of charge, {#} nC/m², with a Gaussian pillbox through it.":
-  "Una lámina infinita de carga, {#} nC/m², con una caja de píldora gaussiana que la atraviesa.",
-"The caps are {#} cm from the sheet and have radius {#} cm.":
-  "Las tapas están a {#} cm de la lámina y tienen radio {#} cm.",
-"E points away from the sheet on both sides.":
-  "E se aleja de la lámina en ambos lados.",
-"A plot of the field E against the distance h from the sheet, with the Gaussian surface marked.":
-  "Una gráfica del campo E contra la distancia h a la lámina, con la superficie gaussiana marcada.",
-"E has the same size at every distance and points away from the sheet on both sides.":
-  "E tiene el mismo tamaño a cualquier distancia y se aleja de la lámina en ambos lados.",
+"Flux ∮F·dA out of the closed prism":
+  "Flujo ∮F·dA hacia afuera del prisma cerrado",
+"Prism, depth {#} cm":
+  "Prisma, profundidad {#} cm",
+"side walls":
+  "paredes laterales",
+"cap at z = +d/{#}":
+  "tapa en z = +d/{#}",
+"cap at z = −d/{#}":
+  "tapa en z = −d/{#}",
+"{#} evaluations of F and div F, {#} ms. The flux is a sum of surface integrals, one per piece; ∫∫∫ div F dV is a separate volume integral over the triangles of the cross section, times the depth. Neither uses the other.":
+  "{#} evaluaciones de F y div F, {#} ms. El flujo es una suma de integrales de superficie, una por pieza; ∫∫∫ div F dV es una integral de volumen aparte sobre los triángulos de la sección, por la profundidad. Ninguna usa la otra.",
 "Your own setup. Pick a setup to return to a known one.":
   "Tu propia configuración. Elige una configuración para volver a una conocida.",
-"An infinite line of charge, {#} nC/m, with a Gaussian cylinder around it.":
-  "Una línea infinita de carga, {#} nC/m, con un cilindro gaussiano a su alrededor.",
-"The cylinder has radius {#} cm and length {#} cm.":
-  "El cilindro tiene radio {#} cm y longitud {#} cm.",
-"E points away from the line.":
-  "E se aleja de la línea.",
-"E falls as {#} over r.":
-  "E decae como {#} sobre r.",
-"Note":
-  "Nota",
-"just left of the sheet":
-  "justo a la izquierda de la lámina",
-"just right of the sheet":
-  "justo a la derecha de la lámina",
-"{#} values of E_x for an infinite plane of charge, σ = {#} nC/m², at even steps across the plot plus the Gaussian surface. Positive E_x points along +x.":
-  "{#} valores de E_x para un plano de carga infinito, σ = {#} nC/m², a pasos iguales a lo largo de la gráfica más la superficie gaussiana. E_x positivo apunta a lo largo de +x.",
+"A freeform prism {#} cm deep.":
+  "Un prisma de forma libre de {#} cm de profundidad.",
+"The motion is paused.":
+  "El movimiento está en pausa.",
 "Cancel drawing":
   "Cancelar el dibujo",
 "Cancel":
   "Cancelar",
+"Draw a closed loop with the pointer":
+  "Dibuja un lazo cerrado con el puntero",
 "Captured reading {#}.":
   "Lectura {#} capturada.",
 "freeform":
@@ -378,50 +512,154 @@ VDI18N.add('es', 'demo/gauss-law', {
   "∮E·dA numérica sobre el prisma 3D",
 "The surface integral is evaluated with adaptive Gauss–Kronrod quadrature ({#} field evaluations, {#} ms) using the full 3D field of every charge, with no use of Gauss's law. Each flat side panel and the triangulated top and bottom faces are integrated separately, and it refines wherever E·n changes fast, near a charge close to the surface. Every one dimensional integral met its error target.":
   "La integral de superficie se evalúa con cuadratura adaptativa de Gauss–Kronrod ({#} evaluaciones del campo, {#} ms) usando el campo 3D completo de cada carga, sin usar la ley de Gauss. Cada panel lateral plano y las caras superior e inferior trianguladas se integran por separado, y se refina donde E·n cambia rápido, cerca de una carga próxima a la superficie. Cada integral unidimensional alcanzó su objetivo de error.",
-"<i></i><span>+{#} nC</span><span>{#}</span><span>at (−{#}, −{#}) cm, inside, q/ε₀ = {#}</span>":
-  "<i></i><span>+{#} nC</span><span>{#}</span><span>en (−{#}, −{#}) cm, adentro, q/ε₀ = {#}</span>",
-"<i></i><span>−{#} nC</span><span>−{#}</span><span>at ({#}, {#}) cm, inside, q/ε₀ = −{#}</span>":
-  "<i></i><span>−{#} nC</span><span>−{#}</span><span>en ({#}, {#}) cm, adentro, q/ε₀ = −{#}</span>",
-"<i></i><span>+{#} nC</span><span>{#}</span><span>at ({#}, −{#}) cm, inside, q/ε₀ = {#}</span>":
-  "<i></i><span>+{#} nC</span><span>{#}</span><span>en ({#}, −{#}) cm, adentro, q/ε₀ = {#}</span>",
-"Prism, depth {#} cm":
-  "Prisma, profundidad {#} cm",
-"Draw a closed loop with the pointer":
-  "Dibuja un lazo cerrado con el puntero",
 "A freeform Gaussian prism {#} cm deep.":
   "Un prisma gaussiano de forma libre de {#} cm de profundidad.",
-"{#} charges.":
-  "{#} cargas.",
-"Charge {#} is +{#} nC at (−{#}, −{#}) cm.":
-  "La carga {#} es +{#} nC en (−{#}, −{#}) cm.",
-"Charge {#} is −{#} nC at ({#}, {#}) cm.":
-  "La carga {#} es −{#} nC en ({#}, {#}) cm.",
-"Charge {#} is +{#} nC at ({#}, −{#}) cm.":
-  "La carga {#} es +{#} nC en ({#}, −{#}) cm.",
-"The motion is paused.":
-  "El movimiento está en pausa.",
+"Plot of E_x against x, measured from the sheet, for an infinite plane of charge, σ = {#} nC/m². The Gaussian surface is at h = {#} cm, where E = {#} kN/C. Drag the marker or use the left and right arrow keys to move the Gaussian surface. Show data table in the rail lists the plotted values.":
+  "Gráfica de E_x en función de x, medida desde la lámina, para un plano de carga infinito, σ = {#} nC/m². La superficie gaussiana está en h = {#} cm, donde E = {#} kN/C. Arrastra el marcador o usa las flechas izquierda y derecha para mover la superficie gaussiana. Mostrar la tabla de datos, en el panel, lista los valores graficados.",
+"Note":
+  "Nota",
+"just left of the sheet":
+  "justo a la izquierda de la lámina",
+"just right of the sheet":
+  "justo a la derecha de la lámina",
+"{#} values of E_x for an infinite plane of charge, σ = {#} nC/m², at even steps across the plot plus the Gaussian surface. Positive E_x points along +x.":
+  "{#} valores de E_x para un plano de carga infinito, σ = {#} nC/m², a pasos iguales a lo largo de la gráfica más la superficie gaussiana. E_x positivo apunta a lo largo de +x.",
+"An infinite sheet of charge, {#} nC/m², with a Gaussian pillbox through it.":
+  "Una lámina infinita de carga, {#} nC/m², con una caja de píldora gaussiana que la atraviesa.",
+"The caps are {#} cm from the sheet and have radius {#} cm.":
+  "Las tapas están a {#} cm de la lámina y tienen radio {#} cm.",
+"The flux is {#} N·m²/C.":
+  "El flujo es {#} N·m²/C.",
+"The field E is {#} kN/C.":
+  "El campo E es {#} kN/C.",
+"E points away from the sheet on both sides.":
+  "E se aleja de la lámina en ambos lados.",
+"A plot of the field E against the distance h from the sheet, with the Gaussian surface marked.":
+  "Una gráfica del campo E contra la distancia h a la lámina, con la superficie gaussiana marcada.",
+"E has the same size at every distance and points away from the sheet on both sides.":
+  "E tiene el mismo tamaño a cualquier distancia y se aleja de la lámina en ambos lados.",
+"The marker is at {#} cm, where E is {#} kN/C.":
+  "El marcador está en {#} cm, donde E es {#} kN/C.",
 "Drag to turn":
   "Arrastra para girar",
-"{#} N·m²/C<span>differs from Q<sub>enc</sub>/ε₀ by {#} N·m²/C, a fraction {#}</span>":
-  "{#} N·m²/C<span>difiere de Q<sub>enc</sub>/ε₀ en {#} N·m²/C, una fracción de {#}</span>",
+"−{#}×{#}⁻¹⁵ N·m²/C <span>≈ {#}</span><span>differs from Q<sub>enc</sub>/ε₀ by {#} N·m²/C, a fraction {#}</span>":
+  "−{#}×{#}⁻¹⁵ N·m²/C <span>≈ {#}</span><span>difiere de Q<sub>enc</sub>/ε₀ en {#} N·m²/C, una fracción de {#}</span>",
 "Charge {#} is +{#} nC at ({#}, {#}) cm.":
   "La carga {#} es +{#} nC en ({#}, {#}) cm.",
 "Charge {#} is outside the surface.":
   "La carga {#} está fuera de la superficie.",
-"The enclosed charge is {#} nC.":
-  "La carga encerrada es {#} nC.",
-"−{#}×{#}⁻¹⁵ N·m²/C <span>≈ {#}</span><span>differs from Q<sub>enc</sub>/ε₀ by {#}×{#}⁻¹⁵ N·m²/C</span>":
-  "−{#}×{#}⁻¹⁵ N·m²/C <span>≈ {#}</span><span>difiere de Q<sub>enc</sub>/ε₀ en {#}×{#}⁻¹⁵ N·m²/C</span>",
 "{#} N·m²/C <span>≈ {#}</span><span>agrees with Q<sub>enc</sub>/ε₀ to every digit of double precision</span>":
   "{#} N·m²/C <span>≈ {#}</span><span>coincide con Q<sub>enc</sub>/ε₀ en todas las cifras de doble precisión</span>",
-"A Gaussian box {#} cm wide, {#} cm tall and {#} cm deep.":
-  "Una caja gaussiana de {#} cm de ancho, {#} cm de alto y {#} cm de profundidad.",
 "{#} values of E_r for a uniformly charged insulating ball with Q = {#} nC and radius R = {#} cm, at even steps across the plot plus the Gaussian surface and R. Positive E_r points outward.":
   "{#} valores de E_r para una esfera aislante con carga uniforme Q = {#} nC y radio R = {#} cm, a pasos iguales a lo largo de la gráfica más la superficie gaussiana y R. E_r positivo apunta hacia afuera.",
+"A uniformly charged ball of total charge +{#} nC and radius {#} cm, with a Gaussian sphere around it.":
+  "Una bola con carga uniforme de carga total +{#} nC y radio {#} cm, con una esfera gaussiana a su alrededor.",
+"The Gaussian sphere has radius {#} cm.":
+  "La esfera gaussiana tiene radio {#} cm.",
+"E points outward.":
+  "E apunta hacia afuera.",
+"A plot of the field E against the distance r, with the Gaussian surface marked.":
+  "Una gráfica del campo E contra la distancia r, con la superficie gaussiana marcada.",
+"E rises in proportion to r inside the ball, up to R = {#} cm, then falls as {#} over r squared.":
+  "E crece en proporción a r dentro de la bola, hasta R = {#} cm, y luego decae como {#} sobre r al cuadrado.",
+"An infinite line of charge, {#} nC/m, with a Gaussian cylinder around it.":
+  "Una línea infinita de carga, {#} nC/m, con un cilindro gaussiano a su alrededor.",
+"The cylinder has radius {#} cm and length {#} cm.":
+  "El cilindro tiene radio {#} cm y longitud {#} cm.",
+"E points away from the line.":
+  "E se aleja de la línea.",
+"E falls as {#} over r.":
+  "E decae como {#} sobre r.",
+"A cylinder {#} cm long and {#} cm across.":
+  "Un cilindro de {#} cm de largo y {#} cm de diámetro.",
+"div F = x/{#} + y/{#} + z/{#}.":
+  "div F = x/{#} + y/{#} + z/{#}.",
+"The flux out of the closed surface is −{#} u·cm².":
+  "El flujo hacia afuera de la superficie cerrada es −{#} u·cm².",
+"The integral of div F over the inside is −{#} u·cm².":
+  "La integral de div F sobre el interior es −{#} u·cm².",
+"div F = z + {#}.":
+  "div F = z + {#}.",
+"The surface is open: the lower half (z < {#}) is left out. The flux through the open surface is {#} u·cm².":
+  "La superficie está abierta: la mitad inferior (z < {#}) se deja fuera. El flujo a través de la superficie abierta es {#} u·cm².",
+"<i></i><span>+{#} nC</span><span>—</span><span>at (−{#}, −{#}) cm, inside, q/ε₀ = {#}</span>":
+  "<i></i><span>+{#} nC</span><span>—</span><span>en (−{#}, −{#}) cm, adentro, q/ε₀ = {#}</span>",
+"Flux through the open surface: the box without its lid (z = +d/{#})":
+  "Flujo a través de la superficie abierta: la caja sin su tapa (z = +d/{#})",
+"Flux through the lid (z = +d/{#}), left out":
+  "Flujo a través de la tapa (z = +d/{#}), que se deja fuera",
+"u·cm² <span>to within rounding</span><span>the same as ∫∫∫ div F dV less the flux through the lower half (z &lt; {#})</span>":
+  "u·cm² <span>salvo redondeo</span><span>igual a ∫∫∫ div F dV menos el flujo a través de la mitad inferior (z &lt; {#})</span>",
+"Open: the lid (z = +d/{#}) is left out, above this slice (see 3D)":
+  "Abierta: la tapa (z = +d/{#}) se deja fuera, sobre este corte (ver 3D)",
+"u·cm² <span>to within rounding</span><span>the same as ∫∫∫ div F dV less the flux through the lid (z = +d/{#})</span>":
+  "u·cm² <span>salvo redondeo</span><span>igual a ∫∫∫ div F dV menos el flujo a través de la tapa (z = +d/{#})</span>",
+"lid (z = +d/{#}) (left out)":
+  "tapa (z = +d/{#}) (fuera)",
+"Open box: ∬F·dA =":
+  "Caja abierta: ∬F·dA =",
+"u·cm²<span>the same as ∫∫∫ div F dV less the flux through the lid (z = +d/{#})</span>":
+  "u·cm²<span>igual a ∫∫∫ div F dV menos el flujo a través de la tapa (z = +d/{#})</span>",
+"The surface is open: the lid (z = +d/{#}) is left out. The flux through the open surface is {#} u·cm².":
+  "La superficie está abierta: la tapa (z = +d/{#}) se deja fuera. El flujo a través de la superficie abierta es {#} u·cm².",
+"Flux through the open surface: the cylinder without its right end cap":
+  "Flujo a través de la superficie abierta: el cilindro sin su tapa derecha",
+"Flux through the right end cap, left out":
+  "Flujo a través de la tapa derecha, que se deja fuera",
+"left out: the right end cap":
+  "fuera: la tapa derecha",
+"u·cm²<span>the same as ∫∫∫ div F dV less the flux through the right end cap</span>":
+  "u·cm²<span>igual a ∫∫∫ div F dV menos el flujo a través de la tapa derecha</span>",
+"right end cap (left out)":
+  "tapa derecha (fuera)",
+"Open cylinder: ∬F·dA =":
+  "Cilindro abierto: ∬F·dA =",
+"The surface is open: the right end cap is left out. The flux through the open surface is −{#} u·cm².":
+  "La superficie está abierta: la tapa derecha se deja fuera. El flujo a través de la superficie abierta es −{#} u·cm².",
+"Flux through the open surface: the prism without its cap at z = +d/{#}":
+  "Flujo a través de la superficie abierta: el prisma sin su tapa en z = +d/{#}",
+"Flux through the cap at z = +d/{#}, left out":
+  "Flujo a través de la tapa en z = +d/{#}, que se deja fuera",
+"Open: the cap at z = +d/{#} is left out, above this slice (see 3D)":
+  "Abierta: la tapa en z = +d/{#} se deja fuera, sobre este corte (ver 3D)",
+"u·cm² <span>to within rounding</span><span>the same as ∫∫∫ div F dV less the flux through the cap at z = +d/{#}</span>":
+  "u·cm² <span>salvo redondeo</span><span>igual a ∫∫∫ div F dV menos el flujo a través de la tapa en z = +d/{#}</span>",
+"cap at z = +d/{#} (left out)":
+  "tapa en z = +d/{#} (fuera)",
+"Open prism: ∬F·dA =":
+  "Prisma abierto: ∬F·dA =",
+"The surface is open: the cap at z = +d/{#} is left out. The flux through the open surface is {#} u·cm².":
+  "La superficie está abierta: la tapa en z = +d/{#} se deja fuera. El flujo a través de la superficie abierta es {#} u·cm².",
+"Still showing the last field. Fx: Not finished yet.":
+  "Aún se muestra el último campo. Fx: Todavía no está terminado.",
+"Still showing the last field. Fx: There is a ) without a matching (.":
+  "Aún se muestra el último campo. Fx: Hay un ) sin su ( correspondiente.",
+"Still showing the last field. Fx: “foo” is not a name I know. Use x, y and z, and functions like sin, exp, sqrt.":
+  "Aún se muestra el último campo. Fx: “foo” no es un nombre que conozca. Usa x, y y z, y funciones como sin, exp, sqrt.",
+"u·cm²<span>the same as ∫∫∫ div F dV less the flux through the cap at z = +d/{#}</span>":
+  "u·cm²<span>igual a ∫∫∫ div F dV menos el flujo a través de la tapa en z = +d/{#}</span>",
+"F is not finite somewhere on or inside the surface.<span>A value like {#}/{#} has no flux. Move the surface away from where F blows up, or change F.</span>":
+  "F no es finito en algún punto de la superficie o de su interior.<span>Un valor como {#}/{#} no tiene flujo. Aleja la superficie de donde F diverge, o cambia F.</span>",
+"Φ undefined<small>F is not usable on this surface</small>":
+  "Φ indefinido<small>F no se puede usar en esta superficie</small>",
+"div F = −2x − {#}/x².":
+  "div F = −2x − {#}/x².",
+"The flux cannot be found: F blows up on or inside the surface.":
+  "No se puede hallar el flujo: F diverge en la superficie o en su interior.",
+"div F = −2x.":
+  "div F = −2x.",
+"The surface is open: the cap at z = +d/{#} is left out. The flux through the open surface is −{#} u·cm².":
+  "La superficie está abierta: la tapa en z = +d/{#} se deja fuera. El flujo a través de la superficie abierta es −{#} u·cm².",
+"<span><i></i>Surface where E points out, E·n > {#}</span> <span><i></i>Surface where E points in, E·n &lt; {#}</span> <span><i></i>Field line in the slice</span> <span><i></i><i></i>A line crossing out or in</span> <span><i></i>Grip: drag to move or resize</span> <span><i></i>Flux patch (3D): an area element colored by its E·dA</span>":
+  "<span><i></i>Superficie donde E apunta hacia afuera, E·n > {#}</span> <span><i></i>Superficie donde E apunta hacia adentro, E·n &lt; {#}</span> <span><i></i>Línea de campo en el corte</span> <span><i></i><i></i>Una línea que sale o entra</span> <span><i></i>Control: arrastra para mover o cambiar el tamaño</span> <span><i></i>Parche de flujo (3D): un elemento de área coloreado según su E·dA</span>",
+"<i></i><span>+{#} nC</span><span>{#}</span><span>at ({#}, −{#}) cm, inside, q/ε₀ = {#}</span>":
+  "<i></i><span>+{#} nC</span><span>{#}</span><span>en ({#}, −{#}) cm, adentro, q/ε₀ = {#}</span>",
+"Charge {#} is +{#} nC at ({#}, −{#}) cm.":
+  "La carga {#} es +{#} nC en ({#}, −{#}) cm.",
+"{#} N·m²/C<span>differs from Q<sub>enc</sub>/ε₀ by {#} N·m²/C, a fraction {#}</span>":
+  "{#} N·m²/C<span>difiere de Q<sub>enc</sub>/ε₀ en {#} N·m²/C, una fracción de {#}</span>",
 "{#}×{#}⁻¹⁵ N·m²/C <span>≈ {#}</span><span>differs from Q<sub>enc</sub>/ε₀ by {#} N·m²/C, a fraction {#}</span>":
   "{#}×{#}⁻¹⁵ N·m²/C <span>≈ {#}</span><span>difiere de Q<sub>enc</sub>/ε₀ en {#} N·m²/C, una fracción {#}</span>",
-"{#}×{#}⁻¹⁴ N·m²/C <span>≈ {#}</span><span>differs from Q<sub>enc</sub>/ε₀ by {#}×{#}⁻¹⁴ N·m²/C</span>":
-  "{#}×{#}⁻¹⁴ N·m²/C <span>≈ {#}</span><span>difiere de Q<sub>enc</sub>/ε₀ en {#}×{#}⁻¹⁴ N·m²/C</span>",
 "−{#}×{#}⁻¹⁴ N·m²/C <span>≈ {#}</span><span>differs from Q<sub>enc</sub>/ε₀ by {#}×{#}⁻¹⁴ N·m²/C</span>":
   "−{#}×{#}⁻¹⁴ N·m²/C <span>≈ {#}</span><span>difiere de Q<sub>enc</sub>/ε₀ en {#}×{#}⁻¹⁴ N·m²/C</span>",
 "Describe the picture":

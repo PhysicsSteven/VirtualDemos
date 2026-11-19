@@ -5726,7 +5726,9 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
      a new series, so the worksheet puts the next export in a new copy of its table. */
   let wsSeries = Date.now();
   function toWorksheet(txt, fallback, opt = {}) {
-    const ws = opt.ws || 'ac-circuits', st = document.getElementById(opt.st || 'statTab');
+    /* a worksheet that opened the page with ?ws=<slug> (hs-series-parallel) gets every export (VD.ws in demos/lib/vd.js) */
+    const own = opt.ws || 'ac-circuits', ws = window.VD && VD.ws ? VD.ws(own) : own, st = document.getElementById(opt.st || 'statTab');
+    if (ws !== own) opt = { ...opt, wsName: '' };
     const cells = (l) => { const o = []; let c = '', q = false; for (let i = 0; i < l.length; i++) { const h = l[i]; if (q) { if (h === '"' && l[i + 1] === '"') { c += h; i++; } else if (h === '"') q = false; else c += h; } else if (h === '"') q = true; else if (h === ',') { o.push(c); c = ''; } else c += h; } o.push(c); return o; };
     const lines = txt.trim().split('\n'), data = lines.filter((l) => l && l[0] !== '#'), meta = {}, heads = [];
     lines.filter((l) => l[0] === '#').forEach((l) => { const c = cells(l.replace(/^#\s*/, '')); heads.push(c); if (c.length > 1 && !(c[0] in meta)) meta[c[0]] = c[1]; });

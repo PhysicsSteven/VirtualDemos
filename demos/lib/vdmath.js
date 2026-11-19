@@ -19,8 +19,22 @@ var VDMATH = (function () {
     sin: Math.sin, cos: Math.cos, tan: Math.tan, sec: (u) => 1 / Math.cos(u), csc: (u) => 1 / Math.sin(u), cot: (u) => Math.cos(u) / Math.sin(u),
     asin: Math.asin, acos: Math.acos, atan: Math.atan, sinh: Math.sinh, cosh: Math.cosh, tanh: Math.tanh,
     exp: Math.exp, ln: Math.log, log: Math.log10, abs: Math.abs, sign: Math.sign,
+    fact: (u) => factorial(u),
   };
-  const ALIAS = { arcsin: 'asin', arccos: 'acos', arctan: 'atan', sgn: 'sign', sqrt: 'sqrt', cbrt: 'cbrt' };
+  /* n! for the series demo (typed as n! or fact(n)): exact products for whole numbers up to 170 (Infinity past that), Γ(u + 1) by
+     Lanczos (g = 7, 9 terms, about 15 figures) between them, NaN at negative whole numbers. Added 2026-11-19. */
+  const LANCZOS = [0.99999999999980993, 676.5203681218851, -1259.1392167224028, 771.32342877765313, -176.61502916214059,
+    12.507343278686905, -0.13857109526572012, 9.9843695780195716e-6, 1.5056327351493116e-7];
+  function gamma(z) {
+    if (z < 0.5) return Math.PI / (Math.sin(Math.PI * z) * gamma(1 - z));
+    z -= 1; let x = LANCZOS[0]; for (let i = 1; i < 9; i++) x += LANCZOS[i] / (z + i);
+    const t = z + 7.5; return Math.sqrt(2 * Math.PI) * Math.pow(t, z + 0.5) * Math.exp(-t) * x;
+  }
+  function factorial(u) {
+    if (u === Math.floor(u)) { if (u < 0) return NaN; if (u > 170) return Infinity; let p = 1; for (let k = 2; k <= u; k++) p *= k; return p; }
+    return u < 0 && u === Math.round(u) ? NaN : gamma(u + 1);
+  }
+  const ALIAS = { arcsin: 'asin', arccos: 'acos', arctan: 'atan', sgn: 'sign', sqrt: 'sqrt', cbrt: 'cbrt', factorial: 'fact' };
   const INVERSE = { sin: 'asin', cos: 'acos', tan: 'atan' };
   const BASE = [...Object.keys(FN), ...Object.keys(ALIAS), 'pi', 'e'];
   const namesFor = (vars) => [...BASE, ...vars].sort((a, b) => b.length - a.length);
@@ -211,6 +225,7 @@ var VDMATH = (function () {
       case 'log': return mkPow(mkMul([u, mkFn('ln', rat(10, 1))]), MINUS1);
       case 'abs': return F('sign');
       case 'sign': return ZERO;
+      case 'fact': return flt(NaN);   /* the slope of n! needs the digamma function: not by the basic rules */
     }
     return ZERO;
   }
@@ -302,7 +317,7 @@ var VDMATH = (function () {
         }
         i += run.length; continue;
       }
-      if ('+-*/^(),|'.includes(ch)) { toks.push({ t: 'op', s: ch, i }); i++; continue; }
+      if ('+-*/^(),|!'.includes(ch)) { toks.push({ t: 'op', s: ch, i }); i++; continue; }
       throw perr('char', i, ch);
     }
     return toks;
@@ -340,7 +355,8 @@ var VDMATH = (function () {
       return power();
     }
     function power() {
-      const b = primary();
+      let b = primary();
+      while (isOp(peek(), '!')) { next(); b = mkFn('fact', b); }   /* n!, (2n)!: the factorial binds tighter than ^ */
       if (isOp(peek(), '^')) { next(); return mkPow(b, unary()); }
       return b;
     }
@@ -382,8 +398,8 @@ var VDMATH = (function () {
   }
   /* parse(text, { vars }): vars lists the variable names allowed (default: one variable, x or t). Greek names can be typed as
      words (theta) or letters (θ). A name that is neither a variable nor a function is an error ('name'). */
-  const GREEK = { 'θ': 'theta', 'φ': 'phi', 'ω': 'omega', 'α': 'alpha', 'τ': 'tau' };
-  const greek = (s) => s.replace(/[θφωατ]/g, (c) => GREEK[c]);
+  const GREEK = { 'θ': 'theta', 'φ': 'phi', 'ω': 'omega', 'α': 'alpha', 'τ': 'tau', 'ρ': 'rho' };   /* ρ added 2026-11-19 for spherical coordinates */
+  const greek = (s) => s.replace(/[θφωατρ]/g, (c) => GREEK[c]);
   function parse(src, o) {
     const vars = o && o.vars, s = greek(clean(src, o));
     return parseTokens(tokenize(s, namesFor(vars || ['x', 't'])), s.length, vars);
@@ -417,7 +433,7 @@ var VDMATH = (function () {
   }
   const numStr = (n) => (exact(n) && !n.dec ? (n.q === 1 ? String(n.p) : n.p + '/' + n.q) : fmt(n.v)).replace('-', '−');
   const isNeg = (t) => (t.k === 'n' && t.v < 0) || (t.k === 'mul' && t.a[0].k === 'n' && t.a[0].v < 0);
-  const SHOW = { theta: 'θ', phi: 'φ', omega: 'ω', alpha: 'α', tau: 'τ' };
+  const SHOW = { theta: 'θ', phi: 'φ', omega: 'ω', alpha: 'α', tau: 'τ', rho: 'ρ' };
   function text(node) {
     const wrap = (r, min) => (r[1] < min ? '(' + r[0] + ')' : r[0]);
     function join(coef, list) {
@@ -468,6 +484,7 @@ var VDMATH = (function () {
         case 'fn': {
           if (n.f === 'exp') return ['e^' + wrap(P(n.a), 4), 3];
           if (n.f === 'abs') return ['|' + P(n.a)[0] + '|', 4];
+          if (n.f === 'fact') return [wrap(P(n.a), 4) + '!', 4];
           return [(PRINT[n.f] || n.f) + '(' + P(n.a)[0] + ')', 4];
         }
       }

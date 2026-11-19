@@ -25,6 +25,8 @@ For a lab, the **Readings** section has **Record reading**, **Export to workshee
 5. **Venturi tube.** Halving the diameter makes the throat flow 4 times faster, 3.20 m/s, and the throat standpipe stands 48.9 cm lower than the inlet one (Q6). Drag the throat grip to widen it back.
 6. **Torricelli's tank.** The hole 0.30 m below the surface sends water out at 2.43 m/s, landing 0.917 m from the wall. With **Compare holes** on, ask the class to predict which hole throws farthest, then drag the hole (Q7).
 7. **Mystery blocks: name the metal.** Five metal cubes, A to E, look alike. Weigh one in air on the spring scale, lower it into the full overflow can and read the water in the beaker: block A weighs 13.56 N and pushes out 512 cm³, so ρ = W/(gV) = 2700 kg/m³, aluminum. Students pick the metal from the list and press **Check**; **New mystery set** deals five fresh blocks. This is Archimedes' test of the crown.
+8. **Force on a dam** (Dam or window scene; for calculus based courses). The face of a dam 20 m wide holds water 10 m deep. Ask where the total push acts before showing it. Cut into 10 strips, each taken at its top, the sum is 8.829 MN, short of the integral ∫ρgh·w dh = ρg·b·a²/2 = 9.810 MN by exactly one tenth. Raise **Strips n**, or choose **Middle**: for a rectangle the midpoint sum is exact at any n, because ρgh·w grows linearly across each strip. The force acts at h_cp = 6.67 m, two thirds of the way down, below the centroid at 5.00 m (Q8). **Window in a tank** (a 60 cm round window, its top 1.5 m down: 4.993 kN at 1.8125 m) and **End of a trough** (a triangle 2 m across, 1.5 m deep, point down: 7.358 kN at 0.75 m) add a width that changes with depth.
+9. **Pump out a tank** (Pumping scene). A full cylinder 3 m across and 4 m deep, pumped out through a spout 1 m above its top. Tap the slices: they all weigh the same, but the bottom ones rise farther. Press **Play** to pump it slice by slice and watch the work done so far fill in under the graph. W = ∫ρgπR²(5 − y) dy = 832.1 kJ, the weight of the water (693.4 kN) times the 3.00 m its center of mass rises (Q9). **Pump out a cone** shows the opposite case: most of the water is near the rim (Q10).
 
 ## Questions
 
@@ -42,6 +44,12 @@ For a lab, the **Readings** section has **Record reading**, **Export to workshee
 
 **Q7.** In **Torricelli's tank** the water stands H = 1.00 m above the floor and the hole is h = 0.30 m below the surface. Find the exit speed and how far from the wall the jet lands. At what other hole depth would it land at the same spot? Explain why the hole halfway down throws farthest, and check with **Compare holes**.
 
+**Q8.** In **Force on a dam**, the face is 20 m wide and the water 10 m deep. Set up the integral for the force by cutting the face into horizontal strips, evaluate it, and find the depth of the center of pressure. With 10 strips each taken at its top, by how much does the sum fall short, and how many strips would bring that error down to 1%? Why does the middle of each strip give the exact answer for a rectangle?
+
+**Q9.** In **Pump out a tank**, a full cylinder of radius 1.5 m and depth 4 m is pumped out through a spout 1 m above its top. Find the work, and check it as the weight of the water times the rise of its center of mass. How much of the work goes into the top half of the water, and how much into the bottom half?
+
+**Q10.** In **Pump out a cone**, a cone 4 m across at its 4 m high rim, point down, is full of water and pumped out over the rim. Find the work. Compare it with a cylinder of the same radius and height pumped out over its rim, and explain the ratio using the volume and the center of mass of each.
+
 ## Common misconceptions
 
 - **"The wide vessel holds more water, so it presses harder on its base."** The pressure at the base depends only on depth, and every base has the same area, so the force is the same. In the flared vessel the slanted walls hold up the extra water; in the narrowing one the walls push down on it.
@@ -56,6 +64,8 @@ For a lab, the **Readings** section has **Record reading**, **Export to workshee
 - Buoyancy: a cube in a tank of floor area 0.15 m², so the level rises by V_sub/A. Vertical motion only, with linear drag on the wet block (damping ratio ζ) and no added mass, so real blocks bob a little more slowly. The scale is read with the block hanging still.
 - Venturi: ideal flow (incompressible, inviscid, steady), uniform speed across each section, horizontal pipe; each standpipe shows the gauge pressure at the axis. A real pipe also loses pressure to friction.
 - Torricelli: a small hole with rounded edges in a wide tank kept full by a supply, so v = √(2gh) and the jet does not contract. The jet falls H − h, giving R = 2√(h(H − h)). Air drag is neglected.
+- Dam or window (OpenStax Calculus Vol 1, 6.5): a flat upright plate; only the gauge pressure ρgh counts, since air pushes on the surface and on the dry side alike. A strip at depth h, width w(h) and height Δh feels ρgh·w(h)·Δh; the demo adds n strips, each taken at its top, middle or bottom, and compares with the closed form F = ρg·A·h_c. The center of pressure is h_cp = ∫h²w dh / ∫h w dh = h_c + I_c/(A·h_c), with I_c = ba³/12 (rectangle), ba³/36 (triangle, point down) and πr⁴/4 (circle). Drawn to scale.
+- Pumping (OpenStax Calculus Vol 1, 6.5): a slice at height y with area A(y) weighs ρg·A(y)·Δy and rises y_o − y to the spout, so W = ∫₀^y_w ρg·A(y)(y_o − y) dy, in closed form for a cylinder, a cone point down and a trough with triangular ends, and equal to ρgV(y_o − y_cm). No losses: the work is the increase in potential energy, whatever the pump's speed. Play lowers the level steadily over 8 s of the clock only to show the order of the slices.
 
 ## Going further
 

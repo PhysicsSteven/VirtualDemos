@@ -1465,6 +1465,104 @@
       "permutation test",
       "statistics"
      ]
+    },
+    {
+     "demo": "surface-tension",
+     "title": "Surface Tension and Capillarity",
+     "desc": "Watch water climb thin glass tubes and mercury sink, find the pressure inside drops and bubbles and let a small bubble empty into a big one, rest a steel needle and a water strider on water, and pull a soap film on a sliding wire.",
+     "tags": [
+      "surface tension",
+      "capillary action",
+      "contact angle",
+      "bubble pressure",
+      "meniscus"
+     ]
+    },
+    {
+     "demo": "multiple-integrals",
+     "title": "Multiple Integrals",
+     "desc": "Boxes under a surface turning into a double integral as the grid refines; slices in either order over a region you type, with the reversed bounds checked; polar wedges and the Gaussian integral √π; triple integrals filled with rectangular, cylindrical or spherical cells; the mass, center of mass and moment of inertia of a rod, plate, disk, sphere or cone (½MR², ⅖MR², ⅓ML² checked); and a grid stretched by a change of variables and its Jacobian.",
+     "tags": [
+      "double integral",
+      "triple integral",
+      "iterated integral",
+      "polar coordinates",
+      "spherical coordinates",
+      "Jacobian",
+      "center of mass",
+      "moment of inertia",
+      "calculus"
+     ]
+    },
+    {
+     "demo": "series",
+     "title": "Sequences and Series",
+     "desc": "Type the terms of any series and add them one at a time: terms as bars, partial sums as a running total. Geometric sums of a bouncing ball's distance and time, the harmonic series passing every bound, the integral test as rectangles under a curve, comparison, the ratio and root tests, the alternating series bound, and sequences with their limits.",
+     "tags": [
+      "infinite series",
+      "partial sums",
+      "geometric series",
+      "harmonic series",
+      "integral test",
+      "comparison test",
+      "ratio test",
+      "alternating series",
+      "sequences",
+      "Madelung constant",
+      "calculus"
+     ]
+    },
+    {
+     "demo": "solids-of-revolution",
+     "title": "Solids of Revolution",
+     "desc": "Spin the region under any typed curve about an axis and slice the solid into disks, washers or cylindrical shells with an n slider, in 3D or flat: the sum of the slices closes in on the integral. Cross sections standing on a base (squares, semicircles, triangles), arc length as a chain of segments, surface area as frustum bands, the moment of inertia of a cone, (3/10)MR², and a sphere, (2/5)MR², and the volume of a vase and of water in a bowl.",
+     "tags": [
+      "volume",
+      "disk method",
+      "washer method",
+      "shell method",
+      "cross sections",
+      "arc length",
+      "surface area",
+      "moment of inertia",
+      "solids of revolution",
+      "calculus"
+     ]
+    },
+    {
+     "demo": "surfaces-and-gradients",
+     "title": "Surfaces and Gradients",
+     "desc": "Type z = f(x, y) and see the surface beside its contour map: partial derivatives as slopes of slices, the tangent plane, the directional derivative and the gradient pointing uphill across the level curves, peaks, pits and saddles by the second derivative test, Lagrange multipliers on a constraint, and limits along different paths. E = −∇V for two charges, a potential energy surface with a rolling ball, the ideal gas P(V, T).",
+     "tags": [
+      "partial derivatives",
+      "gradient",
+      "directional derivative",
+      "tangent plane",
+      "level curves",
+      "critical points",
+      "second derivative test",
+      "Lagrange multipliers",
+      "potential",
+      "calculus"
+     ]
+    },
+    {
+     "demo": "space-3d",
+     "title": "Vectors and Surfaces in Space",
+     "desc": "A space you can turn: vectors by their x, y and z components with their sum, dot product and angle, and cross product with the right hand rule and its area; a line and a plane and where they meet; the quadric surfaces with their traces; a point in rectangular, cylindrical and spherical coordinates with its coordinate surfaces. Torque r × F, the magnetic force qv × B, work F · d and the potential of a point charge.",
+     "tags": [
+      "vectors",
+      "dot product",
+      "cross product",
+      "right hand rule",
+      "lines and planes",
+      "quadric surfaces",
+      "traces",
+      "cylindrical coordinates",
+      "spherical coordinates",
+      "torque",
+      "calculus"
+     ]
     }
    ]
   },
@@ -1622,6 +1720,19 @@
       "superfluid",
       "Gross–Pitaevskii equation",
       "ultracold atoms"
+     ]
+    },
+    {
+     "demo": "osmosis",
+     "title": "Diffusion and Osmosis",
+     "desc": "Watch molecules spread as the square root of time and leak through a still layer, then let water cross a membrane: osmotic pressure lifts a column in a U tube, swells a red blood cell until it bursts, and moves fluid out of a capillary and back in.",
+     "tags": [
+      "diffusion",
+      "Fick's law",
+      "osmotic pressure",
+      "van 't Hoff",
+      "tonicity",
+      "Starling forces"
      ]
     }
    ]
@@ -1849,6 +1960,18 @@
       "power transmission",
       "I²R loss"
      ]
+    },
+    {
+     "demo": "nerve-signals",
+     "title": "Nerve Signals and the ECG",
+     "desc": "An axon as a leaky cable: find the threshold, time an action potential between two electrodes, and see myelin make it jump from node to node, so its speed grows with the diameter instead of its square root. Then watch the heart's turning dipole draw ECG leads I, II and III.",
+     "tags": [
+      "action potential",
+      "Nernst potential",
+      "myelin",
+      "ECG",
+      "Einthoven's triangle"
+     ]
     }
    ]
   },
@@ -2015,6 +2138,18 @@
       "echo ranging",
       "acoustic impedance",
       "Doppler flow"
+     ]
+    },
+    {
+     "demo": "hearing",
+     "title": "Hearing and the Ear",
+     "desc": "Take your own audiogram with headphones, compare phons with decibels on the ISO 226 equal loudness contours, follow a tone to its place on the uncoiled cochlea, and see the 4 kHz notch that noise leaves behind.",
+     "tags": [
+      "audiogram",
+      "phon",
+      "equal loudness contours",
+      "cochlea",
+      "hearing loss"
      ]
     }
    ]

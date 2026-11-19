@@ -4,7 +4,9 @@
    Atwood (θ = 90°, no friction): a = (m2 − m) g / (m + m2) and T = 2 m m2 g/(m + m2); the work done by gravity, push,
    friction and string adds up to the change of the block's kinetic energy while it runs (work-energy theorem).
    Block and tackle: T = F, n strands lift with n F, the ideal MA is n and the hand draws in n Δy of rope for every Δy of load; the
-   the work-energy sum is checked for the ramp only. */
+   the work-energy sum is checked for the ramp only.
+   Simple machines: IMA = d_in/d_out, AMA = mg/F_in, efficiency AMA/IMA = W_out/W_in never above 1, heat never negative; frictionless
+   machines are ideal; the readouts show the core's values. */
 const pre = `const X = window.__forces; if (!X) return true; const S = X.S, G = X.G, near = (a, b, t) => Math.abs(a - b) <= t * Math.max(1, Math.abs(b));
   const rd = (id, l) => { for (const d of document.querySelectorAll('#' + id + ' > div')) if (d.firstChild.textContent === l) return d.lastChild.textContent.replace(/\\u2212/g, '-'); return null; };
 `;
@@ -51,6 +53,16 @@ module.exports = {
       const p = S.p, t = X.tackle(p.m, p.n, p.F, S.s <= 1e-12 && S.v <= 1e-12);
       if (t.T !== p.F || t.up !== p.n * p.F || t.MA !== p.n || !near(t.Fhold, p.m * G / p.n, 1e-12)) return 'tackle: ' + JSON.stringify(t);
       return true; })()` },
+    { name: "simple machines: AMA = mg/F_in, efficiency = W_out/W_in ≤ 1, ideal at μ = 0; readouts match", fn: `(() => { ${pre}
+      if (!S.mach) return true;
+      const q = S.p, M = X.machine(S.machine, q);
+      if (![M.Fin, M.din, M.dout, M.IMA, M.AMA, M.eff].every(isFinite) || M.Fin <= 0 || M.dout <= 0) return 'machine: ' + JSON.stringify(M);
+      if (!near(M.AMA, q.m * G / M.Fin, 1e-12) || !near(M.IMA, M.din / M.dout, 1e-12) || !near(M.eff, M.Wout / M.Win, 1e-12)) return 'IMA, AMA or efficiency off: ' + JSON.stringify(M);
+      if (M.eff > 1 + 1e-12 || M.heat < -1e-9) return 'efficiency ' + M.eff + ', heat ' + M.heat;
+      if ((S.machine === 'lever' || q.mu === 0) && !near(M.eff, 1, 1e-12)) return 'frictionless but efficiency ' + M.eff;
+      const e = rd('forceOut', 'Effort Fin'); if (e !== null && Math.abs(parseFloat(e) - M.Fin) > 0.0051) return 'effort shows ' + e + ', core ' + M.Fin;
+      if (!(S.mc.u >= 0 && S.mc.u <= 1)) return 'progress ' + S.mc.u;
+      return true; })()` },
   ],
   steps: [
     { name: 'Every preset, Release, Hold, back to the top mark, timed run, and the sliders to the extremes mid motion', fn: `(async () => {
@@ -68,6 +80,16 @@ module.exports = {
       set('sM', document.getElementById('sM').min); set('sF', document.getElementById('sF').max); set('sPhi', document.getElementById('sPhi').max); set('sTh', 90);
       if (document.getElementById('go').textContent === 'Release') document.getElementById('go').click(); await pause(600);
       set('sTh', 0); set('sMs', 0); set('sMk', 0); await pause(600);
+    })()` },
+    { name: 'Simple machines: each machine, Play, every knob to its ends mid lift, record and export', fn: `(async () => {
+      const pause = (ms) => new Promise((r) => setTimeout(r, ms)), q = (s) => document.querySelector(s);
+      q('#presets [data-p=machines]').click(); await pause(80);
+      for (const b of document.querySelectorAll('#machSeg button')) {
+        b.click(); await pause(60); q('#go').click(); await pause(300);
+        for (const id of ['sM', 'sN', 'sLin', 'sLout', 'sRa', 'sWR', 'sAR', 'sMu']) { const e = document.getElementById(id); if (!e || e.closest('[hidden]')) continue; for (const v of [e.max, e.min, e.value]) { e.value = v; e.dispatchEvent(new Event('input', { bubbles: true })); await pause(40); } }
+        q('#go').click(); await pause(4500); q('#capture').click(); await pause(40); q('#back').click(); await pause(40);
+      }
+      q('#exportCsv').click(); await pause(100);
     })()` },
   ],
 };

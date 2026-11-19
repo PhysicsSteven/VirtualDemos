@@ -16,6 +16,16 @@ window.VD_SHORTCUTS = {
     [", .", "Turn the 3D view", "on the picture"]
   ],
   "active-galaxies": [],
+  "nerve-signals": [
+    ["A B", "Pick recording electrode A or B (Axon)", "on the picture"],
+    ["← →", "Move the picked electrode along the axon", "on the picture"],
+    ["Shift + ← →", "Move it ten times farther", "on the picture"]
+  ],
+  "hearing": [
+    ["← →", "Change the frequency (Cochlea, Loudness)", "on the picture"],
+    ["↑ ↓", "Change the sound level (Loudness)", "on the picture"],
+    ["Shift + arrows", "Five times bigger steps", "on the picture"]
+  ],
   "between-the-stars": [],
   "neutron-stars": [
     ["← → ↑ ↓", "Turn the view of the star", "on the picture"]
@@ -27,6 +37,10 @@ window.VD_SHORTCUTS = {
     ["+ −", "Zoom in or out", "on the picture"],
     ["← → ↑ ↓", "Turn the view of Earth's orbit and the dust stream", "on the picture (Meteor showers)"]
   ],
+  "surface-tension": [
+    ["← →", "Pull the sliding wire out or push it in by 2 mm", "on the picture (Soap film)"]
+  ],
+  "osmosis": [],
   "equivalence-gravity": [],
   "galaxy-clusters": [],
   "galaxy-collisions": [
@@ -63,6 +77,16 @@ window.VD_SHORTCUTS = {
   "fate-of-the-universe": [
     ["← → ↑ ↓", "Move your universe on the map of matter against dark energy (Shift for bigger steps)", "on the picture"]
   ],
+  "series": [
+    ["↑ ↓ ← →", "One more or one fewer term N (Shift for ten)", "on either graph"],
+    ["+ −", "Zoom the n axis in or out about the middle (or scroll over a graph)", "on either graph"]
+  ],
+  "solids-of-revolution": [
+    ["↑ ↓ ← →", "One slice more or fewer", "on the plane picture or the graph"],
+    ["+ −", "Zoom the plane picture in or out about its center (or scroll over it)", "on the plane picture"],
+    ["+ −", "Magnify the sums about the integral (or scroll over the graph)", "on the graph"],
+    ["Space", "Play or pause the doubling of n", "on the plane picture or the graph"]
+  ],
   "taylor": [
     ["← →", "Move the probe (Shift for ten times as far)", "on the graph"],
     ["↑ ↓", "One order higher or lower", "on the graph"],
@@ -79,6 +103,11 @@ window.VD_SHORTCUTS = {
   "rates-and-optimization": [
     ["← →", "Move the clock, or the choice, along (Shift for bigger steps)", "on the picture or the graph"]
   ],
+  "multiple-integrals": [
+    ["← → ↑ ↓", "Pan the flat view, or turn a solid (Shift for bigger steps)", "on the picture"],
+    ["+ −", "Zoom in or out about the middle of the view (or scroll over the picture)", "on the picture"],
+    [", .", "Turn the 3D view", "on the 3D picture"]
+  ],
   "derivatives": [
     ["← →", "Move the point along the curve (Shift for bigger steps)", "on the picture"],
     ["+ −", "Zoom in or out (or scroll over the graph)", "on the picture"]
@@ -92,6 +121,16 @@ window.VD_SHORTCUTS = {
     ["← →", "Pick a group", "on the picture"],
     ["↑ ↓", "Move the picked group's mean up or down", "on the picture"],
     ["Shift + ↑ ↓", "Make the picked group's spread bigger or smaller", "on the picture"]
+  ],
+  "surfaces-and-gradients": [
+    ["← → ↑ ↓", "Move the point on the contour map (Shift for bigger steps)", "on the map"],
+    ["+ −", "Zoom in or out about the center (or scroll over the map)", "on the map"],
+    [", .", "Turn the surface", "on the 3D view"]
+  ],
+  "space-3d": [
+    [", .", "Turn the space about the z axis", "on the picture"],
+    ["+ −", "Zoom in or out about the center (or scroll over the picture)", "on the picture"],
+    ["Space", "Play or pause", "on the picture"]
   ],
   "slope-fields": [
     ["← → ↑ ↓", "Move the start point of the curve in t or y (Shift for bigger steps)", "on the picture"],
@@ -726,6 +765,7 @@ window.VD_SHORTCUTS = {
   "sound-waves": [
     ["Space", "Strike the materials in the Race view, or clap in the Time of flight view", "on the picture"],
     ["C", "Clap", "on the picture (Time of flight view)"],
+    ["P", "Send a pulse down the slinkies", "on the picture (Slinky view)"],
     ["← → ↑ ↓", "Pan the 3D Race view", "on the picture (3D Race view)"]
   ],
   "spacetime": [
@@ -813,7 +853,9 @@ window.VD_SHORTCUTS = {
     ["← → ↑ ↓", "Move the probe one zone along the star (Shift: ten zones)", "on the composition graph or the temperature and density graph"],
     ["Home End", "Move the probe to the center or the surface", "on the composition graph or the temperature and density graph"]
   ],
-  "states-of-matter": [],
+  "states-of-matter": [
+    ["← → ↑ ↓", "Move the dot on the phase diagram (Shift: larger steps)", "on the picture (Phase diagram view)"]
+  ],
   "stress-strain": [
     ["↑ ↓", "Add or take off load in the tension test, or raise or lower the force in the other tests (Shift: larger steps)", "on the picture"]
   ],

@@ -85,12 +85,14 @@
     {
      "id": "fluids",
      "title": "Fluids",
-     "blurb": "Pressure, buoyancy, flow and viscosity.",
+     "blurb": "Pressure, buoyancy, flow, viscosity, surface tension and osmosis.",
      "demos": [
       "fluids",
       "viscometer",
       "terminal-velocity",
-      "granular-flow"
+      "granular-flow",
+      "surface-tension",
+      "osmosis"
      ]
     }
    ]
@@ -131,13 +133,14 @@
       "room-acoustics",
       "chladni",
       "acoustic-levitation",
-      "ultrasound"
+      "ultrasound",
+      "hearing"
      ]
     },
     {
      "id": "heat",
      "title": "Heat and thermodynamics",
-     "blurb": "Temperature, gases, heat engines, entropy and radiation.",
+     "blurb": "Temperature, gases, diffusion, heat engines, entropy and radiation.",
      "demos": [
       "states-of-matter",
       "temperature",
@@ -149,7 +152,8 @@
       "ising",
       "galton-board",
       "superfluid-helium",
-      "bose-einstein"
+      "bose-einstein",
+      "osmosis"
      ]
     }
    ]
@@ -434,10 +438,14 @@
     {
      "id": "chemistry-biology",
      "title": "Chemistry and biology",
-     "blurb": "An oscillating chemical reaction and the structure of DNA.",
+     "blurb": "An oscillating chemical reaction, the structure of DNA, nerve signals, the ECG and the ear, surface tension in the lungs, and osmosis in cells and capillaries.",
      "demos": [
       "bz-reaction",
-      "dna"
+      "dna",
+      "nerve-signals",
+      "hearing",
+      "surface-tension",
+      "osmosis"
      ]
     },
     {
@@ -457,7 +465,12 @@
       "rates-and-optimization",
       "hypothesis-tests",
       "anova",
-      "regression"
+      "regression",
+      "multiple-integrals",
+      "series",
+      "solids-of-revolution",
+      "surfaces-and-gradients",
+      "space-3d"
      ]
     }
    ]

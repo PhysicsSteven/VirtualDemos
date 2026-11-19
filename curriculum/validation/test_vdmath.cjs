@@ -90,6 +90,12 @@ group('several variables: partials, compile order, substitution, names', () => {
   assert.strictEqual(c.text(p.node), '2 cos(3θ)');
   assert.strictEqual(c.compile(p.node, ['theta'])(Math.PI / 3), -2);
   assert.strictEqual(c.compile(c.parse('2cos(3 theta)', { vars: ['theta'] }).node, ['theta'])(0), 2);
+  /* spherical coordinates (2026-11-19, Multiple Integrals): ρ typed as a letter or as rho, printed as ρ */
+  const SPH = { vars: ['rho', 'phi', 'theta', 'r'] }, sph = c.parse('ρ^2 sin φ', SPH).node;
+  assert.strictEqual(c.text(sph), 'ρ²·sin(φ)');
+  assert.strictEqual(c.compile(sph, ['rho', 'phi'])(2, Math.PI / 2), 4);
+  assert.strictEqual(c.text(c.parse('rho^2 sin(phi)', SPH).node), 'ρ²·sin(φ)');
+  assert.strictEqual(c.compile(c.parse('r rho', SPH).node, ['r', 'rho'])(2, 3), 6);
   const xyz = c.parse('x y^2 z', { vars: ['x', 'y', 'z'] }).node;
   assert.strictEqual(c.compile(xyz, ['x', 'y', 'z'])(2, 3, 0.5), 9);
   assert.strictEqual(c.compile(xyz, ['x', 'y', 'z', 'w'])(2, 3, 0.5, 7), 9);
@@ -110,6 +116,19 @@ group('antiderivative: the basic rules give tidy formulas whose derivative is th
     const r = c.parse(s), F = c.compile(c.antiderivative(r.node, r.v), [r.v]), f = c.compile(r.node, [r.v]);
     for (const x of [0.37, 0.8, 1.3]) { const h = 1e-6, d = (F(x + h) - F(x - h)) / (2 * h); assert(Math.abs(d - f(x)) <= 1e-6 * (1 + Math.abs(f(x))), `${s} at ${x}: ${d} vs ${f(x)}`); }
   }
+});
+
+group('factorial (2026-11-19, for Sequences and Series): n! and fact(n), exact whole products, Γ(u + 1) between, printed back as n!', () => {
+  const N = { vars: ['n'] }, F = (s, v) => c.compile(c.parse(s, N).node, ['n'])(v);
+  assert.strictEqual(F('n!', 5), 120); assert.strictEqual(F('fact(n)', 0), 1); assert.strictEqual(F('factorial(n)', 10), 3628800);
+  assert.strictEqual(F('(2n)!', 3), 720); assert.strictEqual(F('2n!', 3), 12); assert.strictEqual(F('n!^2', 3), 36); assert.strictEqual(F('1/n!', 170) > 0, true);
+  assert.strictEqual(F('n!', 171), Infinity); assert(Number.isNaN(F('n!', -2)));
+  assert(Math.abs(F('n!', 0.5) - Math.sqrt(Math.PI) / 2) < 1e-14, 'half factorial');
+  assert(Math.abs(F('n!', 4.5) / 52.34277778455352 - 1) < 1e-13, 'Γ(5.5)');
+  assert.strictEqual(c.text(c.parse('n!/n^n', N).node), 'n!/n^n');
+  assert.strictEqual(c.text(c.parse('1/(2n)!', N).node), '1/(2n)!');
+  assert.strictEqual(c.text(c.parse('3^n/n!', N).node), '3^n/n!');
+  assert.throws(() => c.parse('!n', N));
 });
 
 console.log(`vdmath: ${n} groups passed`);

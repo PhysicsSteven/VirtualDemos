@@ -126,6 +126,32 @@
     PMerc:  [87.969, 'd', "Mercury's sidereal orbital period", 'NASA GSFC Mercury Fact Sheet (D. R. Williams)'],
     lb:     [0.45359237, 'kg', 'international avoirdupois pound', 'exact (1959 international yard and pound agreement)'],
     OmStar: [0.0027, '', 'density of stars and stellar remnants today as a share of the critical density', 'Fukugita and Peebles 2004 (ApJ 616, 643), Table 2'],
+    /* liquids (Surface Tension and Capillarity, Diffusion and Osmosis; 2026-11-19). Surface tensions: OpenStax College Physics 2e
+       Table 11.3, at 20 °C unless stated; contact angles: Table 11.4; diffusion constants: Table 12.2, at 20 °C and 1 atm */
+    gamWater0:  [0.0756, 'N/m', 'surface tension of water at 0 °C', 'OpenStax College Physics 2e, Table 11.3'],
+    gamWater20: [0.0728, 'N/m', 'surface tension of water at 20 °C', 'OpenStax College Physics 2e, Table 11.3'],
+    gamWater100:[0.0589, 'N/m', 'surface tension of water at 100 °C', 'OpenStax College Physics 2e, Table 11.3'],
+    gamSoap:    [0.0370, 'N/m', 'surface tension of soapy water (typical)', 'OpenStax College Physics 2e, Table 11.3'],
+    gamEthanol: [0.0223, 'N/m', 'surface tension of ethyl alcohol', 'OpenStax College Physics 2e, Table 11.3'],
+    gamGlycerin:[0.0631, 'N/m', 'surface tension of glycerin', 'OpenStax College Physics 2e, Table 11.3'],
+    gamHg:      [0.465, 'N/m', 'surface tension of mercury', 'OpenStax College Physics 2e, Table 11.3'],
+    gamOlive:   [0.032, 'N/m', 'surface tension of olive oil', 'OpenStax College Physics 2e, Table 11.3'],
+    gamTissue:  [0.050, 'N/m', 'surface tension of tissue fluids (typical)', 'OpenStax College Physics 2e, Table 11.3'],
+    gamBlood:   [0.058, 'N/m', 'surface tension of whole blood at 37 °C', 'OpenStax College Physics 2e, Table 11.3'],
+    gamPlasma:  [0.073, 'N/m', 'surface tension of blood plasma at 37 °C', 'OpenStax College Physics 2e, Table 11.3'],
+    thHgGlass:  [140, '°', 'contact angle of mercury on glass', 'OpenStax College Physics 2e, Table 11.4'],
+    thWaterParaffin:[107, '°', 'contact angle of water on paraffin', 'OpenStax College Physics 2e, Table 11.4'],
+    thWaterSilver:[90, '°', 'contact angle of water on silver', 'OpenStax College Physics 2e, Table 11.4'],
+    DH2air:     [6.4e-5, 'm²/s', 'diffusion constant of hydrogen in air', 'OpenStax College Physics 2e, Table 12.2'],
+    DO2air:     [1.8e-5, 'm²/s', 'diffusion constant of oxygen in air', 'OpenStax College Physics 2e, Table 12.2'],
+    DO2water:   [1.0e-9, 'm²/s', 'diffusion constant of oxygen in water', 'OpenStax College Physics 2e, Table 12.2'],
+    DGlucose:   [6.7e-10, 'm²/s', 'diffusion constant of glucose in water', 'OpenStax College Physics 2e, Table 12.2'],
+    DHemoglobin:[6.9e-11, 'm²/s', 'diffusion constant of hemoglobin in water', 'OpenStax College Physics 2e, Table 12.2'],
+    DDNA:       [1.3e-12, 'm²/s', 'diffusion constant of DNA in water', 'OpenStax College Physics 2e, Table 12.2'],
+    mmHg:       [133.322387415, 'Pa', 'conventional millimeter of mercury (13.5951 g/cm³ × 9.80665 m/s² × 1 mm)', 'exact (definition, BIPM SI Brochure)'],
+    rhoBlood:   [1050, 'kg/m³', 'density of whole blood', 'OpenStax College Physics 2e, 11.9 (Pressures in the Body) and Table 11.1'],
+    /* hearing (Hearing and the Ear, 2026-11-19) */
+    Iref:       [1e-12, 'W/m²', 'reference intensity I₀ of the sound intensity level in decibels', 'definition (OpenStax University Physics 17.3)'],
   };
   const VDC = {};
   for (const k in T) VDC[k] = T[k][0];

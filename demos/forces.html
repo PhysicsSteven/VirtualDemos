@@ -62,9 +62,9 @@ table.rows input { font: inherit; font-family: var(--font-mono); width: 4.6em; b
 #paneSeg { display: flex; margin-bottom: 10px; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
 #paneSeg button { flex: 1; font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 8px; cursor: pointer; }
 #paneSeg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
-#viewSeg { display: inline-flex; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
-#viewSeg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
-#viewSeg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
+#viewSeg, #machSeg { display: inline-flex; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
+#viewSeg button, #machSeg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+#viewSeg button[aria-pressed="true"], #machSeg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
 .scene { position: absolute; inset: 0; }
 .instr { left: 12px; top: 58px; max-width: calc(var(--vd-share, 66%) - 24px); }   /* stays on the ramp's side of the divider (VD.split) */
 @media (max-width: 820px) {
@@ -106,6 +106,7 @@ table.rows input { font: inherit; font-family: var(--font-mono); width: 4.6em; b
         <button type="button" class="spin" id="back">Put back</button>
         <button type="button" class="spin" id="timed">Release at the top mark</button>
         <div class="seg" role="group" aria-label="View" id="viewSeg"><button type="button" data-view="3d" aria-pressed="false">3D</button><button type="button" data-view="flat" aria-pressed="true">Flat</button></div>
+        <div class="seg" role="group" aria-label="Machine" id="machSeg" hidden><button type="button" data-mach="lever" aria-pressed="true">Lever</button><button type="button" data-mach="pulleys" aria-pressed="false">Pulleys</button><button type="button" data-mach="ramp" aria-pressed="false">Ramp</button><button type="button" data-mach="wheel" aria-pressed="false">Wheel and axle</button></div>
       </div>
       <span class="blindtag" id="blindTag" hidden>Blind</span>
       </div>
@@ -117,6 +118,14 @@ table.rows input { font: inherit; font-family: var(--font-mono); width: 4.6em; b
         <div class="kctl"><label for="sPhi">Angle of F above the surface</label><input type="range" id="sPhi" min="-45" max="60" step="1"><output id="oPhi" for="sPhi"></output></div>
         <div class="kctl" id="nRow" hidden><label for="sN">Strands n</label><input type="range" id="sN" min="1" max="6" step="1"><output id="oN" for="sN"></output></div>
         <div class="kctl"><label for="sM2">Hanging mass m₂ (0 = none)</label><input type="range" id="sM2" min="0" max="10" step="0.5" data-unit="kg"><output id="oM2" for="sM2"></output></div>
+        <div id="machKnobs" class="kgroup" hidden>
+          <div class="kctl" data-mach="lever"><label for="sLin">Effort arm</label><input type="range" id="sLin" min="0.2" max="2" step="0.05" data-unit="m"><output id="oLin" for="sLin"></output></div>
+          <div class="kctl" data-mach="lever"><label for="sLout">Load arm</label><input type="range" id="sLout" min="0.1" max="1" step="0.05" data-unit="m"><output id="oLout" for="sLout"></output></div>
+          <div class="kctl" data-mach="ramp"><label for="sRa">Ramp angle θ</label><input type="range" id="sRa" min="5" max="60" step="0.5" data-unit="°"><output id="oRa" for="sRa"></output></div>
+          <div class="kctl" data-mach="wheel"><label for="sWR">Wheel radius R</label><input type="range" id="sWR" min="0.1" max="0.6" step="0.01" data-unit="m"><output id="oWR" for="sWR"></output></div>
+          <div class="kctl" data-mach="wheel"><label for="sAR">Axle radius r</label><input type="range" id="sAR" min="0.02" max="0.2" step="0.01" data-unit="m"><output id="oAR" for="sAR"></output></div>
+          <div class="kctl" data-mach="pulleys ramp wheel"><label for="sMu">Friction μ</label><input type="range" id="sMu" min="0" max="0.5" step="0.01"><output id="oMu" for="sMu"></output></div>
+        </div>
       </div>
     </div>
 
@@ -132,6 +141,7 @@ table.rows input { font: inherit; font-family: var(--font-mono); width: 4.6em; b
           <button type="button" data-p="rampm" aria-pressed="false">Ramp and hanging mass</button>
           <button type="button" data-p="atwood" aria-pressed="false">Atwood's machine</button>
           <button type="button" data-p="tackle" aria-pressed="false">Block and tackle</button>
+          <button type="button" data-p="machines" aria-pressed="false">Simple machines</button>
           <button type="button" data-p="close" aria-pressed="false">Friction up close</button>
         </div>
         <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
@@ -267,6 +277,39 @@ table.rows input { font: inherit; font-family: var(--font-mono); width: 4.6em; b
     for (let j = 1; j + 1 <= n; j += 2) lo.push([j, j + 1]);
     return { up, lo, tied: n % 2 ? 'lower' : 'upper' };
   }
+  // Simple machines (OpenStax College Physics 2e §9.5, Physics §9.3): a load of mass m is raised slowly at a steady speed, so its
+  // kinetic energy stays negligible and the effort F_in is the force that just keeps it moving. The output force is the load's
+  // weight F_out = mg; d_in is how far the effort moves along its own direction and d_out how far the load rises.
+  // IMA = d_in/d_out (geometry only), AMA = F_out/F_in, efficiency = AMA/IMA = F_out d_out/(F_in d_in). Lever, rope, pulleys and
+  // wheel are light. Friction: the ramp's sliding friction μ (F_in = mg(sin θ + μ cos θ) up the slope); at an axle, Coulomb friction
+  // on a pin of radius PIN_R, which acts at the friction circle r_f = PIN_R μ/√(1 + μ²) against the turning, with the axle's load the
+  // sum of the two parallel rope pulls. A pulley of radius SHEAVE_R then passes on (SHEAVE_R − r_f)/(SHEAVE_R + r_f) of the tension;
+  // the wheel and axle needs F_in R = mg r + r_f (F_in + mg). The lever turns on a knife edge with no friction, its forces vertical,
+  // so F_in L_in = mg L_out at every angle of its swing.
+  /* the lever swings ±11.54°, the angle whose sine is 0.2, so each end moves 0.4 of its arm: arms in 0.05 m steps give distances
+     exact to 1 mm (with ±12° the rounded distances made a frictionless lever show 100.2 %) */
+  const PIN_R = 0.010, SHEAVE_R = 0.05, MACH_RISE = 1.0, LEVER_SWING = Math.asin(0.2) * 180 / Math.PI, MACH_T = 4;
+  const frictionCircle = (mu) => PIN_R * mu / Math.sqrt(1 + mu * mu);
+  function machine(k, q) {
+    const Fout = q.m * G; let Fin, din, dout;
+    if (k === 'lever') { const s = 2 * Math.sin(LEVER_SWING * Math.PI / 180); din = q.Lin * s; dout = q.Lout * s; Fin = Fout * q.Lout / q.Lin; }
+    else if (k === 'pulleys') {
+      const rf = frictionCircle(q.mu), r = (SHEAVE_R - rf) / (SHEAVE_R + rf); let sum = 0;
+      for (let j = 1; j <= q.n; j++) sum += Math.pow(r, j);   /* strand j is j sheaves from the hand: tension F_in r^j */
+      dout = MACH_RISE; din = q.n * dout; Fin = Fout / sum;
+    } else if (k === 'ramp') { const th = q.ra * Math.PI / 180; din = LEN; dout = LEN * Math.sin(th); Fin = Fout * (Math.sin(th) + q.mu * Math.cos(th)); }
+    else { const rf = frictionCircle(q.mu); dout = MACH_RISE; din = dout * q.R / q.r; Fin = Fout * (q.r + rf) / (q.R - rf); }
+    const IMA = din / dout, AMA = Fout / Fin;
+    return { Fin, Fout, din, dout, IMA, AMA, eff: AMA / IMA, Win: Fin * din, Wout: Fout * dout, heat: Fin * din - Fout * dout };
+  }
+  function machineCSV(rows, meta) {
+    const L = ['# Forces and Friction, Simple machines: captured readings (simulated data)', `# demo version,${meta.version}`, `# g_m_per_s2,${G}`,
+      '# model,"load raised slowly at steady speed; light lever, rope, pulleys and wheel; sliding friction on the ramp, pin friction at each axle (pin radius 1.0 cm), knife edge lever"',
+      '# rounding,"forces to 0.01 N, distances to 0.001 m, as displayed; edited cells exported as typed"', '# noise,none',
+      'row,machine,setting,m_kg,mu,F_in_N,d_in_m,F_out_N,d_out_m'];
+    rows.forEach((r, i) => L.push([i + 1, ({ lever: 'Lever', pulleys: 'Pulleys', ramp: 'Ramp', wheel: 'Wheel and axle' })[r.kind] || r.kind, r.set, r.m, r.mu, r.Fin, r.din, r.Fout, r.dout].map(csvCell).join(',')));
+    return L.join('\n') + '\n';
+  }
   const gateTime = (a, d) => (a !== 0 ? Math.sqrt(2 * d / Math.abs(a)) : Infinity);
   const slipAngle = (ms) => Math.atan(ms) * 180 / Math.PI;      // free block on a ramp starts to slide when tan θ > μs
   function fitLine(xs, ys) {
@@ -313,10 +356,11 @@ table.rows input { font: inherit; font-family: var(--font-mono); width: 4.6em; b
     table: { p: { th: 0, m: 4, F: 0, phi: 0, m2: 2, ms: 0.3, mk: 0.2 }, s: 0.4, hint: 'A hanging mass pulls the block across a table. Both move with the same acceleration a = (m₂g − μk m g)/(m + m₂), and the tension is less than m₂g while they accelerate.' },
     atwood: { p: { th: 90, m: 2, F: 0, phi: 0, m2: 2.5, ms: 0, mk: 0 }, s: 1.0, atwood: true, hint: 'Two masses hang over one pulley: m on the left, m₂ on the right. With a light string and a frictionless pulley, a = (m₂ − m) g/(m + m₂) = 0.5 × 9.81/4.5 = 1.09 m/s² here, much less than g, which is why Atwood used it to measure g. The tension, 2 m m₂ g/(m + m₂) = 21.8 N, lies between the two weights. Time a 1.000 m run and work out g.' },
     tackle: { p: { th: 90, m: 12, F: 32, phi: 0, m2: 0, ms: 0, mk: 0, n: 4 }, s: 0, tackle: true, hint: 'A 12 kg load hangs from a block and tackle: the rope runs back and forth four times between the pulleys, so four strands hold the load, each pulled with the tension F. Here F = 32 N, so the strands pull up with 4 × 32 = 128 N, more than the 117.7 N weight, and the load rises at 0.86 m/s². The pull that just holds it is mg/4 = 29.4 N. The price: the hand pulls in 4 m of rope for every 1 m the load rises, so the work done is the same. Change the number of strands n and find the least pull that lifts the load.' },
+    machines: { p: { th: 0, m: 10, F: 0, phi: 0, m2: 0, ms: 0, mk: 0 }, s: 0.4, mach: true, hint: 'Four simple machines raise a load slowly at a steady speed. Pick one above the picture: a lever, pulleys (a block and tackle), a ramp, or a wheel and axle. Press Play and the load rises; the readouts give the effort F_in and how far it moves, d_in, and the load\'s weight F_out = mg and how far it rises, d_out. The ideal mechanical advantage IMA = d_in/d_out comes from the shape alone; the actual one, AMA = F_out/F_in, is smaller when there is friction, and the efficiency is AMA/IMA = work out/work in. Friction μ is the sliding friction between block and ramp, and for the pulleys and the wheel the friction at each axle (a pin 1.0 cm in radius). The lever turns on a knife edge, so it has none. The lever, rope, pulleys and wheel are taken as weightless, and the load moves so slowly that its kinetic energy is negligible.' },
     close: { p: { th: 0, m: 10, F: 45, phi: 0, m2: 0, ms: 0.5, mk: 0.3 }, s: 0.4, close: true, hint: 'The second pane shows the two surfaces magnified to the size of atoms (a schematic). Even polished surfaces are bumpy at this scale, and only the tips of the bumps touch. With a 45 N push, under the 49 N that static friction can give, the bumps stay locked and nothing slides: no work, no heat. Turn the push past 49 N: the block slides, the bumps catch and tear past each other, and the atoms at the contact jiggle harder: friction turns work into thermal energy at the rate μk N v.' },
     rampm: { p: { th: 30, m: 5, F: 0, phi: 0, m2: 2, ms: 0.2, mk: 0.15 }, s: 1.2, hint: 'Which way does it go? Compare m₂g with mg sin θ. Friction always opposes the motion, or the motion that would happen without it, so it can point up or down the ramp.' }
   };
-  const S = { close: false, heat: 0, atwood: false, tackle: false, preset: 'push', p: { ...PRESETS.push.p }, s: 0.4, v: 0, run: false, timing: null, blind: false, comp: true, net: true, mystery: null, rows: [], lastGate: null, work: { g: 0, F: 0, f: 0, T: 0 } };
+  const S = { close: false, heat: 0, atwood: false, tackle: false, mach: false, machine: 'lever', mc: { u: 0 }, preset: 'push', p: { ...PRESETS.push.p }, s: 0.4, v: 0, run: false, timing: null, blind: false, comp: true, net: true, mystery: null, rows: [], lastGate: null, work: { g: 0, F: 0, f: 0, T: 0 } };
   const can = $('can'), ctx = can.getContext('2d'), stage = $('stage');
   let W = 0, H = 0, dpr = 1, T = null;
   /* the divider between the ramp and the free body diagram (side by side when wide, the diagram below on a phone) */
@@ -341,41 +385,55 @@ table.rows input { font: inherit; font-family: var(--font-mono); width: 4.6em; b
   const f = (v, d = 1) => (Math.abs(v) < 0.5 * 10 ** -d ? (0).toFixed(d) : v.toFixed(d)).replace('-', '−');
 
   // ---------- controls ----------
-  const SL = [['sTh', 'th', (v) => `${f(v, 1)}°`], ['sM', 'm', (v) => `${f(v, 1)} kg`], ['sMs', 'ms', (v) => f(v, 2)], ['sMk', 'mk', (v) => f(v, 2)], ['sF', 'F', (v) => `${f(v, 0)} N`], ['sPhi', 'phi', (v) => `${f(v, 0)}°`], ['sM2', 'm2', (v) => (v ? `${f(v, 1)} kg` : 'none')], ['sN', 'n', (v) => `${v}`]];
+  const SL = [['sTh', 'th', (v) => `${f(v, 1)}°`], ['sM', 'm', (v) => `${f(v, 1)} kg`], ['sMs', 'ms', (v) => f(v, 2)], ['sMk', 'mk', (v) => f(v, 2)], ['sF', 'F', (v) => `${f(v, 0)} N`], ['sPhi', 'phi', (v) => `${f(v, 0)}°`], ['sM2', 'm2', (v) => (v ? `${f(v, 1)} kg` : 'none')], ['sN', 'n', (v) => `${v}`],
+    ['sLin', 'Lin', (v) => `${f(v, 2)} m`], ['sLout', 'Lout', (v) => `${f(v, 2)} m`], ['sRa', 'ra', (v) => `${f(v, 1)}°`], ['sWR', 'R', (v) => `${f(v, 2)} m`], ['sAR', 'r', (v) => `${f(v, 2)} m`], ['sMu', 'mu', (v) => f(v, 2)]];
+  /* the simple machines' own settings, kept in every preset's S.p so their knobs always have a value */
+  const MACH_DEF = { Lin: 1.2, Lout: 0.3, ra: 20, R: 0.4, r: 0.1, mu: 0.2 };
   function sync() {
     for (const [id, k, fmt] of SL) { $(id).value = S.p[k]; $('o' + id.slice(1)).textContent = fmt(S.p[k]); }
-    $('muRows').hidden = !!S.mystery || S.atwood || S.tackle; $('newMystery').hidden = !S.mystery; $('mystery').checked = !!S.mystery;
+    $('muRows').hidden = !!S.mystery || S.atwood || S.tackle || S.mach; $('newMystery').hidden = !S.mystery; $('mystery').checked = !!S.mystery;
   }
   for (const [id, k] of SL) $(id).addEventListener('input', (e) => {
     S.p[k] = +e.target.value;
     if (k === 'mk' && S.p.mk > S.p.ms) S.p.ms = S.p.mk;
     if (k === 'ms' && S.p.mk > S.p.ms) S.p.mk = S.p.ms;
-    S.preset = 'custom'; mark(); S.timing = null; S.lastGate = null; sync(); draw(); readouts();
+    S.preset = 'custom'; mark(); S.timing = null; S.lastGate = null; if (S.mach) { S.mc.u = 0; setRun(false); } sync(); draw(); readouts();
   });
   function mark() { for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset)); }
   function applyPreset(k) {
     const c = PRESETS[k]; S.preset = k; mark(); $('presetHint').textContent = c.hint;
     const keep = S.mystery ? { ms: S.p.ms, mk: S.p.mk } : {};
-    S.p = { n: 4, ...c.p, ...keep }; S.s = c.s; S.sRel = c.s; S.v = 0; S.lastGate = null; S.work = { g: 0, F: 0, f: 0, T: 0 }; setRun(false); S.timing = null;
-    S.atwood = !!c.atwood; S.tackle = !!c.tackle; setPane(c.close ? 'close' : S.close && !S.atwood && !S.tackle ? 'close' : 'fbd'); S.heat = 0; atwoodControls(); if ((S.atwood || S.tackle) && G3.on) setView('flat'); sync(); draw(); readouts();
+    S.p = { n: 4, ...MACH_DEF, ...c.p, ...keep }; S.mc = { u: 0 }; S.s = c.s; S.sRel = c.s; S.v = 0; S.lastGate = null; S.work = { g: 0, F: 0, f: 0, T: 0 }; setRun(false); S.timing = null;
+    S.atwood = !!c.atwood; S.tackle = !!c.tackle; S.mach = !!c.mach; setPane(c.close ? 'close' : S.close && !S.atwood && !S.tackle && !S.mach ? 'close' : 'fbd'); S.heat = 0; atwoodControls(); if ((S.atwood || S.tackle || S.mach) && G3.on) setView('flat'); sync(); draw(); readouts();
   }
   /* Atwood's machine: the ramp turned upright (θ = 90°), so the forces are the same code: N = 0, no friction, the string straight up.
      The ramp, friction and push knobs have no part in it and are hidden, and it is drawn flat (two masses over a pulley). */
   /* The block and tackle uses the mass knob for the load, F for the pull on the rope and its own Strands knob; it is drawn flat too */
   function atwoodControls() {
-    const up = S.atwood || S.tackle;
+    const up = S.atwood || S.tackle || S.mach;
     for (const id of ['sTh', 'sPhi']) $(id).closest('.kctl').hidden = up;
-    $('sF').closest('.kctl').hidden = S.atwood; $('sM2').closest('.kctl').hidden = S.tackle; $('nRow').hidden = !S.tackle;
+    $('sF').closest('.kctl').hidden = S.atwood || S.mach; $('sM2').closest('.kctl').hidden = S.tackle || S.mach; $('nRow').hidden = !S.tackle && !(S.mach && S.machine === 'pulleys');
     $('muRows').hidden = up || !!S.mystery; $('mystery').closest('label').hidden = up; $('viewSeg').hidden = up;
-    $('tComp').closest('label').hidden = up; $('timed').hidden = S.tackle;
+    $('tComp').closest('label').hidden = up; $('timed').hidden = S.tackle || S.mach; $('tNet').closest('label').hidden = S.mach; $('tPairs').closest('label').hidden = S.mach;
+    $('machSeg').hidden = !S.mach; $('machKnobs').hidden = !S.mach; setRun(S.run);
+    for (const k of document.querySelectorAll('#machKnobs .kctl')) k.hidden = !k.dataset.mach.split(' ').includes(S.machine);
+    for (const b of document.querySelectorAll('#machSeg button')) b.setAttribute('aria-pressed', String(b.dataset.mach === S.machine));
     $('paneSeg').hidden = up;
     if (S.rows) renderRows();   /* the readings table's second column: θ on the ramp, m₂ in Atwood's machine */
   }
   /* the second pane: the free body diagram, or the two surfaces magnified (no friction in Atwood's machine, so no close up there) */
   function setPane(v) {
-    S.close = v === 'close' && !S.atwood && !S.tackle;
+    S.close = v === 'close' && !S.atwood && !S.tackle && !S.mach;
     for (const b of document.querySelectorAll('#paneSeg button')) b.setAttribute('aria-pressed', String((b.dataset.pane === 'close') === S.close));
   }
+  /* Simple machines: the machine chosen above the picture; a new machine puts the load back down */
+  function setMachine(k) { S.machine = k; S.mc = { u: 0 }; setRun(false); atwoodControls(); draw(); readouts(); }
+  $('machSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-mach]'); if (b) setMachine(b.dataset.mach); });
+  const machQ = () => machine(S.machine, S.p);
+  /* the machine's setting as one short text, for the readings table and the CSV */
+  const machSet = () => { const P = S.p; return S.machine === 'lever' ? `L_in = ${P.Lin.toFixed(2)} m, L_out = ${P.Lout.toFixed(2)} m` : S.machine === 'pulleys' ? `n = ${P.n}` : S.machine === 'ramp' ? `θ = ${P.ra.toFixed(1)}°, L = ${LEN.toFixed(1)} m` : `R = ${P.R.toFixed(2)} m, r = ${P.r.toFixed(2)} m`; };
+  const MACH_NAME = { lever: 'Lever', pulleys: 'Pulleys', ramp: 'Ramp', wheel: 'Wheel and axle' };
+  function machAdvance(dt) { S.mc.u = reduce ? 1 : Math.min(1, S.mc.u + dt / MACH_T); if (S.mc.u >= 1) setRun(false); }
   function setMystery(on) {
     if (on) { const ms = 0.25 + Math.round(Math.random() * 45) / 100, mk = Math.round(ms * (0.55 + Math.random() * 0.3) * 100) / 100; S.mystery = { ms, mk }; S.p.ms = ms; S.p.mk = mk; if (!S.blind) setBlind(true); capStatus('Mystery surface: μs and μk are hidden. Blind is on.'); }
     else { if (S.mystery) capStatus(`Mystery surface off: it was μs = ${f(S.mystery.ms, 2)}, μk = ${f(S.mystery.mk, 2)}.`); S.mystery = null; }
@@ -393,10 +451,10 @@ table.rows input { font: inherit; font-family: var(--font-mono); width: 4.6em; b
   const atStop = () => !S.run && !S.tackle && (S.s <= 0.25 + 1e-9 || S.s >= LEN - 0.25 - 1e-9);
   /* a muted "real time" after the status line while it runs, so the rate is on screen (student view, 2026-11-15) */
   function rateTag(st, x, y) { if (!S.run) return; const p = ps(), w = ctx.measureText(st).width; ctx.save(); ctx.font = `${11 * p}px ${T.ui}`; ctx.fillStyle = T.muted; ctx.fillText('real time', x + w + 10 * p, y + 2 * p); ctx.restore(); }
-  function setRun(on) { S.run = on; $('go').textContent = on ? 'Hold' : 'Release'; $('go').classList.toggle('attn', !on); }
-  $('go').addEventListener('click', () => { S.timing = null; if (!S.run && S.v === 0) clearWork(); setRun(!S.run); });
+  function setRun(on) { S.run = on; $('go').textContent = S.mach ? (on ? 'Pause' : 'Play') : on ? 'Hold' : 'Release'; $('go').classList.toggle('attn', !on); }
+  $('go').addEventListener('click', () => { if (S.mach) { if (!S.run && S.mc.u >= 1) S.mc.u = 0; setRun(!S.run); draw(); readouts(); return; } S.timing = null; if (!S.run && S.v === 0) clearWork(); setRun(!S.run); });
   function clearWork() { S.work = { g: 0, F: 0, f: 0, T: 0 }; S.v0 = S.v; S.sRel = S.s; }
-  $('back').addEventListener('click', () => { S.s = PRESETS[S.preset] ? PRESETS[S.preset].s : 1.2; S.v = 0; S.timing = null; clearWork(); setRun(false); draw(); readouts(); });
+  $('back').addEventListener('click', () => { if (S.mach) { S.mc.u = 0; setRun(false); draw(); readouts(); return; } S.s = PRESETS[S.preset] ? PRESETS[S.preset].s : 1.2; S.v = 0; S.timing = null; clearWork(); setRun(false); draw(); readouts(); });
   $('timed').addEventListener('click', () => {
     if (S.tackle) return;
     const fz = forces(S.p, 0), top = LEN - 0.45, bottom = 0.45;
@@ -426,7 +484,7 @@ table.rows input { font: inherit; font-family: var(--font-mono); width: 4.6em; b
     const dt = Math.min(0.05, (now - last) / 1000); last = now;
     if (S.run) {
       simClock += dt;
-      if (S.tackle) { tackleAdvance(dt); draw(); readouts(); } else {
+      if (S.tackle) { tackleAdvance(dt); draw(); readouts(); } else if (S.mach) { machAdvance(dt); draw(); readouts(); } else {
       const n = 10; let s = S.s, v = S.v;
       for (let i = 0; i < n; i++) {
         const lo = 0.25, hi = LEN - 0.25, W0 = { ...S.work };
@@ -637,7 +695,7 @@ table.rows input { font: inherit; font-family: var(--font-mono); width: 4.6em; b
     /* the knob panel sits over the top of the scene: the apparatus is drawn below it */
     const ins = $('instr'), top = wide && getComputedStyle(ins).position === 'absolute' ? Math.max(46 * p, ins.offsetTop + ins.offsetHeight + 8) : Math.max(46 * p, (() => { const vb = document.querySelector('#scene .viewbar'); return vb.offsetTop + vb.offsetHeight + 6; })());
     drawScene(0, top, sw, sh - top);
-    (S.tackle ? drawTackleFBD : S.close ? drawClose : drawFBD)(wide ? sw : 0, wide ? 0 : sh, wide ? W - sw : W, wide ? H : H - sh);
+    (S.mach ? drawMachWork : S.tackle ? drawTackleFBD : S.close ? drawClose : drawFBD)(wide ? sw : 0, wide ? 0 : sh, wide ? W - sw : W, wide ? H : H - sh);
   }
   // ---------- friction up close: a schematic of the contact, atoms as balls (not to scale) ----------
   const CL = { n: 15, rows: 4 };
@@ -733,7 +791,7 @@ table.rows input { font: inherit; font-family: var(--font-mono); width: 4.6em; b
     if (S.timing) { ctx.font = `700 ${15 * p}px ${T.mono}`; ctx.fillStyle = T.accent; ctx.fillText(S.timing.done ? `Timer: ${S.lastGate.toFixed(3)} s for 1.000 m` : `Timer: ${S.timing.t.toFixed(3)} s`, x0 + 14 * p, y0 + 24 * p); }
     if (S.pairs) { ctx.fillStyle = T.w; ctx.font = `600 ${11.5 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText(S.blind ? 'Mass m also pulls the Earth up, and pulls down on the string.' : `m also pulls the Earth up with ${f(fz.W, 1)} N, and the string down with ${f(fz.T, 1)} N.`, x0 + 14 * p, y0 + 44 * p, w - 28 * p); }
   }
-  function drawTackle(x0, y0, w, h) {
+  function drawTackle(x0, y0, w, h, o) {   /* o: the simple machines' pulleys (F, y, lift, rope), drawn without the tackle's status */
     // a load on a block and tackle hung from a beam; heights to scale (the ruler works); the sheaves of each block are drawn side by
     // side (in a real block they share one axle) so that every strand shows
     const p = ps(), P = S.p, n = P.n, tk = tackle(P.m, n, P.F, S.s <= 1e-12 && S.v <= 1e-12), HU = LEN, beamH = HU + 0.22;
@@ -747,7 +805,7 @@ table.rows input { font: inherit; font-family: var(--font-mono); width: 4.6em; b
     ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(x0, floorY); ctx.lineTo(x0 + w, floorY); ctx.stroke();
     // geometry in meters: strand j (0 the hand's, 1..n the load's) at xs(j) from the middle, spaced one sheave across
     const r = Math.min(0.09, 0.42 / (n + 1)), sp = 2 * r, cx = x0 + w * 0.56, XS = (j) => cx + ((j - n / 2) * sp) * sc;
-    const y = S.s, lift = S.work.lift || 0, hL = y + TK_LOAD + 0.12 + r, sh = tackleSheaves(n);
+    const y = o ? o.y : S.s, lift = o ? o.lift : S.work.lift || 0, hL = y + TK_LOAD + 0.12 + r, sh = tackleSheaves(n);
     // beam and the upper block's hanger and plate
     const bw = Math.max(1.0, (n + 2) * sp + 0.3) * sc; ctx.fillStyle = T.bench; ctx.fillRect(cx - bw / 2, Y(beamH) - 10 * p, bw, 10 * p); grain(cx - bw / 2, Y(beamH) - 10 * p, bw, 10 * p, 3, 0.4);
     const plate = (xa, xb, hm) => { ctx.fillStyle = T.metal; ctx.strokeStyle = T.metalDark; ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.roundRect(xa - r * sc, Y(hm + r + 0.03), xb - xa + 2 * r * sc, (2 * r + 0.06) * sc, 4 * p); ctx.fill(); ctx.stroke(); };
@@ -758,7 +816,7 @@ table.rows input { font: inherit; font-family: var(--font-mono); width: 4.6em; b
     ctx.strokeStyle = T.ink; ctx.lineWidth = 1.8 * p; ctx.beginPath();
     for (let j = 1; j <= n; j++) { ctx.moveTo(XS(j), Y(HU)); ctx.lineTo(XS(j), Y(hL)); }
     const hHand = 1.0; ctx.moveTo(XS(0), Y(HU)); ctx.lineTo(XS(0), Y(hHand)); ctx.stroke();
-    const rope = S.work.rope || 0, coil = Math.min(9, 1 + Math.floor(rope / 0.5));
+    const rope = o ? o.rope : S.work.rope || 0, coil = Math.min(9, 1 + Math.floor(rope / 0.5));
     ctx.globalAlpha = 0.85; ctx.beginPath(); ctx.moveTo(XS(0), Y(hHand) + 10 * p); ctx.quadraticCurveTo(XS(0) - 0.02 * sc, Y(0.3), XS(0) - 0.12 * sc, floorY - 3 * p); ctx.stroke();
     for (let i = 0; i < coil; i++) { ctx.beginPath(); ctx.ellipse(XS(0) - 0.2 * sc, floorY - (2 + i * 1.6) * p, 0.1 * sc, 3 * p, 0, 0, 2 * Math.PI); ctx.stroke(); }
     ctx.globalAlpha = 1;
@@ -773,7 +831,7 @@ table.rows input { font: inherit; font-family: var(--font-mono); width: 4.6em; b
     sh.up.forEach((q, i) => sheave(q, HU, 0)); sh.lo.forEach((q, i) => sheave(q, hL, 1));
     // the hand, pulling down with F
     { const hx = XS(0), hy = Y(hHand); ctx.fillStyle = T.wood; ctx.strokeStyle = T.ink; ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.roundRect(hx - 9 * p, hy - 4 * p, 18 * p, 14 * p, 5 * p); ctx.fill(); ctx.stroke();
-      if (P.F > 0) arrow(hx - 28 * p, hy, 0, Math.min(70 * p, 18 * p + P.F * 0.5 * p), T.ap, 3 * p, S.blind ? 'F' : `F = ${f(P.F, 0)} N`, false, 0); }
+      const Fh = o ? o.F : P.F; if (Fh > 0) arrow(hx - 28 * p, hy, 0, Math.min(70 * p, 18 * p + Fh * 0.5 * p), T.ap, 3 * p, o ? `${f(Fh, 2)} N` : S.blind ? 'F' : `F = ${f(P.F, 0)} N`, false, 0); }
     // the load: a crate under the lower block's hook
     const lw = Math.min(0.8, 0.42 + 0.02 * P.m) * sc, lx = (XS(1) + XS(n)) / 2, lt = Y(y + TK_LOAD);
     ctx.strokeStyle = T.metalDark; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(lx, Y(hL - r - 0.03)); ctx.lineTo(lx, lt); ctx.stroke();
@@ -781,6 +839,7 @@ table.rows input { font: inherit; font-family: var(--font-mono); width: 4.6em; b
     ctx.fillStyle = T.wood; ctx.fillRect(lx - lw / 2, lt, lw, TK_LOAD * sc); grain(lx - lw / 2, lt, lw, TK_LOAD * sc, 4, 0.35);
     ctx.strokeStyle = T.ink; ctx.lineWidth = 1 * p; ctx.strokeRect(lx - lw / 2, lt, lw, TK_LOAD * sc);
     ctx.fillStyle = T.ink; ctx.font = `600 ${11 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(`m = ${f(P.m, 1)} kg`, lx, lt + TK_LOAD * sc / 2);
+    if (o) return;
     // status
     ctx.font = `600 ${13 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillStyle = T.ink;
     let st = !S.run ? (y >= TK_TOP - 1e-9 ? 'At the top: the blocks meet. Press Put back.' : 'Held in place. Press Release.')
@@ -788,6 +847,134 @@ table.rows input { font: inherit; font-family: var(--font-mono); width: 4.6em; b
     ctx.fillText(st, x0 + 14 * p, y0 + 4 * p); rateTag(st, x0 + 14 * p, y0 + 4 * p);
     ctx.font = `${12 * p}px ${T.mono}`; ctx.fillStyle = T.muted;
     ctx.fillText(`n = ${n} · rope pulled ${f(rope, 2)} m · load up ${f(lift, 2)} m`, x0 + 14 * p, y0 + 24 * p);
+  }
+  // ---------- simple machines: the machine to scale on the left, its work in and out on the right ----------
+  function drawMachine(x0, y0, w, h) {
+    const p = ps(), P = S.p, M = machQ(), u = S.mc.u, k = S.machine, top = y0 + 40 * p, floorY = y0 + h - 20 * p;
+    rulerAt = null;
+    const room = () => {
+      ctx.fillStyle = T.wall; ctx.fillRect(x0, 0, w, floorY);
+      if (window.VDGear) window.VDGear.wall(ctx, x0, 0, w, floorY, { color: T.wall, tile: 0 });
+      ctx.fillStyle = T.wallLine; ctx.fillRect(x0, floorY - 6 * p, w, 6 * p);
+      ctx.fillStyle = T.floor; ctx.fillRect(x0, floorY, w, y0 + h - floorY);
+      ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(x0, floorY); ctx.lineTo(x0 + w, floorY); ctx.stroke();
+    };
+    /* a crate of side s px whose bottom middle is at (x, y), turned by ang */
+    const crate = (x, y, sp, ang) => { ctx.save(); ctx.translate(x, y); ctx.rotate(ang || 0); ctx.fillStyle = T.wood; ctx.fillRect(-sp / 2, -sp, sp, sp); grain(-sp / 2, -sp, sp, sp, 4, 0.35);
+      ctx.strokeStyle = T.ink; ctx.lineWidth = 1 * p; ctx.strokeRect(-sp / 2, -sp, sp, sp); ctx.fillStyle = T.ink; ctx.font = `600 ${10.5 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText(`${f(P.m, 1)} kg`, 0, -sp / 2); ctx.restore(); };
+    /* a vertical distance from yA to yB beside x, with its label */
+    const bracket = (x, yA, yB, lab, side) => { if (Math.abs(yB - yA) < 1) return; ctx.strokeStyle = T.accent; ctx.fillStyle = T.accent; ctx.lineWidth = 1.5 * p;
+      ctx.beginPath(); ctx.moveTo(x - 5 * p, yA); ctx.lineTo(x + 5 * p, yA); ctx.moveTo(x, yA); ctx.lineTo(x, yB); ctx.moveTo(x - 5 * p, yB); ctx.lineTo(x + 5 * p, yB); ctx.stroke();
+      ctx.font = `600 ${11 * p}px ${T.mono}`; ctx.textBaseline = 'middle'; ctx.textAlign = side < 0 ? 'right' : 'left'; ctx.fillText(lab, x + side * 8 * p, (yA + yB) / 2); };
+    const cs = (sc) => Math.min(0.45, 0.25 + 0.012 * P.m) * sc;
+    if (k === 'pulleys') drawTackle(x0, top, w, y0 + h - top, { F: M.Fin, y: u * M.dout, lift: u * M.dout, rope: u * M.din });
+    else if (k === 'lever') {
+      room();
+      const span = P.Lin + P.Lout, sc = Math.min((w - 70 * p) / (span + 0.6), (floorY - top - 30 * p) / 1.3), hp = 0.5, px = x0 + w / 2 + (P.Lout - P.Lin) / 2 * sc, py = floorY - hp * sc;
+      const ph = (a) => (-LEVER_SWING + 2 * LEVER_SWING * a) * Math.PI / 180, ends = (a) => [[px - P.Lout * Math.cos(ph(a)) * sc, py - P.Lout * Math.sin(ph(a)) * sc], [px + P.Lin * Math.cos(ph(a)) * sc, py + P.Lin * Math.sin(ph(a)) * sc]];
+      const [L0, E0] = ends(0), [L1, E1] = ends(u);
+      ctx.strokeStyle = T.muted; ctx.lineWidth = 2 * p; ctx.setLineDash([4 * p, 4 * p]); ctx.beginPath(); ctx.moveTo(L0[0], L0[1]); ctx.lineTo(E0[0], E0[1]); ctx.stroke(); ctx.setLineDash([]);
+      ctx.fillStyle = T.metal; ctx.strokeStyle = T.metalDark; ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.moveTo(px, py + 3 * p); ctx.lineTo(px - 0.14 * sc, floorY); ctx.lineTo(px + 0.14 * sc, floorY); ctx.closePath(); ctx.fill(); ctx.stroke();
+      ctx.save(); ctx.translate(px, py); ctx.rotate(ph(u)); const bt = Math.max(6 * p, 0.06 * sc);
+      ctx.fillStyle = T.board; ctx.fillRect(-P.Lout * sc - 0.08 * sc, -bt, span * sc + 0.16 * sc, bt); grain(-P.Lout * sc - 0.08 * sc, -bt, span * sc + 0.16 * sc, bt, 3, 0.4);
+      ctx.strokeStyle = T.ink; ctx.lineWidth = 1 * p; ctx.strokeRect(-P.Lout * sc - 0.08 * sc, -bt, span * sc + 0.16 * sc, bt); ctx.restore();
+      const nx = Math.sin(ph(u)) * bt, ny = -Math.cos(ph(u)) * bt;   /* the plank's top face, above the line through the knife edge */
+      crate(L1[0] + nx, L1[1] + ny, cs(sc), ph(u));
+      arrow(E1[0] + nx, E1[1] + ny - 60 * p, 0, 56 * p, T.ap, 3 * p, `${f(M.Fin, 2)} N`, false, 3.5);
+      bracket(L1[0] - cs(sc) / 2 - 14 * p, L0[1], L1[1], `${f(u * M.dout, 3)} m`, -1);
+      bracket(Math.min(x0 + w - 70 * p, E1[0] + 24 * p), E0[1], E1[1], `${f(u * M.din, 3)} m`, 1);
+    } else if (k === 'ramp') {
+      room();
+      const th = P.ra * Math.PI / 180, Lb = LEN + 0.5, sc = Math.min((w - 110 * p) / (Lb * Math.cos(th) + 0.9 * Math.sin(th) + 0.3), (floorY - top - 30 * p) / (Lb * Math.sin(th) + 0.9));
+      const bx = x0 + 20 * p + 0.9 * Math.sin(th) * sc, by = floorY, R = (s, q) => [bx + sc * (s * Math.cos(th) - q * Math.sin(th)), by - sc * (s * Math.sin(th) + q * Math.cos(th))];
+      const tp = R(Lb, 0); ctx.fillStyle = T.board; ctx.strokeStyle = T.ink; ctx.lineWidth = 1 * p; ctx.beginPath(); ctx.moveTo(bx, by); ctx.lineTo(tp[0], by); ctx.lineTo(tp[0], tp[1]); ctx.closePath(); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = T.ink; ctx.font = `600 ${11 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillText(`θ = ${f(P.ra, 1)}°`, bx + 34 * p, by - 4 * p);
+      for (const sm of [0, LEN]) { const a = R(sm, 0), b = R(sm, 0.36); ctx.strokeStyle = T.accent; ctx.lineWidth = 2 * p; ctx.setLineDash([3 * p, 3 * p]); ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke(); ctx.setLineDash([]); }
+      const s = u * LEN, BS2 = 0.32, c0 = R(s + BS2 / 2, 0);
+      crate(c0[0], c0[1], BS2 * sc, -th);
+      const a0 = R(s - 0.75, BS2 / 2), a1 = R(s - 0.04, BS2 / 2); arrow(a0[0], a0[1], a1[0] - a0[0], a1[1] - a0[1], T.ap, 3 * p, '');
+      { const tq = R(s - 0.5, 0.36); ctx.font = `700 ${12 * p}px ${T.ui}`; ctx.fillStyle = T.apInk; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.fillText(`${f(M.Fin, 2)} N`, tq[0], tq[1]); }
+      const st0 = R(0, 0), st1 = R(s, 0); bracket(Math.min(x0 + w - 70 * p, tp[0] + 14 * p), st0[1], st1[1], `${f(u * M.dout, 3)} m`, 1);
+      const m0 = R(0, 0.8), m1 = R(s, 0.8); if (s > 0.05) { ctx.strokeStyle = T.accent; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.moveTo(m0[0], m0[1]); ctx.lineTo(m1[0], m1[1]); ctx.stroke();
+        ctx.save(); ctx.translate((m0[0] + m1[0]) / 2, (m0[1] + m1[1]) / 2); ctx.rotate(-th); ctx.fillStyle = T.accent; ctx.font = `600 ${11 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.fillText(`${f(u * M.din, 3)} m`, 0, -3 * p); ctx.restore(); }
+    } else {
+      room();
+      const sc = Math.min((floorY - top - 20 * p) / 2.5, (w - 60 * p) / (2 * P.R + 1.5)), cx = x0 + w / 2, cy = floorY - 2.2 * sc, Rp = P.R * sc, rp = P.r * sc, ang = u * M.dout / P.r;
+      ctx.strokeStyle = T.metalDark; ctx.lineWidth = 5 * p; ctx.beginPath(); ctx.moveTo(cx - 0.5 * sc, floorY); ctx.lineTo(cx, cy); ctx.lineTo(cx + 0.5 * sc, floorY); ctx.stroke();
+      ctx.save(); ctx.translate(cx, cy); ctx.rotate(ang);
+      ctx.fillStyle = T.board; ctx.strokeStyle = T.ink; ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.arc(0, 0, Rp, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.35; ctx.beginPath(); ctx.arc(0, 0, Rp * 0.82, 0, 2 * Math.PI); ctx.fill(); ctx.globalAlpha = 1;
+      ctx.strokeStyle = T.grain; ctx.lineWidth = 3 * p; for (let i = 0; i < 6; i++) { const a = i * Math.PI / 3; ctx.beginPath(); ctx.moveTo(Math.cos(a) * rp, Math.sin(a) * rp); ctx.lineTo(Math.cos(a) * Rp * 0.85, Math.sin(a) * Rp * 0.85); ctx.stroke(); }
+      ctx.fillStyle = T.metal; ctx.strokeStyle = T.metalDark; ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.arc(0, 0, rp, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
+      ctx.strokeStyle = T.metalDark; ctx.beginPath(); ctx.moveTo(-rp, 0); ctx.lineTo(rp, 0); ctx.stroke(); ctx.restore();
+      ctx.fillStyle = T.ink; ctx.beginPath(); ctx.arc(cx, cy, 3 * p, 0, 7); ctx.fill();
+      const yL = u * M.dout, sp = cs(sc), lb = floorY - yL * sc, lx = cx - rp;
+      ctx.strokeStyle = T.ink; ctx.lineWidth = 1.8 * p; ctx.beginPath(); ctx.moveTo(lx, cy); ctx.lineTo(lx, lb - sp); ctx.stroke();
+      crate(lx, lb, sp, 0);
+      bracket(lx - sp / 2 - 12 * p, floorY, lb, `${f(yL, 3)} m`, -1);
+      const ex = cx + Rp, hy = floorY - 0.9 * sc, rope = u * M.din;
+      ctx.beginPath(); ctx.moveTo(ex, cy); ctx.lineTo(ex, hy); ctx.stroke();
+      ctx.globalAlpha = 0.85; ctx.beginPath(); ctx.moveTo(ex, hy + 10 * p); ctx.quadraticCurveTo(ex - 0.02 * sc, floorY - 0.3 * sc, ex + 0.1 * sc, floorY - 3 * p); ctx.stroke();
+      for (let i = 0, nc = Math.min(9, 1 + Math.floor(rope / 0.5)); i < nc; i++) { ctx.beginPath(); ctx.ellipse(ex + 0.2 * sc, floorY - (2 + i * 1.6) * p, 0.1 * sc, 3 * p, 0, 0, 2 * Math.PI); ctx.stroke(); }
+      ctx.globalAlpha = 1;
+      { const span = (cy - hy) / sc; ctx.fillStyle = T.ap; for (let j = 0; j < Math.ceil(span / 0.25) + 1; j++) { const d = ((j * 0.25 + rope) % span + span) % span; ctx.fillRect(ex - 3 * p, cy + d * sc - 1.5 * p, 6 * p, 3 * p); } }
+      ctx.fillStyle = T.wood; ctx.strokeStyle = T.ink; ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.roundRect(ex - 9 * p, hy - 4 * p, 18 * p, 14 * p, 5 * p); ctx.fill(); ctx.stroke();
+      arrow(ex + 28 * p, hy - 20 * p, 0, 50 * p, T.ap, 3 * p, `${f(M.Fin, 2)} N`, false, -1);
+    }
+    // status: what it is doing, then the effort and the load as readouts
+    ctx.font = `600 ${13 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillStyle = T.ink;
+    const st = S.run ? 'Load rising at a steady speed' : u >= 1 ? 'At the top. Press Play to lift it again.' : u > 0 ? 'Paused' : 'Press Play to lift the load';
+    ctx.fillText(st, x0 + 14 * p, y0 + 4 * p); rateTag(st, x0 + 14 * p, y0 + 4 * p);
+    ctx.font = `${11.5 * p}px ${T.mono}`; ctx.fillStyle = T.muted;
+    ctx.fillText(`Effort ${f(M.Fin, 2)} N, moved ${f(u * M.din, 3)} m`, x0 + 14 * p, y0 + 22 * p);
+    ctx.fillText(`Load ${f(M.Fout, 2)} N, raised ${f(u * M.dout, 3)} m`, x0 + 14 * p, y0 + 37 * p);
+  }
+  /* for the harvest (tools/i18n.cjs reads these literals; the canvas and readouts are translated as they are drawn):
+     VDI18N.t('IMA = L_in/L_out, the ratio of the arms')
+     VDI18N.t('IMA = n, the strands that hold the load')
+     VDI18N.t('IMA = L/h = 1/sin θ')
+     VDI18N.t('IMA = R/r, wheel radius over axle radius')
+     VDI18N.t('Load rising at a steady speed')
+     VDI18N.t('At the top. Press Play to lift it again.')
+     VDI18N.t('Paused')
+     VDI18N.t('Press Play to lift the load')
+     VDI18N.t('Play')
+     VDI18N.t('Pause')
+     VDI18N.t('Lifting.')
+     VDI18N.t('Stopped.')
+     VDI18N.t('Simple machines: a lever raises a {#} kg load at a steady speed.')
+     VDI18N.t('Simple machines: a block and tackle raises a {#} kg load at a steady speed.')
+     VDI18N.t('Simple machines: a ramp raises a {#} kg load at a steady speed.')
+     VDI18N.t('Simple machines: a wheel and axle raises a {#} kg load at a steady speed.')
+     VDI18N.t('How this works: Simple Machines')
+     VDI18N.t('Row {#} captured.')
+     VDI18N.t('Press Play and let the load rise all the way first.')
+     VDI18N.t('No simple machine readings to export: the captured rows are from another setup.')
+     VDI18N.t('No ramp readings to export: the captured rows are from the simple machines.')
+     VDI18N.t('IMA {#}, AMA {#}, efficiency {#} %.')
+  */
+  function drawMachWork(x0, y0, w, h) {
+    const p = ps(), M = machQ(), u = S.mc.u, bl = S.blind;
+    ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.beginPath(); if (x0 > 0) { ctx.moveTo(x0, 12 * p); ctx.lineTo(x0, H - 12 * p); } else { ctx.moveTo(12 * p, y0); ctx.lineTo(W - 12 * p, y0); } ctx.stroke();
+    ctx.fillStyle = T.muted; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; const ty = paneTop(x0, y0); paneTitle('WORK IN AND WORK OUT', x0 + 14 * p, ty + 12 * p, w - 28 * p);
+    const lx = x0 + 14 * p, bw = w - 28 * p; let y = ty + 36 * p;
+    ctx.font = `${11.5 * p}px ${T.ui}`; ctx.fillStyle = T.ink;
+    const IMA = { lever: 'IMA = L_in/L_out, the ratio of the arms', pulleys: 'IMA = n, the strands that hold the load', ramp: 'IMA = L/h = 1/sin θ', wheel: 'IMA = R/r, wheel radius over axle radius' }[S.machine];
+    ctx.fillText(IMA, lx, y); y += (h < 300 * p ? 18 : 22) * p;
+    if (bl) { ctx.fillStyle = T.muted; ctx.fillText('Blind: work out the work in and out', lx, y); ctx.fillText('from your readings.', lx, y + 16 * p); return; }
+    const big = Math.max(M.Win, 1e-9), bars = [['Work in, effort × d_in', u * M.Win, T.ap], ['Work out, mg × d_out', u * M.Wout, T.net], ['Thermal energy from friction', u * M.heat, T.fr]];
+    const tight = h < 300 * p;   /* a phone's short pane: each value on its label's line */
+    for (const [lab, v, col] of bars) {
+      ctx.fillStyle = T.ink; ctx.font = `${11.5 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.fillText(lab, lx, y);
+      if (tight) { ctx.font = `600 ${11 * p}px ${T.mono}`; ctx.textAlign = 'right'; ctx.fillText(`${f(v, 2)} J`, lx + bw, y); ctx.textAlign = 'left'; }
+      y += 16 * p;
+      ctx.fillStyle = T.grid; ctx.fillRect(lx, y, bw, (tight ? 7 : 12) * p); ctx.fillStyle = col; ctx.fillRect(lx, y, bw * Math.max(0, v) / big, (tight ? 7 : 12) * p);
+      if (!tight) { ctx.fillStyle = T.ink; ctx.font = `600 ${11 * p}px ${T.mono}`; ctx.fillText(`${f(v, 2)} J`, lx, y + 15 * p); }
+      y += (tight ? 13 : 34) * p;
+    }
+    ctx.font = `600 ${12 * p}px ${T.mono}`; ctx.fillStyle = T.ink;
+    for (const t of [`IMA = d_in/d_out = ${f(M.IMA, 3)}`, `AMA = F_out/F_in = ${f(M.AMA, 3)}`, `Efficiency = AMA/IMA = ${f(100 * M.eff, 1)} %`]) { ctx.fillText(t, lx, y); y += 18 * p; }
   }
   function drawTackleFBD(x0, y0, w, h) {
     const p = ps(), P = S.p, tk = tackle(P.m, P.n, P.F, S.s <= 1e-12 && S.v <= 1e-12), bl = S.blind;
@@ -810,6 +997,7 @@ table.rows input { font: inherit; font-family: var(--font-mono); width: 4.6em; b
   function drawScene(x0, y0, w, h) {
     if (S.atwood) { if (g3) g3.el.hidden = true; drawAtwood(x0, y0, w, h); return; }
     if (S.tackle) { if (g3) g3.el.hidden = true; drawTackle(x0, y0, w, h); return; }
+    if (S.mach) { if (g3) g3.el.hidden = true; drawMachine(x0, y0, w, h); return; }
     const p = ps(), P = S.p, th = P.th * Math.PI / 180, fz = forces(S.p, S.v);
     const drop = P.m2 > 0 ? 1.1 : 0;                                       // room under the pulley for the hanging mass
     const sc = Math.min((w - 90 * p) / (LEN * Math.cos(th) + 0.6), (h - 40 * p) / (LEN * Math.sin(th) + 0.9 + drop));
@@ -951,6 +1139,7 @@ table.rows input { font: inherit; font-family: var(--font-mono); width: 4.6em; b
   function readouts() {
     const fz = forces(S.p, S.v), bl = S.blind, dd = (a, b, w, cls) => `<div${w ? ' class="wide"' : ''}><dt>${a}</dt><dd${cls ? ` class="${cls}"` : ''}>${b}</dd></div>`;
     if (S.tackle) { tackleReadouts(dd); return; }
+    if (S.mach) { machReadouts(dd); return; }
     let h = dd('Weight mg', `${f(fz.W, 1)} N`);
     if (bl) h += '<div class="wide"><dt>N, friction, tension, acceleration</dt><dd class="ok">hidden in Blind</dd></div>';
     else {
@@ -980,6 +1169,16 @@ table.rows input { font: inherit; font-family: var(--font-mono); width: 4.6em; b
     $('workOut').innerHTML = w;
   }
 
+  function machReadouts(dd) {
+    const M = machQ(), u = S.mc.u, bl = S.blind, J = (x) => `${f(x, 2)} J`;
+    let h = dd('Machine', MACH_NAME[S.machine]) + dd('Load weight F<sub>out</sub> = mg', `${f(M.Fout, 2)} N`) + dd('Effort F<sub>in</sub>', `${f(M.Fin, 2)} N`)
+      + dd('Load raised d<sub>out</sub>', `${f(u * M.dout, 3)} m`) + dd('Effort moved d<sub>in</sub>', `${f(u * M.din, 3)} m`);
+    if (bl) h += '<div class="wide"><dt>IMA, AMA and efficiency</dt><dd class="ok">hidden in Blind</dd></div>';
+    else h += dd('Ideal mechanical advantage IMA = d<sub>in</sub>/d<sub>out</sub>', f(M.IMA, 3), true) + dd('Actual mechanical advantage AMA = F<sub>out</sub>/F<sub>in</sub>', f(M.AMA, 3), true) + dd('Efficiency = AMA/IMA', `${f(100 * M.eff, 1)} %`, true);
+    $('forceOut').innerHTML = h;
+    $('workOut').innerHTML = bl ? '<div class="wide"><dt>Work in, work out and thermal energy</dt><dd class="ok">hidden in Blind</dd></div>'
+      : dd('Work by the effort, F<sub>in</sub> d<sub>in</sub>', J(u * M.Win), true) + dd('Gain in gravitational energy, mg d<sub>out</sub>', J(u * M.Wout), true) + dd('Thermal energy from friction', J(u * M.heat), true);
+  }
   function tackleReadouts(dd) {
     const P = S.p, bl = S.blind, tk = tackle(P.m, P.n, P.F, S.s <= 1e-12 && S.v <= 1e-12), Wk = S.work, J = (x) => `${f(x, 2)} J`;
     let h = dd('Weight mg', `${f(tk.W, 1)} N`) + dd('Strands n', `${P.n}`) + dd('Pull on the rope F', `${f(P.F, 0)} N`);
@@ -1006,16 +1205,24 @@ table.rows input { font: inherit; font-family: var(--font-mono); width: 4.6em; b
   function capStatus(m) { $('capStatus').textContent = m; }
   $('capture').addEventListener('click', () => {
     if (S.tackle) { capStatus('Readings and the fit are for the ramp and Atwood\'s machine. For the block and tackle, read the panel under Forces now.'); return; }
+    if (S.mach) {
+      if (S.mc.u < 1) { capStatus(trM('first')); return; }
+      const M = machQ(); S.rows.push({ mach: true, kind: S.machine, set: machSet(), m: S.p.m.toFixed(1), mu: S.machine === 'lever' ? '0' : S.p.mu.toFixed(2), Fin: M.Fin.toFixed(2), din: M.din.toFixed(3), Fout: M.Fout.toFixed(2), dout: M.dout.toFixed(3) });
+      renderRows(); capStatus(`Row ${S.rows.length} captured.`); return;
+    }
     if (!S.lastGate) { capStatus('Use Release at the top mark first, and let the timer finish.'); return; }
     S.rows.push({ th: S.p.th.toFixed(1), m: S.p.m.toFixed(1), m2: S.p.m2.toFixed(1), F: S.p.F.toFixed(0), phi: S.p.phi.toFixed(0), t: S.lastGate.toFixed(3), atw: S.atwood });
     renderRows(); capStatus(`Row ${S.rows.length} captured.`);
   });
+  /* shown only after a press the harvest may not make: written as VDI18N.t literals */
+  const trM = (k) => { const T = window.VDI18N ? VDI18N.t : (x) => x;
+    return k === 'first' ? T('Press Play and let the load rise all the way first.') : k === 'none' ? T('No simple machine readings to export: the captured rows are from another setup.') : T('No ramp readings to export: the captured rows are from the simple machines.'); };
   $('clearRows').addEventListener('click', () => { wsSeries = Date.now(); S.rows = []; renderRows(); capStatus('Readings cleared.'); });
   /* Export to worksheet: the readings go to the student worksheet through localStorage (same site), and the worksheet offers to put
      them in its Data table. The CSV travels with them, and is downloaded here instead if this browser blocks storage. Clear starts
      a new series, so the worksheet puts the next export in a new copy of its table. */
   let wsSeries = Date.now();
-  const wsSlug = () => (S.atwood ? 'atwood' : 'forces');
+  const wsSlug = () => (S.mach ? 'hs-simple-machines' : S.atwood ? 'atwood' : 'forces');
   function toWorksheet(txt, fallback) {
     const cells = (l) => { const o = []; let c = '', q = false; for (let i = 0; i < l.length; i++) { const h = l[i]; if (q) { if (h === '"' && l[i + 1] === '"') { c += h; i++; } else if (h === '"') q = false; else c += h; } else if (h === '"') q = true; else if (h === ',') { o.push(c); c = ''; } else c += h; } o.push(c); return o; };
     const lines = txt.trim().split('\n'), data = lines.filter((l) => l && l[0] !== '#'), meta = {};
@@ -1031,19 +1238,24 @@ table.rows input { font: inherit; font-family: var(--font-mono); width: 4.6em; b
   }
   $('exportCsv').addEventListener('click', () => {
     /* Atwood's machine readings go to the Atwood worksheet, every other setup's to the friction worksheet */
-    const rows = S.rows.filter((r) => !!r.atw === S.atwood);
+    if (S.mach) { const mr = S.rows.filter((r) => r.mach); if (!mr.length) { capStatus(S.rows.length ? trM('none') : 'No readings to export.'); return; }
+      const mt = machineCSV(mr, { version: FF_VERSION }); toWorksheet(mt, () => { try { const u = URL.createObjectURL(new Blob([mt], { type: 'text/csv' })), a = document.createElement('a'); a.href = u; a.download = wsSlug() + '-readings.csv'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 1000); } catch (_) {} }); return; }
+    const rows = S.rows.filter((r) => !r.mach && !!r.atw === S.atwood);
+    if (!rows.length && S.rows.some((r) => r.mach) && !S.rows.some((r) => !r.mach)) { capStatus(trM('ramp')); return; }
     if (!rows.length) { capStatus(S.rows.length ? (S.atwood ? 'No Atwood readings to export: the captured rows are from the ramp.' : 'No ramp readings to export: the captured rows are from Atwood\'s machine.') : 'No readings to export.'); return; }
     const txt = readingsCSV(rows, { version: FF_VERSION, setup: document.querySelector(`#presets button[data-p="${S.preset}"]`)?.textContent || 'Your own setup', surface: S.mystery ? 'mystery surface (coefficients hidden)' : `mu_s ${S.p.ms}, mu_k ${S.p.mk} at export` });
     toWorksheet(txt, () => { try { const u = URL.createObjectURL(new Blob([txt], { type: 'text/csv' })), a = document.createElement('a'); a.href = u; a.download = wsSlug() + '-readings.csv'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 1000); } catch (_) {} });
   });
   function renderRows() {
     const tb = $('rowsTbl').querySelector('tbody');
-    $('rowsTbl').querySelector('thead th:nth-child(2)').textContent = S.atwood ? 'm₂ (kg)' : 'θ (°)';
-    tb.innerHTML = S.rows.length ? S.rows.map((r, i) => { const t = cellNum(r.t), a = isFinite(t) && t > 0 ? 2 * GATE_D / (t * t) : NaN;
+    $('rowsTbl').querySelector('thead th:nth-child(2)').textContent = S.mach ? 'Machine' : S.atwood ? 'm₂ (kg)' : 'θ (°)';
+    $('rowsTbl').querySelector('thead th:nth-child(3)').textContent = S.mach ? 'Effort (N)' : 't (s)'; $('rowsTbl').querySelector('thead th:nth-child(4)').textContent = S.mach ? 'd_in (m)' : 'a (m/s²)';
+    tb.innerHTML = S.rows.length ? S.rows.map((r, i) => { if (r.mach) return `<tr title="${MACH_NAME[r.kind]}, ${r.set}, m ${r.m} kg, mu ${r.mu}; load ${r.Fout} N raised ${r.dout} m"><td>${i + 1}</td><td>${MACH_NAME[r.kind]}</td><td><input data-i="${i}" data-f="Fin" value="${r.Fin}" aria-label="effort, row ${i + 1}"></td><td>${r.din}</td><td><button type="button" data-del="${i}" aria-label="Delete row ${i + 1}">×</button></td></tr>`;
+      const t = cellNum(r.t), a = isFinite(t) && t > 0 ? 2 * GATE_D / (t * t) : NaN;
       /* Atwood's machine has no angle to vary (the ramp stands at 90°), so its rows show m₂ in that column */
       const c2 = r.atw ? `<input data-i="${i}" data-f="m2" value="${r.m2}" aria-label="m2, row ${i + 1}">${S.atwood ? '' : ' <span class="unit">kg</span>'}` : `<input data-i="${i}" data-f="th" value="${r.th}" aria-label="theta, row ${i + 1}">${S.atwood ? ' <span class="unit">°</span>' : ''}`;
       return `<tr title="m ${r.m} kg, m2 ${r.m2} kg, F ${r.F} N at ${r.phi}°"><td>${i + 1}</td><td>${c2}</td><td><input data-i="${i}" data-f="t" value="${r.t}" aria-label="time, row ${i + 1}"></td><td>${isFinite(a) ? a.toFixed(3) : '—'}</td><td><button type="button" data-del="${i}" aria-label="Delete row ${i + 1}">×</button></td></tr>`; }).join('')
-      : '<tr><td class="empty" colspan="5">No readings yet. Release at the top mark, then capture.</td></tr>';
+      : `<tr><td class="empty" colspan="5">${S.mach ? 'No readings yet. Press Play, let the load rise, then record.' : 'No readings yet. Release at the top mark, then capture.'}</td></tr>`;
     fit();
   }
   $('rowsTbl').addEventListener('change', (e) => { const el = e.target; if (el.dataset.f) { S.rows[+el.dataset.i][el.dataset.f] = el.value.trim(); renderRows(); } });
@@ -1090,8 +1302,8 @@ table.rows input { font: inherit; font-family: var(--font-mono); width: 4.6em; b
   // ---------- keys, toggles, Blind, boot ----------
   can.addEventListener('keydown', (e) => {
     const k = e.key;
-    if (k === ' ') $('go').click(); else if (k === 'r' || k === 'R') $('back').click(); else if ((k === 't' || k === 'T') && !S.tackle) $('timed').click();
-    else if ((k === 'ArrowUp' || k === 'ArrowDown') && !S.atwood && !S.tackle) { S.p.th = Math.max(0, Math.min(60, S.p.th + (k === 'ArrowUp' ? 0.5 : -0.5))); S.preset = 'custom'; mark(); sync(); draw(); readouts(); }
+    if (k === ' ') $('go').click(); else if (k === 'r' || k === 'R') $('back').click(); else if ((k === 't' || k === 'T') && !S.tackle && !S.mach) $('timed').click();
+    else if ((k === 'ArrowUp' || k === 'ArrowDown') && !S.atwood && !S.tackle && !S.mach) { S.p.th = Math.max(0, Math.min(60, S.p.th + (k === 'ArrowUp' ? 0.5 : -0.5))); S.preset = 'custom'; mark(); sync(); draw(); readouts(); }
     else return;
     e.preventDefault();
   });
@@ -1112,15 +1324,22 @@ table.rows input { font: inherit; font-family: var(--font-mono); width: 4.6em; b
   /* the measuring tools: the stopwatch on the simulated clock; the ruler on the flat ramp, drawn to scale */
   /* How this works: a 22 s video of the slip angle and one timed slide (made by tools/howto/) */
   VD.howTo({ src: () => `media/how-this-works/${wsSlug()}.mp4`, poster: () => `media/how-this-works/${wsSlug()}.jpg`,
-    title: () => (S.atwood ? 'How this works: Atwood\'s Machine' : 'How this works') });
+    title: () => (S.mach ? 'How this works: Simple Machines' : S.atwood ? 'How this works: Atwood\'s Machine' : 'How this works') });
   VD.tools({ el: can, strip: '.viewbar', stage: '#scene', time: () => simClock, scale: () => rulerAt });
   /* vd-knobs: every range input inside .instr gets a knob, and its readout takes a typed value (demos/lib/vd.js) */
   VD.knobs();
-  tokens(); new ResizeObserver(resize).observe($('scene')); new ResizeObserver(() => draw()).observe($('instr')); { const q = new URLSearchParams(location.search).get('setup'); applyPreset(VD.ws('forces') === 'atwood' ? 'atwood' : q && PRESETS[q] ? q : 'push'); } renderRows(); resize();
+  tokens(); new ResizeObserver(resize).observe($('scene')); new ResizeObserver(() => draw()).observe($('instr')); { const q = new URLSearchParams(location.search).get('setup'); applyPreset(VD.ws('forces') === 'atwood' ? 'atwood' : VD.ws('forces') === 'hs-simple-machines' ? 'machines' : q && PRESETS[q] ? q : 'push');
+    const mq = new URLSearchParams(location.search).get('machine'); if (S.mach && mq && MACH_NAME[mq]) setMachine(mq); } renderRows(); resize();
   /* what the picture shows now, for a screen reader (VD.describe): the setup, whether it is held or released, the forces; Blind hides them */
   if (window.VD && VD.describe) {
     VD.describe(can, () => {
       const P = S.p, fz = forces(P, S.v), bl = S.blind, out = [], pos = { t: `Position ${f(S.s, 2)} m, speed ${f(S.v, 2)} m/s.`, live: false };
+      if (S.mach) {
+        const M = machQ(), u = S.mc.u;
+        out.push(`Simple machines: ${{ lever: 'a lever', pulleys: 'a block and tackle', ramp: 'a ramp', wheel: 'a wheel and axle' }[S.machine]} raises a ${f(P.m, 1)} kg load at a steady speed.`, `Effort ${f(M.Fin, 2)} N, moved ${f(u * M.din, 3)} m.`, `Load weight ${f(M.Fout, 2)} N, raised ${f(u * M.dout, 3)} m.`, S.run ? 'Lifting.' : 'Stopped.');
+        out.push(S.blind ? 'The mechanical advantages and the efficiency are hidden while Blind is on.' : `IMA ${f(M.IMA, 3)}, AMA ${f(M.AMA, 3)}, efficiency ${f(100 * M.eff, 1)} %.`);
+        return out;
+      }
       if (S.tackle) {
         const tk = tackle(P.m, P.n, P.F, S.s <= 1e-12 && S.v <= 1e-12);
         out.push(`A block and tackle lifts a ${f(P.m, 1)} kg load with ${P.n} strands of rope.`, `Pull on the rope F = ${f(P.F, 0)} N.`, `Weight mg = ${f(tk.W, 1)} N.`, S.run ? 'Released.' : 'Held.');
@@ -1159,7 +1378,7 @@ table.rows input { font: inherit; font-family: var(--font-mono); width: 4.6em; b
   G3.want = new URLSearchParams(location.search).get('view') !== 'flat' && !!window.VD3 && !VD3.lowPower(); if (G3.want) setView('3d');
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   /* for the break-it test (tools/breakit/forces.cjs) */
-  window.__forces = { S, forces, tackle, G, LEN, get simClock() { return simClock; } };
+  window.__forces = { S, forces, tackle, machine, G, LEN, get simClock() { return simClock; } };
   requestAnimationFrame(frame);
 })();
 </script>

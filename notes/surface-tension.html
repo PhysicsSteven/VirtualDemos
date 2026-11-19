@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="../demos/lib/theme.js"></script>
+<title>Surface Tension and Capillarity: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+@media screen { :root[data-theme="dark"] {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; overflow-wrap: break-word; }   /* a long file name breaks instead of pushing a phone sideways */
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+<link rel="stylesheet" id="vd-paper" href="../demos/lib/paper.css">
+</head>
+<body class="notes">
+<header class="top" aria-label="Site"><a class="brand" href="../index.html"><svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><ellipse cx="16" cy="16" rx="13" ry="6" fill="none" stroke="currentColor" stroke-width="1.8" transform="rotate(-30 16 16)"/><ellipse cx="16" cy="16" rx="13" ry="6" fill="none" stroke="currentColor" stroke-width="1.8" transform="rotate(30 16 16)"/><circle cx="16" cy="16" r="2.6" fill="currentColor"/></svg>Virtual Physics Demos</a><nav class="tabs" aria-label="Library"><a class="tab" href="../index.html#topics">Demos</a><a class="tab" href="../openstax.html">OpenStax</a><a class="tab" href="index.html" aria-current="page">Notes</a></nav><span class="hfind"></span><span data-vd-theme></span><a class="courses" href="../courses.html"><b>For a class</b> Courses</a></header>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Surface Tension and Capillarity</h1><ul class="meta"><li><a href="../demos/surface-tension.html">Open the demo</a></li><li>Algebra based intro physics (fluids; OpenStax College Physics 2e 11.8 and 11.9, also the AP edition); life science majors</li><li>15 to 35 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>A liquid's surface pulls like a stretched sheet: surface tension γ is the force per meter of edge, or the energy per square meter of surface (N/m = J/m²). Water's is 0.0728 N/m at 20 °C.</li>
+<li>In a narrow tube the surface pulls along the wall with 2πrγ cos θ, and that holds up a column of weight ρgπr²h, so h = 2γ cos θ/(ρgr). Half the radius, twice the height. The contact angle θ decides the sign: water wets clean glass (0°) and climbs; mercury (140°) and water on wax (107°) are pushed down; at 90° nothing happens.</li>
+<li>A curved surface squeezes what is inside: the pressure is higher by 2γ/r in a drop (one surface) and by 4γ/r in a soap bubble (two surfaces). The smaller the drop or bubble, the higher the pressure, so a small bubble empties into a big one.</li>
+<li>A dense object can rest on water when the surface, dented and pulling along two lines of length L, can hold its weight: w = 2γL sin φ, at most 2γL. Soap lowers γ.</li>
+<li>A film pulls a sliding wire with F = 2γl however far it is stretched, unlike a spring; the work done to stretch it is stored as surface energy, 2γlx.</li>
+</ul>
+<h2>Before class</h2>
+<p>Nothing to install. Four experiments, chosen above the picture: <strong>Capillary tubes</strong>, <strong>Drops and bubbles</strong>, <strong>Resting on water</strong> and <strong>Soap film</strong>; the Setups list changes with each. The set up card in the picture holds the controls of each experiment: the Liquid, the Tube wall and the Narrowest tube radius r for the tubes (with Set the contact angle myself); Drop: one surface or Bubble: two surfaces and the radii for drops and bubbles; Needle or Water strider, the Needle metal, Needle diameter and Needle length L, and Add a drop of soap on the surface; the Film liquid, Wire length l and Copper wire diameter for the film, where the sliding wire is dragged in the picture. Time runs from 1/100 speed to 100 times faster (the clock on the strip shows the time). Blind, in the Lab fold, hides predictions and answers. Surface tensions and contact angles are those of OpenStax College Physics 2e Tables 11.3 and 11.4, so the numbers match the book's examples.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Water climbs thin tubes.</strong> The opening setup: three glass tubes of radius 0.25 mm, 0.50 mm and 1.00 mm in water. Ask Q1 before pressing Play. Water reaches 90% of its height in the narrowest tube in about 1.1 s (the readout Time to 90% of the way).</li>
+<li><strong>Mercury sinks in glass</strong>, <strong>Water in a waxed tube</strong> and <strong>Water in silver: flat.</strong> Point at the meniscus each time: curving down, bulging up, flat (Q2).</li>
+<li><strong>Hot water climbs less</strong> and <strong>Glycerin: slow climb</strong> (Q3), then <strong>Sap in a tree's xylem</strong> (Q4).</li>
+<li>Switch modes to <strong>Drops and bubbles.</strong> <strong>Two bubbles: which one wins?</strong> Take a vote, then press Play to open the valve (Q5). Then <strong>Two nearly equal bubbles</strong>.</li>
+<li><strong>A soap bubble of radius 0.200 mm</strong>, <strong>A fog droplet</strong> and <strong>An alveolus in the lung</strong> (Q6).</li>
+<li>Switch modes to <strong>Resting on water.</strong> <strong>A steel needle rests on water</strong>, then <strong>A thicker needle sinks</strong> and <strong>Then add soap</strong> (Q7). <strong>A water strider</strong> shows why the insect has no trouble.</li>
+<li>Switch modes to <strong>Soap film.</strong> <strong>Soap film on a sliding wire</strong>: drag the wire out and watch the force graph stay flat; press Play to let it go. Then <strong>Ethyl alcohol film, 3.50 cm wire</strong> and <strong>Which liquid? 3.16 mN on 2.50 cm</strong> with Blind on (Q8).</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> Predict: three clean glass tubes of radius 0.25 mm, 0.50 mm and 1.00 mm stand in water at 20 °C (γ = 0.0728 N/m, θ = 0°). How high does water climb in each? Explain with forces why doubling the radius halves the height, then press Play and check the readouts.</p></div>
+
+<div class="q"><p><strong>Q2.</strong> Mercury meets glass at θ = 140° (γ = 0.465 N/m, ρ = 13,600 kg/m³), and water meets glass coated with paraffin wax at 107°. Find h for each in a tube of radius 0.25 mm. What does the sign tell you, and what does the meniscus look like in each case? What happens at 90°, as for water in silver?</p></div>
+
+<div class="q"><p><strong>Q3.</strong> At 100 °C water's surface tension is 0.0589 N/m. How high does it climb in the 0.25 mm tube (the demo keeps ρ = 1000 kg/m³)? Glycerin (γ = 0.0631 N/m, ρ = 1260 kg/m³) is 1500 times as viscous as water: how high does it climb, and how does the time to get there compare with water's? Which property sets the height and which sets the time?</p></div>
+
+<div class="q"><p><strong>Q4.</strong> The book's xylem tube has radius 2.50 × 10⁻⁵ m and holds sap of density 1050 kg/m³ with water's surface tension. How high can capillary action lift the sap? What radius would lift it 100 m, to the top of a redwood? What do you conclude?</p></div>
+
+<div class="q"><p><strong>Q5.</strong> Two soap bubbles (γ = 0.0370 N/m) of radius 1.50 cm and 4.00 cm sit on the ends of a pipe with a closed valve. Find the pressure inside each above the air outside. Predict which way air flows when the valve opens, then press Play. Why does the flow stop where it does? With bubbles of 2.00 cm and 2.05 cm, why does one still empty into the other?</p></div>
+
+<div class="q"><p><strong>Q6.</strong> Find the pressure inside a soap bubble of radius 0.200 mm in pascals and in mm Hg, and inside a fog droplet of water of radius 1 μm. Why does the bubble's formula have 4γ/r and the droplet's 2γ/r? Compare the droplet's pressure with the atmosphere's, 101 kPa.</p></div>
+
+<div class="q"><p><strong>Q7.</strong> A steel needle (7800 kg/m³) 1.0 mm thick and 4.0 cm long is set down gently on water at 20 °C. Find its weight and the most the surface can hold, 2γL. Does it rest, and at what tilt φ does the surface meet it? Find the thickest steel needle that can rest on water, and explain why its length does not matter. A drop of soap lowers γ to 0.0370 N/m: predict, then try it.</p></div>
+
+<div class="q"><p><strong>Q8.</strong> A soap film (γ = 0.0370 N/m) fills a frame closed by a sliding wire 5.0 cm long. Find the force on the wire. How much work does it take to pull the wire from x = 6.0 cm to x = 10.0 cm? Why is a film not a spring? A film of an unknown liquid pulls a 2.50 cm wire with 3.16 × 10⁻³ N: find γ and name the liquid from Table 11.3.</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"The water is sucked up the tube."</strong> Nothing sucks. The surface sticks to the glass and pulls the column up along the rim; the column stops where its weight equals that pull.</li>
+<li><strong>"Wider tubes lift more water, since there is more surface."</strong> The rim grows as r but the column's area as r², so a wider tube holds a lower column (the mass held does grow, as r).</li>
+<li><strong>"Surface tension is a skin made of something else."</strong> It is the same liquid: molecules at the surface have fewer neighbors pulling them in, so making more surface costs energy.</li>
+<li><strong>"A bigger bubble has a higher pressure inside."</strong> The smaller one does: ΔP = 4γ/r, so the small bubble pushes its air into the big one.</li>
+<li><strong>"The needle floats because it is light."</strong> Steel is 7.8 times denser than water: buoyancy alone would sink it. The dented surface holds it up, and only if it is thin enough.</li>
+<li><strong>"Capillary action lifts sap to the top of trees."</strong> It lifts it less than a meter in the book's xylem; evaporation from the leaves pulls the water column up.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<p>The capillary height is h = 2γ cos θ/(ρgr), with g = 9.81 m/s², surface tensions from OpenStax College Physics 2e Table 11.3, contact angles from Table 11.4, densities from Table 11.1 and viscosities from Table 12.1 (water taken as 1000 kg/m³ at every temperature, as the book does). It holds for tubes much narrower than the capillary length √(γ/ρg), 2.72 mm for water; the meniscus's own volume and the small fall of the dish's level are left out. The rise in time is Washburn's equation with gravity: Poiseuille flow pushed by the capillary pressure minus the column's weight, dh/dt = (r²ρg/8η)(h_eq − h)/h. The liquid's inertia is left out, so a wide tube rises smoothly here where real water overshoots and bobs. Tube widths are drawn wider than life; heights are to scale.</p>
+<p>The bubbles are spherical caps on pipe ends of radius 2 mm, joined by a pipe 10 cm long through which air flows by Poiseuille's law (air's viscosity 1.81 × 10⁻⁵ Pa s); air is taken as incompressible, since the pressures differ from the atmosphere's by about a ten thousandth. As the small bubble shrinks its cap flattens past a half sphere, its radius grows again, and the flow stops when its radius equals the big bubble's.</p>
+<p>On the surface, the book's model: the surface pulls along two lines of length L tilted φ below level, w = 2γL sin φ. The dent drawn is the exact meniscus of a long object; the extra buoyancy of the water pushed aside by the dent is left out (Keller 1998), and the needle or leg is taken as not wetted. The film pulls the wire with F = 2γl; let go, the copper wire (8800 kg/m³) is pulled back with a = F/m, with friction, air drag and the film's mass left out.</p>
+<h2>Going further</h2>
+<ul>
+<li>Turn on Set the contact angle myself and sweep θ from 0° to 180° in one tube: h follows cos θ, through zero at 90°.</li>
+<li>Find the narrowest needle of aluminum and of gold that sinks (the readout Weight held as a share of the most). The thickest needle that rests goes as 1/√ρ.</li>
+<li>Why do insects that walk on water have waxy, hairy legs? What would a drop of soap in the pond do to a water strider?</li>
+<li>Lung surfactant lowers γ as an alveolus shrinks. Use the two bubbles to explain why the lung needs it.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>. © 2026 Steven Anderson. All rights reserved; see the <a href="../LICENSE.html">terms of use</a>.</footer>
+</main>
+</body>
+</html>

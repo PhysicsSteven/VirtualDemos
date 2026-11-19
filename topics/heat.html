@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <script src="demos/lib/theme.js"></script>
 <title>Heat and thermodynamics · Virtual Physics Demos</title>
-<meta name="description" content="Heat and thermodynamics: Temperature, gases, heat engines, entropy and radiation.">
+<meta name="description" content="Heat and thermodynamics: Temperature, gases, diffusion, heat engines, entropy and radiation.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
@@ -422,8 +422,8 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
   <div class="wrap">
     <p class="eyebrow"><b>Waves and heat</b></p>
     <h1>Heat and thermodynamics</h1>
-    <p class="lede">Temperature, gases, heat engines, entropy and radiation.</p>
-    <ul class="facts"><li><span><strong>11</strong> demos</span></li><li><span><strong>22</strong> worksheets</span></li><li><span>OpenStax Vol 2 · Ch. 1–4 · Vol 3 · Ch. 6, 9</span></li></ul>
+    <p class="lede">Temperature, gases, diffusion, heat engines, entropy and radiation.</p>
+    <ul class="facts"><li><span><strong>12</strong> demos</span></li><li><span><strong>23</strong> worksheets</span></li><li><span>OpenStax Vol 2 · Ch. 1–4 · Vol 3 · Ch. 6, 9</span></li></ul>
   </div>
 </header>
 <nav class="tools" aria-label="Sections">
@@ -480,8 +480,8 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
           <p class="kind"><span class="role role-demo">Demo</span></p>
           <h3><a href="demos/heat-engines.html?topic=heat">Heat Engine Cycles</a></h3>
           <p>Run an ideal gas around Carnot, Otto, Diesel, Stirling and Brayton cycles, or drag your own: the PV loop's area is the net work, a T–S diagram shows the heat, and no engine beats the Carnot limit. Reverse it for a refrigerator.</p>
-          <p class="used">In <a href="thermo.html">Thermodynamics</a></p><p class="used">OpenStax <span class="sec">2:3.1</span> <span class="sec">2:3.2</span> <span class="sec">2:3.3</span> <span class="sec">2:3.4</span> <span class="sec">2:3.6</span> <span class="sec">2:4.2</span> …</p><p class="used needs"><b>Before the worksheet:</b> First law; PV diagrams and work; adiabatic and isothermal processes; efficiency</p>
-          <p class="links"><a class="go" href="demos/heat-engines.html?topic=heat">Open demo</a> <a href="curriculum/labs/students/heat-engines.html">Worksheet: Heat Engine Cycles<span class="wsm">75 min · algebra</span></a> <a href="notes/heat-engines.html">Notes</a></p>
+          <p class="used">In <a href="thermo.html">Thermodynamics</a></p><p class="used">OpenStax <span class="sec">2:3.1</span> <span class="sec">2:3.2</span> <span class="sec">2:3.3</span> <span class="sec">2:3.4</span> <span class="sec">2:3.6</span> <span class="sec">2:4.2</span> …</p><p class="used needs"><b>Before the worksheet:</b> 1. First law; PV diagrams and work; adiabatic and isothermal processes; efficiency</p>
+          <p class="links"><a class="go" href="demos/heat-engines.html?topic=heat">Open demo</a> <a href="curriculum/labs/students/heat-engines.html">Worksheet 1: Heat Engine Cycles<span class="wsm">75 min · algebra</span></a> <a href="curriculum/labs/students/hs-heat-engines.html">Worksheet 2: Heat Engines and Refrigerators</a> <a href="notes/heat-engines.html">Notes</a></p>
         </div>
       </li>
       <li class="item" data-act="start explore sheet-algebra sheet-calculus">
@@ -542,6 +542,16 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
           <p>Cool a gas of atoms in a box or a harmonic trap from 1 µK toward absolute zero: each atom's wave packet grows to the thermal de Broglie wavelength, the packets overlap, and the atoms pile into one shared ground state. Exact Bose–Einstein occupations of the box levels, an energy ladder, the phase of the wavefunction as color, the velocity picture of 1995 and the condensate fraction curve.</p>
           <p class="used">In <a href="modern.html">Modern Physics</a> · <a href="thermo.html">Thermodynamics</a></p><p class="used">Also under <a href="topics/atoms-solids.html">Atoms, molecules and solids</a></p><p class="used">OpenStax <span class="sec">2:2.4</span> <span class="sec">3:9.4</span></p><p class="used needs"><b>Before the worksheet:</b> de Broglie wavelength; particle in a box; energy levels; Boltzmann factor; fitting a line</p>
           <p class="links"><a class="go" href="demos/bose-einstein.html?topic=heat">Open demo</a> <a href="demos/bose-einstein.html?start=1&topic=heat">Start here<span class="wsm">5 min · explore 15 min</span></a> <a href="curriculum/labs/students/bose-einstein-condensation.html">Worksheet: Bose–Einstein Condensation<span class="wsm">75 min · algebra</span></a> <a href="notes/bose-einstein.html">Notes</a></p>
+        </div>
+      </li>
+      <li class="item" data-act="start explore">
+        <a class="pic" href="demos/osmosis.html?topic=heat" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/osmosis-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/osmosis-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
+        <div class="body">
+          <p class="kind"><span class="role role-demo">Demo</span></p>
+          <h3><a href="demos/osmosis.html?topic=heat">Diffusion and Osmosis</a></h3>
+          <p>Watch molecules spread as the square root of time and leak through a still layer, then let water cross a membrane: osmotic pressure lifts a column in a U tube, swells a red blood cell until it bursts, and moves fluid out of a capillary and back in.</p>
+          <p class="used">Also under <a href="topics/fluids.html">Fluids</a> · <a href="topics/chemistry-biology.html">Chemistry and biology</a></p>
+          <p class="links"><a class="go" href="demos/osmosis.html?topic=heat">Open demo</a> <a href="demos/osmosis.html?start=1&topic=heat">Start here<span class="wsm">5 min · explore 15 min</span></a> <a href="notes/osmosis.html">Notes</a></p>
         </div>
       </li>
     </ul>

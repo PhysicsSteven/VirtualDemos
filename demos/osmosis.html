@@ -1,0 +1,731 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="lib/theme.js"></script>
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
+<title>Diffusion and Osmosis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css: a cell biology bench (water teal, solute amber, cells rose), the strip, the set up card */
+:root { --water: #2f8f9d; --water2: #9fd6db; --solute: #c77d12; --cell: #c2364a; --cell2: #f2a0a8; --tissue: #f4e3d3; --slide: #fbf6ec;
+  --out: #c2410c; --in: #0f766e; --mol: #2563eb; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --water: #4fb3c0; --water2: #1d4d55; --solute: #f0a33a; --cell: #f0566c; --cell2: #7a2633; --tissue: #2c2119; --slide: #16130f; --out: #fb923c; --in: #2dd4bf; --mol: #7fb4ff; } }
+:root[data-theme="dark"] { --water: #4fb3c0; --water2: #1d4d55; --solute: #f0a33a; --cell: #f0566c; --cell2: #7a2633; --tissue: #2c2119; --slide: #16130f; --out: #fb923c; --in: #2dd4bf; --mol: #7fb4ff; }
+.stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.stage-ctl select { font: inherit; font-size: 0.84rem; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 6px; }
+.stage-ctl .clock { margin-left: auto; font-size: 0.8rem; color: var(--muted); }
+.scene { position: relative; flex: 1 1 auto; min-height: 560px; background: var(--slide); }
+.scene canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; outline: none; touch-action: none; }
+.scene canvas:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+.setup-card { position: absolute; z-index: 3; right: 14px; top: 14px; width: 262px; display: flex; flex-direction: column; gap: 8px; padding: 8px 10px;
+  background: color-mix(in srgb, var(--surface) 92%, transparent); border: 1px solid var(--line); border-radius: 8px; max-height: calc(100% - 70px); overflow: auto; }
+.setup-card select { font: inherit; font-size: 0.86rem; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 6px; width: 100%; }
+.setup-card .pick { display: flex; flex-direction: column; gap: 4px; }
+.readout .hl dd { color: var(--out); }
+@media (min-width: 821px) { .bench > .stage { align-self: start; min-height: max(680px, 100%); } }
+@media (max-width: 820px) { .scene { min-height: 0; height: 460px; flex: none; } .setup-card { position: static; width: auto; margin: 8px; max-height: none; } }
+@media (max-width: 420px) { .scene { height: 420px; } }
+</style>
+<link rel="stylesheet" id="vd-look" href="lib/look.css">
+<script id="vd-gear" src="lib/gear.js"></script>
+<link rel="stylesheet" id="vd-paper" href="lib/paper.css">
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Diffusion and Osmosis</h1>
+      <p>Molecules wander at random, so spreading out takes four times as long to go twice as far. Watch a drop spread and a layer leak through, then let water cross a membrane that holds back sugar or salt: it lifts a column of liquid, swells a red blood cell until it bursts, and moves fluid out of a capillary at one end and back in at the other.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">SI units · x_rms = √(2Dt) · J = DΔC/L · Π = iMRT</div>
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/osmosis.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/osmosis.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM10 2h6v1h-6zM17 2h5v1h-5zM24 2h1v1h-1zM26 2h4v1h-4zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM12 3h3v1h-3zM16 3h2v1h-2zM20 3h1v1h-1zM22 3h1v1h-1zM24 3h1v1h-1zM28 3h1v1h-1zM30 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM11 4h2v1h-2zM16 4h2v1h-2zM19 4h7v1h-7zM28 4h1v1h-1zM30 4h1v1h-1zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h1v1h-1zM16 5h2v1h-2zM20 5h2v1h-2zM25 5h5v1h-5zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h2v1h-2zM13 6h5v1h-5zM23 6h1v1h-1zM25 6h1v1h-1zM29 6h2v1h-2zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h1v1h-1zM12 7h1v1h-1zM16 7h1v1h-1zM20 7h5v1h-5zM30 7h1v1h-1zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h1v1h-1zM14 9h2v1h-2zM19 9h4v1h-4zM24 9h2v1h-2zM30 9h1v1h-1zM2 10h1v1h-1zM6 10h1v1h-1zM8 10h4v1h-4zM13 10h5v1h-5zM20 10h2v1h-2zM24 10h3v1h-3zM30 10h6v1h-6zM38 10h1v1h-1zM2 11h2v1h-2zM6 11h1v1h-1zM14 11h2v1h-2zM18 11h1v1h-1zM21 11h3v1h-3zM27 11h4v1h-4zM34 11h4v1h-4zM2 12h1v1h-1zM4 12h8v1h-8zM14 12h1v1h-1zM18 12h1v1h-1zM22 12h3v1h-3zM28 12h2v1h-2zM31 12h1v1h-1zM33 12h2v1h-2zM2 13h1v1h-1zM4 13h2v1h-2zM7 13h1v1h-1zM9 13h1v1h-1zM11 13h1v1h-1zM19 13h1v1h-1zM23 13h2v1h-2zM26 13h1v1h-1zM29 13h3v1h-3zM33 13h2v1h-2zM36 13h2v1h-2zM3 14h1v1h-1zM5 14h1v1h-1zM7 14h2v1h-2zM11 14h1v1h-1zM14 14h1v1h-1zM16 14h2v1h-2zM19 14h1v1h-1zM21 14h1v1h-1zM23 14h4v1h-4zM29 14h4v1h-4zM36 14h3v1h-3zM3 15h3v1h-3zM9 15h3v1h-3zM14 15h2v1h-2zM17 15h3v1h-3zM21 15h1v1h-1zM24 15h2v1h-2zM28 15h3v1h-3zM34 15h2v1h-2zM2 16h1v1h-1zM4 16h1v1h-1zM8 16h4v1h-4zM13 16h1v1h-1zM16 16h2v1h-2zM20 16h1v1h-1zM22 16h5v1h-5zM29 16h1v1h-1zM32 16h6v1h-6zM3 17h2v1h-2zM6 17h2v1h-2zM9 17h1v1h-1zM12 17h1v1h-1zM14 17h4v1h-4zM21 17h3v1h-3zM26 17h1v1h-1zM30 17h1v1h-1zM32 17h3v1h-3zM36 17h1v1h-1zM38 17h1v1h-1zM2 18h2v1h-2zM5 18h2v1h-2zM8 18h2v1h-2zM11 18h1v1h-1zM13 18h1v1h-1zM15 18h1v1h-1zM18 18h1v1h-1zM22 18h1v1h-1zM31 18h3v1h-3zM35 18h2v1h-2zM38 18h1v1h-1zM2 19h6v1h-6zM9 19h2v1h-2zM20 19h2v1h-2zM24 19h1v1h-1zM26 19h2v1h-2zM29 19h3v1h-3zM33 19h3v1h-3zM37 19h1v1h-1zM3 20h1v1h-1zM8 20h3v1h-3zM12 20h3v1h-3zM17 20h1v1h-1zM19 20h3v1h-3zM23 20h1v1h-1zM25 20h2v1h-2zM28 20h2v1h-2zM31 20h6v1h-6zM2 21h2v1h-2zM5 21h1v1h-1zM9 21h2v1h-2zM14 21h1v1h-1zM16 21h4v1h-4zM21 21h3v1h-3zM25 21h1v1h-1zM28 21h1v1h-1zM30 21h2v1h-2zM36 21h2v1h-2zM2 22h2v1h-2zM6 22h3v1h-3zM10 22h3v1h-3zM15 22h2v1h-2zM19 22h1v1h-1zM22 22h3v1h-3zM26 22h1v1h-1zM31 22h3v1h-3zM36 22h1v1h-1zM4 23h2v1h-2zM7 23h1v1h-1zM13 23h6v1h-6zM22 23h2v1h-2zM25 23h1v1h-1zM27 23h1v1h-1zM29 23h3v1h-3zM33 23h2v1h-2zM37 23h1v1h-1zM2 24h2v1h-2zM7 24h2v1h-2zM10 24h5v1h-5zM16 24h4v1h-4zM22 24h1v1h-1zM25 24h1v1h-1zM28 24h2v1h-2zM31 24h1v1h-1zM33 24h4v1h-4zM6 25h2v1h-2zM9 25h1v1h-1zM15 25h3v1h-3zM19 25h4v1h-4zM24 25h1v1h-1zM26 25h1v1h-1zM29 25h2v1h-2zM32 25h3v1h-3zM36 25h1v1h-1zM38 25h1v1h-1zM6 26h1v1h-1zM8 26h1v1h-1zM11 26h1v1h-1zM13 26h3v1h-3zM20 26h1v1h-1zM24 26h3v1h-3zM29 26h4v1h-4zM35 26h3v1h-3zM2 27h1v1h-1zM5 27h1v1h-1zM7 27h1v1h-1zM9 27h5v1h-5zM16 27h1v1h-1zM18 27h1v1h-1zM21 27h2v1h-2zM27 27h4v1h-4zM34 27h2v1h-2zM4 28h7v1h-7zM12 28h1v1h-1zM16 28h1v1h-1zM18 28h3v1h-3zM22 28h1v1h-1zM24 28h1v1h-1zM27 28h3v1h-3zM31 28h4v1h-4zM36 28h1v1h-1zM4 29h1v1h-1zM11 29h3v1h-3zM19 29h2v1h-2zM23 29h2v1h-2zM26 29h1v1h-1zM33 29h2v1h-2zM36 29h1v1h-1zM38 29h1v1h-1zM2 30h7v1h-7zM12 30h1v1h-1zM14 30h1v1h-1zM16 30h2v1h-2zM19 30h1v1h-1zM21 30h3v1h-3zM25 30h2v1h-2zM29 30h6v1h-6zM36 30h2v1h-2zM10 31h3v1h-3zM18 31h3v1h-3zM25 31h2v1h-2zM28 31h1v1h-1zM30 31h1v1h-1zM34 31h1v1h-1zM2 32h7v1h-7zM10 32h1v1h-1zM13 32h3v1h-3zM17 32h2v1h-2zM20 32h1v1h-1zM22 32h4v1h-4zM28 32h1v1h-1zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM11 33h1v1h-1zM16 33h2v1h-2zM23 33h1v1h-1zM26 33h1v1h-1zM28 33h1v1h-1zM30 33h1v1h-1zM34 33h3v1h-3zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h2v1h-2zM13 34h1v1h-1zM15 34h4v1h-4zM22 34h1v1h-1zM25 34h2v1h-2zM30 34h8v1h-8zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM11 35h1v1h-1zM14 35h1v1h-1zM20 35h2v1h-2zM23 35h2v1h-2zM26 35h8v1h-8zM35 35h3v1h-3zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM12 36h2v1h-2zM15 36h1v1h-1zM17 36h1v1h-1zM19 36h1v1h-1zM21 36h1v1h-1zM25 36h1v1h-1zM28 36h3v1h-3zM32 36h1v1h-1zM36 36h2v1h-2zM2 37h1v1h-1zM8 37h1v1h-1zM11 37h2v1h-2zM14 37h1v1h-1zM17 37h10v1h-10zM28 37h2v1h-2zM32 37h1v1h-1zM34 37h1v1h-1zM36 37h2v1h-2zM2 38h7v1h-7zM10 38h2v1h-2zM13 38h3v1h-3zM19 38h1v1h-1zM22 38h5v1h-5zM29 38h1v1h-1zM31 38h3v1h-3zM36 38h3v1h-3z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl" id="strip">
+        <button type="button" class="spin attn" id="play">Play</button>
+        <button type="button" class="btn" id="restart" title="Put this experiment back to its start">Reset</button>
+        <label class="lbl" for="selSpeed">Pace</label>
+        <select id="selSpeed"><option value="0.25">1/4 pace</option><option value="1" selected>Normal pace</option><option value="4">4 times the pace</option></select>
+        <div class="seg" role="group" aria-label="Which experiment" id="sceneSeg">
+          <button type="button" data-scene="diff" aria-pressed="true">Diffusion</button>
+          <button type="button" data-scene="utube" aria-pressed="false">Osmosis in a U tube</button>
+          <button type="button" data-scene="cell" aria-pressed="false">Red blood cell</button>
+          <button type="button" data-scene="cap" aria-pressed="false">Capillary</button>
+        </div>
+        <span class="clock mono" id="clock" aria-live="off"></span>
+      </div>
+      <div class="scene" id="scene">
+        <canvas id="can" tabindex="0" role="img" aria-label="Molecules spreading out from a thin line by random walks. Space plays or pauses."></canvas>
+      </div>
+      <div class="setup-card" id="setupCard" role="group" aria-label="Set up the experiment">
+        <span class="card-title" id="cardTitle">Diffusion</span>
+        <div id="boxDiff">
+          <div class="seg" role="group" aria-label="How the molecules start" id="diffSeg"><button type="button" data-d="drop" aria-pressed="true">From a thin line</button><button type="button" data-d="layer" aria-pressed="false">Through a layer</button></div>
+          <div class="pick"><label for="selMol">Molecule and medium (Table 12.2)</label><select id="selMol">
+            <option value="H2air">Hydrogen in air</option><option value="O2air">Oxygen in air</option><option value="O2water">Oxygen in water</option>
+            <option value="glucose" selected>Glucose in water</option><option value="hemoglobin">Hemoglobin in water</option><option value="DNA">DNA in water</option></select></div>
+          <div><div class="slider-head"><label for="sWidth" id="lblWidth">Width of the view</label><output id="oWidth" class="mono" for="sWidth"></output></div><input type="range" id="sWidth" min="-6" max="-1" step="0.05"></div>
+          <p class="note" id="noteDiff"></p>
+        </div>
+        <div id="boxU" hidden>
+          <div class="pick"><label for="selSolute">Solute (cannot cross the membrane)</label><select id="selSolute"><option value="sucrose" selected>Sugar (sucrose), i = 1</option><option value="nacl">Salt (NaCl), i = 2</option><option value="cacl2">Calcium chloride, i = 3</option></select></div>
+          <div><div class="slider-head"><label for="sCR">Right side concentration</label><output id="oCR" class="mono" for="sCR"></output></div><input type="range" id="sCR" min="0" max="2" step="0.01"></div>
+          <div><div class="slider-head"><label for="sCL">Left side concentration</label><output id="oCL" class="mono" for="sCL"></output></div><input type="range" id="sCL" min="0" max="2" step="0.01"></div>
+          <div><div class="slider-head"><label for="sTemp">Temperature</label><output id="oTemp" class="mono" for="sTemp"></output></div><input type="range" id="sTemp" min="0" max="40" step="1"></div>
+          <div><div class="slider-head"><label for="sPist">Piston pushing on the right</label><output id="oPist" class="mono" for="sPist"></output></div><input type="range" id="sPist" min="0" max="8" step="0.05"></div>
+        </div>
+        <div id="boxCell" hidden>
+          <div><div class="slider-head"><label for="sSalt">Salt outside (NaCl, grams per 100 mL)</label><output id="oSalt" class="mono" for="sSalt"></output></div><input type="range" id="sSalt" min="0" max="3" step="0.01"></div>
+          <div class="chips" id="saltChips"><button type="button" data-s="0">Pure water</button><button type="button" data-s="0.45">0.45%</button><button type="button" data-s="0.9">0.9%</button><button type="button" data-s="3">3%</button></div>
+          <p class="note">Inside the cell: isotonic with 0.9% saline.</p>
+        </div>
+        <div id="boxCap" hidden>
+          <div><div class="slider-head"><label for="sPa">Blood pressure, arterial end</label><output id="oPa" class="mono" for="sPa"></output></div><input type="range" id="sPa" min="5" max="60" step="0.5"></div>
+          <div><div class="slider-head"><label for="sPv">Blood pressure, venous end</label><output id="oPv" class="mono" for="sPv"></output></div><input type="range" id="sPv" min="0" max="50" step="0.5"></div>
+          <div><div class="slider-head"><label for="sPip">Plasma protein (oncotic) pressure</label><output id="oPip" class="mono" for="sPip"></output></div><input type="range" id="sPip" min="5" max="40" step="0.5"></div>
+          <div><div class="slider-head"><label for="sPif">Tissue fluid pressure</label><output id="oPif" class="mono" for="sPif"></output></div><input type="range" id="sPif" min="-8" max="10" step="0.5"></div>
+          <div><div class="slider-head"><label for="sPiif">Tissue fluid protein pressure</label><output id="oPiif" class="mono" for="sPiif"></output></div><input type="range" id="sPiif" min="0" max="15" step="0.5"></div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="glucose" data-m="diff" aria-pressed="true">Glucose spreads in water</button>
+          <button type="button" data-p="o2air" data-m="diff" aria-pressed="false">Oxygen in air: 27,000 times faster</button>
+          <button type="button" data-p="cornea" data-m="diff" aria-pressed="false">Oxygen through the tear layer</button>
+          <button type="button" data-p="thin" data-m="diff" aria-pressed="false">Half as thick, a quarter of the time</button>
+          <button type="button" data-p="hemo" data-m="diff" aria-pressed="false">Hemoglobin: big and slow</button>
+          <button type="button" data-p="sugar" data-m="utube" aria-pressed="false" hidden>Sugar water against pure water</button>
+          <button type="button" data-p="salt" data-m="utube" aria-pressed="false" hidden>Salt: twice the particles</button>
+          <button type="button" data-p="both" data-m="utube" aria-pressed="false" hidden>Solute on both sides</button>
+          <button type="button" data-p="reverse" data-m="utube" aria-pressed="false" hidden>Reverse osmosis: push harder</button>
+          <button type="button" data-p="hypo" data-m="cell" aria-pressed="false" hidden>A red cell in pure water</button>
+          <button type="button" data-p="half" data-m="cell" aria-pressed="false" hidden>Half strength saline</button>
+          <button type="button" data-p="iso" data-m="cell" aria-pressed="false" hidden>Isotonic saline</button>
+          <button type="button" data-p="hyper" data-m="cell" aria-pressed="false" hidden>Hypertonic saline</button>
+          <button type="button" data-p="ap" data-m="cap" aria-pressed="false" hidden>A capillary (OpenStax values)</button>
+          <button type="button" data-p="guyton" data-m="cap" aria-pressed="false" hidden>Guyton's values</button>
+          <button type="button" data-p="protein" data-m="cap" aria-pressed="false" hidden>Too little plasma protein: edema</button>
+          <button type="button" data-p="heart" data-m="cap" aria-pressed="false" hidden>Heart failure: high venous pressure</button>
+          <button type="button" data-p="bleed" data-m="cap" aria-pressed="false" hidden>After bleeding: low pressure</button>
+        </div>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+      </section>
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+      </section>
+      <!-- vd-readings --><section class="vd-readings" data-ws="osmosis" data-title="Diffusion and Osmosis" data-demo="osmosis">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings ('+(typeof window.vdDataNote==='function'&&window.vdDataNote()?'catalog data':'simulated data')+')','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:(typeof window.vdDataNote==='function'&&window.vdDataNote())||'Simulated data from '+(/^The /.test(title)?'':'the ')+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
+        <label class="check"><input type="checkbox" id="labStill"><span>Reduce motion</span></label>
+        <details class="more"><summary>The model and its formulas</summary>
+          <p class="formula">random walk: x_rms = √(2Dt), so t = x²/(2D)</p>
+          <p class="formula">Fick: J = D ΔC/L in the steady state; a layer starts to pass it after the lag time L²/(6D)</p>
+          <p class="formula">van 't Hoff: Π = iMRT; the column it holds h = Π/(ρg)</p>
+          <p class="formula">red cell: V = b V₀ + (1 − b) V₀ (c_in/c_out)</p>
+          <p class="formula">Starling: net filtration = (P_c − P_t) − (π_c − π_t)</p>
+          <p class="hint" id="about"></p></details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+<script>
+(() => {
+  // ==CORE START==
+  /* SI units. R = N_A k (exact, demos/lib/constants.js VDC.R), g = 9.81 m/s² (VDC.g), 0 °C = 273.15 K, 1 mm Hg = 133.322387415 Pa (VDC.mmHg).
+     Diffusion constants at 20 °C and 1 atm: OpenStax College Physics 2e Table 12.2, equal to constants.js (DH2air ... DDNA). */
+  const RGAS = 6.02214076e23 * 1.380649e-23, G = 9.81, T0 = 273.15, MMHG = 133.322387415;
+  const DIFF = { H2air: 6.4e-5, O2air: 1.8e-5, O2water: 1.0e-9, glucose: 6.7e-10, hemoglobin: 6.9e-11, DNA: 1.3e-12 };
+  /* a random walk: the rms distance along one direction after time t, and the time to go x */
+  const xrms = (D, t) => Math.sqrt(2 * D * t);
+  const tFor = (D, x) => x * x / (2 * D);
+  /* a still layer of thickness L, with concentration C held on one side and zero on the other, starting empty (Crank, The Mathematics of
+     Diffusion, 1975, eqs 4.22 and 4.24a): the profile c(x, t)/C, the amount through per unit area Q(t)/C, the steady flux J/C = D/L and the lag time */
+  /* erfc to a fractional error below 1.2e-7 (Numerical Recipes, 2nd ed., 6.2, Chebyshev fit) */
+  function erfc(z) { const t = 1 / (1 + 0.5 * Math.abs(z)), r = t * Math.exp(-z * z - 1.26551223 + t * (1.00002368 + t * (0.37409196 + t * (0.09678418 + t * (-0.18628806 + t * (0.27886807 + t * (-1.13520398 + t * (1.48851587 + t * (-0.82215223 + t * 0.17087277))))))))); return z >= 0 ? r : 2 - r; }
+  /* at early times (Dt/L² < 0.02) the series converges too slowly, so the same solution is written with images (Crank 4.21): the first
+     two images are exact to better than e^(−50) there */
+  function layerC(x, t, D, L) { let s = 1 - x / L; if (t <= 0) return x <= 0 ? 1 : 0;
+    if (D * t / (L * L) < 0.02) { const q = 2 * Math.sqrt(D * t); return erfc(x / q) - erfc((2 * L - x) / q); } for (let n = 1; n <= 400; n++) { const e = Math.exp(-D * n * n * Math.PI * Math.PI * t / (L * L)); if (e < 1e-14) break; s -= (2 / Math.PI) * Math.sin(n * Math.PI * x / L) * e / n; } return s; }
+  function layerQ(t, D, L) { if (t <= 0) return 0;
+    if (D * t / (L * L) < 0.02) { const q = 2 * Math.sqrt(D * t), z = L / q; return 2 * q * (Math.exp(-z * z) / Math.sqrt(Math.PI) - z * erfc(z)); } let s = D * t / L - L / 6; for (let n = 1; n <= 400; n++) { const e = Math.exp(-D * n * n * Math.PI * Math.PI * t / (L * L)); if (e < 1e-16) break; s -= (2 * L / (Math.PI * Math.PI)) * ((n % 2 ? -1 : 1) / (n * n)) * e; } return s; }
+  const lagTime = (D, L) => L * L / (6 * D);
+  const fickJ = (D, dC, L) => D * dC / L;
+  /* van 't Hoff: osmotic pressure of a dilute solution, c in mol/m³ (1 mmol/L = 1 mol/m³) */
+  const vantHoff = (i, c, T) => i * c * RGAS * T;
+  /* the U tube: two arms of the same bore, each filled to H0 above the membrane, solute in amount c·H0 per unit area on each side. Water moves
+     x up the right arm (down the left) until the osmotic pressure of the diluted right side minus the concentrated left side equals
+     the height difference 2x plus the piston's push: i R T (cR H0/(H0 + x) − cL H0/(H0 − x)) = ρ g 2x + P */
+  function uEq(i, cR, cL, T, H0, rho, P) {
+    const f = (x) => i * RGAS * T * (cR * H0 / (H0 + x) - cL * H0 / (H0 - x)) - rho * G * 2 * x - P;
+    let lo = -H0 * 0.999, hi = H0 * 0.999; if (f(lo) < 0) return lo; if (f(hi) > 0) return hi;
+    for (let k = 0; k < 100; k++) { const m = (lo + hi) / 2; if (f(m) > 0) lo = m; else hi = m; }
+    return (lo + hi) / 2;
+  }
+  const uDrive = (i, cR, cL, T, H0, rho, P, x) => i * RGAS * T * (cR * H0 / (H0 + x) - cL * H0 / (H0 - x)) - rho * G * 2 * x - P;
+  /* saline: osmolarity of NaCl at w grams per 100 mL, ideal (i = 2), in mol/m³. NaCl 58.44 g/mol (CIAAW 2021: Na 22.990, Cl 35.45) */
+  const MNACL = 58.44;
+  const salineOsm = (w) => 2 * (w * 10 / MNACL) * 1000;   /* mOsm/L = mol/m³ */
+  /* the red cell as an osmometer (Boyle and van 't Hoff): water moves until inside and outside are equal; a share b of the volume is
+     hemoglobin and other solids that take no part. V/V0 = b + (1 − b) c0/c. Its membrane hardly stretches: it can swell only to the sphere
+     its area allows, V = A^1.5/(6√π), and bursts beyond. Area 135 μm², volume 94 μm³ (Evans and Fung 1972, Microvascular Research 4, 335). */
+  const RBC_A = 135, RBC_V0 = 94, RBC_B = 0.4;
+  const sphereV = (A) => Math.pow(A, 1.5) / (6 * Math.sqrt(Math.PI));
+  const cellV = (c0, c, b = RBC_B, V0 = RBC_V0) => (c <= 0 ? Infinity : V0 * (b + (1 - b) * c0 / c));
+  const lysisOsm = (c0, A = RBC_A, V0 = RBC_V0, b = RBC_B) => (1 - b) * c0 / (sphereV(A) / V0 - b);
+  /* Starling: net filtration pressure along a capillary, blood pressure falling in a straight line from the arterial to the venous end */
+  const capP = (Pa, Pv, s) => Pa + (Pv - Pa) * s;
+  const nfp = (Pc, Pt, pic, pit) => (Pc - Pt) - (pic - pit);
+  function crossAt(Pa, Pv, Pt, pic, pit) { const a = nfp(Pa, Pt, pic, pit), b = nfp(Pv, Pt, pic, pit); return a === b ? NaN : a / (a - b); }
+  const meanNfp = (Pa, Pv, Pt, pic, pit) => nfp((Pa + Pv) / 2, Pt, pic, pit);
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  const MOLNAME = { H2air: 'Hydrogen in air', O2air: 'Oxygen in air', O2water: 'Oxygen in water', glucose: 'Glucose in water', hemoglobin: 'Hemoglobin in water', DNA: 'DNA in water' };
+  const SOL = { sucrose: { i: 1, name: 'sugar' }, nacl: { i: 2, name: 'salt' }, cacl2: { i: 3, name: 'calcium chloride' } };
+  const RHO = 1000, H0 = 0.30;   /* dilute solutions taken as water, 1000 kg/m³; each arm filled 30 cm above the membrane */
+  const C0 = salineOsm(0.9);     /* the cell's inside: isotonic with 0.9% saline */
+  const f = (v, d = 2) => (!isFinite(v) ? '—' : v.toFixed(d).replace('-', '−'));
+  const sup = (n) => String(n).replace(/[-0-9]/g, (c) => ({ '-': '⁻', 0: '⁰', 1: '¹', 2: '²', 3: '³', 4: '⁴', 5: '⁵', 6: '⁶', 7: '⁷', 8: '⁸', 9: '⁹' }[c]));
+  const sig = (v, n = 3) => { if (!isFinite(v)) return '—'; const a = Math.abs(v); if (a !== 0 && (a >= 1e5 || a < 1e-3)) { const e = Math.floor(Math.log10(a)); return `${(v / 10 ** e).toFixed(n - 1).replace('-', '−')} × 10${sup(e)}`; } const s = (+v.toPrecision(n)); return Math.abs(s) >= 1000 ? Math.round(s).toLocaleString('en-US').replace('-', '−') : String(s).replace('-', '−'); };
+  const len = (m) => { const a = Math.abs(m); return a === 0 ? '0 m' : a >= 1 ? `${sig(m, 3)} m` : a >= 0.01 ? `${sig(m * 100, 3)} cm` : a >= 1e-3 ? `${sig(m * 1000, 3)} mm` : a >= 1e-6 ? `${sig(m * 1e6, 3)} μm` : `${sig(m * 1e9, 3)} nm`; };
+  const dur = (s) => { const a = Math.abs(s); return a === 0 ? '0 s' : a < 1e-3 ? `${sig(s * 1e6, 3)} μs` : a < 1 ? `${sig(s * 1000, 3)} ms` : a < 120 ? `${sig(s, 3)} s` : a < 7200 ? `${sig(s / 60, 3)} min` : a < 172800 ? `${sig(s / 3600, 3)} h` : a < 3.156e7 * 2 ? `${sig(s / 86400, 3)} days` : `${sig(s / 3.15576e7, 3)} years`; };
+  const pres = (p) => (Math.abs(p) >= 1e5 ? `${sig(p / 1e6, 3)} MPa` : Math.abs(p) >= 1e3 ? `${sig(p / 1000, 3)} kPa` : `${sig(p, 3)} Pa`);
+
+  /* ---------- setups ---------- */
+  const PRE = {
+    glucose: { scene: 'diff', d: 'drop', mol: 'glucose', w: 2e-4, hint: 'Glucose molecules start on a thin line in still water and each takes its own random walk (simulated). Watch the spread: by the time it has doubled, four times as long has passed. x_rms = √(2Dt) with D = 6.7 × 10⁻¹⁰ m²/s: 37 μm in 1 s, but 1 cm takes 21 hours (the book\'s example), which is why we stir sugar into tea.' },
+    o2air: { scene: 'diff', d: 'drop', mol: 'O2air', w: 0.02, hint: 'Oxygen in air: D = 1.8 × 10⁻⁵ m²/s, 27,000 times glucose in water. In air a molecule goes much farther between collisions. Even so, 1 m takes about 8 hours: a smell crosses a room by air currents, not by diffusion.' },
+    cornea: { scene: 'diff', d: 'layer', mol: 'O2water', w: 5e-4, hint: 'The cornea has no blood vessels: it gets oxygen by diffusion through the tear layer, 0.500 mm thick (the book\'s exercise). Oxygen is held on the air side and used up on the eye side. A molecule takes about t = x²/(2D) = 125 s to cross. The flow through builds up and then levels off at J = DC/L.' },
+    thin: { scene: 'diff', d: 'layer', mol: 'O2water', w: 2.5e-4, hint: 'The same tear layer, half as thick: 0.250 mm. The crossing time falls to a quarter, 31 s, and the steady flow doubles.' },
+    hemo: { scene: 'diff', d: 'drop', mol: 'hemoglobin', w: 1e-4, hint: 'Hemoglobin is a big protein: D = 6.9 × 10⁻¹¹ m²/s, ten times smaller than glucose\'s. Massive molecules diffuse slowly.' },
+    sugar: { scene: 'utube', sol: 'sucrose', cR: 1, cL: 0, temp: 20, P: 0, hint: 'Pure water on the left, 1.00 mmol/L sugar water on the right, separated by a membrane that passes water but not sugar. Water crosses to the right until the extra height pushes back hard enough. Π = MRT = 2.44 kPa at 20 °C, a column of 24.8 cm, but the right arm\'s sugar is diluted as it rises, so it stops lower.' },
+    salt: { scene: 'utube', sol: 'nacl', cR: 1, cL: 0, temp: 20, P: 0, hint: 'Salt splits into two ions, Na⁺ and Cl⁻, and osmotic pressure counts particles: i = 2, so 1.00 mmol/L salt pushes twice as hard as sugar (taken as ideal; real salt water gives about 7% less).' },
+    both: { scene: 'utube', sol: 'sucrose', cR: 1.5, cL: 0.5, temp: 20, P: 0, hint: 'Sugar on both sides, 1.50 and 0.50 mmol/L: only the difference counts. This is the relative osmotic pressure of the book.' },
+    reverse: { scene: 'utube', sol: 'sucrose', cR: 1, cL: 0, temp: 20, P: 4, hint: 'A piston pushes on the sugar water with 4.00 kPa, more than its osmotic pressure of 2.44 kPa. Water is pushed out through the membrane, leaving the sugar behind: reverse osmosis, the way seawater is made drinkable.' },
+    hypo: { scene: 'cell', salt: 0, hint: 'A red blood cell dropped into pure water. Its inside is about 308 mOsm/L of particles that cannot cross the membrane, so water rushes in. Predict: how far can it swell? The membrane hardly stretches, so the cell rounds up into a sphere and then bursts (hemolysis).' },
+    half: { scene: 'cell', salt: 0.45, hint: 'Saline at 0.45%, half the isotonic strength: hypotonic. The cell swells to nearly a sphere. Clinical osmotic fragility tests find normal cells start to burst around here (Dacie and Lewis, Practical Haematology).' },
+    iso: { scene: 'cell', salt: 0.9, hint: 'Saline at 0.9% has the same osmolarity as the inside of the cell (isotonic): water goes in and out at equal rates and the cell keeps its dimpled disk shape. This is why intravenous drips use 0.9% saline.' },
+    hyper: { scene: 'cell', salt: 3, hint: 'Saline at 3%: hypertonic. Water leaves the cell, which shrinks and wrinkles (crenation), because its membrane keeps its area while its volume falls.' },
+    ap: { scene: 'cap', Pa: 35, Pv: 18, pic: 25, Pt: 0, pit: 0, hint: 'The textbook capillary (OpenStax Anatomy and Physiology 2e, 20.3): blood pressure 35 mm Hg at the arterial end, 18 at the venous end; the plasma proteins pull water back with 25 mm Hg all along. Fluid is pushed out at the arterial end (35 − 25 = 10 mm Hg) and drawn back in at the venous end (18 − 25 = −7).' },
+    guyton: { scene: 'cap', Pa: 30, Pv: 10, pic: 28, Pt: -3, pit: 8, hint: 'Guyton and Hall\'s values (Textbook of Medical Physiology, ch. 16), with the tissue fluid\'s own pressure (−3 mm Hg) and proteins (8 mm Hg): 13 mm Hg out at the arterial end, 7 in at the venous end. A little more leaves than returns; the lymph vessels carry the rest back.' },
+    protein: { scene: 'cap', Pa: 35, Pv: 18, pic: 12, Pt: 0, pit: 0, hint: 'With too little protein in the plasma (starvation, liver or kidney disease) the oncotic pull falls to 12 mm Hg: fluid leaves along the whole capillary and none returns. The tissues swell (edema).' },
+    heart: { scene: 'cap', Pa: 40, Pv: 30, pic: 25, Pt: 0, pit: 0, hint: 'When the heart cannot keep up, blood backs up in the veins and the venous end\'s pressure rises (here to 30 mm Hg): filtration wins everywhere and fluid collects in the ankles and lungs.' },
+    bleed: { scene: 'cap', Pa: 22, Pv: 10, pic: 25, Pt: 0, pit: 0, hint: 'After losing blood, the pressure in the capillaries falls: now fluid is drawn in along nearly the whole length, refilling the blood from the tissues.' },
+  };
+  const FIRST = { diff: 'glucose', utube: 'sugar', cell: 'hypo', cap: 'ap' };
+  const S = { scene: 'diff', preset: 'glucose', run: false, t: 0, speed: 1, blind: false, still: false,
+    D: { d: 'drop', mol: 'glucose', w: 2e-4 }, U: { sol: 'sucrose', cR: 1, cL: 0, temp: 20, P: 0, x: 0 }, C: { salt: 0, V: RBC_V0, burst: 0 }, K: { Pa: 35, Pv: 18, pic: 25, Pt: 0, pit: 0 } };
+  const can = $('can'), ctx = can.getContext('2d');
+  let W = 0, H = 0, dpr = 1, K = null;
+  const proj = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.25 : 1);
+  const narrow = () => window.innerWidth <= 820;
+  function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    K = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), accent: g('--accent'), surface: g('--surface'), water: g('--water'), water2: g('--water2'), solute: g('--solute'), cell: g('--cell'), cell2: g('--cell2'),
+      tissue: g('--tissue'), slide: g('--slide'), out: g('--out'), in: g('--in'), mol: g('--mol'), mono: g('--font-mono') || 'JetBrains Mono, monospace', sans: g('--font-sans') || 'Atkinson Hyperlegible, sans-serif',
+      dark: document.documentElement.getAttribute('data-theme') === 'dark' || (document.documentElement.getAttribute('data-theme') !== 'light' && matchMedia('(prefers-color-scheme: dark)').matches) }; }
+
+  /* ---------- the random walk (simulated) ---------- */
+  let seed = 1; const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+  const gauss = () => { let u = 0; while (u === 0) u = rnd(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * rnd()); };
+  let parts = [], through = 0, qhist = [];
+  const NDROP = 1600, NRES = 420, RES = 0.4;   /* drop: molecules on the line; layer: molecules kept in the reservoir, which is 0.4 L wide */
+  const Dnow = () => DIFF[S.D.mol];
+  /* the pace: simulated seconds per real second, chosen so the key event takes about 8 s on screen */
+  function rate() { const D = Dnow(), w = S.D.w; return (S.D.d === 'drop' ? tFor(D, w / 4) / 8 : lagTime(D, w) * 6 / 8) * S.speed; }
+  function resetDiff() {
+    seed = 11; parts = []; through = 0; qhist = []; const w = S.D.w;
+    if (S.D.d === 'drop') for (let k = 0; k < NDROP; k++) parts.push({ x: 0, y: rnd() });
+    else for (let k = 0; k < NRES; k++) parts.push({ x: -RES * w * rnd(), y: rnd() });
+  }
+  function stepDiff(dt) {
+    const D = Dnow(), w = S.D.w, hmax = S.D.d === 'drop' ? (w / 300) ** 2 / (2 * D) : (w / 60) ** 2 / (2 * D);
+    let left = dt;
+    while (left > 0) {
+      const h = Math.min(left, hmax), s = Math.sqrt(2 * D * h); left -= h; S.t += h;
+      if (S.D.d === 'layer' && (!qhist.length || S.t - qhist[qhist.length - 1][0] > lagTime(D, w) / 8)) qhist.push([S.t, through]);
+      for (const p of parts) { p.x += s * gauss(); p.y += s / w * 0.5 * gauss(); if (p.y < 0) p.y = -p.y; if (p.y > 1) p.y = 2 - p.y; }
+      if (S.D.d === 'layer') {
+        const L = w; let keep = [], res = [];
+        for (const p of parts) { if (p.x >= L) { through++; continue; } if (p.x < -RES * L) p.x = -2 * RES * L - p.x; (p.x < 0 ? res : keep).push(p); }
+        /* the reservoir is well stirred and held at its concentration: its molecules are laid out evenly again every step */
+        res = []; for (let k = 0; k < NRES; k++) res.push({ x: -RES * L * rnd(), y: rnd() });
+        parts = keep.concat(res);
+      }
+    }
+  }
+  const simRms = () => { if (S.D.d !== 'drop' || !parts.length) return NaN; let s = 0; for (const p of parts) s += p.x * p.x; return Math.sqrt(s / parts.length); };
+  /* molecules through a layer, per unit area, over the reservoir's concentration: count / (molecules per length in the reservoir) */
+  const simQ = () => through / (NRES / (RES * S.D.w));
+
+  /* ---------- drawing helpers ---------- */
+  function label(s, x, y, o = {}) {
+    const p = proj(); ctx.font = `${o.w || 600} ${(o.size || 12) * p}px ${o.mono ? K.mono : K.sans}`; ctx.textAlign = o.a || 'left'; ctx.textBaseline = o.b || 'middle';
+    /* fit: shrink the type (to 60% at most) so the text fits that width, for titles on phones and in longer languages */
+    if (o.fit) { const wd = ctx.measureText(s).width; if (wd > o.fit) ctx.font = `${o.w || 600} ${(o.size || 12) * p * Math.max(0.6, o.fit / wd)}px ${o.mono ? K.mono : K.sans}`; }
+    if (o.halo !== false) { ctx.lineWidth = 3.5; ctx.strokeStyle = o.haloCol || K.canvas; ctx.lineJoin = 'round'; ctx.strokeText(s, x, y); }
+    ctx.fillStyle = o.col || K.ink; ctx.fillText(s, x, y);
+  }
+  /* a muted subtitle: one line if it fits in mw, else wrapped into lines (phones); translated whole, then drawn as pieces */
+  const trT = (t) => (window.VDI18N ? VDI18N.t(t) : t), rawT = (fn) => (window.VDI18N ? VDI18N.raw(fn) : fn());
+  function sub(s, x, y, mw, o = {}) {
+    const p = proj(), size = o.size || 10.5, t = trT(s);
+    return rawT(() => {
+      ctx.font = `${o.w || 400} ${size * p}px ${o.mono ? K.mono : K.sans}`;
+      const lines = []; let cur = '';
+      for (const wd of t.split(' ')) { const tryL = cur ? cur + ' ' + wd : wd; if (cur && ctx.measureText(tryL).width > mw) { lines.push(cur); cur = wd; } else cur = tryL; }
+      if (cur) lines.push(cur);
+      lines.forEach((L, i) => label(L, x, y + i * (size + 3) * p, { size, col: o.col || K.muted, w: o.w || 400, mono: o.mono }));
+      return y + (lines.length - 1) * (size + 3) * p;   /* the last line's y */
+    });
+  }
+  function arrow(x0, y0, x1, y1, col, wd = 2.5) {
+    const p = proj(), a = Math.atan2(y1 - y0, x1 - x0), hl = Math.min(10 * p, 0.45 * Math.hypot(x1 - x0, y1 - y0));
+    ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = wd * p; ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1 - Math.cos(a) * hl * 0.6, y1 - Math.sin(a) * hl * 0.6); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x1 - hl * Math.cos(a - 0.4), y1 - hl * Math.sin(a - 0.4)); ctx.lineTo(x1 - hl * Math.cos(a + 0.4), y1 - hl * Math.sin(a + 0.4)); ctx.closePath(); ctx.fill();
+  }
+  function nice(v) { const e = Math.floor(Math.log10(v)), m = v / 10 ** e; return (m < 1.5 ? 1 : m < 3.5 ? 2 : m < 7.5 ? 5 : 10) * 10 ** e; }
+  function cardW() { return narrow() ? 0 : ($('setupCard').offsetWidth + 24); }
+  function axes(x, y, w, h, xr, yr, xl, yl, title) {
+    const p = proj(), m = { l: 52 * p, r: 14 * p, t: 44 * p, b: 40 * p }, gx = x + m.l, gy = y + m.t, gw = w - m.l - m.r, gh = h - m.t - m.b;
+    ctx.fillStyle = K.canvas; ctx.fillRect(x, y, w, h);
+    if (gw < 50 || gh < 50) return null;
+    const X = (v) => gx + gw * (v - xr[0]) / (xr[1] - xr[0]), Y = (v) => gy + gh * (yr[1] - v) / (yr[1] - yr[0]);
+    ctx.strokeStyle = K.line; ctx.lineWidth = 1; ctx.strokeRect(gx, gy, gw, gh);
+    ctx.font = `${10 * p}px ${K.mono}`; ctx.fillStyle = K.muted; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    const sx = nice((xr[1] - xr[0]) / 5); for (let v = Math.ceil(xr[0] / sx) * sx; v <= xr[1] + 1e-9 * sx; v += sx) ctx.fillText(f(v, sx < 1 ? (sx < 0.1 ? 2 : 1) : 0), X(v), gy + gh + 5 * p);
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; const sy = nice((yr[1] - yr[0]) / 5);
+    for (let v = Math.ceil(yr[0] / sy) * sy; v <= yr[1] + 1e-9 * sy; v += sy) { ctx.fillText(f(v, sy < 1 ? (sy < 0.1 ? 2 : 1) : 0), gx - 5 * p, Y(v)); ctx.globalAlpha = 0.35; ctx.beginPath(); ctx.moveTo(gx, Y(v)); ctx.lineTo(gx + gw, Y(v)); ctx.stroke(); ctx.globalAlpha = 1; }
+    label(yl, x + 12 * p, gy - 12 * p, { size: 10.5, col: K.muted, w: 400, fit: w - 24 * p }); label(xl, gx + gw, gy + gh + 26 * p, { a: 'right', size: 10.5, col: K.muted, w: 400 });
+    label(title, x + 12 * p, y + 18 * p, { size: 12.5, w: 700, fit: w - 24 * p });
+    return { X, Y, gx, gy, gw, gh };
+  }
+
+  /* ---------- diffusion ---------- */
+  function drawDiff(x, y, w, h) {
+    const p = proj(), D = Dnow(), L = S.D.w, drop = S.D.d === 'drop';
+    ctx.fillStyle = K.slide; ctx.fillRect(x, y, w, h);
+    const bx = x + 20 * p, by = y + 66 * p, bw = w - 40 * p, bh = h - 120 * p;
+    /* the box: for a drop the view is w wide around the line; for a layer, the reservoir on the left, the layer, and the sink on the right */
+    const X = drop ? (v) => bx + bw * (0.5 + v / L) : (v) => bx + bw * (v + RES * L) / ((1 + 2 * RES) * L);
+    if (drop) { ctx.fillStyle = K.dark ? 'rgba(79,179,192,0.10)' : 'rgba(47,143,157,0.08)'; ctx.fillRect(bx, by, bw, bh); }
+    else {
+      ctx.fillStyle = K.dark ? 'rgba(240,163,58,0.14)' : 'rgba(199,125,18,0.10)'; ctx.fillRect(bx, by, X(0) - bx, bh);
+      ctx.fillStyle = K.dark ? 'rgba(79,179,192,0.13)' : 'rgba(47,143,157,0.10)'; ctx.fillRect(X(0), by, X(L) - X(0), bh);
+      ctx.strokeStyle = K.muted; ctx.setLineDash([4 * p, 4 * p]); ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(X(0), by); ctx.lineTo(X(0), by + bh); ctx.moveTo(X(L), by); ctx.lineTo(X(L), by + bh); ctx.stroke(); ctx.setLineDash([]);
+      label('held at C', (bx + X(0)) / 2, by - 10 * p, { a: 'center', size: 10.5, col: K.solute });
+      label(`layer L = ${len(L)}`, (X(0) + X(L)) / 2, by - 10 * p, { a: 'center', size: 10.5, col: K.muted });
+      label('used up: 0', (X(L) + bx + bw) / 2, by - 10 * p, { a: 'center', size: 10.5, col: K.muted });
+    }
+    ctx.strokeStyle = K.line; ctx.lineWidth = 1; ctx.strokeRect(bx, by, bw, bh);
+    ctx.save(); ctx.beginPath(); ctx.rect(bx, by, bw, bh); ctx.clip(); ctx.fillStyle = K.solute;
+    const r = Math.max(1.3, 1.8 * p);
+    for (const q of parts) { const px = X(q.x); if (px < bx - 3 || px > bx + bw + 3) continue; ctx.fillRect(px - r, by + q.y * bh - r, 2 * r, 2 * r); }
+    ctx.restore();
+    if (drop) {
+      const rm = xrms(D, S.t), sr = simRms();
+      if (!S.blind && S.t > 0) { ctx.strokeStyle = K.out; ctx.lineWidth = 2 * p; for (const sgn of [-1, 1]) { const px = X(sgn * rm); if (px > bx && px < bx + bw) { ctx.beginPath(); ctx.moveTo(px, by); ctx.lineTo(px, by + bh); ctx.stroke(); } } label('±√(2Dt)', Math.min(bx + bw - 30 * p, X(rm) + 4 * p), by + 12 * p, { size: 11, col: K.out, w: 700 }); }
+      if (S.t > 0 && isFinite(sr)) { ctx.strokeStyle = K.mol; ctx.setLineDash([5 * p, 4 * p]); ctx.lineWidth = 1.6 * p; for (const sgn of [-1, 1]) { const px = X(sgn * sr); if (px > bx && px < bx + bw) { ctx.beginPath(); ctx.moveTo(px, by); ctx.lineTo(px, by + bh); ctx.stroke(); } } ctx.setLineDash([]); }
+    }
+    /* scale bar */
+    const sb = nice(L / 4), sbx = bx + 8 * p, sby = by + bh + 22 * p, wpx = X(sb) - X(0);
+    ctx.strokeStyle = K.ink; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(sbx, sby); ctx.lineTo(sbx + wpx, sby); ctx.stroke(); label(len(sb), sbx + wpx + 8 * p, sby, { size: 11, mono: true });
+    label(`${MOLNAME[S.D.mol]}: ${drop ? 'a thin line spreading' : 'diffusing through a still layer'} · molecules simulated`, x + 14 * p, y + 18 * p, { size: 13, w: 700, fit: w - 28 * p });
+    sub(`t = ${dur(S.t)} · 1 s on screen = ${dur(rate())}`, x + 14 * p, y + 38 * p, w - 28 * p, { size: 11, mono: true });
+  }
+  function drawDiffGraph(x, y, w, h) {
+    const p = proj(), D = Dnow(), L = S.D.w;
+    if (S.D.d === 'drop') {
+      const bins = 40, half = L / 2, cnt = new Array(bins).fill(0); for (const q of parts) { const k = Math.floor((q.x + half) / L * bins); if (k >= 0 && k < bins) cnt[k]++; }
+      const dens = cnt.map((c) => c / parts.length / (L / bins) * L), sg = xrms(D, S.t), g0 = sg > 0 ? L / (Math.sqrt(2 * Math.PI) * sg) : Infinity;
+      const ymax = Math.max(1, ...dens, isFinite(g0) ? Math.min(g0, 60) : 1) * 1.1;
+      const A = axes(x, y, w, h, [-half * 1e6, half * 1e6], [0, ymax], 'x (μm)', 'number against an even spread (1 = even)', 'Where the molecules are'); if (!A) return;
+      ctx.fillStyle = K.solute; ctx.globalAlpha = 0.6; dens.forEach((d, k) => { const x0 = A.X((-half + k * L / bins) * 1e6), x1 = A.X((-half + (k + 1) * L / bins) * 1e6); ctx.fillRect(x0 + 0.5, A.Y(Math.min(d, ymax)), x1 - x0 - 1, A.Y(0) - A.Y(Math.min(d, ymax))); }); ctx.globalAlpha = 1;
+      if (!S.blind && sg > 0) { ctx.strokeStyle = K.out; ctx.lineWidth = 2 * p; ctx.beginPath(); for (let k = 0; k <= 200; k++) { const xv = -half + L * k / 200, v = g0 * Math.exp(-xv * xv / (2 * sg * sg)); const yy = A.Y(Math.min(v, ymax)); k ? ctx.lineTo(A.X(xv * 1e6), yy) : ctx.moveTo(A.X(xv * 1e6), yy); } ctx.stroke();
+        label('bell curve of width √(2Dt)', A.gx + A.gw - 6 * p, A.gy + 14 * p, { a: 'right', size: 10.5, col: K.out }); }
+      label('bars: simulated molecules', A.gx + 6 * p, A.gy + 14 * p, { size: 10.5, col: K.solute });
+    } else {
+      const tl = lagTime(D, L), tmax = tl * 6, Qe = (t) => layerQ(t, D, L) / L, qmax = Math.max(Qe(tmax), simQ() / L) * 1.1 || 1;
+      const A = axes(x, y, w, h, [0, tmax / tl], [0, qmax], 'time t / lag time', 'amount through / CL', 'Amount through the layer'); if (!A) return;
+      if (!S.blind) { ctx.strokeStyle = K.out; ctx.lineWidth = 2 * p; ctx.beginPath(); for (let k = 0; k <= 200; k++) { const t = tmax * k / 200, yy = A.Y(Qe(t)); k ? ctx.lineTo(A.X(t / tl), yy) : ctx.moveTo(A.X(t / tl), yy); } ctx.stroke();
+        ctx.strokeStyle = K.muted; ctx.setLineDash([5 * p, 4 * p]); ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.moveTo(A.X(1), A.Y(0)); ctx.lineTo(A.X(tmax / tl), A.Y((D * tmax / L - L / 6) / L)); ctx.stroke(); ctx.setLineDash([]);
+        label('steady: slope J = DC/L, crossing the axis at L²/6D', A.X(2.2), A.Y(0) - 12 * p, { size: 10, col: K.muted, w: 400, fit: A.gx + A.gw - A.X(2.2) - 4 * p });
+        label('Fick (Crank\'s solution)', A.gx + 6 * p, A.gy + 30 * p, { size: 10.5, col: K.out, fit: A.gw - 12 * p }); }
+      ctx.fillStyle = K.solute; for (const [t, n] of qhist.concat(S.t > 0 ? [[S.t, through]] : [])) { if (t > tmax) continue; ctx.beginPath(); ctx.arc(A.X(t / tl), A.Y(Math.min(n / (NRES / (RES * L)) / L, qmax)), 4 * p, 0, 7); ctx.fill(); }
+      label('dots: simulated molecules counted through', A.gx + 6 * p, A.gy + 14 * p, { size: 10.5, col: K.solute, fit: A.gw - 12 * p });
+    }
+  }
+
+  /* ---------- the U tube ---------- */
+  function uState() { const s = SOL[S.U.sol], T = S.U.temp + T0, cR = S.U.cR, cL = S.U.cL, P = S.U.P * 1000; return { i: s.i, T, cR, cL, P, xeq: uEq(s.i, cR, cL, T, H0, RHO, P), Pi: vantHoff(s.i, cR - cL, T) }; }
+  function drawU(x, y, w, h) {
+    const p = proj(), u = uState(), xs = S.U.x;
+    ctx.fillStyle = K.slide; ctx.fillRect(x, y, w, h);
+    const top = y + 70 * p, bot = y + h - 40 * p, sc = (bot - top) / (2 * H0 + 0.06), base = bot - 0.03 * sc;
+    const nw = narrow(), cx = x + Math.min(w - cardW(), w) * 0.5 - (nw ? 14 * p : 0), armW = (nw ? 44 : 50) * p, gap = (nw ? 60 : 90) * p, xl = cx - gap / 2 - armW, xr = cx + gap / 2;
+    const yL = base - (H0 - xs) * sc, yR = base - (H0 + xs) * sc;
+    /* liquids */
+    ctx.fillStyle = K.water2; ctx.fillRect(xl, yL, armW, base - yL); ctx.fillRect(xl, base, cx - xl, 26 * p);
+    const sg = ctx.createLinearGradient(0, yR, 0, base); sg.addColorStop(0, K.dark ? 'rgba(240,163,58,0.35)' : 'rgba(199,125,18,0.25)'); sg.addColorStop(1, K.dark ? 'rgba(240,163,58,0.5)' : 'rgba(199,125,18,0.35)');
+    ctx.fillStyle = K.water2; ctx.fillRect(xr, yR, armW, base - yR); ctx.fillRect(cx, base, xr + armW - cx, 26 * p);
+    if (u.cR > 0) { ctx.fillStyle = sg; ctx.fillRect(xr, yR, armW, base - yR); ctx.fillRect(cx, base, xr + armW - cx, 26 * p); }
+    if (u.cL > 0) { ctx.fillStyle = sg; ctx.globalAlpha = Math.min(1, u.cL / Math.max(u.cR, 1e-9)); ctx.fillRect(xl, yL, armW, base - yL); ctx.fillRect(xl, base, cx - xl, 26 * p); ctx.globalAlpha = 1; }
+    /* solute particles (they stay on their side), drawn evenly through each side's liquid */
+    let s2 = 5; const r2 = () => ((s2 = (s2 * 16807) % 2147483647) / 2147483647);
+    ctx.fillStyle = K.solute; const dots = (x0, y0, ww, hh, n) => { for (let k = 0; k < n; k++) ctx.fillRect(x0 + 3 + r2() * (ww - 6), y0 + 3 + r2() * (hh - 6), 2.6 * p, 2.6 * p); };
+    dots(xr, yR, armW, base - yR, Math.round(60 * u.cR)); dots(cx + 4, base, xr + armW - cx - 4, 24 * p, Math.round(14 * u.cR));
+    dots(xl, yL, armW, base - yL, Math.round(60 * u.cL)); dots(xl, base, cx - xl - 4, 24 * p, Math.round(14 * u.cL));
+    /* glass */
+    ctx.strokeStyle = K.dark ? 'rgba(200,220,230,0.6)' : 'rgba(90,110,120,0.7)'; ctx.lineWidth = 2.5 * p;
+    ctx.beginPath(); ctx.moveTo(xl, top - 10 * p); ctx.lineTo(xl, base + 26 * p); ctx.lineTo(xr + armW, base + 26 * p); ctx.lineTo(xr + armW, top - 10 * p); ctx.moveTo(xl + armW, top - 10 * p); ctx.lineTo(xl + armW, base); ctx.lineTo(xr, base); ctx.lineTo(xr, top - 10 * p); ctx.stroke();
+    /* the membrane */
+    ctx.strokeStyle = K.ink; ctx.setLineDash([3 * p, 3 * p]); ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(cx, base); ctx.lineTo(cx, base + 26 * p); ctx.stroke(); ctx.setLineDash([]);
+    label('membrane: water passes, solute does not', cx, base + 40 * p, { a: 'center', size: 10.5, col: K.muted, w: 400 });
+    /* the piston */
+    if (u.P > 0) { ctx.fillStyle = K.muted; ctx.fillRect(xr - 2 * p, yR - 10 * p, armW + 4 * p, 10 * p); ctx.fillRect(xr + armW / 2 - 3 * p, yR - 50 * p, 6 * p, 40 * p); arrow(xr + armW / 2, yR - 70 * p, xr + armW / 2, yR - 14 * p, K.out, 2.4); label(`${f(S.U.P, 2)} kPa`, xr - 10 * p, yR - 44 * p, { a: 'right', size: 11, col: K.out, mono: true }); }
+    /* water flow arrow while running */
+    const drive = uDrive(u.i, u.cR, u.cL, u.T, H0, RHO, u.P, xs);
+    if (S.run && Math.abs(drive) > 1) { const d = Math.sign(drive); arrow(cx - d * 22 * p, base + 13 * p, cx + d * 22 * p, base + 13 * p, K.in, 2.2); }
+    /* ruler and marks */
+    const rx = xl - 64 * p, st = nice(2 * H0 / 6);
+    ctx.strokeStyle = K.muted; ctx.lineWidth = 1; ctx.font = `${10 * p}px ${K.mono}`; ctx.fillStyle = K.muted; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    for (let z = 0; z <= 2 * H0 + 1e-9; z += st / 2) { const yy = base - z * sc, mj = Math.abs(z / st - Math.round(z / st)) < 1e-6; ctx.beginPath(); ctx.moveTo(rx, yy); ctx.lineTo(rx + (mj ? 10 : 5) * p, yy); ctx.stroke(); if (mj) ctx.fillText(f(z * 100, 0), rx + 13 * p, yy); }
+    label('cm', rx + 12 * p, top - 22 * p, { size: 10.5, col: K.muted, w: 400 });
+    ctx.strokeStyle = K.out; ctx.lineWidth = 1.6 * p; ctx.beginPath(); ctx.moveTo(xr + armW + 14 * p, yR); ctx.lineTo(xr + armW + 14 * p, yL); ctx.stroke();
+    ctx.setLineDash([3 * p, 3 * p]); ctx.beginPath(); ctx.moveTo(xl + armW, yL); ctx.lineTo(xr + armW + 18 * p, yL); ctx.stroke(); ctx.setLineDash([]);
+    label(`Δh = ${len(2 * xs)}`, xr + armW + (nw ? 12 : 18) * p, (yR + yL) / 2, { size: 12, col: K.out, w: 700, mono: true });
+    if (!S.blind) { const ye = base - (H0 + u.xeq) * sc; ctx.strokeStyle = K.muted; ctx.setLineDash([6 * p, 4 * p]); ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.moveTo(xr - 10 * p, ye); ctx.lineTo(xr + armW + 10 * p, ye); ctx.stroke(); ctx.setLineDash([]); label('it stops here', xr - 14 * p, ye, { a: 'right', size: 10.5, col: K.muted }); }
+    label(`Osmosis: ${u.cR > 0 || u.cL > 0 ? SOL[S.U.sol].name : 'no solute'}, ${f(S.U.temp, 0)} °C`, x + 14 * p, y + 18 * p, { size: 13, w: 700, fit: w - 28 * p });
+    sub('heights to scale; the pace of the flow is set for viewing (it depends on the membrane)', x + 14 * p, y + 38 * p, w - 28 * p, {});
+  }
+
+  /* ---------- the red blood cell ---------- */
+  function cellState() { const c = salineOsm(S.C.salt), Veq = cellV(C0, c), Vs = sphereV(RBC_A); return { c, Veq, Vs, bursts: Veq >= Vs, lys: lysisOsm(C0) }; }
+  function drawCell(x, y, w, h) {
+    const p = proj(), cs = cellState(), V = S.C.V, Vs = cs.Vs;
+    ctx.fillStyle = K.dark ? '#0d0b09' : '#e9e2d6'; ctx.fillRect(x, y, w, h);
+    /* the microscope field */
+    const cx = x + Math.min(w - cardW(), w) / 2 + (narrow() ? 0 : 0), cy = y + h * 0.52, R = Math.min((w - cardW()) * 0.44, h * 0.4, 260 * p);
+    const fg = ctx.createRadialGradient(cx, cy, R * 0.2, cx, cy, R); fg.addColorStop(0, K.dark ? '#2a2420' : '#fffaf0'); fg.addColorStop(1, K.dark ? '#191512' : '#f1e6d2');
+    ctx.fillStyle = fg; ctx.beginPath(); ctx.arc(cx, cy, R, 0, 7); ctx.fill();
+    /* tint of hemoglobin released into the liquid after bursting */
+    if (S.C.burst > 0) { ctx.fillStyle = `rgba(194,54,74,${0.18 * S.C.burst})`; ctx.beginPath(); ctx.arc(cx, cy, R, 0, 7); ctx.fill(); }
+    /* the cell's shape from its volume: a disk dimpled in the middle, thicker as it fills, round at Vs; wrinkled below V0 */
+    const um = R / 16, s = (V - RBC_V0) / (Vs - RBC_V0), cellR = 3.9 * um * (s > 0 ? 1 - 0.22 * s : 1), cells = [[0, 0], [-0.55, -0.42], [0.58, -0.3], [-0.42, 0.5], [0.5, 0.52]];
+    for (const [ox, oy] of cells) {
+      const px = cx + ox * R * 0.95, py = cy + oy * R * 0.9;
+      if (S.C.burst >= 1) { ctx.strokeStyle = K.dark ? 'rgba(240,86,108,0.35)' : 'rgba(194,54,74,0.35)'; ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.arc(px, py, cellR, 0, 7); ctx.stroke(); continue; }
+      ctx.save(); ctx.translate(px, py);
+      if (s < 0) { /* crenated: spiky outline */
+        const n = 14, amp = Math.min(0.25, -s * 0.5); ctx.beginPath(); for (let k = 0; k <= 120; k++) { const a = k / 120 * 2 * Math.PI, rr = cellR * (0.86 + amp * Math.max(0, Math.cos(n * a)) ** 3 * 1.4 - amp * 0.3); k ? ctx.lineTo(rr * Math.cos(a), rr * Math.sin(a)) : ctx.moveTo(rr * Math.cos(a), rr * Math.sin(a)); } ctx.closePath();
+      } else { ctx.beginPath(); ctx.arc(0, 0, cellR, 0, 7); }
+      const g = ctx.createRadialGradient(0, 0, 0, 0, 0, cellR); const pale = Math.max(0, 0.55 - 0.55 * Math.max(0, s));   /* the pale dimple fills in as the cell rounds */
+      g.addColorStop(0, `rgba(242,160,168,${1 - pale})`); g.addColorStop(0.45, K.cell2); g.addColorStop(0.8, K.cell); g.addColorStop(1, K.cell);
+      ctx.fillStyle = g; ctx.fill(); ctx.strokeStyle = K.dark ? 'rgba(255,200,205,0.5)' : 'rgba(120,20,35,0.5)'; ctx.lineWidth = 1 * p; ctx.stroke();
+      ctx.restore();
+    }
+    ctx.strokeStyle = K.dark ? '#000' : '#5b4c3b'; ctx.lineWidth = 6 * p; ctx.beginPath(); ctx.arc(cx, cy, R + 3 * p, 0, 7); ctx.stroke();
+    /* water arrows across the middle cell's membrane */
+    if (S.run && Math.abs(cs.Veq - V) > 0.5 && S.C.burst < 1) { const inward = cs.Veq > V; for (let k = 0; k < 6; k++) { const a = k * Math.PI / 3 + 0.3, r0 = cellR + (inward ? 26 : 6) * p, r1 = cellR + (inward ? 6 : 26) * p; arrow(cx + Math.cos(a) * r0, cy + Math.sin(a) * r0, cx + Math.cos(a) * r1, cy + Math.sin(a) * r1, K.in, 2); } }
+    /* side profile of the middle cell, to scale with the volume */
+    const pw = 120 * p, px0 = x + 18 * p, py0 = y + h - 70 * p, thick = (V / RBC_V0) * 12 * p * (s > 0 ? 1 + s : 1), wid = Math.min(pw, (2 * cellR / R) * pw * 1.6);
+    if (S.C.burst < 1) { ctx.fillStyle = K.cell; ctx.beginPath(); if (s >= 1) ctx.arc(px0 + wid / 2, py0, wid / 2 * 0.7, 0, 7); else { const dimple = Math.max(0, 1 - Math.max(0, s)) * thick * 0.35; ctx.ellipse(px0 + wid / 2, py0, wid / 2, thick / 2 + dimple * 0.2, 0, 0, 7); } ctx.fill();
+      if (s < 1) { ctx.fillStyle = K.dark ? '#0d0b09' : '#e9e2d6'; const dimple = Math.max(0, 1 - Math.max(0, s)) * thick * 0.35; ctx.beginPath(); ctx.ellipse(px0 + wid / 2, py0 - thick / 2 - dimple * 0.2, wid * 0.22, dimple, 0, 0, 7); ctx.fill(); ctx.beginPath(); ctx.ellipse(px0 + wid / 2, py0 + thick / 2 + dimple * 0.2, wid * 0.22, dimple, 0, 0, 7); ctx.fill(); } }
+    label('side view', px0 + wid / 2, py0 + 30 * p, { a: 'center', size: 10.5, col: K.muted, w: 400 });
+    const I = window.VDI18N, state = S.C.burst >= 1 ? (I ? VDI18N.t('burst: hemolysis') : 'burst: hemolysis') : V > RBC_V0 * 1.03 ? (I ? VDI18N.t('swelling') : 'swelling') : V < RBC_V0 * 0.97 ? (I ? VDI18N.t('shrinking: crenation') : 'shrinking: crenation') : 'steady';
+    label(`Red blood cells in ${f(S.C.salt, 2)}% saline`, x + 14 * p, y + 18 * p, { size: 13, w: 700, fit: w - 28 * p });
+    const yl = sub(`volume now ${sig(V, 3)} μm³ · the change is slowed for viewing; a real cell takes a fraction of a second`, x + 14 * p, y + 38 * p, w - 28 * p, {});
+    label(state, x + 14 * p, yl + 20 * p, { size: 13, w: 700, col: S.C.burst >= 1 ? K.out : K.in });
+  }
+
+  /* ---------- the capillary ---------- */
+  let rbcs = []; for (let k = 0; k < 18; k++) rbcs.push({ s: k / 18, o: ((k * 37) % 7) / 7 - 0.5 });
+  let drops = [];
+  function drawCap(x, y, w, h) {
+    const p = proj(), c = S.K, cr = crossAt(c.Pa, c.Pv, c.Pt, c.pic, c.pit);
+    ctx.fillStyle = K.tissue; ctx.fillRect(x, y, w, h);
+    /* a few tissue cells in the background */
+    let s3 = 9; const r3 = () => ((s3 = (s3 * 16807) % 2147483647) / 2147483647);
+    ctx.strokeStyle = K.dark ? 'rgba(255,220,190,0.08)' : 'rgba(120,80,50,0.12)'; ctx.lineWidth = 1;
+    for (let k = 0; k < 26; k++) { const px = x + r3() * w, py = y + r3() * h; ctx.beginPath(); ctx.ellipse(px, py, 30 * p, 20 * p, r3() * 3, 0, 7); ctx.stroke(); }
+    const x0 = x + 40 * p, x1 = x + w - 40 * p - (narrow() ? 0 : cardW()), cy = y + h * 0.5, rad = Math.min(36 * p, h * 0.12);
+    const lg = ctx.createLinearGradient(x0, 0, x1, 0); lg.addColorStop(0, K.dark ? '#7a1f2b' : '#e8a3a8'); lg.addColorStop(1, K.dark ? '#4a2440' : '#c9a3c6');
+    ctx.fillStyle = lg; ctx.fillRect(x0, cy - rad, x1 - x0, 2 * rad);
+    ctx.strokeStyle = K.dark ? 'rgba(255,220,220,0.5)' : 'rgba(120,40,50,0.55)'; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(x0, cy - rad); ctx.lineTo(x1, cy - rad); ctx.moveTo(x0, cy + rad); ctx.lineTo(x1, cy + rad); ctx.stroke();
+    /* red cells flowing (drawn) */
+    for (const b of rbcs) { const px = x0 + b.s * (x1 - x0), py = cy + b.o * rad * 1.1; ctx.fillStyle = K.cell; ctx.beginPath(); ctx.ellipse(px, py, 9 * p, 5.5 * p, 0.3, 0, 7); ctx.fill(); ctx.fillStyle = K.cell2; ctx.beginPath(); ctx.ellipse(px, py, 3.5 * p, 2 * p, 0.3, 0, 7); ctx.fill(); }
+    /* arrows across the wall: length by the net filtration pressure there */
+    const n = 9, scl = 2.2 * p;
+    for (let k = 0; k < n; k++) {
+      const s = (k + 0.5) / n, P = nfp(capP(c.Pa, c.Pv, s), c.Pt, c.pic, c.pit), px = x0 + s * (x1 - x0), L = Math.min(70 * p, Math.abs(P) * scl);
+      if (L < 3) continue; const col = P > 0 ? K.out : K.in;
+      for (const side of [-1, 1]) { const yw = cy + side * rad; if (P > 0) arrow(px, yw + side * 4 * p, px, yw + side * (4 * p + L), col, 2.4); else arrow(px, yw + side * (4 * p + L), px, yw + side * 4 * p, col, 2.4); }
+    }
+    /* water drops (drawn) leaving and returning */
+    for (const d of drops) { ctx.fillStyle = K.mol; ctx.globalAlpha = Math.max(0, 1 - d.age / d.life); ctx.beginPath(); ctx.arc(d.x, d.y, 2 * p, 0, 7); ctx.fill(); } ctx.globalAlpha = 1;
+    label('arterial end', x0, cy + rad + 90 * p, { size: 11.5, w: 700, col: K.out }); label('venous end', x1, cy + rad + 90 * p, { a: 'right', size: 11.5, w: 700, col: K.in });
+    if (!S.blind && isFinite(cr) && cr > 0 && cr < 1) { const px = x0 + cr * (x1 - x0), yt = Math.max(cy - rad - 80 * p, y + 74 * p); ctx.strokeStyle = K.ink; ctx.setLineDash([4 * p, 4 * p]); ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.moveTo(px, yt + 10 * p); ctx.lineTo(px, cy + rad + 70 * p); ctx.stroke(); ctx.setLineDash([]); label('no net flow', px, yt, { a: 'center', size: 10.5 }); }
+    label('A capillary between arteriole and venule', x + 14 * p, y + 18 * p, { size: 13, w: 700, fit: w - 28 * p });
+    sub('arrows: net filtration pressure (orange out, teal in) · cells and drops drawn, not to scale', x + 14 * p, y + 38 * p, w - 28 * p, {});
+    CAPGEOM = { x0, x1, cy, rad };
+  }
+  let CAPGEOM = null;
+  function capTick(dt) {
+    for (const b of rbcs) { b.s += dt * 0.12; if (b.s > 1) b.s -= 1; }
+    if (!CAPGEOM) return; const c = S.K, g = CAPGEOM;
+    for (const d of drops) { d.x += d.vx * dt; d.y += d.vy * dt; d.age += dt; } drops = drops.filter((d) => d.age < d.life);
+    if (drops.length < 140) for (let k = 0; k < 3; k++) {
+      const s = Math.random(), P = nfp(capP(c.Pa, c.Pv, s), c.Pt, c.pic, c.pit); if (Math.random() > Math.min(1, Math.abs(P) / 15)) continue;
+      const side = Math.random() < 0.5 ? -1 : 1, px = g.x0 + s * (g.x1 - g.x0), v = 40 * proj();
+      if (P > 0) drops.push({ x: px, y: g.cy + side * g.rad, vx: 0, vy: side * v, age: 0, life: 1.4 }); else drops.push({ x: px, y: g.cy + side * (g.rad + v * 1.4), vx: 0, vy: -side * v, age: 0, life: 1.4 });
+    }
+  }
+  function drawCapGraph(x, y, w, h) {
+    const c = S.K, p = proj(), lo = Math.min(0, c.Pt, c.pit, nfp(c.Pv, c.Pt, c.pic, c.pit), nfp(c.Pa, c.Pt, c.pic, c.pit)) - 2, hi = Math.max(c.Pa, c.Pv, c.pic) + 4;
+    const A = axes(x, y, w, h, [0, 1], [lo, hi], 'along the capillary (arterial 0 to venous 1)', 'mm Hg', 'Pressures along the capillary'); if (!A) return;
+    const line = (fn, col, dash, lab, at) => { ctx.strokeStyle = col; ctx.lineWidth = 2 * p; ctx.setLineDash(dash || []); ctx.beginPath(); for (let k = 0; k <= 50; k++) { const s = k / 50; k ? ctx.lineTo(A.X(s), A.Y(fn(s))) : ctx.moveTo(A.X(s), A.Y(fn(s))); } ctx.stroke(); ctx.setLineDash([]); label(lab, A.X(at), A.Y(fn(at)) - 10 * p, { size: 10.5, col }); };
+    ctx.strokeStyle = K.ink; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(A.gx, A.Y(0)); ctx.lineTo(A.gx + A.gw, A.Y(0)); ctx.stroke();
+    line((s) => capP(c.Pa, c.Pv, s), K.cell, null, 'blood pressure P_c', 0.12);
+    line(() => c.pic, K.solute, [6 * p, 4 * p], 'plasma protein pull π_c', 0.62);
+    if (!S.blind) line((s) => nfp(capP(c.Pa, c.Pv, s), c.Pt, c.pic, c.pit), K.out, null, 'net filtration', 0.8);
+  }
+
+  /* ---------- layout ---------- */
+  const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, set() {} })))(can, { key: 'graph', axis: () => splitAxis(), def: (a) => (a === 'x' ? 0.6 : 0.6), min: 0.35, max: 0.8, snaps: [0.5, 2 / 3, 0.75],
+    label: 'Divider between the picture and the graph', onChange: () => draw() });
+  function splitAxis() { if (!W || !H || S.scene === 'utube' || S.scene === 'cell') return null; return S.scene === 'cap' ? 'y' : (W > 760 ? 'x' : 'y'); }
+  function pieces() { const a = splitAxis(); if (!a) return [[0, 0, W, H]]; const fr = SPL.f(); return a === 'x' ? [[0, 0, W * fr, H], [W * fr, 0, W * (1 - fr), H]] : [[0, 0, W, H * fr], [0, H * fr, W, H * (1 - fr)]]; }
+  function draw() {
+    if (!K || !W) return;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = K.canvas; ctx.fillRect(0, 0, W, H);
+    const P = pieces(), a = splitAxis(), cardH = !narrow() && a === 'x' ? Math.min(H * 0.68, $('setupCard').offsetHeight + 20) : 0;
+    if (S.scene === 'diff') { drawDiff(...P[0]); const g = P[1]; drawDiffGraph(g[0], g[1] + cardH, g[2], g[3] - cardH); }
+    else if (S.scene === 'utube') drawU(0, 0, W, H);
+    else if (S.scene === 'cell') drawCell(0, 0, W, H);
+    else { drawCap(...P[0]); drawCapGraph(...P[1]); }
+    if (a) { ctx.strokeStyle = K.line; ctx.lineWidth = 1; ctx.beginPath(); if (a === 'x') { ctx.moveTo(P[1][0] + 0.5, 0); ctx.lineTo(P[1][0] + 0.5, H); } else { ctx.moveTo(0, P[1][1] + 0.5); ctx.lineTo(W, P[1][1] + 0.5); } ctx.stroke(); }
+    SPL.place();
+  }
+
+  /* ---------- readouts ---------- */
+  const hid = '<span class="ok">hidden</span>';
+  function readouts() {
+    const dd = (a, b, cls) => `<div${cls ? ` class="${cls}"` : ''}><dt>${a}</dt><dd>${b}</dd></div>`;
+    let h = '';
+    if (S.scene === 'diff') {
+      const D = Dnow(), L = S.D.w;
+      h += dd('Diffusion constant D', `${sig(D, 2)} m²/s`) + dd('Time t', dur(S.t));
+      if (S.D.d === 'drop') {
+        h += dd('Spread now, simulated x_rms', S.t > 0 ? len(simRms()) : '0', 'hl') + dd('√(2Dt)', S.blind ? hid : len(xrms(D, S.t)));
+        h += dd('Time to spread 1 μm', dur(tFor(D, 1e-6))) + dd('Time to spread 1 mm', dur(tFor(D, 1e-3))) + dd('Time to spread 1 cm', dur(tFor(D, 0.01))) + dd('Time to spread 1 m', dur(tFor(D, 1)));
+      } else {
+        h += dd('Layer thickness L', len(L)) + dd('Crossing time L²/(2D)', S.blind ? hid : dur(tFor(D, L)));
+        h += dd('Lag time L²/(6D)', S.blind ? hid : dur(lagTime(D, L))) + dd('Steady flow per C, J/C = D/L', S.blind ? hid : `${sig(D / L, 3)} m/s`);
+        h += dd('Through so far / CL, simulated', f(simQ() / L, 3), 'hl') + dd('Fick and Crank / CL', S.blind ? hid : f(layerQ(S.t, D, L) / L, 3));
+      }
+    } else if (S.scene === 'utube') {
+      const u = uState();
+      h += dd('Concentration difference', `${f(u.cR - u.cL, 2)} mmol/L`) + dd('Particles per formula unit i', String(u.i));
+      h += dd('Osmotic pressure Π = iΔMRT (start)', S.blind ? hid : `${pres(u.Pi)} = ${sig(u.Pi / MMHG, 3)} mm Hg`, 'wide');
+      h += dd('Column it could hold, Π/ρg', S.blind ? hid : len(u.Pi / (RHO * G))) + dd('Height difference now Δh', len(2 * S.U.x), 'hl');
+      h += dd('Where it stops, with dilution', S.blind ? hid : len(2 * u.xeq)) + dd('Piston', `${f(S.U.P, 2)} kPa`);
+      h += dd('Water now flows', Math.abs(uDrive(u.i, u.cR, u.cL, u.T, H0, RHO, u.P, S.U.x)) < 2 ? 'not at all: balanced' : uDrive(u.i, u.cR, u.cL, u.T, H0, RHO, u.P, S.U.x) > 0 ? 'left to right' : 'right to left (reverse osmosis)', 'wide');
+    } else if (S.scene === 'cell') {
+      const cs = cellState(), dP = vantHoff(1, C0 - cs.c, 310.15);
+      h += dd('Outside', `${f(S.C.salt, 2)}% NaCl = ${sig(cs.c, 3)} mOsm/L`, 'wide') + dd('Inside', `${sig(C0, 3)} mOsm/L`);
+      h += dd('Osmotic pressure difference at 37 °C', S.blind ? hid : Math.abs(dP) < 1 ? 'none' : `${pres(Math.abs(dP))} = ${sig(Math.abs(dP) / 101325, 3)} atm, drawing water ${dP > 0 ? 'in' : 'out'}`, 'wide');
+      h += dd('Volume now', `${sig(S.C.V, 3)} μm³`, 'hl') + dd('Volume it heads for', S.blind ? hid : isFinite(cs.Veq) ? `${sig(cs.Veq, 3)} μm³` : 'no limit');
+      h += dd('Largest volume (a sphere of its area)', `${sig(cs.Vs, 3)} μm³`) + dd('Bursts below', S.blind ? hid : `${sig(cs.lys, 3)} mOsm/L = ${f(cs.lys * MNACL / 20000, 2)}% NaCl`);
+      h += dd('Fate', S.blind && !S.played ? hid : cs.bursts ? 'swells and bursts' : cs.Veq > RBC_V0 * 1.03 ? 'swells' : cs.Veq < RBC_V0 * 0.97 ? 'shrinks and crenates' : 'steady', 'wide');
+    } else {
+      const c = S.K, a = nfp(c.Pa, c.Pt, c.pic, c.pit), v = nfp(c.Pv, c.Pt, c.pic, c.pit), cr = crossAt(c.Pa, c.Pv, c.Pt, c.pic, c.pit), m = meanNfp(c.Pa, c.Pv, c.Pt, c.pic, c.pit);
+      h += dd('Net filtration, arterial end', S.blind ? hid : `${f(a, 1)} mm Hg`, 'hl') + dd('Net filtration, venous end', S.blind ? hid : `${f(v, 1)} mm Hg`, 'hl');
+      h += dd('No net flow at', S.blind ? hid : isFinite(cr) && cr > 0 && cr < 1 ? `${f(100 * cr, 0)}% of the way` : 'nowhere: one way all along', 'wide');
+      h += dd('Average over the length', S.blind ? hid : `${f(m, 1)} mm Hg ${m > 0.05 ? '(more leaves than returns)' : m < -0.05 ? '(more returns than leaves)' : '(balanced)'}`, 'wide');
+      h += dd('Plasma protein pull in pascals', `${sig(c.pic * MMHG, 3)} Pa`) + dd('As a concentration, Π/RT at 37 °C', `${sig(c.pic * MMHG / (RGAS * 310.15), 3)} mmol/L`);
+    }
+    $('out').innerHTML = h; window.vdShowCols = SHOWCOLS[S.scene];
+  }
+  function clock() { $('clock').textContent = S.scene === 'diff' ? `t = ${dur(S.t)}` : ''; $('clock').hidden = S.scene !== 'diff'; }
+
+  /* ---------- controls ---------- */
+  const card = VD.setupCard($('setupCard'));
+  const placeCard = () => { $('setupCard').style.top = narrow() ? '' : `${$('strip').offsetHeight + 12}px`; };
+  if (window.ResizeObserver) new ResizeObserver(placeCard).observe($('strip'));
+  function sync() {
+    for (const b of document.querySelectorAll('#diffSeg button')) b.setAttribute('aria-pressed', String(b.dataset.d === S.D.d));
+    $('selMol').value = S.D.mol; $('sWidth').value = Math.log10(S.D.w); $('oWidth').textContent = len(S.D.w);
+    $('lblWidth').textContent = S.D.d === 'drop' ? 'Width of the view' : 'Thickness of the layer L';
+    $('noteDiff').textContent = S.D.d === 'drop' ? 'The molecules start on the center line.' : 'The left side is held at concentration C; the right side uses up whatever arrives.';
+    $('selSolute').value = S.U.sol; $('sCR').value = S.U.cR; $('oCR').textContent = `${f(S.U.cR, 2)} mmol/L`; $('sCL').value = S.U.cL; $('oCL').textContent = `${f(S.U.cL, 2)} mmol/L`;
+    $('sTemp').value = S.U.temp; $('oTemp').textContent = `${S.U.temp} °C`; $('sPist').value = S.U.P; $('oPist').textContent = `${f(S.U.P, 2)} kPa`;
+    $('sSalt').value = S.C.salt; $('oSalt').textContent = `${f(S.C.salt, 2)}%`;
+    for (const b of document.querySelectorAll('#saltChips button')) b.setAttribute('aria-pressed', String(Math.abs(+b.dataset.s - S.C.salt) < 1e-9));
+    for (const [k, o] of [['Pa', 'oPa'], ['Pv', 'oPv'], ['pic', 'oPip'], ['Pt', 'oPif'], ['pit', 'oPiif']]) { const id = { Pa: 'sPa', Pv: 'sPv', pic: 'sPip', Pt: 'sPif', pit: 'sPiif' }[k]; $(id).value = S.K[k]; $(o).textContent = `${f(S.K[k], 1)} mm Hg`; }
+    for (const b of document.querySelectorAll('#presets button')) { b.setAttribute('aria-pressed', String(b.dataset.p === S.preset)); b.hidden = b.dataset.m !== S.scene; }
+    for (const b of document.querySelectorAll('#sceneSeg button')) b.setAttribute('aria-pressed', String(b.dataset.scene === S.scene));
+    $('boxDiff').hidden = S.scene !== 'diff'; $('boxU').hidden = S.scene !== 'utube'; $('boxCell').hidden = S.scene !== 'cell'; $('boxCap').hidden = S.scene !== 'cap';
+    $('cardTitle').textContent = { diff: 'Diffusion', utube: 'The U tube', cell: 'The solution', cap: 'Pressures (mm Hg)' }[S.scene];
+    can.setAttribute('aria-label', { diff: 'Simulated molecules diffusing, with a graph of where they are. Space plays or pauses.', utube: 'A U tube with a membrane at the bottom: pure water on the left, a solution on the right. Space plays or pauses.',
+      cell: 'Red blood cells under a microscope in a salt solution, swelling or shrinking. Space plays or pauses.', cap: 'A capillary with arrows showing fluid pushed out at the arterial end and drawn in at the venous end, and a graph of the pressures. Space plays or pauses.' }[S.scene]);
+    $('about').textContent = ABOUT[S.scene];
+  }
+  function setRun(on) { S.run = on; card.away(on); $('play').textContent = on ? 'Pause' : 'Play'; $('play').classList.toggle('attn', !on); if (!on) { readouts(); clock(); } }
+  function setSpeed(v) { S.speed = v; $('selSpeed').value = String(v); }
+  function restart() { S.t = 0; S.played = false; if (S.scene === 'diff') resetDiff(); S.U.x = 0; S.C.V = RBC_V0; S.C.burst = 0; drops = []; }
+  function hint(s) { $('presetHint').textContent = s || ''; }
+  function applyPreset(k) {
+    const c = PRE[k]; S.preset = k; S.scene = c.scene;
+    if (c.scene === 'diff') Object.assign(S.D, { d: c.d, mol: c.mol, w: c.w });
+    if (c.scene === 'utube') Object.assign(S.U, { sol: c.sol, cR: c.cR, cL: c.cL, temp: c.temp, P: c.P });
+    if (c.scene === 'cell') S.C.salt = c.salt;
+    if (c.scene === 'cap') Object.assign(S.K, { Pa: c.Pa, Pv: c.Pv, pic: c.pic, Pt: c.Pt, pit: c.pit });
+    restart(); hint(c.hint); setRun(false); sync(); redraw();
+  }
+  const lastPreset = {};
+  function setScene(m) { if (m === S.scene) return; lastPreset[S.scene] = S.preset; applyPreset(lastPreset[m] && lastPreset[m] !== 'custom' ? lastPreset[m] : FIRST[m]); }
+  for (const b of document.querySelectorAll('#sceneSeg button')) b.addEventListener('click', () => setScene(b.dataset.scene));
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  const changed = (msg) => { S.preset = 'custom'; restart(); if (msg) hint(msg); setRun(false); sync(); redraw(); };
+  /* the capillary has no state that runs: its sliders change the picture at once, without stopping the flow */
+  const live = () => { S.preset = 'custom'; sync(); redraw(); };
+  for (const b of document.querySelectorAll('#diffSeg button')) b.addEventListener('click', () => { S.D.d = b.dataset.d; S.D.w = S.D.d === 'drop' ? 2e-4 : 5e-4; changed(); });
+  $('selMol').addEventListener('change', (e) => { S.D.mol = e.target.value; const D = DIFF[S.D.mol]; S.D.w = +nice(Math.sqrt(2 * D * (S.D.d === 'drop' ? 20 : 50))).toPrecision(2); S.D.w = Math.min(0.1, Math.max(1e-6, S.D.w)); changed(`${MOLNAME[S.D.mol]}: D = ${sig(D, 2)} m²/s.`); });
+  $('sWidth').addEventListener('input', (e) => { S.D.w = +(10 ** +e.target.value).toPrecision(3); changed(); });
+  $('selSolute').addEventListener('change', (e) => { S.U.sol = e.target.value; changed(); });
+  $('sCR').addEventListener('input', (e) => { S.U.cR = +e.target.value; changed(); });
+  $('sCL').addEventListener('input', (e) => { S.U.cL = +e.target.value; changed(); });
+  $('sTemp').addEventListener('input', (e) => { S.U.temp = +e.target.value; changed(); });
+  $('sPist').addEventListener('input', (e) => { S.U.P = +e.target.value; S.preset = 'custom'; sync(); redraw(); });
+  $('sSalt').addEventListener('input', (e) => { S.C.salt = +e.target.value; changed(); });
+  for (const b of document.querySelectorAll('#saltChips button')) b.addEventListener('click', () => { S.C.salt = +b.dataset.s; changed(); });
+  for (const [id, k] of [['sPa', 'Pa'], ['sPv', 'Pv'], ['sPip', 'pic'], ['sPif', 'Pt'], ['sPiif', 'pit']]) $(id).addEventListener('input', (e) => { S.K[k] = +e.target.value; live(); });
+  $('selSpeed').addEventListener('change', (e) => { S.speed = +e.target.value; redraw(); });
+  $('play').addEventListener('click', () => { if (!S.run && isDone()) restart(); setRun(!S.run); if (S.run) S.played = true; if (S.run && S.still && S.scene !== 'cap') { finish(); setRun(false); } redraw(); });
+  $('restart').addEventListener('click', () => { restart(); setRun(false); redraw(); });
+  can.addEventListener('keydown', (e) => { if (e.key === ' ') { $('play').click(); e.preventDefault(); } });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; redraw(); });
+  $('labStill').addEventListener('change', (e) => { S.still = e.target.checked; redraw(); });
+  if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) { S.still = true; $('labStill').checked = true; }
+  if (window.VD && VD.panel) VD.panel({ reset: '#restart', speed: '#selSpeed', speedLabel: 'Pace', clock: '#clock', step: { label: 'Step', title: 'Forward a little', run: () => { advance(0.25); redraw(); } } });
+  if (window.VD && VD.fitStage) VD.fitStage();
+
+  const ABOUT = {
+    diff: 'Model. Each molecule takes its own random walk (simulated): every short step adds a random push along x drawn from a bell curve of width √(2D Δt), which is exactly diffusion with constant D (OpenStax College Physics 2e Table 12.2, at 20 °C and 1 atm). Their spread then grows as x_rms = √(2Dt), so the time to go a distance x is x²/(2D). In the layer, the left side is kept at concentration C (molecules are added or taken away to hold it) and the right side removes whatever arrives; the amount through is compared with Fick\'s law solved for a layer that starts empty (Crank, The Mathematics of Diffusion, eq. 4.24a), which settles to the steady flow J = DC/L after the lag time L²/(6D). The molecules are drawn spread up and down only to be seen; only their position across counts. The pace on screen follows the molecule and the size of the view.',
+    utube: 'Model. Van \'t Hoff\'s law for dilute, ideal solutions: Π = iMRT, with i the particles each unit gives in water (real salt water gives a few percent less than i = 2), M in mol per liter turned to mol/m³, R = 8.314 J/(mol K) and the temperature in kelvins. Each arm has the same bore and starts 30 cm deep above the membrane; as water crosses, the right side is diluted and the left concentrated, and the flow stops when the osmotic pressure difference equals ρg Δh plus the piston\'s pressure. Solutions are taken as 1000 kg/m³. How fast water crosses depends on the membrane and is not modeled: the pace is set for viewing.',
+    cell: 'Model. A red cell behaves as an osmometer (Boyle and van \'t Hoff): it loses or gains water until the particles inside, taken as isotonic with 0.9% saline (308 mOsm/L, ideal, NaCl 58.44 g/mol), are as concentrated as those outside. A share b = 0.4 of its volume is hemoglobin and other solids that take no part (a model value; measured values are near 0.3 to 0.45). Its area, 135 μm², and volume, 94 μm³, are from Evans and Fung (1972); the membrane barely stretches, so the most it can hold is a sphere of that area, 147 μm³, and beyond that it bursts. Salt is taken to stay outside, and the shapes are drawn from the volume, not computed. The change is slowed for viewing.',
+    cap: 'Model. Starling\'s balance at each point along the capillary: net filtration = (blood pressure − tissue fluid pressure) − (plasma protein pressure − tissue protein pressure), with the blood pressure falling in a straight line from the arterial end to the venous end and the protein pressures the same all along. Only the proteins count toward the osmotic pull, because salts and sugars cross the capillary wall freely. Typical values from OpenStax Anatomy and Physiology 2e, section 20.3, and Guyton and Hall, Textbook of Medical Physiology, chapter 16. The flowing cells and the drops of water are drawn to show the direction, not the amount.',
+  };
+
+  /* ---------- the run ---------- */
+  function isDone() {
+    if (S.scene === 'diff') return S.D.d === 'drop' ? xrms(Dnow(), S.t) > S.D.w * 0.45 : S.t > lagTime(Dnow(), S.D.w) * 6;
+    if (S.scene === 'utube') { const u = uState(); return Math.abs(S.U.x - u.xeq) < 1e-4; }
+    if (S.scene === 'cell') { const cs = cellState(); return cs.bursts ? S.C.burst >= 1 : Math.abs(S.C.V - cs.Veq) < 0.05; }
+    return false;
+  }
+  /* advance by dt seconds of screen time */
+  function advance(dt) {
+    if (S.scene === 'diff') stepDiff(dt * rate());
+    else if (S.scene === 'utube') { const u = uState(); S.U.x = u.xeq + (S.U.x - u.xeq) * Math.exp(-dt * S.speed / 1.6); if (Math.abs(S.U.x - u.xeq) < 5e-5) S.U.x = u.xeq; S.t += dt; }
+    else if (S.scene === 'cell') { const cs = cellState(), target = cs.bursts ? cs.Vs : cs.Veq; S.C.V = target + (S.C.V - target) * Math.exp(-dt * S.speed / 1.2); if (cs.bursts && cs.Vs - S.C.V < 0.4) { S.C.V = cs.Vs; S.C.burst = Math.min(1, S.C.burst + dt * S.speed * 2); } if (!cs.bursts && Math.abs(S.C.V - target) < 0.02) S.C.V = target; S.t += dt; }
+    else { capTick(dt * S.speed); S.t += dt; }
+  }
+  function finish() {
+    if (S.scene === 'diff') { let n = 0; while (!isDone() && n++ < 400) stepDiff(rate() * 0.25); }
+    else if (S.scene === 'utube') S.U.x = uState().xeq;
+    else if (S.scene === 'cell') { const cs = cellState(); S.C.V = cs.bursts ? cs.Vs : cs.Veq; S.C.burst = cs.bursts ? 1 : 0; }
+  }
+  let last = performance.now(), lastOut = 0;
+  function frame(now) {
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    if (S.run) { advance(dt); draw(); if (now - lastOut > 250) { lastOut = now; readouts(); clock(); } if (isDone()) { setRun(false); redraw(); } }
+    requestAnimationFrame(frame);
+  }
+  const redraw = () => { draw(); readouts(); clock(); };
+  function resize() { placeCard(); dpr = window.devicePixelRatio || 1; const r = $('scene').getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr); redraw(); }
+  const retheme = () => { tokens(); redraw(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  VD.projector({ onChange: resize });
+  window.vdVersion = 'osmosis@2026-11-19';
+
+  /* ---------- readings ---------- */
+  window.vdReadingRow = () => {
+    if (S.scene === 'diff') { const D = Dnow(); return S.D.d === 'drop' ? { part: 'spread', molecule: MOLNAME[S.D.mol], D_m2_s: D, t_s: +S.t.toPrecision(4), xrms_sim_um: +(simRms() * 1e6).toPrecision(4), xrms_pred_um: S.blind ? '' : +(xrms(D, S.t) * 1e6).toPrecision(4) }
+      : { part: 'layer', molecule: MOLNAME[S.D.mol], D_m2_s: D, L_mm: +(S.D.w * 1000).toPrecision(4), t_s: +S.t.toPrecision(4), Q_sim_per_CL: +(simQ() / S.D.w).toFixed(4), Q_pred_per_CL: S.blind ? '' : +(layerQ(S.t, D, S.D.w) / S.D.w).toFixed(4), lag_s: S.blind ? '' : +lagTime(D, S.D.w).toPrecision(4) }; }
+    if (S.scene === 'utube') { const u = uState(); return { part: 'U tube', solute: SOL[S.U.sol].name, i: u.i, cR_mM: S.U.cR, cL_mM: S.U.cL, T_C: S.U.temp, piston_kPa: S.U.P, dh_cm: +(2 * S.U.x * 100).toFixed(2), Pi_kPa: S.blind ? '' : +(u.Pi / 1000).toPrecision(4), dh_eq_cm: S.blind ? '' : +(2 * u.xeq * 100).toFixed(2) }; }
+    if (S.scene === 'cell') { const cs = cellState(); return { part: 'red cell', NaCl_pct: S.C.salt, c_out_mOsm: +cs.c.toPrecision(4), V_um3: +S.C.V.toPrecision(4), V_eq_um3: S.blind ? '' : (isFinite(cs.Veq) ? +cs.Veq.toPrecision(4) : 'no limit'), fate: S.blind && !S.played ? '' : cs.bursts ? 'bursts' : cs.Veq > RBC_V0 * 1.03 ? 'swells' : cs.Veq < RBC_V0 * 0.97 ? 'crenates' : 'steady' }; }
+    const c = S.K; return { part: 'capillary', Pa_mmHg: c.Pa, Pv_mmHg: c.Pv, pi_c_mmHg: c.pic, P_t_mmHg: c.Pt, pi_t_mmHg: c.pit, NFP_art: S.blind ? '' : +nfp(c.Pa, c.Pt, c.pic, c.pit).toFixed(1), NFP_ven: S.blind ? '' : +nfp(c.Pv, c.Pt, c.pic, c.pit).toFixed(1) };
+  };
+  const SHOWCOLS = { diff: [['t_s', 't (s)'], ['xrms_sim_um', 'x_rms (μm)'], ['Q_sim_per_CL', 'Q/CL']], utube: [['cR_mM', 'c (mM)'], ['piston_kPa', 'P (kPa)'], ['dh_cm', 'Δh (cm)']], cell: [['NaCl_pct', 'NaCl %'], ['V_um3', 'V (μm³)'], ['fate', 'fate']], cap: [['Pa_mmHg', 'P art'], ['Pv_mmHg', 'P ven'], ['pi_c_mmHg', 'π_c']] };
+  /* no worksheet for this demo yet: Export to worksheet saves the readings as a CSV file */
+  window.addEventListener('load', () => {
+    const sec = document.querySelector('.vd-readings'), ex = sec && sec.querySelector('.vd-export'); if (!ex) return;
+    ex.addEventListener('click', (e) => {
+      e.stopImmediatePropagation();
+      const rows = window.vdRows ? window.vdRows() : [], st = sec.querySelector('.status'), T = (s, v) => (typeof VDI18N === 'object' && VDI18N.t ? VDI18N.t(s, v) : s.replace(/\{(\w+)\}/g, (a, n) => (v && v[n] != null ? v[n] : a)));
+      if (!rows.length) { st.textContent = T('No readings to export.'); return; }
+      const cols = []; rows.forEach((r) => Object.keys(r).forEach((k) => { if (!cols.includes(k)) cols.push(k); }));
+      const cell = (v) => { const s = v == null ? '' : String(v); return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s; };
+      const txt = ['# Diffusion and Osmosis virtual apparatus: recorded readings (simulated data)', `# demo version,${window.vdVersion}`, ['row'].concat(cols).join(','), ...rows.map((r, i) => [i + 1].concat(cols.map((k) => r[k])).map(cell).join(','))].join('\n') + '\n';
+      try { const u = URL.createObjectURL(new Blob([txt], { type: 'text/csv' })), a = document.createElement('a'); a.href = u; a.download = 'osmosis-readings.csv'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 1000); } catch (_) {}
+      st.textContent = T('There is no worksheet for this demo yet, so the readings were saved as a CSV file ({n} rows).', { n: rows.length });
+    }, true);
+  });
+  window.__os = { S, PRE, applyPreset, setScene, setRun, advance, finish, isDone, redraw, restart, uState, cellState, simRms, simQ, rate, get parts() { return parts; } };
+  tokens(); applyPreset('glucose');
+  new ResizeObserver(resize).observe($('scene')); resize();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  VD.tools({ el: can, strip: '#strip', stage: '#scene', time: () => (S.scene === 'diff' ? S.t : null) });
+  if (window.VD && VD.describe) VD.describe(can, () => {
+    if (S.scene === 'diff') return [`${MOLNAME[S.D.mol]}, simulated molecules ${S.D.d === 'drop' ? 'spreading from a line' : 'diffusing through a layer'}.`, { t: `Time ${sig(S.t, 3)} s.`, live: false }];
+    if (S.scene === 'utube') return [`A U tube: the right side stands ${f(200 * S.U.x, 1)} cm above the left.`];
+    if (S.scene === 'cell') return [`Red cells in ${f(S.C.salt, 2)}% saline, volume ${sig(S.C.V, 3)} cubic micrometers.`].concat(S.C.burst >= 1 ? [window.VDI18N ? VDI18N.t('The cell has burst.') : 'The cell has burst.'] : []);
+    return ['A capillary: fluid leaves at the arterial end and returns at the venous end.'];
+  });
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
