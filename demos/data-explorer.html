@@ -1,0 +1,891 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="lib/theme.js"></script>
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
+<script src="lib/vdstats.js"></script>
+<title>Data Explorer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css: a lab notebook of one data set, every graph on one number line */
+:root { --dot: #3b3127; --bar: #c77d1a; --box: #0f766e; --mean: #a1620b; --median: #be123c; --sel: #7c3aed; --fence: #6b7280; --paperline: #e9dcc4; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --dot: #efe6d6; --bar: #e8a440; --box: #5eead4; --mean: #fbbf24; --median: #fb7185; --sel: #c4b5fd; --fence: #9ca3af; --paperline: #3a3226; } }
+:root[data-theme="dark"] { --dot: #efe6d6; --bar: #e8a440; --box: #5eead4; --mean: #fbbf24; --median: #fb7185; --sel: #c4b5fd; --fence: #9ca3af; --paperline: #3a3226; }
+.stage { position: relative; display: flex; flex-direction: column; min-height: min-content; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.stage-ctl .note { flex: 1 1 100%; font-size: 0.8rem; color: var(--muted); }
+.stage-ctl .nrow { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: 0.86rem; }
+.stage-ctl input[type="number"], .shelf-card input[type="number"], .shelf-card input.val { width: 6.4em; font: inherit; font-size: 0.86rem; font-family: var(--font-mono); padding: 3px 6px; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; }
+.shelf-card input.bad, .dbox textarea.bad { border-color: var(--red); }
+.dsrc { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; padding: 8px 12px; border-bottom: 1px solid var(--line); background: var(--surface); font-size: 0.86rem; }
+.dsrc b { font-size: 0.98rem; }
+.dsrc .tag { font-size: 0.74rem; font-weight: 700; padding: 1px 7px; border-radius: 999px; border: 1px solid currentColor; }
+.dsrc .tag.sim { color: var(--sel); } .dsrc .tag.book { color: var(--box); } .dsrc .tag.own { color: var(--mean); }
+.dsrc .cite { flex: 1 1 100%; color: var(--muted); font-size: 0.8rem; }
+.pane { position: relative; flex: 1 1 auto; min-height: 400px; }
+.pane canvas, .tsbox canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; outline: none; touch-action: none; }
+.lower { position: relative; flex: none; height: 230px; display: flex; border-top: 1px solid var(--line); background: var(--canvas); }
+.tsbox { position: relative; flex: 1.5 1 0; min-width: 0; }
+.stembox { flex: 1 1 0; min-width: 0; overflow: auto; border-left: 1px solid var(--line); padding: 8px 10px; font-size: 0.82rem; }
+.stembox h3, .shelf-card h3 { margin: 0 0 4px; font-size: 0.78rem; font-weight: 700; color: var(--muted); }
+.stem { font-family: var(--font-mono); font-size: 0.86rem; line-height: 1.45; margin: 0; }
+.stem .r { display: grid; grid-template-columns: max-content minmax(0, 1fr); column-gap: 0; }
+.stem .s { text-align: right; padding-right: 6px; border-right: 2px solid var(--ink); min-width: 2.2em; }
+.stem .l { padding-left: 6px; overflow-wrap: anywhere; letter-spacing: 0.06em; }
+.stem mark { background: none; color: var(--sel); font-weight: 700; text-decoration: underline; }
+.stem .key { margin-top: 6px; color: var(--muted); font-family: var(--font-ui); font-size: 0.8rem; }
+.shelf { display: flex; flex-wrap: wrap; align-items: stretch; gap: 12px; padding: 10px; border-top: 1px solid var(--line); background: var(--surface); }
+.shelf-card { flex: 1 1 250px; display: grid; grid-template-columns: minmax(0, 1fr); align-content: start; gap: 7px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--canvas); min-width: 0; }
+.shelf-card .row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; font-size: 0.86rem; }
+.shelf-card input[type="range"] { width: 100%; }
+.shelf-card.wide { flex: 2 1 420px; }
+.ftwrap { max-height: 300px; overflow: auto; }
+table.ft { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+table.ft th { position: sticky; top: 0; background: var(--canvas); text-align: right; font-weight: 700; color: var(--muted); padding: 3px 6px; border-bottom: 1px solid var(--line); }
+table.ft td { text-align: right; padding: 2px 6px; font-family: var(--font-mono); border-bottom: 1px solid var(--paperline); white-space: nowrap; }
+table.ft th:first-child, table.ft td:first-child { text-align: left; }
+table.ft tr.on td { color: var(--sel); font-weight: 700; }
+.levels { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px; }
+.levels span { text-align: center; font-size: 0.78rem; font-weight: 700; padding: 4px 2px; border-radius: 6px; border: 1px solid var(--line); color: var(--muted); }
+.levels span.on { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+.dbox textarea { width: 100%; box-sizing: border-box; min-height: 5.5em; resize: vertical; font-family: var(--font-mono); font-size: 0.86rem; padding: 6px 8px; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 8px; }
+.chips .chips-label { flex: 1 1 100%; font-size: 0.78rem; font-weight: 700; color: var(--muted); margin-top: 4px; }
+.rail p.rule { margin: 6px 0 0; font-size: 0.84rem; color: var(--muted); }
+.warn { color: var(--red); font-size: 0.82rem; }
+@media (min-width: 821px) { .bench > .stage { align-self: start; min-height: max(720px, 100%); } }
+@media (max-width: 820px) { table.ft { font-size: 0.76rem; } table.ft th, table.ft td { padding: 2px 3px; } .pane { min-height: 0; height: 480px; flex: none; } .lower { height: auto; flex-direction: column; } .tsbox { flex: none; height: 210px; }
+  .stembox { flex: none; border-left: 0; border-top: 1px solid var(--line); max-height: 260px; } .shelf-card, .shelf-card.wide { flex: 1 1 100%; } }
+</style>
+<link rel="stylesheet" id="vd-paper" href="lib/paper.css">
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Data Explorer</h1>
+      <p>One data set, every way the book draws it, all at once: frequency table, stemplot, dot plot, histogram, box plot and time series. Drag a point and watch the mean, median, quartiles, outlier fences, standard deviation and skew respond.</p>
+    </div>
+    <div class="bar-right">
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/data-explorer.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/data-explorer.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM10 2h3v1h-3zM14 2h2v1h-2zM19 2h3v1h-3zM25 2h1v1h-1zM27 2h1v1h-1zM29 2h2v1h-2zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM11 3h1v1h-1zM13 3h2v1h-2zM16 3h2v1h-2zM20 3h1v1h-1zM22 3h1v1h-1zM24 3h1v1h-1zM26 3h1v1h-1zM28 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM11 4h2v1h-2zM18 4h9v1h-9zM28 4h3v1h-3zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h2v1h-2zM14 5h3v1h-3zM18 5h1v1h-1zM20 5h2v1h-2zM25 5h4v1h-4zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h1v1h-1zM12 6h2v1h-2zM16 6h2v1h-2zM23 6h1v1h-1zM25 6h1v1h-1zM27 6h1v1h-1zM29 6h2v1h-2zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h3v1h-3zM16 7h3v1h-3zM20 7h3v1h-3zM24 7h1v1h-1zM27 7h2v1h-2zM30 7h1v1h-1zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h1v1h-1zM12 9h12v1h-12zM25 9h1v1h-1zM30 9h1v1h-1zM2 10h1v1h-1zM6 10h1v1h-1zM8 10h5v1h-5zM15 10h3v1h-3zM20 10h2v1h-2zM23 10h3v1h-3zM30 10h6v1h-6zM38 10h1v1h-1zM2 11h1v1h-1zM4 11h3v1h-3zM9 11h2v1h-2zM12 11h5v1h-5zM18 11h1v1h-1zM21 11h3v1h-3zM25 11h1v1h-1zM27 11h4v1h-4zM34 11h4v1h-4zM3 12h1v1h-1zM7 12h3v1h-3zM12 12h1v1h-1zM15 12h1v1h-1zM18 12h1v1h-1zM22 12h4v1h-4zM28 12h2v1h-2zM31 12h1v1h-1zM33 12h2v1h-2zM2 13h3v1h-3zM6 13h2v1h-2zM9 13h1v1h-1zM12 13h1v1h-1zM14 13h1v1h-1zM16 13h1v1h-1zM19 13h1v1h-1zM23 13h3v1h-3zM29 13h1v1h-1zM31 13h1v1h-1zM33 13h2v1h-2zM36 13h2v1h-2zM2 14h1v1h-1zM6 14h1v1h-1zM8 14h7v1h-7zM17 14h1v1h-1zM19 14h1v1h-1zM21 14h1v1h-1zM23 14h4v1h-4zM30 14h3v1h-3zM36 14h3v1h-3zM3 15h1v1h-1zM7 15h1v1h-1zM9 15h2v1h-2zM12 15h2v1h-2zM16 15h4v1h-4zM21 15h1v1h-1zM23 15h3v1h-3zM28 15h3v1h-3zM34 15h2v1h-2zM4 16h1v1h-1zM6 16h1v1h-1zM8 16h1v1h-1zM11 16h1v1h-1zM14 16h2v1h-2zM17 16h1v1h-1zM20 16h1v1h-1zM22 16h2v1h-2zM25 16h2v1h-2zM28 16h2v1h-2zM33 16h5v1h-5zM4 17h4v1h-4zM13 17h1v1h-1zM15 17h1v1h-1zM17 17h1v1h-1zM21 17h4v1h-4zM26 17h1v1h-1zM30 17h2v1h-2zM33 17h2v1h-2zM36 17h1v1h-1zM38 17h1v1h-1zM2 18h3v1h-3zM7 18h2v1h-2zM12 18h1v1h-1zM14 18h3v1h-3zM18 18h1v1h-1zM22 18h1v1h-1zM26 18h1v1h-1zM31 18h3v1h-3zM35 18h2v1h-2zM38 18h1v1h-1zM2 19h1v1h-1zM4 19h1v1h-1zM6 19h1v1h-1zM11 19h2v1h-2zM15 19h2v1h-2zM20 19h2v1h-2zM25 19h1v1h-1zM27 19h4v1h-4zM33 19h3v1h-3zM37 19h1v1h-1zM5 20h5v1h-5zM15 20h1v1h-1zM17 20h1v1h-1zM19 20h3v1h-3zM23 20h1v1h-1zM25 20h1v1h-1zM28 20h2v1h-2zM31 20h6v1h-6zM3 21h2v1h-2zM12 21h1v1h-1zM16 21h4v1h-4zM21 21h3v1h-3zM26 21h1v1h-1zM28 21h2v1h-2zM31 21h1v1h-1zM36 21h2v1h-2zM2 22h1v1h-1zM5 22h1v1h-1zM7 22h2v1h-2zM10 22h2v1h-2zM13 22h4v1h-4zM19 22h1v1h-1zM22 22h5v1h-5zM29 22h1v1h-1zM31 22h3v1h-3zM36 22h1v1h-1zM5 23h1v1h-1zM7 23h1v1h-1zM9 23h1v1h-1zM11 23h1v1h-1zM16 23h3v1h-3zM22 23h2v1h-2zM25 23h1v1h-1zM29 23h3v1h-3zM33 23h2v1h-2zM37 23h1v1h-1zM2 24h1v1h-1zM4 24h5v1h-5zM10 24h4v1h-4zM16 24h4v1h-4zM22 24h1v1h-1zM25 24h1v1h-1zM27 24h3v1h-3zM31 24h1v1h-1zM33 24h4v1h-4zM2 25h2v1h-2zM6 25h2v1h-2zM11 25h2v1h-2zM17 25h1v1h-1zM19 25h4v1h-4zM24 25h1v1h-1zM26 25h1v1h-1zM28 25h3v1h-3zM33 25h2v1h-2zM36 25h1v1h-1zM38 25h1v1h-1zM2 26h2v1h-2zM6 26h1v1h-1zM8 26h1v1h-1zM11 26h2v1h-2zM14 26h1v1h-1zM20 26h1v1h-1zM24 26h3v1h-3zM29 26h1v1h-1zM31 26h2v1h-2zM35 26h3v1h-3zM2 27h1v1h-1zM4 27h1v1h-1zM7 27h1v1h-1zM9 27h3v1h-3zM13 27h3v1h-3zM18 27h1v1h-1zM21 27h2v1h-2zM25 27h3v1h-3zM29 27h1v1h-1zM31 27h1v1h-1zM34 27h2v1h-2zM4 28h1v1h-1zM8 28h1v1h-1zM16 28h1v1h-1zM18 28h3v1h-3zM22 28h1v1h-1zM24 28h2v1h-2zM27 28h3v1h-3zM31 28h4v1h-4zM36 28h1v1h-1zM4 29h1v1h-1zM9 29h4v1h-4zM19 29h2v1h-2zM23 29h2v1h-2zM29 29h2v1h-2zM33 29h2v1h-2zM36 29h1v1h-1zM2 30h3v1h-3zM8 30h1v1h-1zM11 30h2v1h-2zM14 30h2v1h-2zM17 30h1v1h-1zM19 30h1v1h-1zM21 30h3v1h-3zM26 30h1v1h-1zM30 30h5v1h-5zM36 30h3v1h-3zM10 31h3v1h-3zM14 31h1v1h-1zM16 31h1v1h-1zM18 31h3v1h-3zM25 31h4v1h-4zM30 31h1v1h-1zM34 31h1v1h-1zM2 32h7v1h-7zM10 32h1v1h-1zM12 32h2v1h-2zM16 32h3v1h-3zM20 32h1v1h-1zM22 32h4v1h-4zM27 32h1v1h-1zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM11 33h1v1h-1zM17 33h1v1h-1zM23 33h1v1h-1zM26 33h1v1h-1zM30 33h1v1h-1zM34 33h3v1h-3zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h3v1h-3zM16 34h3v1h-3zM22 34h1v1h-1zM25 34h1v1h-1zM30 34h8v1h-8zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM11 35h1v1h-1zM14 35h1v1h-1zM16 35h1v1h-1zM20 35h2v1h-2zM23 35h3v1h-3zM27 35h7v1h-7zM35 35h2v1h-2zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM11 36h1v1h-1zM14 36h1v1h-1zM17 36h1v1h-1zM19 36h1v1h-1zM21 36h1v1h-1zM25 36h2v1h-2zM28 36h3v1h-3zM32 36h1v1h-1zM36 36h1v1h-1zM2 37h1v1h-1zM8 37h1v1h-1zM11 37h1v1h-1zM14 37h2v1h-2zM17 37h10v1h-10zM28 37h2v1h-2zM34 37h1v1h-1zM36 37h2v1h-2zM2 38h7v1h-7zM10 38h1v1h-1zM12 38h1v1h-1zM16 38h1v1h-1zM19 38h1v1h-1zM22 38h3v1h-3zM26 38h1v1h-1zM29 38h1v1h-1zM32 38h2v1h-2zM36 38h3v1h-3z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl" id="strip">
+        <button type="button" class="spin attn" id="play" data-vd-key="play">Play</button>
+        <button type="button" class="btn" id="reset" title="Put the data set back as it opened: every dragged or typed value comes back">Reset</button>
+        <div class="nrow"><label for="binW">Bin width</label><input type="number" id="binW" step="any" min="0" value="2"></div>
+        <div class="nrow"><label for="binS">Start</label><input type="number" id="binS" step="any" value="59.95"></div>
+        <label class="check"><input type="checkbox" id="modBox"><span>Modified box plot</span></label>
+        <span class="note" id="note"></span>
+      </div>
+      <div class="dsrc" id="dsrc" aria-live="polite"></div>
+      <div class="pane" id="pane">
+        <canvas id="can" tabindex="0" role="img" aria-label="Histogram, dot plot and box plot of the data on one number line. Drag a dot to change its value; drag the start and width tabs under the histogram to change its bins. Left and right arrows move the selected point; up and down arrows select the next point."></canvas>
+      </div>
+      <div class="lower" id="lower">
+        <div class="tsbox" id="tsbox"><canvas id="ts" tabindex="0" role="img" aria-label="Time series: each value against its place in the order the data were taken. Drag a point up or down to change it."></canvas></div>
+        <div class="stembox" id="stembox"><h3>Stemplot</h3><div class="stem" id="stem" translate="no"></div></div>
+      </div>
+      <div class="shelf" id="shelf">
+        <div class="shelf-card wide" role="group" aria-label="Frequency table">
+          <h3>Frequency table</h3>
+          <div class="seg" role="group" aria-label="Rows of the frequency table" id="ftSeg">
+            <button type="button" data-ft="value" aria-pressed="true">Each value</button>
+            <button type="button" data-ft="class" aria-pressed="false">The histogram's classes</button>
+          </div>
+          <div class="ftwrap"><table class="ft" id="ft"></table></div>
+        </div>
+        <div class="shelf-card" role="group" aria-label="Selected point">
+          <h3>Selected point</h3>
+          <div class="row"><label for="selI">Reading #</label><input type="number" id="selI" min="1" step="1" value="1"><label for="selV">Value</label><input type="text" class="val" id="selV" inputmode="decimal" translate="no" spellcheck="false" autocomplete="off"></div>
+          <div class="row"><button type="button" class="btn" id="selMin">Smallest</button><button type="button" class="btn" id="selMax">Largest</button><button type="button" class="btn" id="selDel">Remove it</button></div>
+          <p class="hint" id="selNote"></p>
+        </div>
+        <div class="shelf-card" role="group" aria-label="Percentiles">
+          <h3>Percentiles</h3>
+          <div class="slider-head"><label for="kIn">k-th percentile, k =</label><output id="kOut" for="kIn"></output></div>
+          <input type="range" id="kIn" min="1" max="99" step="1" value="90">
+          <p class="hint" id="kNote"></p>
+        </div>
+        <div class="shelf-card" role="group" aria-label="Level of measurement">
+          <h3>Level of measurement</h3>
+          <div class="levels" id="levels"><span data-l="nominal">Nominal</span><span data-l="ordinal">Ordinal</span><span data-l="interval">Interval</span><span data-l="ratio">Ratio</span></div>
+          <label class="row" id="levelPick" hidden><span>Your data are</span><select id="levelSel"><option value="ratio">ratio</option><option value="interval">interval</option><option value="ordinal">ordinal</option><option value="nominal">nominal (number codes)</option></select></label>
+          <p class="hint" id="levelNote"></p>
+        </div>
+        <div class="shelf-card wide dbox" role="group" aria-label="The data">
+          <h3><label for="dataIn">The data, in the order taken (edit or paste your own)</label></h3>
+          <textarea id="dataIn" translate="no" spellcheck="false" aria-describedby="dataStatus"></textarea>
+          <p class="hint" id="dataStatus" role="status" aria-live="polite"></p>
+        </div>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/describing-data.html" target="describing-data-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+      </section>
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <span class="chips-label">Simulated lab readings</span>
+          <button type="button" data-p="pendulum" aria-pressed="true">Pendulum: 25 hand timings</button>
+          <button type="button" data-p="laps" aria-pressed="false">Lap times of a tiring runner</button>
+          <button type="button" data-p="decay" aria-pressed="false">Decay counts in 10 s</button>
+          <button type="button" data-p="temps" aria-pressed="false">Lab temperature (°C)</button>
+          <span class="chips-label">From the book</span>
+          <button type="button" data-p="work" aria-pressed="false">Hours worked per day (1.3)</button>
+          <button type="button" data-p="dean" aria-pressed="false">Exam scores (2.1)</button>
+          <button type="button" data-p="market" aria-pressed="false">Distances to supermarkets (2.1)</button>
+          <button type="button" data-p="soccer" aria-pressed="false">Soccer player heights (2.2)</button>
+          <button type="button" data-p="cpi" aria-pressed="false">Consumer Price Index by month (2.2)</button>
+          <button type="button" data-p="homes" aria-pressed="false">Home prices (2.3)</button>
+          <button type="button" data-p="er" aria-pressed="false">Emergency room ages (2.5)</button>
+          <button type="button" data-p="baseball" aria-pressed="false">Baseball team ages (2.7)</button>
+        </div>
+        <div class="btnrow"><button type="button" class="btn" id="newDraw">New draw</button><span class="hint" id="drawNote"></span></div>
+        <details class="more" open><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+      </section>
+      <!-- vd-readings --><section class="vd-readings" data-ws="describing-data" data-title="Data Explorer" data-demo="data-explorer">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings ('+(typeof window.vdDataNote==='function'&&window.vdDataNote()?'catalog data':'simulated data')+')','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:(typeof window.vdDataNote==='function'&&window.vdDataNote())||'Simulated data from '+(/^The /.test(title)?'':'the ')+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the statistics, the box plot and the mean and median marks, to predict them first</span></label>
+        <details class="more" open><summary>The book's rules used here</summary>
+          <p class="rule"><b>Quartiles</b> (OpenStax <i>Introductory Statistics 2e</i>, 2.3 and 2.4): the median splits the ordered data into halves; Q1 is the median of the lower half and Q3 the median of the upper half. When n is odd the median itself is left out of both halves. This is the rule a TI-83 or TI-84 uses (1-Var Stats); spreadsheets and some software use other rules and can give slightly different quartiles.</p>
+          <p class="rule"><b>k-th percentile</b> (2.3): its position in the ordered list is i = k(n + 1)/100; when i is not a whole number, go that fraction of the way from the value at the whole part of i to the next value. Below position 1 it is the smallest value, past position n the largest. The 25th percentile found this way can differ a little from Q1.</p>
+          <p class="rule"><b>Percentile of a value</b> (2.3): (x + 0.5y)/n × 100, where x values are below it and y values equal it.</p>
+          <p class="rule"><b>Outliers</b> (2.3, 2.4): values below Q1 − 1.5 IQR or above Q3 + 1.5 IQR, with IQR = Q3 − Q1. The book's box plot runs its whiskers to the smallest and largest values; tick Modified box plot to stop them at the last values inside the fences and draw outliers as separate points.</p>
+          <p class="rule"><b>Standard deviation</b> (2.7): the sample s = √(Σ(x − x̄)²/(n − 1)). <b>Skew</b> (2.6): read from where the mean sits against the median and the long tail; the number shown is the sample skewness coefficient (n/((n − 1)(n − 2)))·Σ((x − x̄)/s)³, what spreadsheets call SKEW. Positive means a long tail to the right.</p>
+          <p class="rule"><b>Histogram</b> (2.2): bars start at Start and are Bin width wide; a value that falls exactly on a boundary goes in the bar to its right. The book picks a start one more decimal place than the data (60 − 0.05 = 59.95), so no value falls on a boundary.</p>
+          <p class="rule"><b>Stemplot</b> (2.1): the leaf is the last digit at the leaf unit, the stem everything before it; digits past the leaf unit are cut off, not rounded. Empty stems are kept, as the book does, so gaps show.</p>
+        </details>
+        <details class="more"><summary>Where the data come from</summary>
+          <p class="hint">Data sets marked "From the book" are copied from OpenStax <i>Introductory Statistics 2e</i> (Holmes, Illowsky and Dean, 2023; CC BY 4.0), in the section named on each; access for free at openstax.org/details/books/introductory-statistics-2e. The lab readings are simulated here, from seeded random numbers, and say so: draw 1 is what every student sees on opening, and New draw makes another set.</p>
+          <p class="hint">Pendulum: one period timed by hand 25 times; the true period is 2.000 s and each timing is off by a normal reaction error with σ = 0.06 s, shown to 0.01 s. Laps: 20 laps of a 400 m track, 88.0 s plus 0.35 s more each lap as the runner tires, with normal scatter σ = 1.0 s, to 0.1 s. Decay counts: counts in 40 intervals of 10 s from a weak source, drawn from a Poisson distribution with mean 3.2. Lab temperature: 36 readings 10 min apart in a room warming from 20.0 °C by 1.5 °C over the six hours, with thermometer scatter σ = 0.15 °C, to 0.1 °C.</p>
+        </details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  /* Describing one data set by the rules of OpenStax Introductory Statistics 2e, chapters 1 and 2, on demos/lib/vdstats.js
+     (VDSTATS: mean, median, sd, fiveNum, quantile, percentileRank, iqrFences, skew, histogram). Runs in Node with vdstats.js
+     loaded first (curriculum/validation/test_data-explorer.cjs). */
+  const STS = typeof VDSTATS !== 'undefined' ? VDSTATS : globalThis.VDSTATS;
+  /* the data sets copied from the book (CC BY 4.0); sec is the section they are printed in */
+  const BOOK = {
+    work: { values: [5, 6, 3, 3, 2, 4, 7, 5, 2, 3, 5, 6, 5, 4, 4, 3, 5, 2, 5, 3], sec: '1.3', d: 0, start: 1.5, width: 1, level: 'ratio', ordered: false },
+    dean: { values: [33, 42, 49, 49, 53, 55, 55, 61, 63, 67, 68, 68, 69, 69, 72, 73, 74, 78, 80, 83, 88, 88, 88, 90, 92, 94, 94, 94, 94, 96, 100], sec: '2.1', d: 0, start: 32.5, width: 10, level: 'ratio', ordered: false },
+    market: { values: [1.1, 1.5, 2.3, 2.5, 2.7, 3.2, 3.3, 3.3, 3.5, 3.8, 4.0, 4.2, 4.5, 4.5, 4.7, 4.8, 5.5, 5.6, 6.5, 6.7, 12.3], sec: '2.1', d: 1, start: 1.05, width: 1, level: 'ratio', ordered: false },
+    soccer: { values: [60, 60.5, 61, 61, 61.5, 63.5, 63.5, 63.5, 64, 64, 64, 64, 64, 64, 64, 64.5, 64.5, 64.5, 64.5, 64.5, 64.5, 64.5, 64.5, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66,
+      66.5, 66.5, 66.5, 66.5, 66.5, 66.5, 66.5, 66.5, 66.5, 66.5, 66.5, 67, 67, 67, 67, 67, 67, 67, 67, 67, 67, 67, 67, 67.5, 67.5, 67.5, 67.5, 67.5, 67.5, 67.5, 68, 68, 69, 69, 69, 69,
+      69, 69, 69, 69, 69, 69, 69.5, 69.5, 69.5, 69.5, 69.5, 70, 70, 70, 70, 70, 70, 70.5, 70.5, 70.5, 71, 71, 71, 72, 72, 72, 72.5, 72.5, 73, 73.5, 74], sec: '2.2', d: 1, start: 59.95, width: 2, level: 'ratio', ordered: false },
+    cpi: { values: [181.7, 183.1, 184.2, 183.8, 183.5, 183.7, 183.9, 184.6, 185.2, 185.0, 184.5, 184.3, 185.2, 186.2, 187.4, 188.0, 189.1, 189.7, 189.4, 189.5, 189.9, 190.9, 191.0, 190.3,
+      190.7, 191.8, 193.3, 194.6, 194.4, 194.5, 195.4, 196.4, 198.8, 199.2, 197.6, 196.8, 198.3, 198.7, 199.8, 201.5, 202.5, 202.9, 203.5, 203.9, 202.9, 201.8, 201.5, 201.8,
+      202.416, 203.499, 205.352, 206.686, 207.949, 208.352, 208.299, 207.917, 208.490, 208.936, 210.177, 210.036, 211.080, 211.693, 213.528, 214.823, 216.632, 218.815, 219.964, 219.086,
+      218.783, 216.573, 212.425, 210.228, 211.143, 212.193, 212.709, 213.240, 213.856, 215.693, 215.351, 215.834, 215.969, 216.177, 216.330, 215.949, 216.687, 216.741, 217.631, 218.009,
+      218.178, 217.965, 218.011, 218.312, 218.439, 218.711, 218.803, 219.179, 220.223, 221.309, 223.467, 224.906, 225.964, 225.722, 225.922, 226.545, 226.889, 226.421, 226.230, 225.672,
+      226.665, 227.663, 229.392, 230.085, 229.815, 229.478, 229.104, 230.379, 231.407, 231.317, 230.221, 229.601], sec: '2.2', d: 3, start: 179.95, width: 5, level: 'ratio', ordered: true },
+    homes: { values: [389950, 230500, 158000, 479000, 639000, 114950, 5500000, 387000, 659000, 529000, 575000, 488800, 1095000], sec: '2.3', d: 0, start: 0, width: 500000, level: 'ratio', ordered: false },
+    er: { values: [3, 4, 8, 8, 10, 11, 12, 13, 14, 15, 15, 16, 16, 17, 17, 18, 21, 22, 22, 24, 24, 25, 26, 26, 27, 27, 29, 29, 31, 32, 33, 33, 34, 34, 35, 37, 40, 44, 44, 47], sec: '2.5', d: 0, start: 0.5, width: 5, level: 'ratio', ordered: false },
+    baseball: { values: [21, 21, 22, 23, 24, 24, 25, 25, 28, 29, 29, 31, 32, 33, 33, 34, 35, 36, 36, 36, 36, 38, 38, 38, 40], sec: '2.7', d: 0, start: 20.5, width: 4, level: 'ratio', ordered: false },
+  };
+  /* simulated lab readings from a seeded generator; each kind has its own stream, so a draw number always gives the same set */
+  const SIM = {
+    pendulum: { n: 25, d: 2, salt: 101, level: 'ratio', ordered: true, start: 1.855, width: 0.05, make: (r, i) => 2.000 + r.normal(0, 0.06) },
+    laps: { n: 20, d: 1, salt: 202, level: 'ratio', ordered: true, start: 85.95, width: 1, make: (r, i) => 88.0 + 0.35 * i + r.normal(0, 1.0) },
+    decay: { n: 40, d: 0, salt: 303, level: 'ratio', ordered: true, start: -0.5, width: 1, make: (r) => r.poisson(3.2) },
+    temps: { n: 36, d: 1, salt: 404, level: 'interval', ordered: true, start: 19.65, width: 0.2, make: (r, i) => 20.0 + 1.5 * i / 35 + r.normal(0, 0.15) },
+  };
+  const roundTo = (v, d) => { const k = Math.pow(10, d); return Math.round(v * k) / k; };
+  function simulate(kind, draw) {
+    const c = SIM[kind], r = STS.rng(c.salt * 1000 + draw), out = [];
+    for (let i = 0; i < c.n; i++) out.push(roundTo(c.make(r, i), c.d));
+    return out;
+  }
+  /* the number of decimal places a value needs (up to 6) */
+  function decimalsOf(v) { for (let d = 0; d <= 6; d++) if (Math.abs(roundTo(v, d) - v) <= 1e-9 * Math.max(1, Math.abs(v))) return d; return 6; }
+  const dataDecimals = (a) => a.reduce((m, v) => Math.max(m, decimalsOf(v)), 0);
+  /* values typed in: separated by semicolons (as the book prints them), commas, spaces, tabs or new lines */
+  function parseData(text) {
+    const toks = String(text).replace(/−/g, '-').split(/[;,\s]+/).filter(Boolean), values = [], bad = [];
+    for (const t of toks) { const v = Number(t); if (t !== '' && isFinite(v)) values.push(v); else bad.push(t); }
+    return { values, bad };
+  }
+  /* modes: the values that occur most often, when that is more than once */
+  function modes(a) {
+    const m = new Map(); for (const v of a) m.set(v, (m.get(v) || 0) + 1);
+    let top = 0; for (const c of m.values()) top = Math.max(top, c);
+    if (top < 2) return { values: [], count: top };
+    return { values: [...m.keys()].filter((v) => m.get(v) === top).sort((x, y) => x - y), count: top };
+  }
+  /* everything the readouts show, from the book's rules */
+  function describe(a) {
+    const n = a.length; if (!n) return { n: 0 };
+    const f = STS.fiveNum(a), fe = STS.iqrFences(a), mean = STS.mean(a);
+    const sd = n > 1 ? STS.sd(a) : NaN;
+    const outliers = a.filter((v) => v < fe.lo || v > fe.hi).sort((x, y) => x - y);
+    const inside = a.filter((v) => v >= fe.lo && v <= fe.hi);
+    return { n, mean, median: f.med, sd, variance: sd * sd, min: f.min, q1: f.q1, q3: f.q3, max: f.max, range: f.max - f.min, iqr: fe.iqr, lo: fe.lo, hi: fe.hi,
+      outliers, whiskLo: inside.length ? Math.min(...inside) : f.min, whiskHi: inside.length ? Math.max(...inside) : f.max, modes: modes(a), skew: n > 2 && sd > 0 ? STS.skew(a) : NaN, sum: STS.sum(a) };
+  }
+  /* frequency table by value (1.3): value, frequency, relative frequency f/n and cumulative relative frequency */
+  function freqByValue(a) {
+    const m = new Map(); for (const v of a) m.set(v, (m.get(v) || 0) + 1);
+    const keys = [...m.keys()].sort((x, y) => x - y), n = a.length; let cum = 0;
+    return keys.map((v) => { const f = m.get(v); cum += f; return { lo: v, hi: v, f, rf: f / n, crf: cum / n }; });
+  }
+  /* the histogram's classes [start + iw, start + (i + 1)w), as many as reach the largest value; a value on a boundary goes right */
+  function bins(a, start, width) {
+    if (!a.length || !(width > 0)) return { counts: [], edges: [] };
+    const max = Math.max(...a), nb = Math.max(1, Math.floor((max - start) / width + 1e-9) + 1);
+    if (nb > 2000) return { counts: [], edges: [], tooMany: true };
+    const lo = Math.min(start, Math.min(...a)), h = STS.histogram(a.map((v) => v + 1e-9 * Math.max(1, Math.abs(v))), start, width, nb);
+    h.below = a.filter((v) => v < start - 1e-9 * Math.max(1, Math.abs(v))).length; h.lo = lo;
+    return h;
+  }
+  function freqByClass(a, start, width) {
+    const h = bins(a, start, width), n = a.length; let cum = 0;
+    return h.counts.map((f, i) => { cum += f; return { lo: h.edges[i], hi: h.edges[i + 1], f, rf: f / n, crf: cum / n }; });
+  }
+  /* a starting point and width the way the book picks them (2.2): start half a unit of the last decimal place below the smallest
+     value; about √n bars (5 to 15), the width rounded up to 1, 2, 2.5 or 5 times a power of ten, never below the data's unit */
+  function autoBins(a) {
+    const d = dataDecimals(a), u = Math.pow(10, -d), min = Math.min(...a), max = Math.max(...a);
+    const start = roundTo(min - u / 2, d + 1), bars = Math.min(15, Math.max(5, Math.round(Math.sqrt(a.length))));
+    const raw = Math.max(u, (max + u / 2 - start) / bars), p = Math.pow(10, Math.floor(Math.log10(raw)));
+    let w = 10 * p; for (const m of [1, 2, 2.5, 5, 10]) if (m * p >= raw - 1e-12 * raw) { w = m * p; break; }
+    return { start, width: Math.max(u, w) };
+  }
+  /* the stemplot (2.1): leaf unit 10^e, the smallest that keeps the stems to 20 or fewer; leaf = the digit at the leaf unit,
+     cut off rather than rounded; empty stems kept */
+  function stemplot(a) {
+    if (!a.length) return { unit: 1, rows: [] };
+    const d = dataDecimals(a), min = Math.min(...a), max = Math.max(...a);
+    let e = -d; const span = (e) => { const u = Math.pow(10, e + 1); return Math.floor(max / u + 1e-9) - Math.floor(min / u + 1e-9) + 1; };
+    while (span(e) > 20 && e < 300) e++;
+    const unit = Math.pow(10, e);
+    const parts = a.map((v, i) => {
+      const t = Math.trunc(Math.round(v / unit * 1e6) / 1e6), stem = Math.trunc(t / 10), leaf = Math.abs(t % 10);
+      return { i, v, leaf, key: v < 0 ? -Math.abs(stem) - 0.5 : stem };
+    });
+    const k0 = Math.min(...parts.map((q) => q.key)), k1 = Math.max(...parts.map((q) => q.key)), rows = [];
+    for (let key = k0; key <= k1 + 1e-9; key += (key < 0 && key + 1 > 0 ? 0.5 : 1)) {
+      const leaves = parts.filter((q) => q.key === key).sort((x, y) => (key < 0 ? y.leaf - x.leaf : x.leaf - y.leaf) || x.i - y.i);
+      rows.push({ stem: key < 0 ? '−' + String(Math.abs(key + 0.5)) : String(key), leaves: leaves.map((q) => ({ leaf: q.leaf, i: q.i })) });
+    }
+    return { unit, rows };
+  }
+  const zScore = (x, mean, sd) => (x - mean) / sd;
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  const VDI18N = window.VDI18N || { t: (s, o) => s.replace(/\{(\w+)\}/g, (m, k) => (o && k in o ? o[k] : m)) };
+  const tt = (s, o) => VDI18N.t(s, o);
+  const SECNAME = { '1.3': 'Frequency, Frequency Tables, and Levels of Measurement', '2.1': 'Stem-and-Leaf Graphs (Stemplots), Line Graphs, and Bar Graphs',
+    '2.2': 'Histograms, Frequency Polygons, and Time Series Graphs', '2.3': 'Measures of the Location of the Data', '2.5': 'Measures of the Center of the Data',
+    '2.7': 'Measures of the Spread of the Data' };
+  /* what each setup is: its name and unit, what to notice, and why its level of measurement is what it is */
+  const SETS = {
+    pendulum: { name: 'Pendulum period, 25 hand timings', unit: 's', what: 'period T (s)',
+      hint: 'Twenty five people each time one swing of the same pendulum with a stopwatch. The true period is 2.000 s; every timing is off a little by reaction time. Hand timings scatter evenly both ways, so the dot plot is roughly symmetric and the mean and median nearly agree. Click the rightmost dot and drag it far to the right, a timing where someone counted two swings: watch the mean and s chase it while the median and IQR barely move.',
+      why: 'Ratio: a time has a true zero, so 4 s is twice 2 s, and differences make sense too.' },
+    laps: { name: 'Lap times of a tiring runner, 20 laps', unit: 's', what: 'lap time (s)',
+      hint: 'Twenty laps of a 400 m track in the order run. The histogram hides something the time series shows at once: each lap is a bit slower than the last as the runner tires. A time series graph (2.2) keeps the order the data were taken in; the other graphs throw it away.',
+      why: 'Ratio: time has a true zero.' },
+    decay: { name: 'Counts in 10 s from a weak radioactive source', unit: 'counts', what: 'counts in 10 s',
+      hint: 'Forty counts of a Geiger counter, 10 s each, from a weak source averaging 3.2 counts. Counts are whole numbers and cannot go below zero, so the distribution has a long tail to the right: the mean sits to the right of the median and the skew is positive. Switch the frequency table to Each value: this is discrete data, like the book\'s work hours.',
+      why: 'Ratio: zero counts means none at all, and 6 counts is twice 3.' },
+    temps: { name: 'Lab temperature every 10 minutes, 36 readings', unit: '°C', what: 'temperature (°C)',
+      hint: 'A thermometer read every 10 min for six hours while the room warms up. The time series shows the slow rise under the scatter. Temperature in degrees Celsius is the book\'s example of an interval scale (1.3): differences mean something, but 0 °C is not "no temperature", so 22 °C is not 10 % hotter than 20 °C in any physical sense.',
+      why: 'Interval: differences make sense, but 0 °C is not an absence of temperature, so ratios do not.' },
+    work: { name: 'Hours worked per day, 20 students', unit: 'h', what: 'hours worked per day',
+      hint: 'The book\'s first frequency table (1.3). With the table on Each value, read the frequency, the relative frequency (frequency divided by 20) and the cumulative relative frequency of each answer: 2 h was given 3 times, so its relative frequency is 3/20 = 0.15. The cumulative relative frequency of the last row is always 1.',
+      why: 'Ratio: zero hours means none, and 6 h is twice 3 h.' },
+    dean: { name: 'First exam scores, a precalculus class (n = 31)', unit: 'points', what: 'exam score',
+      hint: 'The book\'s stemplot (2.1): stems are the tens, leaves the ones. Most scores are in the 60s to 90s, with a few low scores trailing off to the left, and the skew coefficient is negative. Yet the mean, 73.5, sits just above the median, 73: "the mean is pulled toward the tail" is a rule of thumb (2.6), not a law. Drag the 33 down to 0 and watch the mean drop below the median.',
+      why: 'Ratio: the book counts machine graded exam scores as ratio data, with a true zero of no points.' },
+    market: { name: 'Distances from a home to 21 supermarkets', unit: 'km', what: 'distance (km)',
+      hint: 'The book\'s stemplot with an outlier (2.1): leaves are tenths, and the empty stems 7 to 11 show the gap before 12.3 km. 12.3 is above Q3 + 1.5 IQR, so it is an outlier by the book\'s rule. Drag it in to 7 and see what changes and what does not.',
+      why: 'Ratio: a distance has a true zero.' },
+    soccer: { name: 'Heights of 100 semiprofessional soccer players', unit: 'in', what: 'height (in)',
+      hint: 'The book\'s histogram (2.2): start at 59.95 (60 − 0.05, one more decimal place than the data, so no height falls on a boundary) with bars 2 in wide. The same eight classes make the grouped frequency table of 1.3: switch the table to The histogram\'s classes. Drag the Start or Bin width tab and watch the shape change: the data stay the same.',
+      why: 'Ratio: height has a true zero.' },
+    cpi: { name: 'Consumer Price Index, each month for ten years', unit: '', what: 'CPI',
+      hint: 'The book\'s time series data (2.2), 120 months in order. The histogram only says where values piled up; the time series graph shows the trend, and the dip in year 6 to 7. A time series is the one graph here that uses the order of the data.',
+      why: 'Ratio: an index of prices has a true zero (nothing costs anything) and ratios of it mean something.' },
+    homes: { name: 'Prices of 13 homes', unit: '$', what: 'price ($)',
+      hint: 'The book\'s outlier example (2.3): one home at $5,500,000. It is far above Q3 + 1.5 IQR, so it is an outlier, and it pulls the mean far above the median. For data like these, the median is the better center. Click it and drag it in to $700,000: the median does not move at all.',
+      why: 'Ratio: a price of zero means free, and $400,000 is twice $200,000.' },
+    er: { name: 'Ages of 40 emergency room patients in one week', unit: 'years', what: 'age (years)',
+      hint: 'The book\'s mean and median example (2.5). n = 40 is even, so the median is midway between the 20th and 21st values, both 24. Compare the mean with the median and look at the tail.',
+      why: 'Ratio: age has a true zero.' },
+    baseball: { name: 'Ages of the 25 players on a baseball team', unit: 'years', what: 'age (years)',
+      hint: 'The book\'s standard deviation example (2.7). Pick a player with the Reading # box and read his z score, how many standard deviations he is from the mean: a value more than two standard deviations away is unusual.',
+      why: 'Ratio: age has a true zero.' },
+    custom: { name: 'Your data', unit: '', what: 'value', hint: 'Your own data. Type or paste values in the box under the graphs, separated by semicolons, commas, spaces or new lines, in the order they were taken. Write numbers without thousands commas.', why: '' },
+  };
+  const LEVELS = {
+    nominal: 'Nominal: categories with no order. Numbers here would be codes, and a mean or median of codes means nothing.',
+    ordinal: 'Ordinal: ordered categories (a rating from 1 to 5). The median makes sense; differences, the mean and s do not.',
+    interval: 'Interval: ordered numbers whose differences mean something, but zero is not "none", so ratios do not.',
+    ratio: 'Ratio: numbers with a true zero; differences and ratios both mean something.',
+  };
+  const S = { preset: 'pendulum', draw: 1, orig: [], vals: [], d: 2, start: 0, width: 1, ft: 'value', sel: -1, k: 90, blind: false, modBox: false,
+    shown: Infinity, run: false, clock: 0, view: [0, 1], level: 'ratio', ordered: true, stat: null, drag: null, drop: [] };
+  const can = $('can'), ctx = can.getContext('2d'), ts = $('ts'), tctx = ts.getContext('2d');
+  let W = 0, H = 0, TW = 0, TH = 0, dpr = 1, T = null, need = true, needHtml = true;
+  const reduce = () => document.documentElement.classList.contains('vd-reduce') || (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
+  const NF = {};
+  /* numbers with a decimal point and thousands commas, the minus as − */
+  function fmt(v, dec) {
+    if (!isFinite(v)) return '—';
+    dec = Math.max(0, Math.min(8, dec));
+    const key = dec; if (!NF[key]) NF[key] = new Intl.NumberFormat('en-US', { minimumFractionDigits: dec, maximumFractionDigits: dec });
+    const s = NF[key].format(Math.abs(v) < Math.pow(10, -dec) / 2 ? 0 : v);
+    return s.replace('-', '−');
+  }
+  /* a value that is exact at d + 1 places (a median, a quartile): shown at d places when the extra digit is a zero */
+  const fx = (v, d) => (Math.abs(roundTo(v, d) - v) < 1e-9 * Math.max(1, Math.abs(v)) ? fmt(v, d) : fmt(v, d + 1));
+  const dM = () => Math.min(S.d + 2, 4);   /* places for the mean and s */
+  const unit = () => (SETS[S.preset].unit ? ' ' + tt(SETS[S.preset].unit) : '');
+  const live = () => (S.shown >= S.vals.length ? S.vals : S.vals.slice(0, S.shown));
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), mono: g('--font-mono') || 'monospace', red: g('--red'), dot: g('--dot'), bar: g('--bar'),
+      box: g('--box'), mean: g('--mean'), median: g('--median'), sel: g('--sel'), fence: g('--fence'), paper: g('--paperline') };
+  }
+  const proj = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
+
+  /* ---------- the data ---------- */
+  function computeView() {
+    const a = S.vals.length ? S.vals : [0, 1];
+    const h = bins(a, S.start, S.width), top = h.edges && h.edges.length ? h.edges[h.edges.length - 1] : S.start + S.width;
+    let lo = Math.min(...a, S.start), hi = Math.max(...a, Math.min(top, Math.max(...a) + 3 * S.width));
+    if (hi - lo < 1e-9) { lo -= 1; hi += 1; }
+    const pad = 0.06 * (hi - lo); S.view = [lo - pad, hi + pad];
+  }
+  function widenView() {
+    const a = S.vals; if (!a.length) return;
+    const lo = Math.min(...a), hi = Math.max(...a), span = S.view[1] - S.view[0];
+    if (lo < S.view[0] + 0.01 * span || hi > S.view[1] - 0.01 * span) computeView();
+  }
+  function stats() { S.stat = describe(live()); }
+  function setValues(vals, keepBins) {
+    S.vals = vals.slice(); S.d = Math.max(0, Math.min(6, dataDecimals(S.vals)));
+    if (!keepBins && S.vals.length) { const b = autoBins(S.vals); S.start = b.start; S.width = b.width; }
+    if (S.sel >= S.vals.length) S.sel = S.vals.length - 1;
+    stats(); computeView(); needHtml = true; need = true;
+  }
+  function applyPreset(k) {
+    S.preset = k; setRun(false); S.shown = Infinity; S.sel = -1;
+    const b = BOOK[k], c = SIM[k];
+    if (b) { S.orig = b.values.slice(); S.level = b.level; S.ordered = b.ordered; }
+    else if (c) { S.orig = simulate(k, S.draw); S.level = c.level; S.ordered = c.ordered; }
+    setValues(S.orig);
+    const src = b || c; if (src && src.start != null) { S.start = src.start; S.width = src.width; computeView(); }
+    if (k === 'custom') S.level = $('levelSel').value;
+    S.ft = new Set(S.vals).size <= 15 ? 'value' : 'class';
+    for (const el of document.querySelectorAll('#presets button')) el.setAttribute('aria-pressed', String(el.dataset.p === k));
+    $('presetHint').textContent = tt(SETS[k].hint);
+    $('dataIn').value = S.vals.map((v) => fmt(v, S.d).replace(/,/g, '').replace('−', '-')).join('; '); $('dataIn').classList.remove('bad');
+    $('dataStatus').textContent = '';
+    S.drop = [];
+    sync();
+  }
+  function edited() {   /* a value was dragged or typed: the box under the graphs follows, unless it is being typed in */
+    if (document.activeElement !== $('dataIn')) $('dataIn').value = S.vals.map((v) => fmt(v, S.d).replace(/,/g, '').replace('−', '-')).join('; ');
+    stats(); needHtml = true; need = true;
+  }
+
+  /* ---------- the main picture: histogram, dot plot and box plot on one number line ---------- */
+  function layout() {
+    const p = proj(), axisH = 30 * p, top = 26 * p;
+    const usable = H - top - axisH;
+    const hH = usable * 0.35, dH = usable * 0.4;
+    return { p, L: 16 * p, R: W - 16 * p, hTop: top, hBot: top + hH, dTop: top + hH + 24 * p, dBot: top + hH + dH, bTop: top + hH + dH, bBot: H - axisH, axis: H - axisH };
+  }
+  const X = (v, Lo) => Lo.L + (v - S.view[0]) / (S.view[1] - S.view[0]) * (Lo.R - Lo.L);
+  const Xi = (px, Lo) => S.view[0] + (px - Lo.L) / (Lo.R - Lo.L) * (S.view[1] - S.view[0]);
+  function niceStep(span, n) { const raw = span / Math.max(2, n), p = Math.pow(10, Math.floor(Math.log10(raw))), m = raw / p; return (m <= 1 ? 1 : m <= 2 ? 2 : m <= 5 ? 5 : 10) * p; }
+  const labelOn = (c, t, x, y) => { c.save(); c.strokeStyle = T.canvas; c.lineWidth = 4; c.lineJoin = 'round'; c.strokeText(t, x, y); c.restore(); c.fillText(t, x, y); };
+  /* dot positions: equal values stack; when dots would overlap on screen, values within one dot width share a column */
+  function dotColumns(a, Lo, r) {
+    const res = Math.max(Math.pow(10, -S.d), 2 * r / (Lo.R - Lo.L) * (S.view[1] - S.view[0]));
+    const cols = new Map(), pos = [];
+    const order = a.map((v, i) => i).sort((i, j) => a[i] - a[j] || i - j);
+    for (const i of order) { const key = Math.round(a[i] / res); const k = cols.get(key) || 0; cols.set(key, k + 1); pos[i] = { x: key * res, k }; }
+    let top = 0; for (const c of cols.values()) top = Math.max(top, c);
+    return { pos, top, res };
+  }
+  function draw() {
+    if (!T || !W) return;
+    const Lo = layout(), p = Lo.p, a = live(), st = S.stat, now = performance.now();
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    /* faint ruled lines, a lab notebook page */
+    ctx.strokeStyle = T.paper; ctx.lineWidth = 1; ctx.beginPath();
+    for (let y = Lo.hTop + 8 * p; y < Lo.axis; y += 22 * p) { ctx.moveTo(0, Math.round(y) + 0.5); ctx.lineTo(W, Math.round(y) + 0.5); }
+    ctx.stroke();
+    /* the number line */
+    const step = niceStep(S.view[1] - S.view[0], Math.max(3, (Lo.R - Lo.L) / (80 * p)));
+    ctx.strokeStyle = T.muted; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(Lo.L, Lo.axis); ctx.lineTo(Lo.R, Lo.axis); ctx.stroke();
+    ctx.font = `600 ${11 * p}px ${T.mono}`; const axName = tt(SETS[S.preset].what), axW = ctx.measureText(axName).width;
+    ctx.fillStyle = T.muted; ctx.font = `${11 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    const tdec = Math.max(0, -Math.floor(Math.log10(step) + 1e-9));
+    for (let v = Math.ceil(S.view[0] / step) * step; v <= S.view[1]; v += step) {
+      const x = X(v, Lo); ctx.beginPath(); ctx.moveTo(x, Lo.axis); ctx.lineTo(x, Lo.axis + 4 * p); ctx.stroke();
+      if (x < Lo.R - axW - 30 * p) labelOn(ctx, fmt(v, tdec), x, Lo.axis + 6 * p);
+    }
+    ctx.font = `600 ${11 * p}px ${T.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'top'; ctx.fillStyle = T.ink;
+    labelOn(ctx, axName, Lo.R, Lo.axis + 6 * p);
+    /* panel names */
+    ctx.font = `700 ${11 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillStyle = T.muted;
+    labelOn(ctx, tt('Histogram'), Lo.L, 6 * p); labelOn(ctx, tt('Dot plot'), Lo.L, Lo.dTop); labelOn(ctx, tt('Box plot'), Lo.L, Lo.bTop + 4 * p);
+    if (!a.length) { ctx.textAlign = 'center'; ctx.fillStyle = T.muted; ctx.font = `${13 * p}px ${T.mono}`; labelOn(ctx, S.run ? '' : tt('No data'), W / 2, H / 2); drawPace(Lo); return; }
+    /* histogram */
+    const h = bins(a, S.start, S.width), maxC = Math.max(1, ...h.counts);
+    const hy = (c) => Lo.hBot - c / maxC * (Lo.hBot - Lo.hTop - 34 * p);
+    ctx.globalAlpha = 0.85;
+    for (let i = 0; i < h.counts.length; i++) {
+      const x0 = X(h.edges[i], Lo), x1 = X(h.edges[i + 1], Lo), y = hy(h.counts[i]);
+      ctx.fillStyle = T.bar; ctx.globalAlpha = 0.38; ctx.fillRect(x0, y, x1 - x0, Lo.hBot - y);
+      ctx.globalAlpha = 1; ctx.strokeStyle = T.bar; ctx.lineWidth = 1.4 * p; ctx.strokeRect(Math.round(x0) + 0.5, Math.round(y) + 0.5, Math.round(x1 - x0), Math.round(Lo.hBot - y));
+      if (h.counts[i] && x1 - x0 >= 14 * p) { ctx.fillStyle = T.ink; ctx.font = `${10.5 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; labelOn(ctx, String(h.counts[i]), (x0 + x1) / 2, y - 2 * p); }
+    }
+    ctx.globalAlpha = 1;
+    ctx.strokeStyle = T.muted; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(Lo.L, Lo.hBot + 0.5); ctx.lineTo(Lo.R, Lo.hBot + 0.5); ctx.stroke();
+    /* the start and width tabs */
+    tab(X(S.start, Lo), Lo.hBot, tt('start'), p, S.drag && S.drag.kind === 'start');
+    tab(X(S.start + S.width, Lo), Lo.hBot, tt('width'), p, S.drag && S.drag.kind === 'width');
+    /* dot plot */
+    const r0 = 5.5 * p, dAvail = Lo.dBot - Lo.dTop - 14 * p;
+    let cols = dotColumns(a, Lo, r0), r = r0;
+    if (cols.top * 2 * r0 > dAvail) { r = Math.max(1.6 * p, dAvail / (2 * cols.top)); cols = dotColumns(a, Lo, r); }
+    const gap = Math.min(2 * r, dAvail / Math.max(1, cols.top));
+    S.dotXY = [];
+    for (let i = 0; i < a.length; i++) {
+      const c = cols.pos[i], x = X(c.x, Lo); let y = Lo.dBot - r - c.k * gap;
+      const born = S.drop[i]; if (born && !reduce()) { const u = Math.min(1, (now - born) / 380); if (u < 1) { y = Lo.dTop + (y - Lo.dTop) * u * u; need = true; } }
+      S.dotXY[i] = [x, y];
+      const out = st.n >= 4 && (a[i] < st.lo || a[i] > st.hi);
+      ctx.beginPath(); ctx.arc(x, y, Math.max(1.2, r - 0.6), 0, 7); ctx.fillStyle = T.dot; ctx.fill();
+      if (out) { ctx.strokeStyle = T.red; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.arc(x, y, r + 2.5 * p, 0, 7); ctx.stroke(); }
+    }
+    if (S.sel >= 0 && S.sel < a.length) {
+      const [x, y] = S.dotXY[S.sel];
+      ctx.strokeStyle = T.sel; ctx.lineWidth = 2.5 * p; ctx.beginPath(); ctx.arc(x, y, r + 4 * p, 0, 7); ctx.stroke();
+      ctx.setLineDash([3 * p, 3 * p]); ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.moveTo(X(a[S.sel], Lo), Lo.hTop + 14 * p); ctx.lineTo(X(a[S.sel], Lo), Lo.axis); ctx.stroke(); ctx.setLineDash([]);
+    }
+    ctx.strokeStyle = T.muted; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(Lo.L, Lo.dBot + 0.5); ctx.lineTo(Lo.R, Lo.dBot + 0.5); ctx.stroke();
+    if (!S.blind) {
+      /* the mean: the balance point, a fulcrum under the dots */
+      const xm = X(st.mean, Lo), tri = 8 * p;
+      ctx.fillStyle = T.mean; ctx.beginPath(); ctx.moveTo(xm, Lo.dBot + 1); ctx.lineTo(xm - tri, Lo.dBot + 1 + tri * 1.3); ctx.lineTo(xm + tri, Lo.dBot + 1 + tri * 1.3); ctx.closePath(); ctx.fill();
+      ctx.font = `700 ${11 * p}px ${T.mono}`; ctx.textBaseline = 'top'; const mt = 'x̄ = ' + fmt(st.mean, dM()), mw = ctx.measureText(mt).width + tri + 4 * p;
+      let right = st.mean >= st.median; if (right && xm + mw > Lo.R) right = false; else if (!right && xm - mw < Lo.L) right = true;
+      ctx.textAlign = right ? 'left' : 'right';
+      labelOn(ctx, mt, xm + (right ? 1 : -1) * (tri + 3 * p), Lo.dBot + 3 * p);
+      /* the median through all three graphs */
+      const xd = X(st.median, Lo);
+      ctx.strokeStyle = T.median; ctx.lineWidth = 1.8 * p; ctx.setLineDash([6 * p, 4 * p]); ctx.beginPath(); ctx.moveTo(xd, Lo.hTop + 16 * p); ctx.lineTo(xd, Lo.bBot); ctx.stroke(); ctx.setLineDash([]);
+      ctx.fillStyle = T.median; ctx.textBaseline = 'top'; ctx.textAlign = xd > xm ? 'left' : 'right';
+      labelOn(ctx, tt('median') + ' ' + fx(st.median, S.d), xd + (xd > xm ? 4 : -4) * p, Lo.hTop + 2 * p);
+      /* the k-th percentile */
+      const qk = STS.quantile(a, S.k), xq = X(qk, Lo);
+      ctx.fillStyle = T.sel; ctx.beginPath(); ctx.moveTo(xq, Lo.axis - 1); ctx.lineTo(xq - 5 * p, Lo.axis - 9 * p); ctx.lineTo(xq + 5 * p, Lo.axis - 9 * p); ctx.closePath(); ctx.fill();
+      ctx.font = `600 ${10 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; labelOn(ctx, 'P' + S.k, xq, Lo.axis - 10 * p);
+      drawBox(Lo, st, p);
+    } else {
+      ctx.fillStyle = T.muted; ctx.font = `${12 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      labelOn(ctx, tt('Blind: box plot hidden. Predict the median and quartiles first.'), (Lo.L + Lo.R) / 2, (Lo.bTop + Lo.bBot) / 2 + 6 * p);
+    }
+    drawPace(Lo);
+  }
+  function drawPace(Lo) {
+    if (!S.run) return;
+    const p = Lo.p; ctx.font = `${11 * p}px ${T.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'top'; ctx.fillStyle = T.muted;
+    labelOn(ctx, tt('values arrive in the order taken: {k} of {n}, one every {s} s', { k: Math.min(S.shown, S.vals.length), n: S.vals.length, s: fmt(pace(), 2) }), Lo.R, 6 * p);
+  }
+  function tab(x, y, name, p, on) {
+    ctx.fillStyle = on ? T.sel : T.bar; ctx.beginPath(); ctx.moveTo(x, y + 1); ctx.lineTo(x - 6 * p, y + 9 * p); ctx.lineTo(x + 6 * p, y + 9 * p); ctx.closePath(); ctx.fill();
+    ctx.font = `600 ${9.5 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillStyle = on ? T.sel : T.ink; labelOn(ctx, name, x, y + 10 * p);
+  }
+  function drawBox(Lo, st, p) {
+    const cy = (Lo.bTop + Lo.bBot) / 2 + 6 * p, bh = Math.min(34 * p, (Lo.bBot - Lo.bTop) * 0.5);
+    const xq1 = X(st.q1, Lo), xq3 = X(st.q3, Lo), xmd = X(st.median, Lo);
+    const wl = S.modBox ? st.whiskLo : st.min, wh = S.modBox ? st.whiskHi : st.max;
+    /* the fences */
+    ctx.strokeStyle = T.fence; ctx.lineWidth = 1.2 * p; ctx.setLineDash([2 * p, 4 * p]);
+    for (const v of [st.lo, st.hi]) { const x = X(v, Lo); if (x < Lo.L - 2 || x > Lo.R + 2) continue; ctx.beginPath(); ctx.moveTo(x, cy - bh * 0.9); ctx.lineTo(x, cy + bh * 0.9); ctx.stroke(); }
+    ctx.setLineDash([]);
+    ctx.font = `${9.5 * p}px ${T.mono}`; ctx.fillStyle = T.fence; ctx.textBaseline = 'bottom'; ctx.textAlign = 'center';
+    for (const [v, s] of [[st.lo, 'Q1 − 1.5 IQR'], [st.hi, 'Q3 + 1.5 IQR']]) { const x = X(v, Lo); if (x >= Lo.L + 30 * p && x <= Lo.R - 30 * p) labelOn(ctx, s, x, cy - bh * 0.92); }
+    ctx.strokeStyle = T.box; ctx.lineWidth = 2 * p;
+    ctx.beginPath(); ctx.moveTo(X(wl, Lo), cy); ctx.lineTo(xq1, cy); ctx.moveTo(xq3, cy); ctx.lineTo(X(wh, Lo), cy);
+    ctx.moveTo(X(wl, Lo), cy - bh / 4); ctx.lineTo(X(wl, Lo), cy + bh / 4); ctx.moveTo(X(wh, Lo), cy - bh / 4); ctx.lineTo(X(wh, Lo), cy + bh / 4); ctx.stroke();
+    ctx.globalAlpha = 0.16; ctx.fillStyle = T.box; ctx.fillRect(xq1, cy - bh / 2, xq3 - xq1, bh); ctx.globalAlpha = 1;
+    ctx.strokeRect(xq1, cy - bh / 2, xq3 - xq1, bh);
+    ctx.strokeStyle = T.median; ctx.lineWidth = 2.6 * p; ctx.beginPath(); ctx.moveTo(xmd, cy - bh / 2); ctx.lineTo(xmd, cy + bh / 2); ctx.stroke();
+    if (S.modBox) for (const v of st.outliers) { ctx.strokeStyle = T.red; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.arc(X(v, Lo), cy, 4 * p, 0, 7); ctx.stroke(); }
+    ctx.font = `${10 * p}px ${T.mono}`; ctx.fillStyle = T.box; ctx.textBaseline = 'top'; ctx.textAlign = 'center';
+    const labs = [[st.q1, 'Q1'], [st.q3, 'Q3']]; for (const [v, s] of labs) labelOn(ctx, s, X(v, Lo), cy + bh / 2 + 3 * p);
+    /* the IQR bracket */
+    if (xq3 - xq1 > 120 * p) { ctx.textBaseline = 'top'; labelOn(ctx, 'IQR ' + fx(st.iqr, S.d), (xq1 + xq3) / 2, cy + bh / 2 + 3 * p); }
+  }
+  /* ---------- the time series ---------- */
+  function tsLayout() { const p = proj(); return { p, L: 46 * p, R: TW - 12 * p, T: 24 * p, B: TH - 26 * p }; }
+  function drawTs() {
+    if (!T || !TW) return;
+    const Lo = tsLayout(), p = Lo.p, a = live(), n = S.vals.length;
+    tctx.setTransform(dpr, 0, 0, dpr, 0, 0); tctx.fillStyle = T.canvas; tctx.fillRect(0, 0, TW, TH);
+    tctx.font = `700 ${11 * p}px ${T.mono}`; tctx.fillStyle = T.muted; tctx.textAlign = 'left'; tctx.textBaseline = 'top';
+    tctx.fillText(tt('Time series'), 8 * p, 6 * p);
+    const xs = (i) => Lo.L + (n > 1 ? i / (n - 1) : 0.5) * (Lo.R - Lo.L), ys = (v) => Lo.B - (v - S.view[0]) / (S.view[1] - S.view[0]) * (Lo.B - Lo.T);
+    tctx.strokeStyle = T.line; tctx.lineWidth = 1; tctx.beginPath(); tctx.moveTo(Lo.L, Lo.T); tctx.lineTo(Lo.L, Lo.B); tctx.lineTo(Lo.R, Lo.B); tctx.stroke();
+    const step = niceStep(S.view[1] - S.view[0], Math.max(2, (Lo.B - Lo.T) / (34 * p))), tdec = Math.max(0, -Math.floor(Math.log10(step) + 1e-9));
+    tctx.font = `${10 * p}px ${T.mono}`; tctx.fillStyle = T.muted; tctx.textAlign = 'right'; tctx.textBaseline = 'middle';
+    for (let v = Math.ceil(S.view[0] / step) * step; v <= S.view[1]; v += step) { const y = ys(v); if (y < Lo.T + 4 || y > Lo.B - 4) continue; tctx.fillText(fmt(v, tdec), Lo.L - 4 * p, y); }
+    tctx.textAlign = 'center'; tctx.textBaseline = 'top';
+    const ist = niceStep(Math.max(1, n - 1), 6); for (let i = 0; i <= n - 1; i += Math.max(1, Math.round(ist))) tctx.fillText(String(i + 1), xs(i), Lo.B + 4 * p);
+    tctx.textAlign = 'right'; tctx.fillText(tt(S.preset === 'cpi' ? 'month' : 'reading #'), Lo.R, Lo.B + 14 * p);
+    if (!S.ordered) {
+      tctx.fillStyle = T.muted; tctx.font = `${12 * p}px ${T.mono}`; tctx.textAlign = 'center'; tctx.textBaseline = 'middle';
+      const msg = tt('No time order: the book prints these values without the order they were taken in.');
+      wrapText(tctx, msg, (Lo.L + Lo.R) / 2, (Lo.T + Lo.B) / 2, Lo.R - Lo.L - 20 * p, 16 * p);
+      S.tsXY = []; return;
+    }
+    if (!a.length) return;
+    if (!S.blind && S.stat.n) { tctx.strokeStyle = T.mean; tctx.setLineDash([5 * p, 4 * p]); tctx.lineWidth = 1.3 * p; const y = ys(S.stat.mean); tctx.beginPath(); tctx.moveTo(Lo.L, y); tctx.lineTo(Lo.R, y); tctx.stroke(); tctx.setLineDash([]);
+      tctx.fillStyle = T.mean; tctx.font = `600 ${10 * p}px ${T.mono}`; tctx.textAlign = 'right'; tctx.textBaseline = 'bottom'; tctx.fillText('x̄', Lo.R, y - 2 * p); }
+    tctx.strokeStyle = T.dot; tctx.lineWidth = 1.4 * p; tctx.beginPath();
+    a.forEach((v, i) => { const x = xs(i), y = ys(v); if (i) tctx.lineTo(x, y); else tctx.moveTo(x, y); }); tctx.stroke();
+    S.tsXY = []; const r = n > 60 ? 2 * p : 3.4 * p;
+    a.forEach((v, i) => { const x = xs(i), y = ys(v); S.tsXY[i] = [x, y]; tctx.fillStyle = T.dot; tctx.beginPath(); tctx.arc(x, y, r, 0, 7); tctx.fill(); });
+    if (S.sel >= 0 && S.sel < a.length) { const [x, y] = S.tsXY[S.sel]; tctx.strokeStyle = T.sel; tctx.lineWidth = 2.4 * p; tctx.beginPath(); tctx.arc(x, y, r + 4 * p, 0, 7); tctx.stroke(); }
+  }
+  function wrapText(c, text, x, y, maxW, lh) {
+    const words = text.split(' '), lines = []; let cur = '';
+    for (const w of words) { const t = cur ? cur + ' ' + w : w; if (c.measureText(t).width > maxW && cur) { lines.push(cur); cur = w; } else cur = t; }
+    if (cur) lines.push(cur);
+    lines.forEach((l, i) => c.fillText(l, x, y + (i - (lines.length - 1) / 2) * lh));
+  }
+
+  /* ---------- the HTML pieces: readouts, frequency table, stemplot, selected point, percentile, level ---------- */
+  const esc = (s) => String(s).replace(/[&<>"]/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[ch]));
+  function readouts() {
+    const st = S.stat, d = S.d, u = unit(), dd = (a, b, wide) => `<div${wide ? ' class="wide"' : ''}><dt>${esc(a)}</dt><dd>${b}</dd></div>`;
+    if (!st.n) { $('out').innerHTML = dd(tt('Sample size n'), '0', true); return; }
+    const hide = '<span class="ok">' + esc(tt('hidden: predict it')) + '</span>';
+    const B = S.blind;
+    let h = dd(tt('Sample size n'), String(st.n));
+    h += dd(tt('Mean x̄'), B ? hide : fmt(st.mean, dM()) + u) + dd(tt('Median'), B ? hide : fx(st.median, d) + u);
+    h += dd(tt('Mode'), B ? hide : st.modes.values.length ? (st.modes.values.length > 4 ? tt('{k} values tie', { k: st.modes.values.length }) : st.modes.values.map((v) => fmt(v, d)).join(', ')) + ' ' + tt('({c} times)', { c: st.modes.count }) : tt('none: no value repeats'));
+    h += dd(tt('Standard deviation s'), B ? hide : fmt(st.sd, dM()) + u) + dd(tt('Variance s²'), B ? hide : fmt(st.variance, dM()));
+    h += dd(tt('Smallest'), fmt(st.min, d) + u) + dd(tt('Largest'), fmt(st.max, d) + u);
+    h += dd('Q1', B ? hide : fx(st.q1, d) + u) + dd('Q3', B ? hide : fx(st.q3, d) + u);
+    h += dd(tt('IQR = Q3 − Q1'), B ? hide : fx(st.iqr, d) + u) + dd(tt('Range'), fmt(st.range, d) + u);
+    h += dd(tt('Outlier fences'), B ? hide : fmt(st.lo, d + 2).replace(/\.?0+$/, '') + ' ' + tt('and') + ' ' + fmt(st.hi, d + 2).replace(/\.?0+$/, '') + u, true);
+    h += dd(tt('Outliers (1.5 IQR rule)'), B ? hide : st.outliers.length ? st.outliers.map((v) => fmt(v, d)).join(', ') : tt('none'), true);
+    let shape = '';
+    if (isFinite(st.skew)) shape = st.skew > 0.5 ? tt('skewed right (a long tail to the right)') : st.skew < -0.5 ? tt('skewed left (a long tail to the left)') : tt('roughly symmetric');
+    h += dd(tt('Skew'), B ? hide : (isFinite(st.skew) ? fmt(st.skew, 3) + ', ' + shape : '—'), true);
+    h += dd(tt('Mean − median'), B ? hide : fmt(st.mean - st.median, dM()) + u, true);
+    if (S.level === 'nominal' || S.level === 'ordinal') h += `<div class="wide"><dt>${esc(tt('Careful'))}</dt><dd class="ok warn">${esc(S.level === 'nominal' ? tt('These numbers are codes for categories: none of these statistics means anything. Use a bar graph of the frequencies.') : tt('Ordinal data: the median and percentiles make sense; the mean, s and IQR assume equal steps between values.'))}</dd></div>`;
+    $('out').innerHTML = h;
+  }
+  function freqTable() {
+    const a = live(), rows = S.ft === 'value' ? freqByValue(a) : freqByClass(a, S.start, S.width), d = S.d;
+    const sv = S.sel >= 0 && S.sel < a.length ? a[S.sel] : null;
+    const r4 = (v) => { const s = fmt(v, 4); return s.replace(/0+$/, '').replace(/\.$/, ''); };
+    let h = `<thead><tr><th>${esc(S.ft === 'value' ? tt('Data value') : tt('Class'))}</th><th>${esc(tt('Frequency'))}</th><th>${esc(tt('Relative frequency'))}</th><th>${esc(tt('Cumulative relative frequency'))}</th></tr></thead><tbody>`;
+    for (const r of rows) {
+      const on = sv != null && (S.ft === 'value' ? r.lo === sv : sv >= r.lo - 1e-9 && sv < r.hi - 1e-9);
+      const lab = S.ft === 'value' ? fmt(r.lo, d) : fmt(r.lo, d + 2).replace(/0+$/, '').replace(/\.$/, '') + '–' + fmt(r.hi, d + 2).replace(/0+$/, '').replace(/\.$/, '');
+      h += `<tr${on ? ' class="on"' : ''}><td>${lab}</td><td>${r.f}</td><td>${r4(r.rf)}</td><td>${r4(r.crf)}</td></tr>`;
+    }
+    h += `</tbody><tfoot><tr><td>${esc(tt('Total'))}</td><td>${a.length}</td><td>${a.length ? '1' : '0'}</td><td></td></tr></tfoot>`;
+    $('ft').innerHTML = h;
+    for (const b of document.querySelectorAll('#ftSeg button')) b.setAttribute('aria-pressed', String(b.dataset.ft === S.ft));
+  }
+  function stemHtml() {
+    const a = live(), sp = stemplot(a), d = S.d;
+    if (!a.length) { $('stem').innerHTML = ''; return; }
+    let h = '';
+    for (const r of sp.rows) h += `<div class="r"><span class="s">${r.stem}</span><span class="l">${r.leaves.map((L) => (L.i === S.sel ? `<mark>${L.leaf}</mark>` : String(L.leaf))).join(' ')}</span></div>`;
+    const ex = sp.rows.find((r) => r.leaves.length) || sp.rows[0], L = ex.leaves[0] ? ex.leaves[0].leaf : 0;
+    const stemNum = Number(ex.stem.replace('−', '-')), val = (Math.abs(stemNum) * 10 + L) * sp.unit * (ex.stem.startsWith('−') ? -1 : 1);
+    const ud = Math.max(0, -Math.round(Math.log10(sp.unit)));
+    h += `<div class="key">${esc(tt('Key: {s} | {l} means {v}. Leaf unit {u}.', { s: ex.stem, l: L, v: fmt(val, ud), u: fmt(sp.unit, ud) }))}${sp.unit > Math.pow(10, -d) * 1.0001 ? ' ' + esc(tt('Digits after the leaf are cut off.')) : ''}</div>`;
+    $('stem').innerHTML = h;
+  }
+  function selCard() {
+    const a = live(), st = S.stat, d = S.d;
+    $('selI').max = String(Math.max(1, a.length));
+    if (S.sel < 0 || S.sel >= a.length) { $('selNote').textContent = tt('Click a dot, or type a reading number, to select a value.'); if (document.activeElement !== $('selV')) $('selV').value = ''; return; }
+    const v = a[S.sel];
+    if (document.activeElement !== $('selI')) $('selI').value = String(S.sel + 1);
+    if (document.activeElement !== $('selV')) { $('selV').value = fmt(v, d).replace(/,/g, '').replace('−', '-'); $('selV').classList.remove('bad'); }
+    if (S.blind) { $('selNote').textContent = tt('Reading {i}: {v}.', { i: S.sel + 1, v: fmt(v, d) + unit() }); return; }
+    const z = st.n > 1 && st.sd > 0 ? zScore(v, st.mean, st.sd) : NaN;
+    let below = 0, eq = 0; for (const w of a) { if (w < v) below++; else if (w === v) eq++; }
+    const pr = STS.percentileRank(a, v);
+    $('selNote').textContent = tt('Reading {i}: {v}. z = (x − x̄)/s = {z}. Percentile: ({x} + 0.5·{y})/{n} × 100 = {p} %.', { i: S.sel + 1, v: fmt(v, d) + unit(), z: fmt(z, 2), x: below, y: eq, n: a.length, p: fmt(pr, 1) })
+      + (st.n >= 4 && (v < st.lo || v > st.hi) ? ' ' + tt('It is an outlier.') : '');
+  }
+  function kCard() {
+    const a = live(); $('kOut').textContent = String(S.k);
+    if (!a.length) { $('kNote').textContent = ''; return; }
+    if (S.blind) { $('kNote').textContent = tt('Hidden: predict it.'); return; }
+    const n = a.length, i = S.k * (n + 1) / 100, q = STS.quantile(a, S.k);
+    $('kNote').textContent = tt('Position i = k(n + 1)/100 = {k}·{n1}/100 = {i} in the ordered list, so the {k}th percentile is {q}.', { k: S.k, n1: n + 1, i: fmt(i, 2), q: fmt(q, Math.min(S.d + 2, 6)) + unit() });
+  }
+  function levelCard() {
+    for (const s of document.querySelectorAll('#levels span')) s.classList.toggle('on', s.dataset.l === S.level);
+    $('levelPick').hidden = S.preset !== 'custom';
+    $('levelNote').textContent = S.preset === 'custom' ? tt(LEVELS[S.level]) : tt(SETS[S.preset].why);
+  }
+  function srcLine() {
+    const b = BOOK[S.preset], c = SIM[S.preset];
+    const tag = b ? `<span class="tag book">${esc(tt('From the book'))}</span>` : c ? `<span class="tag sim">${esc(tt('Simulated, draw {d}', { d: S.draw }))}</span>` : `<span class="tag own">${esc(tt('Typed in'))}</span>`;
+    const cite = b ? tt('OpenStax Introductory Statistics 2e, {s} {t} (CC BY 4.0).', { s: b.sec, t: tt(SECNAME[b.sec]) }) : c ? tt('Simulated readings from seeded random numbers, not measurements. New draw makes another set.') : tt('Your own numbers.');
+    $('dsrc').innerHTML = `<b>${esc(tt(SETS[S.preset].name))}</b>${tag}<span class="cite">${esc(cite)}${S.vals.length !== S.orig.length || S.vals.some((v, i) => v !== S.orig[i]) ? ' ' + esc(tt('Edited: Reset brings the original values back.')) : ''}</span>`;
+    $('newDraw').disabled = !c; $('drawNote').textContent = c ? tt('draw {d}', { d: S.draw }) : '';
+  }
+  function note() {
+    const h = bins(live(), S.start, S.width);
+    $('note').textContent = h.tooMany ? tt('That width makes too many bars to draw; make it wider.') : tt('{b} bars from {s}, each {w} wide.', { b: h.counts.length, s: fmt(S.start, S.d + 2).replace(/0+$/, '').replace(/\.$/, ''), w: fmt(S.width, S.d + 2).replace(/0+$/, '').replace(/\.$/, '') });
+  }
+  function sync() {
+    if (document.activeElement !== $('binW')) $('binW').value = String(roundTo(S.width, S.d + 3));
+    if (document.activeElement !== $('binS')) $('binS').value = String(roundTo(S.start, S.d + 3));
+    $('binW').step = String(Math.pow(10, -S.d)); $('binS').step = String(Math.pow(10, -S.d) / 2);
+    $('modBox').checked = S.modBox; $('kIn').value = String(S.k);
+    needHtml = true; need = true;
+  }
+  function html() { readouts(); freqTable(); stemHtml(); selCard(); kCard(); levelCard(); srcLine(); note(); }
+
+  /* ---------- interaction ---------- */
+  function setRun(on) { S.run = on; $('play').textContent = on ? tt('Pause') : tt('Play'); $('play').classList.toggle('attn', !on); }
+  const pace = () => Math.max(0.06, Math.min(0.4, 9 / Math.max(1, S.vals.length)));
+  $('play').addEventListener('click', () => {
+    if (S.run) { setRun(false); return; }
+    if (!S.vals.length) return;
+    if (S.shown >= S.vals.length) { S.shown = 0; S.drop = []; }
+    S.clock = pace(); setRun(true); stats(); needHtml = true; need = true;
+  });
+  $('reset').addEventListener('click', () => { setRun(false); S.shown = Infinity; S.drop = []; S.sel = -1; if (S.preset === 'custom') { setValues(S.orig); } else applyPreset(S.preset); edited(); });
+  $('newDraw').addEventListener('click', () => { if (!SIM[S.preset]) return; S.draw++; applyPreset(S.preset); });
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  for (const b of document.querySelectorAll('#ftSeg button')) b.addEventListener('click', () => { S.ft = b.dataset.ft; needHtml = true; });
+  $('modBox').addEventListener('change', (e) => { S.modBox = e.target.checked; need = true; });
+  $('kIn').addEventListener('input', (e) => { S.k = Math.max(1, Math.min(99, Math.round(+e.target.value))); needHtml = true; need = true; });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; needHtml = true; need = true; });
+  $('levelSel').addEventListener('change', (e) => { if (S.preset === 'custom') { S.level = e.target.value; needHtml = true; } });
+  const minStart = () => (S.vals.length ? Math.min(...S.vals) : S.start);
+  function setBins(start, width) {
+    const u = Math.pow(10, -S.d);
+    if (isFinite(width) && width > 0) S.width = Math.max(u / 10, width);
+    if (isFinite(start)) S.start = Math.min(minStart(), Math.max(minStart() - S.width, start));
+    widenBins(); needHtml = true; need = true;
+  }
+  function widenBins() { const lo = S.start, hi = S.start + S.width, span = S.view[1] - S.view[0]; if (lo < S.view[0] || hi > S.view[1] + span) computeView(); }
+  $('binW').addEventListener('input', () => { const w = +$('binW').value; if (w > 0) setBins(S.start, w); });
+  $('binS').addEventListener('input', () => { const s = $('binS').value.trim(); if (s !== '' && isFinite(+s)) setBins(+s, S.width); });
+  for (const id of ['binW', 'binS']) $(id).addEventListener('change', () => sync());
+  $('dataIn').addEventListener('input', () => {
+    const r = parseData($('dataIn').value);
+    if (r.bad.length) { $('dataIn').classList.add('bad'); $('dataStatus').textContent = tt('“{t}” is not a number. Write numbers without thousands commas.', { t: r.bad[0] }); return; }
+    if (!r.values.length) { $('dataIn').classList.add('bad'); $('dataStatus').textContent = tt('Type at least one value.'); return; }
+    if (r.values.some((v) => Math.abs(v) >= 1e12)) { $('dataIn').classList.add('bad'); $('dataStatus').textContent = tt('Values must be smaller than a trillion in size.'); return; }
+    if (r.values.length > 2000) { $('dataIn').classList.add('bad'); $('dataStatus').textContent = tt('Up to 2,000 values.'); return; }
+    $('dataIn').classList.remove('bad');
+    setRun(false); S.shown = Infinity;
+    if (S.preset !== 'custom') { S.preset = 'custom'; S.level = $('levelSel').value; S.ordered = true; for (const el of document.querySelectorAll('#presets button')) el.setAttribute('aria-pressed', 'false'); $('presetHint').textContent = tt(SETS.custom.hint); }
+    S.orig = r.values.slice(); setValues(r.values);
+    $('dataStatus').textContent = tt('{n} values read.', { n: r.values.length });
+    sync();
+  });
+  function selectAt(i) { S.sel = i; needHtml = true; need = true; }
+  $('selI').addEventListener('input', () => { const i = Math.round(+$('selI').value) - 1; if (i >= 0 && i < live().length) selectAt(i); });
+  $('selV').addEventListener('input', () => {
+    if (S.sel < 0 || S.sel >= S.vals.length) return;
+    const s = $('selV').value.trim().replace(/−/g, '-'), v = Number(s);
+    const ok = s !== '' && isFinite(v) && Math.abs(v) < 1e12; $('selV').classList.toggle('bad', !ok); if (!ok) return;
+    S.vals[S.sel] = v; S.d = Math.max(S.d, decimalsOf(v)); widenView(); edited();
+  });
+  $('selV').addEventListener('change', () => { needHtml = true; });
+  const pickBy = (cmp) => { const a = live(); if (!a.length) return; let k = 0; for (let i = 1; i < a.length; i++) if (cmp(a[i], a[k])) k = i; selectAt(k); };
+  $('selMin').addEventListener('click', () => pickBy((x, y) => x < y));
+  $('selMax').addEventListener('click', () => pickBy((x, y) => x > y));
+  $('selDel').addEventListener('click', () => {
+    if (S.sel < 0 || S.sel >= S.vals.length || S.vals.length <= 1) return;
+    S.vals.splice(S.sel, 1); if (S.shown !== Infinity) S.shown = Math.min(S.shown, S.vals.length); S.sel = -1; edited();
+  });
+  /* dragging on the main picture: a dot (its value), or the start and width tabs */
+  function grabMain(px, py) {
+    const Lo = layout(), p = Lo.p;
+    if (py >= Lo.hBot - 4 * p && py <= Lo.hBot + 24 * p) {
+      const xs = X(S.start, Lo), xw = X(S.start + S.width, Lo);
+      if (Math.abs(px - xw) <= 12 * p && Math.abs(px - xw) <= Math.abs(px - xs)) return { kind: 'width' };
+      if (Math.abs(px - xs) <= 12 * p) return { kind: 'start' };
+    }
+    if (!S.dotXY) return null;
+    let best = -1, bd = 1e9;
+    S.dotXY.forEach((q, i) => { if (!q) return; const dd = Math.hypot(q[0] - px, q[1] - py); if (dd < bd) { bd = dd; best = i; } });
+    if (best >= 0 && bd <= 16 * p) return { kind: 'dot', i: best };
+    if (py > Lo.dTop && py < Lo.bBot) return { kind: 'none' };
+    return null;
+  }
+  const snapV = (v) => roundTo(v, S.d);
+  can.addEventListener('pointerdown', (e) => {
+    const r = can.getBoundingClientRect(), px = e.clientX - r.left, py = e.clientY - r.top, g = grabMain(px, py);
+    if (!g) return;
+    if (g.kind === 'none') { selectAt(-1); return; }
+    if (g.kind === 'dot') selectAt(g.i);
+    S.drag = g; can.setPointerCapture(e.pointerId); e.preventDefault(); need = true;
+  });
+  can.addEventListener('pointermove', (e) => {
+    const r = can.getBoundingClientRect(), px = e.clientX - r.left, py = e.clientY - r.top, Lo = layout();
+    if (!S.drag) { const g = grabMain(px, py); can.style.cursor = g && g.kind !== 'none' ? (g.kind === 'dot' ? 'grab' : 'ew-resize') : 'default'; return; }
+    const v = Xi(Math.max(Lo.L, Math.min(Lo.R, px)), Lo);
+    if (S.drag.kind === 'dot') { S.vals[S.drag.i] = snapV(v); edited(); }
+    else if (S.drag.kind === 'start') { setBins(roundTo(v, S.d + 1), S.width); sync(); }
+    else if (S.drag.kind === 'width') { setBins(S.start, roundTo(v - S.start, S.d + 1)); sync(); }
+  });
+  const upMain = () => { if (S.drag) { S.drag = null; widenView(); need = true; needHtml = true; } };
+  can.addEventListener('pointerup', upMain); can.addEventListener('pointercancel', upMain);
+  function nudge(e) {
+    if (e.key === ' ') { $('play').click(); e.preventDefault(); return; }
+    const a = live(); if (!a.length) return;
+    if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+      const order = a.map((v, i) => i).sort((i, j) => a[i] - a[j] || i - j), k = order.indexOf(S.sel);
+      const nk = k < 0 ? 0 : Math.max(0, Math.min(order.length - 1, k + (e.key === 'ArrowUp' ? 1 : -1))); selectAt(order[nk]); e.preventDefault(); return;
+    }
+    if ((e.key === 'ArrowLeft' || e.key === 'ArrowRight') && S.sel >= 0) {
+      const st = Math.pow(10, -S.d) * (e.shiftKey ? 10 : 1);
+      S.vals[S.sel] = snapV(S.vals[S.sel] + (e.key === 'ArrowRight' ? st : -st)); widenView(); edited(); e.preventDefault();
+    }
+  }
+  can.addEventListener('keydown', nudge); ts.addEventListener('keydown', nudge);
+  /* the time series: drag a point up or down */
+  ts.addEventListener('pointerdown', (e) => {
+    if (!S.ordered || !S.tsXY) return;
+    const r = ts.getBoundingClientRect(), px = e.clientX - r.left, py = e.clientY - r.top, p = proj();
+    let best = -1, bd = 1e9; S.tsXY.forEach((q, i) => { const dd = Math.hypot(q[0] - px, q[1] - py); if (dd < bd) { bd = dd; best = i; } });
+    if (best < 0 || bd > 16 * p) return;
+    selectAt(best); S.tsDrag = best; ts.setPointerCapture(e.pointerId); e.preventDefault();
+  });
+  ts.addEventListener('pointermove', (e) => {
+    if (S.tsDrag == null) return;
+    const r = ts.getBoundingClientRect(), Lo = tsLayout(), py = Math.max(Lo.T, Math.min(Lo.B, e.clientY - r.top));
+    const v = S.view[0] + (Lo.B - py) / (Lo.B - Lo.T) * (S.view[1] - S.view[0]);
+    S.vals[S.tsDrag] = snapV(v); edited();
+  });
+  const upTs = () => { if (S.tsDrag != null) { S.tsDrag = null; widenView(); need = true; } };
+  ts.addEventListener('pointerup', upTs); ts.addEventListener('pointercancel', upTs);
+
+  /* ---------- the loop ---------- */
+  let last = performance.now();
+  function frame(now) {
+    const dt = Math.min(0.1, (now - last) / 1000); last = now;
+    if (S.run) {
+      S.clock += dt;
+      while (S.clock >= pace() && S.shown < S.vals.length) { S.clock -= pace(); S.drop[S.shown] = now; S.shown++; stats(); needHtml = true; need = true; }
+      if (S.shown >= S.vals.length) { S.shown = Infinity; setRun(false); stats(); needHtml = true; }
+      need = true;
+    }
+    if (need) { need = false; draw(); drawTs(); }
+    if (needHtml) { needHtml = false; html(); }
+    requestAnimationFrame(frame);
+  }
+  function resize() {
+    dpr = window.devicePixelRatio || 1;
+    const r = $('pane').getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr);
+    const q = $('tsbox').getBoundingClientRect(); TW = q.width; TH = q.height; ts.width = Math.round(TW * dpr); ts.height = Math.round(TH * dpr);
+    need = true;
+  }
+  const retheme = () => { tokens(); need = true; };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'data-vd-look'] });
+  VD.projector({ onChange: resize });
+  if (window.VD && VD.panel) VD.panel({ play: '#play', reset: '#reset' });
+  if (window.VD && VD.splitPanes) VD.splitPanes($('pane'), $('lower'), { key: 'lower', label: 'Divider between the number line graphs and the time series' });
+  if (window.VD && VD.howTo) VD.howTo({ src: 'media/how-this-works/data-explorer.mp4', poster: 'media/how-this-works/data-explorer.jpg' });
+  /* Copy link carries typed data and edited values */
+  if (window.VD && VD.share && VD.share.picture) VD.share.picture('d', {
+    get: () => (S.preset === 'custom' || S.vals.length !== S.orig.length || S.vals.some((v, i) => v !== S.orig[i]) ? VD.share.pack({ p: S.preset, v: S.vals, o: S.preset === 'custom' ? S.orig : null }) : ''),
+    set: (s) => {
+      const o = s && VD.share.unpack(s); if (!o || !Array.isArray(o.v)) return;
+      const vals = o.v.map(Number).filter(isFinite); if (!vals.length) return;
+      if (o.p && SETS[o.p] && o.p !== 'custom') { applyPreset(o.p); setValues(vals, true); edited(); }
+      else { $('dataIn').value = (o.o || vals).join('; '); $('dataIn').dispatchEvent(new Event('input')); if (o.o) { setValues(vals, true); edited(); } }
+    },
+  });
+  /* Record reading: the data set's summary (the worksheet describing-data) */
+  window.vdReadingRow = () => {
+    const st = S.stat; if (!st || !st.n) return tt('There are no data to describe.');
+    if (S.shown !== Infinity) return tt('Wait for all the values to arrive, or press Reset.');
+    const d = S.d, e = (S.vals.length !== S.orig.length || S.vals.some((v, i) => v !== S.orig[i]));
+    const num = (s) => Number(String(s).replace(/,/g, '').replace('−', '-'));
+    return { setup: S.preset, data_set: SETS[S.preset].name, draw: SIM[S.preset] ? S.draw : '', edited: e ? 'yes' : 'no', n: st.n, mean: num(fmt(st.mean, dM())), median: num(fx(st.median, d)), sd: num(fmt(st.sd, dM())),
+      min: st.min, q1: num(fx(st.q1, d)), q3: num(fx(st.q3, d)), max: st.max, iqr: num(fx(st.iqr, d)), outliers: st.outliers.length, skew: num(fmt(st.skew, 3)) };
+  };
+  window.vdShowCols = [['data_set', 'Data set'], ['n', 'n'], ['mean', 'Mean'], ['median', 'Median'], ['sd', 's']];
+  window.vdVersion = 'data-explorer@2026-11-19';
+  window.vdDataNote = () => (BOOK[S.preset] && S.vals.every((v, i) => v === S.orig[i]) && S.vals.length === S.orig.length ? 'Data from OpenStax Introductory Statistics 2e, ' + BOOK[S.preset].sec + ' (CC BY 4.0).' : '');
+  if (window.VD && VD.describe) VD.describe(can, () => {
+    const st = S.stat; if (!st || !st.n) return [];
+    const out = [tt('{name}: {n} values from {a} to {b}.', { name: tt(SETS[S.preset].name), n: st.n, a: fmt(st.min, S.d), b: fmt(st.max, S.d) })];
+    if (!S.blind) {
+      out.push(tt('Mean {m}, median {md}, standard deviation {s}.', { m: fmt(st.mean, dM()), md: fx(st.median, S.d), s: fmt(st.sd, dM()) }));
+      out.push(tt('Q1 {a}, Q3 {b}, IQR {c}; {k} outliers.', { a: fx(st.q1, S.d), b: fx(st.q3, S.d), c: fx(st.iqr, S.d), k: st.outliers.length }));
+    }
+    return out;
+  });
+  tokens(); new ResizeObserver(resize).observe($('pane')); new ResizeObserver(resize).observe($('tsbox')); resize();
+  applyPreset('pendulum');
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  window.__dx = { S, BOOK, SIM, applyPreset, simulate, describe, freqByValue, freqByClass, bins, autoBins, stemplot, parseData, setBins, selectAt, setRun, live, edited, draw: () => { need = true; needHtml = true; } };
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

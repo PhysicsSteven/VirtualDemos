@@ -12603,6 +12603,22 @@
       ]
     },
     {
+      "demo": "data-explorer",
+      "course": [
+        "later"
+      ],
+      "sections": [],
+      "role": "demo",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "New 2026-11-19 (Claude, OpenStax Introductory Statistics, Steve's approved plan): one data set as frequency table, stemplot, dot plot, histogram, box plot and time series at once, with the book's quartile, percentile and outlier rules (vdstats.js). Book sections are mapped in curriculum/statistics-map.json.",
+      "title": "Data Explorer",
+      "url": "demos/data-explorer.html",
+      "handouts": [
+        "describing-data"
+      ]
+    },
+    {
       "demo": "slope-fields",
       "course": [
         "later"

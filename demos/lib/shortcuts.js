@@ -101,6 +101,10 @@ window.VD_SHORTCUTS = {
     ["← →", "Pan the view (Shift for bigger steps)", "on the picture"],
     ["↑ ↓", "Make ε bigger or smaller", "on the picture"]
   ],
+  "data-explorer": [
+    ["← →", "Move the selected value by one unit of the data's last decimal place (Shift for ten)", "on the graphs"],
+    ["↑ ↓", "Select the next larger or smaller value", "on the graphs"]
+  ],
   "integrals": [
     ["↑ ↓", "One more or one fewer piece n (Error against n)", "on the graph"],
     ["← →", "Move x along the curve (F(x), the area so far; Shift for bigger steps)", "on the graph"],
