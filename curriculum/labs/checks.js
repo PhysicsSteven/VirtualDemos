@@ -474,7 +474,9 @@
     let sxy = 0, sxx = 0; for (const q of pts) { sxy += (q[0] - mx) * (q[1] - my); sxx += (q[0] - mx) ** 2; } return sxx > 0 ? sxy / sxx : NaN; };
   C['sampling-methods'] = {
     items: {},
-    cells: [{ table: 1, col: 'Bias', from: (r) => r.n('Mean of the x') - r.n('Population mean') }],
+    /* the bias is worked out from unrounded means, so it may differ from the difference of the two rounded ones by the rounding,
+       0.01 ¢; within that it agrees */
+    cells: [{ table: 1, col: 'Bias', from: (r) => { const w = r.n('Mean of the x') - r.n('Population mean'), b = r.n('Bias'); return Math.abs(b - w) <= 0.0101 ? b : w; } }],
   };
   C['central-limit-theorem'] = {
     items: {
