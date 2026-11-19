@@ -980,32 +980,43 @@
       {
        "sec": "5.1",
        "title": "Double Integrals over Rectangular Regions",
-       "demos": []
+       "demos": [
+        "multiple-integrals"
+       ]
       },
       {
        "sec": "5.2",
        "title": "Double Integrals over General Regions",
-       "demos": []
+       "demos": [
+        "multiple-integrals"
+       ]
       },
       {
        "sec": "5.3",
        "title": "Double Integrals in Polar Coordinates",
-       "demos": []
+       "demos": [
+        "multiple-integrals"
+       ]
       },
       {
        "sec": "5.4",
        "title": "Triple Integrals",
-       "demos": []
+       "demos": [
+        "multiple-integrals"
+       ]
       },
       {
        "sec": "5.5",
        "title": "Triple Integrals in Cylindrical and Spherical Coordinates",
-       "demos": []
+       "demos": [
+        "multiple-integrals"
+       ]
       },
       {
        "sec": "5.6",
        "title": "Calculating Centers of Mass and Moments of Inertia",
        "demos": [
+        "multiple-integrals",
         "center-of-mass",
         "rotation",
         "rotational-dynamics"
@@ -1014,7 +1025,9 @@
       {
        "sec": "5.7",
        "title": "Change of Variables in Multiple Integrals",
-       "demos": []
+       "demos": [
+        "multiple-integrals"
+       ]
       }
      ]
     },

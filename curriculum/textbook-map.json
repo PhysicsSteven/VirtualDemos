@@ -3499,7 +3499,8 @@
       "status": "usable",
       "demos": [
         "collisions",
-        "center-of-mass"
+        "center-of-mass",
+        "multiple-integrals"
       ],
       "unit": "momentum",
       "note": "Center of Mass (2026-10-22, Claude): weighted average of draggable point masses, an exploding firework whose pieces keep the CM parabola, and a person walking on a boat (CM fixed). Continuous bodies are not integrated."
@@ -3550,7 +3551,8 @@
       "status": "usable",
       "demos": [
         "rotation",
-        "rotational-dynamics"
+        "rotational-dynamics",
+        "multiple-integrals"
       ],
       "unit": "rotation",
       "note": "Rotational Dynamics lab (2026-10-22, Claude): falling mass spins a turntable; time the drop, α from a = 2h/t², I from the τ against α slope; constant α kinematics."
@@ -12716,6 +12718,30 @@
       "note": "New 2026-11-19 (Claude, from Steve's approved Calculus plan): a math tool for OpenStax Calculus Vol 1 4.1 (related rates) and 4.7 (applied optimization). A sliding ladder, a filling cone and a lengthening shadow with live rates and the chain rule checked against the motion; the biggest box, a fence along a river, the can with least metal; the lifeguard and Fermat's principle giving Snell's law; the longest throw, 45° on level ground and less from a height.",
       "title": "Related Rates and Optimization",
       "url": "demos/rates-and-optimization.html"
+    },
+    {
+      "demo": "multiple-integrals",
+      "course": [
+        "later"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "9.6",
+          "title": "Center of Mass"
+        },
+        {
+          "vol": 1,
+          "sec": "10.5",
+          "title": "Calculating Moments of Inertia"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "New 2026-11-19 (Claude, Steve's approved Calculus plan, step 4): a math tool for OpenStax Calculus Vol 3 ch 5 (5.1 to 5.7). Double integrals as boxes under a typed surface, iterated slices in both orders with the reversed bounds checked, polar wedges and the Gaussian integral, triple integrals in rectangular, cylindrical and spherical cells, mass, center of mass and moment of inertia of a rod, plate, disk, sphere or cone with uniform or graded density against closed forms, and a change of variables with its exact Jacobian.",
+      "title": "Multiple Integrals",
+      "url": "demos/multiple-integrals.html"
     }
   ],
   "activities": [

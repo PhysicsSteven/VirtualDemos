@@ -1416,6 +1416,22 @@
       "Snell's law",
       "projectile range"
      ]
+    },
+    {
+     "demo": "multiple-integrals",
+     "title": "Multiple Integrals",
+     "desc": "Boxes under a surface turning into a double integral as the grid refines; slices in either order over a region you type, with the reversed bounds checked; polar wedges and the Gaussian integral √π; triple integrals filled with rectangular, cylindrical or spherical cells; the mass, center of mass and moment of inertia of a rod, plate, disk, sphere or cone (½MR², ⅖MR², ⅓ML² checked); and a grid stretched by a change of variables and its Jacobian.",
+     "tags": [
+      "double integral",
+      "triple integral",
+      "iterated integral",
+      "polar coordinates",
+      "spherical coordinates",
+      "Jacobian",
+      "center of mass",
+      "moment of inertia",
+      "calculus"
+     ]
     }
    ]
   },

@@ -69,6 +69,7 @@ OVERRIDES = {
     "slope-fields": {"wait": 900, "crop": ".pane", "js": "const pn = document.getElementById('pane'); pn.style.flex = 'none'; pn.style.minHeight = '0'; pn.style.height = '400px'; pn.style.width = '640px'; window.__sf.applyPreset('harvest'); window.__sf.S.prog = 99; window.__sf.draw();"},
     "numerical-methods": {"wait": 900, "crop": "#scene", "anchor": "top", "js": "window.__nm.applyPreset('orbit'); window.__nm.plusPeriod(); window.__nm.plusPeriod(); window.__nm.plusPeriod();"},
     "vector-fields": {"wait": 900, "crop": ".pane", "js": "window.__vf.applyPreset('wire'); window.__vf.S.t = 0.3; document.getElementById('showPaddle').checked = true; document.getElementById('showTracers').checked = false; window.__vf.draw();"},
+    "multiple-integrals": {"wait": 2500, "crop": ".pane", "js": "window.__mi.applyPreset('ball'); document.getElementById('cut').checked = true; document.getElementById('showElem').checked = false; window.__mi.S.ni = 3; window.__mi.recompute();"},
     "rainbows": {"wait": 1500, "crop": ".stage", "js": "document.getElementById('setupCard').style.visibility = 'hidden'; window.__rb.applyPreset('evening'); window.__rb.S.marks = false; window.__rb.drawAll();"},
     "color-vision": {"wait": 900, "crop": ".stage", "js": "document.getElementById('setupCard').style.visibility = 'hidden'; window.__cv.applyPreset('yellow');"},
     "quantum-coin": {"wait": 900, "crop": ".stage", "js": "document.getElementById('setupCard').style.visibility = 'hidden'; window.__qc.applyPreset('s60'); window.__qc.measure(300);"},
