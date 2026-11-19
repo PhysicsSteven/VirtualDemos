@@ -334,6 +334,7 @@ HANDOUT_TOPIC = {
     'integrals-error-order': 'How Fast Do Riemann Sums Converge?',
     'errors-and-power': 'Type I Errors, Type II Errors and Power',
     'one-way-anova': 'One Way ANOVA: Gaps, Spreads and False Alarms',
+    'regression-fit': 'Fitting a Line and Judging the Fit',
     'quantum-tunneling': 'Quantum Tunneling', 'energy-levels': 'Energy Levels in a Box and a Spring', 'uncertainty-principle': 'The Uncertainty Principle', 'hydrogen-atom': 'The Hydrogen Atom', 'laser-threshold': 'Laser Threshold, Efficiency and Cavity Modes', 'spin-resonance': 'Spin Resonance',
 }
 

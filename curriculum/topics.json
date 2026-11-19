@@ -456,7 +456,8 @@
       "vector-fields",
       "rates-and-optimization",
       "hypothesis-tests",
-      "anova"
+      "anova",
+      "regression"
      ]
     }
    ]

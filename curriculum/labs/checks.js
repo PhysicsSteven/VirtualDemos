@@ -48,6 +48,19 @@
     cells: [{ table: 2, col: 4, from: (r) => (r.n(2) - r.n(3)) ** 2 / r.n(3) },
       { table: 3, col: 4, from: (r) => 100 * Math.exp(-2 * r.n(1)) }],
   };
+  /* Linear Regression and Correlation (regression-fit, Statistics for physics, 2026-11-19). Table 1 columns: Reading | Data set |
+     n | Slope b | SE of slope | Intercept a | SE of intercept | r | s. Table 4: Try | your line | least squares | Σ(y − ȳ)². */
+  const regRow = (D, re) => D.rows(1).find((r) => re.test(r.s(2)));
+  C['regression-fit'] = {
+    items: {
+      'analysis-1': { expect: (D) => { const L = D.rows(4).filter((r) => isFinite(r.n(3)) && isFinite(r.n(4)));
+        return L.length ? { any: [1 - L[0].n(3) / L[0].n(4), ...L.map((r) => r.n(2) / r.n(3))] } : NaN; } },
+      'analysis-3': { tol: 2, expect: (D) => { const r = D.rows(1)[0]; if (!r) return NaN; const k = r.n(8), n = r.n(3); return k * Math.sqrt(n - 2) / Math.sqrt(1 - k * k); } },
+      'analysis-5': { tol: 4, expect: (D) => { const a = regRow(D, /exam(?!.*removed)/i), b = regRow(D, /exam.*removed/i);
+        return a && b ? { any: [(b.n(4) - a.n(4)) / a.n(4) * 100, Math.abs(b.n(4) - a.n(4)) / a.n(4) * 100] } : NaN; } },
+      'analysis-6': { expect: (D) => { const r = regRow(D, /T²|length/i); if (!r) return NaN; const g = 4 * Math.PI * Math.PI / r.n(4); return { any: [g, g * r.n(5) / r.n(4)] }; } },
+    },
+  };
 
   /* Faraday Waves (Chladni Plates, Liquid layer, 2026-11-19): k = 2π/λ with λ in mm, ω = 2π × the surface frequency; the slope
      of ω²/k against k² is σ/ρ (water, 998.2 kg/m³), given in mN/m, and the intercept is g */

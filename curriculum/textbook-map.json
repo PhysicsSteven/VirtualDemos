@@ -12750,6 +12750,22 @@
       "note": "New 2026-11-19 (Claude, from Steve's approved Calculus plan): a math tool for OpenStax Calculus Vol 1 4.1 (related rates) and 4.7 (applied optimization). A sliding ladder, a filling cone and a lengthening shadow with live rates and the chain rule checked against the motion; the biggest box, a fence along a river, the can with least metal; the lifeguard and Fermat's principle giving Snell's law; the longest throw, 45° on level ground and less from a height.",
       "title": "Related Rates and Optimization",
       "url": "demos/rates-and-optimization.html"
+    },
+    {
+      "demo": "regression",
+      "course": [
+        "later"
+      ],
+      "sections": [],
+      "role": "demo",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "New 2026-11-19 (Claude, OpenStax Introductory Statistics step 5, Steve's approved plan): scatter plot with draggable points, the least squares line with its residual squares against a line the student drags, r, r², s, slope and intercept with standard errors read in context, the t test and 95 % critical value for r beside a shuffle (permutation) test, prediction against extrapolation, outliers by the book's 2s rule and the line without a selected point. Book data (Introductory Statistics 2e 12.3 to 12.6) and simulated spring, pendulum, Ohm's law and bob mass labs. Sections go in the lead's statistics map. Worksheet regression-fit; key in TeacherKeys worksheet-keys/statistics.",
+      "title": "Linear Regression and Correlation",
+      "url": "demos/regression.html",
+      "handouts": [
+        "regression-fit"
+      ]
     }
   ],
   "activities": [

@@ -1092,6 +1092,14 @@
     'counting-statistics': { demo: 'Radioactive Decay (Counting)', cols: ['row', 'rate', 'dt', 'mu', 'n', 'mean', 'sd', 'sqrt_mean', 'var_ratio'] },
   });
   /* ==STATS labsetups END== */
+  /* ==STATS regression START== Statistics for physics (OpenStax Introductory Statistics 2e, 2026-11-19), in no course yet. */
+  /* Linear Regression and Correlation, worksheet regression-fit: each Record reading is one fit, sent to Table 1 (Reading |
+     Data set | n | Slope b | SE of slope | Intercept a | SE of intercept | r | s); Tables 2 to 5 are typed from the readouts. */
+  ENABLED.push('regression-fit');
+  Object.assign(FROM_DEMO, {
+    'regression-fit': { demo: 'Linear Regression and Correlation', cols: ['row', 'set', 'n', 'b', 'se_b', 'a', 'se_a', 'r', 's'] },
+  });
+  /* ==STATS regression END== */
   /* ==FORMULAS START== */
   /* Spreadsheet formulas in the data tables, and the curve fits of the graphs. Plain functions with no page access, so
      curriculum/validation/test_worksheet_formulas.cjs runs them in Node. Formulas are read by a small parser of their own (no eval):

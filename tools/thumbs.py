@@ -62,6 +62,7 @@ OVERRIDES = {
     "curves-and-motion": {"wait": 1200, "crop": ".pane", "js": "window.__cm.applyPreset('orbit'); window.__cm.S.u = 1.2; window.__cm.draw();"},
     "function-families": {"wait": 1200, "crop": ".pane", "js": "const p = document.getElementById('pane'); p.style.flex = 'none'; p.style.minHeight = '0'; p.style.width = '768px'; p.style.height = '480px'; window.__ff.S.t = 2.2; window.__ff.refresh();"},
     "limits": {"wait": 1200, "crop": ".pane", "js": "const p = document.getElementById('pane'); p.style.flex = 'none'; p.style.minHeight = '0'; p.style.width = '768px'; p.style.height = '480px'; window.__lim.applyPreset('sinc'); window.__lim.zoom(0.5); window.__lim.refresh();"},
+    "regression": {"wait": 900, "crop": ".pane", "js": "const pn = document.getElementById('pane'); pn.style.flex = 'none'; pn.style.minHeight = '0'; pn.style.width = '640px'; pn.style.height = '400px'; window.__reg.draw();"},
     "integrals": {"wait": 900, "crop": ".pane", "js": "window.__int.setN(6); window.__int.draw();"},
     "taylor": {"wait": 1200, "crop": ".pane", "js": "window.__ty.applyPreset('poles'); window.__ty.setN(12); window.__ty.draw();"},
     "rates-and-optimization": {"wait": 1000, "crop": ".pane", "js": "window.__ro.applyPreset('guard'); window.__ro.setX(40); window.__ro.draw();"},
