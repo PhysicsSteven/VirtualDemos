@@ -13,7 +13,7 @@
    - Regression: linreg(x, y) gives slope, intercept, r, r2, s (standard error of estimate), SE of slope and intercept,
      t for r and its two sided p value, df = n - 2, and residuals.
    - Tests: tTest1, zTest1, propTest1, tTest2 (Welch, unpooled as the book does), zTest2s (two means, sigmas known), propTest2, pairedT, chisqGOF, chisqIndep,
-     anova1, fTest2 (two variances). Each returns its statistic, df and p value (tail 'two', 'left' or 'right').
+     anova1, fTest2 (two variances), chisqVar (one variance). Each returns its statistic, df and p value (tail 'two', 'left' or 'right').
    - Intervals: zInterval, tInterval, propInterval (the book's normal approximation), plusFourInterval (8.3, added 2026-11-19). */
 var VDSTATS = (function () {
   'use strict';
@@ -242,6 +242,8 @@ var VDSTATS = (function () {
     return { ssb, ssw, dfb, dfw, msb, msw, F, p: 1 - dist.f(dfb, dfw).cdf(F) };
   }
   function fTest2(a, b, tail = 'two') { const F = variance(a) / variance(b), d1 = a.length - 1, d2 = b.length - 1; return { F, d1, d2, p: pval(dist.f(d1, d2), F, tail) }; }
+  /* test of a single variance (Introductory Statistics 11.6): chi2 = (n - 1) s^2 / sigma0^2 with n - 1 df */
+  function chisqVar(s, n, sigma0, tail = 'right') { const c = (n - 1) * s * s / (sigma0 * sigma0), df = n - 1; return { chi2: c, df, p: pval(dist.chisq(df), c, tail) }; }
   function zInterval(xbar, sigma, n, cl) { const z = dist.normal().inv(1 - (1 - cl) / 2), E = z * sigma / Math.sqrt(n); return { lo: xbar - E, hi: xbar + E, E, crit: z }; }
   function tInterval(xbar, s, n, cl) { const t = dist.t(n - 1).inv(1 - (1 - cl) / 2), E = t * s / Math.sqrt(n); return { lo: xbar - E, hi: xbar + E, E, crit: t }; }
   function propInterval(x, n, cl) { const ph = x / n, z = dist.normal().inv(1 - (1 - cl) / 2), E = z * Math.sqrt(ph * (1 - ph) / n); return { lo: ph - E, hi: ph + E, E, crit: z, phat: ph }; }
@@ -254,7 +256,7 @@ var VDSTATS = (function () {
 
   return { rng, lgamma, lchoose, gammaP, gammaQ, betaI, erf, invert, dist, pval, sum, mean, median, variance, sd, sorted, fiveNum,
     quantile, percentileRank, iqrFences, skew, linreg, zTest1, tTest1, tTest1s, propTest1, tTest2, tTest2s, zTest2s, propTest2, pairedT,
-    chisqGOF, chisqIndep, anova1, fTest2, zInterval, tInterval, propInterval, histogram, plusFourInterval };
+    chisqGOF, chisqIndep, chisqVar, anova1, fTest2, zInterval, tInterval, propInterval, histogram, plusFourInterval };
 })();
 if (typeof window !== 'undefined') window.VDSTATS = VDSTATS;
 if (typeof globalThis !== 'undefined') globalThis.VDSTATS = VDSTATS;

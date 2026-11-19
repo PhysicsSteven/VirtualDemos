@@ -557,6 +557,32 @@
     cells: [{ table: 1, col: 'Caught (%)', from: (r) => 100 * r.n('Caught the truth') / r.n('Intervals') }, { table: 2, col: '1/√n', from: (r) => 1 / Math.sqrt(r.n('n')) }],
   };
   /* ==STATS sampling END== */
+  /* ==STATS chance START== Statistics for physics (Chance Lab and Chi-Square Tests, 2026-11-19) */
+  const meanSd = (rows, xcol, fcol) => {
+    const xf = rows.map((r) => [r.n(xcol), r.n(fcol)]).filter(([x, f]) => isFinite(x) && isFinite(f)), n = xf.reduce((a, [, f]) => a + f, 0);
+    if (!(n > 1)) return [NaN, NaN];
+    const m = xf.reduce((a, [x, f]) => a + x * f, 0) / n;
+    return [m, Math.sqrt(xf.reduce((a, [x, f]) => a + (x - m) * (x - m) * f, 0) / (n - 1))];
+  };
+  const both = (v) => (v.every(isFinite) ? v : NaN);
+  C['ws-probability'] = {
+    items: {
+      'analysis-1': { expect: (D) => both(meanSd(D.rows(1), 1, 'Frequency')) },
+      'analysis-3': { expect: (D) => both(meanSd(D.rows(2), 1, 'Frequency')) },
+      'analysis-4': { expect: (D) => both([meanSd(D.rows(3), 'Profit', 'Frequency')[0]]) },
+    },
+    cells: [],
+  };
+  const sumCol = (rows, col) => { const v = nums(rows, col); return v.length ? v.reduce((a, b) => a + b, 0) : NaN; };
+  const contrib = (r) => (r.n('Observed') - r.n('Expected')) ** 2 / r.n('Expected');
+  C['ws-chi-square'] = {
+    items: {
+      'analysis-1': { expect: (D) => sumCol(D.rows(1), 4) },
+      'analysis-2': { expect: (D) => { const a = D.n(1, { Face: 6 }, 4), b = D.n(2, { Face: 6 }, 4), s = sumCol(D.rows(2), 4); return isFinite(a) && isFinite(b) && a > 0 && isFinite(s) ? [s, b / a] : NaN; } },
+    },
+    cells: [1, 2, 3, 4].map((t) => ({ table: t, col: 4, from: contrib })),
+  };
+  /* ==STATS chance END== */
 
   window.VD_WS_CHECKS = C;
 })();

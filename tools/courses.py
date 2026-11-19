@@ -343,6 +343,8 @@ HANDOUT_TOPIC = {
     'regression-fit': 'Fitting a Line and Judging the Fit',
     'describing-data': 'Describing a Data Set: Center, Spread and One Bad Timing',
     'sampling-methods': 'How You Sample Matters', 'central-limit-theorem': 'The Central Limit Theorem', 'ci-coverage': 'What 95 % Confident Means',
+    'ws-probability': 'Dice and Cards: Predict, Simulate, Compare',
+    'ws-chi-square': 'Chi-Square Tests: A Loaded Die, Decay Counts and a Table',
     'quantum-tunneling': 'Quantum Tunneling', 'energy-levels': 'Energy Levels in a Box and a Spring', 'uncertainty-principle': 'The Uncertainty Principle', 'hydrogen-atom': 'The Hydrogen Atom', 'laser-threshold': 'Laser Threshold, Efficiency and Cavity Modes', 'spin-resonance': 'Spin Resonance',
 }
 

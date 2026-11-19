@@ -78,6 +78,8 @@ OVERRIDES = {
     "rates-and-optimization": {"wait": 1000, "crop": ".pane", "js": "window.__ro.applyPreset('guard'); window.__ro.setX(40); window.__ro.draw();"},
     "space-3d": {"wait": 2500, "crop": "#pane", "js": "window.__sp.applyPreset('vec'); window.__sp.draw();"},
     "surfaces-and-gradients": {"wait": 2500, "crop": ".panes", "js": "window.__sg.applyPreset('hill'); window.__sg.S.alpha = 0.6; window.__sg.draw();"},
+    "chance-lab": {"wait": 1200, "crop": "#vennPane", "js": "const pn = document.getElementById('vennPane'); document.getElementById('evgrid').style.display = 'block'; pn.style.width = '640px'; pn.style.height = '400px'; pn.style.minHeight = '0'; pn.style.maxHeight = '400px'; pn.style.flex = 'none'; window.__cl.applyPreset('dice2'); window.__cl.runMany(120); window.__cl.resize(); window.__cl.draw(); pn.scrollIntoView();"},
+    "chi-square-tests": {"wait": 1200, "crop": "#cellPane", "js": "const pn = document.getElementById('cellPane'); pn.style.width = '640px'; pn.style.height = '400px'; window.__cs.applyPreset('loaded'); window.__cs.draw();"},
     "derivatives": {"wait": 900, "crop": ".pane", "js": "window.__fg.S.px = -1.6; window.__fg.draw();"},
     "hypothesis-tests": {"wait": 900, "crop": "#paneA", "js": "window.__ht.applySetup('pair'); window.__ht.draw();"},
     "anova": {"wait": 900, "crop": "#paneM", "js": "window.__an.draw();"},

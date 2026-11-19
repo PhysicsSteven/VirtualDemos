@@ -1162,6 +1162,29 @@
       alt: [{ table: 1, when: (rows) => rows.length > 2 && rows.every((r) => r.kind === rows[0].kind && +r.cl === +rows[0].cl) && new Set(rows.map((r) => r.n)).size === rows.length, cols: ['row', 'n', 'inv_sqrt_n', 'mean_width'] }] },
   });
   /* ==STATS sampling END== */
+  /* ==STATS chance START== Statistics for physics worksheets (OpenStax Introductory Statistics 2e, 2026-11-19). */
+  ENABLED.push('ws-probability', 'ws-chi-square'); GRAPHS.push('ws-probability', 'ws-chi-square');
+  GRAPH_EVERY_TABLE.push('ws-probability');   /* relative frequency against x in Tables 1 to 3, the average profit against n in Table 5 */
+  Object.assign(FROM_DEMO, {
+    /* Chance Lab: a Random variable series fills Table 1 (Diamonds x | P(x) | Frequency | Relative frequency), Table 2 when dealt
+       without replacement, Table 3 for the three dice (with the profit); an Events series fills Table 4, a Long run series Table 5 */
+    'ws-probability': { demo: 'Chance Lab', cols: ['x', 'P_x', 'freq', 'rel_freq'],
+      alt: [
+        { table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.kind === 'pdf' && r.setup === 'cardsWO'), cols: ['x', 'P_x', 'freq', 'rel_freq'] },
+        { table: 2, when: (rows) => rows.length > 0 && rows.every((r) => r.kind === 'pdf' && r.X === 'match'), cols: ['x', 'y', 'P_x', 'freq', 'rel_freq'] },
+        { table: 3, when: (rows) => rows.length > 0 && rows.every((r) => r.kind === 'events'), cols: [(r) => (r.setup === 'cardsWO' ? 'without replacement' : r.setup === 'cardsW' ? 'with replacement' : r.setup), 'trials', 'P_B', 'P_BgA', 'rf_B', 'rf_BgA'] },
+        { table: 4, when: (rows) => rows.length > 0 && rows.every((r) => r.kind === 'long'), cols: ['trials', 'mean_Y', 'mu_Y'] },
+      ] },
+    /* Chi-Square Tests: one row per cell (Face | Observed O | Expected E | (O − E)²/E); 300 rolls go to Table 2, the decay counts to
+       Table 3, a table setup to Table 4. Table 5 is typed from the Readouts. */
+    'ws-chi-square': { demo: 'Chi-Square Tests', cols: ['cell', 'O', 'E', 'contrib'],
+      alt: [
+        { table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.setup === 'loaded' || r.setup === 'fair') && rows.reduce((s, r) => s + (+r.O || 0), 0) > 60, cols: ['cell', 'O', 'E', 'contrib'] },
+        { table: 2, when: (rows) => rows.length > 0 && rows.every((r) => r.setup === 'decay' || r.setup === 'dead'), cols: ['cell', 'O', 'E', 'contrib'] },
+        { table: 3, when: (rows) => rows.length > 0 && rows.every((r) => ['volunteer', 'anxiety', 'dieCoin', 'living', 'counselors'].indexOf(r.setup) >= 0), cols: ['cell', 'O', 'E', 'contrib'] },
+      ] },
+  });
+  /* ==STATS chance END== */
   /* ==FORMULAS START== */
   /* Spreadsheet formulas in the data tables, and the curve fits of the graphs. Plain functions with no page access, so
      curriculum/validation/test_worksheet_formulas.cjs runs them in Node. Formulas are read by a small parser of their own (no eval):

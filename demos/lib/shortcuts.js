@@ -140,6 +140,8 @@ window.VD_SHORTCUTS = {
     ["↑ ↓", "Change the sample size n (Shift for steps of 10)", "on the picture"],
     ["← →", "Step the confidence level through 90, 95 and 99 %", "on the picture"]
   ],
+  "chance-lab": [],
+  "chi-square-tests": [],
   "slope-fields": [
     ["← → ↑ ↓", "Move the start point of the curve in t or y (Shift for bigger steps)", "on the picture"],
     ["+ −", "Zoom in or out about the middle of the view (or scroll over the field)", "on the picture"]

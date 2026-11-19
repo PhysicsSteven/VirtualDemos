@@ -1627,6 +1627,38 @@
       "error bound",
       "standard error"
      ]
+    },
+    {
+     "demo": "chance-lab",
+     "title": "Chance Lab: Dice, Cards and Candies",
+     "desc": "Roll dice, deal cards with or without putting them back, and draw candies from a cup. Pick two events and watch every trial land in a Venn diagram, a tree diagram and a contingency table; check the addition and multiplication rules and independence; and watch relative frequencies settle toward probabilities and averages toward expected values.",
+     "tags": [
+      "probability",
+      "conditional probability",
+      "independent events",
+      "Venn diagram",
+      "tree diagram",
+      "contingency table",
+      "expected value",
+      "law of large numbers",
+      "binomial distribution",
+      "hypergeometric distribution"
+     ]
+    },
+    {
+     "demo": "chi-square-tests",
+     "title": "Chi-Square Tests",
+     "desc": "Observed against expected counts with each cell's (O − E)²/E drawn: a loaded die, Mendel's peas, Geiger counts against a Poisson distribution, tables of two variables, and the spread of stopwatch timings. Simulate data sets where the hypothesis is true and watch their chi square values fill a histogram under the curve.",
+     "tags": [
+      "chi square test",
+      "goodness of fit",
+      "test of independence",
+      "test for homogeneity",
+      "single variance",
+      "degrees of freedom",
+      "Poisson distribution",
+      "p value"
+     ]
     }
    ]
   },

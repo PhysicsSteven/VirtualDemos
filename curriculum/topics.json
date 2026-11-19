@@ -474,7 +474,9 @@
       "data-explorer",
       "distribution-explorer",
       "sampling-lab",
-      "confidence-intervals"
+      "confidence-intervals",
+      "chance-lab",
+      "chi-square-tests"
      ]
     }
    ]

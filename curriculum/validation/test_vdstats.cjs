@@ -85,4 +85,8 @@ group('two means with known sigmas: z by the formula of 10.2', () => {
   near(r.p, 1 - S.dist.normal().cdf(z), 1e-12, 'right p'); near(S.zTest2s(3, 0.33, 20, 2.9, 0.36, 20, 'two').p, 2 * r.p, 1e-12, 'two sided p');
   near(S.zTest2s(5, 1, 4, 4, 1, 4, 'two', 1).z, 0, 1e-15, 'hypothesized difference');
 });
+group('test of a single variance (book Example 11.11: n = 25, s = 3.5, sigma0 = 7.2, left tail)', () => {
+  const v = S.chisqVar(3.5, 25, 7.2, 'left'); near(v.chi2, 5.6713, 1e-4, 'chi2'); near(v.df, 24, 0, 'df'); near(v.p, 0.000042, 0.5e-6, 'p');
+  const r = S.chisqVar(13.2, 15, 12.2); near(r.chi2, 14 * 13.2 * 13.2 / (12.2 * 12.2), 1e-12, 'right tail default'); near(r.p, 1 - S.dist.chisq(14).cdf(r.chi2), 1e-12, 'p right');
+});
 console.log(`${n} groups passed`);

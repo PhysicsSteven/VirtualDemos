@@ -1,0 +1,652 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="lib/theme.js"></script>
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
+<script src="lib/constants.js"></script>
+<script src="lib/vdstats.js"></script>
+<title>Chi-Square Tests</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css: observed and expected colors, the contribution squares, the null curve */
+:root { --cs-o: #8f5000; --cs-e: #3d3a35; --cs-c1: #b42318; --cs-c2: #d97706; --cs-sim: #6d28d9; --cs-warn: #b45309; --cs-tail: #b42318; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --cs-o: #e8a440; --cs-e: #e6dccb; --cs-c1: #ff8a7a; --cs-c2: #fbbf24; --cs-sim: #c4b5fd; --cs-warn: #fbbf24; --cs-tail: #ff8a7a; } }
+:root[data-theme="dark"] { --cs-o: #e8a440; --cs-e: #e6dccb; --cs-c1: #ff8a7a; --cs-c2: #fbbf24; --cs-sim: #c4b5fd; --cs-warn: #fbbf24; --cs-tail: #ff8a7a; }
+.stage { position: relative; display: flex; flex-direction: column; min-height: min-content; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.stage-ctl select, .dbar select { font: inherit; font-size: 0.86rem; padding: 3px 6px; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; max-width: 100%; }
+.stage-ctl .note { margin-left: auto; font-size: 0.8rem; color: var(--muted); }
+.dbar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); font-size: 0.86rem; }
+.dbar label { display: inline-flex; align-items: center; gap: 6px; }
+.dbar [hidden] { display: none !important; }
+.dbar .seg { flex-wrap: wrap; max-width: 100%; }
+.pane { position: relative; height: 330px; flex: none; border-bottom: 1px solid var(--line); }
+.pane.null { height: 270px; }
+.pane canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; outline: none; }
+.cards { display: flex; flex-wrap: wrap; gap: 12px; padding: 10px; border-bottom: 1px solid var(--line); }
+.card { flex: 1 1 280px; min-width: 0; padding: 8px 10px; border: 1px solid var(--line); border-radius: 10px; background: var(--canvas); font-size: 0.86rem; }
+.card > .card-title { display: block; font-size: 0.78rem; font-weight: 700; color: var(--muted); margin-bottom: 6px; }
+.card p { margin: 0 0 6px; }
+.twrap { overflow-x: auto; max-height: 300px; overflow-y: auto; }
+table.cells { border-collapse: collapse; width: 100%; font-size: 0.84rem; font-variant-numeric: tabular-nums; }
+table.cells th, table.cells td { border-bottom: 1px solid var(--line); padding: 3px 6px; text-align: right; }
+table.cells th { color: var(--muted); font-size: 0.78rem; position: sticky; top: 0; background: var(--canvas); }
+table.cells td:first-child, table.cells th:first-child { text-align: left; }
+table.cells td.warn { color: var(--cs-warn); font-weight: 700; }
+table.cells tr.tot td { font-weight: 700; border-top: 2px solid var(--line); }
+.verdict { font-weight: 700; }
+.verdict.rej { color: var(--cs-tail); }
+.rule5 { color: var(--muted); }
+.rule5.warn { color: var(--cs-warn); font-weight: 700; }
+.cite { font-size: 0.78rem; color: var(--muted); }
+.rail .drawrow { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 8px; font-size: 0.86rem; }
+.rail .chips .grp { flex: 1 1 100%; font-size: 0.72rem; font-weight: 700; color: var(--muted); margin-top: 4px; }
+@media (min-width: 821px) { .bench > .stage { align-self: start; } }
+@media (max-width: 820px) { .pane { height: 300px; } .pane.null { height: 240px; } }
+@media (max-width: 520px) { .stage-ctl .note { margin-left: 0; } .card { flex-basis: 100%; } }
+</style>
+<link rel="stylesheet" id="vd-paper" href="lib/paper.css">
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Chi-Square Tests</h1>
+      <p>Observed counts against the counts a hypothesis expects, with each cell's share (O − E)²/E of the chi square statistic drawn as a square. Test a die, Mendel's peas, the counts from a radioactive source, and tables of two variables; test a spread. Then simulate many data sets where the hypothesis is true and watch their statistics fill a histogram under the chi square curve.</p>
+    </div>
+    <div class="bar-right">
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/chi-square-tests.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/chi-square-tests.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM10 2h2v1h-2zM13 2h3v1h-3zM19 2h1v1h-1zM21 2h2v1h-2zM25 2h6v1h-6zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM12 3h1v1h-1zM15 3h1v1h-1zM20 3h2v1h-2zM24 3h1v1h-1zM28 3h1v1h-1zM30 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM11 4h2v1h-2zM14 4h1v1h-1zM17 4h4v1h-4zM23 4h2v1h-2zM28 4h2v1h-2zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h1v1h-1zM14 5h2v1h-2zM17 5h1v1h-1zM20 5h1v1h-1zM25 5h5v1h-5zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h2v1h-2zM13 6h1v1h-1zM15 6h2v1h-2zM18 6h2v1h-2zM23 6h1v1h-1zM25 6h1v1h-1zM27 6h1v1h-1zM29 6h2v1h-2zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h2v1h-2zM14 7h1v1h-1zM17 7h1v1h-1zM19 7h1v1h-1zM21 7h4v1h-4zM27 7h2v1h-2zM30 7h1v1h-1zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h2v1h-2zM13 9h1v1h-1zM15 9h4v1h-4zM21 9h5v1h-5zM28 9h1v1h-1zM30 9h1v1h-1zM2 10h1v1h-1zM6 10h1v1h-1zM8 10h3v1h-3zM12 10h2v1h-2zM15 10h2v1h-2zM18 10h1v1h-1zM21 10h5v1h-5zM30 10h6v1h-6zM38 10h1v1h-1zM2 11h2v1h-2zM6 11h2v1h-2zM11 11h1v1h-1zM14 11h3v1h-3zM20 11h2v1h-2zM23 11h1v1h-1zM25 11h1v1h-1zM27 11h1v1h-1zM29 11h2v1h-2zM34 11h4v1h-4zM2 12h1v1h-1zM5 12h1v1h-1zM8 12h2v1h-2zM11 12h1v1h-1zM13 12h1v1h-1zM17 12h1v1h-1zM21 12h1v1h-1zM23 12h3v1h-3zM28 12h2v1h-2zM31 12h1v1h-1zM33 12h2v1h-2zM6 13h2v1h-2zM9 13h4v1h-4zM16 13h4v1h-4zM21 13h6v1h-6zM29 13h3v1h-3zM33 13h2v1h-2zM36 13h2v1h-2zM2 14h4v1h-4zM7 14h2v1h-2zM12 14h5v1h-5zM19 14h1v1h-1zM23 14h2v1h-2zM26 14h1v1h-1zM30 14h3v1h-3zM36 14h3v1h-3zM2 15h1v1h-1zM4 15h2v1h-2zM7 15h1v1h-1zM10 15h3v1h-3zM14 15h1v1h-1zM17 15h2v1h-2zM21 15h1v1h-1zM23 15h3v1h-3zM27 15h4v1h-4zM34 15h2v1h-2zM3 16h1v1h-1zM5 16h9v1h-9zM15 16h3v1h-3zM19 16h1v1h-1zM22 16h6v1h-6zM29 16h1v1h-1zM31 16h1v1h-1zM33 16h5v1h-5zM3 17h1v1h-1zM5 17h1v1h-1zM12 17h1v1h-1zM14 17h4v1h-4zM19 17h6v1h-6zM26 17h1v1h-1zM30 17h1v1h-1zM32 17h3v1h-3zM36 17h1v1h-1zM38 17h1v1h-1zM3 18h2v1h-2zM6 18h1v1h-1zM8 18h3v1h-3zM12 18h1v1h-1zM15 18h1v1h-1zM20 18h1v1h-1zM23 18h2v1h-2zM30 18h4v1h-4zM35 18h2v1h-2zM38 18h1v1h-1zM2 19h3v1h-3zM9 19h3v1h-3zM13 19h1v1h-1zM18 19h1v1h-1zM21 19h2v1h-2zM24 19h2v1h-2zM27 19h4v1h-4zM33 19h3v1h-3zM37 19h1v1h-1zM6 20h4v1h-4zM11 20h1v1h-1zM13 20h1v1h-1zM15 20h1v1h-1zM18 20h3v1h-3zM22 20h2v1h-2zM25 20h2v1h-2zM28 20h2v1h-2zM31 20h6v1h-6zM2 21h2v1h-2zM6 21h1v1h-1zM10 21h2v1h-2zM14 21h1v1h-1zM16 21h1v1h-1zM19 21h1v1h-1zM23 21h1v1h-1zM28 21h1v1h-1zM30 21h2v1h-2zM36 21h2v1h-2zM2 22h1v1h-1zM4 22h1v1h-1zM6 22h3v1h-3zM11 22h2v1h-2zM14 22h4v1h-4zM19 22h1v1h-1zM21 22h4v1h-4zM26 22h1v1h-1zM31 22h3v1h-3zM36 22h1v1h-1zM2 23h1v1h-1zM5 23h3v1h-3zM10 23h1v1h-1zM12 23h2v1h-2zM15 23h5v1h-5zM22 23h1v1h-1zM25 23h1v1h-1zM27 23h1v1h-1zM29 23h3v1h-3zM33 23h2v1h-2zM37 23h1v1h-1zM2 24h2v1h-2zM5 24h1v1h-1zM8 24h1v1h-1zM11 24h1v1h-1zM14 24h5v1h-5zM20 24h1v1h-1zM22 24h2v1h-2zM25 24h1v1h-1zM28 24h2v1h-2zM31 24h6v1h-6zM2 25h1v1h-1zM5 25h2v1h-2zM10 25h1v1h-1zM12 25h1v1h-1zM14 25h1v1h-1zM17 25h1v1h-1zM21 25h4v1h-4zM26 25h1v1h-1zM28 25h4v1h-4zM33 25h2v1h-2zM36 25h1v1h-1zM38 25h1v1h-1zM2 26h2v1h-2zM5 26h1v1h-1zM7 26h5v1h-5zM15 26h2v1h-2zM18 26h1v1h-1zM22 26h4v1h-4zM28 26h5v1h-5zM35 26h3v1h-3zM2 27h3v1h-3zM6 27h1v1h-1zM12 27h1v1h-1zM14 27h3v1h-3zM20 27h2v1h-2zM25 27h1v1h-1zM27 27h4v1h-4zM34 27h2v1h-2zM4 28h5v1h-5zM10 28h3v1h-3zM14 28h1v1h-1zM17 28h1v1h-1zM19 28h3v1h-3zM24 28h6v1h-6zM31 28h4v1h-4zM36 28h1v1h-1zM4 29h1v1h-1zM7 29h1v1h-1zM9 29h2v1h-2zM12 29h2v1h-2zM17 29h10v1h-10zM29 29h1v1h-1zM33 29h2v1h-2zM36 29h2v1h-2zM2 30h2v1h-2zM5 30h2v1h-2zM8 30h2v1h-2zM12 30h2v1h-2zM15 30h2v1h-2zM19 30h1v1h-1zM22 30h2v1h-2zM26 30h1v1h-1zM29 30h6v1h-6zM36 30h1v1h-1zM10 31h3v1h-3zM14 31h3v1h-3zM18 31h1v1h-1zM20 31h1v1h-1zM23 31h1v1h-1zM25 31h2v1h-2zM28 31h1v1h-1zM30 31h1v1h-1zM34 31h1v1h-1zM2 32h7v1h-7zM10 32h1v1h-1zM13 32h1v1h-1zM16 32h4v1h-4zM22 32h2v1h-2zM25 32h1v1h-1zM28 32h1v1h-1zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM12 33h1v1h-1zM16 33h2v1h-2zM19 33h2v1h-2zM23 33h1v1h-1zM26 33h1v1h-1zM28 33h1v1h-1zM30 33h1v1h-1zM34 33h3v1h-3zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h2v1h-2zM16 34h2v1h-2zM20 34h1v1h-1zM22 34h5v1h-5zM30 34h8v1h-8zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM12 35h1v1h-1zM14 35h2v1h-2zM18 35h1v1h-1zM21 35h3v1h-3zM25 35h1v1h-1zM27 35h1v1h-1zM29 35h5v1h-5zM35 35h2v1h-2zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM14 36h2v1h-2zM18 36h2v1h-2zM25 36h1v1h-1zM28 36h3v1h-3zM32 36h1v1h-1zM36 36h1v1h-1zM2 37h1v1h-1zM8 37h1v1h-1zM11 37h2v1h-2zM19 37h2v1h-2zM22 37h5v1h-5zM28 37h2v1h-2zM31 37h2v1h-2zM34 37h1v1h-1zM36 37h2v1h-2zM2 38h7v1h-7zM10 38h1v1h-1zM13 38h3v1h-3zM17 38h1v1h-1zM19 38h1v1h-1zM22 38h3v1h-3zM26 38h1v1h-1zM31 38h3v1h-3zM36 38h3v1h-3z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl" id="strip">
+        <button type="button" class="spin attn" id="play" data-vd-key="play">Play</button>
+        <button type="button" class="btn" id="reset" title="Clear the simulated data sets and start the same draw set again">Reset</button>
+        <button type="button" class="btn" id="sim1000">Simulate 1,000</button>
+        <select id="speed" aria-label="Data sets a second"><option value="5">5</option><option value="20" selected>20</option><option value="100">100</option><option value="1000">1,000</option></select>
+        <span class="note" id="note">Play simulates data sets where H₀ is true and drops each one's χ² into the histogram below.</span>
+      </div>
+      <div class="dbar" id="dbar">
+        <div class="seg" id="modeSeg" role="group" aria-label="Test">
+          <button type="button" data-m="gof" aria-pressed="true">Goodness of fit</button>
+          <button type="button" data-m="indep" aria-pressed="false">Independence</button>
+          <button type="button" data-m="homog" aria-pressed="false">Homogeneity</button>
+          <button type="button" data-m="var" aria-pressed="false">Single variance</button>
+        </div>
+        <label data-for="die">Rolls <select id="rolls"><option>18</option><option>30</option><option selected>60</option><option>120</option><option>300</option><option>600</option></select></label>
+        <label data-for="die">Chance of a six <select id="p6"><option value="0.16666666666666666">1/6 (fair)</option><option value="0.2">0.20</option><option value="0.25" selected>0.25</option><option value="0.3">0.30</option><option value="0.4">0.40</option></select></label>
+        <label data-for="decay">Intervals of 1 s <select id="nInt"><option>50</option><option selected>100</option><option>200</option><option>500</option></select></label>
+        <label data-for="decay">Count rate (per s) <select id="rate"><option>2</option><option selected>4</option><option>8</option><option>15</option><option>25</option></select></label>
+        <label data-for="decay">Dead time <select id="dead"><option value="0" selected>none</option><option value="0.01">10 ms</option><option value="0.02">20 ms</option><option value="0.04">40 ms</option></select></label>
+        <label data-for="dieCoin">Throws <select id="nDC"><option>60</option><option selected>120</option><option>300</option><option>600</option></select></label>
+        <label data-for="timing">Timings n <select id="nT"><option>10</option><option selected>20</option><option>30</option><option>50</option></select></label>
+        <label data-for="timing">Stopwatch spread σ <select id="sigT"><option value="0.03">0.03 s</option><option value="0.05">0.05 s</option><option value="0.07" selected>0.07 s</option><option value="0.1">0.10 s</option></select></label>
+        <label data-for="var">Hₐ <select id="tail"><option value="right">σ &gt; σ₀ (right tail)</option><option value="left">σ &lt; σ₀ (left tail)</option><option value="two">σ ≠ σ₀ (two tails)</option></select></label>
+        <label>α <select id="alpha"><option value="0.1">0.10</option><option value="0.05" selected>0.05</option><option value="0.01">0.01</option></select></label>
+        <button type="button" class="btn" id="newData" data-for="sim" title="Draw a new simulated data set (the next draw set)">New data</button>
+      </div>
+      <div class="pane" id="cellPane"><canvas id="cells" tabindex="0" role="img" aria-label="Observed counts as filled bars and expected counts as outlined bars, with each cell's contribution to chi square drawn as a square, and the chi square total as a stacked bar. Space plays or pauses."></canvas></div>
+      <div class="cards">
+        <div class="card"><span class="card-title" id="cellsTitle">The cells</span><div class="twrap"><table class="cells" id="cellTable"></table></div></div>
+        <div class="card"><span class="card-title">The test</span><div id="testBox"></div></div>
+      </div>
+      <div class="pane null" id="nullPane"><canvas id="nullc" role="img" aria-label="The chi square curve for these degrees of freedom, the observed statistic with the p value shaded, and a histogram of the statistics of simulated data sets where the null hypothesis is true"></canvas></div>
+    </div>
+
+    <aside class="rail">
+      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/ws-chi-square.html" target="ws-chi-square-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <span class="grp">Goodness of fit</span>
+          <button type="button" data-p="loaded" aria-pressed="true">A loaded die (simulated)</button>
+          <button type="button" data-p="fair" aria-pressed="false">A fair die (simulated)</button>
+          <button type="button" data-p="mendel" aria-pressed="false">Mendel's peas</button>
+          <button type="button" data-p="decay" aria-pressed="false">Decay counts against Poisson (simulated)</button>
+          <button type="button" data-p="dead" aria-pressed="false">A counter with dead time (simulated)</button>
+          <button type="button" data-p="coins" aria-pressed="false">Two coins (book Example 11.4)</button>
+          <button type="button" data-p="absent" aria-pressed="false">Absent days (book Example 11.2)</button>
+          <button type="button" data-p="stream" aria-pressed="false">Streaming services (book Example 11.3)</button>
+          <span class="grp">Independence</span>
+          <button type="button" data-p="volunteer" aria-pressed="false">Volunteer hours (book Example 11.6)</button>
+          <button type="button" data-p="anxiety" aria-pressed="false">Anxiety and need to succeed (book Example 11.7)</button>
+          <button type="button" data-p="dieCoin" aria-pressed="false">A die and a coin (simulated)</button>
+          <span class="grp">Homogeneity</span>
+          <button type="button" data-p="living" aria-pressed="false">Living arrangements (book Example 11.8)</button>
+          <button type="button" data-p="counselors" aria-pressed="false">Counselors (book Example 11.9)</button>
+          <span class="grp">Single variance</span>
+          <button type="button" data-p="post" aria-pressed="false">Post office lines (book Example 11.11)</button>
+          <button type="button" data-p="timing" aria-pressed="false">Stopwatch timings (simulated)</button>
+        </div>
+        <details class="more" open><summary>About this setup</summary><p class="hint" id="presetHint"></p><p class="cite" id="cite"></p></details>
+        <div class="drawrow"><span id="drawLabel">Draw set 1</span></div>
+      </section>
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+      </section>
+      <!-- vd-readings --><section class="vd-readings" data-ws="ws-chi-square" data-title="Chi-Square Tests" data-demo="chi-square-tests">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings ('+(typeof window.vdDataNote==='function'&&window.vdDataNote()?'catalog data':'simulated data')+')','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:(typeof window.vdDataNote==='function'&&window.vdDataNote())||'Simulated data from '+(/^The /.test(title)?'':'the ')+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide χ², the p value and the decision, to judge the bars first</span></label>
+        <details class="more"><summary>How it works</summary>
+          <p class="hint">χ² = Σ (O − E)²/E over every cell. Goodness of fit: E = n·p for each category. Independence and homogeneity: E = (row total)(column total)/(grand total). Single variance: χ² = (n − 1)s²/σ₀². The p value is the area under the chi square curve beyond the statistic (demos/lib/vdstats.js, the regularized incomplete gamma function), as the book's calculator gives it.</p>
+          <p class="hint">The chi square curve is an approximation for counts: it is good when every expected count is at least 5 (book 11.2), which is why small cells are flagged and the decay counts are grouped. The single variance test needs the data to be normal.</p>
+          <p class="hint">The simulation needs no approximation. Goodness of fit: n items fall into the categories with the hypothesized chances. Decay counts: n Poisson counts with the estimated mean, regrouped in the same bins with their own estimated mean. Independence: the grand total falls into the cells with chances (row share)(column share). Homogeneity: each row keeps its own total and falls into the columns with the pooled column shares. Single variance: n normal values with σ = σ₀. The simulated p value is the share of simulated statistics at or beyond the observed one.</p>
+          <p class="hint">The simulated sources: a die whose six comes up with the chance you set (the other faces share the rest equally); a long lived radioactive source counted for 1 s intervals, arrivals at random times at the set rate (a Poisson process), and a counter that is blind for its dead time after each count it records; a fair die and a fair coin thrown together; and a stopwatch whose readings of a 2.006 s pendulum period (a 1.000 m simple pendulum) scatter normally with the set σ, rounded to 0.01 s. Every draw is seeded, so a draw set always gives the same data.</p>
+        </details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  /* Chi square tests: data, expected counts, statistics, grouping of Poisson counts and simulations under the null hypothesis,
+     runnable in Node (curriculum/validation/test_chi-square-tests.cjs). Needs VDSTATS (demos/lib/vdstats.js). */
+  /* data quoted from OpenStax Introductory Statistics 2e (CC BY 4.0) and from Mendel (1866) */
+  const BOOK = {
+    absent: { cats: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'], obs: [15, 12, 9, 9, 15], probs: [0.2, 0.2, 0.2, 0.2, 0.2] },
+    stream: { cats: ['0', '1', '2', '3', '4+'], obs: [66, 119, 340, 60, 15], probs: [0.10, 0.16, 0.55, 0.11, 0.08] },
+    coins: { cats: ['2 heads', '1 head', '0 heads'], obs: [20, 57, 23], probs: [0.25, 0.5, 0.25] },
+    mendel: { cats: ['round yellow', 'round green', 'wrinkled yellow', 'wrinkled green'], obs: [315, 108, 101, 32], probs: [9 / 16, 3 / 16, 3 / 16, 1 / 16] },
+    volunteer: { rows: ['Community college students', 'Four year college students', 'Nonstudents'], cols: ['1–3 hours', '4–6 hours', '7–9 hours'],
+      table: [[111, 96, 48], [96, 133, 61], [91, 150, 53]] },
+    anxiety: { rows: ['High need', 'Medium need', 'Low need'], cols: ['High anxiety', 'Medium high anxiety', 'Medium anxiety', 'Medium low anxiety', 'Low anxiety'],
+      table: [[35, 42, 53, 15, 10], [18, 48, 63, 33, 31], [4, 5, 11, 15, 17]] },
+    living: { rows: ['Men', 'Women'], cols: ['Dormitory', 'Apartment', 'With parents', 'Other'], table: [[72, 84, 49, 45], [91, 86, 88, 35]] },
+    counselors: { rows: ['Before', 'After'], cols: ['Perez', 'Chung', 'Stevens'], table: [[167, 128, 135], [214, 197, 225]] },
+    post: { n: 25, s: 3.5, sigma0: 7.2, tail: 'left', unit: 'min' },
+  };
+  /* goodness of fit: E = n·p, χ² = Σ (O − E)²/E, df = k − 1 − (parameters estimated from the data) */
+  function gof(obs, probs, est) {
+    const n = obs.reduce((s, v) => s + v, 0), exp = probs.map((p) => n * p);
+    const cells = obs.map((o, i) => (o - exp[i]) ** 2 / exp[i]), chi2 = cells.reduce((s, v) => s + v, 0), df = obs.length - 1 - (est || 0);
+    return { n, obs, exp, cells, chi2, df, p: 1 - VDSTATS.dist.chisq(df).cdf(chi2), small: exp.filter((e) => e < 5).length };
+  }
+  /* a table: E = (row total)(column total)/(grand total), df = (r − 1)(c − 1) */
+  function table(t) {
+    const r = VDSTATS.chisqIndep(t), cells = t.map((row, i) => row.map((o, j) => (o - r.expected[i][j]) ** 2 / r.expected[i][j]));
+    return { obs: t, exp: r.expected, cells, chi2: r.chi2, df: r.df, p: r.p, n: t.flat().reduce((s, v) => s + v, 0), small: r.expected.flat().filter((e) => e < 5).length };
+  }
+  /* Poisson counts: group the counts k = 0, 1, 2, ... into bins whose expected count is at least 5 (the low ones together, the
+     high ones in a last bin "k or more"), for n intervals with mean m */
+  function poissonBins(n, m) {
+    const D = VDSTATS.dist.poisson(m), tailE = (k) => n * (k <= 0 ? 1 : 1 - D.cdf(k - 1)), bins = [];
+    let s = 0;
+    for (let guard = 0; guard < 400; guard++) {
+      if (tailE(s) < 10) { bins.push({ lo: s, hi: Infinity }); break; }
+      let e = 0, k = s; while (e < 5) { e += n * D.pmf(k); k++; }
+      if (tailE(k) < 5) { bins.push({ lo: s, hi: Infinity }); break; }
+      bins.push({ lo: s, hi: k - 1 }); s = k;
+    }
+    return bins;
+  }
+  function binProbs(bins, m) { const D = VDSTATS.dist.poisson(m); return bins.map((b) => (b.hi === Infinity ? 1 - (b.lo > 0 ? D.cdf(b.lo - 1) : 0) : D.cdf(b.hi) - (b.lo > 0 ? D.cdf(b.lo - 1) : 0))); }
+  function binCounts(bins, counts) { return bins.map((b) => counts.filter((c) => c >= b.lo && c <= b.hi).length); }
+  const binLabel = (b) => (b.hi === Infinity ? (b.lo === 0 ? 'any' : '≥ ' + b.lo) : b.lo === b.hi ? String(b.lo) : b.lo + '–' + b.hi);
+  /* the decay test: bins from the data's own mean, one parameter estimated, so df = bins − 2 */
+  function poissonTest(counts, bins) {
+    const n = counts.length, m = counts.reduce((s, v) => s + v, 0) / n;
+    bins = bins || poissonBins(n, m);
+    const r = gof(binCounts(bins, counts), binProbs(bins, m), 1);
+    return Object.assign(r, { mean: m, bins });
+  }
+  /* simulated sources, from a seeded generator r */
+  function dieRolls(n, p6, r) { const c = [0, 0, 0, 0, 0, 0]; for (let i = 0; i < n; i++) { const u = r(); c[u < p6 ? 5 : Math.min(4, Math.floor((u - p6) / ((1 - p6) / 5)))]++; } return c; }
+  /* counts in nInt intervals of T s from a Poisson process of the given rate, recorded by a counter that misses any arrival
+     within dead time tau of the last count it recorded (nonparalyzable) */
+  function decayCounts(nInt, rate, tau, r, T) {
+    T = T || 1; const counts = new Array(nInt).fill(0), end = nInt * T; let t = 0, lastRec = -Infinity;
+    for (;;) { t += r.exp(rate); if (t >= end) break; if (t - lastRec >= tau) { counts[Math.floor(t / T)]++; lastRec = t; } }
+    return counts;
+  }
+  function dieCoinTable(n, r) { const t = [[0, 0, 0], [0, 0, 0]]; for (let i = 0; i < n; i++) { const coin = r() < 0.5 ? 0 : 1, d = r.int(6); t[coin][Math.floor(d / 2)]++; } return t; }
+  /* stopwatch readings of a pendulum period: normal scatter σ about the period, rounded to 0.01 s */
+  function timings(n, period, sigma, r) { return Array.from({ length: n }, () => Math.round(r.normal(period, sigma) * 100) / 100); }
+  /* n items falling into cells with chances p, one item at a time (an exact multinomial draw) */
+  function multinomial(n, p, r) {
+    const k = p.length, cum = new Float64Array(k); let s = 0; for (let i = 0; i < k; i++) { s += p[i]; cum[i] = s; }
+    const out = new Array(k).fill(0);
+    for (let j = 0; j < n; j++) { const u = r() * s; let i = 0; while (i < k - 1 && u >= cum[i]) i++; out[i]++; }
+    return out;
+  }
+  /* one statistic simulated under the null hypothesis */
+  const NULLS = {
+    gof: (d, r) => gof(multinomial(d.n, d.probs, r), d.probs).chi2,
+    poisson: (d, r) => { const c = Array.from({ length: d.counts.length }, () => r.poisson(d.mean)); return poissonTest(c, d.bins).chi2; },
+    indep: (d, r) => {
+      const R = d.obs.length, C = d.obs[0].length, rs = d.obs.map((x) => x.reduce((s, v) => s + v, 0)), cs = d.obs[0].map((_, j) => d.obs.reduce((s, x) => s + x[j], 0));
+      const p = []; for (let i = 0; i < R; i++) for (let j = 0; j < C; j++) p.push(rs[i] * cs[j] / (d.n * d.n));
+      for (let tries = 0; tries < 50; tries++) { const f = multinomial(d.n, p, r), t = []; for (let i = 0; i < R; i++) t.push(f.slice(i * C, i * C + C)); const c = table(t).chi2; if (isFinite(c)) return c; }
+      return NaN;
+    },
+    homog: (d, r) => {
+      const cs = d.obs[0].map((_, j) => d.obs.reduce((s, x) => s + x[j], 0)), p = cs.map((c) => c / d.n);
+      for (let tries = 0; tries < 50; tries++) { const t = d.obs.map((row) => multinomial(row.reduce((s, v) => s + v, 0), p, r)); const c = table(t).chi2; if (isFinite(c)) return c; }
+      return NaN;
+    },
+    var: (d, r) => { const x = Array.from({ length: d.n }, () => r.normal(0, d.sigma0)); return (d.n - 1) * VDSTATS.variance(x) / (d.sigma0 * d.sigma0); },
+  };
+  /* the p value of a simulation: the share of simulated statistics at or beyond the observed one (both tails: twice the smaller share) */
+  function simP(sims, n, chi2, tail) {
+    let ge = 0, le = 0; for (let i = 0; i < n; i++) { if (sims[i] >= chi2 - 1e-12) ge++; if (sims[i] <= chi2 + 1e-12) le++; }
+    return tail === 'left' ? le / n : tail === 'two' ? Math.min(1, 2 * Math.min(ge, le) / n) : ge / n;
+  }
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  const VDI18N = window.VDI18N || { t: (s, o) => s.replace(/\{(\w+)\}/g, (m, k) => (o && k in o ? o[k] : m)) };
+  const G = (typeof VDC === 'object' && VDC.g) ? VDC.g : 9.81;   /* g = 9.81 m/s², demos/lib/constants.js */
+  const PERIOD = 2 * Math.PI * Math.sqrt(1 / G);   /* a 1.000 m simple pendulum, small swings */
+  const BOOKREF = (ex, sec) => VDI18N.t('Data: OpenStax, Introductory Statistics 2e, Example {ex} (§{sec}), CC BY 4.0.', { ex, sec });
+  const PRESETS = {
+    loaded: { mode: 'gof', src: 'die', p6: 0.25, rolls: 60, sim: true,
+      hint: 'A die loaded so that a six comes up a quarter of the time (the other faces 0.15 each). H₀: the die is fair, each face 1/6. With 60 rolls the expected count is 10 a face. Does one data set give the loading away? Try 300 rolls, or New data for another 60.' },
+    fair: { mode: 'gof', src: 'die', p6: 1 / 6, rolls: 60, sim: true,
+      hint: 'A fair die, rolled 60 times. H₀ is true here, so a small p value is a false alarm: at α = 0.05 it happens in about 1 data set in 20. Press New data a few times, and run the simulation to see where this χ² falls.' },
+    mendel: { mode: 'gof', src: 'mendel', cite: 'Data: Gregor Mendel, Versuche über Pflanzen-Hybriden (Experiments on Plant Hybridization), 1866: 556 seeds from the second generation of a cross of round yellow and wrinkled green peas.',
+      hint: 'Mendel crossed peas that were round and yellow with peas that were wrinkled and green, then let the hybrids pollinate themselves. His theory of two independent factors predicts the four kinds of seed in the ratio 9 : 3 : 3 : 1. H₀: the seeds follow that ratio. The fit is very close (some have argued too close).' },
+    decay: { mode: 'gof', src: 'decay', rate: 4, nInt: 100, dead: 0, sim: true,
+      hint: 'A Geiger counter counts a long lived source (its rate does not change during the run) in 100 intervals of 1 s, at 4 counts a second on average. H₀: the counts follow a Poisson distribution, with its mean estimated from the data. The counts are grouped so every expected count is at least 5, and estimating the mean costs one more degree of freedom.' },
+    dead: { mode: 'gof', src: 'decay', rate: 25, nInt: 200, dead: 0.02, sim: true,
+      hint: 'A busy counter: 25 arrivals a second, and after each count it records the counter is blind for 20 ms (its dead time). It misses about a third of the arrivals, and the counts it does record are more even than a Poisson distribution allows. Does the test notice? Compare Dead time none.' },
+    coins: { mode: 'gof', src: 'coins', cite: 'ex:11.4:11.2', hint: 'Two coins tossed 100 times, counting the heads. H₀: the coins are fair, so 2, 1 and 0 heads come with chances 1/4, 1/2 and 1/4. The book finds χ² = 2.14, df = 2, p = 0.3430.' },
+    absent: { mode: 'gof', src: 'absent', cite: 'ex:11.2:11.2', hint: 'Sixty absences by day of the week. H₀: absences are spread evenly over the five days. The book finds χ² = 3, df = 4, p = 0.5578.' },
+    stream: { mode: 'gof', src: 'stream', cite: 'ex:11.3:11.2', hint: 'Streaming services in 600 families against the national percentages 10, 16, 55, 11 and 8 %. The book finds χ² = 29.65, df = 4, p = 0.000006: these families differ from the nation.' },
+    volunteer: { mode: 'indep', src: 'volunteer', cite: 'ex:11.6:11.3', hint: 'Hours volunteered each week by 839 volunteers of three kinds. H₀: the hours are independent of the kind of volunteer. The book finds χ² = 12.99, df = 4, p = 0.0113.' },
+    anxiety: { mode: 'indep', src: 'anxiety', cite: 'ex:11.7:11.3', hint: '400 students by their need to succeed in school and their anxiety level. H₀: the two are independent. The smallest expected count is 7.41, so the chi square curve can be used.' },
+    dieCoin: { mode: 'indep', src: 'dieCoin', nDC: 120, sim: true, hint: 'A fair coin and a fair die thrown together 120 times; the die is grouped as 1–2, 3–4 and 5–6. They cannot affect each other, so H₀ (independence) is true: the p value is spread evenly between 0 and 1 over many data sets.' },
+    living: { mode: 'homog', src: 'living', cite: 'ex:11.8:11.4', hint: 'Where 250 college men and 300 college women live. H₀: men and women have the same distribution of living arrangements. The book finds χ² = 10.1287, df = 3, p = 0.0175. The arithmetic is the test of independence, but here each row is its own sample, with its size fixed.' },
+    counselors: { mode: 'homog', src: 'counselors', cite: 'ex:11.9:11.4', hint: 'Students seen by three counselors, before and after a change. H₀: the distribution over counselors is the same before and after. The book finds χ² = 3.2603, df = 2, p = 0.1959.' },
+    post: { mode: 'var', src: 'post', cite: 'ex:11.11:11.6', tail: 'left', hint: 'Waiting times with one line for every window: n = 25, s = 3.5 min, against σ₀ = 7.2 min for separate lines. Hₐ: σ < 7.2 min (a left tail test). The book finds χ² = 5.67, df = 24, p = 0.000042. Only the summary is given, so no simulated data are drawn here.' },
+    timing: { mode: 'var', src: 'timing', nT: 20, sigT: 0.07, tail: 'right', sim: true, hint: 'Twenty stopwatch timings of a pendulum whose period is 2.006 s. The maker claims a reaction time spread of σ₀ = 0.05 s; Hₐ: σ > 0.05 s. The readings are simulated with the spread you set. The test needs the readings to be normal; they are simulated that way.' },
+  };
+  const S = { preset: 'loaded', mode: 'gof', src: 'die', rolls: 60, p6: 0.25, nInt: 100, rate: 4, dead: 0, nDC: 120, nT: 20, sigT: 0.07, tail: 'right', alpha: 0.05, seed: 1,
+    d: null, R: null, sims: new Float64Array(100000), nsim: 0, hist: null, range: 1, run: false, acc: 0, ghost: null, blind: false };
+  const SIGMA0 = 0.05;
+  let TK = null, dpr = 1, need = true, needHtml = true;
+  const f4 = (v) => (isFinite(v) ? v.toFixed(4).replace('-', '−') : '—');
+  const f3 = (v) => (isFinite(v) ? v.toFixed(3).replace('-', '−') : '—');
+  const fp = (p) => (!isFinite(p) ? '—' : p < 1e-15 ? '< 10⁻¹⁵' : p < 0.0001 ? p.toExponential(1).replace('e-', ' × 10^−').replace(/\^−(\d+)/, (m, e) => '⁻' + [...e].map((ch) => '⁰¹²³⁴⁵⁶⁷⁸⁹'[ch]).join('')).replace('^', '') : p.toFixed(4));
+  const big = (n) => n.toLocaleString('en-US');
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    TK = { canvas: g('--canvas'), surface: g('--surface'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif',
+      o: g('--cs-o'), e: g('--cs-e'), c1: g('--cs-c1'), c2: g('--cs-c2'), sim: g('--cs-sim'), warn: g('--cs-warn'), tail: g('--cs-tail') };
+  }
+  const proj = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
+
+  /* ---------- the data and the test ---------- */
+  const isSim = () => !!PRESETS[S.preset] && !!PRESETS[S.preset].sim;
+  function build() {
+    const r = VDSTATS.rng(S.seed), src = S.src;
+    let d;
+    if (src === 'die') { const obs = dieRolls(S.rolls, S.p6, r); d = { kind: 'gof', cats: ['1', '2', '3', '4', '5', '6'], obs, probs: [1, 1, 1, 1, 1, 1].map(() => 1 / 6), catName: VDI18N.t('Face') }; }
+    else if (src === 'decay') {
+      const counts = decayCounts(S.nInt, S.rate, S.dead, r), t = poissonTest(counts);
+      d = { kind: 'poisson', counts, bins: t.bins, mean: t.mean, cats: t.bins.map(binLabel), obs: t.obs, probs: binProbs(t.bins, t.mean), catName: VDI18N.t('Counts in 1 s') };
+    } else if (BOOK[src] && BOOK[src].obs) d = { kind: 'gof', cats: BOOK[src].cats, obs: BOOK[src].obs.slice(), probs: BOOK[src].probs, catName: VDI18N.t('Category') };
+    else if (src === 'dieCoin') d = { kind: 'table', rows: ['Heads', 'Tails'], cols: ['1–2', '3–4', '5–6'], obs: dieCoinTable(S.nDC, r) };
+    else if (BOOK[src] && BOOK[src].table) d = { kind: 'table', rows: BOOK[src].rows, cols: BOOK[src].cols, obs: BOOK[src].table.map((x) => x.slice()) };
+    else if (src === 'post') d = { kind: 'var', n: BOOK.post.n, s: BOOK.post.s, sigma0: BOOK.post.sigma0, unit: 'min', data: null };
+    else { const data = timings(S.nT, PERIOD, S.sigT, r); d = { kind: 'var', n: data.length, s: VDSTATS.sd(data), sigma0: SIGMA0, unit: 's', data, mean: VDSTATS.mean(data) }; }
+    S.d = d;
+    if (d.kind === 'gof') S.R = gof(d.obs, d.probs);
+    else if (d.kind === 'poisson') S.R = Object.assign(gof(d.obs, d.probs, 1), { mean: d.mean });
+    else if (d.kind === 'table') S.R = table(d.obs);
+    else { const v = VDSTATS.chisqVar(d.s, d.n, d.sigma0, S.tail); S.R = { chi2: v.chi2, df: v.df, p: v.p, n: d.n }; }
+    S.null = d.kind === 'gof' ? (rr) => NULLS.gof({ n: S.R.n, probs: d.probs }, rr) : d.kind === 'poisson' ? (rr) => NULLS.poisson(d, rr)
+      : d.kind === 'table' ? (rr) => NULLS[S.mode === 'homog' ? 'homog' : 'indep']({ obs: d.obs, n: S.R.n }, rr) : (rr) => NULLS.var({ n: d.n, sigma0: d.sigma0 }, rr);
+    resetSims();
+  }
+  const tailNow = () => (S.d && S.d.kind === 'var' ? S.tail : 'right');
+  function resetSims() {
+    S.nsim = 0; S.nrng = VDSTATS.rng(S.seed + 7777); S.ghost = null; S.acc = 0;
+    const C = VDSTATS.dist.chisq(S.R.df); S.range = Math.max(C.inv(0.999), S.R.chi2 * 1.08, 1);
+    /* bins of a round width (1, 2, 5, ...: a die's χ² comes in steps of a fifth or a tenth, so round bins hold the same number of
+       possible values and the histogram does not comb) */
+    const raw = S.range / 40, steps = [0.1, 0.2, 0.5, 1, 2, 5, 10, 20, 50, 100]; S.bw = steps.find((v) => v >= raw) || 100;
+    if (S.bw < 1 && S.range > 8) S.bw = 1;
+    S.hist = new Uint32Array(Math.ceil(S.range / S.bw));
+    need = true; needHtml = true;
+  }
+  function simOne() {
+    if (S.nsim >= S.sims.length) { setRun(false); return; }
+    const c = S.null(S.nrng); S.sims[S.nsim++] = c;
+    const b = Math.floor(c / S.bw + 1e-9); if (b >= 0 && b < S.hist.length) S.hist[b]++;
+    S.lastSim = c;
+  }
+  function simMany(k) { for (let i = 0; i < k; i++) simOne(); need = true; needHtml = true; }
+
+  /* ---------- controls ---------- */
+  function syncControls() {
+    for (const b of $('modeSeg').querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.m === S.mode));
+    const show = { die: S.src === 'die', decay: S.src === 'decay', dieCoin: S.src === 'dieCoin', timing: S.src === 'timing', var: S.mode === 'var', sim: isSim() };
+    for (const el of $('dbar').querySelectorAll('[data-for]')) el.hidden = !show[el.dataset.for];
+    $('rolls').value = String(S.rolls); $('nInt').value = String(S.nInt); $('rate').value = String(S.rate); $('dead').value = String(S.dead); $('nDC').value = String(S.nDC);
+    $('nT').value = String(S.nT); $('sigT').value = String(S.sigT); $('tail').value = S.tail; $('alpha').value = String(S.alpha);
+    for (const o of $('p6').options) o.selected = Math.abs(+o.value - S.p6) < 1e-9;
+    $('drawLabel').textContent = isSim() ? VDI18N.t('Draw set {n}', { n: S.seed }) : VDI18N.t('Draw set {n} (for the simulation only: these data are fixed)', { n: S.seed });
+  }
+  const pressPreset = (k) => { for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === k)); };
+  function citeText(c) { if (!c) return VDI18N.t('Simulated data: drawn by this page from the model in About this setup.'); const m = /^ex:([\d.]+):([\d.]+)$/.exec(c); return m ? BOOKREF(m[1], m[2]) : VDI18N.t(c); }
+  function applyPreset(k) {
+    const c = PRESETS[k]; S.preset = k; S.mode = c.mode; S.src = c.src;
+    for (const key of ['p6', 'rolls', 'rate', 'nInt', 'dead', 'nDC', 'nT', 'sigT', 'tail']) if (key in c) S[key] = c[key];
+    $('presetHint').textContent = c.hint; $('cite').textContent = citeText(c.cite); pressPreset(k); setRun(false);
+    syncControls(); build();
+  }
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  const FIRST = { gof: 'loaded', indep: 'volunteer', homog: 'living', var: 'post' };
+  for (const b of $('modeSeg').querySelectorAll('button')) b.addEventListener('click', () => { if (b.dataset.m !== S.mode) applyPreset(FIRST[b.dataset.m]); });
+  const ctl = (id, key, num) => $(id).addEventListener('change', () => { S[key] = num ? +$(id).value : $(id).value; setRun(false); syncControls(); build(); });
+  ctl('rolls', 'rolls', 1); ctl('p6', 'p6', 1); ctl('nInt', 'nInt', 1); ctl('rate', 'rate', 1); ctl('dead', 'dead', 1); ctl('nDC', 'nDC', 1); ctl('nT', 'nT', 1); ctl('sigT', 'sigT', 1); ctl('tail', 'tail', 0);
+  $('alpha').addEventListener('change', () => { S.alpha = +$('alpha').value; need = true; needHtml = true; });
+  $('newData').addEventListener('click', () => { S.seed++; setRun(false); syncControls(); build(); });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; need = true; needHtml = true; });
+  function setRun(on) { S.run = on; $('play').textContent = on ? VDI18N.t('Pause') : VDI18N.t('Play'); $('play').classList.toggle('attn', !on); if (!on) S.ghost = null; }
+  $('play').addEventListener('click', () => { setRun(!S.run); S.acc = Math.max(S.acc, 0.999); });
+  $('reset').addEventListener('click', () => { setRun(false); resetSims(); });
+  $('sim1000').addEventListener('click', () => simMany(1000));
+  const stepOne = () => { simOne(); need = true; needHtml = true; };
+
+  /* ---------- drawing ---------- */
+  const cells = $('cells'), cctx = cells.getContext('2d'), nullc = $('nullc'), nctx = nullc.getContext('2d'), sz = {};
+  function fit(c, pane) { const r = $(pane).getBoundingClientRect(); const w = Math.max(1, r.width), h = Math.max(1, r.height); c.width = Math.round(w * dpr); c.height = Math.round(h * dpr); sz[c.id] = [w, h]; }
+  function lab(c, t, x, y) { c.save(); c.strokeStyle = TK.canvas; c.lineWidth = 4; c.lineJoin = 'round'; c.strokeText(t, x, y); c.restore(); c.fillText(t, x, y); }
+  function fitText(c, t, w) { if (c.measureText(t).width <= w) return t; let s = t; while (s.length > 2 && c.measureText(s + '…').width > w) s = s.slice(0, -1); return s + '…'; }
+  /* the contribution square: area in proportion to (O − E)²/E */
+  function square(c, x, y, k, kmax, side, i) {
+    const a = kmax > 0 ? Math.sqrt(k / kmax) * side : 0;
+    c.fillStyle = i % 2 ? TK.c2 : TK.c1; c.globalAlpha = 0.85; c.fillRect(x - a / 2, y, a, a); c.globalAlpha = 1;
+  }
+  /* the χ² total as a stacked bar of the cells' contributions, with the critical value marked */
+  function stack(c, x0, x1, y, list, p) {
+    const crit = critVals(), hi = Math.max(S.R.chi2, ...crit, 1e-9) * 1.08, X = (v) => x0 + v / hi * (x1 - x0);
+    c.strokeStyle = TK.line; c.lineWidth = 1; c.strokeRect(x0, y, x1 - x0, 14 * p);
+    if (!S.blind) {
+      let acc = 0; list.forEach((k, i) => { c.fillStyle = i % 2 ? TK.c2 : TK.c1; c.globalAlpha = 0.85; c.fillRect(X(acc), y, X(acc + k) - X(acc), 14 * p); c.globalAlpha = 1; acc += k; });
+      c.fillStyle = TK.ink; c.font = `600 ${11 * p}px ${TK.mono}`; c.textAlign = X(S.R.chi2) > x1 - 110 * p ? 'right' : 'left'; c.textBaseline = 'bottom';
+      lab(c, 'χ² = ' + f3(S.R.chi2), X(S.R.chi2) + (c.textAlign === 'left' ? 4 : -4) * p, y - 2 * p);
+    }
+    /* the caption sits at the left under the bar unless a critical value label needs that room (narrow phones) */
+    c.font = `${10 * p}px ${TK.mono}`; const cap = VDI18N.t('χ² adds up the squares'), capEnd = x0 + c.measureText(cap).width + 10 * p;
+    let capOk = true;
+    for (const v of crit) { c.strokeStyle = TK.ink; c.setLineDash([4 * p, 3 * p]); c.lineWidth = 1.5 * p; c.beginPath(); c.moveTo(X(v), y - 4 * p); c.lineTo(X(v), y + 18 * p); c.stroke(); c.setLineDash([]);
+      c.fillStyle = TK.muted; c.font = `${10 * p}px ${TK.mono}`; c.textBaseline = 'top'; const t = VDI18N.t('critical {v}', { v: f3(v) }), tw = c.measureText(t).width;
+      const tx = Math.max(x0, Math.min(Math.max(capEnd, X(v) - tw / 2), x1 - tw)); if (tx < capEnd) capOk = false;
+      c.textAlign = 'left'; lab(c, t, tx, y + 18 * p); }
+    if (capOk) { c.fillStyle = TK.muted; c.font = `${10 * p}px ${TK.mono}`; c.textAlign = 'left'; c.textBaseline = 'top'; lab(c, cap, x0, y + 18 * p); }
+  }
+  function critVals() {
+    const C = VDSTATS.dist.chisq(S.R.df), a = S.alpha, t = tailNow();
+    return t === 'left' ? [C.inv(a)] : t === 'two' ? [C.inv(a / 2), C.inv(1 - a / 2)] : [C.inv(1 - a)];
+  }
+  function drawCells() {
+    const [w, h] = sz.cells || [0, 0]; if (!w || !S.d) return; const c = cctx, p = proj(), d = S.d, R = S.R;
+    c.setTransform(dpr, 0, 0, dpr, 0, 0); c.fillStyle = TK.canvas; c.fillRect(0, 0, w, h);
+    const legend = () => {
+      c.font = `${11 * p}px ${TK.mono}`; c.textBaseline = 'middle'; c.textAlign = 'left'; let x = 10 * p; const y = 12 * p;
+      c.fillStyle = TK.o; c.fillRect(x, y - 5 * p, 14 * p, 10 * p); c.fillStyle = TK.ink; x += 18 * p; lab(c, VDI18N.t('observed O'), x, y); x += c.measureText(VDI18N.t('observed O')).width + 14 * p;
+      c.strokeStyle = TK.e; c.lineWidth = 1.5 * p; c.setLineDash([3 * p, 2 * p]); c.strokeRect(x, y - 5 * p, 14 * p, 10 * p); c.setLineDash([]); x += 18 * p; lab(c, VDI18N.t('expected E'), x, y); x += c.measureText(VDI18N.t('expected E')).width + 14 * p;
+      if (!S.blind) { c.fillStyle = TK.c1; c.fillRect(x, y - 5 * p, 10 * p, 10 * p); x += 14 * p; c.fillStyle = TK.ink; lab(c, '(O − E)²/E', x, y); }
+    };
+    if (d.kind === 'gof' || d.kind === 'poisson') {
+      legend();
+      const k = d.obs.length, pl = 40 * p, pr = 14 * p, top = 34 * p, sqSide = Math.min(40 * p, (w - pl - pr) / k * 0.7), base = h - 70 * p - sqSide - 16 * p, gw = (w - pl - pr) / k;
+      const ymax = Math.max(...d.obs, ...R.exp, ...(S.ghost || [])) * 1.12, Y = (v) => base - v / ymax * (base - top);
+      c.strokeStyle = TK.line; c.lineWidth = 1; c.fillStyle = TK.muted; c.font = `${10 * p}px ${TK.mono}`; c.textAlign = 'right'; c.textBaseline = 'middle';
+      const st = Math.pow(10, Math.floor(Math.log10(ymax / 2))) * (ymax / Math.pow(10, Math.floor(Math.log10(ymax / 2))) > 10 ? 5 : ymax / Math.pow(10, Math.floor(Math.log10(ymax / 2))) > 4 ? 2 : 1);
+      for (let v = 0; v <= ymax; v += st) { const y = Y(v); c.globalAlpha = 0.5; c.beginPath(); c.moveTo(pl, y); c.lineTo(w - pr, y); c.stroke(); c.globalAlpha = 1; c.fillText(big(v), pl - 5 * p, y); }
+      const kmax = Math.max(...R.cells);
+      for (let i = 0; i < k; i++) {
+        const cx = pl + gw * (i + 0.5), bw = Math.min(gw * 0.62, 70 * p);
+        c.fillStyle = TK.o; c.globalAlpha = 0.85; c.fillRect(cx - bw / 2, Y(d.obs[i]), bw, base - Y(d.obs[i])); c.globalAlpha = 1;
+        if (S.ghost) { c.strokeStyle = TK.sim; c.lineWidth = 2 * p; c.beginPath(); c.moveTo(cx - bw / 2, Y(S.ghost[i])); c.lineTo(cx + bw / 2, Y(S.ghost[i])); c.stroke(); }
+        const small = R.exp[i] < 5;
+        c.strokeStyle = small ? TK.warn : TK.e; c.lineWidth = 2 * p; c.setLineDash([5 * p, 3 * p]); c.strokeRect(cx - bw / 2 - 3 * p, Y(R.exp[i]), bw + 6 * p, base - Y(R.exp[i])); c.setLineDash([]);
+        c.fillStyle = TK.ink; c.font = `600 ${11 * p}px ${TK.mono}`; c.textAlign = 'center'; c.textBaseline = 'bottom'; lab(c, String(d.obs[i]), cx, Math.min(Y(d.obs[i]), Y(R.exp[i])) - 3 * p);
+        if (small) { c.fillStyle = TK.warn; c.font = `700 ${10 * p}px ${TK.mono}`; lab(c, 'E < 5', cx, Math.min(Y(d.obs[i]), Y(R.exp[i])) - 17 * p); }
+        c.fillStyle = TK.ink; c.font = `${11 * p}px ${TK.mono}`; c.textBaseline = 'top'; lab(c, fitText(c, VDI18N.t(d.cats[i]), gw - 4), cx, base + 4 * p);
+        if (!S.blind) { square(c, cx, base + 20 * p, R.cells[i], kmax, sqSide, i); c.fillStyle = TK.muted; c.font = `${10 * p}px ${TK.mono}`; lab(c, f3(R.cells[i]), cx, base + 22 * p + (kmax > 0 ? Math.sqrt(R.cells[i] / kmax) : 0) * sqSide); }
+      }
+      c.strokeStyle = TK.ink; c.lineWidth = 1.5; c.beginPath(); c.moveTo(pl, base); c.lineTo(w - pr, base); c.stroke();
+      stack(c, pl, w - pr, h - 40 * p, R.cells, p);
+      if (d.kind === 'poisson') { c.fillStyle = TK.muted; c.font = `${11 * p}px ${TK.mono}`; c.textAlign = 'right'; c.textBaseline = 'top'; lab(c, VDI18N.t('mean count {m} per 1 s (simulated)', { m: f3(d.mean) }), w - pr, 26 * p); }
+    } else if (d.kind === 'table') {
+      legend();
+      const Rn = d.obs.length, Cn = d.obs[0].length, lw = Math.min(150 * p, w * 0.24), top = 54 * p, bot = h - 64 * p, gw = (w - lw - 12 * p) / Cn, gh = (bot - top) / Rn;
+      const ymax = Math.max(...d.obs.flat(), ...R.exp.flat()) * 1.1, kmax = Math.max(...R.cells.flat());
+      c.font = `${11 * p}px ${TK.ui}`; c.textAlign = 'center'; c.textBaseline = 'bottom'; c.fillStyle = TK.ink;
+      for (let j = 0; j < Cn; j++) lab(c, fitText(c, VDI18N.t(d.cols[j]), gw - 6), lw + gw * (j + 0.5), top - 4 * p);
+      c.textAlign = 'right'; c.textBaseline = 'middle';
+      for (let i = 0; i < Rn; i++) lab(c, fitText(c, VDI18N.t(d.rows[i]), lw - 10 * p), lw - 8 * p, top + gh * (i + 0.5));
+      let n = 0; const order = [];
+      for (let i = 0; i < Rn; i++) for (let j = 0; j < Cn; j++) {
+        const x = lw + gw * j, y = top + gh * i, o = d.obs[i][j], e = R.exp[i][j], bh = gh - 34 * p, bw = Math.min(gw * 0.22, 26 * p);
+        c.strokeStyle = TK.line; c.lineWidth = 1; c.strokeRect(x, y, gw, gh);
+        const Y = (v) => y + gh - 6 * p - v / ymax * bh;
+        c.fillStyle = TK.o; c.globalAlpha = 0.85; c.fillRect(x + gw * 0.12, Y(o), bw, y + gh - 6 * p - Y(o)); c.globalAlpha = 1;
+        c.strokeStyle = e < 5 ? TK.warn : TK.e; c.lineWidth = 1.6 * p; c.setLineDash([4 * p, 3 * p]); c.strokeRect(x + gw * 0.12 + bw + 3 * p, Y(e), bw, y + gh - 6 * p - Y(e)); c.setLineDash([]);
+        c.fillStyle = TK.ink; c.font = `600 ${10.5 * p}px ${TK.mono}`; c.textAlign = 'left'; c.textBaseline = 'top'; lab(c, String(o), x + 4 * p, y + 3 * p);
+        c.fillStyle = TK.muted; c.font = `${10 * p}px ${TK.mono}`; lab(c, 'E ' + e.toFixed(1), x + 4 * p, y + 15 * p);
+        if (!S.blind) { const side = Math.min(gw * 0.4, gh * 0.55); square(c, x + gw * 0.76, y + gh / 2 - side / 2, R.cells[i][j], kmax, side, n); c.fillStyle = TK.muted; c.textAlign = 'right'; c.textBaseline = 'bottom'; lab(c, f3(R.cells[i][j]), x + gw - 3 * p, y + gh - 3 * p); }
+        order.push(R.cells[i][j]); n++;
+      }
+      stack(c, lw, w - 12 * p, h - 40 * p, order, p);
+    } else {
+      /* single variance: the claimed spread and the sample's, as two normal curves about the sample mean, with the readings as dots */
+      const pl = 16 * p, pr = 16 * p, top = 40 * p, base = h - 70 * p, m = d.data ? d.mean : 0, wide = 3.5 * Math.max(d.s, d.sigma0);
+      const X = (v) => pl + (v - (m - wide)) / (2 * wide) * (w - pl - pr), peak = 1 / (Math.min(d.s, d.sigma0) * Math.sqrt(2 * Math.PI)), Y = (v) => base - v / peak * (base - top) * 0.9;
+      c.fillStyle = TK.ink; c.font = `${11 * p}px ${TK.mono}`; c.textAlign = 'left'; c.textBaseline = 'top';
+      lab(c, VDI18N.t('spread claimed, σ₀ = {a} {u}', { a: d.sigma0, u: d.unit }) + '   ' + VDI18N.t('sample, s = {b} {u}', { b: f4(d.s), u: d.unit }), 10 * p, 8 * p);
+      for (const [sg, col, dash] of [[d.sigma0, TK.e, [6 * p, 4 * p]], [d.s, TK.o, []]]) {
+        c.strokeStyle = col; c.lineWidth = 2.4 * p; c.setLineDash(dash); c.beginPath();
+        for (let i = 0; i <= 200; i++) { const v = m - wide + 2 * wide * i / 200, y = Y(Math.exp(-0.5 * ((v - m) / sg) ** 2) / (sg * Math.sqrt(2 * Math.PI))); if (i) c.lineTo(X(v), y); else c.moveTo(X(v), y); }
+        c.stroke(); c.setLineDash([]);
+      }
+      c.strokeStyle = TK.ink; c.lineWidth = 1.5; c.beginPath(); c.moveTo(pl, base); c.lineTo(w - pr, base); c.stroke();
+      c.fillStyle = TK.muted; c.font = `${10 * p}px ${TK.mono}`; c.textAlign = 'center'; c.textBaseline = 'top';
+      for (let k = -3; k <= 3; k++) { const v = m + k * d.sigma0; if (X(v) < pl || X(v) > w - pr) continue; c.fillText(d.data ? v.toFixed(2) : (k ? (k > 0 ? '+' : '−') + Math.abs(k) + 'σ₀' : 'x̄'), X(v), base + 4 * p); }
+      if (d.data) {
+        const seen = new Map(); c.fillStyle = TK.o;
+        for (const v of d.data) { const k = seen.get(v) || 0; seen.set(v, k + 1); c.beginPath(); c.arc(X(v), base - 6 * p - k * 9 * p, 3.6 * p, 0, 7); c.fill(); }
+        c.fillStyle = TK.muted; c.textAlign = 'right'; lab(c, VDI18N.t('stopwatch readings (s), simulated'), w - pr, base + 18 * p);
+      } else { c.fillStyle = TK.muted; c.textAlign = 'right'; lab(c, VDI18N.t('only the summary is given: n = {n}', { n: d.n }), w - pr, base + 18 * p); }
+      stack(c, pl, w - pr, h - 40 * p, [S.R.chi2], p);
+    }
+  }
+  function drawNull() {
+    const [w, h] = sz.nullc || [0, 0]; if (!w || !S.R) return; const c = nctx, p = proj(), R = S.R, df = R.df, C = VDSTATS.dist.chisq(df);
+    c.setTransform(dpr, 0, 0, dpr, 0, 0); c.fillStyle = TK.canvas; c.fillRect(0, 0, w, h);
+    const pl = 40 * p, pr = 14 * p, top = (w < 560 ? 44 : 30) * p, base = h - 30 * p, hi = S.range, X = (v) => pl + v / hi * (w - pl - pr);
+    const bw = S.bw, dens = S.nsim ? [...S.hist].map((k) => k / (S.nsim * bw)) : [];
+    let ymax = 0; for (let i = 1; i <= 200; i++) { const v = C.pdf(hi * i / 200); if (isFinite(v)) ymax = Math.max(ymax, v); }
+    if (df <= 2) ymax = Math.min(ymax, Math.max(...dens, C.pdf(hi * 0.02)));
+    ymax = Math.max(ymax, ...dens) * 1.1 || 1; const Y = (v) => base - Math.min(v, ymax * 1.05) / ymax * (base - top);
+    /* the histogram of simulated statistics */
+    if (S.nsim) { c.fillStyle = TK.sim; c.globalAlpha = 0.45; dens.forEach((v, i) => { if (v > 0) c.fillRect(X(i * bw) + 0.5, Y(v), X(bw) - X(0) - 1, base - Y(v)); }); c.globalAlpha = 1; }
+    /* the p value area under the curve */
+    const t = tailNow(), x = R.chi2;
+    if (!S.blind) {
+      const shade = (a, b) => { c.fillStyle = TK.tail; c.globalAlpha = 0.3; c.beginPath(); c.moveTo(X(a), base); for (let i = 0; i <= 120; i++) { const v = a + (b - a) * i / 120; c.lineTo(X(v), Y(C.pdf(Math.max(v, 1e-9)))); } c.lineTo(X(b), base); c.fill(); c.globalAlpha = 1; };
+      if (t === 'right') shade(Math.min(x, hi), hi); else if (t === 'left') shade(0, Math.min(x, hi));
+      else { const cdf = C.cdf(x); if (cdf > 0.5) { shade(Math.min(x, hi), hi); shade(0, Math.min(C.inv(1 - cdf), hi)); } else { shade(0, x); shade(Math.min(C.inv(1 - cdf), hi), hi); } }
+    }
+    c.strokeStyle = TK.ink; c.lineWidth = 2.2 * p; c.beginPath();
+    for (let i = 0; i <= 300; i++) { const v = hi * i / 300, y = Y(C.pdf(Math.max(v, 1e-9))); if (i) c.lineTo(X(v), y); else c.moveTo(X(v), y); }
+    c.stroke();
+    c.strokeStyle = TK.ink; c.lineWidth = 1.5; c.beginPath(); c.moveTo(pl, base); c.lineTo(w - pr, base); c.stroke();
+    c.fillStyle = TK.muted; c.font = `${10 * p}px ${TK.mono}`; c.textAlign = 'center'; c.textBaseline = 'top';
+    const st = hi > 60 ? 20 : hi > 30 ? 10 : hi > 12 ? 5 : hi > 5 ? 2 : 1;
+    for (let v = 0; v <= hi; v += st) c.fillText(String(v), X(v), base + 4 * p);
+    for (const v of critVals()) { if (v > hi) continue; c.strokeStyle = TK.muted; c.setLineDash([4 * p, 3 * p]); c.lineWidth = 1.2 * p; c.beginPath(); c.moveTo(X(v), top); c.lineTo(X(v), base); c.stroke(); c.setLineDash([]); }
+    if (!S.blind) {
+      c.strokeStyle = TK.tail; c.lineWidth = 2.5 * p; c.beginPath(); c.moveTo(X(Math.min(x, hi)), top - 4 * p); c.lineTo(X(Math.min(x, hi)), base); c.stroke();
+      c.fillStyle = TK.tail; c.font = `600 ${11 * p}px ${TK.mono}`; c.textBaseline = 'bottom'; c.textAlign = X(x) > w - 160 * p ? 'right' : 'left';
+      lab(c, 'χ² = ' + f3(x) + '   p = ' + fp(R.p), X(Math.min(x, hi)) + (c.textAlign === 'left' ? 5 : -5) * p, top - 4 * p + 14 * p);
+    }
+    if (S.run && isFinite(S.lastSim)) { c.fillStyle = TK.sim; c.beginPath(); c.arc(X(Math.min(S.lastSim, hi)), base - 6 * p, 5 * p, 0, 7); c.fill(); }
+    c.fillStyle = TK.ink; c.font = `600 ${11 * p}px ${TK.mono}`; c.textAlign = 'left'; c.textBaseline = 'top';
+    lab(c, VDI18N.t('chi square curve, df = {df}', { df }), pl, 6 * p);
+    c.textAlign = 'right'; c.fillStyle = TK.sim; const narrow = w < 560;
+    if (narrow) { c.textAlign = 'left'; c.textBaseline = 'top'; }
+    const simT = S.nsim ? VDI18N.t('{n} simulated data sets with H₀ true', { n: big(S.nsim) }) : VDI18N.t('Play or Simulate 1,000 to fill the histogram');
+    /* on a phone the title starts at the left and shrinks to fit the width (longer languages) */
+    if (narrow) { const room = w - pl - 6 * p, tw = c.measureText(simT).width; if (tw > room) c.font = c.font.replace(/[\d.]+px/, (m) => (parseFloat(m) * room / tw).toFixed(2) + 'px'); c.textAlign = 'left'; }
+    lab(c, simT, narrow ? pl : w - pr, narrow ? 20 * p : 6 * p);
+  }
+
+  /* ---------- HTML ---------- */
+  function cellRows() {
+    const d = S.d, R = S.R, out = [];
+    if (d.kind === 'gof' || d.kind === 'poisson') d.cats.forEach((cat, i) => out.push({ cell: cat, O: d.obs[i], E: R.exp[i], k: R.cells[i] }));
+    else if (d.kind === 'table') d.obs.forEach((row, i) => row.forEach((o, j) => out.push({ cell: d.rows[i] + ', ' + d.cols[j], O: o, E: R.exp[i][j], k: R.cells[i][j] })));
+    return out;
+  }
+  function htmlCells() {
+    const d = S.d, R = S.R, B = S.blind;
+    if (d.kind === 'var') {
+      $('cellsTitle').textContent = VDI18N.t('The sample');
+      let h = `<tr><th>${VDI18N.t('Quantity')}</th><th>${VDI18N.t('Value')}</th></tr>`
+        + `<tr><td>n</td><td>${d.n}</td></tr><tr><td>${VDI18N.t('sample SD')} s</td><td>${f4(d.s)} ${d.unit}</td></tr><tr><td>s²</td><td>${f4(d.s * d.s)}</td></tr>`
+        + `<tr><td>${VDI18N.t('claimed')} σ₀</td><td>${d.sigma0} ${d.unit}</td></tr><tr><td>σ₀²</td><td>${f4(d.sigma0 * d.sigma0)}</td></tr>`;
+      if (d.data) h += `<tr><td>${VDI18N.t('readings (s)')}</td><td style="white-space:normal">${d.data.map((v) => v.toFixed(2)).join(', ')}</td></tr>`;
+      $('cellTable').innerHTML = h; return;
+    }
+    $('cellsTitle').textContent = VDI18N.t('The cells');
+    const rows = cellRows();
+    let h = `<tr><th>${d.kind === 'table' ? VDI18N.t('Cell') : d.catName}</th><th>${VDI18N.t('Observed O')}</th><th>${VDI18N.t('Expected E')}</th><th>(O − E)²/E</th></tr>`;
+    for (const r of rows) h += `<tr><td>${r.cell}</td><td>${r.O}</td><td class="${r.E < 5 ? 'warn' : ''}">${f3(r.E)}</td><td>${B ? '?' : f4(r.k)}</td></tr>`;
+    h += `<tr class="tot"><td>${VDI18N.t('Total')}</td><td>${big(R.n)}</td><td>${f3(rows.reduce((s, r) => s + r.E, 0))}</td><td>${B ? '?' : 'χ² = ' + f4(R.chi2)}</td></tr>`;
+    $('cellTable').innerHTML = h;
+  }
+  function h0Text() {
+    const s = S.src, d = S.d;
+    if (S.mode === 'indep') return [VDI18N.t('H₀: the two variables are independent.'), VDI18N.t('Hₐ: they are dependent.')];
+    if (S.mode === 'homog') return [VDI18N.t('H₀: the rows have the same distribution.'), VDI18N.t('Hₐ: the distributions differ.')];
+    if (S.mode === 'var') { const t = S.tail; return [`H₀: σ = ${d.sigma0} ${d.unit}`, t === 'left' ? `Hₐ: σ < ${d.sigma0} ${d.unit}` : t === 'two' ? `Hₐ: σ ≠ ${d.sigma0} ${d.unit}` : `Hₐ: σ > ${d.sigma0} ${d.unit}`]; }
+    if (s === 'die') return [VDI18N.t('H₀: the die is fair: each face has chance 1/6.'), VDI18N.t('Hₐ: it is not fair.')];
+    if (s === 'mendel') return [VDI18N.t('H₀: the four kinds come in the ratio 9 : 3 : 3 : 1.'), VDI18N.t('Hₐ: they do not.')];
+    if (s === 'decay') return [VDI18N.t('H₀: the counts follow a Poisson distribution.'), VDI18N.t('Hₐ: they do not.')];
+    return [VDI18N.t('H₀: the data fit the expected distribution.'), VDI18N.t('Hₐ: they do not.')];
+  }
+  function dfText() {
+    const d = S.d, R = S.R;
+    if (d.kind === 'gof') return VDI18N.t('df = k − 1 = {k} − 1 = {df}: the {k} counts must add up to n, so once {m} of them are known the last is fixed.', { k: d.obs.length, df: R.df, m: d.obs.length - 1 });
+    if (d.kind === 'poisson') return VDI18N.t('df = k − 1 − 1 = {df}: {k} bins, less 1 because the counts add up to n, less 1 more because the mean was estimated from the same counts.', { k: d.obs.length, df: R.df });
+    if (d.kind === 'table') return VDI18N.t('df = (r − 1)(c − 1) = ({r} − 1)({c} − 1) = {df}: with the row and column totals fixed, only {df} cells can be filled freely.', { r: d.obs.length, c: d.obs[0].length, df: R.df });
+    return VDI18N.t('df = n − 1 = {df}.', { df: R.df });
+  }
+  function simPNow() { return S.nsim ? simP(S.sims, S.nsim, S.R.chi2, tailNow()) : NaN; }
+  function htmlTest() {
+    const R = S.R, B = S.blind, [h0, ha] = h0Text(), rej = R.p <= S.alpha, small = R.small || 0;
+    let h = `<p>${h0}<br>${ha}</p>`;
+    h += `<p class="mono">${S.d.kind === 'var' ? 'χ² = (n − 1)s²/σ₀² = ' : 'χ² = Σ (O − E)²/E = '}${B ? '?' : f4(R.chi2)}</p>`;
+    h += `<p>${dfText()}</p>`;
+    if (S.d.kind !== 'var') h += `<p class="rule5 ${small ? 'warn' : ''}">${small ? VDI18N.t('{n} expected counts are below 5: combine categories before trusting the curve (the simulation still works).', { n: small }) : VDI18N.t('Every expected count is at least 5, so the chi square curve is a good approximation.')}</p>`;
+    else h += `<p class="rule5">${VDI18N.t('The test of a single variance assumes the population is normal.')}</p>`;
+    if (!B) {
+      h += `<p class="mono">p = ${fp(R.p)} (${VDI18N.t('from the curve')})` + (S.nsim ? `<br>${VDI18N.t('simulated p = {p} ({k} of {n})', { p: f4(simPNow()), k: big(Math.round(simPNow() * S.nsim * (tailNow() === 'two' ? 0.5 : 1))), n: big(S.nsim) })}` : '') + '</p>';
+      h += `<p class="verdict ${rej ? 'rej' : ''}">${rej ? VDI18N.t('p ≤ α = {a}: reject H₀.', { a: S.alpha }) : VDI18N.t('p > α = {a}: do not reject H₀.', { a: S.alpha })}</p>`;
+    }
+    $('testBox').innerHTML = h;
+  }
+  function readouts() {
+    const R = S.R, d = S.d, B = S.blind, dd = (a, b, cls) => `<div${cls ? ` class="${cls}"` : ''}><dt>${a}</dt><dd translate="no">${b}</dd></div>`;
+    let h = dd(d.kind === 'var' ? VDI18N.t('Sample size n') : VDI18N.t('Total count n'), big(R.n));
+    if (d.kind === 'poisson') h += dd(VDI18N.t('Mean count per interval'), f3(d.mean));
+    if (d.kind === 'var') h += dd(VDI18N.t('Sample SD s'), f4(d.s) + ' ' + d.unit);
+    h += dd(VDI18N.t('Chi square χ²'), B ? '?' : f4(R.chi2)) + dd(VDI18N.t('Degrees of freedom df'), String(R.df));
+    h += dd(VDI18N.t('p value'), B ? '?' : fp(R.p)) + dd(VDI18N.t('Critical value'), critVals().map(f3).join(', '));
+    h += dd(VDI18N.t('Simulated data sets'), big(S.nsim)) + dd(VDI18N.t('Simulated p value'), B ? '?' : S.nsim ? f4(simPNow()) : '—');
+    if (d.kind !== 'var') h += dd(VDI18N.t('Smallest expected count'), f3(Math.min(...(d.kind === 'table' ? R.exp.flat() : R.exp))));
+    $('out').innerHTML = h;
+  }
+
+  /* ---------- loop ---------- */
+  function sizeAll() { dpr = window.devicePixelRatio || 1; fit(cells, 'cellPane'); fit(nullc, 'nullPane'); need = true; }
+  let last = performance.now(), lastHtml = 0;
+  function frame(now) {
+    const dt = Math.min(0.1, (now - last) / 1000); last = now;
+    if (S.run) {
+      const rate = +$('speed').value; S.acc += dt * rate; let k = Math.min(5000, Math.floor(S.acc)); S.acc -= k;
+      if (k > 0) {
+        for (let i = 0; i < k; i++) simOne();
+        /* the newest simulated data set as a ghost over the bars, at a pace the eye can follow */
+        if (rate <= 20 && (S.d.kind === 'gof')) S.ghost = multinomial(S.R.n, S.d.probs, VDSTATS.rng(S.seed * 1009 + S.nsim));
+        needHtml = true;
+      }
+      need = true;
+    }
+    if (need) { need = false; if (TK) { drawCells(); drawNull(); } }
+    if (needHtml && now - lastHtml > (S.run ? 150 : 0)) { needHtml = false; lastHtml = now; htmlCells(); htmlTest(); readouts(); }
+    requestAnimationFrame(frame);
+  }
+  const retheme = () => { tokens(); need = true; };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'data-vd-look'] });
+  VD.projector({ onChange: sizeAll });
+  if (window.VD && VD.panel) VD.panel({ play: '#play', reset: '#reset', speed: '#speed', speedLabel: 'Data sets a second', step: { run: stepOne, label: 'Step', title: 'Simulate one data set' }, also: ['#sim1000'] });
+  cells.addEventListener('keydown', (e) => { if (e.key === ' ') { $('play').click(); e.preventDefault(); } });
+  /* Readings: every cell of the current test (tools/readings_panel.py) */
+  window.vdVersion = 'chi-square-tests@2026-11-19';
+  window.vdDataNote = () => { const c = PRESETS[S.preset] && PRESETS[S.preset].cite; return c ? citeText(c) : ''; };
+  window.vdReadingRow = () => {
+    const d = S.d, R = S.R, sim = S.nsim ? +simPNow().toFixed(4) : '';
+    if (d.kind === 'var') return { setup: S.preset, n: d.n, s: +d.s.toFixed(4), sigma0: d.sigma0, chi2: +R.chi2.toFixed(4), df: R.df, p: +R.p.toPrecision(4), sim_p: sim, sims: S.nsim };
+    return cellRows().map((r) => ({ setup: S.preset, cell: r.cell, O: r.O, E: +r.E.toFixed(3), contrib: +r.k.toFixed(4), chi2: +R.chi2.toFixed(4), df: R.df, p: +R.p.toPrecision(4), sim_p: sim, sims: S.nsim }));
+  };
+  window.vdShowCols = [['cell', VDI18N.t('Cell')], ['O', 'O'], ['E', 'E'], ['contrib', '(O − E)²/E']];
+  if (window.VD && VD.describe) VD.describe(cells, () => {
+    const R = S.R, out = [`Chi square ${f4(R.chi2)} with ${R.df} degrees of freedom; p ${fp(R.p)}.`];
+    if (S.d.kind !== 'var') out.push('Observed and expected: ' + cellRows().map((r) => `${r.cell} ${r.O} against ${f3(r.E)}`).join('; ') + '.');
+    if (S.nsim) out.push({ t: `${S.nsim} simulated data sets; simulated p ${f4(simPNow())}.`, live: !S.run });
+    return out;
+  });
+  tokens();
+  const ro = new ResizeObserver(sizeAll); ro.observe($('cellPane')); ro.observe($('nullPane'));
+  applyPreset('loaded'); sizeAll();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  if (window.VD && VD.howTo) VD.howTo({ src: 'media/how-this-works/ws-chi-square.mp4', poster: 'media/how-this-works/ws-chi-square.jpg' });
+  window.__cs = { S, applyPreset, simMany, simOne, setRun, build, simPNow, critVals, cellRows, draw: () => { need = true; needHtml = true; } };
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
