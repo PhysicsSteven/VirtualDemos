@@ -70,6 +70,10 @@ A test can only find a difference that shows up in the data. A length read from 
 2. Predict before you measure: if the true g is 9.81 m/s², will a 95 % confidence interval for g from your 100 timings always contain 9.81? About how often will it miss?
 3. A classmate reads every length to the bottom of the bob instead of the center. Will their 100 timings look any different from yours? Will a two sample test of their g against yours find the difference? Write your guesses and one sentence of reasoning for each.
 
+## Safety
+
+On a real bench, clamp the pivot firmly, keep the swing clear of people and equipment, and release the bob without a push.
+
 ## Procedure
 
 Leave **Blind** (under Lab) unchecked. Every timing goes into Readings by itself.
@@ -117,6 +121,10 @@ The Part A export fills this table with 100 rows.
 4. Hand against photogate (rows A and C). Is the hand stopwatch biased? Test whether the mean hand period differs from the photogate's period: work t with the formula in Background (the photogate's s is 0), its degrees of freedom and the p value. State your conclusion.
 5. Center against bottom (rows A and D). The two copies timed the same pendulum. Work the two sample t statistic for $$\bar g$$ from A against $$\bar g$$ from D (use $$s_g$$ and n of each), the Welch degrees of freedom (or 99 to be safe) and the p value. Is the difference significant at α = 0.05? Compare the ratio of the two means of g with 1.030/1.000.
 6. In Part D, did the timings themselves (T̄ and s) differ from Part A by more than chance? What does that tell you about whether repeating at one setup can ever reveal a misread length?
+
+## Uncertainty
+
+Sort what you found into the two kinds. Random error: the scatter of single timings (s), which a mean of n timings shrinks to the standard error $$s/\sqrt n$$; this is what the interval and the tests in Analysis measure. Systematic error: a bias every timing shares, such as a length read to the bottom of the bob or the small angle formula at a finite release angle; repeating at one setup never shrinks it, and only a comparison of setups or the physics reveals it. In two or three sentences, give the size of each kind in this lab, in m/s², from your rows A, C and D.
 
 ## Questions
 
