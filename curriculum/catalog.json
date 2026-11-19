@@ -1293,6 +1293,20 @@
       "energy conservation",
       "phase portrait"
      ]
+    },
+    {
+     "demo": "curves-and-motion",
+     "title": "Curves and Motion",
+     "desc": "Type a path as x(t) and y(t), a polar curve r(θ) or a curve in space and watch a point move along it: velocity and acceleration, the acceleration split into tangential and normal parts, T and N, the osculating circle and curvature, arc length and swept area. Cycloid, projectile, circular motion, a proton's helix, and orbits as conics from a focus and a directrix with Kepler's equal areas.",
+     "tags": [
+      "parametric equations",
+      "polar coordinates",
+      "curvature",
+      "arc length",
+      "tangential and normal acceleration",
+      "conic sections",
+      "Kepler's second law"
+     ]
     }
    ]
   },

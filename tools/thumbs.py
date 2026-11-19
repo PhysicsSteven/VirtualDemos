@@ -59,6 +59,7 @@ OVERRIDES = {
     "rhythm-pitch": {"wait": 1200, "crop": "#scene", "js": "document.getElementById('setupCard').style.display = 'none'; const sc = document.getElementById('scene'); sc.style.flex = 'none'; sc.style.minHeight = '0'; sc.style.height = '480px'; sc.style.width = '768px'; window.vdDemo.applyPreset('major'); window.vdDemo.S.th = 0.37; document.getElementById('chkH').click();"},
     "condensate-waves": {"wait": 1500, "crop": ".pane", "js": "window.__cw.finishPrep(); window.__cw.run(300);"},
     "measurement-uncertainty": {"wait": 900, "crop": ".pane", "js": "const M = window.__mu; M.applyPreset('bottom'); for (const L of [0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6]) { M.S.L = L; M.repeat10(); } M.S.L = 1.0; M.S.y = [8 * Math.PI / 180, 0]; window.dispatchEvent(new Event('resize'));"},
+    "curves-and-motion": {"wait": 1200, "crop": ".pane", "js": "window.__cm.applyPreset('orbit'); window.__cm.S.u = 1.2; window.__cm.draw();"},
     "derivatives": {"wait": 900, "crop": ".pane", "js": "window.__fg.S.px = -1.6; window.__fg.draw();"},
     "numerical-methods": {"wait": 900, "crop": "#scene", "anchor": "top", "js": "window.__nm.applyPreset('orbit'); window.__nm.plusPeriod(); window.__nm.plusPeriod(); window.__nm.plusPeriod();"},
     "rainbows": {"wait": 1500, "crop": ".stage", "js": "document.getElementById('setupCard').style.visibility = 'hidden'; window.__rb.applyPreset('evening'); window.__rb.S.marks = false; window.__rb.drawAll();"},
