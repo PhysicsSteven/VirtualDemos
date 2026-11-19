@@ -2981,7 +2981,8 @@
       "status": "usable",
       "demos": [
         "vectors",
-        "projectile-drag"
+        "projectile-drag",
+        "curves-and-motion"
       ],
       "unit": "kinematics",
       "note": "Use vector subtraction Δv and projectile time-dot positions/velocity arrows to discuss acceleration components. Two-dimensional illustration; no dedicated acceleration-vector or general 3D viewer. Derivatives can be calculated from the trajectory data."
@@ -3015,7 +3016,8 @@
       "requirement": "required",
       "status": "usable",
       "demos": [
-        "circular-motion"
+        "circular-motion",
+        "curves-and-motion"
       ],
       "unit": "kinematics",
       "note": "Circular Motion covers uniform circular motion (string, flat and banked curves, loop) and nonuniform motion in its Speeding up or braking setup: tangential and centripetal parts, total acceleration and its angle, slip when √(a_t² + a_c²) > μs g."
@@ -3803,7 +3805,8 @@
       "requirement": "required",
       "status": "usable",
       "demos": [
-        "kepler-orbits"
+        "kepler-orbits",
+        "curves-and-motion"
       ],
       "unit": "gravitation"
     },
@@ -4737,7 +4740,8 @@
       "status": "usable",
       "demos": [
         "magnetic-force",
-        "e-over-m"
+        "e-over-m",
+        "curves-and-motion"
       ],
       "unit": "magnetic-forces",
       "note": "Magnetic Force: circular motion with r = mv/(qB) and period, oblique launch with helix and pitch (3D), E × B drift, velocity selector, mass spectrometer and cyclotron; e/m apparatus for a real beam. Reviewed by Claude 2026-10-23."
@@ -12230,6 +12234,40 @@
       "handouts": [
         "numerical-methods"
       ]
+    },
+    {
+      "demo": "curves-and-motion",
+      "course": [
+        "later"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "4.2",
+          "title": "Acceleration Vector"
+        },
+        {
+          "vol": 1,
+          "sec": "4.4",
+          "title": "Uniform and Nonuniform Circular Motion"
+        },
+        {
+          "vol": 1,
+          "sec": "13.5",
+          "title": "Kepler's Laws of Planetary Motion"
+        },
+        {
+          "vol": 2,
+          "sec": "11.3",
+          "title": "Motion of a Charged Particle in a Magnetic Field"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "New 2026-11-19 (Claude, Steve's approved Calculus plan): a math tool for OpenStax Calculus Vol 2 7.1 to 7.5 and Vol 3 3.1 to 3.4. Typed parametric, polar or space curves with velocity, acceleration split into tangential and normal parts, T, N, the osculating circle, curvature, arc length and swept area; conics from a focus and a directrix as Kepler orbits (equal areas). Mapped here only where it serves University Physics: the acceleration vector, nonuniform circular motion, Kepler's laws and the helix of a charged particle. No worksheet yet.",
+      "title": "Curves and Motion",
+      "url": "demos/curves-and-motion.html"
     },
     {
       "demo": "fate-of-the-universe",

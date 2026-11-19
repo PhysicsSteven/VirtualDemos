@@ -1,0 +1,987 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="lib/theme.js"></script>
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
+<script src="lib/constants.js"></script>
+<script src="lib/vdmath.js"></script>
+<script src="lib/vd3.js"></script>
+<script src="lib/vd3kit.js"></script>
+<title>Curves and Motion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css: the vector colors, the formula boxes and the picture */
+:root { --cm-curve: #8f5000; --cm-v: #0f766e; --cm-a: #a21caf; --cm-at: #c2410c; --cm-an: #6d28d9; --cm-osc: #4d7c0f; --cm-area: #b45309; --cm-area2: #4d7c0f; --cm-frame: #374151; --cm-sun: #e0a100; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --cm-curve: #e8a440; --cm-v: #5eead4; --cm-a: #f0abfc; --cm-at: #fdba74; --cm-an: #c4b5fd; --cm-osc: #bef264; --cm-area: #f59e0b; --cm-area2: #a3e635; --cm-frame: #e5e7eb; --cm-sun: #fcd34d; } }
+:root[data-theme="dark"] { --cm-curve: #e8a440; --cm-v: #5eead4; --cm-a: #f0abfc; --cm-at: #fdba74; --cm-an: #c4b5fd; --cm-osc: #bef264; --cm-area: #f59e0b; --cm-area2: #a3e635; --cm-frame: #e5e7eb; --cm-sun: #fcd34d; }
+.stage { position: relative; display: flex; flex-direction: column; min-height: min-content; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.fbar { display: flex; flex-direction: column; gap: 6px; padding: 10px 12px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.fbar .frow { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; }
+.fbar .frow[hidden] { display: none; }
+.fbar label.fl { font-family: var(--font-mono); font-weight: 600; font-size: 1rem; color: var(--cm-curve); white-space: nowrap; min-width: 4.6em; }
+.fbar input[type="text"] { flex: 1 1 220px; min-width: 0; font-family: var(--font-mono); font-size: 1.02rem; padding: 6px 10px; color: var(--ink); background: var(--canvas);
+  border: 2px solid var(--line2, var(--line)); border-radius: 8px; }
+.fbar input[type="text"].short { flex: 0 1 8em; width: 8em; }
+.fbar input[type="text"]:focus { outline: none; border-color: var(--cm-curve); }
+.fbar input[type="text"]:focus-visible { box-shadow: 0 0 0 1px var(--cm-curve); }
+.fbar input.bad { border-color: var(--red); }
+.fbar .rl { font-size: 0.88rem; color: var(--muted); }
+.fbar .sl { flex: 1 1 220px; min-width: 0; }
+.fbar .status { font-size: 0.84rem; color: var(--muted); min-height: 1.3em; }
+.fbar .status.bad { color: var(--red); }
+.fbar .conicf { font-family: var(--font-mono); font-size: 0.95rem; color: var(--cm-curve); }
+.pane { position: relative; flex: 1 1 auto; min-height: 500px; }
+.pane canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; outline: none; touch-action: none; cursor: grab; }
+.pane canvas.hid { visibility: hidden; }
+.shelf { display: flex; flex-wrap: wrap; align-items: stretch; gap: 12px; padding: 10px; border-top: 1px solid var(--line); background: var(--surface); }
+.shelf-card { flex: 1 1 230px; display: grid; grid-template-columns: minmax(0, 1fr); align-content: start; gap: 6px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--canvas); }
+.shelf-card > .card-title { font-size: 0.78rem; font-weight: 700; color: var(--muted); }
+.shelf-card .row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; font-size: 0.86rem; }
+.shelf-card label.check[hidden] { display: none; }
+.sw { display: inline-block; width: 24px; height: 0; border-top: 3px solid; vertical-align: middle; margin-right: 6px; }
+.sw.v { border-color: var(--cm-v); } .sw.a { border-color: var(--cm-a); } .sw.at { border-color: var(--cm-at); border-top-style: dashed; }
+.sw.an { border-color: var(--cm-an); border-top-style: dashed; } .sw.tn { border-color: var(--cm-frame); border-top-width: 2px; }
+.sw.osc { border-color: var(--cm-osc); border-top-style: dotted; } .sw.trail { border-color: var(--cm-curve); border-top-width: 4px; }
+.sw.area { border-color: var(--cm-area); border-top-width: 8px; opacity: 0.45; }
+.sw.slice { border-top-width: 8px; border-image: linear-gradient(90deg, var(--cm-area) 50%, var(--cm-area2) 50%) 1; opacity: 0.55; }
+dl.formulas { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 6px 10px; margin: 0; }
+dl.formulas dt { font-family: var(--font-mono); font-weight: 600; white-space: nowrap; color: var(--cm-curve); }
+dl.formulas dd { margin: 0; font-family: var(--font-mono); font-size: 0.86rem; overflow-wrap: anywhere; }
+.rail .setlab { flex: 1 1 100%; margin: 8px 0 2px; font-size: 0.76rem; font-weight: 700; color: var(--muted); }
+.rail .setlab:first-of-type { margin-top: 0; }
+.rail ul.typing { margin: 6px 0 0; padding-left: 1.2em; font-size: 0.86rem; color: var(--muted); }
+.rail ul.typing code { font-family: var(--font-mono); color: var(--ink); }
+@media (min-width: 821px) { .bench > .stage { align-self: start; } }
+@media (max-width: 820px) { .pane { min-height: 0; height: 430px; flex: none; } .shelf-card { flex: 1 1 100%; } }
+@media (max-width: 480px) { .fbar label.fl { min-width: 0; } .fbar input[type="text"].short { flex: 1 1 5em; width: 5em; } }
+</style>
+<link rel="stylesheet" id="vd-paper" href="lib/paper.css">
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Curves and Motion</h1>
+      <p>Type a path as x(t) and y(t), as a polar curve r(θ), or as a curve in space, and watch a point move along it with its velocity and acceleration. The acceleration splits into a tangential part that changes the speed and a normal part that turns the motion, set by the curvature. Arc length and swept area build up as it goes, and the conics come from a focus and a directrix.</p>
+    </div>
+    <div class="bar-right">
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/curves-and-motion.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/curves-and-motion.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM11 2h5v1h-5zM17 2h1v1h-1zM19 2h2v1h-2zM22 2h2v1h-2zM25 2h1v1h-1zM30 2h1v1h-1zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM11 3h1v1h-1zM13 3h1v1h-1zM15 3h2v1h-2zM18 3h1v1h-1zM20 3h2v1h-2zM23 3h2v1h-2zM27 3h1v1h-1zM29 3h2v1h-2zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h5v1h-5zM17 4h1v1h-1zM21 4h3v1h-3zM25 4h1v1h-1zM28 4h3v1h-3zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h4v1h-4zM18 5h2v1h-2zM21 5h1v1h-1zM24 5h2v1h-2zM27 5h2v1h-2zM30 5h1v1h-1zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h1v1h-1zM13 6h1v1h-1zM16 6h2v1h-2zM21 6h2v1h-2zM25 6h1v1h-1zM28 6h1v1h-1zM30 6h1v1h-1zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h1v1h-1zM15 7h1v1h-1zM18 7h1v1h-1zM20 7h1v1h-1zM24 7h1v1h-1zM29 7h2v1h-2zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h3v1h-3zM14 9h1v1h-1zM16 9h1v1h-1zM21 9h3v1h-3zM26 9h1v1h-1zM28 9h1v1h-1zM2 10h1v1h-1zM4 10h5v1h-5zM11 10h1v1h-1zM13 10h1v1h-1zM16 10h1v1h-1zM20 10h1v1h-1zM22 10h1v1h-1zM25 10h5v1h-5zM32 10h5v1h-5zM2 11h1v1h-1zM4 11h1v1h-1zM6 11h1v1h-1zM11 11h1v1h-1zM13 11h6v1h-6zM25 11h1v1h-1zM33 11h1v1h-1zM36 11h2v1h-2zM3 12h6v1h-6zM19 12h2v1h-2zM22 12h2v1h-2zM28 12h3v1h-3zM32 12h3v1h-3zM36 12h3v1h-3zM2 13h1v1h-1zM6 13h1v1h-1zM10 13h5v1h-5zM18 13h1v1h-1zM20 13h1v1h-1zM23 13h1v1h-1zM26 13h1v1h-1zM32 13h3v1h-3zM38 13h1v1h-1zM4 14h1v1h-1zM6 14h1v1h-1zM8 14h1v1h-1zM16 14h1v1h-1zM19 14h1v1h-1zM22 14h1v1h-1zM24 14h15v1h-15zM2 15h4v1h-4zM7 15h1v1h-1zM10 15h3v1h-3zM14 15h2v1h-2zM18 15h2v1h-2zM22 15h1v1h-1zM24 15h2v1h-2zM27 15h1v1h-1zM30 15h1v1h-1zM33 15h1v1h-1zM2 16h3v1h-3zM7 16h2v1h-2zM14 16h6v1h-6zM22 16h1v1h-1zM24 16h1v1h-1zM27 16h4v1h-4zM32 16h4v1h-4zM38 16h1v1h-1zM2 17h1v1h-1zM6 17h2v1h-2zM15 17h9v1h-9zM25 17h1v1h-1zM31 17h1v1h-1zM33 17h2v1h-2zM37 17h1v1h-1zM2 18h1v1h-1zM4 18h2v1h-2zM7 18h2v1h-2zM10 18h2v1h-2zM13 18h2v1h-2zM16 18h3v1h-3zM21 18h1v1h-1zM24 18h1v1h-1zM26 18h7v1h-7zM34 18h1v1h-1zM36 18h1v1h-1zM38 18h1v1h-1zM2 19h1v1h-1zM4 19h3v1h-3zM11 19h1v1h-1zM17 19h1v1h-1zM20 19h1v1h-1zM22 19h2v1h-2zM25 19h1v1h-1zM30 19h2v1h-2zM37 19h1v1h-1zM5 20h1v1h-1zM7 20h3v1h-3zM11 20h2v1h-2zM17 20h2v1h-2zM21 20h1v1h-1zM23 20h2v1h-2zM26 20h1v1h-1zM28 20h3v1h-3zM33 20h3v1h-3zM37 20h2v1h-2zM2 21h1v1h-1zM7 21h1v1h-1zM11 21h1v1h-1zM13 21h1v1h-1zM17 21h1v1h-1zM20 21h5v1h-5zM28 21h3v1h-3zM32 21h1v1h-1zM38 21h1v1h-1zM2 22h4v1h-4zM8 22h1v1h-1zM11 22h1v1h-1zM15 22h3v1h-3zM19 22h1v1h-1zM21 22h1v1h-1zM24 22h1v1h-1zM26 22h4v1h-4zM31 22h2v1h-2zM34 22h3v1h-3zM2 23h1v1h-1zM5 23h1v1h-1zM9 23h1v1h-1zM14 23h3v1h-3zM18 23h1v1h-1zM21 23h1v1h-1zM25 23h1v1h-1zM28 23h1v1h-1zM30 23h2v1h-2zM35 23h1v1h-1zM37 23h1v1h-1zM2 24h2v1h-2zM5 24h1v1h-1zM7 24h2v1h-2zM11 24h1v1h-1zM13 24h5v1h-5zM20 24h1v1h-1zM22 24h2v1h-2zM26 24h1v1h-1zM28 24h8v1h-8zM37 24h2v1h-2zM2 25h2v1h-2zM9 25h1v1h-1zM11 25h1v1h-1zM13 25h3v1h-3zM17 25h2v1h-2zM21 25h3v1h-3zM25 25h1v1h-1zM29 25h1v1h-1zM31 25h4v1h-4zM37 25h1v1h-1zM3 26h3v1h-3zM8 26h1v1h-1zM11 26h3v1h-3zM16 26h2v1h-2zM20 26h2v1h-2zM24 26h2v1h-2zM27 26h1v1h-1zM31 26h4v1h-4zM36 26h2v1h-2zM2 27h6v1h-6zM10 27h1v1h-1zM14 27h1v1h-1zM17 27h2v1h-2zM23 27h3v1h-3zM30 27h2v1h-2zM33 27h1v1h-1zM2 28h1v1h-1zM4 28h2v1h-2zM8 28h1v1h-1zM12 28h1v1h-1zM16 28h1v1h-1zM27 28h3v1h-3zM33 28h2v1h-2zM37 28h2v1h-2zM2 29h1v1h-1zM4 29h4v1h-4zM9 29h1v1h-1zM12 29h1v1h-1zM14 29h1v1h-1zM18 29h1v1h-1zM22 29h2v1h-2zM25 29h1v1h-1zM30 29h5v1h-5zM37 29h2v1h-2zM2 30h1v1h-1zM5 30h1v1h-1zM7 30h3v1h-3zM15 30h2v1h-2zM19 30h1v1h-1zM21 30h1v1h-1zM25 30h12v1h-12zM10 31h14v1h-14zM25 31h3v1h-3zM29 31h2v1h-2zM34 31h2v1h-2zM2 32h7v1h-7zM11 32h1v1h-1zM13 32h2v1h-2zM17 32h1v1h-1zM19 32h1v1h-1zM22 32h3v1h-3zM26 32h1v1h-1zM28 32h1v1h-1zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM36 32h3v1h-3zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h1v1h-1zM14 33h1v1h-1zM17 33h4v1h-4zM23 33h1v1h-1zM25 33h1v1h-1zM28 33h1v1h-1zM30 33h1v1h-1zM34 33h2v1h-2zM37 33h2v1h-2zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h4v1h-4zM15 34h1v1h-1zM18 34h1v1h-1zM21 34h1v1h-1zM24 34h11v1h-11zM36 34h2v1h-2zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h1v1h-1zM14 35h1v1h-1zM16 35h2v1h-2zM20 35h3v1h-3zM25 35h1v1h-1zM30 35h3v1h-3zM34 35h1v1h-1zM36 35h1v1h-1zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM10 36h3v1h-3zM14 36h2v1h-2zM17 36h2v1h-2zM20 36h1v1h-1zM22 36h1v1h-1zM24 36h1v1h-1zM28 36h2v1h-2zM31 36h1v1h-1zM37 36h2v1h-2zM2 37h1v1h-1zM8 37h1v1h-1zM11 37h7v1h-7zM22 37h2v1h-2zM28 37h1v1h-1zM30 37h1v1h-1zM32 37h1v1h-1zM34 37h1v1h-1zM38 37h1v1h-1zM2 38h7v1h-7zM10 38h1v1h-1zM15 38h3v1h-3zM19 38h1v1h-1zM21 38h1v1h-1zM24 38h5v1h-5zM34 38h5v1h-5z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl" id="strip">
+        <button type="button" class="btn attn" id="play" data-vd-key="play">Play</button>
+        <button type="button" class="btn" id="reset" title="Put the point back at the start of the curve">Reset</button>
+        <label class="mono" for="speed" style="font-size:0.82rem;color:var(--muted)">Speed</label>
+        <select id="speed" aria-label="Speed">
+          <option value="0.25">× 0.25</option>
+          <option value="0.5">× 0.5</option>
+          <option value="1" selected>× 1</option>
+          <option value="2">× 2</option>
+          <option value="4">× 4</option>
+        </select>
+        <span class="mono" id="tclock" style="font-size:0.84rem"></span>
+        <div class="seg" role="group" aria-label="Perspective" id="dimSeg" hidden><button type="button" data-dim="3d" aria-pressed="false">3D</button><button type="button" data-dim="flat" aria-pressed="true">Flat</button></div>
+      </div>
+      <div class="fbar" id="fbar">
+        <div class="frow">
+          <div class="seg" role="group" aria-label="Kind of curve" id="modeSeg"><button type="button" data-mode="xy" aria-pressed="true">x(t), y(t)</button><button type="button" data-mode="polar" aria-pressed="false">Polar r(θ)</button><button type="button" data-mode="xyz" aria-pressed="false">Space x, y, z</button><button type="button" data-mode="conic" aria-pressed="false">Conic orbit</button></div>
+        </div>
+        <div class="frow" id="rowX"><label class="fl" for="fx" id="lbX" translate="no">x(t) =</label><input type="text" id="fx" translate="no" spellcheck="false" autocomplete="off" autocapitalize="off" autocorrect="off" aria-describedby="fStatus"></div>
+        <div class="frow" id="rowY"><label class="fl" for="fy" id="lbY" translate="no">y(t) =</label><input type="text" id="fy" translate="no" spellcheck="false" autocomplete="off" autocapitalize="off" autocorrect="off" aria-describedby="fStatus"></div>
+        <div class="frow" id="rowZ" hidden><label class="fl" for="fz" id="lbZ" translate="no">z(t) =</label><input type="text" id="fz" translate="no" spellcheck="false" autocomplete="off" autocapitalize="off" autocorrect="off" aria-describedby="fStatus"></div>
+        <div class="frow" id="rowR" hidden><label class="fl" for="fr" id="lbR" translate="no">r(θ) =</label><input type="text" id="fr" translate="no" spellcheck="false" autocomplete="off" autocapitalize="off" autocorrect="off" aria-describedby="fStatus"></div>
+        <div class="frow" id="rowU">
+          <label class="rl" for="u0" id="lbU0">t from</label><input type="text" class="short" id="u0" translate="no" spellcheck="false" autocomplete="off" aria-describedby="fStatus">
+          <label class="rl" for="u1">to</label><input type="text" class="short" id="u1" translate="no" spellcheck="false" autocomplete="off" aria-describedby="fStatus">
+          <span class="rl" id="timingBox" hidden><label for="timing">Point moves</label> <select id="timing"><option value="even">evenly in θ</option><option value="kepler">with equal areas in equal times</option></select></span>
+        </div>
+        <div class="frow" id="rowE" hidden><div class="sl"><div class="slider-head"><label for="sE">Eccentricity e</label><output id="oE" for="sE"></output></div><input type="range" id="sE" min="0" max="1.8" step="0.01" value="0.6"></div>
+          <div class="sl"><div class="slider-head"><label for="sQ">Closest distance to the Sun q</label><output id="oQ" for="sQ"></output></div><input type="range" id="sQ" min="0.2" max="2" step="0.05" value="0.6"></div></div>
+        <div class="frow" id="rowC" hidden><span class="conicf" id="conicF" translate="no"></span></div>
+        <div class="status" id="fStatus" role="status" aria-live="polite"></div>
+      </div>
+      <div class="pane" id="pane">
+        <canvas id="can" tabindex="0" role="img" aria-label="The curve, with the moving point and its velocity and acceleration arrows. Left and right arrows move the point; plus and minus zoom; Space plays or pauses."></canvas>
+      </div>
+      <div class="shelf" id="shelf">
+        <div class="shelf-card" role="group" aria-label="What to show">
+          <span class="card-title">Show</span>
+          <label class="check"><input type="checkbox" id="showV" checked><span><span class="sw v"></span><span id="nameV">Velocity v</span></span></label>
+          <label class="check"><input type="checkbox" id="showA" checked><span><span class="sw a"></span><span id="nameA">Acceleration a</span></span></label>
+          <label class="check"><input type="checkbox" id="showSplit"><span><span class="sw at"></span><span class="sw an"></span>a split into tangential a<sub>T</sub> and normal a<sub>N</sub></span></label>
+          <label class="check"><input type="checkbox" id="showTN"><span><span class="sw tn"></span>Unit tangent T and unit normal N</span></label>
+          <label class="check"><input type="checkbox" id="showOsc" checked><span><span class="sw osc"></span>Osculating circle, radius 1/κ</span></label>
+          <label class="check"><input type="checkbox" id="showTrail" checked><span><span class="sw trail"></span>Arc length so far (the path traced)</span></label>
+          <label class="check" id="lbArea"><input type="checkbox" id="showArea"><span><span class="sw area"></span>Area swept from the origin</span></label>
+          <label class="check" id="lbSlice"><input type="checkbox" id="showSlice"><span><span class="sw slice"></span>Slices swept in equal times</span></label>
+        </div>
+        <div class="shelf-card" role="group" aria-label="The view">
+          <span class="card-title">The view</span>
+          <div class="row"><button type="button" class="btn" id="zin">Zoom in</button><button type="button" class="btn" id="zout">Zoom out</button><button type="button" class="btn" id="homeView">Reset view</button></div>
+          <span class="hint" id="viewNote">Drag the point along the curve, or drag elsewhere to pan. Scroll or pinch to zoom.</span>
+        </div>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <p class="setlab">Motion in a plane, x(t) and y(t)</p>
+          <button type="button" data-p="cycloid" aria-pressed="true">A rolling wheel: the cycloid</button>
+          <button type="button" data-p="projectile" aria-pressed="false">A projectile</button>
+          <button type="button" data-p="circle" aria-pressed="false">Uniform circular motion: a = v²/r</button>
+          <button type="button" data-p="speedup" aria-pressed="false">A car speeding up on a circular track</button>
+          <button type="button" data-p="lissajous" aria-pressed="false">Lissajous figure, 3 : 2</button>
+          <p class="setlab">Polar curves, r(θ)</p>
+          <button type="button" data-p="rose" aria-pressed="false">A four petal rose</button>
+          <button type="button" data-p="cardioid" aria-pressed="false">Cardioid: a microphone's pickup pattern</button>
+          <button type="button" data-p="dipole" aria-pressed="false">An antenna's radiation pattern, sin²θ</button>
+          <p class="setlab">A curve in space</p>
+          <button type="button" data-p="helix" aria-pressed="false">A proton in a magnetic field: the helix</button>
+          <p class="setlab">Orbits: conics from a focus and a directrix</p>
+          <button type="button" data-p="orbit" aria-pressed="false">An elliptical orbit, the Sun at a focus</button>
+          <button type="button" data-p="escape" aria-pressed="false">Escape: the parabola, e = 1</button>
+          <button type="button" data-p="flyby" aria-pressed="false">A flyby: the hyperbola, e = 1.5</button>
+        </div>
+        <details class="more" open><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+      </section>
+      <section>
+        <h2>At the point</h2>
+        <dl class="readout" id="out"></dl>
+      </section>
+      <section>
+        <h2>Formulas</h2>
+        <dl class="formulas" id="formulas" translate="no"></dl>
+      </section>
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the curvature, the acceleration parts and the areas, to predict them first</span></label>
+        <details class="more"><summary>What you can type</summary>
+          <ul class="typing">
+            <li>Use <code>t</code> in x(t), y(t) and z(t), and <code>θ</code> (or <code>theta</code>) in r(θ).</li>
+            <li><code>+ − * / ^</code> and parentheses; <code>2t</code>, <code>3sin(t)</code> and <code>(t+1)(t−1)</code> multiply.</li>
+            <li><code>sin cos tan</code>, <code>asin acos atan</code>, <code>sinh cosh tanh</code>, <code>exp</code> or <code>e^t</code>, <code>ln</code>, <code>sqrt</code>, <code>abs</code>, <code>pi</code></li>
+            <li>The range boxes take numbers or expressions such as <code>2pi</code> or <code>40/9.81</code>.</li>
+          </ul>
+        </details>
+        <details class="more"><summary>The model and its formulas</summary>
+          <p class="formula">v = r′(t), a = r″(t), T = v/|v|, a<sub>T</sub> = a·T = d|v|/dt, a<sub>N</sub> = |v × a|/|v| = κ|v|², N = (a − a<sub>T</sub>T)/a<sub>N</sub>, κ = |v × a|/|v|³</p>
+          <p class="formula">s = ∫ |r′| dt, A = ½ ∫ (x y′ − y x′) dt = ½ ∫ r² dθ, conic: r = ep/(1 + e cos θ), directrix x = p</p>
+          <p class="hint">The boxes are read by a small parser written for this site (nothing you type is run as code). The first and second derivatives come from the exact rules of calculus applied to what you typed, so the velocity, acceleration and curvature at the point are exact. Arc length, area and the orbit's clock are integrals computed numerically by adaptive Simpson's rule, to about nine significant figures.</p>
+          <p class="hint">In a polar curve moving evenly in θ, θ plays the part of time, so the arrows are dr/dθ and d²r/dθ². Moving with equal areas in equal times, dθ/dt = h/r² with h constant, the motion of a planet under a force toward the origin.</p>
+          <p class="hint">Orbits: the Sun's GM is the IAU nominal value, lengths in astronomical units and time in Julian years. The planet's own mass and every other body are left out. The helix uses CODATA 2022 values for the proton, with the numbers in the boxes rounded to four significant figures.</p>
+        </details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  /* Curves and Motion: the calculus of a moving point, runnable in Node with VDMATH (demos/lib/vdmath.js) in scope
+     (curriculum/validation/test_curves_and_motion.cjs). A curve is read from typed formulas: x(t), y(t) (and z(t)) in t, or r(θ).
+     Its first and second derivatives are exact trees from VDMATH.derivative, compiled to functions. cmMotion gives the velocity,
+     the acceleration, its tangential and normal parts, T, N, B, the curvature and the center of the osculating circle at one
+     parameter value. The parameter moves evenly (it is the time), or for a polar curve with equal areas in equal times
+     (dθ/dt = h/r²), which gives v = r′(θ) θ̇ and a = r″(θ) θ̇² + r′(θ) θ̈ with θ̈ = −2h² r_θ / r⁵. Arc length, swept area and time are
+     integrals by VDMATH.integral. A conic orbit is r = p/(1 + e cos θ) with the focus at the origin and the directrix at x = p/e. */
+  const CM_KEYS = { xy: ['x', 'y'], xyz: ['x', 'y', 'z'], polar: ['r'] };
+  const CM_VAR = { xy: 't', xyz: 't', polar: 'theta' };
+  function cmCurve(kind, nodes) {
+    const v = CM_VAR[kind], c = { kind, v, keys: CM_KEYS[kind], node: {}, d1: {}, d2: {}, fn: {}, txt: {} };
+    for (const k of c.keys) {
+      const n = nodes[k], a = VDMATH.derivative(n, v), b = VDMATH.derivative(a, v);
+      c.node[k] = n; c.d1[k] = a; c.d2[k] = b;
+      c.fn[k] = [VDMATH.compile(n, [v]), VDMATH.compile(a, [v]), VDMATH.compile(b, [v])];
+      c.txt[k] = [VDMATH.text(n), VDMATH.text(a), VDMATH.text(b)];
+    }
+    return c;
+  }
+  /* read from text (for tests and setups): throws VDMATH's error, with .box naming the formula */
+  function cmRead(kind, src) {
+    const nodes = {};
+    for (const k of CM_KEYS[kind]) { try { nodes[k] = VDMATH.parse(src[k], { vars: [CM_VAR[kind]] }).node; } catch (e) { e.box = k; throw e; } }
+    return cmCurve(kind, nodes);
+  }
+  /* a number typed in a range box: any constant expression (2pi, 40/9.81) */
+  function cmNumber(s) { const n = VDMATH.parse(String(s), { vars: [] }).node; const v = VDMATH.compile(n, [])(); return v; }
+  /* position and its first two derivatives with respect to the parameter, as [x, y, z] */
+  function cmJet(c, u) {
+    if (c.kind === 'polar') {
+      const f = c.fn.r, R = f[0](u), R1 = f[1](u), R2 = f[2](u), co = Math.cos(u), si = Math.sin(u);
+      return { p: [R * co, R * si, 0], d1: [R1 * co - R * si, R1 * si + R * co, 0], d2: [R2 * co - 2 * R1 * si - R * co, R2 * si + 2 * R1 * co - R * si, 0], r: R, r1: R1 };
+    }
+    const g = (k, i) => (c.fn[k] ? c.fn[k][i](u) : 0);
+    return { p: [g('x', 0), g('y', 0), g('z', 0)], d1: [g('x', 1), g('y', 1), g('z', 1)], d2: [g('x', 2), g('y', 2), g('z', 2)] };
+  }
+  const cmDot = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+  const cmCross = (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
+  const cmLen = (a) => Math.hypot(a[0], a[1], a[2]);
+  /* the timing: { kind: 'even' } (the parameter is the time) or { kind: 'kepler', h } (polar, dθ/dt = h/r²) */
+  function cmRates(j, tm) {
+    if (!tm || tm.kind !== 'kepler') return [1, 0];
+    const R = j.r, ud = tm.h / (R * R);
+    return [ud, -2 * tm.h * tm.h * j.r1 / Math.pow(R, 5)];
+  }
+  /* everything at one parameter value u */
+  function cmMotion(c, u, tm) {
+    const j = cmJet(c, u), [ud, udd] = cmRates(j, tm);
+    const V = j.d1.map((q) => q * ud), A = j.d1.map((q, i) => j.d2[i] * ud * ud + q * udd);
+    const P = j.p, speed = cmLen(V), acc = cmLen(A);
+    const out = { u, P, V, A, speed, acc, ud, T: null, N: null, B: null, aT: NaN, aN: NaN, kappa: NaN, center: null, ok: P.every(isFinite) && V.every(isFinite) && A.every(isFinite) };
+    if (!out.ok) return out;
+    const scale = Math.max(1e-300, cmLen(j.d1) + cmLen(j.d2) * 0 + Math.abs(ud) * 0);
+    if (!(speed > 1e-10 * Math.max(1, acc)) || cmLen(j.d1) < 1e-12 * scale) { out.cusp = true; return out; }
+    const T = V.map((q) => q / speed), aT = cmDot(A, T), An = A.map((q, i) => q - aT * T[i]), cr = cmLen(cmCross(V, A));
+    out.T = T; out.aT = aT; out.aN = cr / speed; out.kappa = cr / (speed * speed * speed);
+    if (out.aN > 1e-12 * Math.max(acc, 1e-300) && out.kappa > 0) {
+      out.N = An.map((q) => q / cmLen(An)); out.B = cmCross(T, out.N);
+      out.center = P.map((q, i) => q + out.N[i] / out.kappa);
+    } else { out.aN = 0; out.kappa = 0; }
+    return out;
+  }
+  /* an integral by VDMATH's adaptive Simpson rule, given up (NaN) after 200,000 evaluations, so a curve that wiggles far faster than
+     it can be drawn (sin(10⁹t)) cannot stall the page */
+  const CM_BUDGET = { budget: true };
+  function cmInt(f, a, b) {
+    let n = 0; const g = (w) => { if (++n > 200000) throw CM_BUDGET; return f(w); };
+    try { return VDMATH.integral(g, a, b, 1); } catch (e) { if (e === CM_BUDGET) return NaN; throw e; }
+  }
+  /* arc length from u0 to u: ∫ |r′(w)| dw (the same for any timing) */
+  function cmArc(c, u0, u) { return cmInt((w) => cmLen(cmJet(c, w).d1), u0, u); }
+  /* area swept by the line from the origin, from u0 to u: ½ ∫ (x y′ − y x′) dw, which is ½ ∫ r² dθ for a polar curve */
+  function cmArea(c, u0, u) {
+    if (c.kind === 'polar') return cmInt((w) => 0.5 * Math.pow(c.fn.r[0](w), 2), u0, u);
+    return cmInt((w) => { const j = cmJet(c, w); return 0.5 * (j.p[0] * j.d1[1] - j.p[1] * j.d1[0]); }, u0, u);
+  }
+  /* the clock: time from u0 to u (the parameter itself, or ∫ r²/h dθ) */
+  function cmTime(c, u0, u, tm) {
+    if (!tm || tm.kind !== 'kepler') return u - u0;
+    return cmInt((w) => Math.pow(c.fn.r[0](w), 2) / tm.h, u0, u);
+  }
+  /* h for a typed polar curve moving with equal areas: chosen so the whole range takes as long as it does moving evenly */
+  function cmKeplerH(c, u0, u1) { return 2 * cmArea(c, u0, u1) / (u1 - u0); }
+  /* the parameter values that split [u0, u1] into n pieces of equal time */
+  function cmTicks(c, u0, u1, n, tm) {
+    if (!tm || tm.kind !== 'kepler') return Array.from({ length: n + 1 }, (_, k) => u0 + (u1 - u0) * k / n);
+    const m = 400, us = [u0], ts = [0];
+    for (let i = 1; i <= m; i++) { const u = u0 + (u1 - u0) * i / m; us.push(u); ts.push(ts[i - 1] + cmTime(c, us[i - 1], u, tm)); }
+    const total = ts[m], out = [u0];
+    for (let k = 1; k < n; k++) {
+      const want = total * k / n; let i = 1; while (i < m && ts[i] < want) i++;
+      let u = us[i - 1] + (us[i] - us[i - 1]) * (want - ts[i - 1]) / (ts[i] - ts[i - 1]);
+      for (let it = 0; it < 6; it++) { const t = ts[i - 1] + cmTime(c, us[i - 1], u, tm), r = c.fn.r[0](u); u -= (t - want) * tm.h / (r * r); }
+      out.push(u);
+    }
+    out.push(u1); return out;
+  }
+  /* a conic orbit with the focus at the origin: eccentricity e, closest distance q; p = q(1 + e) is the semi latus rectum,
+     the directrix is the line x = p/e (none for a circle), and the range of θ stays where r ≤ rmax on the near branch */
+  function cmConic(e, q, rmax) {
+    const p = q * (1 + e), d = e > 0 ? p / e : Infinity;
+    let th = Math.PI;
+    if (e >= 1 || q * (1 + e) / (1 - e) > rmax) th = Math.acos(Math.max(-1, Math.min(1, (p / rmax - 1) / e)));
+    return { e, q, p, d, a: e < 1 ? q / (1 - e) : e > 1 ? q / (1 - e) : Infinity, u0: -th, u1: th, closed: th === Math.PI, src: `${+p.toPrecision(12)}/(1 + ${e} cos(θ))` };
+  }
+  /* the period of a closed orbit, Kepler's third law: T = 2π √(a³/GM) */
+  function cmPeriod(a, GM) { return 2 * Math.PI * Math.sqrt(a * a * a / GM); }
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  const VDI18N = window.VDI18N || { t: (s, o) => s.replace(/\{(\w+)\}/g, (m, k) => (o && k in o ? o[k] : m)) };
+  const C0 = window.VDC || {};
+  const G_ = C0.g || 9.81;
+  /* the Sun's GM in au³/yr² (IAU nominal GM, the au, the Julian year) */
+  const GM_AU = (C0.GMsun || 1.3271244e20) * Math.pow(C0.yr || 31557600, 2) / Math.pow(C0.au || 149597870700, 3);
+  const KMS_PER_AUYR = (C0.au || 149597870700) / (C0.yr || 31557600) / 1000;
+  /* the helix: a proton (CODATA 2022) with v⊥ = 1.0 × 10⁵ m/s and v∥ = 3.0 × 10⁴ m/s in B = 0.010 T along +z; lengths in cm, time in μs.
+     A positive charge circles clockwise seen from the tip of B, so y = −R sin(ωt). Numbers in the boxes rounded to 4 significant figures. */
+  const HX = (() => { const m = C0.mp || 1.67262192595e-27, q = C0.e || 1.602176634e-19, B = 0.010, vp = 1.0e5, vz = 3.0e4;
+    const R = m * vp / (q * B) * 100, w = q * B / m * 1e-6, r4 = (x) => +x.toPrecision(4);
+    return { R: r4(R), w: r4(w), vz: vz * 100 * 1e-6, B, Rexact: R, wexact: w }; })();
+  const r4 = (x) => +x.toPrecision(4);
+  const PRESETS = {
+    cycloid: { mode: 'xy', x: '0.35(2pi t - sin(2pi t))', y: '0.35(1 - cos(2pi t))', u: ['0', '2'], at: 0.3, rate: 0.25, units: { L: 'm', T: 's' }, extra: 'wheel', show: { v: 1, a: 1, osc: 0, trail: 1 },
+      hint: 'A point on the tire of a bicycle wheel, radius R = 0.35 m, rolling at one turn per second (the hub moves at 2πR = 2.20 m/s). Watch the bottom of each arch: the point stops for an instant (v = 0, a cusp) but its acceleration is not zero, 4π²R = 13.8 m/s² straight up. The acceleration always points at the hub. One arch is 8R = 2.80 m long, while the hub moves only 2πR = 2.20 m.' },
+    projectile: { mode: 'xy', x: '15t', y: '20t - 4.905t^2', u: ['0', '40/9.81'], at: 0.3, rate: 0.5, units: { L: 'm', T: 's' }, extra: 'ground', show: { v: 1, a: 1, split: 1, osc: 1, trail: 1 },
+      hint: 'A ball launched at 15 m/s across and 20 m/s up, g = 9.81 m/s², no air drag. Its acceleration never changes, but its parts do: going up, a_T is negative (it slows), coming down positive (it speeds up). At the top a_T = 0 and all of g is normal, so the radius of curvature there is v²/g = 15²/9.81 = 22.9 m. It lands at t = 40/9.81 = 4.08 s, 61.2 m away.' },
+    circle: { mode: 'xy', x: '2cos(3t)', y: '2sin(3t)', u: ['0', '2pi/3'], at: 0.1, rate: 0.25, units: { L: 'm', T: 's' }, show: { v: 1, a: 1, split: 0, osc: 1, trail: 1 },
+      hint: 'A point on a 2 m circle at ω = 3 rad/s, so v = rω = 6 m/s. The speed never changes, so a_T = 0 and all the acceleration is normal, pointing at the center: a = v²/r = 36/2 = 18 m/s². The osculating circle is the circle itself, κ = 1/r = 0.5 per meter at every point.' },
+    speedup: { mode: 'xy', x: '50cos(0.01t^2)', y: '50sin(0.01t^2)', u: ['0', 'sqrt(200pi)'], at: 2, rate: 2, units: { L: 'm', T: 's' }, show: { v: 1, a: 1, split: 1, osc: 0, trail: 1 },
+      hint: 'A car on a 50 m circular track starting from rest with angular acceleration 0.02 rad/s², so its angle is 0.01t². The tangential part stays a_T = rα = 1 m/s² (the speed grows steadily) while the normal part a_N = v²/r grows with the square of the speed. The total acceleration tilts from straight ahead at the start toward the center. One lap takes √(200π) = 25.1 s.' },
+    lissajous: { mode: 'xy', x: 'sin(3t)', y: 'sin(2t)', u: ['0', '2pi'], at: 0.2, rate: Math.PI / 4, units: null, show: { v: 1, a: 1, osc: 0, trail: 1 },
+      hint: 'The spot on an oscilloscope screen with a sine wave on each pair of plates, the x frequency 3/2 of the y frequency (units of the screen). Each motion alone is simple harmonic, so the acceleration is −9x across and −4y up: it always points back toward the middle, but not exactly at it. The figure closes after one common period, 2π.' },
+    rose: { mode: 'polar', r: '2sin(2θ)', u: ['0', '2pi'], at: 0.3, rate: Math.PI / 4, timing: 'even', units: null, show: { v: 0, a: 0, osc: 1, trail: 1, area: 1 },
+      hint: 'r = 2 sin 2θ draws four petals as θ goes once around. Where sin 2θ is negative, r is negative and the point is drawn on the opposite side of the origin, which is how the second and fourth petals appear. The area swept is ½∫r² dθ = 2π in all, π/2 for each petal.' },
+    cardioid: { mode: 'polar', r: '1 + cos(θ)', u: ['0', '2pi'], at: 0.4, rate: Math.PI / 4, timing: 'even', units: null, show: { v: 1, a: 0, osc: 1, trail: 1, area: 1 },
+      hint: 'A cardioid microphone is most sensitive straight ahead and deaf straight behind: its pickup pattern is r = 1 + cos θ (relative sensitivity against direction). The area inside is 3π/2 = 4.71 and the curve is 8 long. Its curvature κ = 3/(4 cos(θ/2)) grows without limit at the cusp behind.' },
+    dipole: { mode: 'polar', r: 'sin(θ)^2', u: ['0', '2pi'], at: 0.5, rate: Math.PI / 4, timing: 'even', units: null, show: { v: 0, a: 0, osc: 1, trail: 1, area: 0 },
+      hint: 'A short antenna along the x axis radiates power in each direction in proportion to sin²θ, where θ is measured from the antenna: none along the wire, most at right angles to it. Drawn as r(θ) the pattern is two lobes. The area swept is ½∫sin⁴θ dθ = 3π/8 over the full turn.' },
+    helix: { mode: 'xyz', x: `${HX.R}cos(${HX.w}t)`, y: `-${HX.R}sin(${HX.w}t)`, z: `${r4(HX.vz)}t`, u: ['0', `6pi/${HX.w}`], at: 1, rate: 2, units: { L: 'cm', T: 'μs' }, extra: 'field', show: { v: 1, a: 1, osc: 1, trail: 1, tn: 0 },
+      hint: `A proton moving at 1.0 × 10⁵ m/s across and 3.0 × 10⁴ m/s along a 0.010 T magnetic field (B points up, +z). The magnetic force qv × B is always at right angles to v, so the speed never changes (a_T = 0) and the acceleration points straight at the axis. Seen from above it is a circle of radius R = mv⊥/(qB) = ${HX.R} cm. The radius of curvature of the helix itself is R + c²/R with c = v∥/ω, larger than R.` },
+    orbit: { mode: 'conic', e: 0.6, q: 0.6, rate: null, extra: 'sun', show: { v: 1, a: 1, osc: 0, trail: 1, area: 0, slice: 1 },
+      hint: 'An asteroid with e = 0.6 and closest distance q = 0.6 au (semimajor axis 1.5 au, period 1.84 yr). Every point is e times as far from the Sun (the focus) as from the directrix. The twelve slices are swept in equal times and have equal areas, Kepler\'s second law: it moves fast near the Sun and slowly far out. The acceleration always points at the Sun with size GM/r².' },
+    escape: { mode: 'conic', e: 1, q: 1, rate: null, extra: 'sun', show: { v: 1, a: 1, osc: 0, trail: 1, area: 0, slice: 1 },
+      hint: 'With e = 1 the point is as far from the Sun as from the directrix: a parabola. This is escape at exactly the escape speed: at its closest, 1 au from the Sun, it moves at √(2GM/q) = 42.1 km/s, √2 times the speed of a circular orbit there, and it never comes back. The slices are still equal in area.' },
+    flyby: { mode: 'conic', e: 1.5, q: 1, rate: null, extra: 'sun', show: { v: 1, a: 1, osc: 0, trail: 1, area: 0, slice: 1 },
+      hint: 'With e > 1 the conic is a hyperbola: a body from another star passing the Sun faster than escape speed. The near branch is the path; the dashed far branch is the rest of the same conic, also e times as far from the focus as from the directrix. Far out it moves on a nearly straight line.' },
+  };
+  const MODE_FIRST = { xy: 'cycloid', polar: 'rose', xyz: 'helix', conic: 'orbit' };
+  const RMAX = 8;   /* a conic's open branches are drawn out to 8 times q */
+
+  const S = { preset: 'cycloid', mode: 'xy', c: null, tm: { kind: 'even' }, u0: 0, u1: 1, u: 0, run: false, blind: false, units: null, extra: null, rate: 1,
+    view: { cx: 0, cy: 0, span: 4 }, o: { th: -Math.PI / 2 + 0.6, ph: 1.15, zoom: 1 }, conic: null, srcKey: '', samples: null, ticks: null, scales: null, M: null };
+  const can = $('can'), ctx = can.getContext('2d');
+  let W = 0, H = 0, dpr = 1, TK = null, need = true;
+  const proj = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.35 : 1);
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    TK = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), mono: g('--font-mono') || 'monospace', red: g('--red') || '#c0392b',
+      curve: g('--cm-curve'), v: g('--cm-v'), a: g('--cm-a'), at: g('--cm-at'), an: g('--cm-an'), osc: g('--cm-osc'), area: g('--cm-area'), area2: g('--cm-area2'), frame: g('--cm-frame'), sun: g('--cm-sun') };
+  }
+  const fmt = (v, s = 4) => {
+    if (!isFinite(v)) return '—';
+    if (Math.abs(v) < 1e-12) return '0';
+    const a = Math.abs(v);
+    if (a >= 1e6 || a < 1e-3) { const e = Math.floor(Math.log10(a)), m = v / Math.pow(10, e); return `${m.toFixed(s - 1).replace('-', '−')} × 10${VDMATH.sup(e)}`; }
+    return Number(v.toPrecision(s)).toString().replace('-', '−');
+  };
+  const U = () => S.units || { L: '', T: '' };
+  const un = (s) => (s ? ' ' + s : '');
+  const is3 = () => S.mode === 'xyz';
+  const isPolar = () => S.mode === 'polar' || S.mode === 'conic';
+
+  /* ---------- reading the boxes ---------- */
+  const MSG = {
+    name: (e) => VDI18N.t('“{n}” is not a name I know here. Use {v}, and functions like sin, ln, sqrt.', { n: e.name2, v: S.mode === 'polar' ? 'θ' : 't' }),
+    char: (e) => VDI18N.t('“{n}” is not something I can read here.', { n: e.name2 }),
+    unexpected: (e) => VDI18N.t('“{n}” is out of place.', { n: e.name2 }),
+    close: () => VDI18N.t('There is a ) without a matching (.'),
+    comma: () => VDI18N.t('Functions here take one input; there is no comma form.'),
+    arg: (e) => VDI18N.t('{n} needs something to act on, like {n}(t).', { n: e.name2 }),
+    twovars: () => VDI18N.t('Use only one variable.'),
+    end: () => VDI18N.t('Not finished yet.'),
+  };
+  const BOXES = { x: 'fx', y: 'fy', z: 'fz', r: 'fr' };
+  function say(msg, bad, box) {
+    /* the box name and the message are separate pieces, so each is translated on its own */
+    const st = $('fStatus'); st.innerHTML = ''; st.classList.toggle('bad', !!bad);
+    for (const [t, no] of [[box && S.c ? VDI18N.t('Still showing the last curve.') + ' ' : '', false], [box ? `${box}: ` : '', true], [msg, false]]) { if (!t) continue; const sp = document.createElement('span'); if (no) sp.setAttribute('translate', 'no'); sp.textContent = t; st.appendChild(sp); }
+  }
+  function read(force) {
+    if (S.mode === 'conic') return readConic(force);
+    const keys = CM_KEYS[S.mode], v = CM_VAR[S.mode];
+    const key = S.mode + '|' + keys.map((k) => $(BOXES[k]).value).join('|') + '|' + $('u0').value + '|' + $('u1').value + '|' + $('timing').value;
+    if (!force && key === S.srcKey && S.c) return;
+    S.srcKey = key;
+    const nodes = {}; let partial = false;
+    for (const k of keys) {
+      const el = $(BOXES[k]), r = VDMATH.parseLive(el.value, { vars: [v] });
+      if (r.empty) { el.classList.add('bad'); say(VDI18N.t('Type a formula in each box.'), true); return; }
+      if (!r.node) { el.classList.add('bad'); say((MSG[r.error.code] || MSG.end)(r.error), true, k); return; }
+      el.classList.remove('bad'); nodes[k] = r.node; partial = partial || r.partial;
+    }
+    let u0, u1;
+    try { u0 = cmNumber($('u0').value); u1 = cmNumber($('u1').value); $('u0').classList.remove('bad'); $('u1').classList.remove('bad'); } catch (e) { u0 = NaN; }
+    if (!isFinite(u0) || !isFinite(u1) || !(u1 > u0) || u1 - u0 > 1e6) {
+      $('u0').classList.add('bad'); $('u1').classList.add('bad');
+      say(VDI18N.t('The range needs two numbers, the second larger than the first.'), true); return;
+    }
+    const c = cmCurve(S.mode, nodes);
+    say(partial ? VDI18N.t('Drawing what is finished so far, while you type.') : '', false);
+    setCurve(c, u0, u1, S.mode === 'polar' && $('timing').value === 'kepler' ? 'kepler' : 'even');
+  }
+  function readConic(force) {
+    const e = +$('sE').value, q = +$('sQ').value, key = `conic|${e}|${q}`;
+    if (!force && key === S.srcKey && S.c) return;
+    S.srcKey = key;
+    const k = cmConic(e, q, RMAX * q);
+    S.conic = k;
+    const c = cmCurve('polar', { r: VDMATH.parse(k.src, { vars: ['theta'] }).node });
+    $('oE').textContent = e.toFixed(2); $('oQ').textContent = `${q.toFixed(2)} au`;
+    const shape = e === 0 ? VDI18N.t('a circle') : e < 1 ? VDI18N.t('an ellipse') : e === 1 ? VDI18N.t('a parabola') : VDI18N.t('a hyperbola');
+    $('conicF').textContent = `r(θ) = ${fmt(k.p, 4)}/(1 + ${e} cos θ) au,  p = q(1 + e) = ${fmt(k.p, 4)} au: ${shape}`;
+    say('', false);
+    setCurve(c, k.u0, k.u1, 'kepler', Math.sqrt(GM_AU * k.p));
+  }
+  function setCurve(c, u0, u1, timing, h) {
+    const same = S.c && S.u0 === u0 && S.u1 === u1;
+    S.c = c; S.u0 = u0; S.u1 = u1;
+    if (timing === 'kepler') { const hh = h || cmKeplerH(c, u0, u1); S.tm = isFinite(hh) && hh > 0 ? { kind: 'kepler', h: hh } : { kind: 'even' }; }
+    else S.tm = { kind: 'even' };
+    if (!same || !(S.u >= u0 && S.u <= u1)) S.u = Math.min(u1, Math.max(u0, S.u));
+    sampleCurve(); formulas(); need = true;
+  }
+  /* samples of the whole curve, the arrow scales and the equal time ticks */
+  function sampleCurve() {
+    const c = S.c, n = 1500, us = new Float64Array(n + 1), P = [];
+    let vmax = 0, amax = 0, lo = [Infinity, Infinity, Infinity], hi = [-Infinity, -Infinity, -Infinity];
+    for (let i = 0; i <= n; i++) {
+      const u = S.u0 + (S.u1 - S.u0) * i / n; us[i] = u; const j = cmJet(c, u); P.push(j.p);
+      if (j.p.every(isFinite)) for (let k = 0; k < 3; k++) { lo[k] = Math.min(lo[k], j.p[k]); hi[k] = Math.max(hi[k], j.p[k]); }
+      if (i % 5 === 0) { const m = cmMotion(c, u, S.tm); if (m.ok) { if (m.speed < 1e12) vmax = Math.max(vmax, m.speed); if (m.acc < 1e12) amax = Math.max(amax, m.acc); } }
+    }
+    if (!isFinite(lo[0])) { lo = [-1, -1, -1]; hi = [1, 1, 1]; }
+    const size = Math.max(hi[0] - lo[0], hi[1] - lo[1], hi[2] - lo[2], 1e-9);
+    /* arrows are drawn to scale in the picture's own length units: v times kv, a times ka (round values), so the longest is about a fifth of the curve */
+    const round = (x) => { const e = Math.floor(Math.log10(x)), m = x / Math.pow(10, e); return (m < 1.5 ? 1 : m < 3.5 ? 2 : m < 7.5 ? 5 : 10) * Math.pow(10, e); };
+    const kv = vmax > 0 ? round(0.22 * size / vmax) : 1, ka = amax > 0 ? round(0.22 * size / amax) : 1;
+    S.samples = { us, P, lo, hi, size };
+    S.scales = { kv, ka };
+    try { S.ticks = cmTicks(c, S.u0, S.u1, 12, S.tm); } catch (_) { S.ticks = null; }
+    S.total = cmTime(c, S.u0, S.u1, S.tm);
+  }
+
+  /* ---------- the view ---------- */
+  function fitView() {
+    const sm = S.samples; if (!sm) return;
+    if (is3()) { S.o.zoom = 1; need = true; return; }
+    let lo = sm.lo.slice(), hi = sm.hi.slice();
+    if (S.mode === 'conic' || S.extra === 'ground') { lo[0] = Math.min(lo[0], 0); lo[1] = Math.min(lo[1], 0); hi[0] = Math.max(hi[0], 0); hi[1] = Math.max(hi[1], 0); }
+    if (S.mode === 'conic' && S.conic && isFinite(S.conic.d) && S.conic.d < 1.4 * Math.max(hi[0], 1e-9) + 0.5 * (hi[0] - lo[0])) hi[0] = Math.max(hi[0], S.conic.d);
+    if (S.extra === 'wheel') hi[1] = Math.max(hi[1], 2 * 0.35);
+    const w = hi[0] - lo[0], h = hi[1] - lo[1], asp = W / Math.max(1, H);
+    S.view.cx = (lo[0] + hi[0]) / 2; S.view.cy = (lo[1] + hi[1]) / 2;
+    /* span is the width of the picture in curve units */
+    S.view.span = Math.max(w * 1.18, h * 1.24 * asp, 1e-6);
+    need = true;
+  }
+  const kpx = () => W / S.view.span;
+  /* curve point to the picture: 2D, or the flat projection of a space curve (orthographic, the same angles as the 3D camera) */
+  function basis() {
+    const { th, ph } = S.o, d = [Math.sin(ph) * Math.cos(th), Math.sin(ph) * Math.sin(th), Math.cos(ph)];
+    return { d, r: [-Math.sin(th), Math.cos(th), 0], up: [-Math.cos(ph) * Math.cos(th), -Math.cos(ph) * Math.sin(th), Math.sin(ph)] };
+  }
+  let B3 = basis();
+  function scr(p) {
+    if (is3()) {
+      const sm = S.samples, c = [(sm.lo[0] + sm.hi[0]) / 2, (sm.lo[1] + sm.hi[1]) / 2, (sm.lo[2] + sm.hi[2]) / 2], q = [p[0] - c[0], p[1] - c[1], p[2] - c[2]];
+      const k = Math.min(W, H) * 0.8 / sm.size * S.o.zoom;
+      return [W / 2 + cmDot(q, B3.r) * k, H / 2 - cmDot(q, B3.up) * k];
+    }
+    const k = kpx(); return [W / 2 + (p[0] - S.view.cx) * k, H / 2 - (p[1] - S.view.cy) * k];
+  }
+  const pxPer = () => (is3() ? Math.min(W, H) * 0.8 / S.samples.size * S.o.zoom : kpx());
+  function zoom(f) {
+    if (is3()) { S.o.zoom = Math.min(8, Math.max(0.2, S.o.zoom / f)); need = true; return; }
+    const span = Math.min(1e7, Math.max(1e-7, S.view.span * f)); S.view.span = span; need = true;
+  }
+
+  /* ---------- drawing ---------- */
+  function niceStep(span, n) { const raw = span / Math.max(2, n), p10 = Math.pow(10, Math.floor(Math.log10(raw))), m = raw / p10; return (m <= 1 ? 1 : m <= 2 ? 2 : m <= 5 ? 5 : 10) * p10; }
+  function tick(v, step) { if (Math.abs(v) < step * 1e-6) return '0'; return fmt(Number(v.toFixed(Math.max(0, -Math.floor(Math.log10(step)) + 1))), 6); }
+  const label = (t, x, y) => { ctx.save(); ctx.strokeStyle = TK.canvas; ctx.lineWidth = 4; ctx.lineJoin = 'round'; ctx.strokeText(t, x, y); ctx.restore(); ctx.fillText(t, x, y); };
+  function grid(p) {
+    const k = kpx(), x0 = S.view.cx - W / 2 / k, x1 = S.view.cx + W / 2 / k, y0 = S.view.cy - H / 2 / k, y1 = S.view.cy + H / 2 / k;
+    const st = niceStep(x1 - x0, W / (90 * p));
+    ctx.lineWidth = 1; ctx.strokeStyle = TK.line; ctx.beginPath();
+    /* grid values by whole multiples of the step (at most 400 lines), so a view far from the origin never loops on rounding */
+    const vals = (a, b) => { const out = [], i0 = Math.ceil(a / st), i1 = Math.floor(b / st), n = i1 - i0; if (!(n >= 0 && n <= 400) || Math.abs(i0) > 1e12) return out; for (let k = 0; k <= n; k++) out.push((i0 + k) * st); return out; };
+    const xs = vals(x0, x1), ys = vals(y0, y1);
+    for (const x of xs) { const u = Math.round(scr([x, 0, 0])[0]) + 0.5; ctx.moveTo(u, 0); ctx.lineTo(u, H); }
+    for (const y of ys) { const u = Math.round(scr([0, y, 0])[1]) + 0.5; ctx.moveTo(0, u); ctx.lineTo(W, u); }
+    ctx.stroke();
+    const [ox, oy] = scr([0, 0, 0]);
+    ctx.strokeStyle = TK.muted; ctx.lineWidth = 1.5; ctx.beginPath();
+    if (oy >= 0 && oy <= H) { ctx.moveTo(0, oy); ctx.lineTo(W, oy); }
+    if (ox >= 0 && ox <= W) { ctx.moveTo(ox, 0); ctx.lineTo(ox, H); }
+    ctx.stroke();
+    ctx.fillStyle = TK.muted; ctx.font = `${11 * p}px ${TK.mono}`;
+    const ax = Math.min(Math.max(oy, 4), H - 20 * p), ay = Math.min(Math.max(ox, 4), W - 50 * p);
+    ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    for (const x of xs) { if (Math.abs(x) < st / 2) continue; label(tick(x, st), scr([x, 0, 0])[0], ax + 4 * p); }
+    ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    for (const y of ys) { if (Math.abs(y) < st / 2) continue; const u = scr([0, y, 0])[1]; if (u < 12 || u > H - 12) continue; label(tick(y, st), ay + 5 * p, u); }
+    const L = U().L;
+    ctx.textAlign = 'right'; ctx.textBaseline = 'bottom'; label(`x${L ? ` (${L})` : ''}`, W - 6 * p, ax - 3 * p);
+    ctx.textAlign = 'left'; ctx.textBaseline = 'top'; label(`y${L ? ` (${L})` : ''}`, ay + 6 * p, 34 * p);
+  }
+  function axes3(p) {
+    const sm = S.samples, k = sm.size * 0.62, c = [(sm.lo[0] + sm.hi[0]) / 2, (sm.lo[1] + sm.hi[1]) / 2, sm.lo[2]];
+    ctx.lineWidth = 1; ctx.strokeStyle = TK.line; ctx.beginPath();
+    for (let i = -4; i <= 4; i++) {
+      const a = scr([c[0] + i * k / 4, c[1] - k, c[2]]), b = scr([c[0] + i * k / 4, c[1] + k, c[2]]); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]);
+      const e = scr([c[0] - k, c[1] + i * k / 4, c[2]]), f = scr([c[0] + k, c[1] + i * k / 4, c[2]]); ctx.moveTo(e[0], e[1]); ctx.lineTo(f[0], f[1]);
+    }
+    ctx.stroke();
+    ctx.strokeStyle = TK.muted; ctx.fillStyle = TK.muted; ctx.lineWidth = 1.5; ctx.font = `${12 * p}px ${TK.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    const o = [c[0], c[1], c[2]], L = U().L;
+    [['x', [k, 0, 0]], ['y', [0, k, 0]], ['z', [0, 0, sm.hi[2] - sm.lo[2] + 0.2 * k]]].forEach(([n, d]) => {
+      const a = scr(o), b = scr([o[0] + d[0], o[1] + d[1], o[2] + d[2]]); ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke();
+      label(n + (L ? ` (${L})` : ''), b[0] + (b[0] - a[0]) * 0.06, b[1] + (b[1] - a[1]) * 0.06);
+    });
+  }
+  function arrow(p, vec, color, w, dash, name) {
+    const a = scr(p), b = scr([p[0] + vec[0], p[1] + vec[1], p[2] + vec[2]]), dx = b[0] - a[0], dy = b[1] - a[1], L = Math.hypot(dx, dy);
+    if (!(L > 2) || !isFinite(L)) return;
+    const pp = proj(), hd = Math.min(12 * pp, 0.45 * L), ux = dx / L, uy = dy / L;
+    ctx.strokeStyle = color; ctx.fillStyle = color; ctx.lineWidth = w; ctx.setLineDash(dash || []); ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0] - ux * hd * 0.8, b[1] - uy * hd * 0.8); ctx.stroke(); ctx.setLineDash([]);
+    ctx.beginPath(); ctx.moveTo(b[0], b[1]); ctx.lineTo(b[0] - ux * hd - uy * hd * 0.45, b[1] - uy * hd + ux * hd * 0.45); ctx.lineTo(b[0] - ux * hd + uy * hd * 0.45, b[1] - uy * hd - ux * hd * 0.45); ctx.closePath(); ctx.fill();
+    if (name) { ctx.font = `700 ${13 * pp}px ${TK.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; label(name, b[0] + ux * 12 * pp, b[1] + uy * 12 * pp); }
+  }
+  /* the path from samples, broken where it is undefined or leaves the picture far behind */
+  function path(us0, us1, color, width, dash) {
+    const sm = S.samples, n = sm.us.length - 1, i0 = Math.max(0, Math.floor((us0 - S.u0) / (S.u1 - S.u0) * n)), i1 = Math.min(n, Math.ceil((us1 - S.u0) / (S.u1 - S.u0) * n));
+    ctx.strokeStyle = color; ctx.lineWidth = width; ctx.setLineDash(dash || []); ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.beginPath();
+    let on = false;
+    const put = (p) => { if (!p.every(isFinite)) { on = false; return; } const q = scr(p); if (Math.abs(q[0]) > 4e4 || Math.abs(q[1]) > 4e4) { on = false; return; } if (on) ctx.lineTo(q[0], q[1]); else ctx.moveTo(q[0], q[1]); on = true; };
+    put(cmJet(S.c, Math.max(S.u0, us0)).p);
+    for (let i = i0; i <= i1; i++) if (sm.us[i] > us0 && sm.us[i] < us1) put(sm.P[i]);
+    put(cmJet(S.c, Math.min(S.u1, us1)).p);
+    ctx.stroke(); ctx.setLineDash([]);
+  }
+  /* a fan from the origin over the parameter range [a, b], filled */
+  function fan(a, b, color, alpha) {
+    if (!(b > a)) return;
+    const m = Math.max(8, Math.ceil(240 * (b - a) / (S.u1 - S.u0))), o = scr([0, 0, 0]);
+    ctx.fillStyle = color; ctx.globalAlpha = alpha; ctx.beginPath(); ctx.moveTo(o[0], o[1]);
+    for (let i = 0; i <= m; i++) { const p = cmJet(S.c, a + (b - a) * i / m).p; if (!p.every(isFinite)) continue; const q = scr(p); ctx.lineTo(Math.max(-4e4, Math.min(4e4, q[0])), Math.max(-4e4, Math.min(4e4, q[1]))); }
+    ctx.closePath(); ctx.fill(); ctx.globalAlpha = 1;
+  }
+  const on = (id) => $(id).checked && !$(id).closest('label').hidden;
+  function draw() {
+    if (!TK || !W || !S.c || !S.samples) return;
+    const p = proj(), M = S.M = cmMotion(S.c, S.u, S.tm);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = TK.canvas; ctx.fillRect(0, 0, W, H);
+    if (is3()) { B3 = basis(); axes3(p); } else grid(p);
+    const L = U().L;
+    /* swept area and equal time slices */
+    if (!is3() && on('showSlice') && S.ticks) {
+      const tk = S.ticks;
+      for (let i = 0; i < tk.length - 1; i++) {
+        if (tk[i] >= S.u) break;
+        const b = Math.min(S.u, tk[i + 1]); fan(tk[i], b, i % 2 ? TK.area2 : TK.area, 0.22);
+        if (b === tk[i + 1] && !S.blind) {
+          const mid = cmJet(S.c, (tk[i] + b) / 2).p, q = scr([mid[0] * 0.62, mid[1] * 0.62, 0]);
+          ctx.fillStyle = TK.ink; ctx.font = `${11 * p}px ${TK.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+          label(fmt(cmArea(S.c, tk[i], b), 3), q[0], q[1]);
+        }
+      }
+    } else if (!is3() && on('showArea')) fan(S.u0, S.u, TK.area, 0.2);
+    /* extras of a setup: the ground, the rolling wheel, the Sun, focus and directrix, the magnetic field */
+    if (S.extra === 'ground' || S.extra === 'wheel') {
+      const g = scr([0, 0, 0])[1]; ctx.strokeStyle = TK.ink; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(0, g); ctx.lineTo(W, g); ctx.stroke();
+    }
+    if (S.extra === 'wheel') {
+      const R = 0.35, phi = 2 * Math.PI * S.u, c = scr([R * phi, R, 0]), rp = R * kpx();
+      ctx.strokeStyle = TK.muted; ctx.lineWidth = 3 * p; ctx.beginPath(); ctx.arc(c[0], c[1], rp, 0, 7); ctx.stroke();
+      ctx.lineWidth = 1 * p; ctx.beginPath();
+      for (let s = 0; s < 8; s++) { const a = phi + s * Math.PI / 4; ctx.moveTo(c[0], c[1]); ctx.lineTo(c[0] - rp * Math.sin(a), c[1] + rp * Math.cos(a)); }
+      ctx.stroke(); ctx.fillStyle = TK.muted; ctx.beginPath(); ctx.arc(c[0], c[1], 4 * p, 0, 7); ctx.fill();
+    }
+    if (S.mode === 'conic' && S.conic) conicExtras(p);
+    /* the curve: the whole path thin, the part traced so far thick */
+    path(S.u0, S.u1, TK.curve, 1.6 * p, $('showTrail').checked ? [5 * p, 5 * p] : []);
+    if ($('showTrail').checked) path(S.u0, S.u, TK.curve, 4 * p);
+    if (S.extra === 'field' && is3()) fieldArrows(p);
+    if (!M.ok) { pointDot(M, p); return; }
+    /* the osculating circle */
+    if (on('showOsc') && M.center && !S.blind) {
+      const rho = 1 / M.kappa, rpx = rho * pxPer();
+      if (rpx < 2e5 && rpx > 1) {
+        ctx.strokeStyle = TK.osc; ctx.lineWidth = 1.8 * p; ctx.setLineDash([3 * p, 4 * p]); ctx.beginPath();
+        for (let i = 0; i <= 160; i++) { const a = 2 * Math.PI * i / 160, q = scr(M.center.map((cc, k) => cc - rho * (Math.cos(a) * M.N[k] - Math.sin(a) * M.T[k]))); if (i) ctx.lineTo(q[0], q[1]); else ctx.moveTo(q[0], q[1]); }
+        ctx.stroke(); ctx.setLineDash([]);
+        const cc = scr(M.center); ctx.fillStyle = TK.osc; ctx.beginPath(); ctx.arc(cc[0], cc[1], 3 * p, 0, 7); ctx.fill();
+        const pq = scr(M.P); ctx.strokeStyle = TK.osc; ctx.lineWidth = 1 * p; ctx.beginPath(); ctx.moveTo(pq[0], pq[1]); ctx.lineTo(cc[0], cc[1]); ctx.stroke();
+      }
+    }
+    /* arrows, to scale */
+    const tv = S.scales.kv, ta = S.scales.ka, names = vecNames();
+    if (on('showSplit') && M.T && !S.blind) {
+      arrow(M.P, M.T.map((q) => q * M.aT * ta), TK.at, 2.5 * p, [6 * p, 4 * p], 'aT');
+      if (M.N) arrow(M.P, M.N.map((q) => q * M.aN * ta), TK.an, 2.5 * p, [6 * p, 4 * p], 'aN');
+    }
+    if (on('showA')) arrow(M.P, M.A.map((q) => q * ta), TK.a, 3 * p, [], names.a);
+    if (on('showV')) arrow(M.P, M.V.map((q) => q * tv), TK.v, 3 * p, [], names.v);
+    if (on('showTN') && M.T) {
+      const k = 46 * p / pxPer();
+      arrow(M.P, M.T.map((q) => q * k), TK.frame, 2 * p, [], 'T');
+      if (M.N) arrow(M.P, M.N.map((q) => q * k), TK.frame, 2 * p, [], 'N');
+      if (M.N && is3()) arrow(M.P, M.B.map((q) => q * k), TK.frame, 2 * p, [2 * p, 3 * p], 'B');
+    }
+    pointDot(M, p);
+    legend(p, names);
+  }
+  function pointDot(M, p) {
+    const q = scr(cmJet(S.c, S.u).p); if (!q.every(isFinite)) return;
+    ctx.fillStyle = TK.ink; ctx.strokeStyle = TK.canvas; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(q[0], q[1], 6 * p, 0, 7); ctx.fill(); ctx.stroke();
+  }
+  function vecNames() { return S.mode === 'polar' && S.tm.kind !== 'kepler' ? { v: 'dr/dθ', a: 'd²r/dθ²' } : { v: 'v', a: 'a' }; }
+  function conicExtras(p) {
+    const k = S.conic, f = scr([0, 0, 0]);
+    /* the far branch of a hyperbola, dashed */
+    if (k.e > 1) {
+      const lim = Math.acos(-1 / k.e); ctx.strokeStyle = TK.curve; ctx.globalAlpha = 0.6; ctx.lineWidth = 1.4 * p; ctx.setLineDash([2 * p, 5 * p]); ctx.beginPath(); let on1 = false;
+      for (let i = 1; i < 400; i++) { const th = lim + (2 * Math.PI - 2 * lim) * i / 400, r = k.p / (1 + k.e * Math.cos(th)); if (Math.abs(r) > RMAX * 3 * k.q) { on1 = false; continue; } const q = scr([r * Math.cos(th), r * Math.sin(th), 0]); if (on1) ctx.lineTo(q[0], q[1]); else ctx.moveTo(q[0], q[1]); on1 = true; }
+      ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1;
+    }
+    /* the directrix x = p/e and the two distances from the point */
+    const P = cmJet(S.c, S.u).p;
+    if (isFinite(k.d)) {
+      const dx = scr([k.d, 0, 0])[0];
+      ctx.strokeStyle = TK.ink; ctx.lineWidth = 1.5 * p; ctx.setLineDash([8 * p, 5 * p]); ctx.beginPath(); ctx.moveTo(dx, 0); ctx.lineTo(dx, H); ctx.stroke(); ctx.setLineDash([]);
+      ctx.fillStyle = TK.ink; ctx.font = `${12 * p}px ${TK.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'top'; label(VDI18N.t('directrix'), dx - 5 * p, 10 * p);
+      if (!S.blind) {
+        const pq = scr(P), dq = scr([k.d, P[1], 0]);
+        ctx.lineWidth = 1.5 * p; ctx.strokeStyle = TK.frame; ctx.beginPath(); ctx.moveTo(pq[0], pq[1]); ctx.lineTo(f[0], f[1]); ctx.stroke();
+        ctx.setLineDash([2 * p, 3 * p]); ctx.beginPath(); ctx.moveTo(pq[0], pq[1]); ctx.lineTo(dq[0], dq[1]); ctx.stroke(); ctx.setLineDash([]);
+        ctx.fillStyle = TK.frame; ctx.font = `700 ${12 * p}px ${TK.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+        label('PF', (pq[0] + f[0]) / 2, (pq[1] + f[1]) / 2 - 3 * p); label('PD', (pq[0] + dq[0]) / 2, pq[1] - 4 * p);
+      }
+    }
+    /* the Sun at the focus */
+    const g = ctx.createRadialGradient(f[0], f[1], 0, f[0], f[1], 16 * p); g.addColorStop(0, TK.sun); g.addColorStop(1, 'transparent');
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(f[0], f[1], 16 * p, 0, 7); ctx.fill();
+    ctx.fillStyle = TK.sun; ctx.beginPath(); ctx.arc(f[0], f[1], 7 * p, 0, 7); ctx.fill();
+    ctx.fillStyle = TK.muted; ctx.font = `${11 * p}px ${TK.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'top'; label(VDI18N.t('Sun (focus)'), f[0] - 10 * p, f[1] + 8 * p);
+  }
+  function fieldArrows(p) {
+    const sm = S.samples, z0 = sm.lo[2], z1 = sm.hi[2] + 0.1 * sm.size, R = sm.size * 0.42;
+    for (const [x, y] of [[-R, -R], [R, -R], [-R, R], [R, R]]) arrow([(sm.lo[0] + sm.hi[0]) / 2 + x * 0.9, (sm.lo[1] + sm.hi[1]) / 2 + y * 0.9, z0], [0, 0, z1 - z0], TK.muted, 1.2 * p, [4 * p, 4 * p], x > 0 && y > 0 ? 'B' : '');
+  }
+  /* the legend: what each arrow means and its scale, and the pace of the clock */
+  function legend(p, names) {
+    const u = U(), lines = [];
+    const vu = S.mode === 'polar' && S.tm.kind !== 'kepler' ? u.L : (u.L && u.T ? `${u.L}/${u.T}` : ''), au = S.mode === 'polar' && S.tm.kind !== 'kepler' ? u.L : (u.L && u.T ? `${u.L}/${u.T}²` : '');
+    const k = pxPer(), bar = (scale, color, name, unit) => {
+      /* a round value whose arrow is 40 to 100 px long */
+      let val = 50 / (scale * k); const e = Math.floor(Math.log10(val)), m = val / Math.pow(10, e); val = (m < 2 ? 1 : m < 5 ? 2 : 5) * Math.pow(10, e);
+      lines.push({ color, len: val * scale * k, text: `${name}: ${fmt(val, 3)}${un(unit)}` });
+    };
+    if (on('showV')) bar(S.scales.kv, TK.v, names.v, vu);
+    if (on('showA') || on('showSplit')) bar(S.scales.ka, TK.a, names.a, au);
+    ctx.font = `${12 * p}px ${TK.mono}`; ctx.textBaseline = 'middle'; ctx.textAlign = 'left';
+    let y = H - 14 * p - (lines.length - 1) * 20 * p;
+    for (const l of lines) {
+      ctx.strokeStyle = l.color; ctx.lineWidth = 3 * p; ctx.beginPath(); ctx.moveTo(12 * p, y); ctx.lineTo(12 * p + l.len, y); ctx.stroke();
+      ctx.fillStyle = TK.ink; label(l.text, 18 * p + l.len, y); y += 20 * p;
+    }
+    /* pace */
+    /* on a narrow picture the pace sits above the scale bars, so the two never overlap */
+    const pt = paceText(), narrow = W < 560 * p;
+    ctx.textAlign = 'right'; ctx.fillStyle = TK.muted; label(pt, W - 10 * p, narrow ? H - 14 * p - lines.length * 20 * p : H - 14 * p);
+  }
+  function paceText() {
+    const r = S.rate * +$('speed').value, u = U();
+    if (S.mode === 'polar' && S.tm.kind !== 'kepler') return VDI18N.t('θ turns {r} rad each second', { r: fmt(r, 3) });
+    if (u.T === 's') return r === 1 ? VDI18N.t('real time') : VDI18N.t('{r} × real time', { r: fmt(r, 3) });
+    return u.T ? VDI18N.t('1 s on screen = {r} {u}', { r: fmt(r, 3), u: u.T }) : VDI18N.t('1 s on screen = {r} units of time', { r: fmt(r, 3) });
+  }
+
+  /* ---------- the rail ---------- */
+  const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
+  function formulas() {
+    const c = S.c, dl = $('formulas'); if (!c) { dl.innerHTML = ''; return; }
+    const v = c.v === 'theta' ? 'θ' : 't', row = (n, s) => `<dt>${n}</dt><dd>${s.length > 400 ? VDI18N.t('too long to show') : esc(s)}</dd>`;
+    let h = '';
+    for (const k of c.keys) h += row(`${k}(${v})`, c.txt[k][0]);
+    for (const k of c.keys) h += row(`${k}′(${v})`, c.txt[k][1]);
+    for (const k of c.keys) h += row(`${k}″(${v})`, c.txt[k][2]);
+    if (S.mode === 'conic' && S.conic) h += row('p', `${fmt(S.conic.p, 5)} au`) + row(VDI18N.t('directrix'), isFinite(S.conic.d) ? `x = p/e = ${fmt(S.conic.d, 5)} au` : VDI18N.t('none (a circle)'));
+    if (S.tm.kind === 'kepler') h += row('h', `r²dθ/dt = ${fmt(S.tm.h, 5)}${S.mode === 'conic' ? ' au²/yr' : ''}`);
+    dl.innerHTML = h;
+  }
+  function readouts() {
+    const M = S.M || cmMotion(S.c, S.u, S.tm), u = U(), dd = (a, b, cls) => `<div${cls ? ` class="${cls}"` : ''}><dt>${a}</dt><dd translate="no">${b}</dd></div>`, hide = S.blind;
+    const ev = S.mode === 'polar' && S.tm.kind !== 'kepler';
+    const vu = ev ? u.L : (u.L && u.T ? `${u.L}/${u.T}` : ''), au = ev ? u.L : (u.L && u.T ? `${u.L}/${u.T}²` : '');
+    const t = cmTime(S.c, S.u0, S.u, S.tm), names = vecNames();
+    let h = '';
+    if (isPolar()) h += dd('θ', `${fmt(S.u, 4)} rad`);
+    if (!ev) h += dd(VDI18N.t('Time t'), `${fmt(t + (isPolar() ? 0 : S.u0), 4)}${un(u.T)}`);
+    if (isPolar()) h += dd('r', `${fmt(cmJet(S.c, S.u).r, 4)}${un(u.L)}`);
+    else h += dd(VDI18N.t('Position'), `(${M.P.slice(0, is3() ? 3 : 2).map((q) => fmt(q, 4)).join(', ')})${un(u.L)}`);
+    h += dd(ev ? 'Speed |dr/dθ|' : VDI18N.t('Speed |v|'), `${fmt(M.speed, 4)}${un(vu)}`);
+    if (S.mode === 'conic') h += dd(VDI18N.t('Speed'), `${fmt(M.speed * KMS_PER_AUYR, 4)} km/s`);
+    h += dd(ev ? '|d²r/dθ²|' : VDI18N.t('Acceleration |a|'), `${fmt(M.acc, 4)}${un(au)}`);
+    const H_ = (s) => (hide ? '?' : s);
+    if (M.cusp) h += `<div class="wide"><dt>${VDI18N.t('Here')}</dt><dd class="ok">${VDI18N.t('The point is at rest for an instant (v = 0): there is no direction of motion, so T, N, the split of a and κ are undefined here.')}</dd></div>`;
+    else {
+      h += dd(VDI18N.t('Tangential a_T'), H_(`${fmt(M.aT, 4)}${un(au)}`)) + dd(VDI18N.t('Normal a_N'), H_(`${fmt(M.aN, 4)}${un(au)}`));
+      h += dd(VDI18N.t('Curvature κ'), H_(`${fmt(M.kappa, 4)}${u.L ? ` 1/${u.L}` : ''}`)) + dd(VDI18N.t('Radius of curvature 1/κ'), H_(M.kappa > 0 ? `${fmt(1 / M.kappa, 4)}${un(u.L)}` : VDI18N.t('infinite (straight)')));
+    }
+    h += dd(VDI18N.t('Arc length s'), `${fmt(cmArc(S.c, S.u0, S.u), 5)}${un(u.L)}`);
+    if (!is3()) {
+      h += dd(VDI18N.t('Area swept A'), H_(`${fmt(cmArea(S.c, S.u0, S.u), 5)}${u.L ? ` ${u.L}²` : ''}`));
+      if (!ev) h += dd('dA/dt', H_(`${fmt(0.5 * (M.P[0] * M.V[1] - M.P[1] * M.V[0]), 4)}${u.L && u.T ? ` ${u.L}²/${u.T}` : ''}`));
+    }
+    if (S.mode === 'conic' && S.conic && isFinite(S.conic.d)) {
+      const PF = cmLen(M.P), PD = Math.abs(S.conic.d - M.P[0]);
+      h += dd('PF', H_(`${fmt(PF, 4)} au`)) + dd('PD', H_(`${fmt(PD, 4)} au`)) + dd('PF/PD', H_(fmt(PF / PD, 4)));
+      if (S.conic.e < 1) h += dd(VDI18N.t('Period'), `${fmt(cmPeriod(S.conic.a, GM_AU), 4)} yr`);
+    }
+    if (S.mode === 'conic' && !hide) h += dd('GM/r²', `${fmt(GM_AU / Math.pow(cmLen(M.P), 2), 4)} au/yr²`);
+    $('out').innerHTML = h;
+  }
+
+  /* ---------- controls ---------- */
+  const pressPreset = (k) => { for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === k)); };
+  function showMode(m) {
+    S.mode = m;
+    for (const b of document.querySelectorAll('#modeSeg button')) b.setAttribute('aria-pressed', String(b.dataset.mode === m));
+    const v = m === 'polar' ? 'θ' : 't';
+    $('rowX').hidden = $('rowY').hidden = !(m === 'xy' || m === 'xyz'); $('rowZ').hidden = m !== 'xyz'; $('rowR').hidden = m !== 'polar';
+    $('rowU').hidden = m === 'conic'; $('rowE').hidden = $('rowC').hidden = m !== 'conic'; $('timingBox').hidden = m !== 'polar';
+    $('lbU0').textContent = `${v} ${VDI18N.t('from')}`;
+    $('lbArea').hidden = $('lbSlice').hidden = m === 'xyz';
+    $('dimSeg').hidden = m !== 'xyz';
+    $('viewNote').textContent = m === 'xyz' ? VDI18N.t('Drag the point along the curve, or drag elsewhere to turn the view. Scroll or pinch to zoom.') : VDI18N.t('Drag the point along the curve, or drag elsewhere to pan. Scroll or pinch to zoom.');
+    view3sync();
+  }
+  function applyPreset(k) {
+    const c = PRESETS[k]; S.preset = k; showMode(c.mode);
+    if (c.mode === 'conic') { $('sE').value = c.e; $('sQ').value = c.q; }
+    else {
+      if (c.x !== undefined) { $('fx').value = c.x; $('fy').value = c.y; }
+      if (c.z !== undefined) $('fz').value = c.z;
+      if (c.r !== undefined) $('fr').value = c.r;
+      $('u0').value = c.u[0]; $('u1').value = c.u[1];
+      if (c.timing) $('timing').value = c.timing;
+    }
+    S.units = c.mode === 'conic' ? { L: 'au', T: 'yr' } : c.units; S.extra = c.extra || null;
+    const sh = c.show || {};
+    $('showV').checked = !!sh.v; $('showA').checked = !!sh.a; $('showSplit').checked = !!sh.split; $('showTN').checked = !!sh.tn;
+    $('showOsc').checked = !!sh.osc; $('showTrail').checked = sh.trail !== 0; $('showArea').checked = !!sh.area; $('showSlice').checked = !!sh.slice;
+    $('presetHint').textContent = c.hint; pressPreset(k); setRun(false);
+    S.u = -Infinity; read(true);
+    S.rate = c.rate || (S.mode === 'conic' ? S.total / 8 : (S.u1 - S.u0) / 8);
+    S.u = c.mode === 'conic' ? S.u0 : Math.min(S.u1, S.u0 + (c.at || 0));
+    if (c.mode === 'xyz') S.o = { th: -Math.PI / 2 + 0.6, ph: 1.15, zoom: 1 };
+    fitView(); syncNames(); need = true; lastRead = '';
+  }
+  function custom() {
+    if (S.preset === 'custom') return;
+    S.preset = 'custom'; pressPreset(''); S.units = S.mode === 'conic' ? { L: 'au', T: 'yr' } : null; S.extra = S.mode === 'conic' ? 'sun' : null;
+    $('presetHint').textContent = S.mode === 'conic' ? VDI18N.t('Your own orbit: move e through 1 to go from an ellipse to a parabola to a hyperbola, with the same closest distance to the Sun.') : VDI18N.t('Your own curve. Every setup above can be edited in the boxes too. Lengths and times have no units until you choose a setup.');
+  }
+  function syncNames() {
+    const n = vecNames(); $('nameV').textContent = n.v === 'v' ? VDI18N.t('Velocity v') : 'dr/dθ'; $('nameA').textContent = n.a === 'a' ? VDI18N.t('Acceleration a') : 'd²r/dθ²';
+  }
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  for (const b of document.querySelectorAll('#modeSeg button')) b.addEventListener('click', () => { if (b.dataset.mode !== S.mode) applyPreset(MODE_FIRST[b.dataset.mode]); });
+  for (const id of ['fx', 'fy', 'fz', 'fr', 'u0', 'u1']) $(id).addEventListener('input', () => {
+    custom(); const wasRange = id === 'u0' || id === 'u1'; read();
+    if (S.c) { S.rate = (S.u1 - S.u0) / 8; if (!wasRange) fitView(); else fitView(); }
+    need = true; lastRead = '';
+  });
+  $('timing').addEventListener('change', () => { read(true); syncNames(); fitView(); lastRead = ''; });
+  for (const id of ['sE', 'sQ']) $(id).addEventListener('input', () => {
+    custom(); setRun(false); read(); S.rate = S.total / 8; S.u = Math.min(S.u1, Math.max(S.u0, S.u)); fitView(); lastRead = '';
+  });
+  function setRun(on) { S.run = on; $('play').textContent = on ? VDI18N.t('Pause') : VDI18N.t('Play'); $('play').classList.toggle('attn', !on); }
+  $('play').addEventListener('click', () => { if (!S.run && S.u >= S.u1) S.u = S.u0; setRun(!S.run); });
+  $('reset').addEventListener('click', () => { setRun(false); S.u = S.u0; need = true; });
+  $('speed').addEventListener('change', () => { need = true; });
+  for (const id of ['showV', 'showA', 'showSplit', 'showTN', 'showOsc', 'showTrail', 'showArea', 'showSlice']) $(id).addEventListener('change', () => { need = true; });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; need = true; lastRead = ''; });
+  $('zin').addEventListener('click', () => zoom(1 / 1.5));
+  $('zout').addEventListener('click', () => zoom(1.5));
+  $('homeView').addEventListener('click', () => { if (is3()) S.o = { th: -Math.PI / 2 + 0.6, ph: 1.15, zoom: 1 }; fitView(); });
+
+  /* ---------- the picture: drag the point, pan (or turn a space curve), wheel and pinch zoom about the center ---------- */
+  const ptrs = new Map(); let drag = null;
+  function nearestU(x, y) {
+    const sm = S.samples; let best = Infinity, bu = S.u;
+    for (let i = 0; i < sm.us.length; i++) { const p = sm.P[i]; if (!p.every(isFinite)) continue; const q = scr(p), d = (q[0] - x) ** 2 + (q[1] - y) ** 2; if (d < best) { best = d; bu = sm.us[i]; } }
+    return { u: bu, d: Math.sqrt(best) };
+  }
+  const nearPoint = (x, y) => { const q = scr(cmJet(S.c, S.u).p); return Math.hypot(q[0] - x, q[1] - y) < 18 * proj(); };
+  can.addEventListener('pointerdown', (e) => {
+    if (!S.c) return;
+    const r = can.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
+    ptrs.set(e.pointerId, { x, y }); can.setPointerCapture(e.pointerId);
+    if (ptrs.size === 2) { const [a, b] = [...ptrs.values()]; drag = { pinch: Math.hypot(a.x - b.x, a.y - b.y), span: S.view.span, zoom: S.o.zoom }; return; }
+    drag = { mode: nearPoint(x, y) ? 'point' : is3() ? 'turn' : 'pan', x, y, lx: x, ly: y, cx: S.view.cx, cy: S.view.cy, moved: false };
+    if (drag.mode === 'point') setRun(false);
+  });
+  can.addEventListener('pointermove', (e) => {
+    const r = can.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
+    if (!ptrs.has(e.pointerId) || !drag) { if (S.c) can.style.cursor = nearPoint(x, y) ? 'move' : 'grab'; return; }
+    ptrs.set(e.pointerId, { x, y });
+    if (drag.pinch) {
+      const [a, b] = [...ptrs.values()], d = Math.hypot(a.x - b.x, a.y - b.y); if (d < 10) return;
+      if (is3()) S.o.zoom = Math.min(8, Math.max(0.2, drag.zoom * d / drag.pinch)); else S.view.span = Math.min(1e7, Math.max(1e-7, drag.span * drag.pinch / d));
+      need = true; return;
+    }
+    if (Math.hypot(x - drag.x, y - drag.y) > 4) drag.moved = true;
+    if (drag.mode === 'point') { S.u = nearestU(x, y).u; need = true; return; }
+    if (!drag.moved) return;
+    if (drag.mode === 'turn') { S.o.th -= (x - drag.lx) * 0.008; S.o.ph = Math.min(1.55, Math.max(0.12, S.o.ph - (y - drag.ly) * 0.006)); drag.lx = x; drag.ly = y; need = true; return; }
+    const k = kpx(); S.view.cx = drag.cx - (x - drag.x) / k; S.view.cy = drag.cy + (y - drag.y) / k; need = true;
+  });
+  const up = (e) => {
+    if (!ptrs.has(e.pointerId)) return; ptrs.delete(e.pointerId);
+    if (drag && drag.mode !== 'point' && !drag.pinch && !drag.moved && !ptrs.size) { const r = can.getBoundingClientRect(), n = nearestU(e.clientX - r.left, e.clientY - r.top); if (n.d < 30 * proj()) { S.u = n.u; setRun(false); need = true; } }
+    if (!ptrs.size) drag = null; else if (drag && drag.pinch) drag = null;
+  };
+  can.addEventListener('pointerup', up); can.addEventListener('pointercancel', up);
+  /* the wheel zooms about the middle of the view (Steve 2026-11-12), one notch about 20 % */
+  can.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    const d = e.deltaY * (e.deltaMode === 1 ? 33 : e.deltaMode === 2 ? 400 : 1);
+    zoom(Math.exp(Math.max(-100, Math.min(100, d)) * 0.0018));
+  }, { passive: false });
+  can.addEventListener('keydown', (e) => {
+    const step = (S.u1 - S.u0) / (e.shiftKey ? 20 : 200);
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') { setRun(false); S.u = Math.min(S.u1, Math.max(S.u0, S.u + (e.key === 'ArrowLeft' ? -step : step))); need = true; e.preventDefault(); }
+    else if (e.key === '+' || e.key === '=') { zoom(1 / 1.5); e.preventDefault(); }
+    else if (e.key === '-' || e.key === '_') { zoom(1.5); e.preventDefault(); }
+    else if (e.key === ' ') { $('play').click(); e.preventDefault(); }
+  });
+
+  /* ---------- the 3D view of a space curve (three.js through lib/vd3.js and lib/vd3kit.js) ---------- */
+  let st3 = null, g3 = null, view3 = null;
+  const use3 = () => !!(st3 && view3 && view3.is3d() && is3());
+  function init3() {
+    const st = VD3K.stage($('pane'), { before: can, fov: 32, near: 0.01, far: 100 }); if (!st) return false;
+    st3 = st; st.el.style.position = 'absolute'; st.el.style.inset = '0'; st.el.style.width = '100%'; st.el.style.height = '100%';
+    const mat = (c) => new THREE.MeshBasicMaterial({ color: c });
+    g3 = { root: new THREE.Group(), key: '', mats: {} };
+    for (const k of ['curve', 'v', 'a', 'at', 'an', 'osc', 'frame', 'muted']) g3.mats[k] = mat('#888');
+    g3.mats.faint = new THREE.MeshBasicMaterial({ color: '#888', transparent: true, opacity: 0.35 });
+    st.scene.add(g3.root);
+    const mkArrow = (m) => { const g = new THREE.Group(), sh = new THREE.Mesh(new THREE.CylinderGeometry(1, 1, 1, 10), m), hd = new THREE.Mesh(new THREE.ConeGeometry(1, 1, 14), m); g.add(sh, hd); g.sh = sh; g.hd = hd; st.scene.add(g); return g; };
+    g3.arrows = {}; for (const k of ['v', 'a', 'at', 'an', 'T', 'N', 'B']) g3.arrows[k] = mkArrow(g3.mats[k === 'T' || k === 'N' || k === 'B' ? 'frame' : k]);
+    g3.dot = new THREE.Mesh(new THREE.SphereGeometry(1, 24, 16), mat('#888')); st.scene.add(g3.dot);
+    g3.osc = new THREE.Line(new THREE.BufferGeometry(), new THREE.LineBasicMaterial({ color: '#888' })); st.scene.add(g3.osc);
+    st.onTheme(() => { g3.key = ''; const c = (k) => TK && TK[k]; for (const k of ['curve', 'v', 'a', 'at', 'an', 'osc', 'frame']) if (c(k)) g3.mats[k].color.set(c(k)); g3.mats.muted.color.set(TK.muted); g3.mats.faint.color.set(TK.curve); g3.dot.material.color.set(TK.ink); g3.osc.material.color.set(TK.osc); });
+    st.orbit(st.el, S.o, () => { need = true; }, { zMin: 0.2, zMax: 8, phMin: 0.12, phMax: 1.55, grab: (e) => {
+      const r = st.el.getBoundingClientRect(), q = st.project(w3(cmJet(S.c, S.u).p)); if (Math.hypot(q[0] - (e.clientX - r.left), q[1] - (e.clientY - r.top)) > 18) return false;
+      setRun(false); const mv = (ev) => { const rr = st.el.getBoundingClientRect(); let best = Infinity, bu = S.u; const sm = S.samples; for (let i = 0; i < sm.us.length; i += 2) { const qq = st.project(w3(sm.P[i])), d = (qq[0] - (ev.clientX - rr.left)) ** 2 + (qq[1] - (ev.clientY - rr.top)) ** 2; if (d < best) { best = d; bu = sm.us[i]; } } S.u = bu; need = true; };
+      const done = () => { window.removeEventListener('pointermove', mv); window.removeEventListener('pointerup', done); }; window.addEventListener('pointermove', mv); window.addEventListener('pointerup', done); return true; } });
+    st.el.tabIndex = 0;
+    return true;
+  }
+  /* curve units to scene units: the curve is scaled to about 1 and centered */
+  function w3(p) { const sm = S.samples, k = 1 / sm.size; return [(p[0] - (sm.lo[0] + sm.hi[0]) / 2) * k, (p[1] - (sm.lo[1] + sm.hi[1]) / 2) * k, (p[2] - (sm.lo[2] + sm.hi[2]) / 2) * k]; }
+  function build3() {
+    const key = S.srcKey + '|' + S.u0 + '|' + S.u1; if (g3.key === key) return; g3.key = key;
+    while (g3.root.children.length) { const o = g3.root.children[0]; st3.dispose(o); }
+    const sm = S.samples, pts = [];
+    for (let i = 0; i < sm.P.length; i++) if (sm.P[i].every(isFinite)) pts.push(new THREE.Vector3(...w3(sm.P[i])));
+    if (pts.length < 2) return;
+    const crv = new THREE.CatmullRomCurve3(pts), segs = Math.min(1500, pts.length);
+    g3.full = new THREE.Mesh(new THREE.TubeGeometry(crv, segs, 0.0035, 6, false), g3.mats.faint); g3.root.add(g3.full);
+    g3.trace = new THREE.Mesh(new THREE.TubeGeometry(crv, segs, 0.008, 8, false), g3.mats.curve); g3.trace.segs = segs; g3.root.add(g3.trace);
+    /* a floor grid a little wider than the curve, under it */
+    const xy = Math.max(sm.hi[0] - sm.lo[0], sm.hi[1] - sm.lo[1]) / sm.size, gs = Math.max(0.4, 1.5 * xy), zt = (sm.hi[2] - sm.lo[2]) / sm.size;
+    const grid = new THREE.GridHelper(gs, 12, TK.muted, TK.line); grid.rotation.x = Math.PI / 2; grid.position.z = -0.5 * zt; g3.root.add(grid); g3.grid = grid;
+    if (S.extra === 'field') for (const [x, y] of [[-1, -1], [1, -1], [-1, 1], [1, 1]]) { const a = new THREE.ArrowHelper(new THREE.Vector3(0, 0, 1), new THREE.Vector3(x * gs * 0.42, y * gs * 0.42, grid.position.z), zt + 0.12, new THREE.Color(TK.muted).getHex(), 0.05, 0.025); g3.root.add(a); }
+    if (S.extra === 'field') { const lb = VD3K.label('B', { size: 0.06, color: TK.muted }); lb.position.set(gs * 0.42, gs * 0.42, 0.5 * zt + 0.18); g3.root.add(lb); }
+    const L = U().L;
+    [['x', [gs * 0.55, 0, grid.position.z]], ['y', [0, gs * 0.55, grid.position.z]], ['z', [0, 0, 0.5 * zt + 0.1]]].forEach(([n, p]) => { const lb = VD3K.label(n + (L ? ` (${L})` : ''), { size: 0.05, color: TK.muted }); lb.position.set(...p); g3.root.add(lb); });
+  }
+  function setArrow(g, from, vec, r) {
+    const L = cmLen(vec); if (!(L > 1e-4) || !isFinite(L)) { g.visible = false; return; }
+    g.visible = true; const hl = Math.min(0.05, 0.4 * L), d = new THREE.Vector3(...vec).normalize();
+    g.position.set(...from); g.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), d);
+    g.sh.scale.set(r, L - hl, r); g.sh.position.set(0, (L - hl) / 2, 0); g.hd.scale.set(r * 2.6, hl, r * 2.6); g.hd.position.set(0, L - hl / 2, 0);
+  }
+  function render3() {
+    const pane = $('pane'); st3.size(pane.clientWidth, pane.clientHeight); st3.theme();
+    build3();
+    const M = S.M || cmMotion(S.c, S.u, S.tm), sm = S.samples, k = 1 / sm.size, P = w3(M.P);
+    if (g3.trace) { const f = (S.u - S.u0) / (S.u1 - S.u0); g3.trace.geometry.setDrawRange(0, Math.max(0, Math.round(f * g3.trace.segs)) * 8 * 6); }
+    g3.dot.position.set(...P); g3.dot.scale.setScalar(0.022);
+    const tv = S.scales.kv * k, ta = S.scales.ka * k, hide = (n) => { g3.arrows[n].visible = false; };
+    if (on('showV') && M.ok) setArrow(g3.arrows.v, P, M.V.map((q) => q * tv), 0.006); else hide('v');
+    if (on('showA') && M.ok) setArrow(g3.arrows.a, P, M.A.map((q) => q * ta), 0.006); else hide('a');
+    if (on('showSplit') && M.T && !S.blind) { setArrow(g3.arrows.at, P, M.T.map((q) => q * M.aT * ta), 0.004); if (M.N) setArrow(g3.arrows.an, P, M.N.map((q) => q * M.aN * ta), 0.004); else hide('an'); } else { hide('at'); hide('an'); }
+    if (on('showTN') && M.T) { setArrow(g3.arrows.T, P, M.T.map((q) => q * 0.15), 0.003); if (M.N) { setArrow(g3.arrows.N, P, M.N.map((q) => q * 0.15), 0.003); setArrow(g3.arrows.B, P, M.B.map((q) => q * 0.15), 0.003); } else { hide('N'); hide('B'); } } else { hide('T'); hide('N'); hide('B'); }
+    if (on('showOsc') && M.center && !S.blind && 1 / M.kappa * k < 50) {
+      const rho = 1 / M.kappa, pts = [];
+      for (let i = 0; i <= 96; i++) { const a = 2 * Math.PI * i / 96; pts.push(new THREE.Vector3(...w3(M.center.map((cc, j) => cc - rho * (Math.cos(a) * M.N[j] - Math.sin(a) * M.T[j]))))); }
+      g3.osc.geometry.setFromPoints(pts); g3.osc.visible = true;
+    } else g3.osc.visible = false;
+    st3.place(S.o, [0, 0, 0], st3.fit(2.6));
+    st3.scene.updateMatrixWorld(); st3.r.render(st3.scene, st3.cam);
+  }
+  function view3sync() {
+    const on3 = use3();
+    if (st3) st3.el.style.display = on3 ? '' : 'none';
+    can.classList.toggle('hid', on3);
+    need = true;
+  }
+
+  /* ---------- the clock ---------- */
+  let last = performance.now(), lastRead = '';
+  function advance(dt) {
+    const d = S.rate * +$('speed').value * dt;
+    if (S.tm.kind === 'kepler') {
+      /* dθ/dt = h/r², four RK4 steps a frame */
+      const f = (u) => S.tm.h / Math.pow(S.c.fn.r[0](u), 2), n = 4, h = d / n;
+      for (let i = 0; i < n; i++) { const u = S.u, k1 = f(u), k2 = f(u + h * k1 / 2), k3 = f(u + h * k2 / 2), k4 = f(u + h * k3); S.u = u + h * (k1 + 2 * k2 + 2 * k3 + k4) / 6; if (!isFinite(S.u)) { S.u = S.u1; break; } }
+    } else S.u += d;
+    if (S.u >= S.u1) S.u = S.u0;
+  }
+  function frame(now) {
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    if (S.run && S.c) { advance(dt); need = true; }
+    if (need && S.c) {
+      need = false;
+      if (use3()) { S.M = cmMotion(S.c, S.u, S.tm); render3(); } else draw();
+      const k = `${S.u},${S.blind},${S.srcKey}`; if (k !== lastRead) { lastRead = k; readouts(); clock(); }
+    }
+    requestAnimationFrame(frame);
+  }
+  function clock() {
+    const u = U(), ev = S.mode === 'polar' && S.tm.kind !== 'kepler';
+    $('tclock').textContent = ev ? `θ = ${fmt(S.u, 3)} rad` : `t = ${fmt(cmTime(S.c, S.u0, S.u, S.tm) + (isPolar() ? 0 : S.u0), 3)}${un(u.T)}`;
+  }
+  function resize() {
+    dpr = window.devicePixelRatio || 1; const r = $('pane').getBoundingClientRect(); const firstW = !W; W = r.width; H = r.height;
+    can.width = Math.round(W * dpr); can.height = Math.round(H * dpr); if (firstW) fitView(); need = true;
+  }
+  const retheme = () => { tokens(); if (st3) st3.theme(true); need = true; };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'data-vd-look'] });
+  VD.projector({ onChange: resize });
+  if (window.VD && VD.panel) VD.panel({ play: '#play', reset: '#reset', speed: '#speed', clock: '#tclock' });
+  /* Copy link carries the curve typed in the boxes */
+  if (window.VD && VD.share && VD.share.picture) VD.share.picture('c', {
+    get: () => (S.preset === 'custom' && S.mode !== 'conic' ? VD.share.pack({ m: S.mode, x: $('fx').value, y: $('fy').value, z: $('fz').value, r: $('fr').value, a: $('u0').value, b: $('u1').value, k: $('timing').value }) : ''),
+    set: (s) => { const o = s && VD.share.unpack(s); if (!o || !CM_KEYS[o.m]) return; applyPreset(MODE_FIRST[o.m]); $('fx').value = o.x || ''; $('fy').value = o.y || ''; $('fz').value = o.z || ''; $('fr').value = o.r || ''; $('u0').value = o.a || '0'; $('u1').value = o.b || '1'; $('timing').value = o.k === 'kepler' ? 'kepler' : 'even'; $('fx').dispatchEvent(new Event('input')); },
+  });
+  /* what the picture shows, for a screen reader (VD.describe) */
+  if (window.VD && VD.describe) VD.describe(can, () => {
+    if (!S.c) return [];
+    const M = S.M || cmMotion(S.c, S.u, S.tm), u = U(), live = !S.run;
+    /* plain minus signs, so a number is read as a number by the translation; typed formulas are their own pieces */
+    const f3 = (q) => fmt(q, 3).replace('−', '-');
+    const out = S.mode === 'conic' ? [`An orbit with eccentricity ${$('sE').value}, the Sun at the focus.`]
+      : S.mode === 'polar' ? ['The polar curve r(θ) =', $('fr').value] : ['The curve x(t) =', $('fx').value, 'y(t) =', $('fy').value].concat(is3() ? ['z(t) =', $('fz').value] : []);
+    out.push({ t: 'The point is at', live }, { t: `(${M.P.slice(0, is3() ? 3 : 2).map(f3).join(', ')})${un(u.L)}`, live }, { t: `Speed ${f3(M.speed)}, acceleration ${f3(M.acc)}.`, live });
+    if (!S.blind && !M.cusp) out.push({ t: `Tangential part ${f3(M.aT)}, normal part ${f3(M.aN)}, curvature ${f3(M.kappa)}.`, live });
+    if (M.cusp) out.push({ t: 'The point is at rest for an instant.', live });
+    out.push(S.run ? 'The point is moving along the curve.' : 'The point is still.');
+    return out;
+  });
+  /* the 3D | Flat switch, for space curves only */
+  view3 = VD3K.view({ seg: '#dimSeg', start: 'flat', init: init3, status: (m) => say(m, false), change: () => view3sync() });
+  tokens(); new ResizeObserver(resize).observe($('pane')); resize(); applyPreset('cycloid');
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  window.__cm = { S, applyPreset, cmMotion, cmJet, cmArc, cmArea, cmTime, cmTicks, read, setRun, fitView, zoom, GM_AU, HX, draw: () => { need = true; } };
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

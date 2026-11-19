@@ -443,10 +443,11 @@
     {
      "id": "math",
      "title": "Math for physics",
-     "blurb": "Type any function and see its derivatives and its integral graphed with it, and watch how a computer solves the equations of motion step by step.",
+     "blurb": "Type any function and see its derivatives and its integral graphed with it, follow a point along a curve with its velocity, acceleration and curvature, and watch how a computer solves the equations of motion step by step.",
      "demos": [
       "derivatives",
-      "numerical-methods"
+      "numerical-methods",
+      "curves-and-motion"
      ]
     }
    ]
