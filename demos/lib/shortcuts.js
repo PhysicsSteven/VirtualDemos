@@ -88,6 +88,10 @@ window.VD_SHORTCUTS = {
     ["← → ↑ ↓", "Move the start point of the curve in t or y (Shift for bigger steps)", "on the picture"],
     ["+ −", "Zoom in or out about the middle of the view (or scroll over the field)", "on the picture"]
   ],
+  "function-families": [
+    ["← →", "Turn P (Unit circle), move the point on f (Stretch and shift) or slide P along f (Inverse); Shift for bigger steps", "on the picture"],
+    ["+ −", "Zoom in or out about the middle of the view (or scroll over the graph)", "on the picture"]
+  ],
   "integrals": [
     ["↑ ↓", "One more or one fewer piece n (Error against n)", "on the graph"],
     ["← →", "Move x along the curve (F(x), the area so far; Shift for bigger steps)", "on the graph"],

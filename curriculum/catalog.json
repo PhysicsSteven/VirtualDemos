@@ -1270,6 +1270,24 @@
      ]
     },
     {
+     "demo": "function-families",
+     "title": "Families of Functions",
+     "desc": "Turn a point around the unit circle and watch it draw sine and cosine with the angle as arc length; stretch and shift any typed function and see what each number does; reflect a graph in y = x to make its inverse, with the slope turning into 1/slope. Phasors, simple harmonic motion and exponential decay with its half life are the same moves.",
+     "tags": [
+      "unit circle",
+      "radian",
+      "trigonometric functions",
+      "transformations of functions",
+      "inverse function",
+      "exponential function",
+      "logarithm",
+      "phasor",
+      "simple harmonic motion",
+      "half life",
+      "calculus"
+     ]
+    },
+    {
      "demo": "derivatives",
      "title": "Functions and Their Derivatives",
      "desc": "Type or paste any function and see it graphed with its first, second and third derivatives and its integral, updating as you type; slide a point along the curve to see the tangent slope.",

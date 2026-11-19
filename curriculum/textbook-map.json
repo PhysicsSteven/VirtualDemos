@@ -4051,7 +4051,8 @@
       "requirement": "required",
       "status": "usable",
       "demos": [
-        "springs"
+        "springs",
+        "function-families"
       ],
       "unit": "oscillations"
     },
@@ -4083,7 +4084,8 @@
       "requirement": "required",
       "status": "usable",
       "demos": [
-        "springs"
+        "springs",
+        "function-families"
       ],
       "unit": "oscillations",
       "note": "Reference circle projects uniform circular motion onto undamped SHM. Select Free, b=0; Reference circle is hidden in Blind/Unknown spring. Damped shrinking-circle extension is not uniform circular motion."
@@ -4680,7 +4682,8 @@
       "status": "usable",
       "demos": [
         "circuits",
-        "slope-fields"
+        "slope-fields",
+        "function-families"
       ],
       "unit": "dc-circuits"
     },
@@ -12179,6 +12182,35 @@
       "handouts": [
         "mp-ct-reconstruction"
       ]
+    },
+    {
+      "demo": "function-families",
+      "course": [
+        "later"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "15.1",
+          "title": "Simple Harmonic Motion"
+        },
+        {
+          "vol": 1,
+          "sec": "15.3",
+          "title": "Comparing Simple Harmonic Motion and Circular Motion"
+        },
+        {
+          "vol": 2,
+          "sec": "10.5",
+          "title": "RC Circuits"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "New 2026-11-19 (Claude, from Steve's approved Calculus plan): a math tool for OpenStax Calculus Vol 1 ch 1 (1.1 to 1.5) and 3.7. The unit circle drawing sin and cos with the angle as arc length, and a phasor x = A cos(ωt + φ) with a block on a spring; g(x) = a·f(b(x − c)) + d for any typed f with each number's effect named; inverses by reflection in y = x with slope 1/slope, eˣ and ln x as mirror images, the horizontal line test. Physics setups: SHM as a stretched cos, capacitor discharge and half life, how long until a fraction of a sample is left.",
+      "title": "Families of Functions",
+      "url": "demos/function-families.html"
     },
     {
       "demo": "derivatives",
