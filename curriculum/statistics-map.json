@@ -198,6 +198,7 @@
      "sec": "3.1",
      "title": "Terminology",
      "demos": [
+      "chance-lab",
       "quantum-coin",
       "galton-board"
      ],
@@ -207,6 +208,7 @@
      "sec": "3.2",
      "title": "Independent and Mutually Exclusive Events",
      "demos": [
+      "chance-lab",
       "galton-board"
      ],
      "worksheets": []
@@ -214,26 +216,37 @@
     {
      "sec": "3.3",
      "title": "Two Basic Rules of Probability",
-     "demos": [],
+     "demos": [
+      "chance-lab"
+     ],
      "worksheets": []
     },
     {
      "sec": "3.4",
      "title": "Contingency Tables",
-     "demos": [],
+     "demos": [
+      "chance-lab",
+      "chi-square-tests"
+     ],
      "worksheets": []
     },
     {
      "sec": "3.5",
      "title": "Tree and Venn Diagrams",
-     "demos": [],
+     "demos": [
+      "chance-lab"
+     ],
      "worksheets": []
     },
     {
      "sec": "3.6",
      "title": "Probability Topics",
-     "demos": [],
-     "worksheets": []
+     "demos": [
+      "chance-lab"
+     ],
+     "worksheets": [
+      "ws-probability"
+     ]
     }
    ]
   },
@@ -245,7 +258,8 @@
      "sec": "4.1",
      "title": "Probability Distribution Function (PDF) for a Discrete Random Variable",
      "demos": [
-      "distribution-explorer"
+      "distribution-explorer",
+      "chance-lab"
      ],
      "worksheets": []
     },
@@ -253,6 +267,7 @@
      "sec": "4.2",
      "title": "Mean or Expected Value and Standard Deviation",
      "demos": [
+      "chance-lab",
       "galton-board"
      ],
      "worksheets": []
@@ -281,7 +296,8 @@
      "sec": "4.5",
      "title": "Hypergeometric Distribution",
      "demos": [
-      "distribution-explorer"
+      "distribution-explorer",
+      "chance-lab"
      ],
      "worksheets": []
     },
@@ -299,14 +315,22 @@
     {
      "sec": "4.7",
      "title": "Discrete Distribution (Playing Card Experiment)",
-     "demos": [],
-     "worksheets": []
+     "demos": [
+      "chance-lab"
+     ],
+     "worksheets": [
+      "ws-probability"
+     ]
     },
     {
      "sec": "4.8",
      "title": "Discrete Distribution (Dice Experiment Using Three Regular Dice)",
-     "demos": [],
-     "worksheets": []
+     "demos": [
+      "chance-lab"
+     ],
+     "worksheets": [
+      "ws-probability"
+     ]
     }
    ]
   },
@@ -635,7 +659,8 @@
      "sec": "11.1",
      "title": "Facts About the Chi-Square Distribution",
      "demos": [
-      "distribution-explorer"
+      "distribution-explorer",
+      "chi-square-tests"
      ],
      "worksheets": []
     },
@@ -644,6 +669,7 @@
      "title": "Goodness-of-Fit Test",
      "demos": [
       "radioactive-decay",
+      "chi-square-tests",
       "galton-board",
       "quantum-coin"
      ],
@@ -652,38 +678,54 @@
     {
      "sec": "11.3",
      "title": "Test of Independence",
-     "demos": [],
+     "demos": [
+      "chi-square-tests"
+     ],
      "worksheets": []
     },
     {
      "sec": "11.4",
      "title": "Test for Homogeneity",
-     "demos": [],
+     "demos": [
+      "chi-square-tests"
+     ],
      "worksheets": []
     },
     {
      "sec": "11.5",
      "title": "Comparison of the Chi-Square Tests",
-     "demos": [],
+     "demos": [
+      "chi-square-tests"
+     ],
      "worksheets": []
     },
     {
      "sec": "11.6",
      "title": "Test of a Single Variance",
-     "demos": [],
+     "demos": [
+      "chi-square-tests"
+     ],
      "worksheets": []
     },
     {
      "sec": "11.7",
      "title": "Lab 1: Chi-Square Goodness-of-Fit",
-     "demos": [],
-     "worksheets": []
+     "demos": [
+      "chi-square-tests"
+     ],
+     "worksheets": [
+      "ws-chi-square"
+     ]
     },
     {
      "sec": "11.8",
      "title": "Lab 2: Chi-Square Test of Independence",
-     "demos": [],
-     "worksheets": []
+     "demos": [
+      "chi-square-tests"
+     ],
+     "worksheets": [
+      "ws-chi-square"
+     ]
     }
    ]
   },
