@@ -87,6 +87,12 @@ window.VD_SHORTCUTS = {
     ["← →", "Move the point along the curve (Shift for bigger steps)", "on the picture"],
     ["+ −", "Zoom in or out about the center (or scroll over the picture)", "on the picture"]
   ],
+  "hypothesis-tests": [],
+  "anova": [
+    ["← →", "Pick a group", "on the picture"],
+    ["↑ ↓", "Move the picked group's mean up or down", "on the picture"],
+    ["Shift + ↑ ↓", "Make the picked group's spread bigger or smaller", "on the picture"]
+  ],
   "slope-fields": [
     ["← → ↑ ↓", "Move the start point of the curve in t or y (Shift for bigger steps)", "on the picture"],
     ["+ −", "Zoom in or out about the middle of the view (or scroll over the field)", "on the picture"]

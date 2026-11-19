@@ -66,6 +66,8 @@ OVERRIDES = {
     "taylor": {"wait": 1200, "crop": ".pane", "js": "window.__ty.applyPreset('poles'); window.__ty.setN(12); window.__ty.draw();"},
     "rates-and-optimization": {"wait": 1000, "crop": ".pane", "js": "window.__ro.applyPreset('guard'); window.__ro.setX(40); window.__ro.draw();"},
     "derivatives": {"wait": 900, "crop": ".pane", "js": "window.__fg.S.px = -1.6; window.__fg.draw();"},
+    "hypothesis-tests": {"wait": 900, "crop": "#paneA", "js": "window.__ht.applySetup('pair'); window.__ht.draw();"},
+    "anova": {"wait": 900, "crop": "#paneM", "js": "window.__an.draw();"},
     "slope-fields": {"wait": 900, "crop": ".pane", "js": "const pn = document.getElementById('pane'); pn.style.flex = 'none'; pn.style.minHeight = '0'; pn.style.height = '400px'; pn.style.width = '640px'; window.__sf.applyPreset('harvest'); window.__sf.S.prog = 99; window.__sf.draw();"},
     "numerical-methods": {"wait": 900, "crop": "#scene", "anchor": "top", "js": "window.__nm.applyPreset('orbit'); window.__nm.plusPeriod(); window.__nm.plusPeriod(); window.__nm.plusPeriod();"},
     "vector-fields": {"wait": 900, "crop": ".pane", "js": "window.__vf.applyPreset('wire'); window.__vf.S.t = 0.3; document.getElementById('showPaddle').checked = true; document.getElementById('showTracers').checked = false; window.__vf.draw();"},

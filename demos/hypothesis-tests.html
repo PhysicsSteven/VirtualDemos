@@ -1,0 +1,824 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="lib/theme.js"></script>
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
+<script src="lib/constants.js"></script>
+<script src="lib/vdstats.js"></script>
+<title>Hypothesis Tests</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css: an evidence board. The null curve in ink, the p value in vermilion, the
+   rejection region in slate, the truth (what the simulation knows and the test does not) in teal, the data in amber. */
+:root { --ht-p: #c2410c; --ht-crit: #475569; --ht-true: #0f766e; --ht-data: #9a5b00; --ht-keep: #8a8072; --ht-card: #fbf6ec; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --ht-p: #ff8a5c; --ht-crit: #a5b4c8; --ht-true: #5eead4; --ht-data: #f2b84b; --ht-keep: #8f8778; --ht-card: #221f1a; } }
+:root[data-theme="dark"] { --ht-p: #ff8a5c; --ht-crit: #a5b4c8; --ht-true: #5eead4; --ht-data: #f2b84b; --ht-keep: #8f8778; --ht-card: #221f1a; }
+.stage { position: relative; display: flex; flex-direction: column; min-height: min-content; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.stage-ctl .note { margin-left: auto; font-size: 0.8rem; color: var(--muted); }
+.question { padding: 10px 14px 4px; font-size: 1.02rem; font-weight: 700; color: var(--ink); }
+.question small { display: block; font-weight: 400; font-size: 0.8rem; color: var(--muted); margin-top: 2px; }
+.pane { position: relative; flex: none; }
+.pane canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; outline: none; touch-action: pan-y; }
+#paneA { height: 360px; }
+#paneB { height: 300px; border-top: 1px solid var(--line); }
+.steps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; padding: 10px; border-top: 1px solid var(--line); background: var(--surface); counter-reset: st; }
+.step { position: relative; padding: 9px 10px 9px 36px; border: 1px solid var(--line); border-radius: 10px; background: var(--ht-card); font-size: 0.86rem; line-height: 1.4; min-width: 0; overflow-wrap: anywhere; }
+.step::before { counter-increment: st; content: counter(st); position: absolute; left: 9px; top: 8px; width: 20px; height: 20px; border-radius: 50%; background: var(--ink); color: var(--canvas);
+  font: 700 0.78rem/20px var(--font-mono); text-align: center; }
+.step h3 { margin: 0 0 4px; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.02em; color: var(--muted); }
+.step .big { font-family: var(--font-mono); font-size: 0.92rem; color: var(--ink); }
+.step .pv { color: var(--ht-p); font-weight: 700; }
+.step .verdict { font-weight: 700; }
+.step .verdict.rej { color: var(--ht-p); }
+.shelf { display: flex; flex-wrap: wrap; align-items: stretch; gap: 10px; padding: 10px; border-top: 1px solid var(--line); background: var(--surface); }
+.shelf-card { flex: 1 1 220px; display: grid; grid-template-columns: minmax(0, 1fr); align-content: start; gap: 7px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--canvas); }
+.shelf-card > .card-title { font-size: 0.78rem; font-weight: 700; color: var(--muted); }
+.shelf-card .row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; font-size: 0.86rem; }
+.shelf-card .slider-head output { white-space: nowrap; font-family: var(--font-mono); }
+.shelf-card .seg { flex-wrap: wrap; }
+.shelf-card select { font: inherit; font-size: 0.86rem; padding: 3px 6px; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; }
+.tally { display: flex; flex-wrap: wrap; gap: 4px 18px; padding: 8px 12px 10px; border-top: 1px solid var(--line); font-size: 0.86rem; background: var(--surface); }
+.tally b { font-family: var(--font-mono); }
+.tally .rej { color: var(--ht-p); }
+.sim { font-size: 0.76rem; color: var(--muted); padding: 0 12px 8px; background: var(--surface); }
+#n2Row[hidden] { display: none; }
+@media (min-width: 821px) { .bench > .stage { align-self: start; } }
+@media (max-width: 1100px) { .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 820px) { #paneA { height: 340px; } #paneB { height: 470px; } .shelf-card { flex: 1 1 100%; } }
+@media (max-width: 520px) { .steps { grid-template-columns: minmax(0, 1fr); } .stage-ctl .note { margin-left: 0; } }
+:root[data-projector="on"] #paneA { height: 440px; }
+:root[data-projector="on"] #paneB { height: 380px; }
+</style>
+<link rel="stylesheet" id="vd-paper" href="lib/paper.css">
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Hypothesis Tests</h1>
+      <p>Test a claim the way the book does, in four steps: the hypotheses, the distribution, the p value, and the decision with a conclusion in words. The p value is the shaded tail of the null distribution beyond your sample's statistic. Then run a thousand studies at once and count how often the test is wrong: Type I errors when the null hypothesis is true, Type II errors and power when it is false.</p>
+    </div>
+    <div class="bar-right">
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/hypothesis-tests.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/hypothesis-tests.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM12 2h3v1h-3zM19 2h1v1h-1zM23 2h1v1h-1zM25 2h2v1h-2zM28 2h1v1h-1zM30 2h1v1h-1zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM11 3h2v1h-2zM14 3h1v1h-1zM16 3h2v1h-2zM20 3h1v1h-1zM22 3h3v1h-3zM27 3h1v1h-1zM29 3h2v1h-2zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h2v1h-2zM13 4h2v1h-2zM18 4h1v1h-1zM23 4h1v1h-1zM25 4h2v1h-2zM28 4h3v1h-3zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h1v1h-1zM12 5h1v1h-1zM15 5h1v1h-1zM18 5h2v1h-2zM24 5h1v1h-1zM27 5h4v1h-4zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h2v1h-2zM13 6h1v1h-1zM17 6h3v1h-3zM21 6h2v1h-2zM25 6h1v1h-1zM28 6h1v1h-1zM30 6h1v1h-1zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h1v1h-1zM14 7h1v1h-1zM19 7h1v1h-1zM24 7h1v1h-1zM27 7h1v1h-1zM29 7h2v1h-2zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h2v1h-2zM14 9h4v1h-4zM19 9h5v1h-5zM26 9h1v1h-1zM28 9h1v1h-1zM2 10h1v1h-1zM4 10h5v1h-5zM12 10h7v1h-7zM24 10h2v1h-2zM27 10h3v1h-3zM32 10h5v1h-5zM2 11h1v1h-1zM4 11h4v1h-4zM12 11h1v1h-1zM16 11h2v1h-2zM20 11h1v1h-1zM22 11h1v1h-1zM25 11h1v1h-1zM30 11h1v1h-1zM33 11h1v1h-1zM36 11h2v1h-2zM6 12h3v1h-3zM10 12h4v1h-4zM17 12h5v1h-5zM23 12h1v1h-1zM26 12h1v1h-1zM28 12h2v1h-2zM32 12h3v1h-3zM36 12h3v1h-3zM2 13h1v1h-1zM4 13h1v1h-1zM11 13h1v1h-1zM13 13h1v1h-1zM16 13h2v1h-2zM20 13h4v1h-4zM29 13h1v1h-1zM32 13h3v1h-3zM38 13h1v1h-1zM2 14h1v1h-1zM4 14h1v1h-1zM7 14h6v1h-6zM14 14h1v1h-1zM17 14h1v1h-1zM19 14h1v1h-1zM21 14h2v1h-2zM24 14h1v1h-1zM26 14h3v1h-3zM30 14h9v1h-9zM2 15h2v1h-2zM7 15h1v1h-1zM9 15h1v1h-1zM12 15h1v1h-1zM14 15h3v1h-3zM18 15h1v1h-1zM22 15h1v1h-1zM24 15h2v1h-2zM27 15h1v1h-1zM30 15h1v1h-1zM33 15h1v1h-1zM2 16h2v1h-2zM5 16h6v1h-6zM14 16h5v1h-5zM20 16h1v1h-1zM22 16h2v1h-2zM29 16h2v1h-2zM33 16h3v1h-3zM38 16h1v1h-1zM2 17h2v1h-2zM5 17h2v1h-2zM11 17h3v1h-3zM16 17h3v1h-3zM21 17h3v1h-3zM25 17h1v1h-1zM28 17h1v1h-1zM32 17h3v1h-3zM37 17h1v1h-1zM3 18h1v1h-1zM7 18h2v1h-2zM10 18h1v1h-1zM12 18h1v1h-1zM17 18h1v1h-1zM20 18h3v1h-3zM24 18h1v1h-1zM27 18h3v1h-3zM31 18h2v1h-2zM34 18h1v1h-1zM36 18h1v1h-1zM38 18h1v1h-1zM2 19h2v1h-2zM9 19h2v1h-2zM13 19h1v1h-1zM15 19h4v1h-4zM23 19h3v1h-3zM28 19h1v1h-1zM30 19h2v1h-2zM37 19h1v1h-1zM2 20h1v1h-1zM8 20h1v1h-1zM11 20h2v1h-2zM15 20h1v1h-1zM22 20h3v1h-3zM28 20h2v1h-2zM33 20h3v1h-3zM37 20h2v1h-2zM3 21h1v1h-1zM5 21h1v1h-1zM7 21h1v1h-1zM10 21h3v1h-3zM14 21h1v1h-1zM16 21h1v1h-1zM18 21h1v1h-1zM20 21h1v1h-1zM23 21h4v1h-4zM28 21h3v1h-3zM32 21h1v1h-1zM38 21h1v1h-1zM2 22h2v1h-2zM5 22h6v1h-6zM12 22h1v1h-1zM14 22h1v1h-1zM19 22h1v1h-1zM24 22h1v1h-1zM26 22h4v1h-4zM31 22h2v1h-2zM34 22h3v1h-3zM3 23h2v1h-2zM7 23h1v1h-1zM9 23h1v1h-1zM12 23h2v1h-2zM18 23h2v1h-2zM21 23h1v1h-1zM23 23h1v1h-1zM25 23h1v1h-1zM28 23h1v1h-1zM30 23h2v1h-2zM35 23h1v1h-1zM37 23h1v1h-1zM5 24h1v1h-1zM7 24h2v1h-2zM12 24h2v1h-2zM15 24h1v1h-1zM17 24h1v1h-1zM19 24h1v1h-1zM22 24h3v1h-3zM26 24h2v1h-2zM29 24h2v1h-2zM33 24h3v1h-3zM37 24h2v1h-2zM2 25h1v1h-1zM5 25h2v1h-2zM10 25h1v1h-1zM13 25h1v1h-1zM17 25h7v1h-7zM25 25h1v1h-1zM28 25h2v1h-2zM31 25h4v1h-4zM37 25h1v1h-1zM3 26h2v1h-2zM6 26h3v1h-3zM11 26h2v1h-2zM14 26h5v1h-5zM21 26h1v1h-1zM24 26h2v1h-2zM27 26h1v1h-1zM30 26h5v1h-5zM36 26h2v1h-2zM2 27h5v1h-5zM9 27h3v1h-3zM13 27h1v1h-1zM16 27h2v1h-2zM20 27h1v1h-1zM22 27h2v1h-2zM25 27h1v1h-1zM30 27h2v1h-2zM33 27h1v1h-1zM2 28h1v1h-1zM8 28h1v1h-1zM10 28h2v1h-2zM13 28h1v1h-1zM17 28h2v1h-2zM21 28h1v1h-1zM27 28h4v1h-4zM33 28h2v1h-2zM37 28h2v1h-2zM2 29h1v1h-1zM6 29h1v1h-1zM13 29h1v1h-1zM17 29h1v1h-1zM21 29h3v1h-3zM30 29h5v1h-5zM38 29h1v1h-1zM2 30h1v1h-1zM4 30h1v1h-1zM6 30h1v1h-1zM8 30h5v1h-5zM17 30h1v1h-1zM19 30h1v1h-1zM21 30h1v1h-1zM26 30h3v1h-3zM30 30h7v1h-7zM10 31h3v1h-3zM14 31h2v1h-2zM17 31h2v1h-2zM20 31h3v1h-3zM25 31h3v1h-3zM29 31h2v1h-2zM34 31h2v1h-2zM2 32h7v1h-7zM14 32h1v1h-1zM16 32h2v1h-2zM20 32h1v1h-1zM22 32h3v1h-3zM26 32h1v1h-1zM28 32h1v1h-1zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM36 32h3v1h-3zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h6v1h-6zM17 33h2v1h-2zM23 33h3v1h-3zM28 33h1v1h-1zM30 33h1v1h-1zM34 33h2v1h-2zM37 33h2v1h-2zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h3v1h-3zM15 34h1v1h-1zM20 34h2v1h-2zM24 34h11v1h-11zM36 34h2v1h-2zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h3v1h-3zM14 35h1v1h-1zM17 35h2v1h-2zM25 35h1v1h-1zM28 35h1v1h-1zM30 35h3v1h-3zM34 35h1v1h-1zM36 35h1v1h-1zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM10 36h1v1h-1zM12 36h2v1h-2zM15 36h1v1h-1zM20 36h1v1h-1zM24 36h1v1h-1zM26 36h1v1h-1zM28 36h2v1h-2zM31 36h1v1h-1zM37 36h2v1h-2zM2 37h1v1h-1zM8 37h1v1h-1zM11 37h1v1h-1zM13 37h1v1h-1zM18 37h1v1h-1zM22 37h2v1h-2zM28 37h3v1h-3zM32 37h1v1h-1zM34 37h1v1h-1zM38 37h1v1h-1zM2 38h7v1h-7zM10 38h2v1h-2zM13 38h2v1h-2zM16 38h1v1h-1zM19 38h1v1h-1zM21 38h1v1h-1zM24 38h1v1h-1zM26 38h3v1h-3zM32 38h1v1h-1zM34 38h5v1h-5z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl" id="strip">
+        <button type="button" class="spin attn" id="play" data-vd-key="play">Play</button>
+        <button type="button" class="btn" id="reset" title="Clear the studies run so far">Reset</button>
+        <label class="lbl" for="countSel">Studies</label>
+        <select id="countSel"><option value="100">100</option><option value="1000" selected>1,000</option><option value="10000">10,000</option></select>
+        <span class="note" id="note">Play runs many studies like yours, each with new simulated data, and tallies the decisions.</span>
+      </div>
+      <div class="question" id="question"></div>
+      <div class="pane" id="paneA">
+        <canvas id="canA" tabindex="0" role="img" aria-label="Your sample on top; below it the null distribution of the test statistic, with your statistic marked and the p value shaded."></canvas>
+      </div>
+      <div class="steps" id="steps">
+        <div class="step"><h3>Hypotheses</h3><div id="st1"></div></div>
+        <div class="step"><h3>Distribution</h3><div id="st2"></div></div>
+        <div class="step"><h3>p value</h3><div id="st3"></div></div>
+        <div class="step"><h3>Decision and conclusion</h3><div id="st4"></div></div>
+      </div>
+      <div class="shelf" id="shelf">
+        <div class="shelf-card" role="group" aria-label="The test">
+          <span class="card-title">The test</span>
+          <div class="row"><span>Alternative</span><span class="seg" id="tailSeg" role="group" aria-label="Alternative hypothesis">
+            <button type="button" data-tail="left" aria-pressed="false">Left tailed</button><button type="button" data-tail="two" aria-pressed="true">Two tailed</button><button type="button" data-tail="right" aria-pressed="false">Right tailed</button></span></div>
+          <div class="row"><span>Significance level α</span><span class="seg" id="alphaSeg" role="group" aria-label="Significance level">
+            <button type="button" data-a="0.1" aria-pressed="false">0.10</button><button type="button" data-a="0.05" aria-pressed="true">0.05</button><button type="button" data-a="0.01" aria-pressed="false">0.01</button></span></div>
+        </div>
+        <div class="shelf-card" role="group" aria-label="The study">
+          <span class="card-title">The study</span>
+          <div><div class="slider-head"><label for="sN" id="nLab">Sample size n</label><output id="oN" for="sN"></output></div><input type="range" id="sN" min="2" max="60" step="1"></div>
+          <div id="n2Row"><div class="slider-head"><label for="sN2" id="n2Lab">Second sample size n₂</label><output id="oN2" for="sN2"></output></div><input type="range" id="sN2" min="2" max="60" step="1"></div>
+          <div id="sigRow"><div class="slider-head"><label for="sSig" id="sigLab">Spread σ</label><output id="oSig" for="sSig"></output></div><input type="range" id="sSig" min="0.01" max="0.2" step="0.005"></div>
+          <div class="row"><button type="button" class="btn" id="newDraw">New draw</button><span class="hint" id="drawNo"></span></div>
+        </div>
+        <div class="shelf-card" role="group" aria-label="The truth">
+          <span class="card-title">The truth (the simulation knows it; the test does not)</span>
+          <div><div class="slider-head"><label for="sTruth" id="truthLab">True value</label><output id="oTruth" for="sTruth"></output></div><input type="range" id="sTruth" min="0" max="1" step="0.01"></div>
+          <div class="row"><button type="button" class="btn" id="makeNull">Make H₀ true</button><button type="button" class="btn" id="sweep" title="Run 1,000 studies at each of 13 true values across the slider and plot each fraction rejected on the power curve">Simulate the power curve</button></div>
+        </div>
+      </div>
+      <div class="pane" id="paneB">
+        <canvas id="canB" tabindex="0" role="img" aria-label="Left: a histogram of the test statistic from every study run, the rejected ones in color, with the null curve. Right: the power curve, the chance of rejecting the null hypothesis against the true value."></canvas>
+      </div>
+      <div class="tally" id="tally" aria-live="polite"></div>
+      <p class="sim">Every sample here is simulated by the demo from the true value and spread on the sliders; nothing is measured.</p>
+    </div>
+
+    <aside class="rail">
+      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/errors-and-power.html" target="errors-and-power-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="g" aria-pressed="true">Pendulum g: is it 9.81? (t test)</button>
+          <button type="button" data-p="drag" aria-pressed="false">Drop timer, σ known: is g low? (z test)</button>
+          <button type="button" data-p="det" aria-pressed="false">Detector efficiency: above 80 %? (one proportion)</button>
+          <button type="button" data-p="die" aria-pressed="false">A die: are sixes one in six? (one proportion)</button>
+          <button type="button" data-p="gates" aria-pressed="false">Two photogates, σ known: same period? (two means, z)</button>
+          <button type="button" data-p="watch" aria-pressed="false">Two stopwatch timers: same period? (two means, Welch t)</button>
+          <button type="button" data-p="det2" aria-pressed="false">Two detectors: same efficiency? (two proportions)</button>
+          <button type="button" data-p="pair" aria-pressed="false">New photogate: did it change the period? (matched pairs)</button>
+        </div>
+        <details class="more" open><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+      </section>
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+      </section>
+      <!-- vd-readings --><section class="vd-readings" data-ws="errors-and-power" data-title="Hypothesis Tests" data-demo="hypothesis-tests">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings ('+(typeof window.vdDataNote==='function'&&window.vdDataNote()?'catalog data':'simulated data')+')','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:(typeof window.vdDataNote==='function'&&window.vdDataNote())||'Simulated data from '+(/^The /.test(title)?'':'the ')+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the p value, the decision and the theory power curve, to predict them first</span></label>
+        <details class="more"><summary>How it works</summary>
+          <p class="hint">Each sample is drawn by the demo from a normal distribution with the true value and spread on the sliders (a proportion: each trial is a success with the true probability). The draws are seeded: Draw 1 is the same on every computer, and New draw moves to the next set. Play runs studies from their own seeded stream, so the same settings give the same tally.</p>
+          <p class="hint">The statistics follow the book. One mean with σ known: z = (x̄ − μ₀)/(σ/√n). With σ unknown: t = (x̄ − μ₀)/(s/√n), df = n − 1. One proportion: z = (p′ − p₀)/√(p₀q₀/n), the normal approximation, fair when np₀ and nq₀ are both more than 5. Two means with σ known: z = (x̄₁ − x̄₂)/√(σ₁²/n₁ + σ₂²/n₂). Unknown: the unpooled t = (x̄₁ − x̄₂)/√(s₁²/n₁ + s₂²/n₂), with Welch's df from the samples. Two proportions: the pooled proportion. Matched pairs: a one sample t test on the differences.</p>
+          <p class="hint">Decision: reject H₀ when the p value is less than α. Over many studies with H₀ true, the fraction rejected is the Type I error rate, close to α; with H₀ false it is the power, 1 − β, and the rest are Type II errors. The fraction from N studies has a standard error √(f(1 − f)/N).</p>
+          <p class="hint">The theory power curve is exact for the z tests (a normal statistic). For one sample and matched pairs t tests it is the noncentral t, worked out by numerical integration. For proportions it uses the normal approximation, and for two means with σ unknown it treats Welch's statistic as a t with the df the true spreads give: both are approximations, so the simulated dots can sit a little off the curve.</p>
+        </details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  /* Hypothesis tests of Introductory Statistics chapters 9 and 10: simulate one study, analyze it with the book's test (through
+     the shared library VDSTATS), run many studies, and the theory power. Runs in Node (curriculum/validation/test_hypothesis-tests.cjs).
+     P (the settings): kind 'z1' | 't1' | 'p1' | 'z2' | 't2' | 'p2' | 'pair'; mu0 (the value H0 names: μ₀ or p₀; 0 for a difference);
+     n, n2; sigma (σ, or σ₁), sigma2 (σ₂); truth (the true μ, p, μ₁ − μ₂, p_A − p_B or μ_d); base (the second group's true mean or
+     proportion; the pendulums' mean period for pairs); spreadUnits (the pendulum to pendulum spread for pairs); tail; alpha. */
+  const ST = VDSTATS;
+  /* one study: the data drawn from the truth, from rng r. Normal data are truth + σ·z, so a slider moves the same draw smoothly. */
+  function simulate(P, r) {
+    const norm = (m, s, n) => Array.from({ length: n }, () => r.normal(m, s));
+    const bern = (p, n) => Array.from({ length: n }, () => (r() < p ? 1 : 0));
+    switch (P.kind) {
+      case 'z1': case 't1': return { x: norm(P.truth, P.sigma, P.n) };
+      case 'p1': return { x: bern(P.truth, P.n) };
+      case 'z2': case 't2': return { a: norm(P.base + P.truth, P.sigma, P.n), b: norm(P.base, P.sigma2, P.n2) };
+      case 'p2': return { a: bern(P.base + P.truth, P.n), b: bern(P.base, P.n2) };
+      case 'pair': {
+        /* each unit (a pendulum) has its own period; each gate adds its own scatter σ_d/√2, so a difference has spread σ_d */
+        const u = norm(P.base, P.spreadUnits, P.n), e = P.sigma / Math.SQRT2;
+        const old = u.map((v) => v + r.normal(0, e)), neu = u.map((v) => v + P.truth + r.normal(0, e));
+        return { old, neu, d: neu.map((v, i) => v - old[i]) };
+      }
+    }
+    return null;
+  }
+  const count = (a) => a.reduce((s, v) => s + v, 0);
+  /* the book's test of one study: statistic, its distribution (normal, or t with df), p value, the point estimate and the
+     standard error that turns the statistic back into the estimate's units */
+  function analyze(P, d, tail) {
+    tail = tail || P.tail;
+    switch (P.kind) {
+      case 'z1': { const m = ST.mean(d.x), se = P.sigma / Math.sqrt(P.n), r = ST.zTest1(m, P.mu0, P.sigma, P.n, tail); return { stat: r.z, df: 0, p: r.p, est: m, se }; }
+      case 't1': { const r = ST.tTest1(d.x, P.mu0, tail); return { stat: r.t, df: r.df, p: r.p, est: r.mean, se: r.sd / Math.sqrt(P.n), s: r.sd }; }
+      case 'p1': { const x = count(d.x), r = ST.propTest1(x, P.n, P.mu0, tail); return { stat: r.z, df: 0, p: r.p, est: r.phat, se: Math.sqrt(P.mu0 * (1 - P.mu0) / P.n), x }; }
+      case 'z2': { const m1 = ST.mean(d.a), m2 = ST.mean(d.b), r = ST.zTest2s(m1, P.sigma, P.n, m2, P.sigma2, P.n2, tail); return { stat: r.z, df: 0, p: r.p, est: m1 - m2, se: r.se, m1, m2 }; }
+      case 't2': { const r = ST.tTest2(d.a, d.b, tail), m1 = ST.mean(d.a), m2 = ST.mean(d.b); return { stat: r.t, df: r.df, p: r.p, est: m1 - m2, se: r.se, m1, m2, s1: ST.sd(d.a), s2: ST.sd(d.b) }; }
+      case 'p2': { const x1 = count(d.a), x2 = count(d.b), r = ST.propTest2(x1, P.n, x2, P.n2, tail), pc = r.pooled;
+        return { stat: r.z, df: 0, p: r.p, est: x1 / P.n - x2 / P.n2, se: Math.sqrt(pc * (1 - pc) * (1 / P.n + 1 / P.n2)), x1, x2, pooled: pc }; }
+      case 'pair': { const r = ST.tTest1(d.d, 0, tail); return { stat: r.t, df: r.df, p: r.p, est: r.mean, se: r.sd / Math.sqrt(P.n), s: r.sd }; }
+    }
+    return null;
+  }
+  /* the null distribution of the statistic: standard normal (df 0) or Student's t */
+  const nullDist = (df) => (df > 0 ? ST.dist.t(df) : ST.dist.normal());
+  /* p value of a statistic for another tail, from its distribution */
+  const pFor = (stat, df, tail) => ST.pval(nullDist(df), stat, tail);
+  const reject = (p, alpha) => p < alpha;
+  /* critical values at α: [lo, hi], with ±Infinity where that side never rejects */
+  function critical(df, tail, alpha) {
+    const D = nullDist(df);
+    if (tail === 'two') { const c = D.inv(1 - alpha / 2); return [-c, c]; }
+    if (tail === 'right') return [-Infinity, D.inv(1 - alpha)];
+    return [D.inv(alpha), Infinity];
+  }
+  /* the df the null curve is drawn with: n − 1, or for Welch the df that the true spreads give (each study uses its own) */
+  function theoryDf(P) {
+    if (P.kind === 't1' || P.kind === 'pair') return P.n - 1;
+    if (P.kind === 't2') { const v1 = P.sigma ** 2 / P.n, v2 = P.sigma2 ** 2 / P.n2; return (v1 + v2) ** 2 / (v1 * v1 / (P.n - 1) + v2 * v2 / (P.n2 - 1)); }
+    return 0;
+  }
+  /* power when the statistic is normal with mean m and spread s (z tests exactly; proportions by the normal approximation) */
+  function normalPower(m, s, tail, alpha) {
+    const N = ST.dist.normal(), [lo, hi] = critical(0, tail, alpha);
+    return (isFinite(hi) ? 1 - N.cdf((hi - m) / s) : 0) + (isFinite(lo) ? N.cdf((lo - m) / s) : 0);
+  }
+  /* power of a t test with noncentrality λ and df: T = (Z + λ)/√(V/df), V chi square with df. P(T > c) is the average over V of
+     1 − Φ(c√(V/df) − λ); integrated by Simpson's rule in w = √V (so df = 1 has no singularity), in two pieces of 600 intervals. */
+  function tPower(lambda, df, tail, alpha) {
+    const [lo, hi] = critical(df, tail, alpha), C = ST.dist.chisq(df), N = ST.dist.normal();
+    const dens = (w) => (w === 0 ? (df === 1 ? 2 / Math.sqrt(2 * Math.PI) : 0) : C.pdf(w * w) * 2 * w);   /* the density of w; its limit at 0 for df = 1 */
+    const g = (w) => { const k = w / Math.sqrt(df); return (isFinite(hi) ? 1 - N.cdf(hi * k - lambda) : 0) + (isFinite(lo) ? N.cdf(lo * k - lambda) : 0); };
+    const simpson = (a, b, m) => { const h = (b - a) / m; let s = 0; for (let i = 0; i <= m; i++) { const w = a + i * h; s += (i === 0 || i === m ? 1 : i % 2 ? 4 : 2) * dens(w) * g(w); } return s * h / 3; };
+    /* a fine piece near w = 0, where a large critical value (small df) makes the integrand change fast, then the rest */
+    const wmax = Math.sqrt(df + 12 * Math.sqrt(2 * df) + 40), cmax = Math.max(isFinite(hi) ? Math.abs(hi) : 0, isFinite(lo) ? Math.abs(lo) : 0, 1);
+    const w1 = Math.min(wmax / 2, 10 * Math.sqrt(df) / cmax + 0.5);
+    return Math.min(1, Math.max(0, simpson(0, w1, 600) + simpson(w1, wmax, 600)));
+  }
+  /* the theory power at the truth in P (at truth = H0 it is the Type I error rate, α for the exact tests) */
+  function power(P, tail, alpha) {
+    tail = tail || P.tail; alpha = alpha || P.alpha;
+    switch (P.kind) {
+      case 'z1': return normalPower((P.truth - P.mu0) / (P.sigma / Math.sqrt(P.n)), 1, tail, alpha);
+      case 'z2': return normalPower(P.truth / Math.sqrt(P.sigma ** 2 / P.n + P.sigma2 ** 2 / P.n2), 1, tail, alpha);
+      case 'p1': { const p = P.truth, se0 = Math.sqrt(P.mu0 * (1 - P.mu0) / P.n), se1 = Math.sqrt(p * (1 - p) / P.n); return normalPower((p - P.mu0) / se0, Math.max(1e-9, se1 / se0), tail, alpha); }
+      case 'p2': { const pa = P.base + P.truth, pb = P.base, pc = (P.n * pa + P.n2 * pb) / (P.n + P.n2);
+        const se0 = Math.sqrt(pc * (1 - pc) * (1 / P.n + 1 / P.n2)), se1 = Math.sqrt(pa * (1 - pa) / P.n + pb * (1 - pb) / P.n2);
+        return normalPower((pa - pb) / se0, Math.max(1e-9, se1 / se0), tail, alpha); }
+      case 't1': return tPower((P.truth - P.mu0) / (P.sigma / Math.sqrt(P.n)), P.n - 1, tail, alpha);
+      case 'pair': return tPower(P.truth / (P.sigma / Math.sqrt(P.n)), P.n - 1, tail, alpha);
+      case 't2': return tPower(P.truth / Math.sqrt(P.sigma ** 2 / P.n + P.sigma2 ** 2 / P.n2), theoryDf(P), tail, alpha);
+    }
+    return NaN;
+  }
+  /* the effect in standard errors (the noncentrality the power depends on) */
+  function lambdaOf(P) {
+    switch (P.kind) {
+      case 'z1': case 't1': return (P.truth - P.mu0) / (P.sigma / Math.sqrt(P.n));
+      case 'pair': return P.truth / (P.sigma / Math.sqrt(P.n));
+      case 'z2': case 't2': return P.truth / Math.sqrt(P.sigma ** 2 / P.n + P.sigma2 ** 2 / P.n2);
+      case 'p1': return (P.truth - P.mu0) / Math.sqrt(P.mu0 * (1 - P.mu0) / P.n);
+      case 'p2': { const pa = P.base + P.truth, pb = P.base, pc = (P.n * pa + P.n2 * pb) / (P.n + P.n2); return P.truth / Math.sqrt(pc * (1 - pc) * (1 / P.n + 1 / P.n2)); }
+    }
+    return NaN;
+  }
+  /* a 32 bit hash of a text (FNV-1a), to seed a stream from the settings that change the data */
+  function hash(s) { let h = 2166136261; for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return h >>> 0; }
+  /* the observed study: draw number 1 on open; its own seeded stream for each setup */
+  const studySeed = (setup, draw) => hash(`study|${setup}|${draw}`);
+  const runSeed = (setup, draw) => hash(`studies|${setup}|${draw}`);
+  /* many studies from one stream: each gives its statistic and df (the decision follows from the tail and α) */
+  function runStudies(P, r, howMany, out) {
+    out = out || { stat: [], df: [] };
+    for (let i = 0; i < howMany; i++) { const a = analyze(P, simulate(P, r), 'two'); out.stat.push(a.stat); out.df.push(a.df); }
+    return out;
+  }
+  function tallyRun(run, tail, alpha) { let k = 0; for (let i = 0; i < run.stat.length; i++) if (reject(pFor(run.stat[i], run.df[i], tail), alpha)) k++; return k; }
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  const VDI18N = window.VDI18N || { t: (s, o) => s.replace(/\{(\w+)\}/g, (m, k) => (o && k in o ? o[k] : m)) };
+  const G = (typeof VDC === 'object' && VDC.g) ? VDC.g : 9.81;   /* g = 9.81 m/s², demos/lib/constants.js */
+  /* the setups. param: the parameter's symbol; est: the estimate's symbol; claim: the alternative in words for each tail */
+  const SETUPS = {
+    g: { kind: 't1', mu0: G, n: 10, nr: [3, 60], sigma: 0.06, sr: [0.01, 0.2, 0.005], truth: G, tr: [G - 0.12, G + 0.12, 0.005], tail: 'two', unit: 'm/s²', dec: 3,
+      q: 'Is the g this pendulum measures consistent with 9.81 m/s²?', xl: 'g (m/s²)', param: 'μ', est: 'x̄',
+      claim: { two: 'the mean g this pendulum measures differs from 9.81 m/s²', left: 'the mean g this pendulum measures is less than 9.81 m/s²', right: 'the mean g this pendulum measures is more than 9.81 m/s²' },
+      hint: 'A student finds g from ten pendulum timings (simulated: each value scatters about the true mean with a spread σ the test does not know, so it uses the sample standard deviation s and a t test with df = n − 1). H₀ says the setup measures g = 9.81 m/s² on average. The truth starts equal to 9.81, so H₀ is true: press Play and count how often the test rejects it anyway. Those are Type I errors.' },
+    drag: { kind: 'z1', mu0: G, n: 8, nr: [2, 60], sigma: 0.03, sr: [0.01, 0.1, 0.005], truth: 9.79, tr: [G - 0.08, G + 0.04, 0.0025], tail: 'left', unit: 'm/s²', dec: 4,
+      q: 'Does air drag make the g this drop timer measures low?', xl: 'g (m/s²)', param: 'μ', est: 'x̄',
+      claim: { two: 'the mean g this drop timer measures differs from 9.81 m/s²', left: 'the mean g this drop timer measures is less than 9.81 m/s²', right: 'the mean g this drop timer measures is more than 9.81 m/s²' },
+      hint: 'A ball dropped through two photogates gives g from its fall time. The maker states that each value scatters with σ = 0.03 m/s², so σ is known and the test is a z test. Air drag would make the ball fall a little slower, so the claim is one sided: Hₐ: μ < 9.81 m/s², a left tailed test. The truth here is 9.79 m/s² (simulated), so H₀ is false.' },
+    det: { kind: 'p1', mu0: 0.8, n: 150, nr: [10, 1000], truth: 0.85, tr: [0.7, 0.95, 0.005], tail: 'right', unit: '', dec: 3,
+      q: 'Does this particle counter detect more than 80 % of the particles?', xl: 'fraction detected', param: 'p', est: 'p′',
+      claim: { two: 'the counter\'s detection fraction differs from 0.80', left: 'the counter detects less than 80 % of the particles', right: 'the counter detects more than 80 % of the particles' },
+      hint: 'A source sends 150 particles through a counter; each is detected or missed (simulated, with a true efficiency of 0.85). The maker claims more than 80 %, so Hₐ: p > 0.80, right tailed. The test is the book\'s normal approximation, z = (p′ − p₀)/√(p₀q₀/n), fair since np₀ = 120 and nq₀ = 30 are both more than 5. Filled squares are detected particles.' },
+    die: { kind: 'p1', mu0: 1 / 6, n: 120, nr: [12, 1000], truth: 1 / 6, tr: [0.08, 0.3, 0.0025], tail: 'two', unit: '', dec: 4,
+      q: 'Does this die land on six one time in six?', xl: 'fraction of sixes', param: 'p', est: 'p′',
+      claim: { two: 'the chance of a six differs from 1/6', left: 'the chance of a six is less than 1/6', right: 'the chance of a six is more than 1/6' },
+      hint: 'A die is rolled 120 times (simulated); filled squares are sixes. H₀: p = 1/6. A proportion test is a z test only approximately, and the count of sixes is a whole number, so the Type I error rate over many studies is near α but not exactly α. Raise n and watch it close in.' },
+    gates: { kind: 'z2', mu0: 0, n: 10, nr: [2, 60], n2: 10, sigma: 2, sigma2: 2, sr: [0.5, 6, 0.1], base: 2006, truth: 1.5, tr: [-4, 4, 0.1], tail: 'two', unit: 'ms', dec: 2,
+      q: 'Do two photogates give the same period for the same pendulum?', xl: 'period (ms)', param: 'μ₁ − μ₂', est: 'x̄₁ − x̄₂', g1: 'gate 1', g2: 'gate 2',
+      claim: { two: 'the two gates give different mean periods', left: 'gate 1 gives a shorter mean period than gate 2', right: 'gate 1 gives a longer mean period than gate 2' },
+      hint: 'One pendulum (period about 2,006 ms) is timed ten times with each of two photogates. Each gate\'s timings scatter with a known σ = 2.0 ms (from many earlier runs), so the test is the z test of two means with σ known. The truth: gate 1 reads 1.5 ms longer (simulated).' },
+    watch: { kind: 't2', mu0: 0, n: 12, nr: [2, 60], n2: 8, sigma: 0.08, sigma2: 0.15, sr: [0.02, 0.3, 0.01], base: 2.006, truth: 0.1, tr: [-0.25, 0.25, 0.005], tail: 'two', unit: 's', dec: 3,
+      q: 'Do two students with stopwatches find the same period?', xl: 'period (s)', param: 'μ₁ − μ₂', est: 'x̄₁ − x̄₂', g1: 'student 1', g2: 'student 2',
+      claim: { two: 'the two students\' mean periods differ', left: 'student 1\'s mean period is shorter than student 2\'s', right: 'student 1\'s mean period is longer than student 2\'s' },
+      hint: 'Two students time the same pendulum by hand, 12 and 8 times. Their reaction times differ, so their spreads differ (σ₁ = 0.08 s, σ₂ = 0.15 s, unknown to the test): the book\'s unpooled t test with Welch\'s df, which is not a whole number. The spread slider sets σ₁ and keeps σ₂ = 1.875 σ₁. The truth: student 1 reads 0.10 s long (simulated).' },
+    det2: { kind: 'p2', mu0: 0, n: 200, nr: [10, 1000], n2: 200, base: 0.8, truth: 0.06, tr: [-0.15, 0.15, 0.005], tail: 'two', unit: '', dec: 3,
+      q: 'Do two counters detect the same fraction of particles?', xl: 'fraction detected', param: 'p_A − p_B', est: 'p′_A − p′_B', g1: 'counter A', g2: 'counter B',
+      claim: { two: 'the two counters detect different fractions', left: 'counter A detects a smaller fraction than counter B', right: 'counter A detects a larger fraction than counter B' },
+      hint: 'Two counters each see 200 particles (simulated). Counter B detects 80 %; the truth slider sets how much better counter A is. The book\'s test pools the two samples, p_c = (x_A + x_B)/(n_A + n_B), for the standard error under H₀: p_A = p_B.' },
+    pair: { kind: 'pair', mu0: 0, n: 10, nr: [3, 60], sigma: 3, sr: [0.5, 10, 0.1], base: 1800, spreadUnits: 300, truth: 2, tr: [-6, 6, 0.1], tail: 'two', unit: 'ms', dec: 2,
+      q: 'Did the new photogate change the measured period?', xl: 'difference d = new − old (ms)', param: 'μ_d', est: 'd̄',
+      claim: { two: 'the new gate changes the measured period', left: 'the new gate reads shorter periods', right: 'the new gate reads longer periods' },
+      hint: 'Ten pendulums of different lengths (periods from about 1.2 to 2.4 s) are each timed with the old photogate and the new one. The pendulums differ by hundreds of ms, but each difference new − old is a few ms, so the test is on the differences: a one sample t test that μ_d = 0. σ is the spread of the differences. The truth: the new gate reads 2.0 ms long (simulated).' },
+  };
+  const S = { setup: 'g', P: null, draw: 1, data: null, A: null, blind: false, count: 1000, play: false, run: null, done: [], drops: [] };
+  const canA = $('canA'), ctxA = canA.getContext('2d'), canB = $('canB'), ctxB = canB.getContext('2d');
+  let WA = 0, HA = 0, WB = 0, HB = 0, dpr = 1, T = null, needA = true, needB = true;
+  const proj = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), surface: g('--surface'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), mono: g('--font-mono') || 'monospace',
+      p: g('--ht-p'), crit: g('--ht-crit'), tru: g('--ht-true'), data: g('--ht-data'), keep: g('--ht-keep') };
+  }
+  /* numbers: plain text with a real minus sign, commas in big counts */
+  const num = (v, d) => (isFinite(v) ? (Math.abs(v) < 0.5 * Math.pow(10, -d) ? 0 : v).toFixed(d).replace('-', '−') : '—');
+  const big = (k) => Math.round(k).toLocaleString('en-US');
+  const sig = (v, s = 4) => (isFinite(v) ? Number(v.toPrecision(s)).toString().replace('-', '−') : '—');
+  function pText(p) { if (!isFinite(p)) return '—'; if (p < 0.0001) return '< 0.0001'; return p.toFixed(4); }
+  const pIs = (p) => (isFinite(p) && p < 0.0001 ? '< 0.0001' : '= ' + pText(p));   /* "p = 0.0468" or "p < 0.0001" */
+  const isP = (P) => P.kind === 'p1' || P.kind === 'p2';
+  const two = (P) => P.kind === 'z2' || P.kind === 't2' || P.kind === 'p2';
+  const C = () => SETUPS[S.setup];
+
+  /* ---------- state ---------- */
+  function settings() {
+    const c = C(), P = S.P;
+    return Object.assign({ kind: c.kind, mu0: c.mu0, base: c.base, spreadUnits: c.spreadUnits }, P);
+  }
+  function study() {
+    const P = settings(), r = VDSTATS.rng(studySeed(S.setup, S.draw));
+    S.data = simulate(P, r); S.A = analyze(P, S.data, P.tail);
+  }
+  const runKey = () => { const P = settings(); return `${S.setup}|${S.draw}|${P.n}|${P.n2}|${P.sigma}|${P.truth}`; };
+  const curveKey = () => { const P = settings(); return `${S.setup}|${S.draw}|${P.n}|${P.n2}|${P.sigma}`; };
+  function changed(keepRun) {
+    study();
+    if (!keepRun && S.run && S.run.key !== runKey()) { S.run = null; setPlay(false); }
+    needA = needB = true; steps(); readouts(); tally();
+  }
+
+  /* ---------- the four steps ---------- */
+  const ha = (P) => (P.tail === 'two' ? '≠' : P.tail === 'left' ? '<' : '>');
+  function h0Text(P) {
+    const c = C(), v = S.setup === 'die' ? '1/6' : P.kind === 'p1' ? num(P.mu0, 2) : num(P.mu0, 2) + ' ' + c.unit;
+    if (P.kind === 'z1' || P.kind === 't1' || P.kind === 'p1') return [`H₀: ${c.param} = ${v}`, `Hₐ: ${c.param} ${ha(P)} ${v}`];
+    if (P.kind === 'pair') return ['H₀: μ_d = 0', `Hₐ: μ_d ${ha(P)} 0`];
+    const [a, b] = P.kind === 'p2' ? ['p_A', 'p_B'] : ['μ₁', 'μ₂'];
+    return [`H₀: ${a} = ${b}`, `Hₐ: ${a} ${ha(P)} ${b}`];
+  }
+  function distText(P, A) {
+    const c = C(), d = c.dec, u = c.unit ? ' ' + c.unit : '';
+    switch (P.kind) {
+      case 'z1': return [VDI18N.t('Normal: σ is known, so z.'), `z = (x̄ − μ₀)/(σ/√n) = (${num(A.est, d)} − ${num(P.mu0, 2)})/(${sig(P.sigma)}/√${P.n})`];
+      case 't1': return [VDI18N.t('Student\'s t, df = {df}: σ is unknown, so the test uses s.', { df: A.df }), `t = (x̄ − μ₀)/(s/√n) = (${num(A.est, d)} − ${num(P.mu0, 2)})/(${num(A.s, d)}/√${P.n})`];
+      case 'p1': return [VDI18N.t('Normal, approximately: np₀ = {a} and nq₀ = {b}.', { a: num(P.n * P.mu0, 1), b: num(P.n * (1 - P.mu0), 1) }), `z = (p′ − p₀)/√(p₀q₀/n), p′ = ${A.x}/${P.n} = ${num(A.est, 4)}`];
+      case 'z2': return [VDI18N.t('Normal: both σ known, so z.'), `z = (x̄₁ − x̄₂)/√(σ₁²/n₁ + σ₂²/n₂), x̄₁ − x̄₂ = ${num(A.est, d)}${u}`];
+      case 't2': return [VDI18N.t('Student\'s t with Welch\'s df = {df}: σ unknown, not pooled.', { df: num(A.df, 2) }), `t = (x̄₁ − x̄₂)/√(s₁²/n₁ + s₂²/n₂), x̄₁ − x̄₂ = ${num(A.est, d)}${u}`];
+      case 'p2': return [VDI18N.t('Normal, approximately, with the pooled proportion p_c = {pc}.', { pc: num(A.pooled, 4) }), `z = (p′_A − p′_B)/√(p_c q_c (1/n_A + 1/n_B)), p′_A = ${A.x1}/${P.n}, p′_B = ${A.x2}/${P.n2}`];
+      case 'pair': return [VDI18N.t('Student\'s t on the differences, df = {df}.', { df: A.df }), `t = d̄/(s_d/√n) = ${num(A.est, d)}/(${num(A.s, d)}/√${P.n})`];
+    }
+    return ['', ''];
+  }
+  const statName = (A) => (A.df > 0 ? 't' : 'z');
+  function steps() {
+    const P = settings(), A = S.A, c = C();
+    const [h0, h1] = h0Text(P);
+    $('st1').innerHTML = `<div class="big" translate="no">${h0}</div><div class="big" translate="no">${h1}</div><div>${VDI18N.t(P.tail === 'two' ? 'Two tailed test' : P.tail === 'left' ? 'Left tailed test' : 'Right tailed test')}</div>`;
+    const [d1, d2] = distText(P, A);
+    $('st2').innerHTML = `<div>${d1}</div><div class="big" translate="no">${d2}</div>`;
+    const sn = statName(A);
+    $('st3').innerHTML = `<div class="big" translate="no">${sn} = ${num(A.stat, 3)}</div>` + (S.blind ? `<div>${VDI18N.t('p value hidden (Blind)')}</div>`
+      : `<div class="big pv" translate="no">p ${pIs(A.p)}</div><div>${VDI18N.t(P.tail === 'two' ? 'both shaded tails' : 'the shaded tail')}</div>`);
+    if (S.blind) { $('st4').innerHTML = `<div>${VDI18N.t('Hidden (Blind): compare the p value with α yourself.')}</div>`; return; }
+    const rej = reject(A.p, P.alpha), pct = num(P.alpha * 100, 0) + ' %';
+    $('st4').innerHTML = `<div class="verdict${rej ? ' rej' : ''}">${rej ? VDI18N.t('p < α: reject H₀.') : VDI18N.t('p ≥ α: do not reject H₀.')}</div><div>`
+      + (rej ? VDI18N.t('At the {a} significance level, there is sufficient evidence to conclude that {c}.', { a: pct, c: VDI18N.t(c.claim[P.tail]) })
+        : VDI18N.t('At the {a} significance level, there is not sufficient evidence to conclude that {c}.', { a: pct, c: VDI18N.t(c.claim[P.tail]) })) + '</div>';
+  }
+
+  /* ---------- picture A: the sample and the null distribution ---------- */
+  const lab = (ctx, t, x, y) => { ctx.save(); ctx.strokeStyle = T.canvas; ctx.lineWidth = 4; ctx.lineJoin = 'round'; ctx.strokeText(t, x, y); ctx.restore(); ctx.fillText(t, x, y); };
+  function niceStep(span, n) { const raw = span / Math.max(1, n), p10 = Math.pow(10, Math.floor(Math.log10(raw))), m = raw / p10; return (m <= 1 ? 1 : m <= 2 ? 2 : m <= 5 ? 5 : 10) * p10; }
+  function tickText(v, step) { const d = Math.max(0, -Math.floor(Math.log10(step) + 1e-9)); return num(v, d); }
+  /* dots on a number line, stacked where they would touch */
+  function dotRow(ctx, vals, X, y0, r, color) {
+    const placed = [], order = vals.map((v, i) => [X(v), i]).sort((a, b) => a[0] - b[0]);
+    for (const [x] of order) {
+      let lev = 0; while (placed.some((q) => q.l === lev && Math.abs(q.x - x) < 2 * r - 0.5)) lev++;
+      placed.push({ x, l: lev });
+    }
+    ctx.fillStyle = color; ctx.strokeStyle = T.canvas; ctx.lineWidth = 1.2;
+    for (const q of placed) { ctx.beginPath(); ctx.arc(q.x, y0 - r - q.l * (2 * r - 1), r, 0, 7); ctx.fill(); ctx.stroke(); }
+    return Math.max(0, ...placed.map((q) => q.l));
+  }
+  function dataAxis(ctx, lo, hi, x0, x1, y, p) {
+    const X = (v) => x0 + (v - lo) / (hi - lo) * (x1 - x0), st = niceStep(hi - lo, Math.max(3, (x1 - x0) / (80 * p)));
+    ctx.strokeStyle = T.muted; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(x0, y + 0.5); ctx.lineTo(x1, y + 0.5); ctx.stroke();
+    ctx.fillStyle = T.muted; ctx.font = `${10.5 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    for (let v = Math.ceil(lo / st) * st; v <= hi + st * 1e-9; v += st) { const u = X(v); ctx.beginPath(); ctx.moveTo(u, y); ctx.lineTo(u, y + 4); ctx.stroke(); ctx.fillText(tickText(v, st), u, y + 5); }
+    return X;
+  }
+  function marker(ctx, x, y, color, text, p, below) {
+    ctx.fillStyle = color; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x - 6 * p, y + 9 * p); ctx.lineTo(x + 6 * p, y + 9 * p); ctx.closePath(); ctx.fill();
+    if (text) { ctx.font = `600 ${11 * p}px ${T.mono}`; ctx.textBaseline = 'top'; ctx.textAlign = 'center'; lab(ctx, text, x, y + (below ? 11 : 11) * p); }
+  }
+  function drawSample(ctx, x0, x1, y0, y1, p) {
+    const P = settings(), A = S.A, d = S.data, c = C();
+    ctx.font = `600 ${11 * p}px ${T.mono}`; ctx.fillStyle = T.muted; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    if (isP(P)) {
+      const groups = P.kind === 'p1' ? [[d.x, '']] : [[d.a, c.g1], [d.b, c.g2]], gw = (x1 - x0 - (groups.length - 1) * 16 * p) / groups.length;
+      groups.forEach(([arr, name], gi) => {
+        const gx = x0 + gi * (gw + 16 * p), top = y0 + 16 * p, h = y1 - top - 4 * p, n = arr.length;
+        let cell = Math.floor(Math.sqrt(gw * h / n)); while (cell > 2 && Math.ceil(n / Math.floor(gw / cell)) * cell > h) cell--;
+        const cols = Math.max(1, Math.floor(gw / cell)), k = count(arr);
+        ctx.fillStyle = T.ink; ctx.font = `600 ${11 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+        let txt = `${name ? VDI18N.t(name) + ': ' : ''}x = ${k} ${VDI18N.t('of')} n = ${n}, p′ = ${num(k / n, 3)}`;
+        if (ctx.measureText(txt).width > gw) txt = `${name ? VDI18N.t(name) + ': ' : ''}${k}/${n} = ${num(k / n, 3)}`;
+        lab(ctx, txt, gx, y0);
+        if (cell < 2) {   /* too many to draw one by one: a bar */
+          ctx.fillStyle = T.line; ctx.fillRect(gx, top, gw, Math.min(h, 22 * p)); ctx.fillStyle = T.data; ctx.fillRect(gx, top, gw * k / n, Math.min(h, 22 * p));
+          return;
+        }
+        for (let i = 0; i < n; i++) {
+          const u = gx + (i % cols) * cell, v = top + Math.floor(i / cols) * cell;
+          ctx.fillStyle = arr[i] ? T.data : T.line; ctx.fillRect(u + 0.5, v + 0.5, Math.max(1, cell - (cell > 5 ? 1.5 : 0.5)), Math.max(1, cell - (cell > 5 ? 1.5 : 0.5)));
+        }
+      });
+      return;
+    }
+    const rows = P.kind === 'z2' || P.kind === 't2' ? [[d.a, c.g1], [d.b, c.g2]] : [[P.kind === 'pair' ? d.d : d.x, '']];
+    const all = rows.flatMap((q) => q[0]).concat(two(P) ? [] : [P.mu0]);
+    let lo = Math.min(...all), hi = Math.max(...all); const pad = Math.max((hi - lo) * 0.12, 1e-9); lo -= pad; hi += pad;
+    const ax = y1 - 22 * p, X = dataAxis(ctx, lo, hi, x0, x1, ax, p), r = Math.max(3, Math.min(6, (x1 - x0) / 110)) * p;
+    ctx.fillStyle = T.muted; ctx.textAlign = 'right'; ctx.textBaseline = 'top'; ctx.font = `${10.5 * p}px ${T.mono}`; lab(ctx, VDI18N.t(c.xl), x1, y0);
+    if (!two(P)) {
+      ctx.strokeStyle = T.ink; ctx.setLineDash([5 * p, 4 * p]); ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.moveTo(X(P.mu0), y0 + 14 * p); ctx.lineTo(X(P.mu0), ax); ctx.stroke(); ctx.setLineDash([]);
+      ctx.fillStyle = T.ink; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.font = `600 ${11 * p}px ${T.mono}`;
+      lab(ctx, P.kind === 'pair' ? 'H₀: μ_d = 0' : `μ₀ = ${num(P.mu0, 2)}`, X(P.mu0), y0);
+      dotRow(ctx, rows[0][0], X, ax - 1, r, T.data);
+      marker(ctx, X(A.est), ax + 1, T.data, '', p);
+      ctx.fillStyle = T.data; ctx.textAlign = X(A.est) < X(P.mu0) ? 'right' : 'left'; ctx.textBaseline = 'bottom'; ctx.font = `600 ${11 * p}px ${T.mono}`;
+      lab(ctx, `${c.est} = ${num(A.est, c.dec)}`, X(A.est) + (X(A.est) < X(P.mu0) ? -8 : 8) * p, ax - 2 * r * 2.2);
+      return;
+    }
+    const lane = (ax - y0 - 16 * p) / 2;
+    rows.forEach(([arr, name], i) => {
+      const y = y0 + 16 * p + lane * (i + 1) - 4 * p, m = VDSTATS.mean(arr);
+      ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(x0, y + 0.5); ctx.lineTo(x1, y + 0.5); ctx.stroke();
+      dotRow(ctx, arr, X, y, r * 0.9, i ? T.keep : T.data);
+      ctx.strokeStyle = i ? T.ink : T.data; ctx.lineWidth = 2.5 * p; ctx.beginPath(); ctx.moveTo(X(m), y - lane + 10 * p); ctx.lineTo(X(m), y + 4 * p); ctx.stroke();
+      ctx.fillStyle = T.ink; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.font = `${10.5 * p}px ${T.mono}`;
+      lab(ctx, `${VDI18N.t(name)}: x̄${i ? '₂' : '₁'} = ${num(m, c.dec)}`, x0 + 2, y - lane + 22 * p);
+    });
+  }
+  /* the null curve over [L0, L1] in the statistic, with the p value shaded and the critical values at α */
+  function drawNull(ctx, x0, x1, y0, y1, p) {
+    const P = settings(), A = S.A, c = C(), df = A.df, D = nullDist(df);
+    const L = Math.min(9, Math.max(4, Math.abs(A.stat) * 1.15 + 0.6)), X = (z) => x0 + (z + L) / (2 * L) * (x1 - x0);
+    const peak = D.pdf(0), ax = y1 - 34 * p, Y = (f) => ax - f / peak * (ax - y0 - 62 * p);
+    const [lo, hi] = critical(df, P.tail, P.alpha);
+    /* the rejection region: a band under the axis and a light tint */
+    ctx.fillStyle = T.crit; ctx.globalAlpha = 0.12;
+    if (isFinite(hi) && hi < L) ctx.fillRect(X(hi), y0 + 20 * p, x1 - X(hi), ax - y0 - 20 * p);
+    if (isFinite(lo) && lo > -L) ctx.fillRect(x0, y0 + 20 * p, X(lo) - x0, ax - y0 - 20 * p);
+    ctx.globalAlpha = 1;
+    /* the shaded p value */
+    const shade = (a, b) => { if (b <= a) return; ctx.beginPath(); ctx.moveTo(X(a), ax); for (let i = 0; i <= 120; i++) { const z = a + (b - a) * i / 120; ctx.lineTo(X(z), Y(D.pdf(z))); } ctx.lineTo(X(b), ax); ctx.closePath(); ctx.fill(); };
+    if (!S.blind) {
+      ctx.fillStyle = T.p; ctx.globalAlpha = 0.55; const s = A.stat, m = Math.abs(s);
+      if (P.tail === 'right') shade(Math.max(-L, Math.min(L, s)), L);
+      else if (P.tail === 'left') shade(-L, Math.max(-L, Math.min(L, s)));
+      else { shade(Math.min(L, m), L); shade(-L, Math.max(-L, -m)); }
+      ctx.globalAlpha = 1;
+    }
+    /* the curve */
+    ctx.strokeStyle = T.ink; ctx.lineWidth = 2.2 * p; ctx.beginPath();
+    for (let i = 0; i <= 300; i++) { const z = -L + 2 * L * i / 300; i ? ctx.lineTo(X(z), Y(D.pdf(z))) : ctx.moveTo(X(z), Y(D.pdf(z))); }
+    ctx.stroke();
+    /* axis in the statistic, and under it the estimate it stands for */
+    ctx.strokeStyle = T.muted; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(x0, ax + 0.5); ctx.lineTo(x1, ax + 0.5); ctx.stroke();
+    ctx.font = `${10.5 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    const stepZ = L > 6 ? 2 : 1, center = two(P) || P.kind === 'pair' ? 0 : P.mu0;
+    for (let z = -Math.floor(L / stepZ) * stepZ; z <= L; z += stepZ) {
+      const u = X(z); ctx.strokeStyle = T.muted; ctx.beginPath(); ctx.moveTo(u, ax); ctx.lineTo(u, ax + 4); ctx.stroke();
+      if (u < x0 + 22 * p || u > x1 - 20 * p - ctx.measureText(`${c.est} →`).width) continue;   /* leave the ends to the axis names */
+      ctx.fillStyle = T.ink; ctx.fillText(num(z, 0), u, ax + 5);
+      if (WA > 480 || z % 2 === 0) { ctx.fillStyle = T.muted; ctx.fillText(num(center + z * A.se, c.dec), u, ax + 18 * p); }
+    }
+    ctx.textAlign = 'left'; ctx.fillStyle = T.ink; ctx.font = `600 ${11 * p}px ${T.mono}`; ctx.textBaseline = 'top';
+    lab(ctx, VDI18N.t('Null distribution of {s}', { s: statName(A) }) + (df > 0 ? `, df = ${num(df, Number.isInteger(df) ? 0 : 2)}` : ''), x0, y0);
+    ctx.textAlign = 'right'; ctx.font = `${10.5 * p}px ${T.mono}`; ctx.fillStyle = T.muted;
+    lab(ctx, `${statName(A)} →`, x1, ax - 14 * p); lab(ctx, `${c.est} →`, x1, ax + 18 * p);
+    /* critical values */
+    ctx.strokeStyle = T.crit; ctx.lineWidth = 1.5 * p; ctx.setLineDash([3 * p, 3 * p]); ctx.fillStyle = T.crit; ctx.font = `${10.5 * p}px ${T.mono}`; ctx.textBaseline = 'bottom';
+    for (const cv of [lo, hi]) {
+      if (!isFinite(cv) || Math.abs(cv) > L) continue;
+      const u = X(cv); ctx.beginPath(); ctx.moveTo(u, y0 + 26 * p); ctx.lineTo(u, ax); ctx.stroke();
+      ctx.textAlign = cv > 0 ? 'left' : 'right'; lab(ctx, `${VDI18N.t('critical')} ${num(cv, 3)}`, u + (cv > 0 ? 4 : -4) * p, ax - 18 * p);
+    }
+    ctx.setLineDash([]);
+    ctx.textAlign = 'right'; ctx.textBaseline = 'top'; ctx.fillStyle = T.crit; ctx.font = `${10.5 * p}px ${T.mono}`;
+    lab(ctx, VDI18N.t('gray: rejection region at α = {a}', { a: num(P.alpha, 2) }), x1, WA < 620 ? y0 + 14 * p : y0);
+    /* the observed statistic: a pin */
+    const sx = X(Math.max(-L, Math.min(L, A.stat)));
+    const pinTop = y0 + 22 * p;
+    ctx.strokeStyle = T.data; ctx.lineWidth = 2.5 * p; ctx.beginPath(); ctx.moveTo(sx, ax); ctx.lineTo(sx, pinTop); ctx.stroke();
+    ctx.fillStyle = T.data; ctx.beginPath(); ctx.arc(sx, pinTop, 5 * p, 0, 7); ctx.fill();
+    ctx.font = `700 ${12 * p}px ${T.mono}`; ctx.textBaseline = 'middle'; const right = sx < (x0 + x1) / 2;
+    ctx.textAlign = right ? 'left' : 'right';
+    lab(ctx, VDI18N.t('your {s} = {v}', { s: statName(A), v: num(A.stat, 3) }), sx + (right ? 10 : -10) * p, pinTop);
+    if (!S.blind) { ctx.fillStyle = T.p; ctx.font = `600 ${11.5 * p}px ${T.mono}`; lab(ctx, VDI18N.t('p value {p}', { p: pIs(A.p) }), sx + (right ? 10 : -10) * p, pinTop + 16 * p); }
+  }
+  function drawA() {
+    if (!T || !WA) return;
+    const p = proj(), ctx = ctxA;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, WA, HA);
+    const pad = 14 * p, split = Math.round(HA * (isP(settings()) ? 0.36 : 0.4));
+    drawSample(ctx, pad, WA - pad, 8 * p, split, p);
+    ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(pad, split + 6.5); ctx.lineTo(WA - pad, split + 6.5); ctx.stroke();
+    drawNull(ctx, pad, WA - pad, split + 14 * p, HA - 2, p);
+  }
+
+  /* ---------- picture B: many studies and the power curve ---------- */
+  const SPL = !(window.VD && VD.split) ? { f: () => 0.56, place() {}, set() {} } : VD.split(canB, { key: 'runs', axis: () => (WB > 560 ? 'x' : 'y'), def: (a) => (a === 'x' ? 0.56 : 0.52), min: 0.35, max: 0.72,
+    snaps: [0.5, 2 / 3], label: 'Divider between the studies and the power curve', onChange: () => { needB = true; } });
+  function histRange(P) { const l = Math.abs(lambdaOf(P)); return Math.min(14, Math.max(4.5, l + 4.2)); }
+  function drawHist(ctx, x0, y0, x1, y1, p) {
+    const P = settings(), run = S.run, df = theoryDf(P), D = nullDist(df), L = histRange(P), nb = 40, bw = 2 * L / nb;
+    const X = (z) => x0 + (z + L) / (2 * L) * (x1 - x0), ax = y1 - 22 * p, top = y0 + 36 * p;
+    const rej = new Array(nb).fill(0), keep = new Array(nb).fill(0); let N = 0, K = 0, out = 0;
+    if (run) for (let i = 0; i < run.stat.length; i++) {
+      const s = run.stat[i], r = reject(pFor(s, run.df[i], P.tail), P.alpha); N++; if (r) K++;
+      const b = Math.floor((s + L) / bw); if (b < 0 || b >= nb) { out++; continue; } (r ? rej : keep)[b]++;
+    }
+    const total = S.count, peak = Math.max(D.pdf(0) * total * bw, ...rej.map((v, i) => v + keep[i]), 1), Y = (c) => ax - c / peak * (ax - top);
+    /* the rejection region */
+    const [lo, hi] = critical(df, P.tail, P.alpha);
+    ctx.fillStyle = T.crit; ctx.globalAlpha = 0.1;
+    if (isFinite(hi) && hi < L) ctx.fillRect(X(hi), top - 10 * p, x1 - X(hi), ax - top + 10 * p);
+    if (isFinite(lo) && lo > -L) ctx.fillRect(x0, top - 10 * p, X(lo) - x0, ax - top + 10 * p);
+    ctx.globalAlpha = 1;
+    for (let b = 0; b < nb; b++) {
+      const u = X(-L + b * bw) + 0.5, w = Math.max(1, X(-L + (b + 1) * bw) - X(-L + b * bw) - 1);
+      if (keep[b]) { ctx.fillStyle = T.keep; ctx.fillRect(u, Y(keep[b]), w, ax - Y(keep[b])); }
+      if (rej[b]) { ctx.fillStyle = T.p; ctx.fillRect(u, Y(keep[b] + rej[b]), w, Y(keep[b]) - Y(keep[b] + rej[b])); }
+    }
+    /* studies landing: the newest few fall into their bin */
+    const now = performance.now();
+    S.drops = S.drops.filter((q) => now - q.t < 450);
+    for (const q of S.drops) {
+      const f = Math.min(1, (now - q.t) / 450), u = X(Math.max(-L, Math.min(L, q.s)));
+      ctx.fillStyle = q.r ? T.p : T.keep; ctx.globalAlpha = 1 - 0.6 * f; ctx.beginPath(); ctx.arc(u, top - 6 * p + (ax - top) * f * f * 0.9, 3 * p, 0, 7); ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+    /* the null curve scaled to the number of studies asked for */
+    ctx.strokeStyle = T.ink; ctx.lineWidth = 1.6 * p; ctx.setLineDash([6 * p, 4 * p]); ctx.beginPath();
+    for (let i = 0; i <= 200; i++) { const z = -L + 2 * L * i / 200, v = Y(D.pdf(z) * total * bw); i ? ctx.lineTo(X(z), v) : ctx.moveTo(X(z), v); }
+    ctx.stroke(); ctx.setLineDash([]);
+    ctx.strokeStyle = T.crit; ctx.lineWidth = 1.4 * p; ctx.setLineDash([3 * p, 3 * p]);
+    for (const cv of [lo, hi]) if (isFinite(cv) && Math.abs(cv) < L) { ctx.beginPath(); ctx.moveTo(X(cv), top - 10 * p); ctx.lineTo(X(cv), ax); ctx.stroke(); }
+    ctx.setLineDash([]);
+    ctx.strokeStyle = T.muted; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(x0, ax + 0.5); ctx.lineTo(x1, ax + 0.5); ctx.stroke();
+    ctx.fillStyle = T.ink; ctx.font = `${10.5 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    const stz = L > 9 ? 4 : L > 6 ? 2 : 1;
+    for (let z = -Math.floor(L / stz) * stz; z <= L; z += stz) ctx.fillText(num(z, 0), X(z), ax + 4);
+    ctx.textAlign = 'left'; ctx.font = `600 ${11 * p}px ${T.mono}`; ctx.textBaseline = 'top';
+    const truthTxt = VDI18N.t(Math.abs(P.truth - P.mu0) < 1e-12 ? 'H₀ true' : 'H₀ false');
+    lab(ctx, VDI18N.t('{n} of {N} studies: their {s}', { n: big(N), N: big(total), s: statName(S.A) }) + ` (${truthTxt})`, x0, y0);
+    ctx.font = `${10.5 * p}px ${T.mono}`; ctx.fillStyle = T.muted;
+    lab(ctx, VDI18N.t('dashed: the null curve for {N} studies', { N: big(total) }), x0, y0 + 15 * p);
+    if (out) { ctx.textAlign = 'right'; lab(ctx, VDI18N.t('{k} beyond the edges', { k: big(out) }), x1, y0 + 15 * p); }
+    if (!N) { ctx.fillStyle = T.muted; ctx.textAlign = 'center'; ctx.font = `${12 * p}px ${T.mono}`; lab(ctx, VDI18N.t('Press Play to run the studies'), (x0 + x1) / 2, (top + ax) / 2); }
+  }
+  function curveRange() { const c = C(); return [c.tr[0], c.tr[1]]; }
+  function drawPower(ctx, x0, y0, x1, y1, p) {
+    const P = settings(), c = C(), [a, b] = curveRange(), left = x0 + 34 * p, ax = y1 - 34 * p, top = y0 + 22 * p;
+    const X = (v) => left + (v - a) / (b - a) * (x1 - left), Y = (f) => ax - f * (ax - top);
+    ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.beginPath();
+    for (let f = 0; f <= 1.0001; f += 0.25) { ctx.moveTo(left, Y(f) + 0.5); ctx.lineTo(x1, Y(f) + 0.5); }
+    ctx.stroke();
+    ctx.fillStyle = T.muted; ctx.font = `${10.5 * p}px ${T.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    for (let f = 0; f <= 1.0001; f += 0.25) ctx.fillText(num(f, 2), left - 4, Y(f));
+    const st = niceStep(b - a, Math.max(3, (x1 - left) / (70 * p)));
+    ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    for (let v = Math.ceil(a / st - 1e-9) * st; v <= b + 1e-9; v += st) { ctx.fillText(tickText(v, st), X(v), ax + 4); }
+    ctx.fillText(VDI18N.t('true value') + (c.unit ? ` (${c.unit})` : ''), (left + x1) / 2, ax + 18 * p);
+    /* α and the H0 value */
+    ctx.strokeStyle = T.crit; ctx.lineWidth = 1.2 * p; ctx.setLineDash([3 * p, 3 * p]); ctx.beginPath(); ctx.moveTo(left, Y(P.alpha)); ctx.lineTo(x1, Y(P.alpha));
+    ctx.moveTo(X(P.mu0), top); ctx.lineTo(X(P.mu0), ax); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = T.crit; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; lab(ctx, 'α', left + 3, Y(P.alpha) - 1);
+    ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; lab(ctx, 'H₀', X(P.mu0), top - 1);
+    /* the theory curve */
+    if (!S.blind) {
+      const ck = JSON.stringify([S.setup, P.n, P.n2, P.sigma, P.sigma2, P.tail, P.alpha]);
+      if (!S.curve || S.curve.key !== ck) S.curve = { key: ck, f: Array.from({ length: 121 }, (_, i) => power(Object.assign({}, P, { truth: a + (b - a) * i / 120 }))) };
+      ctx.strokeStyle = T.tru; ctx.lineWidth = 2.4 * p; ctx.beginPath();
+      S.curve.f.forEach((f, i) => { const v = a + (b - a) * i / 120; i ? ctx.lineTo(X(v), Y(f)) : ctx.moveTo(X(v), Y(f)); });
+      ctx.stroke();
+    }
+    /* simulated points with ±1 standard error, for these settings */
+    const key = curveKey();
+    for (const d of S.done) {
+      if (d.key !== key) continue;
+      const f = tallyRun(d, P.tail, P.alpha) / d.stat.length, se = Math.sqrt(f * (1 - f) / d.stat.length), u = X(d.truth);
+      if (u < left - 2 || u > x1 + 2) continue;
+      ctx.strokeStyle = T.ink; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(u, Y(f - se)); ctx.lineTo(u, Y(f + se)); ctx.stroke();
+      ctx.fillStyle = T.p; ctx.strokeStyle = T.canvas; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(u, Y(f), 4.2 * p, 0, 7); ctx.fill(); ctx.stroke();
+    }
+    /* the current truth */
+    const u = X(P.truth);
+    ctx.strokeStyle = T.tru; ctx.lineWidth = 1.5 * p; ctx.globalAlpha = 0.7; ctx.beginPath(); ctx.moveTo(u, top); ctx.lineTo(u, ax); ctx.stroke(); ctx.globalAlpha = 1;
+    if (!S.blind) { ctx.fillStyle = T.tru; ctx.beginPath(); ctx.arc(u, Y(power(P)), 4 * p, 0, 7); ctx.fill(); }
+    ctx.fillStyle = T.ink; ctx.font = `600 ${11 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    lab(ctx, VDI18N.t('Power curve: P(reject H₀)'), x0, y0);
+    ctx.font = `${10.5 * p}px ${T.mono}`; ctx.fillStyle = T.muted; ctx.textAlign = 'right';
+    lab(ctx, two(P) ? `n₁ = ${P.n}, n₂ = ${P.n2}` : `n = ${P.n}`, x1, y0);
+  }
+  function drawB() {
+    if (!T || !WB) return;
+    const p = proj(), ctx = ctxB, f = SPL.f(), wide = WB > 560, pad = 12 * p;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, WB, HB);
+    if (wide) { const s = Math.round(WB * f); drawHist(ctx, pad, 8 * p, s - pad, HB - 4, p); drawPower(ctx, s + pad, 8 * p, WB - pad, HB - 4, p); }
+    else { const s = Math.round(HB * f); drawHist(ctx, pad, 8 * p, WB - pad, s - 4, p); drawPower(ctx, pad, s + 8 * p, WB - pad, HB - 4, p); }
+  }
+
+  /* ---------- the runs ---------- */
+  function setPlay(on) { S.play = on; $('play').textContent = on ? VDI18N.t('Pause') : VDI18N.t('Play'); $('play').classList.toggle('attn', !on); }
+  function newRun() { S.run = { key: runKey(), ckey: curveKey(), truth: settings().truth, rng: VDSTATS.rng(runSeed(S.setup, S.draw)), stat: [], df: [] }; S.drops = []; }
+  function addStudies(k, animate) {
+    const P = settings(), run = S.run, m = Math.min(k, S.count - run.stat.length); if (m <= 0) return;
+    const start = run.stat.length; runStudies(P, run.rng, m, run);
+    if (animate) { const now = performance.now(); for (let i = Math.max(start, run.stat.length - 12); i < run.stat.length; i++) S.drops.push({ s: run.stat[i], r: reject(pFor(run.stat[i], run.df[i], P.tail), P.alpha), t: now - (run.stat.length - i) * 20 }); }
+    if (run.stat.length >= S.count) finish();
+  }
+  function finish() {
+    const run = S.run; setPlay(false);
+    S.done = S.done.filter((d) => !(d.key === run.ckey && d.truth === run.truth));
+    S.done.push({ key: run.ckey, truth: run.truth, stat: run.stat.slice(), df: run.df.slice() });
+    if (S.done.length > 60) S.done.shift();
+    readouts(); tally();
+  }
+  function play() {
+    if (S.play) { setPlay(false); return; }
+    if (!S.run || S.run.key !== runKey() || S.run.stat.length >= S.count) newRun();
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) { addStudies(S.count, false); needB = true; tally(); return; }
+    setPlay(true);
+  }
+  /* the power curve by simulation: 1,000 studies (or the chosen count) at 13 true values across the slider */
+  function sweep() {
+    setPlay(false);
+    const c = C(), base = settings(), [a, b] = curveRange(), key = curveKey(), N = S.count;
+    for (let i = 0; i <= 12; i++) {
+      const v = Number((a + (b - a) * i / 12).toPrecision(10)), P = Object.assign({}, base, { truth: v });
+      const res = runStudies(P, VDSTATS.rng(runSeed(S.setup, S.draw)), N);
+      S.done = S.done.filter((d) => !(d.key === key && Math.abs(d.truth - v) < 1e-12));
+      S.done.push({ key, truth: v, stat: res.stat, df: res.df });
+    }
+    while (S.done.length > 80) S.done.shift();
+    void c; needB = true; readouts();
+  }
+  function tally() {
+    const P = settings(), run = S.run, N = run ? run.stat.length : 0, K = run ? tallyRun(run, P.tail, P.alpha) : 0, f = N ? K / N : NaN, h0 = Math.abs(P.truth - P.mu0) < 1e-12;
+    if (!N) { $('tally').innerHTML = `<span>${VDI18N.t('No studies yet. Play runs {N} studies with these settings.', { N: big(S.count) })}</span>`; return; }
+    const se = Math.sqrt(f * (1 - f) / N);
+    let h = `<span>${VDI18N.t('Studies')} <b>${big(N)}</b></span><span class="rej">${VDI18N.t('Rejected H₀')} <b>${big(K)}</b></span><span>${VDI18N.t('Fraction rejected')} <b>${num(f, 3)} ± ${num(se, 3)}</b></span>`;
+    h += h0 ? `<span>${VDI18N.t('H₀ is true, so every rejection is a Type I error. Compare the fraction with α = {a}.', { a: num(P.alpha, 2) })}</span>`
+      : `<span>${VDI18N.t('H₀ is false: the fraction rejected is the power. Type II errors')} <b>${big(N - K)}</b> (β = ${num(1 - f, 3)})</span>`;
+    $('tally').innerHTML = h;
+  }
+
+  /* ---------- the rail ---------- */
+  function readouts() {
+    const P = settings(), A = S.A, c = C(), dd = (a, b, cls) => `<div${cls ? ` class="${cls}"` : ''}><dt>${a}</dt><dd translate="no">${b}</dd></div>`;
+    const run = S.run, N = run ? run.stat.length : 0, K = run ? tallyRun(run, P.tail, P.alpha) : 0;
+    let h = dd(VDI18N.t('Test statistic'), `${statName(A)} = ${num(A.stat, 3)}`);
+    h += dd(VDI18N.t('Degrees of freedom'), A.df > 0 ? num(A.df, Number.isInteger(A.df) ? 0 : 2) : VDI18N.t('none (normal)'));
+    h += dd(VDI18N.t('p value'), S.blind ? '?' : pText(A.p));
+    h += dd(VDI18N.t('Decision at α = {a}', { a: num(P.alpha, 2) }), S.blind ? '?' : reject(A.p, P.alpha) ? VDI18N.t('reject H₀') : VDI18N.t('do not reject H₀'));
+    h += dd(VDI18N.t('True effect'), `${num(P.truth - P.mu0, c.dec)}${c.unit ? ' ' + c.unit : ''}`);
+    h += dd(VDI18N.t('Effect in standard errors'), num(lambdaOf(P), 2));
+    h += dd(VDI18N.t('Studies run'), big(N));
+    h += dd(VDI18N.t('Rejected H₀'), N ? `${big(K)} (${num(K / N, 3)})` : '—');
+    h += dd(VDI18N.t('Theory power at this truth'), S.blind ? '?' : num(power(P), 3));
+    $('out').innerHTML = h;
+  }
+  function sliderOut() {
+    const P = settings(), c = C(), u = c.unit ? ' ' + c.unit : '';
+    $('oN').textContent = P.n; $('oN2').textContent = P.n2 || '';
+    if (c.sigma) $('oSig').textContent = (c.kind === 't2' ? `σ₁ = ${sig(P.sigma)}, σ₂ = ${sig(P.sigma2)}` : `${sig(P.sigma)}`) + u;
+    $('oTruth').textContent = `${num(P.truth, c.dec)}${u}`;
+    $('drawNo').textContent = VDI18N.t('Draw {d}', { d: S.draw });
+  }
+  function syncControls() {
+    const P = settings(), c = C();
+    for (const b of document.querySelectorAll('#tailSeg button')) b.setAttribute('aria-pressed', String(b.dataset.tail === P.tail));
+    for (const b of document.querySelectorAll('#alphaSeg button')) b.setAttribute('aria-pressed', String(+b.dataset.a === P.alpha));
+    const n = $('sN'); n.min = c.nr[0]; n.max = c.nr[1]; n.value = P.n;
+    $('n2Row').hidden = !two(P); if (two(P)) { const m = $('sN2'); m.min = c.nr[0]; m.max = c.nr[1]; m.value = P.n2; }
+    $('nLab').textContent = two(P) ? VDI18N.t('First sample size n₁') : P.kind === 'pair' ? VDI18N.t('Pairs n') : VDI18N.t('Sample size n');
+    $('sigRow').hidden = !c.sigma;
+    if (c.sigma) { const s = $('sSig'); s.min = c.sr[0]; s.max = c.sr[1]; s.step = c.sr[2]; s.value = P.sigma;
+      $('sigLab').textContent = c.kind === 'z1' || c.kind === 'z2' ? VDI18N.t('Known spread σ') : c.kind === 'pair' ? VDI18N.t('Spread of the differences σ_d (unknown to the test)') : VDI18N.t('Spread σ (unknown to the test)'); }
+    const t = $('sTruth'); t.min = c.tr[0]; t.max = c.tr[1]; t.step = c.tr[2]; t.value = P.truth;
+    $('truthLab').textContent = VDI18N.t({ t1: 'True mean μ', z1: 'True mean μ', p1: 'True proportion p', z2: 'True difference μ₁ − μ₂', t2: 'True difference μ₁ − μ₂', p2: 'True difference p_A − p_B', pair: 'True mean difference μ_d' }[c.kind]);
+    sliderOut();
+  }
+  function applySetup(k) {
+    const c = SETUPS[k]; S.setup = k; S.draw = 1; S.run = null; setPlay(false);
+    S.P = { n: c.n, n2: c.n2, sigma: c.sigma, sigma2: c.sigma2, truth: c.truth, tail: c.tail, alpha: S.P ? S.P.alpha : 0.05 };
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === k));
+    $('presetHint').textContent = c.hint;
+    $('question').innerHTML = `${VDI18N.t(c.q)}<small>${VDI18N.t('Simulated data. The book\'s four steps are under the picture.')}</small>`;
+    syncControls(); changed();
+  }
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applySetup(b.dataset.p));
+  for (const b of document.querySelectorAll('#tailSeg button')) b.addEventListener('click', () => { S.P.tail = b.dataset.tail; syncControls(); changed(true); });
+  for (const b of document.querySelectorAll('#alphaSeg button')) b.addEventListener('click', () => { S.P.alpha = +b.dataset.a; syncControls(); changed(true); });
+  $('sN').addEventListener('input', () => { S.P.n = +$('sN').value; sliderOut(); changed(); });
+  $('sN2').addEventListener('input', () => { S.P.n2 = +$('sN2').value; sliderOut(); changed(); });
+  $('sSig').addEventListener('input', () => { const c = C(); S.P.sigma = +$('sSig').value; if (c.sigma2) S.P.sigma2 = c.kind === 'z2' ? S.P.sigma : Number((S.P.sigma * c.sigma2 / c.sigma).toPrecision(6)); sliderOut(); changed(); });
+  $('sTruth').addEventListener('input', () => { S.P.truth = Number((+$('sTruth').value).toPrecision(10)); sliderOut(); changed(); });
+  /* each slider's readout takes a typed value (VD.typeIn): click it, type, Enter */
+  const typeSlider = (id, out, label) => { if (!(window.VD && VD.typeIn)) return; const el = $(id);
+    VD.typeIn($(out), { get: () => +el.value, set: (v) => { el.value = v; el.dispatchEvent(new Event('input', { bubbles: true })); }, min: () => +el.min, max: () => +el.max, step: () => +el.step, label, can: () => !S.blind || id !== 'sTruth' }); };
+  typeSlider('sN', 'oN', 'Sample size n'); typeSlider('sN2', 'oN2', 'Second sample size n₂'); typeSlider('sSig', 'oSig', 'Spread σ'); typeSlider('sTruth', 'oTruth', 'True value');
+  $('makeNull').addEventListener('click', () => { S.P.truth = C().mu0; syncControls(); changed(); });
+  $('sweep').addEventListener('click', sweep);
+  $('newDraw').addEventListener('click', () => { S.draw++; S.run = null; setPlay(false); sliderOut(); changed(); });
+  $('countSel').addEventListener('change', () => { S.count = +$('countSel').value; if (S.run && S.run.stat.length > S.count) { S.run.stat.length = S.count; S.run.df.length = S.count; } needB = true; tally(); readouts(); });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; changed(true); });
+  $('play').addEventListener('click', play);
+  $('reset').addEventListener('click', () => { setPlay(false); S.run = null; S.drops = []; needB = true; tally(); readouts(); });
+  for (const [cv, f] of [[canA, null], [canB, null]]) cv.addEventListener('keydown', (e) => { void f; if (e.key === ' ') { $('play').click(); e.preventDefault(); } });
+
+  /* ---------- the loop ---------- */
+  let last = performance.now();
+  function frame(now) {
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    if (S.play && S.run) {
+      S.acc = (S.acc || 0) + dt * S.count / 5;   /* a run takes about five seconds, whatever its size */
+      const k = Math.floor(S.acc); if (k > 0) { S.acc -= k; addStudies(k, true); tally(); readouts(); }
+      needB = true;
+    }
+    if (S.drops.length) needB = true;
+    if (needA) { needA = false; drawA(); }
+    if (needB) { needB = false; drawB(); }
+    requestAnimationFrame(frame);
+  }
+  function resize() {
+    dpr = window.devicePixelRatio || 1;
+    const a = $('paneA').getBoundingClientRect(), b = $('paneB').getBoundingClientRect();
+    WA = a.width; HA = a.height; WB = b.width; HB = b.height;
+    canA.width = Math.round(WA * dpr); canA.height = Math.round(HA * dpr); canB.width = Math.round(WB * dpr); canB.height = Math.round(HB * dpr);
+    SPL.place(); needA = needB = true;
+  }
+  const retheme = () => { tokens(); needA = needB = true; };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'data-vd-look'] });
+  VD.projector({ onChange: resize });
+  if (window.VD && VD.panel) VD.panel({ play: '#play', reset: '#reset' });
+  if (window.VD && VD.howTo) VD.howTo({ src: 'media/how-this-works/errors-and-power.mp4', poster: 'media/how-this-works/errors-and-power.jpg' });
+  /* Readings: the settings, the test of your sample and the tally of the studies run */
+  window.vdVersion = 'hypothesis-tests@2026-11-19';
+  window.vdShowCols = [['alpha', 'α'], ['n', 'n'], ['effect', VDI18N.t('effect')], ['statistic', VDI18N.t('statistic')], ['p_value', 'p'], ['fraction', VDI18N.t('fraction rejected')]];
+  window.vdReadingRow = () => {
+    const P = settings(), A = S.A, c = C(), run = S.run, N = run ? run.stat.length : 0, K = run ? tallyRun(run, P.tail, P.alpha) : 0;
+    const test = { z1: 'z, one mean', t1: 't, one mean', p1: 'z, one proportion', z2: 'z, two means', t2: 'Welch t, two means', p2: 'z, two proportions', pair: 't, matched pairs' }[P.kind];
+    const setup = { g: 'Pendulum g', drag: 'Drop timer', det: 'Detector efficiency', die: 'A die', gates: 'Two photogates', watch: 'Two stopwatch timers', det2: 'Two detectors', pair: 'New photogate' }[S.setup] || S.setup;
+    return { setup, test, tail: P.tail, alpha: P.alpha, n: P.n, n2: two(P) ? P.n2 : '', sigma: c.sigma ? P.sigma : '', truth: Number(P.truth.toPrecision(8)),
+      effect: Number((P.truth - P.mu0).toFixed(c.dec + 1)), draw: S.draw, estimate: Number(A.est.toPrecision(6)), statistic: Number(A.stat.toFixed(3)),
+      df: A.df > 0 ? Number(A.df.toFixed(2)) : '', p_value: S.blind ? '' : Number(A.p.toPrecision(4)), decision: S.blind ? '' : reject(A.p, P.alpha) ? 'reject H₀' : 'do not reject H₀',
+      studies: N || '', rejected: N ? K : '', fraction: N ? Number((K / N).toFixed(4)) : '', power_theory: S.blind ? '' : Number(power(P).toFixed(4)) };
+  };
+  if (window.VD && VD.describe) VD.describe(canA, () => {
+    const P = settings(), A = S.A, c = C();
+    const out = [c.q, h0Text(P).join('; ') + '.', `The ${statName(A)} statistic of this sample is ${num(A.stat, 3)}.`];
+    if (!S.blind) out.push(`The p value, the shaded area, is ${pText(A.p)}; at α = ${P.alpha} the decision is to ${reject(A.p, P.alpha) ? 'reject' : 'not reject'} H₀.`);
+    return out;
+  });
+  if (window.VD && VD.describe) VD.describe(canB, () => {
+    const P = settings(), run = S.run, N = run ? run.stat.length : 0, K = run ? tallyRun(run, P.tail, P.alpha) : 0;
+    return [N ? { t: `${N} studies run; ${K} rejected H₀, a fraction ${num(K / N, 3)}.`, live: !S.play } : 'No studies run yet.', S.blind ? '' : `The theory power at this truth is ${num(power(P), 3)}.`].filter(Boolean);
+  });
+  tokens(); new ResizeObserver(resize).observe($('paneA')); new ResizeObserver(resize).observe($('paneB')); resize(); applySetup('g');
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  window.__ht = { S, SETUPS, applySetup, settings, play, sweep, power, analyze, simulate, tallyRun, critical, finishNow: () => { if (!S.run || S.run.key !== runKey() || S.run.stat.length >= S.count) newRun(); addStudies(S.count, false); needB = true; tally(); readouts(); }, draw: () => { needA = needB = true; } };
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

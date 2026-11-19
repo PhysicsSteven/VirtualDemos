@@ -1060,6 +1060,27 @@
       alt: [{ table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.setup === 'table'), cols: ['row', 'rule', 'n', 'sum'] }] },
   });
   /* ==CALCULUS END== */
+  /* ==STATS tests START== Statistics for physics worksheets (OpenStax Introductory Statistics, 2026-11-19), in no course yet.
+     Hypothesis Tests, errors-and-power: Tables 1 to 3 have one set of columns (Reading | α | n | True effect | Studies | Rejections |
+     Fraction); a series whose true effect varies goes to Table 2, one whose n varies at a nonzero effect to Table 3, and a series
+     recorded with no studies run (Reset first) to Table 4 (Reading | Setup | Test | Statistic | p value | Decision).
+     One Way ANOVA, one-way-anova: Table 1 Reading | Gap | Spread s | F | p value | Gap² (typed); a series whose spread varies goes to
+     Table 2 (… | 1/s², typed); a series of null runs to Table 3 (Reading | k | n | α | Studies | False alarms | Fraction); a series
+     in the two variances mode to Table 4 (Reading | s₁ | s₂ | F | p value). */
+  const STATS_TESTS = ['errors-and-power', 'one-way-anova'];
+  ENABLED.push(...STATS_TESTS); GRAPHS.push(...STATS_TESTS); GRAPH_EVERY_TABLE.push(...STATS_TESTS);
+  CURVE_TABLES['errors-and-power'] = [1, 2];   /* power against the effect and against n: curves, read rather than fitted */
+  Object.assign(FROM_DEMO, {
+    'errors-and-power': { demo: 'Hypothesis Tests', cols: ['row', 'alpha', 'n', 'effect', 'studies', 'rejected', 'fraction'],
+      alt: [{ table: 3, when: (rows) => rows.length > 0 && rows.every((r) => r.studies === '' || r.studies == null), cols: ['row', 'setup', 'test', 'statistic', 'p_value', 'decision'] },
+      { table: 1, when: (rows) => rows.length > 1 && new Set(rows.map((r) => String(r.effect))).size > 1, cols: ['row', 'alpha', 'n', 'effect', 'studies', 'rejected', 'fraction'] },
+      { table: 2, when: (rows) => rows.length > 1 && new Set(rows.map((r) => String(r.n))).size > 1 && rows.every((r) => +r.effect !== 0), cols: ['row', 'alpha', 'n', 'effect', 'studies', 'rejected', 'fraction'] }] },
+    'one-way-anova': { demo: 'One Way ANOVA', cols: ['row', 'gap', 'spread', 'F', 'p_value', null],
+      alt: [{ table: 3, when: (rows) => rows.length > 0 && rows.every((r) => r.mode === 'two variances'), cols: ['row', 'spread', 'spread2', 'F', 'p_value'] },
+      { table: 2, when: (rows) => rows.length > 0 && rows.every((r) => r.studies !== '' && r.studies != null), cols: ['row', 'k', 'n', 'alpha', 'studies', 'false_alarms', 'fraction'] },
+      { table: 1, when: (rows) => rows.length > 1 && new Set(rows.map((r) => String(r.spread))).size > 1, cols: ['row', 'gap', 'spread', 'F', 'p_value', null] }] },
+  });
+  /* ==STATS tests END== */
   /* ==FORMULAS START== */
   /* Spreadsheet formulas in the data tables, and the curve fits of the graphs. Plain functions with no page access, so
      curriculum/validation/test_worksheet_formulas.cjs runs them in Node. Formulas are read by a small parser of their own (no eval):
