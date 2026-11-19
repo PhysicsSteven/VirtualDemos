@@ -1367,6 +1367,19 @@
       "Ampère's law",
       "calculus"
      ]
+    },
+    {
+     "demo": "rates-and-optimization",
+     "title": "Related Rates and Optimization",
+     "desc": "One quantity drives a whole scene: a ladder slides down a wall, a cone fills with water, a shadow grows as you walk from a lamp, with every rate shown and the chain rule checked against the motion. Then find the best box, field and can, where the derivative is zero, and the physics: the lifeguard's fastest path is Snell's law (Fermat's principle), and the longest throw is at 45° on level ground and lower from a height.",
+     "tags": [
+      "related rates",
+      "chain rule",
+      "optimization",
+      "Fermat's principle",
+      "Snell's law",
+      "projectile range"
+     ]
     }
    ]
   },

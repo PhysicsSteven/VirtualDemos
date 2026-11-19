@@ -1,0 +1,897 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="lib/theme.js"></script>
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
+<title>Related Rates and Optimization</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css: the scene colors, the two panes and the controls card */
+:root { --q: #8f5000; --rate: #0f766e; --best: #a21caf; --drv: #be123c; --water: #2563eb; --sand: #e3cf9f; --grass: #a3c47a; --wood: #92400e; --metal: #64748b; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --q: #e8a440; --rate: #5eead4; --best: #f0abfc; --drv: #fb7185; --water: #60a5fa; --sand: #6b5a35; --grass: #3f5f22; --wood: #d6a35c; --metal: #a8b3c4; } }
+:root[data-theme="dark"] { --q: #e8a440; --rate: #5eead4; --best: #f0abfc; --drv: #fb7185; --water: #60a5fa; --sand: #6b5a35; --grass: #3f5f22; --wood: #d6a35c; --metal: #a8b3c4; }
+.stage { position: relative; display: flex; flex-direction: column; min-height: min-content; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.stage-ctl .note { flex: 1 1 100%; font-size: 0.8rem; color: var(--muted); }
+.stage-ctl .clock { font-family: var(--font-mono); font-size: 0.9rem; white-space: nowrap; }
+.pane { position: relative; flex: 1 1 auto; min-height: 380px; }
+.lower { position: relative; flex: none; height: 270px; border-top: 1px solid var(--line); background: var(--canvas); }
+.pane canvas, .lower canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; outline: none; touch-action: none; cursor: crosshair; }
+.shelf { display: flex; flex-wrap: wrap; align-items: stretch; gap: 12px; padding: 10px; border-top: 1px solid var(--line); background: var(--surface); }
+.shelf-card { flex: 1 1 260px; display: grid; grid-template-columns: minmax(0, 1fr); align-content: start; gap: 7px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--canvas); }
+.shelf-card > .card-title { font-size: 0.78rem; font-weight: 700; color: var(--muted); }
+.shelf-card .prow { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 2px 8px; font-size: 0.86rem; }
+.shelf-card .prow[hidden] { display: none; }
+.shelf-card .prow input[type="range"] { grid-column: 1 / -1; width: 100%; }
+.shelf-card .prow output { font-family: var(--font-mono); font-size: 0.84rem; white-space: nowrap; }
+.shelf-card .prow.choice label { font-weight: 700; color: var(--drv); }
+.shelf-card .row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; font-size: 0.86rem; }
+.sw { display: inline-block; width: 22px; height: 0; border-top: 3px solid; vertical-align: middle; margin-right: 6px; }
+.sw.q { border-color: var(--q); } .sw.rate { border-color: var(--rate); border-top-style: dashed; } .sw.best { border-color: var(--best); border-top-style: dotted; }
+dl.formulas { display: grid; grid-template-columns: minmax(0, 1fr); gap: 5px; margin: 0; }
+dl.formulas dd { margin: 0; font-family: var(--font-mono); font-size: 0.9rem; overflow-wrap: anywhere; }
+dl.formulas dt { font-size: 0.78rem; color: var(--muted); margin-top: 4px; }
+.chips .chips-label { flex: 1 1 100%; font-size: 0.78rem; font-weight: 700; color: var(--muted); margin-top: 4px; }
+#out dd.ok { color: var(--rate); }
+@media (min-width: 821px) { .bench > .stage { align-self: start; min-height: max(760px, 100%); } }
+@media (max-width: 820px) { .pane { min-height: 0; height: 330px; flex: none; } .lower { height: 240px; } .shelf-card { flex: 1 1 100%; } }
+</style>
+<link rel="stylesheet" id="vd-paper" href="lib/paper.css">
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Related Rates and Optimization</h1>
+      <p>One quantity drives a whole scene. A ladder slides down a wall, a cone fills with water, a shadow grows as you walk from a lamp: see every rate change together and check the chain rule live. Then fold a box, fence a field, shape a can, run to a swimmer or aim a throw, and find the best choice where the slope of the graph is zero. The lifeguard's best path is Snell's law of refraction.</p>
+    </div>
+    <div class="bar-right">
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/rates-and-optimization.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/rates-and-optimization.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM11 2h5v1h-5zM17 2h9v1h-9zM30 2h1v1h-1zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM11 3h1v1h-1zM14 3h2v1h-2zM17 3h2v1h-2zM20 3h1v1h-1zM23 3h2v1h-2zM27 3h1v1h-1zM29 3h2v1h-2zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h3v1h-3zM14 4h2v1h-2zM18 4h1v1h-1zM22 4h2v1h-2zM26 4h1v1h-1zM28 4h2v1h-2zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h2v1h-2zM15 5h2v1h-2zM19 5h1v1h-1zM24 5h2v1h-2zM27 5h4v1h-4zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h1v1h-1zM13 6h1v1h-1zM15 6h2v1h-2zM19 6h1v1h-1zM21 6h2v1h-2zM25 6h1v1h-1zM27 6h2v1h-2zM30 6h1v1h-1zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h2v1h-2zM14 7h5v1h-5zM27 7h4v1h-4zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h1v1h-1zM12 9h2v1h-2zM15 9h1v1h-1zM17 9h1v1h-1zM21 9h3v1h-3zM26 9h1v1h-1zM2 10h1v1h-1zM4 10h5v1h-5zM11 10h6v1h-6zM18 10h2v1h-2zM22 10h1v1h-1zM24 10h6v1h-6zM32 10h5v1h-5zM5 11h2v1h-2zM9 11h2v1h-2zM13 11h1v1h-1zM17 11h1v1h-1zM20 11h3v1h-3zM25 11h1v1h-1zM30 11h2v1h-2zM33 11h1v1h-1zM36 11h2v1h-2zM4 12h1v1h-1zM7 12h6v1h-6zM14 12h1v1h-1zM16 12h5v1h-5zM23 12h1v1h-1zM28 12h3v1h-3zM32 12h3v1h-3zM36 12h3v1h-3zM2 13h2v1h-2zM10 13h1v1h-1zM13 13h1v1h-1zM15 13h1v1h-1zM17 13h1v1h-1zM20 13h1v1h-1zM23 13h1v1h-1zM29 13h2v1h-2zM32 13h3v1h-3zM38 13h1v1h-1zM2 14h1v1h-1zM8 14h1v1h-1zM10 14h1v1h-1zM17 14h1v1h-1zM19 14h1v1h-1zM21 14h2v1h-2zM24 14h5v1h-5zM30 14h9v1h-9zM2 15h1v1h-1zM4 15h2v1h-2zM7 15h1v1h-1zM11 15h2v1h-2zM14 15h2v1h-2zM18 15h2v1h-2zM22 15h4v1h-4zM30 15h1v1h-1zM33 15h1v1h-1zM2 16h1v1h-1zM4 16h1v1h-1zM8 16h4v1h-4zM14 16h2v1h-2zM17 16h2v1h-2zM22 16h2v1h-2zM28 16h3v1h-3zM32 16h4v1h-4zM38 16h1v1h-1zM2 17h3v1h-3zM10 17h1v1h-1zM12 17h1v1h-1zM14 17h5v1h-5zM20 17h6v1h-6zM33 17h2v1h-2zM37 17h1v1h-1zM2 18h1v1h-1zM4 18h1v1h-1zM8 18h1v1h-1zM13 18h1v1h-1zM15 18h3v1h-3zM20 18h2v1h-2zM24 18h1v1h-1zM26 18h2v1h-2zM29 18h1v1h-1zM31 18h2v1h-2zM34 18h1v1h-1zM36 18h1v1h-1zM38 18h1v1h-1zM3 19h1v1h-1zM6 19h1v1h-1zM9 19h2v1h-2zM12 19h3v1h-3zM17 19h2v1h-2zM20 19h6v1h-6zM37 19h1v1h-1zM2 20h1v1h-1zM6 20h1v1h-1zM8 20h4v1h-4zM14 20h2v1h-2zM23 20h2v1h-2zM28 20h3v1h-3zM33 20h3v1h-3zM37 20h2v1h-2zM4 21h4v1h-4zM9 21h3v1h-3zM13 21h1v1h-1zM18 21h1v1h-1zM20 21h5v1h-5zM26 21h1v1h-1zM28 21h1v1h-1zM32 21h1v1h-1zM38 21h1v1h-1zM4 22h1v1h-1zM6 22h3v1h-3zM14 22h1v1h-1zM16 22h1v1h-1zM19 22h1v1h-1zM21 22h1v1h-1zM24 22h6v1h-6zM31 22h2v1h-2zM34 22h3v1h-3zM3 23h2v1h-2zM6 23h2v1h-2zM11 23h1v1h-1zM13 23h1v1h-1zM15 23h2v1h-2zM18 23h2v1h-2zM21 23h1v1h-1zM23 23h1v1h-1zM25 23h1v1h-1zM27 23h2v1h-2zM30 23h2v1h-2zM35 23h1v1h-1zM37 23h1v1h-1zM4 24h3v1h-3zM8 24h5v1h-5zM15 24h3v1h-3zM19 24h1v1h-1zM22 24h3v1h-3zM26 24h1v1h-1zM28 24h3v1h-3zM32 24h4v1h-4zM37 24h2v1h-2zM5 25h1v1h-1zM13 25h11v1h-11zM25 25h1v1h-1zM28 25h2v1h-2zM31 25h4v1h-4zM37 25h1v1h-1zM3 26h1v1h-1zM8 26h1v1h-1zM10 26h2v1h-2zM13 26h1v1h-1zM17 26h2v1h-2zM21 26h1v1h-1zM24 26h5v1h-5zM30 26h5v1h-5zM36 26h2v1h-2zM2 27h1v1h-1zM4 27h1v1h-1zM6 27h1v1h-1zM10 27h4v1h-4zM15 27h1v1h-1zM17 27h1v1h-1zM20 27h2v1h-2zM23 27h1v1h-1zM25 27h1v1h-1zM30 27h2v1h-2zM33 27h1v1h-1zM2 28h1v1h-1zM4 28h1v1h-1zM6 28h4v1h-4zM11 28h1v1h-1zM13 28h2v1h-2zM17 28h2v1h-2zM26 28h5v1h-5zM33 28h2v1h-2zM37 28h2v1h-2zM2 29h1v1h-1zM5 29h3v1h-3zM9 29h3v1h-3zM13 29h1v1h-1zM15 29h1v1h-1zM17 29h1v1h-1zM21 29h3v1h-3zM29 29h6v1h-6zM2 30h1v1h-1zM4 30h1v1h-1zM8 30h2v1h-2zM13 30h5v1h-5zM19 30h1v1h-1zM21 30h1v1h-1zM26 30h12v1h-12zM10 31h1v1h-1zM12 31h3v1h-3zM16 31h3v1h-3zM20 31h3v1h-3zM25 31h3v1h-3zM29 31h2v1h-2zM34 31h2v1h-2zM2 32h7v1h-7zM11 32h1v1h-1zM13 32h1v1h-1zM15 32h3v1h-3zM20 32h1v1h-1zM22 32h2v1h-2zM26 32h3v1h-3zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM36 32h3v1h-3zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h1v1h-1zM12 33h2v1h-2zM17 33h2v1h-2zM23 33h3v1h-3zM28 33h1v1h-1zM30 33h1v1h-1zM34 33h2v1h-2zM37 33h2v1h-2zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h2v1h-2zM13 34h1v1h-1zM15 34h2v1h-2zM20 34h2v1h-2zM24 34h2v1h-2zM27 34h8v1h-8zM36 34h2v1h-2zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h1v1h-1zM16 35h3v1h-3zM21 35h2v1h-2zM25 35h1v1h-1zM28 35h1v1h-1zM30 35h3v1h-3zM34 35h1v1h-1zM36 35h1v1h-1zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM10 36h1v1h-1zM12 36h5v1h-5zM20 36h1v1h-1zM22 36h1v1h-1zM24 36h1v1h-1zM26 36h1v1h-1zM28 36h2v1h-2zM31 36h1v1h-1zM37 36h2v1h-2zM2 37h1v1h-1zM8 37h1v1h-1zM15 37h2v1h-2zM18 37h1v1h-1zM21 37h3v1h-3zM26 37h1v1h-1zM28 37h5v1h-5zM34 37h1v1h-1zM38 37h1v1h-1zM2 38h7v1h-7zM10 38h3v1h-3zM14 38h3v1h-3zM19 38h1v1h-1zM21 38h1v1h-1zM24 38h1v1h-1zM26 38h3v1h-3zM32 38h1v1h-1zM34 38h5v1h-5z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl" id="strip">
+        <button type="button" class="spin attn" id="play" data-vd-key="play">Play</button>
+        <button type="button" class="btn" id="reset" title="Put the clock or the choice back where this setup started">Reset</button>
+        <span class="clock" id="tclock" translate="no"></span>
+        <button type="button" class="btn" id="best">Go to the best</button>
+        <span class="note" id="note"></span>
+      </div>
+      <div class="pane" id="pane">
+        <canvas id="scene" tabindex="0" role="img" aria-label="The scene. Drag the marked handle to change the quantity that drives it; left and right arrows move it; Space plays or pauses."></canvas>
+      </div>
+      <div class="lower" id="lower">
+        <canvas id="plot" tabindex="0" role="img" aria-label="The graph: the quantity and its rate of change against time, or the quantity and its derivative against the choice, with the best choice marked where the derivative is zero."></canvas>
+      </div>
+      <div class="shelf" id="shelf">
+        <div class="shelf-card" role="group" aria-label="Controls">
+          <span class="card-title" id="ctlTitle">Controls</span>
+          <div class="prow choice"><label for="cs" id="csLab">Choice</label><output for="cs" id="csOut" translate="no"></output><input type="range" id="cs" min="0" max="1000" step="1" value="0"></div>
+          <div class="prow"><label for="p0" id="p0Lab"></label><output for="p0" id="p0Out" translate="no"></output><input type="range" id="p0" min="0" max="1" step="0.01" value="0"></div>
+          <div class="prow"><label for="p1" id="p1Lab"></label><output for="p1" id="p1Out" translate="no"></output><input type="range" id="p1" min="0" max="1" step="0.01" value="0"></div>
+          <div class="prow"><label for="p2" id="p2Lab"></label><output for="p2" id="p2Out" translate="no"></output><input type="range" id="p2" min="0" max="1" step="0.01" value="0"></div>
+          <div class="prow"><label for="p3" id="p3Lab"></label><output for="p3" id="p3Out" translate="no"></output><input type="range" id="p3" min="0" max="1" step="0.01" value="0"></div>
+        </div>
+        <div class="shelf-card" role="group" aria-label="The graph">
+          <span class="card-title">The graph</span>
+          <span><span class="sw q"></span><span id="legQ">The quantity</span></span>
+          <span><span class="sw rate"></span><span id="legR">Its rate</span></span>
+          <span id="legBestRow"><span class="sw best"></span><span id="legB">The best choice, where the derivative is zero</span></span>
+          <label class="check"><input type="checkbox" id="showTan" checked><span>Tangent line at the point</span></label>
+          <span class="hint">Drag across the graph to move the point.</span>
+        </div>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <span class="chips-label">Related rates</span>
+          <button type="button" data-p="ladder" aria-pressed="true">A ladder sliding down a wall</button>
+          <button type="button" data-p="cone" aria-pressed="false">A cone filling with water</button>
+          <button type="button" data-p="shadow" aria-pressed="false">Walking away from a lamp: the shadow</button>
+          <span class="chips-label">Optimization</span>
+          <button type="button" data-p="box" aria-pressed="false">The biggest box from a sheet</button>
+          <button type="button" data-p="fence" aria-pressed="false">Fence a field along a river</button>
+          <button type="button" data-p="can" aria-pressed="false">A can with the least metal</button>
+          <span class="chips-label">In physics</span>
+          <button type="button" data-p="guard" aria-pressed="false">The lifeguard: fastest way to a swimmer</button>
+          <button type="button" data-p="light" aria-pressed="false">Light into water: Fermat and Snell</button>
+          <button type="button" data-p="range" aria-pressed="false">Longest throw on level ground: 45°</button>
+          <button type="button" data-p="rangeH" aria-pressed="false">Longest throw from a height: less than 45°</button>
+        </div>
+        <details class="more" open><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+      </section>
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+      </section>
+      <section>
+        <h2>Formulas</h2>
+        <dl class="formulas" id="formulas"></dl>
+      </section>
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the best choice and the rates the chain rule gives, to work them out first</span></label>
+        <details class="more"><summary>How it works</summary>
+          <p class="hint">Related rates: one quantity changes at a steady rate you set (the foot of the ladder moves out at dx/dt, water flows in at dV/dt, the walker moves at dx/dt), and every other quantity in the scene follows from an equation that ties it to that one. The chain rule gives each rate: dy/dt = (dy/dx)(dx/dt), with dy/dx worked out exactly from the equation. Beside it, the rate from the motion is measured the way an experiment would: the change in the drawn quantity over ±0.1 ms of the run, divided by 0.2 ms. The two agree to every digit shown.</p>
+          <p class="hint">Optimization: the quantity is graphed against the choice, with its exact derivative below it. The best choice is where the derivative is zero; it comes from the closed form where there is one (the box, the fence, the can, the throw) and otherwise from bisection on the derivative to full precision (the lifeguard and the light ray).</p>
+          <p class="hint">Models: the ladder's top stays on the wall and its foot on the floor; the cone is a perfect cone, point down; the lamp is a point; the box walls have no thickness; the throw has no air drag, with g = 9.81 m/s²; light speeds are c/n with n = 1.000293 for air and 1.333 for water (OpenStax University Physics Vol 3, Table 1.1).</p>
+        </details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  /* Related Rates and Optimization (OpenStax Calculus Vol 1 4.1 and 4.7), runnable in Node
+     (curriculum/validation/test_rates_optimization.cjs). Every scene is a few exact formulas. A related rates scene has a driver u
+     that changes at a steady rate (u(t) = u0 + (du/dt)t), a dependent y(u) with its exact dy/du, and a second quantity z(u) with dz/du;
+     the chain rule gives dy/dt = (dy/du)(du/dt). An optimization scene has a quantity q(x) of the choice x, its exact derivative
+     dq(x), the range of x, and best(), where dq = 0. */
+  const G = 9.81;                    /* m/s², free fall (VDC.g) */
+  const C = 299792458;               /* m/s, speed of light (VDC.c) */
+  const RAD = Math.PI / 180;
+  const N_AIR = 1.000293, N_WATER = 1.333;   /* OpenStax University Physics Vol 3, Table 1.1 */
+
+  /* the rate of change measured from the motion itself: the change in g over ±dt about t, over 2dt (the formulas hold a
+     moment either side of the run, so the difference is centered at the ends too) */
+  function measured(g, t, dt) { return (g(t + dt) - g(t - dt)) / (2 * dt); }
+
+  /* A ladder of length L, foot x from the wall, top y up the wall: x² + y² = L². */
+  const ladderY = (x, L) => Math.sqrt(Math.max(0, L * L - x * x));
+  /* A cone, point down, rim radius R and height H (lengths in cm, volume in liters): V = πR²h³/(3H²)/1000. */
+  const coneV = (h, R, H) => Math.PI * R * R * h * h * h / (3 * H * H) / 1000;
+  const coneH = (V, R, H) => Math.cbrt(3000 * H * H * V / (Math.PI * R * R));
+  /* A lamp at height H, a walker of height p at x: similar triangles give the shadow s = px/(H − p). */
+
+  const SC = {
+    ladder: {
+      kind: 'rates',
+      u0: (p) => 0.28 * p.L, dudt: (p) => p.v,
+      T: (p) => (p.L * Math.sqrt(0.99) - 0.28 * p.L) / p.v,          /* runs until the top is 0.1 L above the floor */
+      y: (x, p) => ladderY(x, p.L), dydu: (x, p) => -x / ladderY(x, p.L),
+      z: (x, p) => Math.acos(Math.min(1, x / p.L)) / RAD, dzdu: (x, p) => -1 / ladderY(x, p.L) / RAD,
+    },
+    cone: {
+      kind: 'rates',
+      u0: (p) => coneV(0.25 * p.H, p.R, p.H), dudt: (p) => p.Q,
+      T: (p) => (coneV(p.H, p.R, p.H) - coneV(0.25 * p.H, p.R, p.H)) / p.Q,
+      y: (V, p) => coneH(V, p.R, p.H), dydu: (V, p) => { const h = coneH(V, p.R, p.H); return 1000 * p.H * p.H / (Math.PI * p.R * p.R * h * h); },
+      z: (V, p) => p.R / p.H * coneH(V, p.R, p.H), dzdu: (V, p) => { const h = coneH(V, p.R, p.H); return p.R / p.H * 1000 * p.H * p.H / (Math.PI * p.R * p.R * h * h); },
+    },
+    shadow: {
+      kind: 'rates',
+      u0: () => 1, dudt: (p) => p.v, T: (p) => 14 / p.v,
+      y: (x, p) => p.p * x / (p.H - p.p), dydu: (x, p) => p.p / (p.H - p.p),
+      z: (x, p) => p.H * x / (p.H - p.p), dzdu: (x, p) => p.H / (p.H - p.p),
+    },
+    /* a sheet a × b with a square of side x cut from each corner, folded up: V = x(a − 2x)(b − 2x) */
+    box: {
+      kind: 'opt', lo: () => 0, hi: (p) => Math.min(p.a, p.b) / 2,
+      q: (x, p) => x * (p.a - 2 * x) * (p.b - 2 * x), dq: (x, p) => 12 * x * x - 4 * (p.a + p.b) * x + p.a * p.b,
+      best: (p) => (p.a + p.b - Math.sqrt(p.a * p.a - p.a * p.b + p.b * p.b)) / 6,
+    },
+    /* P meters of fence on three sides, the river on the fourth: A = x(P − 2x) */
+    fence: {
+      kind: 'opt', lo: () => 0, hi: (p) => p.P / 2,
+      q: (x, p) => x * (p.P - 2 * x), dq: (x, p) => p.P - 4 * x, best: (p) => p.P / 4,
+    },
+    /* a closed can of volume V, radius r: h = V/(πr²), metal A = 2πr² + 2V/r */
+    can: {
+      kind: 'opt', lo: (p) => 0.5 * Math.cbrt(p.V / (2 * Math.PI)), hi: (p) => 2 * Math.cbrt(p.V / (2 * Math.PI)),
+      q: (r, p) => 2 * Math.PI * r * r + 2 * p.V / r, dq: (r, p) => 4 * Math.PI * r - 2 * p.V / (r * r),
+      best: (p) => Math.cbrt(p.V / (2 * Math.PI)),
+    },
+    /* start a above the shoreline, finish b below it and D along it; run at v1, swim at v2; enter the water at x:
+       T = √(a² + x²)/v1 + √(b² + (D − x)²)/v2, and T′ = sin θ1/v1 − sin θ2/v2 (angles from the normal to the shore) */
+    guard: {
+      kind: 'opt', lo: () => 0, hi: (p) => p.D,
+      q: (x, p) => Math.hypot(p.a, x) / p.v1 + Math.hypot(p.b, p.D - x) / p.v2,
+      dq: (x, p) => x / Math.hypot(p.a, x) / p.v1 - (p.D - x) / Math.hypot(p.b, p.D - x) / p.v2,
+      best: (p) => bisect((x) => SC.guard.dq(x, p), 0, p.D),
+    },
+    /* light from a point 1 m up in air to a point 1 m down in water, 2 m along: the same sum with v = c/n, in nanoseconds */
+    light: {
+      kind: 'opt', lo: () => 0, hi: () => 2,
+      q: (x, p) => SC.guard.q(x, lightP(p)) * 1e9, dq: (x, p) => SC.guard.dq(x, lightP(p)) * 1e9,
+      best: (p) => SC.guard.best(lightP(p)),
+    },
+    /* a throw at speed v0 and angle θ (degrees) from height h above level ground, no drag:
+       R = v0 cos θ (v0 sin θ + √(v0² sin²θ + 2gh))/g; the best angle has tan θ = v0/√(v0² + 2gh) */
+    range: {
+      kind: 'opt', lo: () => 0, hi: () => 90,
+      q: (th, p) => rangeOf(th, p), dq: (th, p) => rangeSlope(th, p),
+      best: (p) => Math.atan(p.v0 / Math.sqrt(p.v0 * p.v0 + 2 * G * p.h)) / RAD,
+    },
+  };
+  SC.rangeH = SC.range;
+  const lightP = (p) => ({ a: 1, b: 1, D: 2, v1: C / p.n1, v2: C / p.n2 });
+  function rangeOf(th, p) {
+    const s = Math.sin(th * RAD), c = Math.cos(th * RAD), q = Math.sqrt(p.v0 * p.v0 * s * s + 2 * G * p.h);
+    return p.v0 * c * (p.v0 * s + q) / G;
+  }
+  /* dR/dθ per degree: (v0/g)(−v0 sin²θ − q sin θ + v0 cos²θ + v0² sin θ cos²θ/q) × π/180 */
+  function rangeSlope(th, p) {
+    const s = Math.sin(th * RAD), c = Math.cos(th * RAD), q = Math.sqrt(p.v0 * p.v0 * s * s + 2 * G * p.h);
+    const tail = q > 0 ? p.v0 * p.v0 * s * c * c / q : p.v0 * c * c;
+    return p.v0 / G * (-p.v0 * s * s - q * s + p.v0 * c * c + tail) * RAD;
+  }
+  const bestRange = (p) => p.v0 * Math.sqrt(p.v0 * p.v0 + 2 * G * p.h) / G;
+  /* where an increasing g crosses zero on [lo, hi], to the last bit */
+  function bisect(g, lo, hi) {
+    let a = lo, b = hi;
+    if (g(a) >= 0) return a;
+    if (g(b) <= 0) return b;
+    for (let i = 0; i < 200; i++) { const m = (a + b) / 2; if (m === a || m === b) break; if (g(m) < 0) a = m; else b = m; }
+    return (a + b) / 2;
+  }
+  /* sin θ1 and sin θ2, from the normal, where the path crosses the shore at x */
+  const sines = (x, p) => [x / Math.hypot(p.a, x), (p.D - x) / Math.hypot(p.b, p.D - x)];
+  /* the trajectory's height at distance X, for the drawing */
+  const heightAt = (X, th, p) => p.h + X * Math.tan(th * RAD) - G * X * X / (2 * p.v0 * p.v0 * Math.cos(th * RAD) ** 2);
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  const VDI18N = window.VDI18N || { t: (s, o) => s.replace(/\{(\w+)\}/g, (m, k) => (o && k in o ? o[k] : m)) };
+  /* text is translated where it is shown (i18n.js); tr only fills in the symbols */
+  const tr = (s, o) => s.replace(/\{(\w+)\}/g, (m, k) => (o && k in o ? o[k] : m));
+
+  /* numbers: n significant figures, commas in big numbers, a true minus sign */
+  function sf(v, n = 4) {
+    if (!isFinite(v)) return '—';
+    if (Math.abs(v) < 1e-12) v = 0;
+    let s;
+    if (Math.abs(v) >= Math.pow(10, n)) s = Math.round(v).toLocaleString('en-US');
+    else { s = v.toPrecision(n); if (s.includes('e')) s = String(Number(s)); const [i, f] = s.split('.'); s = Number(i).toLocaleString('en-US') + (f !== undefined ? '.' + f : ''); if (i === '-0') s = '-0' + (f !== undefined ? '.' + f : ''); }
+    return s.replace('-', '−');
+  }
+  const fx = (v, d) => (isFinite(v) ? (Math.abs(v) < 0.5 * Math.pow(10, -d) ? 0 : v).toFixed(d).replace('-', '−') : '—');
+  const u = (s, unit) => (unit ? s + (unit === '°' ? '' : ' ') + unit : s);
+
+  /* each setup: its controls, its symbols and units, its teaching hint */
+  const META = {
+    ladder: {
+      p: [{ k: 'L', label: 'Ladder length L', unit: 'm', min: 3, max: 8, step: 0.1, v: 5, d: 1 }, { k: 'v', label: 'Foot pulled out at dx/dt', unit: 'm/s', min: 0.1, max: 2, step: 0.05, v: 0.5, d: 2 }],
+      U: { s: 'x', unit: 'm', name: 'Foot from the wall' }, Y: { s: 'y', unit: 'm', name: 'Top above the floor' }, Z: { s: 'θ', unit: '°', name: 'Angle with the floor', rate: '°/s' },
+      dyu: '', d: 3,
+      formulas: [['The ladder', 'x² + y² = L²'], ['Differentiate in t', '2x·dx/dt + 2y·dy/dt = 0'], ['So', 'dy/dt = −(x/y)·dx/dt'], ['The angle', 'cos θ = x/L,  dθ/dt = −(dx/dt)/y']],
+      hint: 'The foot of a 5 m ladder is pulled out from the wall at a steady 0.5 m/s. The top slides down, slowly at first and then faster and faster: dy/dt = −(x/y)(dx/dt), and x/y grows without limit as the top nears the floor. At x = 3 m, y = 4 m and the top falls at 0.375 m/s. The run stops when the top is 0.1 L above the floor; a real ladder would leave the wall before that.',
+    },
+    cone: {
+      p: [{ k: 'Q', label: 'Water flowing in, dV/dt', unit: 'L/s', min: 0.1, max: 2, step: 0.05, v: 0.5, d: 2 }, { k: 'R', label: 'Rim radius R', unit: 'cm', min: 5, max: 25, step: 0.5, v: 15, d: 1 }, { k: 'H', label: 'Height of the cone H', unit: 'cm', min: 10, max: 40, step: 1, v: 30, d: 0 }],
+      U: { s: 'V', unit: 'L', name: 'Water in the cone' }, Y: { s: 'h', unit: 'cm', name: 'Depth of the water' }, Z: { s: 'r', unit: 'cm', name: 'Radius of the surface', rate: 'cm/s' },
+      dyu: 'cm/L', d: 3,
+      formulas: [['The cone', 'r = (R/H)·h,  V = πr²h/3 = πR²h³/(3H²)'], ['Differentiate in t', 'dV/dt = (πR²h²/H²)·dh/dt = πr²·dh/dt'], ['So', 'dh/dt = (dV/dt)/(πr²)']],
+      hint: 'Water pours at a steady 0.5 L/s into a cone 30 cm deep, point down. The level shoots up at first and then slows: dh/dt = (dV/dt)/(πr²), the flow spread over the area of the surface, and that area grows as the water rises. At h = 10 cm the level rises at 20/π = 6.37 cm/s. The run starts with the water a quarter of the way up.',
+    },
+    shadow: {
+      p: [{ k: 'H', label: 'Lamp height H', unit: 'm', min: 3, max: 10, step: 0.1, v: 6, d: 1 }, { k: 'p', label: 'Walker height', unit: 'm', min: 1, max: 2.2, step: 0.05, v: 1.8, d: 2 }, { k: 'v', label: 'Walking speed dx/dt', unit: 'm/s', min: 0.5, max: 3, step: 0.1, v: 1.4, d: 1 }],
+      U: { s: 'x', unit: 'm', name: 'Walker from the lamp post' }, Y: { s: 's', unit: 'm', name: 'Length of the shadow' }, Z: { s: 'ℓ', unit: 'm', name: 'Tip of the shadow from the post', rate: 'm/s' },
+      dyu: '', d: 3,
+      formulas: [['Similar triangles', 's/p = (x + s)/H'], ['So', 's = p·x/(H − p),  ℓ = x + s = H·x/(H − p)'], ['Differentiate in t', 'ds/dt = (p/(H − p))·dx/dt']],
+      hint: 'A 1.8 m walker leaves a 6 m lamp post at 1.4 m/s. The shadow grows at a steady 0.6 m/s however far away the walker is, because s is a fixed fraction of x; its tip runs ahead at 2.0 m/s, faster than the walker. Change the lamp height: the closer it is to the walker\'s height, the faster the shadow grows.',
+    },
+    box: {
+      p: [{ k: 'a', label: 'Sheet length a', unit: 'cm', min: 10, max: 60, step: 0.5, v: 30, d: 1 }, { k: 'b', label: 'Sheet width b', unit: 'cm', min: 10, max: 60, step: 0.5, v: 20, d: 1 }],
+      X: { s: 'x', unit: 'cm', name: 'Side of each corner square', d: 2 }, Q: { s: 'V', unit: 'cm³', name: 'Volume of the box' }, dQ: 'cm²', start: 1.5, sweep: true,
+      formulas: [['The box', 'V = x(a − 2x)(b − 2x)'], ['Its derivative', 'dV/dx = 12x² − 4(a + b)x + ab'], ['dV/dx = 0', 'x = [a + b − √(a² − ab + b²)]/6']],
+      hint: 'Cut a square of side x from each corner of a 30 cm × 20 cm sheet and fold up the sides. A tiny x gives a flat tray, a big x a tall narrow box with almost no floor; in between is the most volume, where dV/dx = 0: x = 3.92 cm and V = 1,056 cm³. For a square sheet the best cut is always a sixth of the side.',
+    },
+    fence: {
+      p: [{ k: 'P', label: 'Fence you have, P', unit: 'm', min: 20, max: 400, step: 5, v: 120, d: 0 }],
+      X: { s: 'x', unit: 'm', name: 'Each side out from the river', d: 2 }, Q: { s: 'A', unit: 'm²', name: 'Area fenced in' }, dQ: 'm', start: 10,
+      formulas: [['Fence on three sides', 'P = 2x + y'], ['The area', 'A = x·y = x(P − 2x)'], ['dA/dx = 0', 'P − 4x = 0,  x = P/4,  y = P/2']],
+      hint: 'Fence a field against a straight river with 120 m of fence; the river side needs none. The area x(P − 2x) is a parabola: the best field has x = P/4 = 30 m and the side along the river twice as long, y = 60 m, for 1,800 m². That is P²/8, more than the 1,600 m² of a square with sides P/3.',
+    },
+    can: {
+      p: [{ k: 'V', label: 'Volume the can holds V', unit: 'cm³', min: 100, max: 2000, step: 5, v: 355, d: 0 }],
+      X: { s: 'r', unit: 'cm', name: 'Radius of the can', d: 3 }, Q: { s: 'A', unit: 'cm²', name: 'Metal: sides and both ends' }, dQ: 'cm', start: 2.2, min: true,
+      formulas: [['Fixed volume', 'V = πr²h,  so h = V/(πr²)'], ['The metal', 'A = 2πr² + 2πrh = 2πr² + 2V/r'], ['dA/dr = 0', '4πr − 2V/r² = 0,  r = ∛(V/2π),  h = 2r']],
+      hint: 'A can must hold 355 cm³ (a drink can). A thin can needs a lot of side, a wide flat one a lot of top and bottom. The least metal is where dA/dr = 0: r = ∛(V/2π) = 3.84 cm, and then the height equals the diameter, h = 2r, whatever the volume. Real drink cans are taller and thinner than this, because their ends are made of thicker metal and other costs count.',
+    },
+    guard: {
+      p: [{ k: 'v1', label: 'Running speed on sand v₁', unit: 'm/s', min: 1, max: 10, step: 0.1, v: 6, d: 1 }, { k: 'v2', label: 'Swimming speed v₂', unit: 'm/s', min: 0.5, max: 10, step: 0.1, v: 1.5, d: 1 }, { k: 'b', label: 'Swimmer out from the shore', unit: 'm', min: 5, max: 60, step: 1, v: 30, d: 0 }, { k: 'D', label: 'Swimmer along the shore', unit: 'm', min: 10, max: 120, step: 1, v: 60, d: 0 }],
+      X: { s: 'x', unit: 'm', name: 'Where she enters the water, along the shore', d: 2 }, Q: { s: 'T', unit: 's', name: 'Time to reach the swimmer' }, dQ: 's/m', start: 25, snell: true, min: true,
+      formulas: [['The time', 'T = √(a² + x²)/v₁ + √(b² + (D − x)²)/v₂'], ['Its derivative', 'dT/dx = sin θ₁/v₁ − sin θ₂/v₂'], ['dT/dx = 0', 'sin θ₁/v₁ = sin θ₂/v₂   (Snell\'s law)']],
+      hint: 'A lifeguard 20 m up the beach runs at 6 m/s and swims at 1.5 m/s to a swimmer 30 m out and 60 m along. Running straight at the swimmer is not fastest, and neither is the shortest swim: she should run further along the sand, where she is fast. The fastest path has dT/dx = 0, which is exactly sin θ₁/v₁ = sin θ₂/v₂: Snell\'s law. Set the two speeds equal and the best path is a straight line.',
+    },
+    light: {
+      p: [{ k: 'n1', label: 'Index above n₁', unit: '', min: 1, max: 2.5, step: 0.001, v: N_AIR, d: 6, trim: true }, { k: 'n2', label: 'Index below n₂', unit: '', min: 1, max: 2.5, step: 0.001, v: N_WATER, d: 6, trim: true }],
+      X: { s: 'x', unit: 'm', name: 'Where the ray crosses the surface', d: 4 }, Q: { s: 'T', unit: 'ns', name: 'Travel time from A to B' }, dQ: 'ns/m', start: 0.6, snell: true, min: true, light: true,
+      formulas: [['Light speed in each', 'v = c/n'], ['The time', 'T = (n₁·√(a² + x²) + n₂·√(b² + (D − x)²))/c'], ['dT/dx = 0', 'n₁ sin θ₁ = n₂ sin θ₂   (Snell\'s law)']],
+      hint: 'Fermat\'s principle: light goes from A to B along the path that takes the least time. A is 1 m up in air (n = 1.000293) and B 1 m down in water (n = 1.333), 2 m along. The time is the lifeguard\'s problem with v = c/n, so the fastest path obeys n₁ sin θ₁ = n₂ sin θ₂: the ray bends toward the normal in the water. Try glass, n = 1.5, or make n₂ smaller than n₁.',
+    },
+    range: {
+      p: [{ k: 'v0', label: 'Launch speed v₀', unit: 'm/s', min: 5, max: 40, step: 0.5, v: 20, d: 1 }, { k: 'h', label: 'Launch height h', unit: 'm', min: 0, max: 50, step: 0.5, v: 0, d: 1 }],
+      X: { s: 'θ', unit: '°', name: 'Launch angle', d: 2 }, Q: { s: 'R', unit: 'm', name: 'Range on level ground' }, dQ: 'm/°', start: 20, throwing: true,
+      formulas: [['Level ground (h = 0)', 'R = v₀² sin 2θ/g'], ['dR/dθ = 0', 'cos 2θ = 0,  θ = 45°,  R = v₀²/g'], ['From a height h', 'tan θ = v₀/√(v₀² + 2gh),  R = (v₀/g)√(v₀² + 2gh)']],
+      hint: 'A throw at 20 m/s from the ground, no air drag. The range R = v₀² sin 2θ/g is largest where dR/dθ = 0, at 45°, giving v₀²/g = 40.8 m. Angles the same distance either side of 45° (30° and 60°) land at the same spot. Raise the launch height and watch the best angle drop below 45°.',
+    },
+    rangeH: {
+      p: [{ k: 'v0', label: 'Launch speed v₀', unit: 'm/s', min: 5, max: 40, step: 0.5, v: 14, d: 1 }, { k: 'h', label: 'Launch height h', unit: 'm', min: 0, max: 50, step: 0.5, v: 2, d: 1 }],
+      X: { s: 'θ', unit: '°', name: 'Launch angle', d: 2 }, Q: { s: 'R', unit: 'm', name: 'Range on level ground' }, dQ: 'm/°', start: 30, throwing: true,
+      formulas: [['The range', 'R = v₀ cos θ (v₀ sin θ + √(v₀² sin²θ + 2gh))/g'], ['dR/dθ = 0', 'tan θ = v₀/√(v₀² + 2gh)'], ['The longest', 'R = (v₀/g)·√(v₀² + 2gh)']],
+      hint: 'A shot put leaves the hand about 2 m up at 14 m/s (no air drag). From a height the ball has extra time to fall, so a flatter throw goes further: the best angle is 42.4°, not 45°, for 21.9 m. Raise h to 50 m (a cliff) and it drops to 22.2°.',
+    },
+  };
+  /* the guard's fixed start: 20 m up the beach */
+  const GUARD_A = 20;
+
+  const S = { preset: 'ladder', sc: SC.ladder, m: META.ladder, p: {}, t: 0, x: 0, run: false, dir: 1, blind: false };
+  const scn = $('scene'), ctx = scn.getContext('2d'), plt = $('plot'), pc = plt.getContext('2d');
+  let W = 0, H = 0, PW = 0, PH = 0, dpr = 1, T = null, need = true, hand = null;
+  const isRates = () => S.sc.kind === 'rates';
+  const P = () => (S.preset === 'guard' ? Object.assign({ a: GUARD_A }, S.p) : S.p);
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), mono: g('--font-mono') || 'monospace', sans: g('--font-sans') || 'sans-serif',
+      q: g('--q'), rate: g('--rate'), best: g('--best'), drv: g('--drv'), water: g('--water'), sand: g('--sand'), grass: g('--grass'), wood: g('--wood'), metal: g('--metal') };
+  }
+  const proj = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
+
+  /* the state of a rates scene at time t */
+  function rs(t) {
+    const p = P(), sc = S.sc, uu = sc.u0(p) + sc.dudt(p) * t;
+    return { u: uu, dudt: sc.dudt(p), y: sc.y(uu, p), dydu: sc.dydu(uu, p), z: sc.z(uu, p), dzdu: sc.dzdu(uu, p) };
+  }
+  const yAt = (t) => rs(t).y;
+  const tEnd = () => S.sc.T(P());
+  const lo = () => S.sc.lo(P()), hi = () => S.sc.hi(P());
+  const bestX = () => S.sc.best(P());
+
+  /* drawing helpers */
+  function arrow(c, x1, y1, x2, y2, color, w) {
+    const L = Math.hypot(x2 - x1, y2 - y1); if (L < 2) return;
+    const ux = (x2 - x1) / L, uy = (y2 - y1) / L, hd = Math.min(12 * w / 2.5, L * 0.6);
+    c.strokeStyle = color; c.fillStyle = color; c.lineWidth = w; c.lineCap = 'round';
+    c.beginPath(); c.moveTo(x1, y1); c.lineTo(x2 - ux * hd * 0.6, y2 - uy * hd * 0.6); c.stroke();
+    c.beginPath(); c.moveTo(x2, y2); c.lineTo(x2 - ux * hd - uy * hd * 0.45, y2 - uy * hd + ux * hd * 0.45); c.lineTo(x2 - ux * hd + uy * hd * 0.45, y2 - uy * hd - ux * hd * 0.45); c.closePath(); c.fill();
+  }
+  function label(c, t, x, y, color, align, base, size, bold) {
+    c.save(); c.font = `${bold ? '700 ' : ''}${(size || 13) * proj()}px ${T.mono}`; c.textAlign = align || 'left'; c.textBaseline = base || 'middle';
+    c.strokeStyle = T.canvas; c.lineWidth = 4; c.lineJoin = 'round'; c.strokeText(t, x, y); c.fillStyle = color || T.ink; c.fillText(t, x, y); c.restore();
+  }
+  function dot(c, x, y, r, color) { c.fillStyle = color; c.strokeStyle = T.canvas; c.lineWidth = 2; c.beginPath(); c.arc(x, y, r, 0, 7); c.fill(); c.stroke(); }
+  function handleDot(x, y, set, cursor) {
+    const p = proj();
+    ctx.save(); ctx.strokeStyle = T.drv; ctx.lineWidth = 2; ctx.setLineDash([3, 3]); ctx.beginPath(); ctx.arc(x, y, 13 * p, 0, 7); ctx.stroke(); ctx.restore();
+    dot(ctx, x, y, 6 * p, T.drv);
+    hand = { x, y, set, cursor: cursor || 'grab' };
+  }
+  /* world to screen: fit a box (world units, y up) into the scene with a margin; returns X, Y, k and the inverse */
+  function fit(x0, x1, y0, y1, top) {
+    const m = 18 * proj(), tp = (top || 34) * proj(), k = Math.min((W - 2 * m) / (x1 - x0), (H - m - tp) / (y1 - y0));
+    const ox = (W - k * (x1 - x0)) / 2 - k * x0, oy = tp + (H - m - tp - k * (y1 - y0)) / 2 + k * y1;
+    return (S.fit = { k, X: (x) => ox + k * x, Y: (y) => oy - k * y, Xi: (px) => (px - ox) / k, Yi: (py) => (oy - py) / k });
+  }
+  function dim(c, x1, y1, x2, y2, text, color, side) {
+    /* a dimension line with end ticks and a label beside its middle */
+    const p = proj(), L = Math.hypot(x2 - x1, y2 - y1); if (L < 4) return;
+    const sg = side || 1, nx = -(y2 - y1) / L * sg, ny = (x2 - x1) / L * sg, o = 14 * p;
+    const a1 = x1 + nx * o, b1 = y1 + ny * o, a2 = x2 + nx * o, b2 = y2 + ny * o;
+    c.strokeStyle = color; c.lineWidth = 1.2; c.beginPath(); c.moveTo(a1, b1); c.lineTo(a2, b2);
+    c.moveTo(a1 - nx * 5, b1 - ny * 5); c.lineTo(a1 + nx * 5, b1 + ny * 5); c.moveTo(a2 - nx * 5, b2 - ny * 5); c.lineTo(a2 + nx * 5, b2 + ny * 5); c.stroke();
+    label(c, text, (a1 + a2) / 2 + nx * 10 * p, (b1 + b2) / 2 + ny * 10 * p, color, Math.abs(nx) > 0.5 ? (nx > 0 ? 'left' : 'right') : 'center', 'middle', 12);
+  }
+  /* an arrow for a rate, scaled so a typical rate is a comfortable length; returns nothing */
+  const rateLen = (v, ref) => Math.max(-1, Math.min(1, v / ref)) * 70 * proj();
+
+  /* ---- the scenes ---- */
+  function drawLadder(st) {
+    const p = P(), L = p.L, f = fit(-0.22 * L - 0.4, L * 1.0 + 0.4, -0.5, L + 0.2), pr = proj();
+    const x = st.u, y = st.y;
+    /* wall and floor */
+    ctx.fillStyle = T.line; ctx.fillRect(f.X(-0.5), f.Y(L + 0.2), f.X(0) - f.X(-0.5), f.Y(0) - f.Y(L + 0.2));
+    ctx.fillRect(f.X(-0.5), f.Y(0), f.X(L + 0.4) - f.X(-0.5), f.Y(-0.5) - f.Y(0));
+    ctx.strokeStyle = T.muted; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(f.X(0), f.Y(L + 0.2)); ctx.lineTo(f.X(0), f.Y(0)); ctx.lineTo(f.X(L + 0.4), f.Y(0)); ctx.stroke();
+    /* the ladder: two rails and rungs */
+    const ax = f.X(x), ay = f.Y(0), bx = f.X(0), by = f.Y(y), len = Math.hypot(bx - ax, by - ay), nx = -(by - ay) / len * 7 * pr, ny = (bx - ax) / len * 7 * pr;
+    ctx.strokeStyle = T.wood; ctx.lineWidth = 4 * pr; ctx.lineCap = 'round'; ctx.beginPath();
+    ctx.moveTo(ax + nx, ay + ny); ctx.lineTo(bx + nx, by + ny); ctx.moveTo(ax - nx, ay - ny); ctx.lineTo(bx - nx, by - ny);
+    const rungs = Math.round(L / 0.3);
+    for (let i = 1; i < rungs; i++) { const s = i / rungs, cx = ax + (bx - ax) * s, cy = ay + (by - ay) * s; ctx.moveTo(cx + nx, cy + ny); ctx.lineTo(cx - nx, cy - ny); }
+    ctx.lineWidth = 2.5 * pr; ctx.stroke();
+    /* angle at the foot */
+    const th = Math.atan2(y, x), rA = 34 * pr; ctx.strokeStyle = T.muted; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.arc(ax, ay, rA, Math.PI, Math.PI + th); ctx.stroke();
+    label(ctx, `θ = ${fx(st.z, 1)}°`, ax - rA - 6 * pr, ay - 14 * pr, T.muted, 'right', 'middle', 12);
+    /* dimensions */
+    dim(ctx, f.X(0), f.Y(0) + 4 * pr, f.X(x), f.Y(0) + 4 * pr, `x = ${fx(x, 2)} m`, T.drv, 1);
+    dim(ctx, f.X(0) - 4 * pr, f.Y(0), f.X(0) - 4 * pr, f.Y(y), `y = ${fx(y, 2)} m`, T.q, -1);
+    label(ctx, `L = ${fx(L, 1)} m`, (ax + bx) / 2 + 12 * pr, (ay + by) / 2 - 8 * pr, T.wood, 'left', 'bottom', 12);
+    /* rate arrows: the foot moves out at dx/dt, the top down at dy/dt */
+    if (!S.blind) {
+      const ref = Math.max(2 * st.dudt, 0.3);
+      arrow(ctx, ax, ay - 16 * pr, ax + rateLen(st.dudt, ref), ay - 16 * pr, T.drv, 2.5 * pr);
+      const dy = st.dydu * st.dudt;
+      arrow(ctx, bx + 16 * pr, by, bx + 16 * pr, by - rateLen(dy, ref), T.rate, 2.5 * pr);
+      label(ctx, `dy/dt = ${sf(dy, 3)} m/s`, bx + 28 * pr, by - rateLen(dy, ref) / 2, T.rate, 'left', 'middle', 12);
+    }
+    handleDot(ax, ay, (wx) => setU(wx), 'ew-resize');
+  }
+  function drawCone(st) {
+    const p = P(), R = p.R, Hc = p.H, top = Math.max(R, 12), f = fit(-top - 4, top + 12, -2, Hc + 8), pr = proj();
+    const h = st.y, r = st.z;
+    /* the stream from a tap above */
+    ctx.fillStyle = T.metal; ctx.fillRect(f.X(-3), f.Y(Hc + 7.5), f.X(4) - f.X(-3), f.Y(Hc + 6) - f.Y(Hc + 7.5));
+    ctx.fillStyle = T.water; ctx.globalAlpha = 0.55; const sw = Math.max(2, Math.min(10, 3 * p.Q)) * pr;
+    ctx.fillRect(f.X(0) - sw / 2, f.Y(Hc + 6), sw, f.Y(h) - f.Y(Hc + 6)); ctx.globalAlpha = 1;
+    /* the water */
+    ctx.fillStyle = T.water; ctx.globalAlpha = 0.35; ctx.beginPath(); ctx.moveTo(f.X(0), f.Y(0)); ctx.lineTo(f.X(-r), f.Y(h)); ctx.lineTo(f.X(r), f.Y(h)); ctx.closePath(); ctx.fill(); ctx.globalAlpha = 1;
+    ctx.strokeStyle = T.water; ctx.lineWidth = 2 * pr; ctx.beginPath(); ctx.moveTo(f.X(-r), f.Y(h)); ctx.lineTo(f.X(r), f.Y(h)); ctx.stroke();
+    /* the cone */
+    ctx.strokeStyle = T.metal; ctx.lineWidth = 3 * pr; ctx.lineJoin = 'round'; ctx.beginPath(); ctx.moveTo(f.X(-R), f.Y(Hc)); ctx.lineTo(f.X(0), f.Y(0)); ctx.lineTo(f.X(R), f.Y(Hc)); ctx.stroke();
+    ctx.strokeStyle = T.muted; ctx.lineWidth = 1; ctx.setLineDash([4, 4]); ctx.beginPath(); ctx.moveTo(f.X(-R), f.Y(Hc)); ctx.lineTo(f.X(R), f.Y(Hc)); ctx.stroke(); ctx.setLineDash([]);
+    dim(ctx, f.X(R) + 16 * pr, f.Y(0), f.X(R) + 16 * pr, f.Y(h), `h = ${fx(h, 2)} cm`, T.q, 1);
+    dim(ctx, f.X(0), f.Y(h) - 2 * pr, f.X(r), f.Y(h) - 2 * pr, `r = ${fx(r, 2)} cm`, T.muted, -1);
+    label(ctx, `R = ${fx(R, 1)} cm, H = ${fx(Hc, 0)} cm`, f.X(-R), f.Y(Hc) - 12 * pr, T.muted, 'left', 'bottom', 12);
+    label(ctx, `V = ${sf(st.u, 4)} L`, f.X(5), f.Y(Hc + 6.75), T.drv, 'left', 'middle', 12);
+    if (!S.blind) {
+      const dh = st.dydu * st.dudt;
+      arrow(ctx, f.X(-r * 0.4), f.Y(h), f.X(-r * 0.4), f.Y(h) - rateLen(dh, 8), T.rate, 2.5 * pr);
+      label(ctx, `dh/dt = ${sf(dh, 3)} cm/s`, f.X(-r * 0.4) - 8 * pr, f.Y(h) - rateLen(dh, 8) - 4 * pr, T.rate, 'right', 'bottom', 12);
+    }
+    handleDot(f.X(r), f.Y(h), (wx, wy) => { const hh = Math.max(0.1 * Hc, Math.min(Hc, wy)); setU(coneV(hh, R, Hc)); }, 'ns-resize');
+  }
+  function drawShadow(st) {
+    const p = P(), Hl = p.H, ph = p.p, xmax = 15, tipMax = Hl * xmax / (Hl - ph), f = fit(-1.2, Math.max(tipMax, xmax) + 4.5, -2.6, Hl + 0.6), pr = proj();
+    const x = st.u, s = st.y, tip = st.z;
+    /* ground and lamp post */
+    ctx.fillStyle = T.line; ctx.fillRect(f.X(-1.2), f.Y(0), f.X(tipMax + 4.5) - f.X(-1.2), 4 * pr);
+    ctx.strokeStyle = T.metal; ctx.lineWidth = 5 * pr; ctx.beginPath(); ctx.moveTo(f.X(0), f.Y(0)); ctx.lineTo(f.X(0), f.Y(Hl)); ctx.lineTo(f.X(0.5), f.Y(Hl)); ctx.stroke();
+    ctx.fillStyle = T.q; ctx.beginPath(); ctx.arc(f.X(0.5), f.Y(Hl), 6 * pr, 0, 7); ctx.fill();
+    /* the light ray past the head, and the shadow */
+    ctx.strokeStyle = T.q; ctx.globalAlpha = 0.6; ctx.lineWidth = 1.2; ctx.setLineDash([6, 4]); ctx.beginPath(); ctx.moveTo(f.X(0.5), f.Y(Hl)); ctx.lineTo(f.X(tip + 0.5 * (1 - ph / Hl) * 0), f.Y(0)); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1;
+    ctx.fillStyle = T.ink; ctx.globalAlpha = 0.45; ctx.fillRect(f.X(x), f.Y(0) - 2, f.X(tip) - f.X(x), 6 * pr); ctx.globalAlpha = 1;
+    /* the walker: a simple figure of height ph */
+    const hx = f.X(x), hy = f.Y(ph), k = f.k * ph, wpr = 3 * pr; ctx.strokeStyle = T.ink; ctx.lineWidth = wpr; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.arc(hx, hy + 0.07 * k, 0.07 * k, 0, 7); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(hx, hy + 0.14 * k); ctx.lineTo(hx, f.Y(0.48 * ph)); ctx.lineTo(hx - 0.1 * k, f.Y(0)); ctx.moveTo(hx, f.Y(0.48 * ph)); ctx.lineTo(hx + 0.1 * k, f.Y(0));
+    ctx.moveTo(hx - 0.12 * k, f.Y(0.62 * ph)); ctx.lineTo(hx, hy + 0.22 * k); ctx.lineTo(hx + 0.12 * k, f.Y(0.6 * ph)); ctx.stroke();
+    dim(ctx, f.X(0), f.Y(0), f.X(x), f.Y(0), `x = ${fx(x, 2)} m`, T.drv, 1);
+    dim(ctx, f.X(x), f.Y(0) + 26 * pr, f.X(tip), f.Y(0) + 26 * pr, `s = ${fx(s, 2)} m`, T.q, 1);
+    label(ctx, `H = ${fx(Hl, 1)} m`, f.X(0) + 10 * pr, f.Y(Hl * 0.8), T.muted, 'left', 'middle', 12);
+    if (!S.blind) {
+      const ds = st.dydu * st.dudt, dl = st.dzdu * st.dudt, ref = Math.max(dl, 1);
+      arrow(ctx, hx, hy - 14 * pr, hx + rateLen(st.dudt, ref), hy - 14 * pr, T.drv, 2.5 * pr);
+      arrow(ctx, f.X(tip), f.Y(0) - 16 * pr, f.X(tip) + rateLen(dl, ref), f.Y(0) - 16 * pr, T.rate, 2.5 * pr);
+      label(ctx, `dℓ/dt = ${sf(dl, 3)} m/s`, f.X(tip) + rateLen(dl, ref) + 6 * pr, f.Y(0) - 16 * pr, T.rate, 'left', 'middle', 12);
+      label(ctx, `ds/dt = ${sf(ds, 3)} m/s`, f.X(tip) + 8 * pr, f.Y(0) + 62 * pr, T.q, 'left', 'top', 12);
+    }
+    handleDot(hx, f.Y(ph * 0.5), (wx) => setU(wx), 'ew-resize');
+  }
+  function drawBox(x) {
+    const p = P(), a = p.a, b = p.b, gap = Math.max(a, b) * 0.18, dep = 0.45, cosA = Math.cos(Math.PI / 6), sinA = Math.sin(Math.PI / 6);
+    const bx0 = a + gap, maxH = Math.max(b, Math.min(a, b) / 2 + b * dep * sinA), f = fit(-0.3 * Math.max(a, b), bx0 + a + b * dep * cosA + 1, -0.1 * Math.max(a, b), maxH + 1), pr = proj();
+    /* the sheet, with the corner squares cut and the fold lines */
+    ctx.fillStyle = T.sand; ctx.strokeStyle = T.wood; ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.moveTo(f.X(x), f.Y(0)); ctx.lineTo(f.X(a - x), f.Y(0)); ctx.lineTo(f.X(a - x), f.Y(x)); ctx.lineTo(f.X(a), f.Y(x)); ctx.lineTo(f.X(a), f.Y(b - x));
+    ctx.lineTo(f.X(a - x), f.Y(b - x)); ctx.lineTo(f.X(a - x), f.Y(b)); ctx.lineTo(f.X(x), f.Y(b)); ctx.lineTo(f.X(x), f.Y(b - x)); ctx.lineTo(f.X(0), f.Y(b - x));
+    ctx.lineTo(f.X(0), f.Y(x)); ctx.lineTo(f.X(x), f.Y(x)); ctx.closePath(); ctx.fill(); ctx.stroke();
+    ctx.strokeStyle = T.muted; ctx.lineWidth = 1; ctx.setLineDash([5, 4]); ctx.strokeRect(f.X(x), f.Y(b - x), f.X(a - x) - f.X(x), f.Y(x) - f.Y(b - x)); ctx.setLineDash([]);
+    ctx.strokeStyle = T.drv; ctx.lineWidth = 1; ctx.setLineDash([2, 3]);
+    for (const [cx, cy] of [[0, 0], [a - x, 0], [0, b - x], [a - x, b - x]]) ctx.strokeRect(f.X(cx), f.Y(cy + x), f.X(cx + x) - f.X(cx), f.Y(cy) - f.Y(cy + x));
+    ctx.setLineDash([]);
+    dim(ctx, f.X(0), f.Y(0), f.X(a), f.Y(0), `a = ${fx(a, 1)} cm`, T.muted, 1);
+    dim(ctx, f.X(0), f.Y(0), f.X(0), f.Y(b), `b = ${fx(b, 1)} cm`, T.muted, -1);
+    label(ctx, `x = ${fx(x, 2)} cm`, f.X(x) + 6 * pr, f.Y(b - x * 0.5), T.drv, 'left', 'middle', 12);
+    /* the folded box, open at the top, drawn in an oblique view: length a − 2x across, width b − 2x going back, height x */
+    const Lb = a - 2 * x, Wb = b - 2 * x, hgt = x, ox = bx0, oy = 0;
+    const P3 = (X, Y, Z) => [f.X(ox + X + Y * dep * cosA), f.Y(oy + Z + Y * dep * sinA)];
+    const face = (pts, fill, alpha) => { ctx.beginPath(); pts.forEach((q, i) => (i ? ctx.lineTo(q[0], q[1]) : ctx.moveTo(q[0], q[1]))); ctx.closePath(); ctx.globalAlpha = alpha; ctx.fillStyle = fill; ctx.fill(); ctx.globalAlpha = 1; ctx.strokeStyle = T.wood; ctx.lineWidth = 1.5; ctx.stroke(); };
+    if (Lb > 0 && Wb > 0) {
+      face([P3(0, 0, 0), P3(Lb, 0, 0), P3(Lb, Wb, 0), P3(0, Wb, 0)], T.sand, 0.6);               /* floor */
+      face([P3(0, Wb, 0), P3(Lb, Wb, 0), P3(Lb, Wb, hgt), P3(0, Wb, hgt)], T.sand, 0.75);        /* back wall */
+      face([P3(0, 0, 0), P3(0, Wb, 0), P3(0, Wb, hgt), P3(0, 0, hgt)], T.sand, 0.85);             /* left wall */
+      face([P3(Lb, 0, 0), P3(Lb, Wb, 0), P3(Lb, Wb, hgt), P3(Lb, 0, hgt)], T.sand, 0.85);          /* right wall */
+      face([P3(0, 0, 0), P3(Lb, 0, 0), P3(Lb, 0, hgt), P3(0, 0, hgt)], T.sand, 0.95);             /* front wall */
+      const [mx, my] = P3(Lb / 2, Wb / 2, hgt);
+      label(ctx, `V = ${sf(SC.box.q(x, p), 4)} cm³`, mx, Math.min(my, P3(0, 0, hgt)[1]) - 22 * pr, T.q, 'center', 'bottom', 13, true);
+      const [hx0, hy0] = P3(Lb, 0, 0), [hx1, hy1] = P3(Lb, 0, hgt);
+      dim(ctx, hx0, hy0, hx1, hy1, `x`, T.drv, 1);
+    }
+    handleDot(f.X(x), f.Y(x), (wx, wy) => setX((wx + wy) / 2), 'nwse-resize');
+  }
+  function drawFence(x) {
+    const p = P(), Pf = p.P, y = Pf - 2 * x, f = fit(-0.55 * Pf, 0.55 * Pf, -0.55 * Pf, 0.13 * Pf), pr = proj();
+    /* the river along the top */
+    ctx.fillStyle = T.water; ctx.globalAlpha = 0.35; ctx.fillRect(f.X(-0.55 * Pf), f.Y(0.13 * Pf), f.X(0.55 * Pf) - f.X(-0.55 * Pf), f.Y(0) - f.Y(0.13 * Pf)); ctx.globalAlpha = 1;
+    ctx.strokeStyle = T.water; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(f.X(-0.55 * Pf), f.Y(0)); ctx.lineTo(f.X(0.55 * Pf), f.Y(0)); ctx.stroke();
+    label(ctx, tr('River: no fence needed'), f.X(0), f.Y(0.065 * Pf), T.water, 'center', 'middle', 12);
+    /* the field */
+    ctx.fillStyle = T.grass; ctx.globalAlpha = 0.6; ctx.fillRect(f.X(-y / 2), f.Y(0), f.X(y / 2) - f.X(-y / 2), f.Y(-x) - f.Y(0)); ctx.globalAlpha = 1;
+    ctx.strokeStyle = T.wood; ctx.lineWidth = 3 * pr; ctx.lineJoin = 'round'; ctx.beginPath(); ctx.moveTo(f.X(-y / 2), f.Y(0)); ctx.lineTo(f.X(-y / 2), f.Y(-x)); ctx.lineTo(f.X(y / 2), f.Y(-x)); ctx.lineTo(f.X(y / 2), f.Y(0)); ctx.stroke();
+    /* posts */
+    ctx.fillStyle = T.wood; const posts = (x1, y1, x2, y2) => { const n = Math.max(1, Math.round(Math.hypot(x2 - x1, y2 - y1) / (Pf / 40))); for (let i = 0; i <= n; i++) { ctx.fillRect(f.X(x1 + (x2 - x1) * i / n) - 2.5 * pr, f.Y(y1 + (y2 - y1) * i / n) - 2.5 * pr, 5 * pr, 5 * pr); } };
+    posts(-y / 2, 0, -y / 2, -x); posts(-y / 2, -x, y / 2, -x); posts(y / 2, -x, y / 2, 0);
+    dim(ctx, f.X(-y / 2), f.Y(-x), f.X(y / 2), f.Y(-x), `y = ${fx(y, 1)} m`, T.muted, 1);
+    dim(ctx, f.X(y / 2), f.Y(0), f.X(y / 2), f.Y(-x), `x = ${fx(x, 2)} m`, T.drv, -1);
+    if (x > 0 && y > 0) label(ctx, `A = ${sf(SC.fence.q(x, p), 4)} m²`, f.X(0), f.Y(-x / 2), T.ink, 'center', 'middle', 13, true);
+    handleDot(f.X(y / 2), f.Y(-x), (wx, wy) => setX(-wy), 'ns-resize');
+  }
+  function drawCan(r) {
+    const p = P(), V = p.V, h = V / (Math.PI * r * r), rL = SC.can.lo(p), rH = SC.can.hi(p), hMax = V / (Math.PI * rL * rL), barW = rH * 1.1;
+    const f = fit(-rH - 1, rH + 2 + barW + 1, -0.14 * hMax, hMax + 2), pr = proj(), ry = Math.max(3, r * f.k * 0.25);
+    const xl = f.X(-r), xr = f.X(r), yb = f.Y(0), yt = f.Y(h);
+    /* the body */
+    const g = ctx.createLinearGradient(xl, 0, xr, 0); g.addColorStop(0, T.metal); g.addColorStop(0.45, T.canvas); g.addColorStop(1, T.metal);
+    ctx.fillStyle = g; ctx.globalAlpha = 0.8; ctx.beginPath(); ctx.moveTo(xl, yt); ctx.lineTo(xl, yb); ctx.ellipse(f.X(0), yb, (xr - xl) / 2, ry, 0, Math.PI, 0, true); ctx.lineTo(xr, yt); ctx.closePath(); ctx.fill(); ctx.globalAlpha = 1;
+    ctx.strokeStyle = T.metal; ctx.lineWidth = 2 * pr; ctx.beginPath(); ctx.moveTo(xl, yt); ctx.lineTo(xl, yb); ctx.ellipse(f.X(0), yb, (xr - xl) / 2, ry, 0, Math.PI, 0, true); ctx.lineTo(xr, yt); ctx.stroke();
+    ctx.fillStyle = T.metal; ctx.globalAlpha = 0.5; ctx.beginPath(); ctx.ellipse(f.X(0), yt, (xr - xl) / 2, ry, 0, 0, 7); ctx.fill(); ctx.globalAlpha = 1; ctx.stroke();
+    dim(ctx, xl, yb + ry, xr, yb + ry, `2r = ${fx(2 * r, 2)} cm`, T.drv, 1);
+    dim(ctx, xl, yb, xl, yt, `h = ${fx(h, 2)} cm`, T.muted, -1);
+    /* the metal, as a bar: the two ends and the side */
+    const ends = 2 * Math.PI * r * r, side = 2 * V / r, Amax = SC.can.q(rL, p), bx = f.X(rH + 2), bw = f.X(rH + 2 + barW) - bx, bh = f.Y(0) - f.Y(hMax);
+    const sc = bh / Amax;
+    ctx.fillStyle = T.q; ctx.globalAlpha = 0.85; ctx.fillRect(bx, f.Y(0) - ends * sc, bw, ends * sc); ctx.globalAlpha = 0.45; ctx.fillRect(bx, f.Y(0) - (ends + side) * sc, bw, side * sc); ctx.globalAlpha = 1;
+    ctx.strokeStyle = T.q; ctx.lineWidth = 1.5; ctx.strokeRect(bx, f.Y(0) - (ends + side) * sc, bw, (ends + side) * sc);
+    label(ctx, tr('Metal'), bx + bw / 2, f.Y(0) - (ends + side) * sc - 6 * pr, T.q, 'center', 'bottom', 12, true);
+    label(ctx, `${tr('ends')} ${sf(ends, 3)}`, bx + bw + 6 * pr, f.Y(0) - ends * sc / 2, T.q, 'left', 'middle', 11);
+    label(ctx, `${tr('side')} ${sf(side, 3)}`, bx + bw + 6 * pr, f.Y(0) - ends * sc - side * sc / 2, T.q, 'left', 'middle', 11);
+    label(ctx, `A = ${sf(ends + side, 4)} cm²`, f.X(0), Math.min(yt - ry - 12 * pr, f.Y(0) - 40 * pr), T.ink, 'center', 'bottom', 13, true);
+    handleDot(xr, (yb + yt) / 2, (wx) => setX(Math.abs(wx)), 'ew-resize');
+  }
+  function drawGuard(x) {
+    const p0 = P(), light = !!S.m.light, p = light ? lightP(p0) : p0, a = p.a, b = p.b, D = p.D, m = 0.14 * Math.max(D, a + b), f = fit(-m, D + m, -b - m * 0.6, a + m * 0.6), pr = proj();
+    /* sand (or air) above the shore, water below */
+    ctx.fillStyle = light ? T.canvas : T.sand; ctx.globalAlpha = light ? 1 : 0.7; ctx.fillRect(f.X(-m), f.Y(a + m), f.X(D + m) - f.X(-m), f.Y(0) - f.Y(a + m)); ctx.globalAlpha = 1;
+    ctx.fillStyle = T.water; ctx.globalAlpha = 0.28; ctx.fillRect(f.X(-m), f.Y(0), f.X(D + m) - f.X(-m), f.Y(-b - m) - f.Y(0)); ctx.globalAlpha = 1;
+    ctx.strokeStyle = T.water; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(f.X(-m), f.Y(0)); ctx.lineTo(f.X(D + m), f.Y(0)); ctx.stroke();
+    label(ctx, light ? tr('Air') : tr('Sand'), f.X(D + m) - 8 * pr, f.Y(0) - 12 * pr, T.muted, 'right', 'bottom', 12);
+    label(ctx, tr('Water'), f.X(D + m) - 8 * pr, f.Y(0) + 12 * pr, T.water, 'right', 'top', 12);
+    const A = [f.X(0), f.Y(a)], B = [f.X(D), f.Y(-b)], E = [f.X(x), f.Y(0)];
+    /* the best path, dotted */
+    if (!S.blind) {
+      const xb = bestX(); ctx.strokeStyle = T.best; ctx.lineWidth = 2 * pr; ctx.setLineDash([2 * pr, 5 * pr]); ctx.beginPath(); ctx.moveTo(A[0], A[1]); ctx.lineTo(f.X(xb), f.Y(0)); ctx.lineTo(B[0], B[1]); ctx.stroke(); ctx.setLineDash([]);
+    }
+    /* the chosen path */
+    ctx.strokeStyle = light ? T.q : T.drv; ctx.lineWidth = 3 * pr; ctx.lineJoin = 'round'; ctx.beginPath(); ctx.moveTo(A[0], A[1]); ctx.lineTo(E[0], E[1]); ctx.lineTo(B[0], B[1]); ctx.stroke();
+    /* the normal at the crossing and the angles from it */
+    ctx.strokeStyle = T.muted; ctx.lineWidth = 1; ctx.setLineDash([4, 4]); ctx.beginPath(); ctx.moveTo(E[0], E[1] - 70 * pr); ctx.lineTo(E[0], E[1] + 70 * pr); ctx.stroke(); ctx.setLineDash([]);
+    const [s1, s2] = sines(x, p), t1 = Math.asin(s1), t2 = Math.asin(s2), rA = 42 * pr;
+    ctx.strokeStyle = T.ink; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.arc(E[0], E[1], rA, -Math.PI / 2 - t1, -Math.PI / 2, t1 < 0); ctx.stroke();
+    ctx.beginPath(); ctx.arc(E[0], E[1], rA * 0.8, Math.PI / 2 - t2, Math.PI / 2, t2 < 0); ctx.stroke();
+    label(ctx, `θ₁ = ${fx(t1 / RAD, 1)}°`, E[0] - 6 * pr, E[1] - rA - 8 * pr, T.ink, 'right', 'bottom', 12);
+    label(ctx, `θ₂ = ${fx(t2 / RAD, 1)}°`, E[0] + 6 * pr, E[1] + rA + 6 * pr, T.ink, 'left', 'top', 12);
+    /* the ends */
+    dot(ctx, A[0], A[1], 7 * pr, light ? T.q : T.drv); dot(ctx, B[0], B[1], 7 * pr, light ? T.q : T.water);
+    label(ctx, light ? 'A' : tr('Lifeguard'), A[0], A[1] - 12 * pr, T.ink, 'center', 'bottom', 12, true);
+    label(ctx, light ? 'B' : tr('Swimmer'), B[0], B[1] + 12 * pr, T.ink, 'center', 'top', 12, true);
+    dim(ctx, f.X(0), f.Y(0), f.X(x), f.Y(0), `x = ${fx(x, light ? 3 : 1)} m`, T.drv, -1);
+    if (!light) {
+      label(ctx, `${fx(a, 0)} m`, A[0] - 8 * pr, (A[1] + f.Y(0)) / 2, T.muted, 'right', 'middle', 11);
+      label(ctx, `${fx(b, 0)} m`, B[0] + 8 * pr, (B[1] + f.Y(0)) / 2, T.muted, 'left', 'middle', 11);
+    }
+    handleDot(E[0], E[1], (wx) => setX(wx), 'ew-resize');
+  }
+  function drawRange(th) {
+    const p = P(), Rb = bestRange(p), apex = p.h + p.v0 * p.v0 / (2 * G), f = fit(-0.12 * Rb - 1, Rb * 1.06, -0.12 * apex, apex * 1.04), pr = proj();
+    /* ground and the launch platform */
+    ctx.fillStyle = T.grass; ctx.globalAlpha = 0.6; ctx.fillRect(f.X(-0.12 * Rb - 1), f.Y(0), f.X(Rb * 1.06) - f.X(-0.12 * Rb - 1), f.Y(-0.06 * apex) - f.Y(0)); ctx.globalAlpha = 1;
+    if (p.h > 0) { ctx.fillStyle = T.line; ctx.fillRect(f.X(-0.12 * Rb - 1), f.Y(p.h), f.X(0) - f.X(-0.12 * Rb - 1), f.Y(0) - f.Y(p.h)); dim(ctx, f.X(0), f.Y(0), f.X(0), f.Y(p.h), `h = ${fx(p.h, 1)} m`, T.muted, 1); }
+    ctx.strokeStyle = T.muted; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(f.X(-0.12 * Rb - 1), f.Y(p.h)); ctx.lineTo(f.X(0), f.Y(p.h)); ctx.lineTo(f.X(0), f.Y(0)); ctx.lineTo(f.X(Rb * 1.06), f.Y(0)); ctx.stroke();
+    const path = (ang, color, w, dash) => {
+      const R = rangeOf(ang, p), n = 120; ctx.strokeStyle = color; ctx.lineWidth = w; ctx.setLineDash(dash); ctx.beginPath();
+      for (let i = 0; i <= n; i++) { const X = R * i / n, Y = Math.max(0, heightAt(X, ang, p)); i ? ctx.lineTo(f.X(X), f.Y(Y)) : ctx.moveTo(f.X(X), f.Y(Y)); }
+      ctx.stroke(); ctx.setLineDash([]); return R;
+    };
+    if (!S.blind) { const bt = bestX(), Rb2 = path(bt, T.best, 2 * pr, [2 * pr, 5 * pr]); dot(ctx, f.X(Rb2), f.Y(0), 4 * pr, T.best); }
+    const R = path(th, T.q, 3 * pr, []);
+    dot(ctx, f.X(R), f.Y(0), 5 * pr, T.q);
+    dim(ctx, f.X(0), f.Y(0), f.X(R), f.Y(0), `R = ${fx(R, 2)} m`, T.q, 1);
+    /* the aim */
+    const L = 60 * pr, ax = f.X(0) + L * Math.cos(th * RAD), ay = f.Y(p.h) - L * Math.sin(th * RAD);
+    arrow(ctx, f.X(0), f.Y(p.h), ax, ay, T.drv, 3 * pr);
+    ctx.strokeStyle = T.ink; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.arc(f.X(0), f.Y(p.h), 30 * pr, -th * RAD, 0); ctx.stroke();
+    label(ctx, `θ = ${fx(th, 1)}°`, f.X(0) - 6 * pr, f.Y(p.h) - 24 * pr, T.ink, 'right', 'bottom', 12);
+    label(ctx, `v₀ = ${fx(p.v0, 1)} m/s`, f.X(0) - 6 * pr, f.Y(p.h) - 8 * pr, T.muted, 'right', 'bottom', 11);
+    handleDot(ax, ay, (wx, wy) => { const dx = wx, dy = wy - p.h; setX(Math.atan2(dy, Math.max(1e-9, dx)) / RAD); }, 'grab');
+  }
+
+  /* ---- the graph ---- */
+  function niceStep(span, n) { const raw = span / Math.max(2, n), p10 = Math.pow(10, Math.floor(Math.log10(raw))), m = raw / p10; return (m <= 1 ? 1 : m <= 2 ? 2 : m <= 5 ? 5 : 10) * p10; }
+  function tick(v, step) { if (Math.abs(v) < step * 1e-6) return '0'; return sf(Number(v.toFixed(Math.max(0, -Math.floor(Math.log10(step)) + 1))), 6).replace(/(\.\d*?)0+$/, '$1').replace(/\.$/, ''); }
+  /* one band of the graph: samples ys over xs into the box [top, top + h]; returns the y mapping */
+  function band(xs, ys, top, h, X, color, dash, title, zeroLine, extra) {
+    const pr = proj(); let y0 = Infinity, y1 = -Infinity;
+    for (const v of ys.concat(extra || [])) if (isFinite(v)) { y0 = Math.min(y0, v); y1 = Math.max(y1, v); }
+    if (!isFinite(y0)) return null;
+    if (zeroLine) { y0 = Math.min(y0, 0); y1 = Math.max(y1, 0); }
+    if (y1 - y0 < 1e-9 * (1 + Math.abs(y1))) { y0 -= 1; y1 += 1; }
+    const pad = 0.1 * (y1 - y0); y0 -= pad; y1 += pad;
+    const Y = (v) => top + h - (v - y0) / (y1 - y0) * h;
+    const L = 58 * pr, R = PW - 10 * pr;
+    pc.strokeStyle = T.line; pc.lineWidth = 1; pc.beginPath();
+    const sy = niceStep(y1 - y0, h / (34 * pr));
+    pc.font = `${11 * pr}px ${T.mono}`; pc.fillStyle = T.muted; pc.textAlign = 'right'; pc.textBaseline = 'middle';
+    for (let v = Math.ceil(y0 / sy) * sy; v <= y1; v += sy) { const w = Math.round(Y(v)) + 0.5; pc.moveTo(L, w); pc.lineTo(R, w); pc.fillText(tick(v, sy), L - 5 * pr, w); }
+    pc.stroke();
+    if (y0 < 0 && y1 > 0) { pc.strokeStyle = T.muted; pc.lineWidth = 1.3; pc.beginPath(); pc.moveTo(L, Y(0)); pc.lineTo(R, Y(0)); pc.stroke(); }
+    pc.strokeStyle = color; pc.lineWidth = 2.6 * pr; pc.setLineDash(dash); pc.lineJoin = 'round'; pc.beginPath();
+    let on = false; for (let i = 0; i < xs.length; i++) { const v = ys[i]; if (!isFinite(v)) { on = false; continue; } const a = X(xs[i]), b = Y(v); on ? pc.lineTo(a, b) : pc.moveTo(a, b); on = true; }
+    pc.stroke(); pc.setLineDash([]);
+    label(pc, title, R - 4 * pr, top + 2 * pr, color, 'right', 'top', 12, true);
+    return Y;
+  }
+  function drawPlot() {
+    const pr = proj();
+    pc.setTransform(dpr, 0, 0, dpr, 0, 0); pc.fillStyle = T.canvas; pc.fillRect(0, 0, PW, PH);
+    const L = 58 * pr, R = PW - 10 * pr, bot = PH - 26 * pr, top = 8 * pr, gapB = 10 * pr, h1 = (bot - top - gapB) * 0.58, h2 = bot - top - gapB - h1;
+    const x0 = isRates() ? 0 : lo(), x1 = isRates() ? tEnd() : hi(), X = (v) => L + (v - x0) / (x1 - x0) * (R - L);
+    const n = 240, xs = []; for (let i = 0; i <= n; i++) xs.push(x0 + (x1 - x0) * i / n);
+    const cur = isRates() ? S.t : S.x;
+    let ys1, ys2, t1, t2, slope, at;
+    if (isRates()) {
+      const m = S.m, st = xs.map(rs);
+      ys1 = st.map((s) => s.y); ys2 = st.map((s) => s.dydu * s.dudt);
+      t1 = `${m.Y.s} (${m.Y.unit})`; t2 = `d${m.Y.s}/dt (${m.Y.unit}/s)`;
+      const c = rs(cur); at = [c.y, c.dydu * c.dudt]; slope = c.dydu * c.dudt;
+      if (S.blind) ys2 = ys2.map(() => NaN);
+    } else {
+      const m = S.m, p = P();
+      ys1 = xs.map((v) => S.sc.q(v, p)); ys2 = xs.map((v) => S.sc.dq(v, p));
+      if (S.preset === 'can') { const cap = 3 * S.sc.q(S.sc.best(p), p); ys1 = ys1.map((v) => (v > cap ? NaN : v)); ys2 = ys2.map((v, i) => (isFinite(ys1[i]) ? v : NaN)); }
+      t1 = `${m.Q.s} (${m.Q.unit})`; t2 = `d${m.Q.s}/d${m.X.s} (${m.dQ})`;
+      at = [S.sc.q(cur, p), S.sc.dq(cur, p)]; slope = at[1];
+    }
+    const Y1 = band(xs, ys1, top, h1, X, T.q, [], t1, false, [at[0]]);
+    const Y2 = band(xs, ys2, top + h1 + gapB, h2, X, T.rate, [10 * pr, 6 * pr], t2, true, S.blind && isRates() ? [] : [at[1]]);
+    /* x axis */
+    pc.strokeStyle = T.muted; pc.lineWidth = 1; pc.beginPath(); pc.moveTo(L, bot); pc.lineTo(R, bot); pc.moveTo(L, top); pc.lineTo(L, bot); pc.stroke();
+    const sx = niceStep(x1 - x0, (R - L) / (70 * pr)); pc.font = `${11 * pr}px ${T.mono}`; pc.fillStyle = T.muted; pc.textAlign = 'center'; pc.textBaseline = 'top';
+    for (let v = Math.ceil(x0 / sx) * sx; v <= x1 + 1e-9; v += sx) { if (X(v) < R - 44 * pr) pc.fillText(tick(v, sx), X(v), bot + 4 * pr); pc.beginPath(); pc.moveTo(X(v), bot); pc.lineTo(X(v), bot + 3); pc.stroke(); }
+    const xl = isRates() ? 't (s)' : `${S.m.X.s} (${S.m.X.unit})`;
+    pc.textAlign = 'right'; pc.fillText(xl, R, bot + 4 * pr + 12 * pr > PH ? bot - 14 * pr : bot + 4 * pr);
+    /* the best choice, where the derivative is zero */
+    if (!isRates() && !S.blind && Y2) {
+      const xb = bestX(), u = X(xb);
+      pc.strokeStyle = T.best; pc.lineWidth = 1.5 * pr; pc.setLineDash([2 * pr, 4 * pr]); pc.beginPath(); pc.moveTo(u, top); pc.lineTo(u, bot); pc.stroke(); pc.setLineDash([]);
+      dot(pc, u, Y2(0), 5 * pr, T.best);
+      if (Y1) dot(pc, u, Y1(S.sc.q(xb, P())), 5 * pr, T.best);
+      label(pc, `${tr('best')}: d${S.m.Q.s}/d${S.m.X.s} = 0`, u + (u > PW * 0.7 ? -6 : 6) * pr, Y2(0) + 8 * pr, T.best, u > PW * 0.7 ? 'right' : 'left', 'top', 12, true);
+    }
+    /* the point, with its tangent */
+    const u = X(cur);
+    pc.strokeStyle = T.drv; pc.lineWidth = 1; pc.setLineDash([4, 4]); pc.beginPath(); pc.moveTo(u, top); pc.lineTo(u, bot); pc.stroke(); pc.setLineDash([]);
+    if (Y1 && $('showTan').checked && isFinite(slope) && !(isRates() && S.blind)) {
+      pc.save(); pc.beginPath(); pc.rect(L, top, R - L, h1); pc.clip();
+      const dx = (x1 - x0) * 0.18; pc.strokeStyle = T.ink; pc.globalAlpha = 0.75; pc.lineWidth = 1.5 * pr; pc.beginPath();
+      pc.moveTo(X(cur - dx), Y1(at[0] - slope * dx)); pc.lineTo(X(cur + dx), Y1(at[0] + slope * dx)); pc.stroke(); pc.globalAlpha = 1; pc.restore();
+    }
+    if (Y1) dot(pc, u, Y1(at[0]), 5 * pr, T.q);
+    if (Y2 && !(isRates() && S.blind)) dot(pc, u, Y2(at[1]), 5 * pr, T.rate);
+  }
+
+  /* ---- readouts ---- */
+  function readouts() {
+    /* a row of words (cls 'ok') is translated; numbers and units are not */
+    const dd = (a, b, cls) => `<div${cls ? ' class="wide"' : ''}><dt>${a}</dt><dd${cls === 'ok' ? ' class="ok"' : ' translate="no"'}>${b}</dd></div>`;
+    const low = (t) => t.charAt(0).toLowerCase() + t.slice(1);
+    const m = S.m, p = P(), hide = S.blind;
+    let h = '';
+    if (isRates()) {
+      const c = rs(S.t), dy = c.dydu * c.dudt, meas = measured(yAt, S.t, 1e-4), dz = c.dzdu * c.dudt;
+      const U = m.U, Yq = m.Y, Z = m.Z, du = `d${U.s}/dt`, dyS = `d${Yq.s}/dt`, dz2 = `d${Z.s}/dt`;
+      h += dd('t', u(fx(S.t, 2), 's'));
+      h += dd(`${U.s}, ${low(U.name)}`, u(sf(c.u, 4), U.unit)) + dd(`${du} (${tr('set')})`, u(sf(c.dudt, 3), U.unit + '/s'));
+      h += dd(`${Yq.s}, ${low(Yq.name)}`, u(sf(c.y, 4), Yq.unit));
+      h += dd(`d${Yq.s}/d${U.s} (${tr('from the equation')})`, u(sf(c.dydu, 4), m.dyu));
+      h += dd(`(d${Yq.s}/d${U.s})·(${du})`, hide ? '?' : u(sf(dy, 4), Yq.unit + '/s'));
+      h += dd(`${dyS} ${tr('from the motion')}`, hide ? '?' : u(sf(meas, 4), Yq.unit + '/s'));
+      if (!hide) {
+        const agree = Math.abs(dy - meas) <= 1e-5 * Math.max(1e-9, Math.abs(dy));
+        h += dd(tr('Chain rule'), agree ? tr('{a} = ({b})({c}): they agree', { a: dyS, b: `d${Yq.s}/d${U.s}`, c: du }) : VDI18N.t('they differ'), 'ok');
+      }
+      h += dd(`${Z.s}, ${low(Z.name)}`, u(sf(c.z, 4), Z.unit)) + dd(`${dz2} (${tr('chain rule')})`, hide ? '?' : u(sf(dz, 4), Z.rate));
+    } else {
+      const x = S.x, q = S.sc.q(x, p), d = S.sc.dq(x, p), X = m.X, Q = m.Q, xb = bestX(), qb = S.sc.q(xb, p);
+      h += dd(`${X.s}, ${low(X.name)}`, u(fx(x, X.d), X.unit));
+      h += dd(`${Q.s}, ${low(Q.name)}`, u(sf(q, 5), Q.unit));
+      h += dd(`d${Q.s}/d${X.s}`, u(sf(d, 4), m.dQ));
+      const tiny = 1e-7 * (Math.abs(S.sc.dq(lo() + 0.3 * (hi() - lo()), p)) + 1e-12), mn = !!m.min;
+      h += dd(tr('Slope of the graph'), Math.abs(d) < tiny ? tr('zero: this is the best choice')
+        : d > 0 ? (mn ? tr('rising: a smaller {x} does better', { x: X.s }) : tr('rising: a larger {x} does better', { x: X.s }))
+        : (mn ? tr('falling: a larger {x} does better', { x: X.s }) : tr('falling: a smaller {x} does better', { x: X.s })), 'ok');
+      if (!hide) {
+        h += dd(`${tr('Best')} ${X.s} (d${Q.s}/d${X.s} = 0)`, u(fx(xb, X.d), X.unit));
+        h += dd(`${tr('Best')} ${Q.s}`, u(sf(qb, 5), Q.unit));
+      }
+      if (S.preset === 'box') h += dd(tr('Floor of the box'), `${fx(p.a - 2 * x, 2)} cm × ${fx(p.b - 2 * x, 2)} cm`);
+      if (S.preset === 'fence') h += dd(`y, ${tr('side along the river')}`, u(fx(p.P - 2 * x, 2), 'm'));
+      if (S.preset === 'can') { const hh = p.V / (Math.PI * x * x); h += dd(`h, ${tr('height')}`, u(fx(hh, 2), 'cm')) + dd('h/r', sf(hh / x, 4)); }
+      if (m.snell) {
+        const [s1, s2] = sines(x, S.m.light ? lightP(p) : p);
+        if (m.light) {
+          h += dd('n₁ sin θ₁', sf(p.n1 * s1, 5)) + dd('n₂ sin θ₂', sf(p.n2 * s2, 5));
+        } else {
+          h += dd('sin θ₁/v₁', u(sf(s1 / p.v1, 5), 's/m')) + dd('sin θ₂/v₂', u(sf(s2 / p.v2, 5), 's/m'));
+        }
+        if (!hide) {
+          const [b1, b2] = sines(xb, S.m.light ? lightP(p) : p);
+          h += dd(tr('At the best point'), m.light ? `n₁ sin θ₁ = ${sf(p.n1 * b1, 6)}, n₂ sin θ₂ = ${sf(p.n2 * b2, 6)}` : `sin θ₁/v₁ = ${sf(b1 / p.v1, 6)}, sin θ₂/v₂ = ${sf(b2 / p.v2, 6)} s/m`, 'ok');
+        }
+      }
+      if (m.throwing && !hide) h += dd(`${tr('Longest range')} (v₀/g)√(v₀² + 2gh)`, u(fx(bestRange(p), 2), 'm'));
+    }
+    $('out').innerHTML = h;
+  }
+  function formulas() {
+    $('formulas').innerHTML = S.m.formulas.map(([a, b]) => `<dt>${a}</dt><dd translate="no">${b}</dd>`).join('');
+  }
+
+  /* ---- state changes ---- */
+  function setU(uu) {
+    /* a related rates scene: drag the driver to a value, which sets the clock */
+    const p = P(), sc = S.sc; S.t = Math.max(0, Math.min(tEnd(), (uu - sc.u0(p)) / sc.dudt(p))); setRun(false); syncChoice(); need = true;
+  }
+  function setX(x) { S.x = Math.max(lo(), Math.min(hi(), x)); setRun(false); syncChoice(); need = true; }
+  function syncChoice() {
+    const el = $('cs'), a = isRates() ? 0 : lo(), b = isRates() ? tEnd() : hi(), v = isRates() ? S.t : S.x;
+    el.value = String(Math.round((v - a) / (b - a) * 1000));
+    $('csOut').textContent = isRates() ? `t = ${fx(S.t, 2)} s` : `${S.m.X.s} = ${u(fx(S.x, S.m.X.d), S.m.X.unit)}`;
+    $('tclock').textContent = isRates() ? `t = ${fx(S.t, 2)} s` : '';
+  }
+  const pval = (d) => { let t = fx(S.p[d.k], d.d); if (d.trim) t = t.replace(/(\.\d*?)0+$/, '$1').replace(/\.$/, ''); return u(t, d.unit); };
+  function paramsUI() {
+    const m = S.m;
+    $('csLab').textContent = isRates() ? tr('Clock: time since the start') : tr(m.X.name);
+    for (let i = 0; i < 4; i++) {
+      const row = $('p' + i).closest('.prow'), d = m.p[i];
+      row.hidden = !d; if (!d) continue;
+      $('p' + i + 'Lab').textContent = tr(d.label);
+      const el = $('p' + i); el.min = d.min; el.max = d.max; el.step = d.step; el.value = S.p[d.k];
+      $('p' + i + 'Out').textContent = pval(d);
+    }
+    $('best').hidden = isRates();
+    $('legQ').textContent = isRates() ? tr('{y}, the quantity that follows', { y: m.Y.s }) : tr('{q}, the quantity to make best', { q: m.Q.s });
+    $('legR').textContent = isRates() ? tr('d{y}/dt, its rate against time', { y: m.Y.s }) : tr('d{q}/d{x}, its derivative', { q: m.Q.s, x: m.X.s });
+    $('legBestRow').hidden = isRates();
+    $('note').textContent = isRates() ? tr('Real time: 1 s on the clock is 1 s. Play runs it; drag the red handle to move the driver yourself.') : tr('Play sweeps {x} back and forth across its range in 8 s. Drag the red handle or the graph to choose {x} yourself.', { x: m.X.s });
+    $('ctlTitle').textContent = isRates() ? tr('The clock and the scene') : tr('Your choice and the scene');
+    /* the controls card grew or shrank: let the picture size helper (vd.js) measure the stage again */
+    if (S.rows !== m.p.length) { S.rows = m.p.length; window.dispatchEvent(new Event('resize')); }
+  }
+  for (let i = 0; i < 4; i++) $('p' + i).addEventListener('input', () => {
+    const d = S.m.p[i]; if (!d) return;
+    const keepU = isRates() ? rs(S.t).u : null;
+    S.p[d.k] = +$('p' + i).value; $('p' + i + 'Out').textContent = pval(d);
+    if (isRates()) { S.t = Math.max(0, Math.min(tEnd(), S.t)); if (keepU !== null && S.preset === 'shadow') S.t = Math.max(0, Math.min(tEnd(), (keepU - 1) / S.p.v)); }
+    else S.x = Math.max(lo(), Math.min(hi(), S.x));
+    syncChoice(); need = true;
+  });
+  $('cs').addEventListener('input', () => {
+    const f = +$('cs').value / 1000; setRun(false);
+    if (isRates()) S.t = f * tEnd(); else S.x = lo() + f * (hi() - lo());
+    syncChoice(); need = true;
+  });
+  const pressPreset = (k) => { for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === k)); };
+  function applyPreset(k) {
+    S.preset = k; S.sc = SC[k]; S.m = META[k]; S.p = {}; for (const d of S.m.p) S.p[d.k] = d.v;
+    S.t = 0; S.x = isRates() ? 0 : S.m.start; S.dir = 1;
+    pressPreset(k); $('presetHint').textContent = tr(S.m.hint); setRun(false);
+    paramsUI(); syncChoice(); formulas(); need = true;
+  }
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  function setRun(on) {
+    if (on && isRates() && S.t >= tEnd() - 1e-9) S.t = 0;   /* Play at the end of a run starts it over */
+    S.run = on; $('play').textContent = on ? tr('Pause') : tr('Play'); $('play').classList.toggle('attn', !on);
+  }
+  $('play').addEventListener('click', () => setRun(!S.run));
+  $('reset').addEventListener('click', () => { setRun(false); S.t = 0; if (!isRates()) S.x = S.m.start; S.dir = 1; syncChoice(); need = true; });
+  $('best').addEventListener('click', () => { if (!isRates()) setX(bestX()); });
+  $('showTan').addEventListener('change', () => { need = true; });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; $('best').disabled = S.blind; need = true; });
+
+  /* ---- pointer and keys ---- */
+  let drag = null;
+  scn.addEventListener('pointerdown', (e) => {
+    const r = scn.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
+    if (!hand || Math.hypot(x - hand.x, y - hand.y) > 26 * proj()) return;
+    drag = { id: e.pointerId, set: hand.set }; scn.setPointerCapture(e.pointerId); setRun(false); e.preventDefault();
+  });
+  scn.addEventListener('pointermove', (e) => {
+    const r = scn.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
+    if (!drag) { scn.style.cursor = hand && Math.hypot(x - hand.x, y - hand.y) <= 26 * proj() ? hand.cursor : 'default'; return; }
+    if (S.fit) drag.set(S.fit.Xi(x), S.fit.Yi(y));
+  });
+  const upS = () => { drag = null; };
+  scn.addEventListener('pointerup', upS); scn.addEventListener('pointercancel', upS);
+  let pdrag = false;
+  const plotSet = (e) => {
+    const r = plt.getBoundingClientRect(), pr = proj(), L = 58 * pr, R = PW - 10 * pr, f = Math.max(0, Math.min(1, (e.clientX - r.left - L) / (R - L)));
+    setRun(false); if (isRates()) S.t = f * tEnd(); else S.x = lo() + f * (hi() - lo()); syncChoice(); need = true;
+  };
+  plt.addEventListener('pointerdown', (e) => { pdrag = true; plt.setPointerCapture(e.pointerId); plotSet(e); });
+  plt.addEventListener('pointermove', (e) => { if (pdrag) plotSet(e); });
+  plt.addEventListener('pointerup', () => { pdrag = false; }); plt.addEventListener('pointercancel', () => { pdrag = false; });
+  const keys = (e) => {
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+      const sgn = e.key === 'ArrowLeft' ? -1 : 1, k = e.shiftKey ? 10 : 1;
+      setRun(false);
+      if (isRates()) S.t = Math.max(0, Math.min(tEnd(), S.t + sgn * k * tEnd() / 200)); else S.x = Math.max(lo(), Math.min(hi(), S.x + sgn * k * (hi() - lo()) / 400));
+      syncChoice(); need = true; e.preventDefault();
+    } else if (e.key === ' ') { $('play').click(); e.preventDefault(); }
+  };
+  scn.addEventListener('keydown', keys); plt.addEventListener('keydown', keys);
+
+  /* ---- frame ---- */
+  function draw() {
+    if (!T || !W) return;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    hand = null;
+    const k = S.preset, pr = proj();
+    if (k === 'ladder') drawLadder(rs(S.t));
+    else if (k === 'cone') drawCone(rs(S.t));
+    else if (k === 'shadow') drawShadow(rs(S.t));
+    else if (k === 'box') drawBox(S.x);
+    else if (k === 'fence') drawFence(S.x);
+    else if (k === 'can') drawCan(S.x);
+    else if (k === 'guard' || k === 'light') drawGuard(S.x);
+    else drawRange(S.x);
+    if (isRates()) label(ctx, `t = ${fx(S.t, 2)} s   (${tr('real time')})`, 10 * pr, 14 * pr, T.ink, 'left', 'middle', 13, true);
+    else label(ctx, `${S.m.X.s} = ${u(fx(S.x, S.m.X.d), S.m.X.unit)}   ${S.m.Q.s} = ${u(sf(S.sc.q(S.x, P()), 5), S.m.Q.unit)}`, 10 * pr, 14 * pr, T.ink, 'left', 'middle', 13, true);
+    drawPlot();
+  }
+  let last = performance.now(), lastKey = '';
+  function frame(now) {
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    if (S.run) {
+      if (isRates()) { S.t += dt; if (S.t >= tEnd()) { S.t = tEnd(); setRun(false); } }
+      else { const span = hi() - lo(); S.x += S.dir * span / 8 * dt; if (S.x >= hi()) { S.x = hi(); S.dir = -1; } if (S.x <= lo()) { S.x = lo(); S.dir = 1; } }
+      syncChoice(); need = true;
+    }
+    if (need) {
+      need = false; draw();
+      const key = `${S.preset},${S.t},${S.x},${S.blind},${JSON.stringify(S.p)}`; if (key !== lastKey) { lastKey = key; readouts(); }
+    }
+    requestAnimationFrame(frame);
+  }
+  function resize() {
+    dpr = window.devicePixelRatio || 1;
+    const r = $('pane').getBoundingClientRect(); W = r.width; H = r.height; scn.width = Math.round(W * dpr); scn.height = Math.round(H * dpr);
+    const q = $('lower').getBoundingClientRect(); PW = q.width; PH = q.height; plt.width = Math.round(PW * dpr); plt.height = Math.round(PH * dpr);
+    need = true;
+  }
+  const retheme = () => { tokens(); need = true; };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'data-vd-look'] });
+  VD.projector({ onChange: resize });
+  if (window.VD && VD.panel) VD.panel({ play: '#play', reset: '#reset', clock: '#tclock' });
+  if (window.VD && VD.splitPanes) VD.splitPanes($('pane'), $('lower'), { key: 'lower', label: 'Divider between the scene and the graph' });
+  if (window.VD && VD.describe) VD.describe(scn, () => {
+    const m = S.m, p = P(), live = !S.run, chip = document.querySelector('#presets [aria-pressed="true"]'), out = [`The setup: ${chip ? chip.textContent : ''}.`];
+    if (isRates()) {
+      const c = rs(S.t);
+      out.push({ t: `Time ${fx(S.t, 2)} s.`, live }, { t: `${m.U.s} = ${sf(c.u, 4)} ${m.U.unit}, changing at ${sf(c.dudt, 3)} ${m.U.unit} per second.`, live }, { t: `${m.Y.s} = ${sf(c.y, 4)} ${m.Y.unit}.`, live });
+      if (!S.blind) out.push({ t: `${m.Y.s} changes at ${sf(c.dydu * c.dudt, 4)} ${m.Y.unit} per second.`, live });
+    } else {
+      out.push({ t: `${m.X.s} = ${fx(S.x, m.X.d)} ${m.X.unit}, ${m.Q.s} = ${sf(S.sc.q(S.x, p), 5)} ${m.Q.unit}, slope ${sf(S.sc.dq(S.x, p), 4)}.`, live });
+      if (!S.blind) out.push(`The best ${m.X.s} is ${fx(bestX(), m.X.d)} ${m.X.unit}.`);
+    }
+    out.push(S.run ? 'It is running.' : 'It is paused.');
+    return out;
+  });
+  tokens(); const ro = new ResizeObserver(resize); ro.observe($('pane')); ro.observe($('lower')); resize(); applyPreset('ladder');
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  window.__ro = { S, SC, META, applyPreset, setRun, setX, setU, rs, bestX, measured, readouts, draw: () => { need = true; } };
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
