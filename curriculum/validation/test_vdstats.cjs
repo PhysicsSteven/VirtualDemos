@@ -64,6 +64,7 @@ group('tests and intervals', () => {
   const t1 = S.tTest1s(5.2, 1.2, 25, 5, 'right'); near(t1.t, 0.833333, 1e-6, 't'); near(t1.df, 24, 0, 'df');
   const ci = S.tInterval(8.2286, 1.6722, 15, 0.95); near(ci.E, 0.926, 1e-3, 'book 8.2 t interval');
   const pr = S.propInterval(421, 500, 0.95); near(pr.lo, 0.810, 1e-3, 'prop lo'); near(pr.hi, 0.874, 1e-3, 'prop hi');
+  const p4 = S.plusFourInterval(6, 25, 0.95); near(p4.phat, 8 / 29, 1e-12, 'plus four p′'); near(p4.lo, 0.113, 1e-3, 'plus four lo (book 8.3: 6 of 25 smokers)'); near(p4.hi, 0.438, 1e-3, 'plus four hi');
   const g = S.chisqGOF([10, 12, 8, 14, 9, 7], [10, 10, 10, 10, 10, 10]); near(g.chi2, 3.4, 1e-12, 'gof'); near(g.df, 5, 0, 'df');
   const ind = S.chisqIndep([[10, 20], [30, 40]]); near(ind.chi2, 0.79365, 1e-4, 'indep');
   const an = S.anova1([[1, 2, 3], [2, 3, 4], [5, 6, 7]]); near(an.F, 13, 1e-12, 'F'); near(an.dfb, 2, 0, 'dfb'); near(an.dfw, 6, 0, 'dfw');
