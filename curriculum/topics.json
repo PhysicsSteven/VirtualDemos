@@ -445,6 +445,8 @@
      "title": "Math for physics",
      "blurb": "Type any function and see its derivatives and integrals, its Taylor polynomials, the slope field of a differential equation, a vector field with its work and curl, or a point moving along a curve, and watch how a computer solves the equations of motion step by step.",
      "demos": [
+      "function-families",
+      "limits",
       "derivatives",
       "numerical-methods",
       "curves-and-motion",

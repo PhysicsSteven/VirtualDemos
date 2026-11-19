@@ -1,0 +1,961 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="lib/theme.js"></script>
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
+<script src="lib/vdmath.js"></script>
+<title>Families of Functions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css: the curve colors, the function box, the parameter rows and the stage */
+:root { --fg-f: #8f5000; --fg-g: #0f766e; --c-sin: #be123c; --c-cos: #15803d; --c-arc: #7c3aed; --c-key: #b45309; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --fg-f: #e8a440; --fg-g: #5eead4; --c-sin: #fb7185; --c-cos: #4ade80; --c-arc: #c4b5fd; --c-key: #fbbf24; } }
+:root[data-theme="dark"] { --fg-f: #e8a440; --fg-g: #5eead4; --c-sin: #fb7185; --c-cos: #4ade80; --c-arc: #c4b5fd; --c-key: #fbbf24; }
+.stage { position: relative; display: flex; flex-direction: column; min-height: min-content; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.stage-ctl .note { flex: 1 1 100%; font-size: 0.8rem; color: var(--muted); }
+.fbar { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; padding: 10px 12px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.fbar[hidden] { display: none; }
+.fbar .frow { flex: 1 1 380px; display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; }
+.fbar label.fn { font-family: var(--font-mono); font-weight: 600; font-size: 1.05rem; white-space: nowrap; color: var(--fg-f); }
+.fbar input[type="text"] { flex: 1 1 240px; min-width: 0; font-family: var(--font-mono); font-size: 1.05rem; padding: 6px 10px; color: var(--ink); background: var(--canvas);
+  border: 2px solid var(--line2, var(--line)); border-radius: 8px; }
+.fbar input:focus { outline: none; border-color: var(--fg-f); }
+.fbar input:focus-visible { box-shadow: 0 0 0 1px var(--fg-f); }
+.fbar .bad { border-color: var(--red) !important; }
+.fbar .status { flex: 1 1 100%; font-size: 0.84rem; color: var(--muted); min-height: 1.3em; }
+.fbar .status.bad { color: var(--red); border: 0; }
+.pane { position: relative; flex: 1 1 auto; min-height: 420px; }
+.pane canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; outline: none; touch-action: none; cursor: crosshair; }
+.shelf { display: flex; flex-wrap: wrap; align-items: stretch; gap: 12px; padding: 10px; border-top: 1px solid var(--line); background: var(--surface); }
+.shelf-card { flex: 1 1 230px; display: grid; grid-template-columns: minmax(0, 1fr); align-content: start; gap: 7px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--canvas); }
+.shelf-card[hidden] { display: none; }
+.shelf-card.wide { flex: 2 1 420px; }
+.shelf-card > .card-title { font-size: 0.78rem; font-weight: 700; color: var(--muted); }
+.shelf-card .row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; font-size: 0.86rem; }
+.shelf-card input.num { width: 6.6em; font: inherit; font-size: 0.86rem; font-family: var(--font-mono); padding: 3px 6px; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; }
+.shelf-card input.num.bad { border-color: var(--red); }
+.shelf-card input[type="range"] { width: 100%; }
+.prow { display: grid; grid-template-columns: 2.2em minmax(0, 1fr) 6.6em; align-items: center; gap: 4px 8px; }
+.prow > label { font-family: var(--font-mono); font-weight: 700; font-size: 1rem; }
+.prow.on > label { color: var(--fg-g); }
+.prow .eff { grid-column: 2 / 4; font-size: 0.8rem; color: var(--muted); margin-top: -4px; }
+.seg.wrap { flex-wrap: wrap; }
+dl.formulas { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 6px 10px; margin: 0; }
+dl.formulas dt { font-family: var(--font-mono); font-weight: 600; white-space: nowrap; }
+dl.formulas dd { margin: 0; font-family: var(--font-mono); font-size: 0.88rem; overflow-wrap: anywhere; }
+dl.formulas .f { color: var(--fg-f); } dl.formulas .g { color: var(--fg-g); }
+.chips .chips-label { flex: 1 1 100%; font-size: 0.78rem; font-weight: 700; color: var(--muted); margin-top: 4px; }
+.rail ul.typing { margin: 6px 0 0; padding-left: 1.2em; font-size: 0.86rem; color: var(--muted); }
+.rail ul.typing code { font-family: var(--font-mono); color: var(--ink); }
+@media (min-width: 821px) { .bench > .stage { align-self: start; min-height: max(700px, 100%); } }
+@media (max-width: 820px) { .pane { min-height: 0; height: 460px; flex: none; } .shelf-card, .shelf-card.wide { flex: 1 1 100%; } }
+</style>
+<link rel="stylesheet" id="vd-paper" href="lib/paper.css">
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Families of Functions</h1>
+      <p>Turn a point around the unit circle and watch it draw sine and cosine, with the angle measured as arc length. Stretch and shift any function you type, and see what each number does. Reflect a graph in y = x to make its inverse, and watch the slope turn into 1/slope. Oscillations, phasors and exponential decay are these same moves.</p>
+    </div>
+    <div class="bar-right">
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/function-families.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/function-families.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM10 2h3v1h-3zM14 2h1v1h-1zM17 2h1v1h-1zM20 2h2v1h-2zM23 2h1v1h-1zM27 2h2v1h-2zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM10 3h1v1h-1zM14 3h1v1h-1zM17 3h2v1h-2zM20 3h1v1h-1zM22 3h1v1h-1zM24 3h1v1h-1zM28 3h1v1h-1zM30 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h2v1h-2zM13 4h1v1h-1zM15 4h1v1h-1zM18 4h1v1h-1zM22 4h3v1h-3zM27 4h2v1h-2zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM16 5h1v1h-1zM19 5h1v1h-1zM21 5h3v1h-3zM27 5h1v1h-1zM29 5h1v1h-1zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h2v1h-2zM15 6h1v1h-1zM17 6h1v1h-1zM19 6h1v1h-1zM21 6h1v1h-1zM23 6h1v1h-1zM27 6h1v1h-1zM30 6h1v1h-1zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM13 7h1v1h-1zM16 7h2v1h-2zM19 7h2v1h-2zM23 7h3v1h-3zM27 7h2v1h-2zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM11 9h1v1h-1zM14 9h4v1h-4zM24 9h1v1h-1zM26 9h4v1h-4zM2 10h1v1h-1zM5 10h6v1h-6zM12 10h2v1h-2zM16 10h1v1h-1zM18 10h1v1h-1zM20 10h3v1h-3zM24 10h3v1h-3zM29 10h3v1h-3zM34 10h1v1h-1zM36 10h3v1h-3zM2 11h4v1h-4zM7 11h1v1h-1zM9 11h2v1h-2zM12 11h1v1h-1zM15 11h1v1h-1zM22 11h4v1h-4zM28 11h2v1h-2zM33 11h3v1h-3zM37 11h1v1h-1zM3 12h4v1h-4zM8 12h1v1h-1zM16 12h1v1h-1zM20 12h1v1h-1zM23 12h1v1h-1zM25 12h1v1h-1zM29 12h5v1h-5zM36 12h1v1h-1zM38 12h1v1h-1zM2 13h1v1h-1zM4 13h1v1h-1zM7 13h1v1h-1zM9 13h1v1h-1zM14 13h1v1h-1zM17 13h1v1h-1zM19 13h2v1h-2zM24 13h3v1h-3zM30 13h9v1h-9zM3 14h2v1h-2zM7 14h4v1h-4zM12 14h2v1h-2zM15 14h1v1h-1zM18 14h1v1h-1zM21 14h1v1h-1zM26 14h1v1h-1zM32 14h1v1h-1zM35 14h1v1h-1zM38 14h1v1h-1zM2 15h1v1h-1zM6 15h2v1h-2zM9 15h1v1h-1zM11 15h2v1h-2zM14 15h6v1h-6zM21 15h1v1h-1zM23 15h3v1h-3zM28 15h3v1h-3zM34 15h2v1h-2zM3 16h2v1h-2zM8 16h2v1h-2zM14 16h2v1h-2zM17 16h1v1h-1zM19 16h1v1h-1zM21 16h2v1h-2zM27 16h3v1h-3zM31 16h2v1h-2zM34 16h3v1h-3zM38 16h1v1h-1zM4 17h2v1h-2zM10 17h1v1h-1zM12 17h1v1h-1zM19 17h3v1h-3zM24 17h2v1h-2zM29 17h2v1h-2zM33 17h1v1h-1zM35 17h3v1h-3zM2 18h2v1h-2zM5 18h2v1h-2zM8 18h1v1h-1zM11 18h1v1h-1zM15 18h1v1h-1zM17 18h3v1h-3zM21 18h2v1h-2zM24 18h4v1h-4zM29 18h1v1h-1zM32 18h1v1h-1zM36 18h3v1h-3zM2 19h2v1h-2zM5 19h1v1h-1zM7 19h1v1h-1zM9 19h2v1h-2zM16 19h1v1h-1zM18 19h3v1h-3zM22 19h1v1h-1zM24 19h1v1h-1zM29 19h1v1h-1zM35 19h2v1h-2zM3 20h1v1h-1zM5 20h2v1h-2zM8 20h1v1h-1zM11 20h1v1h-1zM13 20h1v1h-1zM15 20h3v1h-3zM19 20h1v1h-1zM22 20h2v1h-2zM25 20h3v1h-3zM29 20h3v1h-3zM35 20h2v1h-2zM38 20h1v1h-1zM2 21h4v1h-4zM7 21h1v1h-1zM15 21h2v1h-2zM20 21h1v1h-1zM24 21h1v1h-1zM27 21h1v1h-1zM30 21h1v1h-1zM32 21h4v1h-4zM38 21h1v1h-1zM2 22h1v1h-1zM4 22h3v1h-3zM8 22h1v1h-1zM11 22h3v1h-3zM16 22h4v1h-4zM25 22h2v1h-2zM28 22h8v1h-8zM2 23h1v1h-1zM4 23h1v1h-1zM6 23h1v1h-1zM9 23h4v1h-4zM14 23h1v1h-1zM17 23h1v1h-1zM21 23h5v1h-5zM29 23h1v1h-1zM31 23h1v1h-1zM34 23h1v1h-1zM36 23h2v1h-2zM4 24h3v1h-3zM8 24h1v1h-1zM10 24h1v1h-1zM14 24h1v1h-1zM16 24h2v1h-2zM19 24h2v1h-2zM23 24h1v1h-1zM25 24h3v1h-3zM29 24h2v1h-2zM32 24h2v1h-2zM35 24h1v1h-1zM38 24h1v1h-1zM2 25h1v1h-1zM5 25h3v1h-3zM9 25h1v1h-1zM12 25h1v1h-1zM14 25h3v1h-3zM19 25h1v1h-1zM21 25h2v1h-2zM24 25h1v1h-1zM30 25h1v1h-1zM32 25h5v1h-5zM2 26h2v1h-2zM8 26h2v1h-2zM12 26h1v1h-1zM17 26h4v1h-4zM22 26h1v1h-1zM26 26h1v1h-1zM32 26h1v1h-1zM2 27h6v1h-6zM9 27h3v1h-3zM14 27h2v1h-2zM18 27h1v1h-1zM21 27h2v1h-2zM24 27h2v1h-2zM27 27h4v1h-4zM34 27h2v1h-2zM2 28h3v1h-3zM6 28h1v1h-1zM8 28h3v1h-3zM13 28h1v1h-1zM15 28h2v1h-2zM18 28h1v1h-1zM21 28h1v1h-1zM24 28h1v1h-1zM28 28h2v1h-2zM34 28h1v1h-1zM36 28h3v1h-3zM2 29h1v1h-1zM5 29h1v1h-1zM7 29h1v1h-1zM9 29h1v1h-1zM11 29h1v1h-1zM13 29h2v1h-2zM16 29h2v1h-2zM24 29h1v1h-1zM26 29h1v1h-1zM28 29h6v1h-6zM35 29h4v1h-4zM2 30h1v1h-1zM4 30h2v1h-2zM8 30h1v1h-1zM10 30h1v1h-1zM15 30h1v1h-1zM21 30h2v1h-2zM26 30h2v1h-2zM29 30h9v1h-9zM10 31h2v1h-2zM14 31h3v1h-3zM20 31h3v1h-3zM24 31h1v1h-1zM26 31h1v1h-1zM30 31h1v1h-1zM34 31h1v1h-1zM36 31h2v1h-2zM2 32h7v1h-7zM10 32h1v1h-1zM14 32h2v1h-2zM17 32h2v1h-2zM21 32h1v1h-1zM23 32h1v1h-1zM25 32h4v1h-4zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM38 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h1v1h-1zM12 33h1v1h-1zM14 33h2v1h-2zM18 33h5v1h-5zM25 33h1v1h-1zM27 33h1v1h-1zM29 33h2v1h-2zM34 33h1v1h-1zM37 33h2v1h-2zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h6v1h-6zM25 34h2v1h-2zM28 34h7v1h-7zM37 34h1v1h-1zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h3v1h-3zM14 35h1v1h-1zM16 35h1v1h-1zM18 35h1v1h-1zM20 35h2v1h-2zM23 35h3v1h-3zM28 35h2v1h-2zM31 35h2v1h-2zM35 35h1v1h-1zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM11 36h10v1h-10zM24 36h2v1h-2zM29 36h1v1h-1zM34 36h1v1h-1zM38 36h1v1h-1zM2 37h1v1h-1zM8 37h1v1h-1zM13 37h1v1h-1zM15 37h2v1h-2zM18 37h2v1h-2zM22 37h1v1h-1zM24 37h2v1h-2zM28 37h1v1h-1zM34 37h5v1h-5zM2 38h7v1h-7zM10 38h1v1h-1zM12 38h1v1h-1zM17 38h2v1h-2zM22 38h1v1h-1zM26 38h1v1h-1zM30 38h2v1h-2zM33 38h1v1h-1zM35 38h1v1h-1zM38 38h1v1h-1z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl" id="strip">
+        <button type="button" class="spin attn" id="play" data-vd-key="play">Play</button>
+        <button type="button" class="btn" id="reset" title="Put the angle, the numbers or the point back where this setup started">Reset</button>
+        <div class="seg wrap" role="group" aria-label="Mode" id="modeSeg">
+          <button type="button" data-m="circle" aria-pressed="true">Unit circle</button>
+          <button type="button" data-m="transform" aria-pressed="false">Stretch and shift</button>
+          <button type="button" data-m="inverse" aria-pressed="false">Inverse</button>
+        </div>
+        <span class="note" id="note"></span>
+      </div>
+      <div class="fbar" id="fbar" hidden>
+        <div class="frow">
+          <label for="fx" class="fn" id="fxLabel" translate="no">f(x) =</label>
+          <input type="text" id="fx" translate="no" spellcheck="false" autocomplete="off" autocapitalize="off" autocorrect="off" inputmode="text" aria-describedby="fxStatus" value="x^2">
+        </div>
+        <div class="status" id="fxStatus" role="status" aria-live="polite"></div>
+      </div>
+      <div class="pane" id="pane">
+        <canvas id="can" tabindex="0" role="img" aria-label="The picture: the unit circle and the graphs it draws, a function with its stretched and shifted copy, or a function with its mirror image in y = x. Drag the point; arrows move it; plus and minus zoom; Space plays or pauses."></canvas>
+      </div>
+      <div class="shelf" id="shelf">
+        <div class="shelf-card" role="group" aria-label="Angle" data-for="circle">
+          <span class="card-title">Angle</span>
+          <div class="slider-head"><label for="thSlide">θ = ωt + φ</label><output id="thOut" translate="no"></output></div>
+          <input type="range" id="thSlide" min="-6.2832" max="18.85" step="0.001" value="0.8">
+          <div class="row"><span>Graph</span><div class="seg" role="group" aria-label="Graph" id="showSeg">
+            <button type="button" data-s="sin" aria-pressed="false">sin</button>
+            <button type="button" data-s="cos" aria-pressed="false">cos</button>
+            <button type="button" data-s="both" aria-pressed="true">Both</button>
+          </div></div>
+        </div>
+        <div class="shelf-card wide" role="group" aria-label="Phasor" data-for="circle">
+          <span class="card-title" id="phTitle">Phasor: x = A cos(ωt + φ)</span>
+          <div class="prow" data-k="A"><label for="sA" translate="no">A</label><input type="range" id="sA" min="0.1" max="3" step="0.01"><input type="text" class="num" id="nA" translate="no" spellcheck="false" autocomplete="off" aria-label="Amplitude A"><span class="eff">Amplitude: the radius of the circle</span></div>
+          <div class="prow" data-k="w"><label for="sW" translate="no">ω</label><input type="range" id="sW" min="0.1" max="6.3" step="0.01"><input type="text" class="num" id="nW" translate="no" spellcheck="false" autocomplete="off" aria-label="Angular frequency omega"><span class="eff">Angular frequency: radians turned each second</span></div>
+          <div class="prow" data-k="ph"><label for="sPh" translate="no">φ</label><input type="range" id="sPh" min="-3.1416" max="3.1416" step="0.01"><input type="text" class="num" id="nPh" translate="no" spellcheck="false" autocomplete="off" aria-label="Phase phi"><span class="eff">Phase: the angle at t = 0</span></div>
+        </div>
+        <div class="shelf-card wide" role="group" aria-label="Stretch and shift" data-for="transform">
+          <span class="card-title" id="tfTitle" translate="no">g(x) = a·f(b(x − c)) + d</span>
+          <div class="prow" data-k="a"><label for="sa" translate="no">a</label><input type="range" id="sa" min="-4" max="4" step="0.01"><input type="text" class="num" id="na" translate="no" spellcheck="false" autocomplete="off" aria-label="a, the vertical stretch"><span class="eff" id="ea"></span></div>
+          <div class="prow" data-k="b"><label for="sb" translate="no">b</label><input type="range" id="sb" min="-4" max="4" step="0.01"><input type="text" class="num" id="nb" translate="no" spellcheck="false" autocomplete="off" aria-label="b, the horizontal stretch"><span class="eff" id="eb"></span></div>
+          <div class="prow" data-k="c"><label for="sc" translate="no">c</label><input type="range" id="sc" min="-6" max="6" step="0.01"><input type="text" class="num" id="nc" translate="no" spellcheck="false" autocomplete="off" aria-label="c, the horizontal shift"><span class="eff" id="ec"></span></div>
+          <div class="prow" data-k="d"><label for="sd" translate="no">d</label><input type="range" id="sd" min="-6" max="6" step="0.01"><input type="text" class="num" id="nd" translate="no" spellcheck="false" autocomplete="off" aria-label="d, the vertical shift"><span class="eff" id="ed"></span></div>
+          <span class="hint">Play sweeps the number you touched last. Type a number or <code translate="no">pi/4</code>, <code translate="no">-1/2</code>.</span>
+        </div>
+        <div class="shelf-card" role="group" aria-label="Domain" data-for="inverse">
+          <span class="card-title">Domain of f</span>
+          <div class="row"><label for="loIn">From</label><input type="text" class="num" id="loIn" value="0" translate="no" spellcheck="false" autocomplete="off"><label for="hiIn">to</label><input type="text" class="num" id="hiIn" value="2" translate="no" spellcheck="false" autocomplete="off"></div>
+          <div class="slider-head"><label for="x0Slide">Point x₀</label><output id="x0Out" translate="no"></output></div>
+          <input type="range" id="x0Slide" min="0" max="1000" step="1" value="500">
+          <label class="check"><input type="checkbox" id="showTan" checked><span>Tangent lines and slope triangles</span></label>
+        </div>
+        <div class="shelf-card" role="group" aria-label="The view" data-for="transform inverse">
+          <span class="card-title">The view</span>
+          <div class="row"><button type="button" class="btn" id="zin">Zoom in</button><button type="button" class="btn" id="zout">Zoom out</button><button type="button" class="btn" id="homeView">Reset view</button></div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+      </section>
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <span class="chips-label">Unit circle</span>
+          <button type="button" data-p="circle" aria-pressed="true">sin and cos from the unit circle</button>
+          <button type="button" data-p="radian" aria-pressed="false">One radian: an arc as long as the radius</button>
+          <button type="button" data-p="phasor" aria-pressed="false">Phasor: a mass on a spring</button>
+          <span class="chips-label">Stretch and shift</span>
+          <button type="button" data-p="parab" aria-pressed="false">Move a parabola</button>
+          <button type="button" data-p="sine" aria-pressed="false">sin x: amplitude, period, phase</button>
+          <button type="button" data-p="root" aria-pressed="false">√x: a shift moves the domain</button>
+          <button type="button" data-p="shm" aria-pressed="false">Oscillation: x = A cos(ωt + φ)</button>
+          <button type="button" data-p="decay" aria-pressed="false">Exponential decay and half life</button>
+          <span class="chips-label">Inverse</span>
+          <button type="button" data-p="sqrt" aria-pressed="false">x² and √x</button>
+          <button type="button" data-p="explog" aria-pressed="false">eˣ and ln x: mirror images</button>
+          <button type="button" data-p="arcsin" aria-pressed="false">sin x and arcsin x</button>
+          <button type="button" data-p="cubic" aria-pressed="false">x³ + x: slope becomes 1/slope</button>
+          <button type="button" data-p="fail" aria-pressed="false">x² on [−2, 2]: not one to one</button>
+          <button type="button" data-p="when" aria-pressed="false">Decay: how long until N is left?</button>
+        </div>
+        <details class="more" open><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+      </section>
+      <section>
+        <h2>Formulas</h2>
+        <dl class="formulas" id="formulas" translate="no"></dl>
+      </section>
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the readouts and formulas, to predict them first</span></label>
+        <details class="more"><summary>What you can type</summary>
+          <ul class="typing">
+            <li>Use <code>x</code> or <code>t</code> as the variable.</li>
+            <li><code>+ − * / ^</code> and parentheses; <code>2x</code>, <code>3sin(x)</code> and <code>(x+1)(x−1)</code> multiply.</li>
+            <li><code>sin cos tan sec csc cot</code>, <code>asin acos atan</code>, <code>sinh cosh tanh</code>, <code>exp</code> or <code>e^x</code>, <code>ln</code>, <code>log</code> (base 10), <code>sqrt</code>, <code>abs</code> or <code>|x|</code>, <code>pi</code></li>
+          </ul>
+        </details>
+        <details class="more"><summary>How it works</summary>
+          <p class="hint">The box is read by a small parser (demos/lib/vdmath.js); nothing you type is run as code. Angles are in radians.</p>
+          <p class="hint">Unit circle: the point is at (A cos θ, A sin θ) with θ = ωt + φ. On the unit circle (A = 1) the graph's θ axis uses the same scale as the circle, so the arc from (1, 0) to the point unrolls onto the axis at its true length: an angle in radians is that arc length divided by the radius.</p>
+          <p class="hint">Stretch and shift: g(x) = a·f(b(x − c)) + d is computed from f exactly as written, and its formula is f with x replaced by b(x − c), simplified. A point (x, y) of f lands at (c + x/b, a·y + d) on g.</p>
+          <p class="hint">Inverse: f must be one to one on the domain; the demo checks it at 4,001 points (the values must strictly rise or strictly fall). The mirror image is every point (x, f(x)) drawn at (f(x), x). The slope of f at x₀ is f′(x₀), exact from the derivative rules; the slope of the inverse at y₀ = f(x₀) is 1/f′(x₀). As a check, the demo also measures it from the inverse itself: f⁻¹ is found by bisection to rounding and its slope by a central difference.</p>
+        </details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  /* Families of functions: the unit circle and phasors, stretches and shifts, inverses, and exponential decay. Runs in Node with
+     demos/lib/vdmath.js loaded first (curriculum/validation/test_function_families.cjs). OpenStax Calculus Vol 1 1.1 to 1.5 and 3.7;
+     University Physics Vol 1 15.1 and 15.3. */
+  /* the point on a circle of radius A at time t, turning at ω from the phase φ: x = A cos(ωt + φ), y = A sin(ωt + φ) */
+  function phasor(A, w, ph, t) {
+    const th = w * t + ph;
+    return { th, x: A * Math.cos(th), y: A * Math.sin(th), vx: -A * w * Math.sin(th), vy: A * w * Math.cos(th), arc: A * th, T: 2 * Math.PI / Math.abs(w), f: Math.abs(w) / (2 * Math.PI) };
+  }
+  /* g(x) = a·f(b(x − c)) + d, as a function */
+  const transformed = (f, a, b, c, d) => (x) => a * f(b * (x - c)) + d;
+  /* where the point (x, y) of f lands on g: (c + x/b, a·y + d) */
+  const mapPoint = (x, y, a, b, c, d) => [c + x / b, a * y + d];
+  /* the tree n with the variable v replaced by the tree r, rebuilt through the simplifying constructors */
+  function substNode(n, v, r) {
+    const M = VDMATH;
+    switch (n.k) {
+      case 'v': return n.n === v ? r : n;
+      case 'add': return M.mkAdd(n.a.map((m) => substNode(m, v, r)));
+      case 'mul': return M.mkMul(n.a.map((m) => substNode(m, v, r)));
+      case 'pow': return M.mkPow(substNode(n.a, v, r), substNode(n.b, v, r));
+      case 'fn': return M.mkFn(n.f, substNode(n.a, v, r));
+    }
+    return n;
+  }
+  /* the tree of a·f(b(x − c)) + d */
+  function transformNode(node, v, a, b, c, d) {
+    const M = VDMATH, num = (x) => M.num(x), V = { k: 'v', n: v };
+    const inner = M.mkMul([num(b), M.mkAdd([V, num(-c)])]);
+    return M.mkAdd([M.mkMul([num(a), substNode(node, v, inner)]), num(d)]);
+  }
+  /* what each number does to the graph: a and b stretch (and flip when negative), c and d shift */
+  function effects(a, b, c, d) {
+    const st = (k) => (k === 0 ? 'flat' : Math.abs(k) === 1 ? 'none' : Math.abs(k) > 1 ? 'more' : 'less');
+    return { a: { kind: st(a), flip: a < 0, by: Math.abs(a) }, b: { kind: st(b), flip: b < 0, by: b === 0 ? Infinity : 1 / Math.abs(b) },
+      c: { dir: c > 0 ? 'right' : c < 0 ? 'left' : 'none', by: Math.abs(c) }, d: { dir: d > 0 ? 'up' : d < 0 ? 'down' : 'none', by: Math.abs(d) } };
+  }
+  /* is f one to one on [lo, hi]? The values at n + 1 evenly spaced points must strictly rise or strictly fall. If not, two
+     points x1 < x2 with the same value y (found beside the first turn by bisection) show the horizontal line test failing. */
+  function oneToOne(f, lo, hi, n) {
+    n = n || 4000;
+    const xs = [], ys = [];
+    for (let i = 0; i <= n; i++) { const x = lo + (hi - lo) * i / n; xs.push(x); ys.push(f(x)); }
+    if (!ys.every(isFinite)) return { ok: false, why: 'undefined', x: xs[ys.findIndex((y) => !isFinite(y))] };
+    const dir = Math.sign(ys[n] - ys[0]);
+    if (dir === 0) return { ok: false, why: 'turns', ...sameValue(f, xs, ys, 1) };
+    for (let i = 1; i <= n; i++) if (Math.sign(ys[i] - ys[i - 1]) !== dir) return { ok: false, why: 'turns', ...sameValue(f, xs, ys, i) };
+    return { ok: true, dir };
+  }
+  function sameValue(f, xs, ys, i) {
+    /* the turn is near xs[i − 1]; take a point a little to its left and find where f comes back to that value on the right */
+    const n = xs.length - 1; let iT = i - 1;
+    const up = ys[Math.min(n, iT + 1)] >= ys[iT];
+    while (iT < n && (ys[iT + 1] >= ys[iT]) === up) iT++;   /* walk to the next turn on the right (an extremum) */
+    const k = Math.max(0, iT - Math.max(1, Math.round(n / 8))), y = ys[k], x1 = xs[k];
+    let lo = xs[iT], hi = null;
+    for (let j = iT + 1; j <= n; j++) if ((ys[j] - y) * (ys[iT] - y) <= 0) { hi = xs[j]; break; }
+    if (hi === null) return { x1, x2: null, y };
+    const s0 = Math.sign(f(lo) - y);
+    for (let it = 0; it < 80; it++) { const m = (lo + hi) / 2; if (Math.sign(f(m) - y) === s0) lo = m; else hi = m; }
+    return { x1, x2: (lo + hi) / 2, y };
+  }
+  /* f⁻¹(y) on [lo, hi] for a one to one f, by bisection to rounding; NaN outside the range of f */
+  function inverseAt(f, y, lo, hi) {
+    let a = lo, b = hi, fa = f(a) - y, fb = f(b) - y;
+    if (fa === 0) return a; if (fb === 0) return b;
+    if (fa * fb > 0) return NaN;
+    for (let it = 0; it < 200; it++) {
+      const m = (a + b) / 2; if (m === a || m === b) break;
+      const fm = f(m) - y; if (fm === 0) return m;
+      if (fm * fa < 0) { b = m; } else { a = m; fa = fm; }
+    }
+    return (a + b) / 2;
+  }
+  /* the slope of f⁻¹ at y, measured on the inverse itself by a central difference */
+  function inverseSlope(f, y, lo, hi, h) { return (inverseAt(f, y + h, lo, hi) - inverseAt(f, y - h, lo, hi)) / (2 * h); }
+  /* exponential decay N = N₀e^(−t/τ) = N₀e^(bt) with b = −1/τ: the time constant and the half life τ ln 2 */
+  const decay = (b) => ({ tau: -1 / b, half: Math.LN2 / -b });
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  const VDI18N = window.VDI18N || { t: (s, o) => s.replace(/\{(\w+)\}/g, (m, k) => (o && k in o ? o[k] : m)) };
+  const M = VDMATH, fmt = M.fmt;
+  const PI = Math.PI;
+  /* each setup: its mode and the numbers it starts from. Units label the axes where the setup is physical. */
+  const PRESETS = {
+    circle: { mode: 'circle', A: 1, w: 1, ph: 0, th: 0.8, show: 'both',
+      hint: 'The point P is at (cos θ, sin θ). Its height is sin θ and its distance across is cos θ. Press Play: P turns at one radian a second and draws both graphs. The graph\'s θ axis has the same scale as the circle, so the violet arc from (1, 0) to P unrolls onto the axis at its true length. One full turn is 2π = 6.283 radians.' },
+    radian: { mode: 'circle', A: 1, w: 1, ph: 0, th: 1, show: 'sin',
+      hint: 'θ = 1 radian: the arc from (1, 0) to P is exactly as long as the radius. That is the definition of a radian, so θ in radians is the arc length s divided by the radius r: θ = s/r. A half turn is π radians (180°), so 1 rad = 180°/π = 57.30°. Drag P or the θ slider and compare the arc with the violet piece of the θ axis.' },
+    phasor: { mode: 'circle', A: 0.1, w: PI, ph: PI / 3, th: PI / 3, show: 'cos', units: { x: 'm', t: 's' },
+      hint: 'A mass on a spring moves exactly like the shadow of a point going around a circle: x = A cos(ωt + φ). The radius is the amplitude A = 0.10 m, the point turns at ω = π rad/s so one period is T = 2π/ω = 2.00 s, and φ = π/3 is where it starts at t = 0. Press Play and watch the block keep pace with P.' },
+    parab: { mode: 'transform', src: 'x^2', a: 2, b: 1, c: 1, d: -3, key: 1, act: 'a', x: [-2.5, 4.5],
+      hint: 'g(x) = a·f(b(x − c)) + d. Here g(x) = 2(x − 1)² − 3: a = 2 stretches f up and down, c = 1 moves it right, d = −3 moves it down. The orange dot on f lands on the teal dot on g. Press Play to sweep a, or touch another number and Play sweeps that one.' },
+    sine: { mode: 'transform', src: 'sin(x)', a: 2, b: 2, c: PI / 4, d: 0, key: PI / 2, act: 'b', x: [-1, 7.5],
+      hint: 'a = 2 is the amplitude. b = 2 squeezes the graph toward the y axis, so the period 2π shrinks to 2π/2 = π. c = π/4 moves it right by π/4. Watch: c is the shift of the graph, but inside the function it is multiplied by b, so g(x) = 2 sin(2x − π/2).' },
+    root: { mode: 'transform', src: 'sqrt(x)', a: 1, b: -1, c: 2, d: 1, key: 1, act: 'c', x: [-4, 5],
+      hint: '√x is defined only for x ≥ 0. b = −1 flips it over the y axis and c = 2 moves it right, so g(x) = √(−(x − 2)) + 1 = √(2 − x) + 1 is defined for x ≤ 2. A shift moves the domain and the range with the graph.' },
+    shm: { mode: 'transform', src: 'cos(t)', a: 3, b: PI, c: 1 / 3, d: 0, key: 0, act: 'b', x: [-0.5, 4.5], units: { x: 's', y: 'cm', yName: 'x', kind: 'shm' },
+      hint: 'x(t) = A cos(ωt + φ) is cos t stretched and shifted. a = A = 3 cm is the amplitude; b = ω = π rad/s squeezes the period to T = 2π/ω = 2.00 s; c = 1/3 s delays it, which is a phase φ = −ωc = −π/3. The first peak, at t = 0 for cos t, moves to t = c.' },
+    decay: { mode: 'transform', src: 'e^t', a: 5, b: -0.5, c: 0, d: 0, key: 0, act: 'b', x: [-0.5, 7], units: { x: 's', y: 'V', yName: 'V', kind: 'decay' },
+      hint: 'A capacitor discharging through a resistor: V = V₀e^(−t/τ) is eᵗ with a = V₀ = 5 V and b = −1/τ. With τ = RC = 2.0 s, b = −0.5 /s flips eᵗ over the y axis and stretches it. Every half life, t½ = τ ln 2 = 1.386 s, V halves: 5, 2.5, 1.25 V. Sweep b and watch the half life change.' },
+    sqrt: { mode: 'inverse', src: 'x^2', lo: '0', hi: '2', x0: 1.5, x: [-2.2, 6.2], cy: 1.5,
+      hint: 'On [0, 2], x² is one to one and its inverse is √x. Reflecting in the dashed line y = x swaps every point (x, y) for (y, x). At P = (1.5, 2.25) the slope of x² is 2 × 1.5 = 3; at the mirrored point Q = (2.25, 1.5) the slope of √x is 1/3. The slope triangle has its rise and run swapped.' },
+    explog: { mode: 'inverse', src: 'e^x', lo: '-3', hi: '1.6', x0: 0.5, x: [-3.5, 5.5], cy: 0.9,
+      hint: 'ln x is the inverse of eˣ, so the graph of ln x is the graph of eˣ reflected in y = x. eˣ is its own slope: at x₀ the slope is e^(x₀) = y₀, so the slope of ln at y₀ is 1/y₀. That is why d/dy ln y = 1/y. eˣ never reaches 0, so ln has a vertical asymptote at 0.' },
+    arcsin: { mode: 'inverse', src: 'sin(x)', lo: '-pi/2', hi: 'pi/2', x0: 1.1, x: [-4, 4], cy: 0,
+      hint: 'sin x is not one to one over all x, so arcsin uses only [−π/2, π/2], where sin rises. The slope of sin is cos x₀, so the slope of arcsin at y = sin x₀ is 1/cos x₀ = 1/√(1 − y²). At the ends the slope of sin is 0, and the slope of arcsin becomes infinite.' },
+    cubic: { mode: 'inverse', src: 'x^3 + x', lo: '-1.5', hi: '1.5', x0: 1, x: [-3.5, 3.5],
+      hint: 'x³ + x always rises, so it has an inverse, but no simple formula gives it. The demo finds f⁻¹(y) by bisection. You can still find the inverse\'s slope: at P = (1, 2) the slope of f is 3x² + 1 = 4, so the slope of f⁻¹ at y = 2 is 1/4. The measured slope agrees.' },
+    fail: { mode: 'inverse', src: 'x^2', lo: '-2', hi: '2', x0: 1.5, x: [-2.8, 4.8], cy: 1.4,
+      hint: 'On [−2, 2], x² takes the value 1 twice, at x = −1 and x = 1: it fails the horizontal line test. Its mirror image fails the vertical line test, so it is not a function. Change the domain to start at 0 and the inverse √x comes back.' },
+    when: { mode: 'inverse', src: 'e^(-t)', lo: '0', hi: '3', x0: Math.LN2, x: [-2, 5.5], cy: 1.3, units: { x: 's', y: '', yName: 'N/N₀' },
+      hint: 'A decaying sample keeps the fraction N/N₀ = e^(−t/τ); here τ = 1.0 s. The inverse answers the other question, how long until a fraction N/N₀ is left: t = τ ln(N₀/N). Half is left after τ ln 2 = 0.693 s. The slope of the inverse, dt/dN, is 1 over the decay rate.' },
+  };
+  const S = { mode: 'circle', preset: 'circle', A: 1, w: 1, ph: 0, t: 0.8, show: 'both', units: null,
+    node: null, v: 'x', f: null, df: null, a: 1, b: 1, c: 0, d: 0, key: 1, act: 'a', lo: 0, hi: 2, loTxt: '0', hiTxt: '2', x0: 1, tan: true,
+    run: false, blind: false, sweepDir: 1, x0v: -5, x1v: 5, y0: -5, y1: 5, autoY: true, oto: null, gNode: null };
+  const can = $('can'), ctx = can.getContext('2d');
+  let W = 0, H = 0, dpr = 1, T = null, need = true;
+  const f6 = (v) => (isFinite(v) ? fmt(Math.abs(v) < 1e-300 ? 0 : Number(v.toPrecision(6))) : VDI18N.t('undefined'));
+  const f4 = (v) => (isFinite(v) ? fmt(Number(v.toPrecision(4))) : VDI18N.t('undefined'));
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), mono: g('--font-mono') || 'monospace', red: g('--red'),
+      f: g('--fg-f'), g: g('--fg-g'), sin: g('--c-sin'), cos: g('--c-cos'), arc: g('--c-arc'), key: g('--c-key'), surface: g('--surface') };
+  }
+  const proj = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.35 : 1);
+  const X = (x) => (x - S.x0v) / (S.x1v - S.x0v) * W, Y = (y) => H - (y - S.y0) / (S.y1 - S.y0) * H;
+  const Xi = (px) => S.x0v + px / W * (S.x1v - S.x0v), Yi = (py) => S.y0 + (H - py) / H * (S.y1 - S.y0);
+
+  /* ---------- reading the boxes ---------- */
+  const MSG = {
+    name: (e) => VDI18N.t('“{n}” is not a name I know. Use x or t, and functions like sin, ln, sqrt.', { n: e.name2 }),
+    char: (e) => VDI18N.t('“{n}” is not something I can read here.', { n: e.name2 }),
+    unexpected: (e) => VDI18N.t('“{n}” is out of place.', { n: e.name2 }),
+    close: () => VDI18N.t('There is a ) without a matching (.'),
+    comma: () => VDI18N.t('Functions here take one input; there is no comma form.'),
+    arg: (e) => VDI18N.t('{n} needs something to act on, like {n}(x).', { n: e.name2 }),
+    twovars: () => VDI18N.t('Use one variable, x or t, not both.'),
+    end: () => VDI18N.t('Not finished yet.'),
+    empty: () => VDI18N.t('Type a function of x, like x^2 sin(x).'),
+  };
+  function status(msg, bad) { const st = $('fxStatus'); st.textContent = msg; st.classList.toggle('bad', !!bad); }
+  /* a number typed in a box: plain, or a constant expression like pi/4 or -1/2 */
+  function numOf(s) {
+    s = String(s).trim();
+    if (/^[-+−]?(\d+\.?\d*|\.\d+)(e[-+]?\d+)?$/i.test(s)) return Number(s.replace('−', '-'));
+    try { const r = M.parse(s, { vars: [] }); if (!M.hasV(r.node)) return M.compile(r.node, ['x'])(0); } catch (_) { /* not a number */ }
+    return NaN;
+  }
+  function read() {
+    const r = M.parseLive($('fx').value);
+    $('fx').classList.toggle('bad', !r.node && !r.empty);
+    if (r.empty) { status(MSG.empty(), false); return; }
+    if (!r.node) { status((S.node ? VDI18N.t('Still showing the last graph. ') : '') + (MSG[r.error.code] || MSG.end)(r.error), true); return; }
+    status(r.partial ? VDI18N.t('Graphing what is finished so far, while you type.') : '', false);
+    S.node = r.node; S.v = r.v; S.f = M.compile(r.node, [r.v]);
+    let d = null; try { d = M.derivative(r.node, r.v); } catch (_) { d = null; }
+    S.dNode = d; S.df = d ? M.compile(d, [r.v]) : null;
+    $('fxLabel').textContent = `f(${r.v}) =`;
+    S.oto = null; S.gNode = null;
+  }
+  function readDomain() {
+    let ok = true;
+    for (const [id, k] of [['loIn', 'lo'], ['hiIn', 'hi']]) { const v = numOf($(id).value); $(id).classList.toggle('bad', !isFinite(v)); if (isFinite(v)) S[k] = v; else ok = false; }
+    if (ok && !(S.hi > S.lo)) { $('hiIn').classList.add('bad'); ok = false; }
+    S.oto = null; return ok;
+  }
+  const gOf = () => transformed(S.f, S.a, S.b, S.c, S.d);
+  function work() {
+    if (S.mode === 'inverse' && S.f && !S.oto) { S.oto = oneToOne(S.f, S.lo, S.hi, 4000); }
+    if (S.mode === 'transform' && S.node && !S.gNode) { try { S.gNode = transformNode(S.node, S.v, S.a, S.b, S.c, S.d); } catch (_) { S.gNode = null; } }
+  }
+
+  /* ---------- drawing helpers ---------- */
+  function niceStep(span, n) {
+    const raw = span / Math.max(2, n), p10 = Math.pow(10, Math.floor(Math.log10(raw))), m = raw / p10;
+    return (m <= 1 ? 1 : m <= 2 ? 2 : m <= 5 ? 5 : 10) * p10;
+  }
+  function tick(v, step) {
+    if (Math.abs(v) < step * 1e-6) return '0';
+    return fmt(Number(v.toFixed(Math.max(0, -Math.floor(Math.log10(step)) + 1))));
+  }
+  const labelOn = (c, t, x, y) => { c.save(); c.strokeStyle = T.canvas; c.lineWidth = 4; c.lineJoin = 'round'; c.strokeText(t, x, y); c.restore(); c.fillText(t, x, y); };
+  /* a grid with ticks for the view of the transform and inverse modes */
+  function grid(p, xName, yName) {
+    const c = ctx, sx = niceStep(S.x1v - S.x0v, W / (90 * p)), sy = niceStep(S.y1 - S.y0, H / (50 * p));
+    c.lineWidth = 1; c.strokeStyle = T.line; c.beginPath();
+    for (let x = Math.ceil(S.x0v / sx) * sx; x <= S.x1v; x += sx) { const u = Math.round(X(x)) + 0.5; c.moveTo(u, 0); c.lineTo(u, H); }
+    for (let y = Math.ceil(S.y0 / sy) * sy; y <= S.y1; y += sy) { const u = Math.round(Y(y)) + 0.5; c.moveTo(0, u); c.lineTo(W, u); }
+    c.stroke();
+    const ax = Math.min(Math.max(Y(0), 0), H), ay = Math.min(Math.max(X(0), 0), W);
+    c.strokeStyle = T.muted; c.lineWidth = 1.5; c.beginPath();
+    if (Y(0) >= 0 && Y(0) <= H) { c.moveTo(0, Y(0)); c.lineTo(W, Y(0)); }
+    if (X(0) >= 0 && X(0) <= W) { c.moveTo(X(0), 0); c.lineTo(X(0), H); }
+    c.stroke();
+    c.font = `600 ${12 * p}px ${T.mono}`; const nameW = c.measureText(xName).width;
+    c.fillStyle = T.muted; c.font = `${11 * p}px ${T.mono}`;
+    const below = ax + 16 * p < H; c.textAlign = 'center'; c.textBaseline = below ? 'top' : 'bottom';
+    for (let x = Math.ceil(S.x0v / sx) * sx; x <= S.x1v; x += sx) { if (Math.abs(x) < sx / 2) continue; const u = X(x); if (u < 14 * p || u > W - 14 * p || (!below && u > W - nameW - 30 * p)) continue; labelOn(c, tick(x, sx), u, below ? ax + 4 * p : ax - 4 * p); }
+    const right = ay + 50 * p < W; c.textAlign = right ? 'left' : 'right'; c.textBaseline = 'middle';
+    for (let y = Math.ceil(S.y0 / sy) * sy; y <= S.y1; y += sy) { if (Math.abs(y) < sy / 2) continue; const u = Y(y); if (u < 26 * p || u > H - 12 * p) continue; labelOn(c, tick(y, sy), right ? ay + 5 * p : ay - 5 * p, u); }
+    c.font = `600 ${12 * p}px ${T.mono}`; c.fillStyle = T.ink;
+    c.textAlign = 'right'; c.textBaseline = 'bottom'; labelOn(c, xName, W - 6 * p, below ? ax - 4 * p : ax - 20 * p);
+    c.textAlign = 'left'; c.textBaseline = 'top'; labelOn(c, yName, (right ? ay : 0) + 6 * p, 6 * p);
+  }
+  /* a curve y = g(x) over the view, broken where it is undefined or jumps off the screen; swap draws x = g(y) (the mirror image) */
+  function curve(g, x0, x1, color, width, dash, swap) {
+    const c = ctx, m = Math.min(2400, Math.max(200, Math.ceil(2 * (swap ? H : W))));
+    c.strokeStyle = color; c.lineWidth = width; c.setLineDash(dash || []); c.lineCap = 'round'; c.lineJoin = 'round'; c.beginPath();
+    let pen = false, pw = 0;
+    for (let i = 0; i <= m; i++) {
+      const s = x0 + (x1 - x0) * i / m, v = g(s);
+      const px = swap ? X(v) : X(s), py = swap ? Y(s) : Y(v), w = swap ? px : py, lim = swap ? W : H;
+      if (!isFinite(px) || !isFinite(py)) { pen = false; continue; }
+      if (pen && Math.abs(w - pw) > 3 * lim) pen = false;
+      const qx = Math.max(-2 * W, Math.min(3 * W, px)), qy = Math.max(-2 * H, Math.min(3 * H, py));
+      if (pen) c.lineTo(qx, qy); else c.moveTo(qx, qy);
+      pen = true; pw = w;
+    }
+    c.stroke(); c.setLineDash([]);
+  }
+  function dot(x, y, color, r, ring) {
+    const c = ctx; if (!isFinite(x) || !isFinite(y)) return;
+    c.beginPath(); c.arc(x, y, r, 0, 7); c.fillStyle = color; c.fill(); if (ring) { c.strokeStyle = T.canvas; c.lineWidth = 2; c.stroke(); }
+  }
+
+  /* ---------- the unit circle ---------- */
+  /* the layout: the circle on the left (or on top on a narrow stage) and the graph beside it; R is the circle's radius in px */
+  function circleLayout() {
+    const p = proj(), side = W >= 560;
+    if (side) {
+      const cw = Math.min(H * 0.92, W * 0.4), R = Math.max(40, cw / 2 - 34 * p);
+      return { side, cx: cw / 2 + 6, cy: H / 2, R, gx0: cw + 10, gx1: W - 12 * p, gy: H / 2 };
+    }
+    const ch = Math.min(W, H * 0.52), R = Math.max(40, ch / 2 - 30 * p);
+    return { side, cx: W / 2, cy: ch / 2 + 4, R, gx0: 12 * p, gx1: W - 12 * p, gy: ch + (H - ch) / 2 };
+  }
+  /* the graph's horizontal scale and window: on the unit circle (A = 1, ω = 1, φ = 0, no units) one radian of θ is R px, the
+     circle's own scale, so the arc unrolls at its true length; otherwise two and a half periods fill the graph */
+  function graphWindow(L) {
+    const gw = L.gx1 - L.gx0, plain = !S.units && S.A === 1 && S.w === 1 && S.ph === 0;
+    const pxPer = plain ? L.R : gw / (2.5 * 2 * PI / Math.abs(S.w));
+    const span = gw / pxPer;
+    let t0 = 0; if (S.t > 0.75 * span) t0 = S.t - 0.75 * span; if (S.t < 0) t0 = S.t - 0.1 * span;
+    return { plain, pxPer, t0, t1: t0 + span, gy: L.gy, amp: L.side ? L.R : Math.max(30, Math.min(L.R, (H - L.cy - L.R) / 2 - 24)) };
+  }
+  const PIL = ['0', 'π/2', 'π', '3π/2', '2π', '5π/2', '3π', '7π/2', '4π', '9π/2', '5π', '11π/2', '6π'];
+  function drawCircle() {
+    const p = proj(), c = ctx, L = circleLayout(), G = graphWindow(L), P = phasor(S.A, S.w, S.ph, S.t), R = L.R;
+    const th = P.th, cosT = Math.cos(th), sinT = Math.sin(th), px = L.cx + R * cosT, py = L.cy - R * sinT;
+    const unitName = S.units ? ' ' + S.units.x : '';
+    /* the circle and its axes */
+    c.strokeStyle = T.line; c.lineWidth = 1; c.beginPath(); c.moveTo(L.cx - R - 18 * p, L.cy); c.lineTo(L.cx + R + 18 * p, L.cy); c.moveTo(L.cx, L.cy - R - 18 * p); c.lineTo(L.cx, L.cy + R + 18 * p); c.stroke();
+    c.strokeStyle = T.muted; c.lineWidth = 1.6 * p; c.beginPath(); c.arc(L.cx, L.cy, R, 0, 2 * PI); c.stroke();
+    c.font = `${11 * p}px ${T.mono}`; c.fillStyle = T.muted; c.textAlign = 'left'; c.textBaseline = 'top';
+    labelOn(c, f6(S.A) + unitName, L.cx + R + 3 * p, L.cy + 3 * p);
+    /* the arc from (A, 0) to P, the angle θ (turns past the first drawn as a thicker ring) */
+    const turns = Math.floor(Math.abs(th) / (2 * PI)), sgn = th >= 0 ? 1 : -1;
+    c.strokeStyle = T.arc; c.lineCap = 'round';
+    if (turns > 0) { c.globalAlpha = 0.35; c.lineWidth = 5 * p; c.beginPath(); c.arc(L.cx, L.cy, R, 0, 2 * PI); c.stroke(); c.globalAlpha = 1; }
+    c.lineWidth = 5 * p; c.beginPath(); c.arc(L.cx, L.cy, R, 0, -sgn * (Math.abs(th) - turns * 2 * PI), sgn > 0); c.stroke();
+    c.lineWidth = 1.4 * p; c.beginPath(); c.arc(L.cx, L.cy, Math.min(26 * p, R / 3), 0, -sgn * (Math.abs(th) - turns * 2 * PI), sgn > 0); c.stroke();
+    /* the radius, the cos and sin pieces */
+    c.strokeStyle = T.ink; c.lineWidth = 2 * p; c.beginPath(); c.moveTo(L.cx, L.cy); c.lineTo(px, py); c.stroke();
+    const showS = S.show !== 'cos', showC = S.show !== 'sin';
+    if (showC) { c.strokeStyle = T.cos; c.lineWidth = 4 * p; c.beginPath(); c.moveTo(L.cx, L.cy); c.lineTo(px, L.cy); c.stroke(); }
+    if (showS) { c.strokeStyle = T.sin; c.lineWidth = 4 * p; c.beginPath(); c.moveTo(px, L.cy); c.lineTo(px, py); c.stroke(); }
+    c.setLineDash([4 * p, 4 * p]); c.lineWidth = 1.2 * p; c.strokeStyle = T.muted; c.beginPath();
+    if (!showS) { c.moveTo(px, L.cy); c.lineTo(px, py); }
+    if (!showC) { c.moveTo(L.cx, py); c.lineTo(px, py); }
+    c.stroke(); c.setLineDash([]);
+    /* a block on a spring along the x axis, at x = A cos θ (the phasor setup) */
+    if (S.units) {
+      const wall = L.cx - R - 16 * p, bw = 16 * p, by = L.cy;
+      c.strokeStyle = T.muted; c.lineWidth = 2 * p; c.beginPath(); c.moveTo(wall, by - 16 * p); c.lineTo(wall, by + 16 * p); c.stroke();
+      c.lineWidth = 1.4 * p; c.beginPath(); c.moveTo(wall, by); const sx1 = px - bw / 2, nz = 12;
+      for (let i = 1; i < nz; i++) c.lineTo(wall + (sx1 - wall) * i / nz, by + (i % 2 ? -6 : 6) * p);
+      c.lineTo(sx1, by); c.stroke();
+      c.fillStyle = T.cos; c.globalAlpha = 0.9; c.fillRect(px - bw / 2, by - bw / 2, bw, bw); c.globalAlpha = 1;
+      c.strokeStyle = T.ink; c.lineWidth = 1; c.strokeRect(px - bw / 2, by - bw / 2, bw, bw);
+    }
+    dot(px, py, T.ink, 6 * p, true);
+    c.font = `700 ${13 * p}px ${T.mono}`; c.fillStyle = T.ink; c.textAlign = cosT >= 0 ? 'left' : 'right'; c.textBaseline = sinT >= 0 ? 'bottom' : 'top';
+    labelOn(c, 'P', px + (cosT >= 0 ? 8 : -8) * p, py + (sinT >= 0 ? -6 : 6) * p);
+    /* the angle and the arc length, in a corner of the circle */
+    c.font = `${12 * p}px ${T.mono}`; c.textAlign = 'left'; c.textBaseline = 'top'; c.fillStyle = T.arc;
+    const top = L.side ? L.cy - R - 30 * p : 6 * p, left = L.side ? 8 * p : 8 * p;
+    labelOn(c, S.blind ? 'θ = ?' : VDI18N.t('θ = {t} rad = {d}°', { t: f4(th), d: f4(th * 180 / PI) }), left, Math.max(4 * p, top));
+    if (!S.units) labelOn(c, S.blind ? VDI18N.t('arc = ?') : VDI18N.t('arc = θ × r = {s}', { s: f4(P.arc) }), left, Math.max(4 * p, top) + 16 * p);
+
+    /* the graph */
+    const gx = (t) => L.gx0 + (t - G.t0) * G.pxPer, gy = G.gy, amp = G.amp, sc = amp / S.A;
+    c.save(); c.beginPath(); c.rect(L.gx0 - 4, 0, L.gx1 - L.gx0 + 8, H); c.clip();
+    c.strokeStyle = T.line; c.lineWidth = 1; c.beginPath();
+    c.moveTo(L.gx0, gy - amp); c.lineTo(L.gx1, gy - amp); c.moveTo(L.gx0, gy + amp); c.lineTo(L.gx1, gy + amp);
+    /* ticks: π/2 apart on the θ axis, else nice seconds */
+    const ticks = [];
+    if (G.plain) { for (let k = Math.ceil(G.t0 / (PI / 2)); k * PI / 2 <= G.t1; k++) ticks.push([k * PI / 2, k >= 0 && k < PIL.length ? PIL[k] : fmt(Number((k / 2).toFixed(1))) + 'π']); }
+    else { const st = niceStep(G.t1 - G.t0, (L.gx1 - L.gx0) / (80 * p)); for (let t = Math.ceil(G.t0 / st) * st; t <= G.t1; t += st) ticks.push([t, tick(t, st)]); }
+    for (const [t] of ticks) { const u = Math.round(gx(t)) + 0.5; c.moveTo(u, gy - amp - 6 * p); c.lineTo(u, gy + amp + 6 * p); }
+    c.stroke();
+    c.strokeStyle = T.muted; c.lineWidth = 1.5; c.beginPath(); c.moveTo(L.gx0, gy); c.lineTo(L.gx1, gy); if (gx(0) >= L.gx0) { c.moveTo(gx(0), gy - amp - 14 * p); c.lineTo(gx(0), gy + amp + 14 * p); } c.stroke();
+    c.font = `${11 * p}px ${T.mono}`; c.fillStyle = T.muted; c.textAlign = 'center'; c.textBaseline = 'top';
+    for (const [t, s] of ticks) { if (Math.abs(t) < 1e-9) continue; const u = gx(t); if (u < L.gx0 + 10 || u > L.gx1 - 10) continue; labelOn(c, s, u, gy + 4 * p); }
+    c.textAlign = 'right'; c.textBaseline = 'middle'; labelOn(c, f6(S.A), L.gx0 + 40 * p, gy - amp); labelOn(c, '−' + f6(S.A), L.gx0 + 40 * p, gy + amp);
+    /* the unrolled arc: the piece of the θ axis from 0 to θ, as long as the arc on the circle */
+    if (G.plain) { c.strokeStyle = T.arc; c.lineWidth = 5 * p; c.globalAlpha = 0.8; c.beginPath(); c.moveTo(gx(Math.max(G.t0, Math.min(0, S.t))), gy); c.lineTo(gx(Math.max(G.t0, S.t)), gy); c.stroke(); c.globalAlpha = 1; }
+    const draw1 = (fn, color, on) => {
+      if (!on) return;
+      for (const pass of [0, 1]) {
+        c.strokeStyle = color; c.lineWidth = (pass ? 3 : 1.6) * p; c.globalAlpha = pass ? 1 : 0.35; c.beginPath();
+        const a0 = pass ? Math.max(G.t0, Math.min(0, S.t)) : G.t0, a1 = pass ? S.t : G.t1, m = Math.max(2, Math.ceil(Math.abs(gx(a1) - gx(a0)) / 2));
+        if (pass && !(a1 > a0)) continue;
+        for (let i = 0; i <= m; i++) { const t = a0 + (a1 - a0) * i / m, y = gy - sc * fn(t); if (i) c.lineTo(gx(t), y); else c.moveTo(gx(t), y); }
+        c.stroke(); c.globalAlpha = 1;
+      }
+    };
+    draw1((t) => S.A * Math.sin(S.w * t + S.ph), T.sin, showS);
+    draw1((t) => S.A * Math.cos(S.w * t + S.ph), T.cos, showC);
+    const ux = gx(S.t);
+    if (showS) dot(ux, gy - sc * P.y, T.sin, 5.5 * p, true);
+    if (showC) dot(ux, gy - sc * P.x, T.cos, 5.5 * p, true);
+    c.restore();
+    /* the level line from P to the sine graph (beside each other only) */
+    if (showS && L.side) { c.strokeStyle = T.sin; c.globalAlpha = 0.55; c.setLineDash([3 * p, 4 * p]); c.lineWidth = 1.2 * p; c.beginPath(); c.moveTo(px, py); c.lineTo(ux, py); c.stroke(); c.setLineDash([]); c.globalAlpha = 1; }
+    /* the key in the graph's corner */
+    c.font = `${12 * p}px ${T.mono}`; c.textAlign = 'right'; c.textBaseline = 'top';
+    let ky = Math.max(6 * p, gy - amp - 52 * p);
+    const vn = S.units ? 't' : 'θ', arg = S.units || !G.plain ? 'ωt + φ' : 'θ', Ap = S.A === 1 && !S.units ? '' : 'A ';
+    if (showC) { c.fillStyle = T.cos; labelOn(c, (S.units ? 'x = ' : '') + `${Ap}cos(${arg})`, L.gx1, ky); ky += 16 * p; }
+    if (showS) { c.fillStyle = T.sin; labelOn(c, (S.units ? 'y = ' : '') + `${Ap}sin(${arg})`, L.gx1, ky); }
+    c.fillStyle = T.ink; c.textAlign = 'right'; c.textBaseline = 'bottom'; c.font = `600 ${12 * p}px ${T.mono}`;
+    labelOn(c, S.units ? `${vn} (${S.units.t})` : VDI18N.t('θ (rad)'), L.gx1, gy - 4 * p);
+  }
+
+  /* ---------- stretch and shift, and the inverse ---------- */
+  function drawGraphModes() {
+    const p = proj(), c = ctx, u = S.units;
+    const xn = u ? `${S.v} (${u.x})` : S.v, yn = u ? (u.y ? `${u.yName} (${u.y})` : u.yName) : 'y';
+    grid(p, xn, yn);
+    if (!S.f) return;
+    work();
+    if (S.mode === 'transform') {
+      const g = gOf();
+      curve(S.f, S.x0v, S.x1v, T.f, 2 * p, [7 * p, 5 * p]);
+      curve(g, S.x0v, S.x1v, T.g, 3.2 * p);
+      /* the key point of f and where it lands on g, with the arrow between */
+      const ky = S.f(S.key), [gx, gy] = mapPoint(S.key, ky, S.a, S.b, S.c, S.d);
+      if (isFinite(ky) && isFinite(gx) && isFinite(gy)) {
+        c.strokeStyle = T.key; c.fillStyle = T.key; c.lineWidth = 1.8 * p; c.setLineDash([5 * p, 4 * p]);
+        c.beginPath(); c.moveTo(X(S.key), Y(ky)); c.lineTo(X(gx), Y(gy)); c.stroke(); c.setLineDash([]);
+        const ang = Math.atan2(Y(gy) - Y(ky), X(gx) - X(S.key)), L2 = Math.hypot(Y(gy) - Y(ky), X(gx) - X(S.key));
+        if (L2 > 18 * p) { c.beginPath(); c.moveTo(X(gx) - 9 * p * Math.cos(ang) , Y(gy) - 9 * p * Math.sin(ang)); c.lineTo(X(gx) - 19 * p * Math.cos(ang - 0.4), Y(gy) - 19 * p * Math.sin(ang - 0.4)); c.lineTo(X(gx) - 19 * p * Math.cos(ang + 0.4), Y(gy) - 19 * p * Math.sin(ang + 0.4)); c.closePath(); c.fill(); }
+        dot(X(S.key), Y(ky), T.f, 6 * p, true); dot(X(gx), Y(gy), T.g, 6 * p, true);
+      }
+      /* the half lives of a decay, marked on g */
+      if (u && u.kind === 'decay' && S.b < 0 && S.node && S.node.k === 'fn' && S.node.f === 'exp') {
+        const h = decay(S.b).half; c.font = `${11 * p}px ${T.mono}`; c.textAlign = 'center'; c.textBaseline = 'bottom';
+        for (let k = 1; k <= 4; k++) {
+          const t = S.c + k * h, y = g(t); if (X(t) > W - 10) break;
+          c.strokeStyle = T.g; c.globalAlpha = 0.6; c.setLineDash([3 * p, 3 * p]); c.lineWidth = 1.2 * p; c.beginPath(); c.moveTo(X(t), Y(0)); c.lineTo(X(t), Y(y)); c.lineTo(X(S.x0v), Y(y)); c.stroke(); c.setLineDash([]); c.globalAlpha = 1;
+          dot(X(t), Y(y), T.g, 4 * p, false); c.fillStyle = T.g; if (!S.blind) labelOn(c, k + ' t½', X(t), Y(y) - 6 * p);
+        }
+      }
+      c.font = `${12 * p}px ${T.mono}`; c.textAlign = 'right'; c.textBaseline = 'top';
+      c.fillStyle = T.f; labelOn(c, `f(${S.v})`, W - 8 * p, 8 * p);
+      c.fillStyle = T.g; labelOn(c, `g(${S.v}) = a·f(b(${S.v} − c)) + d`, W - 8 * p, 24 * p);
+      return;
+    }
+    /* the inverse: the mirror line, f on its domain (and faintly outside it), the mirror image, P and its image Q */
+    const lo = Math.min(S.x0v, S.y0) - 1, hi = Math.max(S.x1v, S.y1) + 1;
+    c.strokeStyle = T.muted; c.lineWidth = 1.4 * p; c.setLineDash([8 * p, 6 * p]); c.beginPath(); c.moveTo(X(lo), Y(lo)); c.lineTo(X(hi), Y(hi)); c.stroke(); c.setLineDash([]);
+    c.globalAlpha = 0.35; curve(S.f, S.x0v, S.x1v, T.f, 1.4 * p, [3 * p, 4 * p]); c.globalAlpha = 1;
+    curve(S.f, S.lo, S.hi, T.f, 3.2 * p);
+    const oto = S.oto, ok = oto && oto.ok;
+    curve(S.f, S.lo, S.hi, T.g, 3.2 * p, ok ? [] : [6 * p, 5 * p], true);
+    if (oto && !ok && oto.why === 'turns' && oto.x2 != null) {   /* the horizontal line test on f, and the vertical line test on its mirror image */
+      c.strokeStyle = T.red; c.lineWidth = 1.6 * p; c.setLineDash([6 * p, 4 * p]); c.beginPath();
+      c.moveTo(0, Y(oto.y)); c.lineTo(W, Y(oto.y)); c.moveTo(X(oto.y), 0); c.lineTo(X(oto.y), H); c.stroke(); c.setLineDash([]);
+      for (const x of [oto.x1, oto.x2]) { dot(X(x), Y(oto.y), T.red, 5 * p, true); dot(X(oto.y), Y(x), T.red, 5 * p, true); }
+    }
+    const x0 = S.x0, y0 = S.f(x0);
+    if (isFinite(y0)) {
+      c.strokeStyle = T.muted; c.lineWidth = 1.2 * p; c.setLineDash([3 * p, 4 * p]); c.beginPath(); c.moveTo(X(x0), Y(y0)); c.lineTo(X(y0), Y(x0)); c.stroke(); c.setLineDash([]);
+      const m = S.df ? S.df(x0) : NaN;
+      if (S.tan && isFinite(m)) {
+        const span = 0.18 * (S.x1v - S.x0v), run = 0.07 * (S.x1v - S.x0v);
+        const seg = (x, y, k, color) => {
+          c.strokeStyle = color; c.lineWidth = 1.8 * p; c.beginPath();
+          if (isFinite(k) && Math.abs(k) < 1e6) { const dx = span / Math.sqrt(1 + k * k); c.moveTo(X(x - dx), Y(y - k * dx)); c.lineTo(X(x + dx), Y(y + k * dx)); }
+          else { c.moveTo(X(x), Y(y - span)); c.lineTo(X(x), Y(y + span)); }
+          c.stroke();
+        };
+        seg(x0, y0, m, T.f); seg(y0, x0, 1 / m, T.g);
+        /* the slope triangles: run then rise at P; the same triangle mirrored (rise and run swapped) at Q */
+        if (isFinite(m) && Math.abs(m) < 50 && Math.abs(m) > 0.02) {
+          const r = run / Math.max(1, Math.abs(m)), rise = m * r;
+          c.lineWidth = 1.6 * p; c.globalAlpha = 0.9;
+          c.strokeStyle = T.f; c.beginPath(); c.moveTo(X(x0), Y(y0)); c.lineTo(X(x0 + r), Y(y0)); c.lineTo(X(x0 + r), Y(y0 + rise)); c.stroke();
+          c.strokeStyle = T.g; c.beginPath(); c.moveTo(X(y0), Y(x0)); c.lineTo(X(y0), Y(x0 + r)); c.lineTo(X(y0 + rise), Y(x0 + r)); c.stroke();
+          c.globalAlpha = 1;
+          c.font = `${11 * p}px ${T.mono}`; c.fillStyle = T.f; c.textAlign = 'left'; c.textBaseline = 'middle';
+          if (!S.blind) { labelOn(c, VDI18N.t('slope {m}', { m: f4(m) }), X(x0 + r) + 6 * p, Y(y0 + rise / 2)); c.fillStyle = T.g; c.textAlign = 'center'; c.textBaseline = 'top'; labelOn(c, VDI18N.t('slope {m}', { m: f4(1 / m) }), X(y0 + rise / 2), Y(x0 + r) + 6 * p); }
+        }
+      }
+      dot(X(x0), Y(y0), T.f, 6.5 * p, true); dot(X(y0), Y(x0), T.g, 6.5 * p, true);
+      c.font = `700 ${13 * p}px ${T.mono}`; c.textBaseline = 'bottom'; c.textAlign = 'right';
+      c.fillStyle = T.f; labelOn(c, 'P', X(x0) - 8 * p, Y(y0) - 6 * p); c.fillStyle = T.g; c.textAlign = 'left'; labelOn(c, 'Q', X(y0) + 8 * p, Y(x0) - 6 * p);
+    }
+    c.font = `${12 * p}px ${T.mono}`; c.textAlign = 'right'; c.textBaseline = 'top';
+    c.fillStyle = T.f; labelOn(c, `f(${S.v})`, W - 8 * p, 8 * p);
+    c.fillStyle = T.g; labelOn(c, ok || !oto ? `f⁻¹(${S.v})` : VDI18N.t('mirror image: not a function'), W - 8 * p, 24 * p);
+    c.fillStyle = T.muted; labelOn(c, `y = ${S.v}`, W - 8 * p, 40 * p);
+  }
+  function draw() {
+    if (!T || !W) return;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    if (S.mode === 'circle') drawCircle(); else drawGraphModes();
+  }
+
+  /* ---------- the rail ---------- */
+  const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
+  const dd = (a, b, cls) => `<div${cls ? ` class="${cls}"` : ''}><dt>${a}</dt><dd translate="no">${b}</dd></div>`;
+  const wide = (a, b) => `<div class="wide"><dt>${a}</dt><dd class="ok">${b}</dd></div>`;
+  /* one sentence for what each number does, from effects() */
+  function effectText(k, e, phys) {
+    const n = (v) => f4(v);
+    if (k === 'a') {
+      if (e.kind === 'flat') return VDI18N.t('a = 0 flattens the graph onto y = d');
+      const s = e.kind === 'none' ? VDI18N.t('no vertical stretch') : e.kind === 'more' ? VDI18N.t('stretched vertically by {k}', { k: n(e.by) }) : VDI18N.t('squashed vertically by {k}', { k: n(e.by) });
+      return (phys === 'shm' ? VDI18N.t('amplitude A: ') : phys === 'decay' ? VDI18N.t('starting value V₀: ') : '') + s + (e.flip ? VDI18N.t(', and flipped over the x axis') : '');
+    }
+    if (k === 'b') {
+      if (e.kind === 'flat') return VDI18N.t('b = 0 makes g the constant a·f(0) + d');
+      const s = e.kind === 'none' ? VDI18N.t('no horizontal stretch') : e.kind === 'more' ? VDI18N.t('squeezed toward the y axis: widths × {k}', { k: n(e.by) }) : VDI18N.t('stretched away from the y axis: widths × {k}', { k: n(e.by) });
+      return (phys === 'shm' ? VDI18N.t('angular frequency ω: ') : phys === 'decay' ? VDI18N.t('b = −1/τ: ') : '') + s + (e.flip ? VDI18N.t(', and flipped over the y axis') : '');
+    }
+    if (k === 'c') return e.dir === 'none' ? VDI18N.t('no sideways shift') : e.dir === 'right' ? VDI18N.t('moved right by {k}', { k: n(e.by) }) : VDI18N.t('moved left by {k}', { k: n(e.by) });
+    return e.dir === 'none' ? VDI18N.t('no vertical shift') : e.dir === 'up' ? VDI18N.t('moved up by {k}', { k: n(e.by) }) : VDI18N.t('moved down by {k}', { k: n(e.by) });
+  }
+  function formulas() {
+    const dl = $('formulas'), v = S.v;
+    if (S.mode === 'circle') {
+      dl.innerHTML = `<dt>P</dt><dd>(A cos θ, A sin θ)</dd><dt>θ</dt><dd>ωt + φ</dd><dt>s</dt><dd>${esc(VDI18N.t('arc length = Aθ (θ in radians)'))}</dd><dt>T</dt><dd>2π/ω</dd>` + `<dt></dt><dd>sin²θ + cos²θ = 1</dd>`;
+      return;
+    }
+    if (!S.node) { dl.innerHTML = ''; return; }
+    work();
+    let h = `<dt class="f">f(${v})</dt><dd class="f">${esc(M.text(S.node))}</dd>`;
+    if (S.mode === 'transform') {
+      h += `<dt class="g">g(${v})</dt><dd class="g">${S.blind ? '?' : esc(S.gNode ? M.text(S.gNode) : '')}</dd>`;
+      h += `<dt></dt><dd>(${v}, y) → (c + ${v}/b, a·y + d)</dd>`;
+    } else {
+      h += `<dt class="f">f′(${v})</dt><dd class="f">${S.blind ? '?' : esc(S.dNode ? M.text(S.dNode) : '')}</dd>`;
+      h += `<dt class="g">(f⁻¹)′(y)</dt><dd class="g">1 / f′(f⁻¹(y))</dd>`;
+    }
+    dl.innerHTML = h;
+  }
+  function readouts() {
+    const hide = S.blind; let h = '';
+    if (S.mode === 'circle') {
+      const P = phasor(S.A, S.w, S.ph, S.t), u = S.units, ux = u ? ' ' + u.x : '';
+      if (u) h += dd('t', f4(S.t) + ' s');
+      h += dd('θ', hide ? '?' : f4(P.th) + ' rad') + dd(VDI18N.t('θ in degrees'), hide ? '?' : f4(P.th * 180 / PI) + '°');
+      h += dd(u ? 'x = A cos θ' : 'cos θ', hide ? '?' : f4(P.x) + ux) + dd(u ? 'y = A sin θ' : 'sin θ', hide ? '?' : f4(P.y) + ux);
+      h += dd(VDI18N.t('Arc length s = Aθ'), hide ? '?' : f4(P.arc) + ux);
+      if (!u) h += dd('cos²θ + sin²θ', hide ? '?' : f6(P.x * P.x / (S.A * S.A) + P.y * P.y / (S.A * S.A)));
+      h += dd(VDI18N.t('Period T = 2π/ω'), f4(P.T) + ' s') + dd(VDI18N.t('Frequency f = ω/2π'), f4(P.f) + ' Hz');
+      if (u) h += dd(VDI18N.t('Velocity v = −Aω sin θ'), hide ? '?' : f4(P.vx) + ' m/s');
+      h += wide(VDI18N.t('Time scale'), VDI18N.t('Play runs in real time: 1 s on screen is 1 s of t, so P turns ω = {w} rad each second.', { w: f4(S.w) }));
+    } else if (S.mode === 'transform' && S.f) {
+      const e = effects(S.a, S.b, S.c, S.d), phys = S.units && S.units.kind;
+      for (const k of ['a', 'b', 'c', 'd']) h += wide(`${k} = ${f4(S[k])}`, esc(effectText(k, e[k], phys)));
+      const ky = S.f(S.key), [gx, gy] = mapPoint(S.key, ky, S.a, S.b, S.c, S.d);
+      h += dd(VDI18N.t('Point on f'), `(${f4(S.key)}, ${f4(ky)})`, 'wide') + dd(VDI18N.t('Lands on g at'), hide ? '?' : `(${f4(gx)}, ${f4(gy)})`, 'wide');
+      if (phys === 'shm') {
+        const w = S.b, A = S.a;
+        h += dd(VDI18N.t('Amplitude A'), f4(Math.abs(A)) + ' cm') + dd(VDI18N.t('ω'), f4(w) + ' rad/s') + dd(VDI18N.t('Period T = 2π/|ω|'), hide ? '?' : f4(2 * PI / Math.abs(w)) + ' s') + dd(VDI18N.t('Phase φ = −ωc'), hide ? '?' : f4(-w * S.c) + ' rad');
+      }
+      if (phys === 'decay' && S.node && S.node.k === 'fn' && S.node.f === 'exp' && S.b < 0) {
+        const dc = decay(S.b);
+        h += dd(VDI18N.t('Time constant τ = −1/b'), hide ? '?' : f4(dc.tau) + ' s') + dd(VDI18N.t('Half life t½ = τ ln 2'), hide ? '?' : f4(dc.half) + ' s');
+        h += dd(VDI18N.t('V at t½ ÷ V at 0'), hide ? '?' : f4((gOf()(S.c + dc.half) - S.d) / (gOf()(S.c) - S.d)));
+      }
+    } else if (S.mode === 'inverse' && S.f) {
+      work();
+      const oto = S.oto, x0 = S.x0, y0 = S.f(x0), m = S.df ? S.df(x0) : NaN, u = S.units, ux = u ? ' ' + u.x : '', uy = u && u.y ? ' ' + u.y : '';
+      if (!oto.ok) {
+        if (oto.why === 'undefined') h += wide(VDI18N.t('One to one?'), VDI18N.t('f is not defined everywhere on the domain (at x = {x}). Choose a domain where it is.', { x: f4(oto.x) }));
+        else h += wide(VDI18N.t('One to one?'), oto.x2 != null ? VDI18N.t('No: f({a}) = f({b}) = {y}. A horizontal line meets f twice, so the mirror image is not a function. Shrink the domain to one side of the turn.', { a: f4(oto.x1), b: f4(oto.x2), y: f4(oto.y) }) : VDI18N.t('No: f turns back on this domain.'));
+      } else h += wide(VDI18N.t('One to one?'), oto.dir > 0 ? VDI18N.t('Yes: f rises across the whole domain, so each y comes from one x.') : VDI18N.t('Yes: f falls across the whole domain, so each y comes from one x.'));
+      h += dd('P = (x₀, f(x₀))', `(${f4(x0)}${ux}, ${hide ? '?' : f4(y0) + uy})`, 'wide') + dd('Q = (f(x₀), x₀)', hide ? '?' : `(${f4(y0)}${uy}, ${f4(x0)}${ux})`, 'wide');
+      h += dd(VDI18N.t('Slope of f at P'), hide ? '?' : f6(m)) + dd(VDI18N.t('1 / slope'), hide ? '?' : f6(1 / m));
+      if (oto.ok && !hide) {
+        const hs = 1e-6 * Math.max(1, Math.abs(y0)), ms = inverseSlope(S.f, y0, S.lo, S.hi, hs);
+        h += dd(VDI18N.t('Slope of f⁻¹ at Q, measured'), isFinite(ms) ? f6(ms) : VDI18N.t('at an end of the range'));
+      }
+    }
+    $('out').innerHTML = h;
+  }
+  function noteText() {
+    $('note').textContent = S.mode === 'circle' ? VDI18N.t('Play turns P in real time. Drag P around the circle, or drag along the graph.')
+      : S.mode === 'transform' ? VDI18N.t('Play sweeps the number you touched last. Drag the orange point along f; drag elsewhere to pan, scroll to zoom.')
+      : VDI18N.t('Play slides P along f. Drag P; drag elsewhere to pan, scroll to zoom.');
+  }
+  function syncControls() {
+    for (const b of document.querySelectorAll('#modeSeg button')) b.setAttribute('aria-pressed', String(b.dataset.m === S.mode));
+    for (const b of document.querySelectorAll('#showSeg button')) b.setAttribute('aria-pressed', String(b.dataset.s === S.show));
+    for (const el of document.querySelectorAll('#shelf [data-for]')) el.hidden = !el.dataset.for.split(' ').includes(S.mode);
+    $('fbar').hidden = S.mode === 'circle';
+    const P = phasor(S.A, S.w, S.ph, S.t);
+    $('thSlide').value = P.th; $('thOut').textContent = S.blind ? '?' : f4(P.th) + ' rad';
+    for (const [k, s, n] of [['A', 'sA', 'nA'], ['w', 'sW', 'nW'], ['ph', 'sPh', 'nPh'], ['a', 'sa', 'na'], ['b', 'sb', 'nb'], ['c', 'sc', 'nc'], ['d', 'sd', 'nd']]) {
+      $(s).value = S[k]; if (document.activeElement !== $(n)) { $(n).value = f4(S[k]).replace('−', '-'); $(n).classList.remove('bad'); }
+    }
+    for (const r of document.querySelectorAll('.prow')) r.classList.toggle('on', S.mode === 'transform' && r.dataset.k === S.act);
+    if (S.mode === 'transform' && S.f) { const e = effects(S.a, S.b, S.c, S.d), phys = S.units && S.units.kind; for (const k of ['a', 'b', 'c', 'd']) $('e' + k).textContent = effectText(k, e[k], phys); }
+    $('x0Slide').value = Math.round((S.x0 - S.lo) / (S.hi - S.lo) * 1000); $('x0Out').textContent = f4(S.x0);
+    $('showTan').checked = S.tan;
+    if (document.activeElement !== $('loIn')) $('loIn').value = S.loTxt;
+    if (document.activeElement !== $('hiIn')) $('hiIn').value = S.hiTxt;
+    $('phTitle').textContent = S.units ? VDI18N.t('Phasor: x = A cos(ωt + φ)') : VDI18N.t('Circle: radius A, turning at ω from φ');
+    noteText();
+  }
+  function refresh() { syncControls(); formulas(); need = true; }
+
+  /* ---------- controls ---------- */
+  const pressPreset = (k) => { for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === k)); };
+  function custom() { if (S.preset !== 'custom') { S.preset = 'custom'; pressPreset(''); $('presetHint').textContent = VDI18N.t('Your own setup. Every setup above can be edited, too.'); } }
+  function fitY() {
+    if (!W || !H) return;
+    if (S.mode === 'inverse') { const c = PRESETS[S.preset], k = H / W * (S.x1v - S.x0v), cy = c && c.cy != null ? c.cy : (S.x0v + S.x1v) / 2; S.y0 = cy - k / 2; S.y1 = cy + k / 2; return; }
+    if (!S.f) return;
+    /* fitted to g, the curve that matters; f widens the range only where it stays within half a range of g */
+    const g = gOf(), ys = [], fs = [];
+    for (let i = 0; i <= 400; i++) { const x = S.x0v + (S.x1v - S.x0v) * i / 400, y = g(x), z = S.f(x); if (isFinite(y)) ys.push(y); if (isFinite(z)) fs.push(z); }
+    if (!ys.length) ys.push(...fs);
+    if (!ys.length) return;
+    ys.sort((p, q) => p - q);
+    let lo = ys[Math.floor(ys.length * 0.02)], hi = ys[Math.ceil(ys.length * 0.98) - 1];
+    if (hi - lo < 1e-9 * (1 + Math.abs(hi))) { lo -= 1; hi += 1; }
+    const sp = hi - lo, l0 = lo - 0.5 * sp, h0 = hi + 0.5 * sp; for (const z of fs) if (z > l0 && z < h0) { lo = Math.min(lo, z); hi = Math.max(hi, z); }
+    lo = Math.min(lo, 0); hi = Math.max(hi, 0);
+    const pad = 0.12 * (hi - lo); S.y0 = lo - pad; S.y1 = hi + pad * 1.6; S.autoY = true;
+  }
+  function applyPreset(k) {
+    const c = PRESETS[k]; S.preset = k; setRun(false);
+    S.mode = c.mode; S.units = c.units || null;
+    if (c.mode === 'circle') { S.A = c.A; S.w = c.w; S.ph = c.ph; S.t = (c.th - c.ph) / c.w; S.show = c.show; }
+    else {
+      $('fx').value = c.src; S.node = null; read();
+      if (c.mode === 'transform') { S.a = c.a; S.b = c.b; S.c = c.c; S.d = c.d; S.key = c.key; S.act = c.act; }
+      else { S.loTxt = c.lo; S.hiTxt = c.hi; $('loIn').value = c.lo; $('hiIn').value = c.hi; readDomain(); S.x0 = c.x0; }
+      S.x0v = c.x[0]; S.x1v = c.x[1];
+    }
+    $('presetHint').textContent = c.hint; pressPreset(k);
+    S.gNode = null; S.oto = null; fitY(); refresh();
+  }
+  function resetMotion() {
+    const c = PRESETS[S.preset];
+    if (S.mode === 'circle') S.t = c && c.mode === 'circle' ? (c.th - S.ph) / S.w : 0;
+    else if (S.mode === 'transform') { if (c && c.mode === 'transform') { S.a = c.a; S.b = c.b; S.c = c.c; S.d = c.d; S.key = c.key; } else { S.a = 1; S.b = 1; S.c = 0; S.d = 0; } S.gNode = null; }
+    else S.x0 = c && c.mode === 'inverse' ? Math.min(S.hi, Math.max(S.lo, c.x0)) : (S.lo + S.hi) / 2;
+  }
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  for (const b of document.querySelectorAll('#modeSeg button')) b.addEventListener('click', () => {
+    if (b.dataset.m === S.mode) return;
+    applyPreset(b.dataset.m === 'circle' ? 'circle' : b.dataset.m === 'transform' ? 'parab' : 'sqrt');
+  });
+  for (const b of document.querySelectorAll('#showSeg button')) b.addEventListener('click', () => { S.show = b.dataset.s; refresh(); });
+  $('fx').addEventListener('input', () => { custom(); S.units = null; read(); if (S.mode === 'inverse') S.x0 = Math.min(S.hi, Math.max(S.lo, S.x0)); fitY(); refresh(); });
+  for (const id of ['loIn', 'hiIn']) $(id).addEventListener('input', () => {
+    if (!readDomain()) { need = true; return; }
+    S.loTxt = $('loIn').value.trim(); S.hiTxt = $('hiIn').value.trim(); S.x0 = Math.min(S.hi, Math.max(S.lo, S.x0)); custom(); refresh();
+  });
+  $('x0Slide').addEventListener('input', () => { setRun(false); S.x0 = S.lo + (S.hi - S.lo) * (+$('x0Slide').value) / 1000; refresh(); });
+  $('showTan').addEventListener('change', (e) => { S.tan = e.target.checked; need = true; });
+  $('thSlide').addEventListener('input', () => { setRun(false); S.t = (+$('thSlide').value - S.ph) / S.w; refresh(); });
+  /* the parameter rows: slider and box move together; a, b, c, d mark which one Play sweeps */
+  const PARAMS = { A: ['sA', 'nA', 'circle'], w: ['sW', 'nW', 'circle'], ph: ['sPh', 'nPh', 'circle'], a: ['sa', 'na'], b: ['sb', 'nb'], c: ['sc', 'nc'], d: ['sd', 'nd'] };
+  function setParam(k, v) {
+    if (!isFinite(v)) return false;
+    if (k === 'A' && !(v > 0)) return false;
+    if (k === 'w' && v === 0) return false;
+    if (k === 'w' || k === 'ph') { const th = S.w * S.t + S.ph; S[k] = v; S.t = (th - S.ph) / S.w; }   /* keep P where it is */
+    else S[k] = v;
+    if ('abcd'.includes(k)) { S.act = k; S.gNode = null; }
+    custom(); return true;
+  }
+  for (const k in PARAMS) {
+    const [s, n] = PARAMS[k];
+    $(s).addEventListener('input', () => { setRun(false); if (setParam(k, +$(s).value)) refresh(); });
+    $(n).addEventListener('input', () => { const v = numOf($(n).value), ok = setParam(k, v); $(n).classList.toggle('bad', !ok); if (ok) { syncControls(); formulas(); need = true; } });
+    $(n).addEventListener('change', () => syncControls());
+    $(n).addEventListener('focus', () => { if ('abcd'.includes(k)) { S.act = k; syncControls(); } });
+  }
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; refresh(); });
+  function setRun(on) { S.run = on; $('play').textContent = on ? VDI18N.t('Pause') : VDI18N.t('Play'); $('play').classList.toggle('attn', !on); }
+  $('play').addEventListener('click', () => { setRun(!S.run); need = true; });
+  $('reset').addEventListener('click', () => { setRun(false); resetMotion(); refresh(); });
+  function setView(x0, x1, y0, y1) {
+    if (!(x1 > x0) || !(y1 > y0) || !isFinite(x0 + x1 + y0 + y1)) return;
+    if (x1 - x0 < 1e-6 || x1 - x0 > 1e7) return;
+    S.x0v = x0; S.x1v = x1; S.y0 = y0; S.y1 = y1; need = true;
+  }
+  function zoom(fct) {
+    if (S.mode === 'circle') return;
+    const cx = (S.x0v + S.x1v) / 2, cy = (S.y0 + S.y1) / 2;
+    if (S.autoY && S.mode === 'transform') { setView(cx - (cx - S.x0v) * fct, cx + (S.x1v - cx) * fct, S.y0, S.y1); fitY(); return; }
+    setView(cx - (cx - S.x0v) * fct, cx + (S.x1v - cx) * fct, cy - (cy - S.y0) * fct, cy + (S.y1 - cy) * fct);
+  }
+  $('zin').addEventListener('click', () => zoom(1 / 1.5));
+  $('zout').addEventListener('click', () => zoom(1.5));
+  $('homeView').addEventListener('click', () => { const c = PRESETS[S.preset]; if (c && c.x) { S.x0v = c.x[0]; S.x1v = c.x[1]; } else { S.x0v = -5; S.x1v = 5; } fitY(); need = true; });
+
+  /* the picture: drag P (circle or inverse) or the key point (transform); drag the graph of the circle mode to move in time;
+     drag elsewhere to pan; wheel, pinch, + and − zoom about the view's center */
+  const ptrs = new Map(); let drag = null;
+  function grab(x, y) {
+    if (S.mode === 'circle') {
+      const L = circleLayout(), P = phasor(S.A, S.w, S.ph, S.t);
+      if (Math.hypot(x - (L.cx + L.R * Math.cos(P.th)), y - (L.cy - L.R * Math.sin(P.th))) < 22 || Math.abs(Math.hypot(x - L.cx, y - L.cy) - L.R) < 16) return 'P';
+      if (x > L.gx0 && (L.side || y > L.cy + L.R + 10)) return 'gt';
+      return null;
+    }
+    if (!S.f) return null;
+    if (S.mode === 'transform') { const ky = S.f(S.key); return Math.hypot(x - X(S.key), y - Y(ky)) < 18 ? 'key' : null; }
+    const y0 = S.f(S.x0); if (Math.hypot(x - X(S.x0), y - Y(y0)) < 18) return 'x0'; if (Math.hypot(x - X(y0), y - Y(S.x0)) < 18) return 'q';
+    return null;
+  }
+  function dragTo(mode, x, y) {
+    if (mode === 'P') {
+      const L = circleLayout(), P = phasor(S.A, S.w, S.ph, S.t);
+      let a = Math.atan2(L.cy - y, x - L.cx); const turn = 2 * PI; a += Math.round((P.th - a) / turn) * turn;   /* the nearest angle to the last one: keeps whole turns */
+      S.t = (a - S.ph) / S.w; refresh(); return;
+    }
+    if (mode === 'gt') { const L = circleLayout(), G = graphWindow(L); S.t = G.t0 + (x - L.gx0) / G.pxPer; refresh(); return; }
+    if (mode === 'key') { S.key = Xi(x); refresh(); return; }
+    if (mode === 'x0') { S.x0 = Math.min(S.hi, Math.max(S.lo, Xi(x))); refresh(); return; }
+    if (mode === 'q') { const yq = Yi(y), x0 = S.oto && S.oto.ok ? inverseAt(S.f, Xi(x), S.lo, S.hi) : NaN; if (isFinite(x0)) S.x0 = x0; else S.x0 = Math.min(S.hi, Math.max(S.lo, yq)); refresh(); }
+  }
+  can.addEventListener('pointerdown', (e) => {
+    const r = can.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
+    ptrs.set(e.pointerId, { x, y }); can.setPointerCapture(e.pointerId);
+    if (ptrs.size === 2) { const [p1, p2] = [...ptrs.values()]; drag = { pinch: Math.hypot(p1.x - p2.x, p1.y - p2.y), view: [S.x0v, S.x1v, S.y0, S.y1] }; return; }
+    const g = grab(x, y);
+    drag = { mode: g || 'pan', x, y, view: [S.x0v, S.x1v, S.y0, S.y1], moved: false };
+    if (g) { setRun(false); dragTo(g, x, y); }
+  });
+  can.addEventListener('pointermove', (e) => {
+    const r = can.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
+    if (!ptrs.has(e.pointerId) || !drag) { can.style.cursor = grab(x, y) ? 'grab' : S.mode === 'circle' ? 'default' : 'crosshair'; return; }
+    ptrs.set(e.pointerId, { x, y });
+    if (drag.pinch) {
+      if (S.mode === 'circle') return;
+      const [p1, p2] = [...ptrs.values()], d = Math.hypot(p1.x - p2.x, p1.y - p2.y); if (d < 10) return;
+      const f = drag.pinch / d, [x0, x1, y0, y1] = drag.view, cx = (x0 + x1) / 2, cy = (y0 + y1) / 2;
+      S.autoY = false; setView(cx - (cx - x0) * f, cx + (x1 - cx) * f, cy - (cy - y0) * f, cy + (y1 - cy) * f); return;
+    }
+    if (Math.hypot(x - drag.x, y - drag.y) > 4) drag.moved = true;
+    if (drag.mode !== 'pan') { dragTo(drag.mode, x, y); return; }
+    if (!drag.moved || S.mode === 'circle') return;
+    const [x0, x1, y0, y1] = drag.view, dx = (x - drag.x) / W * (x1 - x0), dy = (y - drag.y) / H * (y1 - y0);
+    if (Math.abs(y - drag.y) > 2) S.autoY = false;
+    setView(x0 - dx, x1 - dx, S.autoY ? y0 : y0 + dy, S.autoY ? y1 : y1 + dy);
+  });
+  const up = (e) => {
+    if (!ptrs.has(e.pointerId)) return;
+    ptrs.delete(e.pointerId);
+    if (drag && drag.mode === 'pan' && drag.moved && S.autoY) fitY();
+    if (!ptrs.size) drag = null; else if (drag && drag.pinch) drag = null;
+  };
+  can.addEventListener('pointerup', up); can.addEventListener('pointercancel', up);
+  can.addEventListener('wheel', (e) => {
+    if (S.mode === 'circle') return;
+    e.preventDefault();
+    const d = e.deltaY * (e.deltaMode === 1 ? 33 : e.deltaMode === 2 ? 400 : 1);
+    zoom(Math.exp(Math.max(-100, Math.min(100, d)) * 0.0018));   /* about the view's center (Steve 2026-11-12) */
+  }, { passive: false });
+  can.addEventListener('keydown', (e) => {
+    const k = e.key, sgn = k === 'ArrowLeft' || k === 'ArrowDown' ? -1 : k === 'ArrowRight' || k === 'ArrowUp' ? 1 : 0;
+    if (sgn) {
+      setRun(false);
+      if (S.mode === 'circle') S.t += sgn * (e.shiftKey ? PI / 4 : PI / 36) / S.w;
+      else if (S.mode === 'transform') S.key += sgn * (S.x1v - S.x0v) / (e.shiftKey ? 20 : 200);
+      else S.x0 = Math.min(S.hi, Math.max(S.lo, S.x0 + sgn * (S.hi - S.lo) / (e.shiftKey ? 20 : 200)));
+      refresh(); e.preventDefault();
+    } else if (k === '+' || k === '=') { zoom(1 / 1.5); e.preventDefault(); }
+    else if (k === '-' || k === '_') { zoom(1.5); e.preventDefault(); }
+    else if (k === ' ') { $('play').click(); e.preventDefault(); }
+  });
+
+  /* Play: P turns in real time; a sweep of the chosen number from end to end of its slider in 4 s; P slides across the domain in 4 s */
+  let last = performance.now(), lastRead = '';
+  function frame(now) {
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    if (S.run) {
+      if (S.mode === 'circle') { S.t += dt; syncControls(); }
+      else if (S.mode === 'transform') {
+        const sl = $(PARAMS[S.act][0]), lo = +sl.min, hi = +sl.max; let v = S[S.act] + S.sweepDir * (hi - lo) / 4 * dt;
+        if (v >= hi) { v = hi; S.sweepDir = -1; } if (v <= lo) { v = lo; S.sweepDir = 1; }
+        if (S.act === 'b' && Math.abs(v) < 1e-3) v = S.sweepDir * 1e-3;
+        S[S.act] = Number(v.toFixed(4)); S.gNode = null; syncControls(); formulas(); if (S.autoY) fitY();
+      } else if (S.f) {
+        let v = S.x0 + S.sweepDir * (S.hi - S.lo) / 4 * dt;
+        if (v >= S.hi) { v = S.hi; S.sweepDir = -1; } if (v <= S.lo) { v = S.lo; S.sweepDir = 1; }
+        S.x0 = v; syncControls();
+      }
+      need = true;
+    }
+    if (need) {
+      need = false; draw();
+      const k = `${S.mode},${S.t},${S.A},${S.w},${S.ph},${S.a},${S.b},${S.c},${S.d},${S.key},${S.x0},${S.lo},${S.hi},${$('fx').value},${S.blind},${S.show}`;
+      if (k !== lastRead) { lastRead = k; readouts(); }
+    }
+    requestAnimationFrame(frame);
+  }
+  function resize() {
+    dpr = window.devicePixelRatio || 1;
+    const r = $('pane').getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr);
+    if (S.autoY || S.mode === 'inverse') fitY(); need = true;
+  }
+  const retheme = () => { tokens(); need = true; };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'data-vd-look'] });
+  VD.projector({ onChange: resize });
+  if (window.VD && VD.panel) VD.panel({ play: '#play', reset: '#reset' });
+  /* Copy link carries what was typed and the numbers */
+  if (window.VD && VD.share && VD.share.picture) VD.share.picture('f', {
+    get: () => (S.preset === 'custom' ? VD.share.pack({ m: S.mode, f: $('fx').value, a: S.a, b: S.b, c: S.c, d: S.d, lo: S.loTxt, hi: S.hiTxt, A: S.A, w: S.w, ph: S.ph }) : ''),
+    set: (s) => {
+      const o = s && VD.share.unpack(s); if (!o) return;
+      applyPreset(o.m === 'transform' ? 'parab' : o.m === 'inverse' ? 'sqrt' : 'circle');
+      if (o.m === 'circle') { for (const k of ['A', 'w', 'ph']) if (isFinite(+o[k])) setParam(k, +o[k]); }
+      else {
+        $('fx').value = o.f || 'x'; S.units = null; read();
+        if (o.m === 'transform') for (const k of ['a', 'b', 'c', 'd']) { if (isFinite(+o[k])) S[k] = +o[k]; }
+        else { $('loIn').value = o.lo || '0'; $('hiIn').value = o.hi || '1'; readDomain(); S.loTxt = $('loIn').value; S.hiTxt = $('hiIn').value; S.x0 = (S.lo + S.hi) / 2; }
+      }
+      custom(); S.gNode = null; fitY(); refresh();
+    },
+  });
+  window.vdVersion = 'function-families@2026-11-19';
+  /* what the picture shows now, for a screen reader (VD.describe) */
+  if (window.VD && VD.describe) VD.describe(can, () => {
+    const t = VDI18N.t, live = !S.run, out = [];
+    if (S.mode === 'circle') {
+      const P = phasor(S.A, S.w, S.ph, S.t);
+      out.push({ t: t('The point is at angle {a} radians on a circle of radius {r}: cos θ = {c}, sin θ = {s}.', { a: f4(P.th), r: f4(S.A), c: f4(Math.cos(P.th)), s: f4(Math.sin(P.th)) }), live });
+    } else if (S.f && S.mode === 'transform') {
+      out.push(t('f({v}) = {e}; g = a·f(b({v} − c)) + d with a = {a}, b = {b}, c = {c}, d = {d}.', { v: S.v, e: M.text(S.node), a: f4(S.a), b: f4(S.b), c: f4(S.c), d: f4(S.d) }));
+    } else if (S.f) {
+      work(); out.push(t('f({v}) = {e} on the domain from {lo} to {hi}, and its mirror image in y = x.', { v: S.v, e: M.text(S.node), lo: f4(S.lo), hi: f4(S.hi) }));
+      out.push({ t: t('P = ({x}, {y}) with slope {m}; its image Q has slope {k}.', { x: f4(S.x0), y: f4(S.f(S.x0)), m: f4(S.df ? S.df(S.x0) : NaN), k: f4(S.df ? 1 / S.df(S.x0) : NaN) }), live });
+    }
+    return out;
+  });
+  tokens(); new ResizeObserver(resize).observe($('pane')); resize(); applyPreset('circle');
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  window.__ff = { S, applyPreset, phasor, transformed, mapPoint, transformNode, oneToOne, inverseAt, inverseSlope, decay, setRun, setParam, draw: () => { need = true; }, refresh };
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

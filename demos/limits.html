@@ -1,0 +1,906 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="lib/theme.js"></script>
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
+<script src="lib/vdmath.js"></script>
+<script src="lib/constants.js"></script>
+<title>Limits</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css: the curve and band colors, the function boxes and the two graphs */
+:root { --fg-f: #8f5000; --c-left: #be123c; --c-right: #0f766e; --c-eps: #b45309; --c-del: #15803d; --c-d: #7c3aed; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --fg-f: #e8a440; --c-left: #fb7185; --c-right: #5eead4; --c-eps: #fbbf24; --c-del: #4ade80; --c-d: #c4b5fd; } }
+:root[data-theme="dark"] { --fg-f: #e8a440; --c-left: #fb7185; --c-right: #5eead4; --c-eps: #fbbf24; --c-del: #4ade80; --c-d: #c4b5fd; }
+.stage { position: relative; display: flex; flex-direction: column; min-height: min-content; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.stage-ctl .note { flex: 1 1 100%; font-size: 0.8rem; color: var(--muted); }
+.fbar { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; padding: 10px 12px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.fbar .frow { flex: 1 1 380px; display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; }
+.fbar .frow.lim { flex: 0 1 auto; }
+.fbar label.fn { font-family: var(--font-mono); font-weight: 600; font-size: 1.05rem; white-space: nowrap; color: var(--fg-f); }
+.fbar input[type="text"] { flex: 1 1 240px; min-width: 0; font-family: var(--font-mono); font-size: 1.05rem; padding: 6px 10px; color: var(--ink); background: var(--canvas);
+  border: 2px solid var(--line2, var(--line)); border-radius: 8px; }
+.fbar input#aIn { flex: 0 1 7em; width: 7em; }
+.fbar input:focus { outline: none; border-color: var(--fg-f); }
+.fbar input:focus-visible { box-shadow: 0 0 0 1px var(--fg-f); }
+.fbar .bad { border-color: var(--red) !important; }
+.fbar .status { flex: 1 1 100%; font-size: 0.84rem; color: var(--muted); min-height: 1.3em; }
+.fbar .status.bad { color: var(--red); border: 0; }
+.pane { position: relative; flex: 1 1 auto; min-height: 330px; }
+.lower { position: relative; flex: none; height: 230px; border-top: 1px solid var(--line); background: var(--canvas); }
+.pane canvas, .lower canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; outline: none; touch-action: none; cursor: crosshair; }
+.shelf { display: flex; flex-wrap: wrap; align-items: stretch; gap: 12px; padding: 10px; border-top: 1px solid var(--line); background: var(--surface); }
+.shelf-card { flex: 1 1 230px; display: grid; grid-template-columns: minmax(0, 1fr); align-content: start; gap: 7px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--canvas); }
+.shelf-card > .card-title { font-size: 0.78rem; font-weight: 700; color: var(--muted); }
+.shelf-card .row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; font-size: 0.86rem; }
+.shelf-card input.num { width: 6.6em; font: inherit; font-size: 0.86rem; font-family: var(--font-mono); padding: 3px 6px; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; }
+.shelf-card input.num.bad { border-color: var(--red); }
+.shelf-card input[type="range"] { width: 100%; }
+.seg.wrap { flex-wrap: wrap; }
+table.vals { width: 100%; border-collapse: collapse; font-family: var(--font-mono); font-size: 0.82rem; }
+table.vals th, table.vals td { padding: 2px 4px; text-align: right; border-bottom: 1px solid var(--line); }
+table.vals th { color: var(--muted); font-weight: 600; }
+table.vals .l { color: var(--c-left); } table.vals .r { color: var(--c-right); }
+dl.formulas { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 6px 10px; margin: 0; }
+dl.formulas dt { font-family: var(--font-mono); font-weight: 600; white-space: nowrap; }
+dl.formulas dd { margin: 0; font-family: var(--font-mono); font-size: 0.88rem; overflow-wrap: anywhere; }
+dl.formulas .f { color: var(--fg-f); } dl.formulas .d { color: var(--c-d); }
+.chips .chips-label { flex: 1 1 100%; font-size: 0.78rem; font-weight: 700; color: var(--muted); margin-top: 4px; }
+.rail ul.typing { margin: 6px 0 0; padding-left: 1.2em; font-size: 0.86rem; color: var(--muted); }
+.rail ul.typing code { font-family: var(--font-mono); color: var(--ink); }
+@media (min-width: 821px) { .bench > .stage { align-self: start; min-height: max(700px, 100%); } }
+@media (max-width: 820px) { .pane { min-height: 0; height: 360px; flex: none; } .lower { height: 240px; } .shelf-card { flex: 1 1 100%; } }
+</style>
+<link rel="stylesheet" id="vd-paper" href="lib/paper.css">
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Limits</h1>
+      <p>Zoom in on a point and watch f(x) settle, or not: holes, jumps, blow ups and endless wiggles, from the left and from the right. Set an ε band and see the largest δ window that fits inside it, follow f out to infinity to its asymptotes, and see why f/g and f′/g′ head for the same number at 0/0.</p>
+    </div>
+    <div class="bar-right">
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/limits.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 37 37" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/limits.html" shape-rendering="crispEdges"><rect width="37" height="37" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM15 2h1v1h-1zM18 2h4v1h-4zM25 2h1v1h-1zM28 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM11 3h2v1h-2zM14 3h1v1h-1zM16 3h2v1h-2zM20 3h1v1h-1zM24 3h1v1h-1zM28 3h1v1h-1zM34 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h5v1h-5zM16 4h1v1h-1zM18 4h1v1h-1zM21 4h4v1h-4zM26 4h1v1h-1zM28 4h1v1h-1zM30 4h3v1h-3zM34 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h7v1h-7zM19 5h1v1h-1zM21 5h1v1h-1zM24 5h3v1h-3zM28 5h1v1h-1zM30 5h3v1h-3zM34 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h2v1h-2zM13 6h1v1h-1zM15 6h1v1h-1zM18 6h6v1h-6zM25 6h2v1h-2zM28 6h1v1h-1zM30 6h3v1h-3zM34 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h2v1h-2zM13 7h1v1h-1zM17 7h1v1h-1zM19 7h1v1h-1zM28 7h1v1h-1zM34 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h7v1h-7zM10 9h3v1h-3zM14 9h1v1h-1zM16 9h3v1h-3zM20 9h1v1h-1zM22 9h5v1h-5zM2 10h1v1h-1zM4 10h5v1h-5zM11 10h1v1h-1zM15 10h3v1h-3zM19 10h1v1h-1zM21 10h1v1h-1zM24 10h1v1h-1zM26 10h1v1h-1zM28 10h5v1h-5zM5 11h3v1h-3zM11 11h2v1h-2zM14 11h2v1h-2zM19 11h7v1h-7zM28 11h2v1h-2zM31 11h2v1h-2zM34 11h1v1h-1zM3 12h1v1h-1zM7 12h3v1h-3zM11 12h1v1h-1zM13 12h2v1h-2zM16 12h2v1h-2zM22 12h3v1h-3zM27 12h2v1h-2zM30 12h1v1h-1zM32 12h2v1h-2zM2 13h2v1h-2zM6 13h2v1h-2zM9 13h1v1h-1zM11 13h4v1h-4zM22 13h2v1h-2zM25 13h2v1h-2zM30 13h3v1h-3zM34 13h1v1h-1zM3 14h2v1h-2zM6 14h4v1h-4zM14 14h1v1h-1zM17 14h3v1h-3zM24 14h1v1h-1zM27 14h1v1h-1zM29 14h3v1h-3zM33 14h1v1h-1zM3 15h1v1h-1zM11 15h3v1h-3zM15 15h1v1h-1zM18 15h1v1h-1zM20 15h4v1h-4zM25 15h1v1h-1zM33 15h2v1h-2zM4 16h1v1h-1zM8 16h1v1h-1zM10 16h1v1h-1zM15 16h3v1h-3zM19 16h1v1h-1zM22 16h1v1h-1zM27 16h2v1h-2zM31 16h3v1h-3zM3 17h4v1h-4zM11 17h1v1h-1zM13 17h1v1h-1zM16 17h2v1h-2zM21 17h5v1h-5zM27 17h3v1h-3zM31 17h2v1h-2zM2 18h2v1h-2zM5 18h4v1h-4zM12 18h2v1h-2zM19 18h1v1h-1zM21 18h1v1h-1zM24 18h2v1h-2zM27 18h1v1h-1zM29 18h3v1h-3zM34 18h1v1h-1zM2 19h3v1h-3zM7 19h1v1h-1zM9 19h1v1h-1zM11 19h1v1h-1zM13 19h3v1h-3zM18 19h8v1h-8zM27 19h3v1h-3zM31 19h3v1h-3zM5 20h2v1h-2zM8 20h1v1h-1zM10 20h5v1h-5zM17 20h2v1h-2zM20 20h1v1h-1zM23 20h2v1h-2zM27 20h1v1h-1zM29 20h2v1h-2zM32 20h2v1h-2zM3 21h2v1h-2zM6 21h1v1h-1zM9 21h1v1h-1zM11 21h1v1h-1zM15 21h4v1h-4zM21 21h4v1h-4zM26 21h1v1h-1zM29 21h6v1h-6zM7 22h3v1h-3zM12 22h2v1h-2zM17 22h1v1h-1zM19 22h1v1h-1zM24 22h4v1h-4zM29 22h3v1h-3zM33 22h2v1h-2zM2 23h1v1h-1zM4 23h1v1h-1zM7 23h1v1h-1zM13 23h1v1h-1zM16 23h1v1h-1zM18 23h2v1h-2zM21 23h1v1h-1zM23 23h1v1h-1zM25 23h1v1h-1zM28 23h1v1h-1zM32 23h1v1h-1zM34 23h1v1h-1zM2 24h1v1h-1zM5 24h4v1h-4zM11 24h1v1h-1zM13 24h1v1h-1zM15 24h1v1h-1zM17 24h1v1h-1zM20 24h1v1h-1zM22 24h1v1h-1zM33 24h1v1h-1zM2 25h1v1h-1zM4 25h1v1h-1zM6 25h1v1h-1zM9 25h1v1h-1zM13 25h3v1h-3zM18 25h1v1h-1zM21 25h1v1h-1zM23 25h2v1h-2zM31 25h2v1h-2zM34 25h1v1h-1zM2 26h1v1h-1zM4 26h1v1h-1zM7 26h2v1h-2zM10 26h3v1h-3zM15 26h2v1h-2zM18 26h2v1h-2zM22 26h1v1h-1zM24 26h8v1h-8zM33 26h2v1h-2zM10 27h2v1h-2zM14 27h1v1h-1zM18 27h1v1h-1zM21 27h2v1h-2zM24 27h3v1h-3zM30 27h1v1h-1zM32 27h1v1h-1zM34 27h1v1h-1zM2 28h7v1h-7zM16 28h2v1h-2zM22 28h5v1h-5zM28 28h1v1h-1zM30 28h1v1h-1zM32 28h1v1h-1zM2 29h1v1h-1zM8 29h1v1h-1zM10 29h1v1h-1zM12 29h1v1h-1zM14 29h1v1h-1zM16 29h2v1h-2zM20 29h1v1h-1zM22 29h5v1h-5zM30 29h5v1h-5zM2 30h1v1h-1zM4 30h3v1h-3zM8 30h1v1h-1zM10 30h1v1h-1zM13 30h1v1h-1zM16 30h1v1h-1zM19 30h1v1h-1zM22 30h1v1h-1zM24 30h1v1h-1zM26 30h6v1h-6zM33 30h2v1h-2zM2 31h1v1h-1zM4 31h3v1h-3zM8 31h1v1h-1zM10 31h1v1h-1zM13 31h2v1h-2zM16 31h1v1h-1zM21 31h3v1h-3zM26 31h2v1h-2zM30 31h5v1h-5zM2 32h1v1h-1zM4 32h3v1h-3zM8 32h1v1h-1zM10 32h1v1h-1zM12 32h1v1h-1zM17 32h2v1h-2zM22 32h3v1h-3zM28 32h2v1h-2zM32 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM11 33h1v1h-1zM13 33h2v1h-2zM16 33h1v1h-1zM20 33h4v1h-4zM27 33h1v1h-1zM30 33h3v1h-3zM2 34h7v1h-7zM10 34h3v1h-3zM14 34h1v1h-1zM16 34h2v1h-2zM19 34h1v1h-1zM21 34h1v1h-1zM24 34h4v1h-4zM29 34h1v1h-1zM31 34h1v1h-1zM33 34h1v1h-1z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl" id="strip">
+        <button type="button" class="spin attn" id="play" data-vd-key="play">Play</button>
+        <button type="button" class="btn" id="reset" title="Put the view and ε back where this setup started">Reset</button>
+        <div class="seg" role="group" aria-label="Approach" id="sideSeg">
+          <button type="button" data-s="both" aria-pressed="true">Both sides</button>
+          <button type="button" data-s="left" aria-pressed="false">From the left</button>
+          <button type="button" data-s="right" aria-pressed="false">From the right</button>
+        </div>
+        <span class="note" id="note"></span>
+      </div>
+      <div class="fbar">
+        <div class="frow">
+          <label for="fx" class="fn" id="fxLabel" translate="no">f(x) =</label>
+          <input type="text" id="fx" translate="no" spellcheck="false" autocomplete="off" autocapitalize="off" autocorrect="off" inputmode="text" aria-describedby="fxStatus" value="sin(x)/x">
+        </div>
+        <div class="frow lim">
+          <label for="aIn" class="fn" id="aLabel" translate="no">as x →</label>
+          <input type="text" id="aIn" translate="no" spellcheck="false" autocomplete="off" autocapitalize="off" autocorrect="off" aria-describedby="fxStatus" value="0">
+        </div>
+        <div class="status" id="fxStatus" role="status" aria-live="polite"></div>
+      </div>
+      <div class="pane" id="pane">
+        <canvas id="can" tabindex="0" role="img" aria-label="Graph of f near the point a, with the limit marked, the epsilon band and the largest delta window inside it. Drag to pan; plus and minus zoom about the middle; Space zooms in on the point (or out toward infinity)."></canvas>
+      </div>
+      <div class="lower" id="lower">
+        <canvas id="low" tabindex="0" role="img" aria-label="The lower graph: the values of f at points closer and closer to a, from each side; or f/g beside f′/g′ near a."></canvas>
+      </div>
+      <div class="shelf" id="shelf">
+        <div class="shelf-card" role="group" aria-label="Epsilon and delta">
+          <span class="card-title">ε and δ</span>
+          <label class="check"><input type="checkbox" id="showEps" checked><span>Show the ε band and the largest δ</span></label>
+          <div class="slider-head"><label for="epsSlide">ε</label><input type="text" class="num" id="epsIn" translate="no" spellcheck="false" autocomplete="off" aria-label="Epsilon"></div>
+          <input type="range" id="epsSlide" min="0" max="1000" step="1" value="500" aria-label="Epsilon, from 0.0001 to 10">
+          <span class="hint" id="epsNote"></span>
+        </div>
+        <div class="shelf-card" role="group" aria-label="Lower graph">
+          <span class="card-title">Lower graph</span>
+          <div class="seg wrap" role="group" aria-label="Lower graph" id="tabSeg">
+            <button type="button" data-t="values" aria-pressed="true">Values as x closes in</button>
+            <button type="button" data-t="lh" aria-pressed="false">L'Hôpital: f/g and f′/g′</button>
+          </div>
+          <span class="hint" id="tabNote"></span>
+        </div>
+        <div class="shelf-card" role="group" aria-label="The view">
+          <span class="card-title">The view</span>
+          <div class="row"><button type="button" class="btn" id="zin">Zoom in</button><button type="button" class="btn" id="zout">Zoom out</button><button type="button" class="btn" id="homeView">Reset view</button></div>
+          <span class="hint" id="zoomNote"></span>
+        </div>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+      </section>
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="sinc" aria-pressed="true">sin x / x → 1</button>
+          <button type="button" data-p="line" aria-pressed="false">ε and δ for a line</button>
+          <button type="button" data-p="hole" aria-pressed="false">A hole: (x² − 1)/(x − 1)</button>
+          <button type="button" data-p="jump" aria-pressed="false">A jump: a switch closes</button>
+          <button type="button" data-p="recip" aria-pressed="false">1/x: −∞ and +∞</button>
+          <button type="button" data-p="osc" aria-pressed="false">sin(1/x): no limit</button>
+          <button type="button" data-p="squeeze" aria-pressed="false">x sin(1/x): squeezed to 0</button>
+          <button type="button" data-p="xlnx" aria-pressed="false">x ln x from the right</button>
+          <button type="button" data-p="infty" aria-pressed="false">Out to infinity: a horizontal asymptote</button>
+          <button type="button" data-p="vert" aria-pressed="false">Vertical asymptotes</button>
+          <button type="button" data-p="slant" aria-pressed="false">A slant asymptote</button>
+          <button type="button" data-p="lhop" aria-pressed="false">L'Hôpital twice: (eˣ − 1 − x)/x²</button>
+          <span class="chips-label">In physics</span>
+          <button type="button" data-p="avgvel" aria-pressed="false">Average velocity → instantaneous velocity</button>
+          <button type="button" data-p="cosq" aria-pressed="false">(1 − cos θ)/θ²: a pendulum's height</button>
+          <button type="button" data-p="gamma" aria-pressed="false">γ as v → c</button>
+          <button type="button" data-p="terminal" aria-pressed="false">Terminal velocity as t → ∞</button>
+        </div>
+        <details class="more" open><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+      </section>
+      <section>
+        <h2>Formulas</h2>
+        <dl class="formulas" id="formulas" translate="no"></dl>
+      </section>
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the limits and δ, to predict them first</span></label>
+        <details class="more"><summary>What you can type</summary>
+          <ul class="typing">
+            <li>Use <code>x</code> or <code>t</code> as the variable. For the point, type a number, <code>pi/2</code>, <code>inf</code> or <code>-inf</code>.</li>
+            <li><code>+ − * / ^</code> and parentheses; <code>2x</code>, <code>3sin(x)</code> and <code>(x+1)(x−1)</code> multiply.</li>
+            <li><code>sin cos tan sec csc cot</code>, <code>asin acos atan</code>, <code>sinh cosh tanh</code>, <code>exp</code> or <code>e^x</code>, <code>ln</code>, <code>log</code> (base 10), <code>sqrt</code>, <code>abs</code> or <code>|x|</code>, <code>sign</code>, <code>pi</code></li>
+          </ul>
+        </details>
+        <details class="more"><summary>How it works</summary>
+          <p class="hint">The box is read by a small parser (demos/lib/vdmath.js); nothing you type is run as code. The parser simplifies as it reads, so x/x becomes 1 and x²/x becomes x: their holes are gone before f is ever evaluated.</p>
+          <p class="hint">Each one sided limit is found by closing in: f at x = a ± h for h = ½·max(1, |a|) halved again and again, down to where x can no longer be told apart from a in double precision (toward infinity, x = ±2ᵏ out to 2⁶²). The values are said to settle when three Aitken Δ² extrapolations in a row agree to 10⁻⁷ of 1 + |L| and the values themselves are within 10⁻³ of L; the estimate is taken before rounding takes over. Values that grow in size step after step without settling blow up to ±∞; values that keep turning back oscillate. A numerical search can be fooled by a function built to fool it; the readout says how each limit was found.</p>
+          <p class="hint">Where f is a quotient N/D with N(a) = D(a) = 0, L'Hôpital's rule is applied exactly: N and D are differentiated by the rules of calculus until one of them is not 0 at a. Where f(a) is defined and equals the limit found, f is continuous there and the limit is f(a).</p>
+          <p class="hint">The largest δ: each side is scanned at 2,000 evenly spaced points and at halvings toward a, out to the view's half width and in to 10⁻⁵ × max(1, |a|) from a (closer in, rounding takes the digits of x − a and of differences like 1 − cos x), and the first point outside the ε band is refined by bisection to rounding. A wiggle narrower than the scan's spacing could be missed. Toward infinity, N is found the same way, scanning inward from 10¹⁵ at 50 points a decade.</p>
+          <p class="hint">Zoomed in far enough, a difference of nearly equal numbers loses its digits to rounding (1 − cos x near 0, for one), and the graph turns to noise. That is the computer's arithmetic, not the function; the values graph shows where it starts.</p>
+        </details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  /* Limits: one sided limits by closing in, holes, jumps, blow ups and oscillation, limits at infinity and asymptotes, the
+     largest δ for an ε, and L'Hôpital's rule on the parsed quotient. Runs in Node with demos/lib/vdmath.js loaded first
+     (curriculum/validation/test_limits.cjs). OpenStax Calculus Vol 1 2.1 to 2.5, 4.6 and 4.8. */
+  /* the points that close in on a from one side (s = −1 left, +1 right): x = a + s·h with h = h₀/2ᵏ, h₀ = ½ max(1, |a|), down
+     to where x can no longer be told from a; toward infinity (a = ±∞): x = s·2ᵏ, k = 0 … 62 */
+  function sideSeq(f, a, s) {
+    const xs = [], ys = [];
+    if (isFinite(a)) {
+      const h0 = 0.5 * Math.max(1, Math.abs(a));
+      for (let k = 0; k <= 50; k++) { const x = a + s * h0 * Math.pow(2, -k); if (x === a) break; xs.push(x); ys.push(f(x)); }
+    } else for (let k = 0; k <= 62; k++) { const x = s * Math.pow(2, k); xs.push(x); ys.push(f(x)); }
+    return { xs, ys };
+  }
+  /* Aitken's Δ² extrapolation of three terms of a sequence that closes in geometrically */
+  function aitken(y0, y1, y2) { const d1 = y2 - y1, dd = d1 - (y1 - y0); return dd === 0 ? y2 : y2 - d1 * d1 / dd; }
+  /* what the values do as x closes in: settle to a value L (with an error estimate), grow without bound (inf, −inf),
+     keep oscillating (osc), keep drifting without settling to 7 figures (slow), or are undefined on that side (undef).
+     Settled means: three Aitken estimates in a row agree to 10⁻⁷ of 1 + |L| and the values themselves are within 10⁻³
+     of it. The estimate is taken before rounding error (cancellation) takes over at the smallest h. */
+  function classify(ys) {
+    const n = ys.length, tail = ys.slice(-12);
+    if (tail.every((y) => isNaN(y))) return { kind: 'undef' };
+    if (tail.every((y) => y === Infinity)) return { kind: 'inf' };
+    if (tail.every((y) => y === -Infinity)) return { kind: '-inf' };
+    let i0 = n; while (i0 > 0 && isFinite(ys[i0 - 1])) i0--;
+    let i1 = i0; if (n - i0 < 8) { i1 = 0; }
+    const y = ys.slice(i1).filter(isFinite);
+    if (y.length < 8) return { kind: 'undef' };
+    let best = null;
+    for (let k = 0; k + 5 < y.length; k++) {
+      const A = [aitken(y[k], y[k + 1], y[k + 2]), aitken(y[k + 1], y[k + 2], y[k + 3]), aitken(y[k + 2], y[k + 3], y[k + 4]), aitken(y[k + 3], y[k + 4], y[k + 5])];
+      if (!A.every(isFinite)) continue;
+      const e = Math.max(Math.abs(A[1] - A[0]), Math.abs(A[2] - A[1]), Math.abs(A[3] - A[2])), L = A[3], tol = 1e-7 * (1 + Math.abs(L));
+      if (e <= tol && Math.abs(y[k + 5] - L) <= 1e-3 * (1 + Math.abs(L)) && (!best || e < best.err)) best = { L, err: e };
+    }
+    if (best) return { kind: 'value', L: best.L, err: Math.max(best.err, 1e-12 * (1 + Math.abs(best.L))) };
+    /* not settled: monotone and growing in size is a blow up; growing slowly (like ln) still counts when the steps do not shrink */
+    const t = y.slice(-20); let up = true, down = true, grow = true;
+    for (let k = 1; k < t.length; k++) { if (!(t[k] > t[k - 1])) up = false; if (!(t[k] < t[k - 1])) down = false; if (!(Math.abs(t[k]) > Math.abs(t[k - 1]))) grow = false; }
+    if ((up || down) && grow) {
+      const dEnd = Math.abs(t[t.length - 1] - t[t.length - 2]), dMid = Math.abs(t[10] - t[9]);
+      if (Math.abs(t[t.length - 1]) > 1e6 * (1 + Math.abs(t[0])) || dEnd >= 0.5 * dMid) return { kind: up ? 'inf' : '-inf' };
+    }
+    return { kind: up || down ? 'slow' : 'osc', last: y[y.length - 1] };
+  }
+  function limitSide(f, a, s) { const q = sideSeq(f, a, s); return Object.assign(classify(q.ys), { seq: q }); }
+  /* the two sides together: the limit exists when both settle to the same value (within their error estimates) */
+  function limitBoth(f, a) {
+    const left = isFinite(a) || a === -Infinity ? limitSide(f, a, isFinite(a) ? -1 : -1) : null;
+    const right = isFinite(a) || a === Infinity ? limitSide(f, a, 1) : null;
+    if (a === Infinity) return { left: null, right, both: right };
+    if (a === -Infinity) return { left, right: null, both: left };
+    let both;
+    if (left.kind === 'value' && right.kind === 'value') {
+      const tol = 10 * (left.err + right.err) + 1e-9 * (1 + Math.abs(left.L));
+      both = Math.abs(left.L - right.L) <= tol ? { kind: 'value', L: left.err <= right.err ? left.L : right.L, err: Math.max(left.err, right.err) } : { kind: 'differ' };
+    } else if (left.kind === right.kind && (left.kind === 'inf' || left.kind === '-inf')) both = { kind: left.kind };
+    else both = { kind: 'none' };
+    return { left, right, both };
+  }
+  /* f = N/D from the parsed tree: the factors with a negative power form D */
+  function splitQuotient(node) {
+    const M = VDMATH, negPow = (m) => m.k === 'pow' && m.b.k === 'n' && m.b.v < 0;
+    const flip = (m) => M.mkPow(m.a, M.mkMul([M.rat(-1, 1), m.b]));
+    if (negPow(node)) return { num: M.num(1), den: flip(node) };
+    if (node.k !== 'mul' || !node.a.some(negPow)) return null;
+    return { num: M.mkMul(node.a.filter((m) => !negPow(m))), den: M.mkMul(node.a.filter(negPow).map(flip)) };
+  }
+  /* L'Hôpital's rule at a finite a, exactly on the formulas: while N(a) = D(a) = 0, differentiate both (up to 5 times) */
+  function lhopital(node, v, a) {
+    const M = VDMATH, q = splitQuotient(node); if (!q || !isFinite(a)) return null;
+    let N = q.num, D = q.den; const steps = [], zero = (u) => Math.abs(u) <= 1e-12 * (1 + Math.abs(a));
+    for (let i = 0; i <= 5; i++) {
+      const n = M.compile(N, [v])(a), d = M.compile(D, [v])(a);
+      steps.push({ N, D, n, d });
+      if (!isFinite(n) || !isFinite(d)) return { steps, kind: 'stuck' };
+      if (!zero(d)) return { steps, kind: i ? 'lhopital' : 'direct', L: n / d };
+      if (!zero(n)) return { steps, kind: 'blowup' };
+      N = M.derivative(N, v); D = M.derivative(D, v);
+    }
+    return { steps, kind: 'stuck' };
+  }
+  /* the largest δ (up to span) with |f(x) − L| < ε for every x with 0 < |x − a| < δ on the chosen sides, from a scan of each
+     side (2,000 evenly spaced points and halvings toward a) and bisection to rounding at the first point that fails. The scan
+     stops 10⁻⁵ × max(1, |a|) from a: closer in, x − a and differences like 1 − cos x lose their digits to rounding. */
+  function deltaFor(f, a, L, eps, sides, span) {
+    const out = {}, tmin = 1e-5 * Math.max(1, Math.abs(a));
+    for (const s of sides) {
+      const ts = []; for (let j = 1; j <= 2000; j++) ts.push(span * j / 2000); for (let m = 1; m <= 60 && span * Math.pow(2, -m) / 2000 >= tmin; m++) ts.push(span * Math.pow(2, -m) / 2000);
+      if (span / 2000 > tmin) ts.push(tmin);
+      ts.sort((p, q) => p - q);
+      const bad = (t) => { const y = f(a + s * t); return !(Math.abs(y - L) < eps); };
+      let good = 0, hit = null;
+      for (const t of ts) { if (bad(t)) { hit = t; break; } good = t; }
+      if (hit === null) { out[s] = { d: span, capped: true }; continue; }
+      if (good === 0) { out[s] = { d: hit, capped: false, floor: true }; continue; }
+      let lo = good, hi = hit;
+      for (let it = 0; it < 100 && hi - lo > 0; it++) { const m = (lo + hi) / 2; if (m === lo || m === hi) break; if (bad(m)) hi = m; else lo = m; }
+      out[s] = { d: lo, capped: false };
+    }
+    const ds = sides.map((s) => out[s].d);
+    return { delta: Math.min(...ds), capped: sides.every((s) => out[s].capped), floor: sides.some((s) => out[s].floor), sides: out };
+  }
+  /* toward infinity: the smallest N with |f(x) − L| < ε for every x beyond N (scanned from 10¹⁵ inward, 50 points a decade,
+     then bisection) */
+  function nFor(f, s, L, eps) {
+    const bad = (u) => { const y = f(s * u); return !(Math.abs(y - L) < eps); };
+    let prev = 1e15; if (bad(prev)) return { N: Infinity };
+    for (let k = 15 * 50 - 1; k >= -3 * 50; k--) {
+      const u = Math.pow(10, k / 50);
+      if (bad(u)) { let lo = u, hi = prev; for (let it = 0; it < 100; it++) { const m = (lo + hi) / 2; if (m === lo || m === hi) break; if (bad(m)) lo = m; else hi = m; } return { N: hi }; }
+      prev = u;
+    }
+    return { N: 0 };
+  }
+  /* a slant asymptote y = mx + b at ±∞: m = lim f(x)/x, b = lim (f(x) − mx), when m is finite and not 0 */
+  function slant(f, s) {
+    const a = s * Infinity, m = limitSide((x) => f(x) / x, a, s);
+    if (m.kind !== 'value' || Math.abs(m.L) < 1e-9) return null;
+    const mm = Math.abs(m.L - Math.round(m.L)) < 1e-9 ? Math.round(m.L) : m.L;
+    const b = limitSide((x) => f(x) - mm * x, a, s);
+    return b.kind === 'value' ? { m: mm, b: b.L } : null;
+  }
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  const VDI18N = window.VDI18N || { t: (s, o) => s.replace(/\{(\w+)\}/g, (m, k) => (o && k in o ? o[k] : m)) };
+  const M = VDMATH, fmt = M.fmt, sup = M.sup;
+  const g = (window.VDC && VDC.g) || 9.81;
+  const gs = (v) => String(Number(v.toPrecision(10)));
+  const PRESETS = {
+    sinc: { src: 'sin(x)/x', a: '0', eps: 0.05, x: [-12, 12], units: { x: 'rad', xName: 'θ', y: '', yName: 'sin θ / θ' },
+      hint: 'sin x / x is 0/0 at x = 0, so f(0) is undefined, yet near 0 the values close in on 1: sin θ ≈ θ for small angles in radians. The orange band is L ± ε; the green window is the largest δ with every x inside it (except a itself) landing in the band. Press Play to zoom in on the point: the curve flattens toward the hole at (0, 1).' },
+    line: { src: '2x + 1', a: '1', eps: 0.5, x: [-1, 3],
+      hint: 'The precise definition: the limit is L if for every ε > 0 there is a δ > 0 so that 0 < |x − a| < δ makes |f(x) − L| < ε. For f(x) = 2x + 1 at a = 1, L = 3 and |f(x) − 3| = 2|x − 1|, so the largest δ is exactly ε/2. Change ε and check the readout.' },
+    hole: { src: '(x^2 - 1)/(x - 1)', a: '1', eps: 0.3, x: [-2, 4],
+      hint: '(x² − 1)/(x − 1) = x + 1 everywhere except x = 1, where it is 0/0 and undefined. The graph is a line with a hole at (1, 2). The limit is 2: the limit asks what f does near a, never what it does at a. Defining f(1) = 2 would remove the discontinuity.' },
+    jump: { src: '5(1 + sign(t))/2', a: '0', eps: 0.5, x: [-2, 2], units: { x: 's', xName: 't', y: 'V', yName: 'V' },
+      hint: 'A switch closed at t = 0 connects a 5 V battery: V = 0 V before and 5 V after (at t = 0 itself this formula gives 2.5 V). The limit from the left is 0, from the right 5. They differ, so the two sided limit does not exist: a jump discontinuity. No ε band narrower than 2.5 V can hold both sides.' },
+    recip: { src: '1/x', a: '0', eps: 0.5, x: [-3, 3],
+      hint: '1/x grows without bound as x → 0: to −∞ from the left and +∞ from the right. "Equals ∞" is shorthand: the limit does not exist as a number, it grows past any bound. The y axis is a vertical asymptote.' },
+    osc: { src: 'sin(1/x)', a: '0', eps: 0.5, x: [-0.5, 0.5],
+      hint: 'sin(1/x) swings between −1 and 1 faster and faster as x → 0. Zoom in as far as you like: the swings never settle, so there is no limit from either side. On the lower graph the values jump around at every h.' },
+    squeeze: { src: 'x sin(1/x)', a: '0', eps: 0.05, x: [-0.5, 0.5],
+      hint: 'x sin(1/x) still wiggles, but it is squeezed between −|x| and |x|, which both go to 0. By the squeeze theorem the limit is 0. For this f the largest δ is about ε: |x sin(1/x)| ≤ |x| < ε whenever |x| < ε.' },
+    xlnx: { src: 'x ln(x)', a: '0', side: 'right', eps: 0.1, x: [-0.2, 1.2],
+      hint: 'x ln x is 0 · (−∞) at 0, a form with no value of its own. ln x is defined only for x > 0, so only the limit from the right makes sense. The x wins: x ln x → 0 from the right. Its lowest point is at x = 1/e.' },
+    infty: { src: '(3x^2 + 1)/(x^2 - 4)', a: 'inf', eps: 0.1, x: [-10, 40],
+      hint: 'As x → ∞ the x² terms take over, so (3x² + 1)/(x² − 4) → 3/1 = 3: the line y = 3 is a horizontal asymptote. With a = ∞ the ε band asks for an N beyond which every value stays within ε of 3. Press Play to zoom out toward infinity.' },
+    vert: { src: '(3x^2 + 1)/(x^2 - 4)', a: '2', eps: 0.5, x: [-6, 6],
+      hint: 'The same function near x = 2, where the bottom is 0 and the top is 13: it blows up, to −∞ from the left and +∞ from the right. x = 2 and x = −2 are vertical asymptotes. Type -2 for a, or inf to go back to the horizontal one.' },
+    slant: { src: '(x^2 + 1)/x', a: 'inf', eps: 0.1, x: [-8, 8],
+      hint: '(x² + 1)/x = x + 1/x. As x → ∞ it has no limit, but f(x) − x = 1/x → 0, so the graph closes in on the slant asymptote y = x. The demo finds the slope m = lim f(x)/x and the intercept b = lim (f(x) − mx).' },
+    lhop: { src: '(e^x - 1 - x)/x^2', a: '0', eps: 0.05, x: [-3, 3], tab: 'lh',
+      hint: 'At x = 0 both top and bottom are 0. L\'Hôpital\'s rule: if f/g is 0/0, its limit is the limit of f′/g′. Here f′/g′ = (eˣ − 1)/(2x) is 0/0 again, so differentiate once more: eˣ/2 → 1/2. The lower graph shows f/g and f′/g′ heading for the same value.' },
+    avgvel: { src: `${gs(g / 2)}((2 + x)^2 - 4)/x`, a: '0', eps: 1, x: [-1.5, 1.5], units: { x: 's', xName: 'Δt', y: 'm/s', yName: VDI18N.t('average velocity') },
+      hint: `A ball falls from rest: y = ½gt² with g = ${gs(g)} m/s². Its average velocity from t = 2 s to 2 s + Δt is [y(2 + Δt) − y(2)]/Δt, which is 0/0 at Δt = 0. As Δt → 0 it closes in on the instantaneous velocity at t = 2 s, g × 2 s = ${gs(2 * g)} m/s: the derivative is this limit.` },
+    cosq: { src: '(1 - cos(x))/x^2', a: '0', eps: 0.02, x: [-6, 6], units: { x: 'rad', xName: 'θ', y: '', yName: '(1 − cos θ)/θ²' },
+      hint: 'A pendulum of length L swung to θ is raised by h = L(1 − cos θ). For small θ, (1 − cos θ)/θ² → 1/2, so h ≈ ½Lθ²: the small angle energy U = ½mgLθ². Zoom in very far and the graph turns to noise: 1 − cos θ is a difference of nearly equal numbers, and rounding eats its digits (see the lower graph past h = 10⁻⁵).' },
+    gamma: { src: '1/sqrt(1 - x^2)', a: '1', side: 'left', eps: 0.5, x: [-0.2, 1.2], units: { x: 'c', xName: 'v', y: '', yName: 'γ' },
+      hint: 'The Lorentz factor γ = 1/√(1 − v²/c²), with v in units of c. As v → c from below, γ grows without bound: no object with mass reaches c. From the right (v > c) γ is not even defined. The line v = c is a vertical asymptote.' },
+    terminal: { src: `50(1 - e^(-${gs(g)}t/50))`, a: 'inf', eps: 1, x: [-2, 40], units: { x: 's', xName: 't', y: 'm/s', yName: 'v' },
+      hint: `A falling body with linear drag, terminal speed 50 m/s (a chosen value): v(t) = v_T(1 − e^(−gt/v_T)), time constant v_T/g = ${gs(Number((50 / g).toPrecision(3)))} s. As t → ∞, v → 50 m/s, a horizontal asymptote. The N readout says how long until v stays within ε of it.` },
+  };
+  const S = { preset: 'sinc', side: 'both', node: null, v: 'x', f: null, a: 0, aTxt: '0', eps: 0.05, showEps: true, tab: 'values', units: null,
+    run: false, blind: false, x0: -12, x1: 12, y0: -1, y1: 2, autoY: true, res: null, lh: null, lim: null, del: null, home: null };
+  const can = $('can'), ctx = can.getContext('2d'), low = $('low'), lctx = low.getContext('2d');
+  let W = 0, H = 0, LW = 0, LH = 0, dpr = 1, T = null, need = true;
+  const f4 = (v) => (isFinite(v) ? fmt(Number(v.toPrecision(4))) : VDI18N.t('undefined'));
+  const f7 = (v) => (isFinite(v) ? fmt(Math.abs(v) < 1e-300 ? 0 : Number(v.toPrecision(7))) : VDI18N.t('undefined'));
+  /* a limit shown to the digits its error estimate supports (at most 10 significant figures) */
+  const fL = (L, err) => { if (!isFinite(L)) return f7(L); const dec = Math.max(0, Math.min(12, -Math.floor(Math.log10(Math.max(err || 0, 1e-12))) - 1)); const v = Number(L.toFixed(dec)); return fmt(Number(v.toPrecision(10)) || 0); };
+  const sci = (v) => { if (!isFinite(v)) return f7(v); if (v === 0) return '0'; const e = Math.floor(Math.log10(Math.abs(v))); if (e >= -3 && e < 5) return fmt(Number(v.toPrecision(3))); let m = Number((v / Math.pow(10, e)).toPrecision(3)); let ee = e; if (Math.abs(m) >= 10) { m /= 10; ee++; } return (m === 1 ? '' : fmt(m) + '×') + '10' + sup(ee); };
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement), q = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: q('--canvas'), ink: q('--ink'), muted: q('--muted'), line: q('--line'), mono: q('--font-mono') || 'monospace', red: q('--red'),
+      f: q('--fg-f'), left: q('--c-left'), right: q('--c-right'), eps: q('--c-eps'), del: q('--c-del'), d: q('--c-d') };
+  }
+  const proj = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.35 : 1);
+  const X = (x) => (x - S.x0) / (S.x1 - S.x0) * W, Y = (y) => H - (y - S.y0) / (S.y1 - S.y0) * H;
+  const finiteA = () => isFinite(S.a);
+
+  /* ---------- reading the boxes ---------- */
+  const MSG = {
+    name: (e) => VDI18N.t('“{n}” is not a name I know. Use x or t, and functions like sin, ln, sqrt.', { n: e.name2 }),
+    char: (e) => VDI18N.t('“{n}” is not something I can read here.', { n: e.name2 }),
+    unexpected: (e) => VDI18N.t('“{n}” is out of place.', { n: e.name2 }),
+    close: () => VDI18N.t('There is a ) without a matching (.'),
+    comma: () => VDI18N.t('Functions here take one input; there is no comma form.'),
+    arg: (e) => VDI18N.t('{n} needs something to act on, like {n}(x).', { n: e.name2 }),
+    twovars: () => VDI18N.t('Use one variable, x or t, not both.'),
+    end: () => VDI18N.t('Not finished yet.'),
+    empty: () => VDI18N.t('Type a function of x, like x^2 sin(x).'),
+  };
+  function status(msg, bad) { const st = $('fxStatus'); st.textContent = msg; st.classList.toggle('bad', !!bad); }
+  function readA() {
+    const s = $('aIn').value.trim().replace(/∞/g, 'inf').replace(/−/g, '-'); let v = NaN;
+    if (/^\+?inf(inity)?$/i.test(s)) v = Infinity; else if (/^-inf(inity)?$/i.test(s)) v = -Infinity;
+    else if (/^[-+]?(\d+\.?\d*|\.\d+)(e[-+]?\d+)?$/i.test(s)) v = Number(s);
+    else { try { const r = M.parse(s, { vars: [] }); if (!M.hasV(r.node)) v = M.compile(r.node, ['x'])(0); } catch (_) { v = NaN; } }
+    const ok = !isNaN(v) && (isFinite(v) || Math.abs(v) === Infinity);
+    $('aIn').classList.toggle('bad', !ok);
+    if (ok) { S.a = v; S.aTxt = $('aIn').value.trim(); }
+    return ok;
+  }
+  function read() {
+    const r = M.parseLive($('fx').value);
+    $('fx').classList.toggle('bad', !r.node && !r.empty);
+    if (r.empty) { status(MSG.empty(), false); return; }
+    if (!r.node) { status((S.node ? VDI18N.t('Still showing the last graph. ') : '') + (MSG[r.error.code] || MSG.end)(r.error), true); return; }
+    status(r.partial ? VDI18N.t('Graphing what is finished so far, while you type.') : '', false);
+    S.node = r.node; S.v = r.v; S.f = M.compile(r.node, [r.v]);
+    $('fxLabel').textContent = `f(${r.v}) =`; $('aLabel').textContent = `${VDI18N.t('as')} ${r.v} →`;
+    S.res = null;
+  }
+  /* the limit, the sides, L'Hôpital and the δ for the current ε, worked out once */
+  function work() {
+    if (!S.f) return;
+    if (!S.res) {
+      S.res = limitBoth(S.f, S.a); S.lh = null; S.del = null;
+      try { S.lh = lhopital(S.node, S.v, S.a); } catch (_) { S.lh = null; }
+      S.sl = !finiteA() ? slant(S.f, S.a > 0 ? 1 : -1) : null;
+    }
+    const R = S.res, pick = !finiteA() ? R.both : S.side === 'left' ? R.left : S.side === 'right' ? R.right : R.both;
+    let lim = { kind: pick.kind, L: pick.L, err: pick.err, how: 'numeric' };
+    if (pick.kind === 'value') {
+      const fa = finiteA() ? S.f(S.a) : NaN;
+      if (isFinite(fa) && Math.abs(fa - pick.L) <= 1e-7 * (1 + Math.abs(pick.L))) lim = { kind: 'value', L: fa, err: 0, how: 'cont' };
+      else if (S.lh && (S.lh.kind === 'lhopital' || S.lh.kind === 'direct') && Math.abs(S.lh.L - pick.L) <= 1e-6 * (1 + Math.abs(pick.L))) lim = { kind: 'value', L: S.lh.L, err: 0, how: S.lh.kind === 'lhopital' ? 'lh' : 'direct' };
+    }
+    S.lim = lim;
+    if (lim.kind === 'value' && (!S.del || S.del.eps !== S.eps || S.del.L !== lim.L || S.del.side !== S.side)) {
+      if (finiteA()) {
+        const sides = S.side === 'left' ? [-1] : S.side === 'right' ? [1] : [-1, 1];
+        const span = Math.max(1e-12, Math.max(Math.abs(S.x1 - S.a), Math.abs(S.a - S.x0), (S.home ? S.home[1] - S.home[0] : 1) / 2));
+        S.del = Object.assign(deltaFor(S.f, S.a, lim.L, S.eps, sides, span), { eps: S.eps, L: lim.L, side: S.side });
+      } else S.del = Object.assign(nFor(S.f, S.a > 0 ? 1 : -1, lim.L, S.eps), { eps: S.eps, L: lim.L, side: S.side });
+    }
+    if (lim.kind !== 'value') S.del = null;
+  }
+
+  /* ---------- drawing ---------- */
+  function niceStep(span, n) { const raw = span / Math.max(2, n), p10 = Math.pow(10, Math.floor(Math.log10(raw))), m = raw / p10; return (m <= 1 ? 1 : m <= 2 ? 2 : m <= 5 ? 5 : 10) * p10; }
+  function tick(v, step) {
+    if (Math.abs(v) < step * 1e-6) return '0';
+    if (step < 1e-3 || step >= 1e5) { const e = Math.floor(Math.log10(Math.abs(v))), m = Number((v / Math.pow(10, e)).toPrecision(4)); return (m === 1 ? '' : m === -1 ? '−' : fmt(m) + '×') + '10' + sup(e); }
+    return fmt(Number(v.toFixed(Math.max(0, -Math.floor(Math.log10(step)) + 1))));
+  }
+  const labelOn = (c, t, x, y) => { c.save(); c.strokeStyle = T.canvas; c.lineWidth = 4; c.lineJoin = 'round'; c.strokeText(t, x, y); c.restore(); c.fillText(t, x, y); };
+  /* a grid on any canvas for the view v; offsets: tick labels of a deep zoom are written as offsets from the center */
+  function grid(c, v, w, h, p, xName, yName, xTick, yTick) {
+    const XX = (x) => (x - v.x0) / (v.x1 - v.x0) * w, YY = (y) => h - (y - v.y0) / (v.y1 - v.y0) * h;
+    const sx = niceStep(v.x1 - v.x0, w / (100 * p)), sy = niceStep(v.y1 - v.y0, h / (50 * p));
+    c.lineWidth = 1; c.strokeStyle = T.line; c.beginPath();
+    for (let x = Math.ceil(v.x0 / sx) * sx; x <= v.x1; x += sx) { const u = Math.round(XX(x)) + 0.5; c.moveTo(u, 0); c.lineTo(u, h); }
+    for (let y = Math.ceil(v.y0 / sy) * sy; y <= v.y1; y += sy) { const u = Math.round(YY(y)) + 0.5; c.moveTo(0, u); c.lineTo(w, u); }
+    c.stroke();
+    const ax = Math.min(Math.max(YY(0), 0), h), ay = Math.min(Math.max(XX(0), 0), w);
+    c.strokeStyle = T.muted; c.lineWidth = 1.5; c.beginPath();
+    if (YY(0) >= 0 && YY(0) <= h) { c.moveTo(0, YY(0)); c.lineTo(w, YY(0)); }
+    if (XX(0) >= 0 && XX(0) <= w) { c.moveTo(XX(0), 0); c.lineTo(XX(0), h); }
+    c.stroke();
+    c.font = `600 ${12 * p}px ${T.mono}`; const nameW = c.measureText(xName).width;
+    c.fillStyle = T.muted; c.font = `${11 * p}px ${T.mono}`;
+    const below = ax + 16 * p < h; c.textAlign = 'center'; c.textBaseline = below ? 'top' : 'bottom';
+    let lastR = -1e9;
+    for (let x = Math.ceil(v.x0 / sx) * sx; x <= v.x1; x += sx) {
+      const u = XX(x); if (u < 14 * p || u > w - 14 * p || (!below && u > w - nameW - 30 * p)) continue;
+      const t = xTick ? xTick(x, sx) : tick(x, sx); if (t === null) continue; const tw = c.measureText(t).width;
+      if (u - tw / 2 < lastR + 8) continue; lastR = u + tw / 2; labelOn(c, t, u, below ? ax + 4 * p : ax - 4 * p);
+    }
+    const right = ay + 70 * p < w; c.textAlign = right ? 'left' : 'right'; c.textBaseline = 'middle';
+    for (let y = Math.ceil(v.y0 / sy) * sy; y <= v.y1; y += sy) { if (Math.abs(y) < sy / 2 && !yTick) continue; const u = YY(y); if (u < 26 * p || u > h - 12 * p) continue; labelOn(c, yTick ? yTick(y, sy) : tick(y, sy), right ? ay + 5 * p : ay - 5 * p, u); }
+    c.font = `600 ${12 * p}px ${T.mono}`; c.fillStyle = T.ink;
+    c.textAlign = 'right'; c.textBaseline = 'bottom'; labelOn(c, xName, w - 6 * p, below ? ax - 4 * p : ax - 20 * p);
+    c.textAlign = 'left'; c.textBaseline = 'top'; labelOn(c, yName, (right ? ay : 0) + 6 * p, 6 * p);
+  }
+  function curve(c, fn, x0, x1, XX, YY, w, h, color, width, dash) {
+    const m = Math.min(3000, Math.max(300, Math.ceil(2 * w)));
+    c.strokeStyle = color; c.lineWidth = width; c.setLineDash(dash || []); c.lineCap = 'round'; c.lineJoin = 'round'; c.beginPath();
+    let pen = false, pw = 0;
+    for (let i = 0; i <= m; i++) {
+      const x = x0 + (x1 - x0) * i / m, y = fn(x), u = YY(y);
+      if (!isFinite(u)) { pen = false; continue; }
+      if (pen && Math.abs(u - pw) > 2 * h) pen = false;
+      const uc = Math.max(-2 * h, Math.min(3 * h, u));
+      if (pen) c.lineTo(XX(x), uc); else c.moveTo(XX(x), uc);
+      pen = true; pw = u;
+    }
+    c.stroke(); c.setLineDash([]);
+  }
+  const dot = (c, x, y, r, fill, stroke) => { if (!isFinite(x) || !isFinite(y)) return; c.beginPath(); c.arc(x, y, r, 0, 7); if (fill) { c.fillStyle = fill; c.fill(); } if (stroke) { c.strokeStyle = stroke; c.lineWidth = 2.2; c.stroke(); } };
+  /* tick labels near a deep zoom: the center value once, then offsets */
+  const deep = () => finiteA() && (S.x1 - S.x0) < 1e-3 * Math.max(1, Math.abs(S.a));
+  function draw() {
+    if (!T || !W) return;
+    const p = proj(), c = ctx, u = S.units;
+    c.setTransform(dpr, 0, 0, dpr, 0, 0); c.fillStyle = T.canvas; c.fillRect(0, 0, W, H);
+    const xn = u ? `${u.xName} (${u.x})` : S.v, yn = u ? (u.y ? `${u.yName} (${u.y})` : u.yName) : 'y';
+    const xTick = deep() ? (x, st) => (Math.abs(x - S.a) < st / 2 ? null : (x > S.a ? '+' : '−') + tick(Math.abs(x - S.a), st)) : null;
+    const yc = S.lim && S.lim.kind === 'value' ? S.lim.L : (S.y0 + S.y1) / 2, deepY = (S.y1 - S.y0) < 1e-3 * Math.max(1, Math.abs(yc));
+    const yTick = deepY ? (y, st) => (Math.abs(y - yc) < st / 2 ? fmt(Number(yc.toPrecision(12))) : (y > yc ? '+' : '−') + tick(Math.abs(y - yc), st)) : null;
+    grid(c, { x0: S.x0, x1: S.x1, y0: S.y0, y1: S.y1 }, W, H, p, xn, yn, xTick, yTick);
+    if (deep()) { c.font = `${11 * p}px ${T.mono}`; c.fillStyle = T.muted; c.textAlign = 'center'; c.textBaseline = 'bottom'; labelOn(c, VDI18N.t('x ticks: distance from a = {a}', { a: f7(S.a) }), W / 2, H - 4 * p); }
+    if (!S.f) return;
+    work();
+    const lim = S.lim, hasL = lim.kind === 'value', L = lim.L, show = S.showEps && hasL && !S.blind;
+    /* the ε band and the δ window (or the region beyond N) */
+    if (show) {
+      c.fillStyle = T.eps; c.globalAlpha = 0.13; c.fillRect(0, Y(L + S.eps), W, Y(L - S.eps) - Y(L + S.eps)); c.globalAlpha = 1;
+      c.strokeStyle = T.eps; c.lineWidth = 1.3 * p; c.setLineDash([6 * p, 4 * p]); c.beginPath(); for (const y of [L + S.eps, L - S.eps]) { c.moveTo(0, Y(y)); c.lineTo(W, Y(y)); } c.stroke(); c.setLineDash([]);
+      c.font = `${11 * p}px ${T.mono}`; c.fillStyle = T.eps; c.textAlign = 'left'; c.textBaseline = 'bottom'; labelOn(c, 'L + ε', 8 * p, Y(L + S.eps) - 3 * p); c.textBaseline = 'top'; labelOn(c, 'L − ε', 8 * p, Y(L - S.eps) + 3 * p);
+      if (S.del) {
+        let xa, xb;
+        if (finiteA()) { const sd = S.del.sides; xa = sd[-1] ? S.a - sd[-1].d : S.a; xb = sd[1] ? S.a + sd[1].d : S.a; if (S.side === 'both') { xa = S.a - S.del.delta; xb = S.a + S.del.delta; } }
+        else if (isFinite(S.del.N)) { if (S.a > 0) { xa = S.del.N; xb = S.x1 + 1e9 * (S.x1 - S.x0); } else { xa = S.x0 - 1e9 * (S.x1 - S.x0); xb = -S.del.N; } }
+        if (xa !== undefined) {
+          const pa = Math.max(-10, X(xa)), pb = Math.min(W + 10, X(xb));
+          c.fillStyle = T.del; c.globalAlpha = 0.14; c.fillRect(pa, 0, pb - pa, H); c.globalAlpha = 1;
+          c.strokeStyle = T.del; c.lineWidth = 1.3 * p; c.setLineDash([6 * p, 4 * p]); c.beginPath();
+          for (const x of [xa, xb]) if (X(x) > -5 && X(x) < W + 5 && (finiteA() || Math.abs(x) === S.del.N)) { c.moveTo(X(x), 0); c.lineTo(X(x), H); } c.stroke(); c.setLineDash([]);
+          c.font = `${11 * p}px ${T.mono}`; c.fillStyle = T.del; c.textBaseline = 'bottom';
+          if (finiteA()) { if (xa < S.a) { c.textAlign = 'right'; labelOn(c, 'a − δ', X(xa) - 3 * p, H - 18 * p); } if (xb > S.a) { c.textAlign = 'left'; labelOn(c, 'a + δ', X(xb) + 3 * p, H - 18 * p); } }
+          else { c.textAlign = S.a > 0 ? 'left' : 'right'; labelOn(c, S.a > 0 ? 'x > N' : 'x < −N', X(S.a > 0 ? xa : xb) + (S.a > 0 ? 3 : -3) * p, H - 18 * p); }
+        }
+      }
+    }
+    /* x = a, asymptotes */
+    const sidesInf = finiteA() && [S.res.left, S.res.right].some((r) => r && (r.kind === 'inf' || r.kind === '-inf'));
+    if (finiteA()) { c.strokeStyle = sidesInf ? T.red : T.muted; c.lineWidth = 1.3 * p; c.setLineDash([3 * p, 4 * p]); c.beginPath(); c.moveTo(X(S.a), 0); c.lineTo(X(S.a), H); c.stroke(); c.setLineDash([]);
+      c.font = `${11 * p}px ${T.mono}`; c.fillStyle = sidesInf ? T.red : T.muted; c.textAlign = 'left'; c.textBaseline = 'top'; const rt = X(S.a) > W - 230 * p; c.textAlign = rt ? 'right' : 'left'; labelOn(c, sidesInf ? VDI18N.t('vertical asymptote x = {a}', { a: f4(S.a) }) : `${S.v} = a`, X(S.a) + (rt ? -4 : 4) * p, 44 * p); }
+    if (hasL && !S.blind) {
+      c.strokeStyle = T.ink; c.globalAlpha = 0.6; c.lineWidth = 1.2 * p; c.setLineDash([2 * p, 4 * p]); c.beginPath(); c.moveTo(0, Y(L)); c.lineTo(W, Y(L)); c.stroke(); c.setLineDash([]); c.globalAlpha = 1;
+      if (!finiteA()) { c.font = `${11 * p}px ${T.mono}`; c.fillStyle = T.ink; c.textAlign = S.a > 0 ? 'right' : 'left'; c.textBaseline = 'bottom'; labelOn(c, VDI18N.t('horizontal asymptote y = {L}', { L: fL(L, lim.err) }), S.a > 0 ? W - 8 * p : 8 * p, Y(L) - 4 * p); }
+    }
+    if (S.sl && !S.blind) {
+      const sl = S.sl; c.strokeStyle = T.d; c.lineWidth = 1.6 * p; c.setLineDash([8 * p, 5 * p]); c.beginPath(); c.moveTo(0, Y(sl.m * S.x0 + sl.b)); c.lineTo(W, Y(sl.m * S.x1 + sl.b)); c.stroke(); c.setLineDash([]);
+      c.font = `${11 * p}px ${T.mono}`; c.fillStyle = T.d; c.textAlign = 'right'; c.textBaseline = 'top';
+      labelOn(c, VDI18N.t('slant asymptote y = {e}', { e: lineText(sl, S.v) }), W - 8 * p, 44 * p);
+    }
+    curve(c, S.f, S.x0, S.x1, X, Y, W, H, T.f, 3 * p);
+    /* the approach points: a ± 10⁻ᵏ on the curve, left and right in their colors */
+    if (finiteA()) for (const s of [-1, 1]) {
+      if ((S.side === 'left' && s > 0) || (S.side === 'right' && s < 0)) continue;
+      for (let k = 0; k <= 14; k++) { const x = S.a + s * Math.pow(10, -k) * Math.max(1, Math.abs(S.a)); if (x === S.a) break; const y = S.f(x), px = X(x); if (px < 0 || px > W || !isFinite(y) || Y(y) < 0 || Y(y) > H) continue; dot(c, px, Y(y), 3.6 * p, s < 0 ? T.left : T.right); }
+    }
+    /* the point: an open circle at the limit (or each one sided value), a filled dot at f(a) where it is defined */
+    if (finiteA() && !S.blind) {
+      const R = S.res, fa = S.f(S.a);
+      if (hasL) dot(c, X(S.a), Y(L), 6 * p, T.canvas, T.ink);
+      else for (const [r, col] of [[R.left, T.left], [R.right, T.right]]) if (r && r.kind === 'value') dot(c, X(S.a), Y(r.L), 6 * p, T.canvas, col);
+      if (isFinite(fa)) dot(c, X(S.a), Y(fa), 5 * p, T.ink, T.canvas);
+    }
+    /* the corner: what is being approached and how far in the view is */
+    c.font = `${12 * p}px ${T.mono}`; c.textAlign = 'right'; c.textBaseline = 'top'; c.fillStyle = T.f;
+    const tgt = finiteA() ? `${S.v} → ${f7(S.a)}${S.side === 'left' ? '⁻' : S.side === 'right' ? '⁺' : ''}` : `${S.v} → ${S.a > 0 ? '∞' : '−∞'}`;
+    labelOn(c, tgt, W - 8 * p, 8 * p);
+    c.fillStyle = T.muted; labelOn(c, VDI18N.t('view width {w}', { w: sci(S.x1 - S.x0) }), W - 8 * p, 24 * p);
+  }
+
+  /* the lower graph: the values at the approach points against how close they are, or f/g beside f′/g′ */
+  function drawLow() {
+    if (!T || !LW) return;
+    const p = proj(), c = lctx;
+    c.setTransform(dpr, 0, 0, dpr, 0, 0); c.fillStyle = T.canvas; c.fillRect(0, 0, LW, LH);
+    if (!S.f) return;
+    work();
+    const note = (t) => {
+      c.fillStyle = T.muted; c.font = `${13 * p}px ${T.mono}`; c.textAlign = 'center'; c.textBaseline = 'middle';
+      const run = () => { const words = t.split(' '), lines = []; let line = '';
+        for (const w of words) { const tryL = line ? line + ' ' + w : w; if (c.measureText(tryL).width > LW - 24 * p && line) { lines.push(line); line = w; } else line = tryL; }
+        lines.push(line); lines.forEach((l, i) => labelOn(c, l, LW / 2, LH / 2 + (i - (lines.length - 1) / 2) * 18 * p)); };
+      if (window.VDI18N && VDI18N.raw) VDI18N.raw(run); else run();
+    };
+    const lim = S.lim, hasL = lim.kind === 'value';
+    if (S.tab === 'values') {
+      const fin = finiteA(), sc = Math.max(1, Math.abs(S.a)), K = fin ? 14 : 18;
+      const at = (s, k) => (fin ? S.f(S.a + s * Math.pow(10, -k) * sc) : S.f(s * Math.pow(10, k)));
+      const sides = fin ? [-1, 1].filter((s) => S.side === 'both' || (S.side === 'left' ? s < 0 : s > 0)) : [S.a > 0 ? 1 : -1];
+      const ys = []; for (const s of sides) for (let j = 0; j <= 20 * Math.min(K, 9); j++) { const y = at(s, j / 20); if (isFinite(y)) ys.push(y); }
+      if (!ys.length) { note(VDI18N.t('f is not defined near a on this side.')); return; }
+      ys.sort((q, r) => q - r);
+      let lo = ys[Math.floor(ys.length * 0.04)], hi = ys[Math.ceil(ys.length * 0.96) - 1];
+      if (hasL && !S.blind) { lo = Math.min(lo, L(lim)); hi = Math.max(hi, L(lim)); }
+      if (hi - lo < 1e-9 * (1 + Math.abs(hi))) { lo -= 0.5 * (1 + Math.abs(lo)); hi += 0.5 * (1 + Math.abs(hi)); }
+      const v = { x0: -0.4, x1: K + 0.4, y0: lo - 0.12 * (hi - lo), y1: hi + 0.25 * (hi - lo) };
+      const XX = (x) => (x - v.x0) / (v.x1 - v.x0) * LW, YY = (y) => LH - (y - v.y0) / (v.y1 - v.y0) * LH;
+      const xt = (x) => (Math.abs(x - Math.round(x)) > 1e-9 ? null : fin ? (x === 0 ? '1' : '10' + sup(-Math.round(x))) : (x === 0 ? '1' : '10' + sup(Math.round(x))));
+      grid(c, v, LW, LH, p, fin ? VDI18N.t('h = |x − a| (log)') : VDI18N.t('|x| (log)'), fin ? 'f(a ± h)' : 'f(x)', xt);
+      if (hasL && !S.blind) { c.strokeStyle = T.ink; c.globalAlpha = 0.6; c.lineWidth = 1.2 * p; c.setLineDash([2 * p, 4 * p]); c.beginPath(); c.moveTo(0, YY(lim.L)); c.lineTo(LW, YY(lim.L)); c.stroke(); c.setLineDash([]); c.globalAlpha = 1;
+        c.fillStyle = T.ink; c.font = `${11 * p}px ${T.mono}`; c.textAlign = 'left'; c.textBaseline = 'bottom'; labelOn(c, 'L = ' + fL(lim.L, lim.err), 8 * p, YY(lim.L) - 3 * p); }
+      /* where the view above is: its half width as h (or its far edge as |x|) */
+      const hv = fin ? -Math.log10(Math.max(1e-300, (S.x1 - S.x0) / 2 / sc)) : Math.log10(Math.max(1, S.a > 0 ? S.x1 : -S.x0));
+      if (XX(hv) > 50 * p && hv < v.x1) { c.strokeStyle = T.muted; c.setLineDash([4 * p, 4 * p]); c.lineWidth = 1; c.beginPath(); c.moveTo(XX(hv), 0); c.lineTo(XX(hv), LH); c.stroke(); c.setLineDash([]); c.fillStyle = T.muted; c.font = `${10 * p}px ${T.mono}`; c.textAlign = 'center'; c.textBaseline = 'top'; labelOn(c, VDI18N.t('the view above'), XX(hv), 22 * p); }
+      for (const s of sides) {
+        const col = fin ? (s < 0 ? T.left : T.right) : T.f;
+        c.strokeStyle = col; c.fillStyle = col; c.lineWidth = 2 * p; c.beginPath(); let pen = false, pw = 0;
+        for (let j = 0; j <= 20 * K; j++) { const k = j / 20, y = at(s, k), u = YY(y); if (!isFinite(u)) { pen = false; continue; } const uc = Math.max(-LH, Math.min(2 * LH, u)); if (pen && Math.abs(u - pw) > 1.5 * LH) pen = false; if (pen) c.lineTo(XX(k), uc); else c.moveTo(XX(k), uc); pen = true; pw = u; }
+        c.stroke();
+        for (let k = 0; k <= K; k++) { const y = at(s, k); if (isFinite(y) && YY(y) > -5 && YY(y) < LH + 5) dot(c, XX(k), YY(y), 3.4 * p, col); }
+      }
+      c.font = `${12 * p}px ${T.mono}`; c.textAlign = 'right'; c.textBaseline = 'top';
+      if (fin) { let ky = 8 * p; for (const s of sides) { c.fillStyle = s < 0 ? T.left : T.right; labelOn(c, s < 0 ? VDI18N.t('from the left, f(a − h)') : VDI18N.t('from the right, f(a + h)'), LW - 8 * p, ky); ky += 16 * p; } }
+      else { c.fillStyle = T.f; labelOn(c, S.a > 0 ? VDI18N.t('f(x) as x grows') : VDI18N.t('f(x) as x goes to −∞'), LW - 8 * p, 8 * p); }
+      return;
+    }
+    /* L'Hôpital */
+    if (!finiteA()) { note(VDI18N.t('L\'Hôpital\'s rule here works at a number a, where f/g is 0/0. Type a number for a.')); return; }
+    const q = splitQuotient(S.node);
+    if (!q) { note(VDI18N.t('f is not a quotient f/g, so there is nothing to differentiate top and bottom. Try a setup with a fraction.')); return; }
+    const lh = S.lh;
+    if (!lh || lh.steps[0].d !== 0 && Math.abs(lh.steps[0].d) > 1e-12 * (1 + Math.abs(S.a)) || lh.kind === 'blowup') { note(VDI18N.t('At a this quotient is not 0/0 (the bottom is {d}), so L\'Hôpital\'s rule does not apply: put a in directly.', { d: f4(lh ? lh.steps[0].d : NaN) })); return; }
+    const N1 = M.compile(M.derivative(q.num, S.v), [S.v]), D1 = M.compile(M.derivative(q.den, S.v), [S.v]);
+    const r1 = (x) => N1(x) / D1(x);
+    const vv = { x0: S.x0, x1: S.x1 }, ys = [];
+    for (let i = 0; i <= 300; i++) { const x = vv.x0 + (vv.x1 - vv.x0) * i / 300; for (const y of [S.f(x), r1(x)]) if (isFinite(y)) ys.push(y); }
+    ys.sort((a, b) => a - b);
+    let lo = ys.length ? ys[Math.floor(ys.length * 0.05)] : -1, hi = ys.length ? ys[Math.ceil(ys.length * 0.95) - 1] : 1;
+    if (hasL) { lo = Math.min(lo, lim.L); hi = Math.max(hi, lim.L); }
+    if (hi - lo < 1e-9 * (1 + Math.abs(hi))) { lo -= 1; hi += 1; }
+    const v = { x0: vv.x0, x1: vv.x1, y0: lo - 0.15 * (hi - lo), y1: hi + 0.3 * (hi - lo) };
+    const XX = (x) => (x - v.x0) / (v.x1 - v.x0) * LW, YY = (y) => LH - (y - v.y0) / (v.y1 - v.y0) * LH;
+    grid(c, v, LW, LH, p, S.v, 'y');
+    if (hasL && !S.blind) { c.strokeStyle = T.ink; c.globalAlpha = 0.6; c.setLineDash([2 * p, 4 * p]); c.lineWidth = 1.2 * p; c.beginPath(); c.moveTo(0, YY(lim.L)); c.lineTo(LW, YY(lim.L)); c.stroke(); c.setLineDash([]); c.globalAlpha = 1; }
+    curve(c, r1, v.x0, v.x1, XX, YY, LW, LH, T.d, 2.4 * p, [7 * p, 4 * p]);
+    curve(c, S.f, v.x0, v.x1, XX, YY, LW, LH, T.f, 2.6 * p);
+    if (hasL && !S.blind) dot(c, XX(S.a), YY(lim.L), 5 * p, T.canvas, T.ink);
+    c.font = `${12 * p}px ${T.mono}`; c.textAlign = 'right'; c.textBaseline = 'top';
+    c.fillStyle = T.f; labelOn(c, 'f/g = ' + M.text(S.node), LW - 8 * p, 8 * p);
+    c.fillStyle = T.d; labelOn(c, 'f′/g′ = (' + M.text(M.derivative(q.num, S.v)) + ')/(' + M.text(M.derivative(q.den, S.v)) + ')', LW - 8 * p, 24 * p);
+  }
+  const L = (lim) => lim.L;
+  /* mx + b printed plainly: x, −x, 2x; + b only when b is not 0 */
+  function lineText(sl, v) { const m = Number(sl.m.toPrecision(6)), b = Number(sl.b.toFixed(6)) || 0; const mx = m === 1 ? v : m === -1 ? '−' + v : fmt(m) + v; return b ? `${mx} ${b > 0 ? '+' : '−'} ${fmt(Math.abs(b))}` : mx; }
+
+  /* ---------- the rail ---------- */
+  const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
+  const dd = (a, b, cls) => `<div${cls ? ` class="${cls}"` : ''}><dt>${a}</dt><dd translate="no">${b}</dd></div>`;
+  const wide = (a, b) => `<div class="wide"><dt>${a}</dt><dd class="ok">${b}</dd></div>`;
+  function kindText(r, unit) {
+    if (!r) return '—';
+    if (S.blind && (r.kind === 'value' || r.kind === 'inf' || r.kind === '-inf')) return '?';
+    if (r.kind === 'value') return fL(r.L, r.err) + (unit || '');
+    if (r.kind === 'inf') return '+∞ ' + VDI18N.t('(grows without bound)');
+    if (r.kind === '-inf') return '−∞ ' + VDI18N.t('(falls without bound)');
+    if (r.kind === 'osc') return VDI18N.t('none: the values keep swinging');
+    if (r.kind === 'slow') return VDI18N.t('not settled to 7 figures, even at the smallest h');
+    if (r.kind === 'differ') return VDI18N.t('none: the two sides differ');
+    if (r.kind === 'undef') return VDI18N.t('f is not defined on this side');
+    return VDI18N.t('none');
+  }
+  function formulas() {
+    const dl = $('formulas'); if (!S.node) { dl.innerHTML = ''; return; }
+    let h = `<dt class="f">f(${S.v})</dt><dd class="f">${esc(M.text(S.node))}</dd>`;
+    const q = splitQuotient(S.node);
+    if (q) h += `<dt>N/D</dt><dd>(${esc(M.text(q.num))}) / (${esc(M.text(q.den))})</dd>`;
+    h += `<dt>ε, δ</dt><dd>${esc(VDI18N.t('0 < |x − a| < δ ⇒ |f(x) − L| < ε'))}</dd>`;
+    if (q) h += `<dt class="d">${esc(VDI18N.t('0/0'))}</dt><dd class="d">lim N/D = lim N′/D′</dd>`;
+    dl.innerHTML = h;
+  }
+  function readouts() {
+    if (!S.f) return;
+    work();
+    const R = S.res, lim = S.lim, u = S.units, uy = u && u.y ? ' ' + u.y : '', fin = finiteA(), hide = S.blind;
+    let h = '';
+    if (fin) {
+      const fa = S.f(S.a);
+      h += dd('a', f7(S.a)) + dd('f(a)', isFinite(fa) ? f7(fa) + uy : VDI18N.t('undefined'));
+      if (S.side !== 'right') h += dd(VDI18N.t('Limit from the left'), kindText(R.left, uy), 'wide');
+      if (S.side !== 'left') h += dd(VDI18N.t('Limit from the right'), kindText(R.right, uy), 'wide');
+      if (S.side === 'both') h += dd(VDI18N.t('Limit'), kindText(lim.kind === 'value' ? lim : R.both, uy), 'wide');
+    } else h += dd(VDI18N.t('Limit as x → {a}', { a: S.a > 0 ? '∞' : '−∞' }).replace('x', S.v), kindText(lim.kind === 'value' ? lim : R.both, uy), 'wide');
+    if (lim.kind === 'value' && !hide) {
+      const how = lim.how === 'cont' ? VDI18N.t('f is continuous at a: f(a) is defined and equals the values closing in, so the limit is f(a).')
+        : lim.how === 'lh' ? VDI18N.t('exactly, by L\'Hôpital\'s rule (below)') : lim.how === 'direct' ? VDI18N.t('exactly, as N(a)/D(a)')
+        : VDI18N.t('numerically, by closing in from each side and extrapolating, to the figures shown');
+      h += wide(VDI18N.t('How it was found'), how);
+    }
+    if (fin && S.side === 'both' && !hide) {
+      const fa = S.f(S.a), Lk = R.left && R.left.kind, Rk = R.right && R.right.kind;
+      let ct;
+      if (lim.kind === 'value') ct = lim.how === 'cont' ? VDI18N.t('yes') : isFinite(fa) ? VDI18N.t('no: f(a) is not the limit (a removable discontinuity)') : VDI18N.t('no: f(a) is undefined, a hole (a removable discontinuity)');
+      else if ([Lk, Rk].some((k) => k === 'inf' || k === '-inf')) ct = VDI18N.t('no: an infinite discontinuity');
+      else if (Lk === 'value' && Rk === 'value') ct = VDI18N.t('no: a jump discontinuity');
+      else if ([Lk, Rk].includes('osc')) ct = VDI18N.t('no: it oscillates');
+      else ct = VDI18N.t('no');
+      h += wide(VDI18N.t('Continuous at a?'), ct);
+    }
+    /* L'Hôpital's steps, when f is 0/0 at a */
+    if (fin && S.lh && S.lh.steps.length > 1 && !hide) {
+      const st = S.lh.steps, last = st[st.length - 1], k = st.length - 1, pr = '′′′′′'.slice(0, k);
+      const txt = S.lh.kind === 'lhopital' ? (k === 1 ? VDI18N.t('0/0 at a. Differentiating top and bottom once: N′(a)/D′(a) = {n}/{d} = {L}', { n: f7(last.n), d: f7(last.d), L: f7(last.n / last.d) })
+        : VDI18N.t('0/0 at a. Differentiating top and bottom {k} times: N{p}(a)/D{p}(a) = {n}/{d} = {L}', { k, p: pr, n: f7(last.n), d: f7(last.d), L: f7(last.n / last.d) }))
+        : S.lh.kind === 'blowup' ? VDI18N.t('0/0 at a. After {k} times, the top is {n} and the bottom 0: the quotient blows up.', { k, n: f7(last.n) }) : VDI18N.t('0/0 at a, and still 0/0 after 5 rounds.');
+      h += wide(VDI18N.t('L\'Hôpital\'s rule'), esc(txt));
+    }
+    /* ε and δ */
+    if (lim.kind === 'value' && S.del && !hide) {
+      if (fin) {
+        const d = S.del.delta, tiny = S.del.floor;
+        h += dd('ε', f7(S.eps) + uy) + dd(VDI18N.t('Largest δ'), tiny ? VDI18N.t('below 10⁻⁵ × max(1, |a|): none found') : S.del.capped ? '≥ ' + f7(d) : f7(d));
+        if (S.del.capped) h += wide('δ', VDI18N.t('Every x in the view stays in the band; δ is at least the distance to the edge of the view.'));
+      } else h += dd('ε', f7(S.eps) + uy) + dd('N', !isFinite(S.del.N) ? VDI18N.t('none up to 10¹⁵') : S.del.N === 0 ? VDI18N.t('any') : f7(S.del.N) + (u ? ' ' + u.x : ''));
+    }
+    if (!fin && S.sl && !hide) h += wide(VDI18N.t('Slant asymptote'), 'y = ' + lineText(S.sl, S.v));
+    /* a few values closing in */
+    const sc = fin ? Math.max(1, Math.abs(S.a)) : 1, rows = fin ? [1, 3, 5, 7] : [1, 3, 6, 9];
+    let tb = `<table class="vals"><thead><tr><th>${fin ? 'h' : S.v}</th>`;
+    if (fin) { if (S.side !== 'right') tb += `<th class="l">f(a − h)</th>`; if (S.side !== 'left') tb += `<th class="r">f(a + h)</th>`; } else tb += `<th>f(${S.v})</th>`;
+    tb += '</tr></thead><tbody>';
+    for (const k of rows) {
+      tb += `<tr><td>${fin ? (sc === 1 ? '' : f4(sc) + '×') + '10' + sup(-k) : (S.a > 0 ? '' : '−') + '10' + sup(k)}</td>`;
+      if (fin) { if (S.side !== 'right') tb += `<td class="l">${f7(S.f(S.a - Math.pow(10, -k) * sc))}</td>`; if (S.side !== 'left') tb += `<td class="r">${f7(S.f(S.a + Math.pow(10, -k) * sc))}</td>`; }
+      else tb += `<td>${f7(S.f((S.a > 0 ? 1 : -1) * Math.pow(10, k)))}</td>`;
+      tb += '</tr>';
+    }
+    tb += '</tbody></table>';
+    h += `<div class="wide"><dt>${VDI18N.t('Closing in')}</dt><dd translate="no">${tb}</dd></div>`;
+    $('out').innerHTML = h;
+  }
+  function noteText() {
+    $('note').textContent = finiteA() ? VDI18N.t('Play zooms in on the point, ten times every 1.5 s. Drag to pan; scroll or pinch to zoom about the middle.') : VDI18N.t('Play zooms out toward infinity, ten times every 1.5 s. Drag to pan; scroll or pinch to zoom.');
+    $('tabNote').textContent = S.tab === 'values' ? VDI18N.t('The values at x = a ± h for h = 1, 0.1, 0.01, … (log axis): do they settle?') : VDI18N.t('Near 0/0, f/g and f′/g′ close in on the same value.');
+    $('epsNote').textContent = finiteA() ? VDI18N.t('δ is computed: the largest window around a whose every point lands in the band.') : VDI18N.t('N is computed: beyond it every value lands in the band.');
+    $('zoomNote').textContent = VDI18N.t('View width: {w}', { w: sci(S.x1 - S.x0) });
+  }
+  const EPS0 = -4, EPS1 = 1;   /* the ε slider: 10⁻⁴ to 10 on a log scale */
+  function syncControls() {
+    for (const b of document.querySelectorAll('#sideSeg button')) { b.setAttribute('aria-pressed', String(b.dataset.s === S.side)); b.disabled = !finiteA(); }
+    for (const b of document.querySelectorAll('#tabSeg button')) b.setAttribute('aria-pressed', String(b.dataset.t === S.tab));
+    $('showEps').checked = S.showEps;
+    $('epsSlide').value = Math.round((Math.log10(S.eps) - EPS0) / (EPS1 - EPS0) * 1000);
+    if (document.activeElement !== $('epsIn')) { $('epsIn').value = f4(S.eps); $('epsIn').classList.remove('bad'); }
+    if (document.activeElement !== $('aIn')) $('aIn').value = S.aTxt;
+    noteText();
+  }
+  function refresh() { syncControls(); formulas(); need = true; }
+
+  /* ---------- controls ---------- */
+  const pressPreset = (k) => { for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === k)); };
+  function custom() { if (S.preset !== 'custom') { S.preset = 'custom'; pressPreset(''); $('presetHint').textContent = VDI18N.t('Your own setup. Every setup above can be edited, too.'); } }
+  function fitY() {
+    if (!S.f || !W) return;
+    work();
+    const ys = [];
+    for (let i = 0; i <= 600; i++) { const x = S.x0 + (S.x1 - S.x0) * i / 600, y = S.f(x); if (isFinite(y)) ys.push(y); }
+    const lim = S.lim, hasL = lim && lim.kind === 'value';
+    if (!ys.length) { if (hasL) { S.y0 = lim.L - 1; S.y1 = lim.L + 1; } return; }
+    ys.sort((p, q) => p - q);
+    let lo = ys[Math.floor(ys.length * 0.06)], hi = ys[Math.ceil(ys.length * 0.94) - 1];
+    if (hasL) { lo = Math.min(lo, lim.L - (S.showEps ? S.eps : 0)); hi = Math.max(hi, lim.L + (S.showEps ? S.eps : 0)); }
+    if (finiteA() && isFinite(S.f(S.a))) { lo = Math.min(lo, S.f(S.a)); hi = Math.max(hi, S.f(S.a)); }
+    const tiny = 1e-12 * Math.max(1, Math.abs(hi), Math.abs(lo));
+    if (hi - lo < tiny) { lo -= tiny * 50; hi += tiny * 50; }
+    const pad = 0.15 * (hi - lo); S.y0 = lo - pad; S.y1 = hi + pad * 1.5; S.autoY = true;
+  }
+  function homeView() {
+    const c = PRESETS[S.preset];
+    if (c && c.x && S.aTxt === c.a) { S.x0 = c.x[0]; S.x1 = c.x[1]; }
+    else if (finiteA()) { const w = 3 * Math.max(1, Math.abs(S.a)) ; S.x0 = S.a - w; S.x1 = S.a + w; }
+    else if (S.a > 0) { S.x0 = -5; S.x1 = 50; } else { S.x0 = -50; S.x1 = 5; }
+    S.home = [S.x0, S.x1]; fitY();
+  }
+  function applyPreset(k) {
+    const c = PRESETS[k]; S.preset = k; setRun(false);
+    $('fx').value = c.src; $('aIn').value = c.a; readA();
+    S.side = c.side || 'both'; S.eps = c.eps; S.units = c.units || null; S.tab = c.tab || 'values';
+    $('presetHint').textContent = c.hint; pressPreset(k);
+    S.node = null; read(); S.res = null; homeView(); refresh();
+  }
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  $('fx').addEventListener('input', () => { custom(); S.units = null; read(); fitY(); refresh(); });
+  $('aIn').addEventListener('input', () => { if (!readA()) return; custom(); S.res = null; homeView(); refresh(); });
+  for (const b of document.querySelectorAll('#sideSeg button')) b.addEventListener('click', () => { if (b.disabled) return; S.side = b.dataset.s; S.del = null; fitY(); refresh(); });
+  for (const b of document.querySelectorAll('#tabSeg button')) b.addEventListener('click', () => { S.tab = b.dataset.t; refresh(); });
+  $('showEps').addEventListener('change', (e) => { S.showEps = e.target.checked; need = true; });
+  $('epsSlide').addEventListener('input', () => { S.eps = Number(Math.pow(10, EPS0 + (EPS1 - EPS0) * (+$('epsSlide').value) / 1000).toPrecision(3)); syncControls(); need = true; });
+  $('epsIn').addEventListener('input', () => {
+    const s = $('epsIn').value.trim(), v = /^[-+]?(\d+\.?\d*|\.\d+)(e[-+]?\d+)?$/i.test(s) ? Number(s) : NaN, ok = v > 0 && v < 1e6;
+    $('epsIn').classList.toggle('bad', !ok); if (ok) { S.eps = v; need = true; }
+  });
+  $('epsIn').addEventListener('change', () => syncControls());
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; refresh(); });
+  function setRun(on) { S.run = on; $('play').textContent = on ? VDI18N.t('Pause') : VDI18N.t('Play'); $('play').classList.toggle('attn', !on); }
+  /* Play: from a finite a it centers on the point and zooms in; toward ±∞ it zooms out from the origin */
+  $('play').addEventListener('click', () => {
+    if (!S.run && S.f) {
+      work();
+      if (finiteA()) {
+        const w = S.x1 - S.x0, min = 2e-9 * Math.max(1, Math.abs(S.a)); if (w <= min * 1.01) homeView();
+        const hw = (S.x1 - S.x0) / 2; S.x0 = S.a - hw; S.x1 = S.a + hw;
+        if (S.lim.kind === 'value') { const hy = (S.y1 - S.y0) / 2; S.y0 = S.lim.L - hy; S.y1 = S.lim.L + hy; S.autoY = false; } else fitY();
+      } else if ((S.a > 0 ? S.x1 : -S.x0) >= 1e12) homeView();
+    }
+    setRun(!S.run); need = true;
+  });
+  $('reset').addEventListener('click', () => { setRun(false); const c = PRESETS[S.preset]; if (c) S.eps = c.eps; S.del = null; homeView(); refresh(); });
+  function setView(x0, x1, y0, y1) {
+    if (!(x1 > x0) || !(y1 > y0) || !isFinite(x0 + x1 + y0 + y1)) return false;
+    const sc = finiteA() ? Math.max(1, Math.abs(S.a)) : 1;
+    if (x1 - x0 < 2e-9 * Math.max(sc, Math.abs(x0), Math.abs(x1)) || x1 - x0 > 1e13) return false;
+    S.x0 = x0; S.x1 = x1; S.y0 = y0; S.y1 = y1; need = true; return true;
+  }
+  function zoom(fct) {
+    const cx = (S.x0 + S.x1) / 2, cy = (S.y0 + S.y1) / 2;
+    if (S.autoY) { if (setView(cx - (cx - S.x0) * fct, cx + (S.x1 - cx) * fct, S.y0, S.y1)) fitY(); return; }
+    setView(cx - (cx - S.x0) * fct, cx + (S.x1 - cx) * fct, cy - (cy - S.y0) * fct, cy + (S.y1 - cy) * fct);
+  }
+  $('zin').addEventListener('click', () => zoom(1 / 1.5));
+  $('zout').addEventListener('click', () => zoom(1.5));
+  $('homeView').addEventListener('click', () => { setRun(false); homeView(); need = true; });
+  const ptrs = new Map(); let drag = null;
+  can.addEventListener('pointerdown', (e) => {
+    const r = can.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
+    ptrs.set(e.pointerId, { x, y }); can.setPointerCapture(e.pointerId);
+    if (ptrs.size === 2) { const [p1, p2] = [...ptrs.values()]; drag = { pinch: Math.hypot(p1.x - p2.x, p1.y - p2.y), view: [S.x0, S.x1, S.y0, S.y1] }; return; }
+    drag = { x, y, view: [S.x0, S.x1, S.y0, S.y1], moved: false };
+  });
+  can.addEventListener('pointermove', (e) => {
+    if (!ptrs.has(e.pointerId) || !drag) return;
+    const r = can.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
+    ptrs.set(e.pointerId, { x, y });
+    if (drag.pinch) {
+      const [p1, p2] = [...ptrs.values()], d = Math.hypot(p1.x - p2.x, p1.y - p2.y); if (d < 10) return;
+      const f = drag.pinch / d, [x0, x1, y0, y1] = drag.view, cx = (x0 + x1) / 2, cy = (y0 + y1) / 2;
+      S.autoY = false; setView(cx - (cx - x0) * f, cx + (x1 - cx) * f, cy - (cy - y0) * f, cy + (y1 - cy) * f); return;
+    }
+    if (Math.hypot(x - drag.x, y - drag.y) > 4) drag.moved = true;
+    if (!drag.moved) return;
+    setRun(false);
+    const [x0, x1, y0, y1] = drag.view, dx = (x - drag.x) / W * (x1 - x0), dy = (y - drag.y) / H * (y1 - y0);
+    if (Math.abs(y - drag.y) > 2) S.autoY = false;
+    setView(x0 - dx, x1 - dx, S.autoY ? y0 : y0 + dy, S.autoY ? y1 : y1 + dy);
+  });
+  const up = (e) => { if (!ptrs.has(e.pointerId)) return; ptrs.delete(e.pointerId); if (drag && drag.moved && S.autoY) fitY(); if (!ptrs.size) drag = null; else if (drag && drag.pinch) drag = null; };
+  can.addEventListener('pointerup', up); can.addEventListener('pointercancel', up);
+  can.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    const d = e.deltaY * (e.deltaMode === 1 ? 33 : e.deltaMode === 2 ? 400 : 1);
+    zoom(Math.exp(Math.max(-100, Math.min(100, d)) * 0.0018));   /* about the view's center (Steve 2026-11-12) */
+  }, { passive: false });
+  function keys(e) {
+    if (e.key === '+' || e.key === '=') { zoom(1 / 1.5); e.preventDefault(); }
+    else if (e.key === '-' || e.key === '_') { zoom(1.5); e.preventDefault(); }
+    else if (e.key === ' ') { $('play').click(); e.preventDefault(); }
+    else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') { S.eps = Number(Math.min(10, Math.max(1e-4, S.eps * (e.key === 'ArrowUp' ? 1.25 : 0.8))).toPrecision(3)); syncControls(); need = true; e.preventDefault(); }
+    else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') { const dx = (S.x1 - S.x0) * (e.shiftKey ? 0.25 : 0.05) * (e.key === 'ArrowLeft' ? -1 : 1); setRun(false); setView(S.x0 + dx, S.x1 + dx, S.y0, S.y1); if (S.autoY) fitY(); e.preventDefault(); }
+  }
+  can.addEventListener('keydown', keys); low.addEventListener('keydown', keys);
+
+  /* Play: ten times every 1.5 s, in toward a (to a view 2·10⁻⁹ of max(1, |a|) wide) or out toward infinity (to 10¹²) */
+  let last = performance.now(), lastRead = '';
+  function frame(now) {
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    if (S.run && S.f) {
+      const k = Math.pow(10, dt / 1.5);
+      if (finiteA()) {
+        const hw = (S.x1 - S.x0) / 2 / k, hh = (S.y1 - S.y0) / 2 / k, min = 1e-9 * Math.max(1, Math.abs(S.a));
+        const lim = S.lim, cy = lim && lim.kind === 'value' ? lim.L : (S.y0 + S.y1) / 2;
+        if (hw <= min) setRun(false);
+        else if (lim && lim.kind === 'value') setView(S.a - hw, S.a + hw, cy - hh, cy + hh);
+        else { setView(S.a - hw, S.a + hw, S.y0, S.y1); fitY(); }
+      } else {
+        const far = (S.a > 0 ? S.x1 : -S.x0) * k;
+        if (far >= 1e12) setRun(false);
+        else { if (S.a > 0) setView(-0.05 * far, far, S.y0, S.y1); else setView(-far, 0.05 * far, S.y0, S.y1); fitY(); }
+      }
+      noteText(); need = true;
+    }
+    if (need) {
+      need = false; draw(); drawLow();
+      const key = `${S.x0},${S.x1},${S.a},${S.side},${S.eps},${$('fx').value},${S.blind},${S.tab}`;
+      if (key !== lastRead) { lastRead = key; readouts(); }
+    }
+    requestAnimationFrame(frame);
+  }
+  function resize() {
+    dpr = window.devicePixelRatio || 1;
+    const r = $('pane').getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr);
+    const q = $('lower').getBoundingClientRect(); LW = q.width; LH = q.height; low.width = Math.round(LW * dpr); low.height = Math.round(LH * dpr);
+    if (S.autoY) fitY(); need = true;
+  }
+  const retheme = () => { tokens(); need = true; };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'data-vd-look'] });
+  VD.projector({ onChange: resize });
+  if (window.VD && VD.panel) VD.panel({ play: '#play', reset: '#reset' });
+  if (window.VD && VD.splitPanes) VD.splitPanes($('pane'), $('lower'), { key: 'lower', label: 'Divider between the graph and the lower graph' });
+  if (window.VD && VD.share && VD.share.picture) VD.share.picture('f', {
+    get: () => (S.preset === 'custom' ? VD.share.pack({ f: $('fx').value, a: S.aTxt, s: S.side, e: S.eps }) : ''),
+    set: (s) => {
+      const o = s && VD.share.unpack(s); if (!o) return;
+      $('fx').value = o.f || 'x'; $('aIn').value = o.a || '0'; readA(); S.side = ['both', 'left', 'right'].includes(o.s) ? o.s : 'both'; if (+o.e > 0) S.eps = +o.e;
+      custom(); S.units = null; read(); S.res = null; homeView(); refresh();
+    },
+  });
+  window.vdVersion = 'limits@2026-11-19';
+  if (window.VD && VD.describe) VD.describe(can, () => {
+    if (!S.f) return [];
+    work(); const t = VDI18N.t, out = [], R = S.res;
+    out.push(t('f({v}) = {e}, as {v} approaches {a}.', { v: S.v, e: M.text(S.node), a: finiteA() ? f7(S.a) : S.a > 0 ? t('infinity') : t('minus infinity') }));
+    if (!S.blind) {
+      if (finiteA()) { if (R.left) out.push(t('From the left: {k}.', { k: kindText(R.left, '') })); if (R.right) out.push(t('From the right: {k}.', { k: kindText(R.right, '') })); }
+      out.push(t('Limit: {k}.', { k: kindText(S.lim.kind === 'value' ? S.lim : R.both, '') }));
+      if (S.del && finiteA()) out.push(t('For ε = {e} the largest δ is {d}.', { e: f7(S.eps), d: f7(S.del.delta) }));
+    }
+    out.push({ t: t('The view is {w} wide.', { w: sci(S.x1 - S.x0) }), live: !S.run });
+    return out;
+  });
+  tokens(); new ResizeObserver(resize).observe($('pane')); new ResizeObserver(resize).observe($('lower')); resize(); applyPreset('sinc');
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  window.__lim = { S, applyPreset, limitSide, limitBoth, lhopital, deltaFor, nFor, slant, splitQuotient, work, setRun, homeView, zoom, draw: () => { need = true; }, refresh };
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
