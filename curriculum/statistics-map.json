@@ -55,8 +55,12 @@
     {
      "sec": "1.2",
      "title": "Data, Sampling, and Variation in Data and Sampling",
-     "demos": [],
-     "worksheets": []
+     "demos": [
+      "sampling-lab"
+     ],
+     "worksheets": [
+      "sampling-methods"
+     ]
     },
     {
      "sec": "1.3",
@@ -69,20 +73,30 @@
     {
      "sec": "1.4",
      "title": "Experimental Design and Ethics",
-     "demos": [],
-     "worksheets": []
+     "demos": [
+      "sampling-lab"
+     ],
+     "worksheets": [
+      "sampling-methods"
+     ]
     },
     {
      "sec": "1.5",
      "title": "Data Collection Experiment",
-     "demos": [],
+     "demos": [
+      "sampling-lab"
+     ],
      "worksheets": []
     },
     {
      "sec": "1.6",
      "title": "Sampling Experiment",
-     "demos": [],
-     "worksheets": []
+     "demos": [
+      "sampling-lab"
+     ],
+     "worksheets": [
+      "sampling-methods"
+     ]
     }
    ]
   },
@@ -394,34 +408,48 @@
      "sec": "7.1",
      "title": "The Central Limit Theorem for Sample Means (Averages)",
      "demos": [
+      "sampling-lab",
       "measurement-uncertainty"
      ],
-     "worksheets": []
+     "worksheets": [
+      "central-limit-theorem"
+     ]
     },
     {
      "sec": "7.2",
      "title": "The Central Limit Theorem for Sums",
      "demos": [
+      "sampling-lab",
       "galton-board"
      ],
-     "worksheets": []
+     "worksheets": [
+      "central-limit-theorem"
+     ]
     },
     {
      "sec": "7.3",
      "title": "Using the Central Limit Theorem",
-     "demos": [],
-     "worksheets": []
+     "demos": [
+      "sampling-lab"
+     ],
+     "worksheets": [
+      "central-limit-theorem"
+     ]
     },
     {
      "sec": "7.4",
      "title": "Central Limit Theorem (Pocket Change)",
-     "demos": [],
+     "demos": [
+      "sampling-lab"
+     ],
      "worksheets": []
     },
     {
      "sec": "7.5",
      "title": "Central Limit Theorem (Cookie Recipes)",
-     "demos": [],
+     "demos": [
+      "sampling-lab"
+     ],
      "worksheets": []
     }
    ]
@@ -434,43 +462,58 @@
      "sec": "8.1",
      "title": "A Single Population Mean using the Normal Distribution",
      "demos": [
+      "confidence-intervals",
       "measurement-uncertainty"
      ],
-     "worksheets": []
+     "worksheets": [
+      "ci-coverage"
+     ]
     },
     {
      "sec": "8.2",
      "title": "A Single Population Mean using the Student t Distribution",
      "demos": [
       "measurement-uncertainty",
-      "distribution-explorer"
+      "distribution-explorer",
+      "confidence-intervals"
      ],
      "worksheets": [
-      "g-statistics"
+      "g-statistics",
+      "ci-coverage"
      ]
     },
     {
      "sec": "8.3",
      "title": "A Population Proportion",
-     "demos": [],
-     "worksheets": []
+     "demos": [
+      "confidence-intervals"
+     ],
+     "worksheets": [
+      "ci-coverage"
+     ]
     },
     {
      "sec": "8.4",
      "title": "Confidence Interval (Home Costs)",
-     "demos": [],
+     "demos": [
+      "confidence-intervals"
+     ],
      "worksheets": []
     },
     {
      "sec": "8.5",
      "title": "Confidence Interval (Place of Birth)",
-     "demos": [],
+     "demos": [
+      "confidence-intervals"
+     ],
      "worksheets": []
     },
     {
      "sec": "8.6",
      "title": "Confidence Interval (Women's Heights)",
-     "demos": [],
+     "demos": [
+      "confidence-intervals"
+     ],
      "worksheets": []
     }
    ]
