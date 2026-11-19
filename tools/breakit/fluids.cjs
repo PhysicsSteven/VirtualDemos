@@ -55,7 +55,28 @@ module.exports = {
       if (S.scene !== 'press' || S.blind) return true; const q = S.P.press;
       if (q.pd > q.D + 1e-9) return 'probe depth ' + q.pd + ' below the bottom ' + q.D;
       const want = (S.gmode === 'abs' ? PATM + rho * G * q.pd : rho * G * q.pd) / 1000, got = nm('Pressure gauge');
-      return Math.abs(got - want) <= 6e-3 ? true : 'gauge shows ' + rd('Pressure gauge') + ', should be ' + want + ' kPa'; })()` }
+      return Math.abs(got - want) <= 6e-3 ? true : 'gauge shows ' + rd('Pressure gauge') + ', should be ' + want + ' kPa'; })()` },
+    { name: "dam or window: F = ρg A h_c, h_cp = h_c + I_c/(A h_c), the strips sum ρgh·w·Δh, h_cp inside the plate", fn: `(() => { ${pre}
+      if (S.scene !== 'plate') return true; const o = F.plateNow(), pl = o.pl, E = o.E, St = o.S;
+      if (![E.F, E.hcp, St.F].every(isFinite)) return 'not finite: ' + [E.F, E.hcp, St.F];
+      const r = pl.shape === 'circ' ? pl.a / 2 : 0;
+      const A = pl.shape === 'rect' ? pl.a * pl.b : pl.shape === 'tri' ? pl.a * pl.b / 2 : Math.PI * r * r;
+      const yc = pl.shape === 'rect' ? pl.a / 2 : pl.shape === 'tri' ? pl.a / 3 : r, Ic = pl.shape === 'rect' ? pl.b * pl.a ** 3 / 12 : pl.shape === 'tri' ? pl.b * pl.a ** 3 / 36 : Math.PI * r ** 4 / 4;
+      const hc = pl.d0 + yc, Fx = rho * G * A * hc;
+      if (!near(E.F, Fx, 1e-12)) return 'F = ' + E.F + ', ρgA h_c = ' + Fx;
+      if (!near(E.hcp, hc + Ic / (A * hc), 1e-12)) return 'h_cp = ' + E.hcp;
+      if (E.hcp < pl.d0 - 1e-12 || E.hcp > pl.d0 + pl.a + 1e-12) return 'center of pressure ' + E.hcp + ' outside the plate';
+      let sum = 0; for (const sp of St.strips) sum += sp.dF; if (!near(sum, St.F, 1e-12)) return 'strips add to ' + sum + ', shown ' + St.F;
+      if (St.strips.length !== S.P.plate.n) return St.strips.length + ' strips, n = ' + S.P.plate.n;
+      return true; })()` },
+    { name: "pumping: W = ρgV(y_o − y_cm), the slices sum, y_w ≤ H ≤ y_o, the level stays in the tank", fn: `(() => { ${pre}
+      if (S.scene !== 'pump') return true; const o = F.pumpNow(), tk = o.tk;
+      if (![o.W, o.Sl.W, o.M.V].every(isFinite)) return 'not finite: ' + [o.W, o.Sl.W, o.M.V];
+      if (!(tk.yw <= tk.H + 1e-12 && tk.H <= tk.yo + 1e-12)) return 'y_w ' + tk.yw + ', H ' + tk.H + ', y_o ' + tk.yo;
+      if (!near(o.W, rho * G * o.M.V * (tk.yo - o.M.ycm), 1e-12)) return 'W = ' + o.W + ', ρgV(y_o − y_cm) = ' + rho * G * o.M.V * (tk.yo - o.M.ycm);
+      let sum = 0; for (const s2 of o.Sl.slices) sum += s2.dW; if (!near(sum, o.Sl.W, 1e-12)) return 'slices add to ' + sum;
+      const L = F.pumpL; if (L !== null && (L < -1e-12 || L > tk.yw + 1e-12)) return 'level ' + L + ' outside 0 to ' + tk.yw;
+      return true; })()` }
   ],
   steps: [
     { name: "block: switch liquid to mercury and back mid bob, then a steel block", fn: `(async () => { const F = window.__fl; F.applyPreset('float'); F.go(0.4);
@@ -63,6 +84,12 @@ module.exports = {
     { name: "Venturi: widest and narrowest throat, then shrink the pipe under the throat", fn: `(() => { const F = window.__fl; F.applyPreset('venturi'); F.setParam('D2', 1); F.setParam('v1', 2); F.go(0.5);
       F.setParam('D1', 10); F.setParam('D2', 10); F.go(0.5); F.setParam('D2', 1); F.setParam('D1', 3); F.go(0.5); F.S.liq = 'hg'; F.go(0.2); F.S.liq = 'oil'; F.go(0.2); })()` },
     { name: "Torricelli and depth: hole to the surface and the floor, lower H under the hole, deepest probe then a shallower tank", fn: `(() => { const F = window.__fl; F.applyPreset('torr'); F.setParam('hh', 0); F.go(0.3); F.setParam('hh', 1.5); F.setParam('H', 0.2); F.go(0.3);
-      F.setParam('H', 1.5); F.setParam('hh', 0.75); F.go(0.3); F.applyPreset('depth'); F.setParam('pd', 10); F.setParam('D', 0.5); F.go(0.2); })()` }
+      F.setParam('H', 1.5); F.setParam('hh', 0.75); F.go(0.3); F.applyPreset('depth'); F.setParam('pd', 10); F.setParam('D', 0.5); F.go(0.2); })()` },
+    { name: "dam and pumping: every shape, one strip and a hundred, the plate at the surface and deep, a tank pumped dry then shrunk", fn: `(async () => { const F = window.__fl, pause = (ms) => new Promise((r) => setTimeout(r, ms));
+      for (const pr of ['dam', 'window', 'troughEnd']) { F.applyPreset(pr); F.setParam('n', 1); F.setParam('n', 100); F.setParam('d0', 0); F.setParam('d0', 20); F.setParam('a', 0.1); F.setParam('a', 20); await pause(50); }
+      for (const b of document.querySelectorAll('#plateSeg button, #sampleSeg button')) { b.click(); await pause(30); }
+      F.applyPreset('pumpCyl'); F.setRunning(true); F.go(9); F.setRunning(true); F.go(1);
+      for (const b of document.querySelectorAll('#tankSeg button')) { b.click(); F.go(3); }
+      F.setParam('H', 0.5); F.setParam('yw', 10); F.setParam('yo', 0.5); F.setParam('n', 100); F.setParam('R', 5); F.go(2); F.applyPreset('pumpCone'); F.setParam('n', 1); F.go(0.5); })()` }
   ]
 };

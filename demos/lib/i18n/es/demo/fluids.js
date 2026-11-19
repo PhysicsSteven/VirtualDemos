@@ -34,8 +34,8 @@ VDI18N.add('es', 'demo/fluids', {
   "cámara lenta ×{#}",
 "Cavitation: pressure would fall below vapor pressure; model invalid":
   "Cavitación: la presión bajaría por debajo de la presión de vapor; el modelo no es válido",
-"Graph for the current scene: pressure against depth, forces on the vessels, column heights, forces on the block, pressure along the pipe, or jet range against hole depth. Show data table in the Lab section lists the plotted values.":
-  "Gráfica de la escena actual: presión en función de la profundidad, fuerzas sobre los recipientes, alturas de columna, fuerzas sobre el bloque, presión a lo largo del tubo o alcance del chorro en función de la profundidad del orificio. Mostrar la tabla de datos, en la sección Laboratorio, lista los valores graficados.",
+"Graph for the current scene: pressure against depth, forces on the vessels, column heights, forces on the block, pressure along the pipe, jet range against hole depth, force per meter of depth on a plate, or work per meter of height to pump a tank. Show data table in the Lab section lists the plotted values.":
+  "Gráfica de la escena actual: presión en función de la profundidad, fuerzas sobre los recipientes, alturas de columna, fuerzas sobre el bloque, presión a lo largo del tubo, alcance del chorro en función de la profundidad del orificio, fuerza por metro de profundidad sobre una placa o trabajo por metro de altura para vaciar un tanque. Mostrar la tabla de datos, en la sección Laboratorio, lista los valores graficados.",
 "Divider between the tank and the graphs":
   "Divisor entre el tanque y las gráficas",
 "Depth":
@@ -50,6 +50,10 @@ VDI18N.add('es', 'demo/fluids', {
   "Venturi",
 "Torricelli":
   "Torricelli",
+"Dam or window":
+  "Presa o ventana",
+"Pumping":
+  "Bombeo",
 "Pressure grows with depth":
   "La presión crece con la profundidad",
 "Floating and sinking":
@@ -64,6 +68,16 @@ VDI18N.add('es', 'demo/fluids', {
   "Tubo de Venturi",
 "Torricelli's tank":
   "Tanque de Torricelli",
+"Force on a dam":
+  "Fuerza sobre una presa",
+"Window in a tank":
+  "Ventana en un tanque",
+"End of a trough":
+  "Extremo de un canal",
+"Pump out a tank":
+  "Vaciar un tanque",
+"Pump out a cone":
+  "Vaciar un cono",
 "A floating block settles with a fraction ρ_obj/ρ_fluid of its height under the surface, here half. Try Steel or Ice, or slide the density through {#} kg/m³: the block sinks once it is denser than the water.":
   "Un bloque que flota se acomoda con una fracción ρ_obj/ρ_fluid de su altura bajo la superficie, aquí la mitad. Prueba Acero o Hielo, o desliza la densidad hasta pasar {#} kg/m³: el bloque se hunde en cuanto es más denso que el agua.",
 "Liquid":
@@ -122,6 +136,22 @@ VDI18N.add('es', 'demo/fluids', {
   "Densidades de los metales de los que están hechos los bloques",
 "Near {#} °C, from the CRC Handbook of Chemistry and Physics.":
   "Cerca de {#} °C, del CRC Handbook of Chemistry and Physics.",
+"Plate shape":
+  "Forma de la placa",
+"Rectangle":
+  "Rectángulo",
+"Triangle":
+  "Triángulo",
+"Circle":
+  "Círculo",
+"Tank shape":
+  "Forma del tanque",
+"Cylinder":
+  "Cilindro",
+"Cone":
+  "Cono",
+"Trough":
+  "Canal",
 "Liquid depth":
   "Profundidad del líquido",
 "Probe depth":
@@ -154,6 +184,34 @@ VDI18N.add('es', 'demo/fluids', {
   "Altura del agua H",
 "Hole depth h":
   "Profundidad del orificio h",
+"Plate height a":
+  "Altura de la placa a",
+"Plate width b":
+  "Ancho de la placa b",
+"Depth of its top edge":
+  "Profundidad de su borde superior",
+"Strips n":
+  "Franjas n",
+"Tank height H":
+  "Altura del tanque H",
+"Trough length ℓ":
+  "Largo del canal ℓ",
+"Water depth":
+  "Profundidad del agua",
+"Spout height above the bottom":
+  "Altura de la salida sobre el fondo",
+"Slices n":
+  "Rebanadas n",
+"Take each strip at its":
+  "Toma cada franja en su",
+"Where each strip is sampled":
+  "Dónde se evalúa cada franja",
+"Top":
+  "Borde superior",
+"Middle":
+  "Punto medio",
+"Bottom":
+  "Borde inferior",
 "Spring scale":
   "Dinamómetro",
 "Overflow can":
@@ -450,6 +508,140 @@ VDI18N.add('es', 'demo/fluids', {
   "v = √(2gh), t = √({#}(H − h)/g), R = vt = {#}√(h(H − h))",
 "steady jet":
   "chorro estacionario",
+"depth h (m)":
+  "profundidad h (m)",
+"centroid, h":
+  "centroide, h",
+"F acts here, h":
+  "F actúa aquí, h",
+"cp":
+  "cp",
+"strip {#}: h = {#} m, w = {#} m, ρgh·w·Δh = {#} MN":
+  "franja {#}: h = {#} m, w = {#} m, ρgh·w·Δh = {#} MN",
+"n = {#} strips: F":
+  "n = {#} franjas: F",
+"= {#} MN":
+  "= {#} MN",
+"∫ρgh·w dh = {#} MN":
+  "∫ρgh·w dh = {#} MN",
+"Force per meter of depth, ρgh·w(h): the area under the curve is F. Bars: the {#} strips, area {#} MN; under the curve {#} MN":
+  "Fuerza por metro de profundidad, ρgh·w(h): el área bajo la curva es F. Barras: las {#} franjas, área {#} MN; bajo la curva {#} MN",
+"ρgh·w (kN/m)":
+  "ρgh·w (kN/m)",
+"Plate":
+  "Placa",
+"Drag the plate up or down to change its depth, the grip on its lower edge for its height and the grip on its side for its width. Tap a strip to read its depth, width and force.":
+  "Arrastra la placa hacia arriba o hacia abajo para cambiar su profundidad, el control de su borde inferior para su altura y el de su costado para su ancho. Toca una franja para leer su profundidad, su ancho y su fuerza.",
+"Model: a flat vertical plate in a liquid at rest with constant density, g = {#} m/s². Air pushes on the surface and on the dry side of the plate alike, so only the gauge pressure ρgh counts. A horizontal strip at depth h, width w(h) and height Δh feels the force ρgh·w(h)·Δh; the strips add to F_n, and as n grows F_n → ∫ρgh·w(h) dh = ρgA·h_c. The center of pressure is the depth where the whole force could act with the same turning effect, h_cp = ∫h²w dh / ∫h w dh. Drawn to scale.":
+  "Modelo: una placa plana vertical en un líquido en reposo de densidad constante, g = {#} m/s². El aire empuja igual sobre la superficie y sobre el lado seco de la placa, así que solo cuenta la presión manométrica ρgh. Una franja horizontal a profundidad h, de ancho w(h) y altura Δh, siente la fuerza ρgh·w(h)·Δh; las franjas suman F_n, y conforme n crece F_n → ∫ρgh·w(h) dh = ρgA·h_c. El centro de presión es la profundidad donde toda la fuerza podría actuar con el mismo efecto de giro, h_cp = ∫h²w dh / ∫h w dh. Dibujado a escala.",
+"<span><i></i>Strips, darker where the pressure ρgh is greater</span><span><i></i>The strip you picked</span><span><i></i>Center of pressure: where F acts</span><span><i></i>Centroid of the plate</span>":
+  "<span><i></i>Franjas, más oscuras donde la presión ρgh es mayor</span><span><i></i>La franja que elegiste</span><span><i></i>Centro de presión: donde actúa F</span><span><i></i>Centroide de la placa</span>",
+"The face of a dam {#} m wide with water {#} m deep. The pressure grows with depth, so cut the face into horizontal strips: each strip feels nearly one pressure, ρgh, and its force is ρgh times its area. Each strip is taken here at its top, where the pressure is lowest, so the sum falls short. Raise n, or take each strip at its middle: the sum closes in on F = ∫ρgh·w dh = ρg·b·a²/{#} = {#} MN, and the force acts two thirds of the way down, not halfway.":
+  "La cortina de una presa de {#} m de ancho con agua de {#} m de profundidad. La presión crece con la profundidad, así que corta la cortina en franjas horizontales: cada franja siente casi una sola presión, ρgh, y su fuerza es ρgh por su área. Aquí cada franja se toma en su borde superior, donde la presión es menor, así que la suma se queda corta. Sube n, o toma cada franja en su punto medio: la suma se acerca a F = ∫ρgh·w dh = ρg·b·a²/{#} = {#} MN, y la fuerza actúa a dos tercios de la profundidad, no a la mitad.",
+"Plate area A":
+  "Área de la placa A",
+"Strips n, each Δh":
+  "Franjas n, cada una Δh",
+"{#}, {#} m, taken at its top":
+  "{#}, {#} m, tomada en su borde superior",
+"Sum of the strips F<sub>n</sub>":
+  "Suma de las franjas F<sub>n</sub>",
+"{#} MN":
+  "{#} MN",
+"Integral F = ∫ρgh·w dh":
+  "Integral F = ∫ρgh·w dh",
+"Centroid depth h<sub>c</sub>":
+  "Profundidad del centroide h<sub>c</sub>",
+"Pressure there ρgh<sub>c</sub>":
+  "Presión ahí ρgh<sub>c</sub>",
+"Center of pressure h<sub>cp</sub>":
+  "Centro de presión h<sub>cp</sub>",
+"h<sub>cp</sub> from the strips":
+  "h<sub>cp</sub> con las franjas",
+"Strip {#}: depth, width":
+  "Franja {#}: profundidad, ancho",
+"Its force ρgh·w·Δh":
+  "Su fuerza ρgh·w·Δh",
+"F = ∫ρgh·w(h) dh = ρg·A·h_c = {#}·{#}·{#}·{#} N; h_cp = h_c + I_c/(A·h_c)":
+  "F = ∫ρgh·w(h) dh = ρg·A·h_c = {#}·{#}·{#}·{#} N; h_cp = h_c + I_c/(A·h_c)",
+"height y (m)":
+  "altura y (m)",
+"lift y":
+  "elevación y",
+"slice {#}: A = {#} m²":
+  "rebanada {#}: A = {#} m²",
+"ρgAΔy·(y":
+  "ρgAΔy·(y",
+"spout, y":
+  "salida, y",
+"n = {#} slices: W":
+  "n = {#} rebanadas: W",
+"∫ρgA(y)(y":
+  "∫ρgA(y)(y",
+"− y) dy = {#} kJ":
+  "− y) dy = {#} kJ",
+"Work per meter of height, ρg·A(y)·(y_o − y): the area under the curve is W. Bars: the {#} slices, area {#} kJ; under the curve {#} kJ":
+  "Trabajo por metro de altura, ρg·A(y)·(y_o − y): el área bajo la curva es W. Barras: las {#} rebanadas, área {#} kJ; bajo la curva {#} kJ",
+"height y above the bottom (m)":
+  "altura y sobre el fondo (m)",
+"ρgA·lift (kJ/m)":
+  "ρgA·elevación (kJ/m)",
+"Drag the grip on the water surface for the depth, the grip on the spout to raise or lower it, and the grip on the rim for the tank height. Tap a slice to read its area and how far it is lifted. Play pumps the tank empty slice by slice.":
+  "Arrastra el control de la superficie del agua para la profundidad, el de la salida para subirla o bajarla y el del borde para la altura del tanque. Toca una rebanada para leer su área y cuánto se eleva. Iniciar vacía el tanque rebanada por rebanada.",
+"Model: a liquid of constant density, g = {#} m/s², lifted with no losses: the work is the increase in its potential energy, as if each slice were raised slowly to the spout and left there. A slice at height y with area A(y) and thickness Δy weighs ρg·A(y)·Δy and rises y_o − y; the slices add to W_n, and as n grows W_n → ∫ρg·A(y)(y_o − y) dy, which equals the weight times the rise of the center of mass. How fast the pump works does not change the work. The trough is seen from its end, ℓ long into the page. Drawn to scale.":
+  "Modelo: un líquido de densidad constante, g = {#} m/s², elevado sin pérdidas: el trabajo es el aumento de su energía potencial, como si cada rebanada se subiera despacio hasta la salida y se dejara ahí. Una rebanada a la altura y, con área A(y) y grosor Δy, pesa ρg·A(y)·Δy y sube y_o − y; las rebanadas suman W_n, y conforme n crece W_n → ∫ρg·A(y)(y_o − y) dy, que es igual al peso por lo que sube el centro de masa. Qué tan rápido trabaja la bomba no cambia el trabajo. El canal se ve desde su extremo, con ℓ de largo hacia dentro de la página. Dibujado a escala.",
+"Take each slice at its":
+  "Toma cada rebanada en su",
+"Fill again":
+  "Llenar de nuevo",
+"<span><i></i>The slice you picked and its lift to the spout</span><span><i></i>Slices still to pump</span><span><i></i>The integral</span><span><i></i>Work done so far</span>":
+  "<span><i></i>La rebanada que elegiste y lo que sube hasta la salida</span><span><i></i>Rebanadas por bombear</span><span><i></i>La integral</span><span><i></i>Trabajo hecho hasta ahora</span>",
+"A full cylindrical tank, {#} m across and {#} m deep, pumped out through a spout {#} m above its top. Every slice weighs the same, but the slices near the bottom must be lifted farther. Press Play to pump it slice by slice. W = ∫ρg·πR²({#} − y) dy = {#} kJ, the same as lifting all the water by the {#} m its center of mass rises.":
+  "Un tanque cilíndrico lleno, de {#} m de diámetro y {#} m de profundidad, que se vacía por una salida {#} m arriba de su borde. Todas las rebanadas pesan lo mismo, pero las del fondo deben subir más. Presiona Iniciar para bombearlo rebanada por rebanada. W = ∫ρg·πR²({#} − y) dy = {#} kJ, lo mismo que subir toda el agua los {#} m que sube su centro de masa.",
+"Water volume V":
+  "Volumen de agua V",
+"Its weight ρgV":
+  "Su peso ρgV",
+"Slices n, each Δy":
+  "Rebanadas n, cada una Δy",
+"{#}, {#} m, taken at its middle":
+  "{#}, {#} m, tomada en su punto medio",
+"Sum of the slices W<sub>n</sub>":
+  "Suma de las rebanadas W<sub>n</sub>",
+"Integral W = ∫ρgA(y)(y<sub>o</sub> − y) dy":
+  "Integral W = ∫ρgA(y)(y<sub>o</sub> − y) dy",
+"Center of mass of the water":
+  "Centro de masa del agua",
+"{#} m up":
+  "{#} m de altura",
+"ρgV × (y<sub>o</sub> − y<sub>cm</sub>)":
+  "ρgV × (y<sub>o</sub> − y<sub>cm</sub>)",
+"Slice {#}: height, area, lift":
+  "Rebanada {#}: altura, área, elevación",
+"Its work ρgAΔy·(y<sub>o</sub> − y)":
+  "Su trabajo ρgAΔy·(y<sub>o</sub> − y)",
+"Pumped so far":
+  "Bombeado hasta ahora",
+"not started: press Play":
+  "sin empezar: presiona Iniciar",
+"W = ∫₀^y_w ρg·A(y)·(y_o − y) dy = ρgV·(y_o − y_cm), with y_w = {#} m and y_o = {#} m":
+  "W = ∫₀^y_w ρg·A(y)·(y_o − y) dy = ρgV·(y_o − y_cm), con y_w = {#} m y y_o = {#} m",
+"full":
+  "lleno",
+"pumped so far: {#} J, level {#} m":
+  "bombeado hasta ahora: {#} J, nivel {#} m",
+"pumping":
+  "bombeando",
+"A cylindrical tank {#} m tall holds water {#} m deep; it is pumped out through a spout {#} m above the bottom.":
+  "Un tanque cilíndrico de {#} m de altura tiene agua de {#} m de profundidad; se vacía por una salida {#} m arriba del fondo.",
+"The water is cut into {#} slices; the work to lift them adds to {#} kJ.":
+  "El agua se corta en {#} rebanadas; el trabajo para subirlas suma {#} kJ.",
+"The integral gives {#} kJ.":
+  "La integral da {#} kJ.",
+"The water level is now {#} m.":
+  "El nivel del agua está ahora en {#} m.",
+"pumped so far: {#} kJ, level {#} m":
+  "bombeado hasta ahora: {#} kJ, nivel {#} m",
 "Seawater, {#} kg/m³":
   "Agua de mar, {#} kg/m³",
 "seawater, {#} kg/m³":
@@ -486,16 +678,6 @@ VDI18N.add('es', 'demo/fluids', {
   "Agua en el vaso",
 "Scale reading T = W − F_B = W − ρ_f V_sub g; the beaker gains ρ_f V_sub g.":
   "Lectura del dinamómetro T = W − F_B = W − ρ_f V_sub g; el vaso gana ρ_f V_sub g.",
-"The block hangs from a spring scale.":
-  "El bloque cuelga de un dinamómetro de resorte.",
-"The tank is a full overflow can, with a beaker catching the spill.":
-  "El tanque es una lata de derrame llena, con un vaso que recoge lo que se derrama.",
-"The spring scale reads {#} N.":
-  "El dinamómetro marca {#} N.",
-"The beaker holds {#} cm³ of water.":
-  "El vaso contiene {#} cm³ de agua.",
-"The block is denser than the liquid, so it sinks.":
-  "El bloque es más denso que el líquido, así que se hunde.",
 "Your readings: buoyant force W − T against submerged volume, water":
   "Tus lecturas: fuerza de flotación W − T en función del volumen sumergido, agua",
 "{#} of {#} Buoyancy readings used (this liquid). model: slope ρ_f g = {#} N/m³, through the origin":
@@ -516,22 +698,60 @@ VDI18N.add('es', 'demo/fluids', {
   "A, masa y volumen desconocidos",
 "ρ = m/V: m = W/g from the scale in air; V from the water a block all the way under pushes into the beaker.":
   "ρ = m/V: m = W/g con el dinamómetro en el aire; V a partir del agua que un bloque completamente sumergido empuja al vaso.",
-"A tank of liquid {#} m deep with a hole in its side.":
-  "Un tanque de líquido de {#} m de profundidad con un orificio en un lado.",
-"The hole is {#} m below the surface.":
-  "El orificio está {#} m bajo la superficie.",
-"The jet lands {#} m from the tank.":
-  "El chorro cae a {#} m del tanque.",
-"Exit speed {#} m/s.":
-  "Rapidez de salida {#} m/s.",
-"The range is largest, {#} m, for a hole {#} m deep.":
-  "El alcance es máximo, {#} m, para un orificio a {#} m de profundidad.",
+"strip {#}: h = {#} m, w = {#} m, ρgh·w·Δh = {#} kN":
+  "franja {#}: h = {#} m, w = {#} m, ρgh·w·Δh = {#} kN",
+"∫ρgh·w dh = {#} kN":
+  "∫ρgh·w dh = {#} kN",
+"Force per meter of depth, ρgh·w(h): the area under the curve is F. Bars: the {#} strips, area {#} kN; under the curve {#} kN":
+  "Fuerza por metro de profundidad, ρgh·w(h): el área bajo la curva es F. Barras: las {#} franjas, área {#} kN; bajo la curva {#} kN",
+"Diameter a":
+  "Diámetro a",
+"A round window {#} cm across in the side of an aquarium, its top {#} m below the surface. The strips are wider in the middle than at the ends, so w(h) changes with depth too. The force is the pressure at the window’s center times its area, ρg·h_c·πr², and the center of pressure sits a little below the center.":
+  "Una ventana redonda de {#} cm de diámetro en el costado de un acuario, con su borde superior {#} m bajo la superficie. Las franjas son más anchas en el centro que en los extremos, así que w(h) también cambia con la profundidad. La fuerza es la presión en el centro de la ventana por su área, ρg·h_c·πr², y el centro de presión queda un poco abajo del centro.",
+"The end of a full water trough: a triangle {#} m across the top and {#} m deep, point down. The deepest strips, where the pressure is greatest, are the narrowest. F = ρg·a²b/{#}, and the force acts halfway down.":
+  "El extremo de un canal lleno de agua: un triángulo de {#} m de ancho arriba y {#} m de profundidad, con la punta hacia abajo. Las franjas más profundas, donde la presión es mayor, son las más angostas. F = ρg·a²b/{#}, y la fuerza actúa a la mitad de la profundidad.",
+"A flat upright plate, a triangle, point down, {#} m tall and {#} m wide, its top {#} m below the surface.":
+  "Una placa plana vertical, un triángulo con la punta hacia abajo, de {#} m de alto y {#} m de ancho, con su borde superior {#} m bajo la superficie.",
+"It is cut into {#} horizontal strips; their forces add to {#} kN.":
+  "Se corta en {#} franjas horizontales; sus fuerzas suman {#} kN.",
+"The integral gives {#} kN, acting {#} m below the surface.":
+  "La integral da {#} kN, que actúan {#} m bajo la superficie.",
+"Radius at the top R":
+  "Radio arriba R",
+"A cone point down, {#} m across at its {#} m high rim, full of water and pumped out over the rim. Most of the water is near the top, where it hardly has to rise: the center of mass sits three quarters of the way up, so W = ρgV·(H/{#}).":
+  "Un cono con la punta hacia abajo, de {#} m de diámetro en su borde a {#} m de altura, lleno de agua y vaciado por encima del borde. Casi toda el agua está cerca de arriba, donde apenas tiene que subir: el centro de masa queda a tres cuartos de la altura, así que W = ρgV·(H/{#}).",
+"{#} J, level {#} m":
+  "{#} J, nivel {#} m",
 "vegetable oil, {#} kg/m³":
   "aceite vegetal, {#} kg/m³",
+"− y) dy = {#} MJ":
+  "− y) dy = {#} MJ",
+"Work per meter of height, ρg·A(y)·(y_o − y): the area under the curve is W. Bars: the {#} slices, area {#} MJ; under the curve {#} MJ":
+  "Trabajo por metro de altura, ρg·A(y)·(y_o − y): el área bajo la curva es W. Barras: las {#} rebanadas, área {#} MJ; bajo la curva {#} MJ",
+"{#} kJ, level {#} m":
+  "{#} kJ, nivel {#} m",
 "The liquid is mercury, density {#} kg/m³.":
   "El líquido es mercurio, de densidad {#} kg/m³.",
+"A cone shaped tank, point down, {#} m tall holds water {#} m deep; it is pumped out through a spout {#} m above the bottom.":
+  "Un tanque en forma de cono, con la punta hacia abajo, de {#} m de altura tiene agua de {#} m de profundidad; se vacía por una salida {#} m arriba del fondo.",
+"The water is cut into {#} slices; the work to lift them adds to {#} MJ.":
+  "El agua se corta en {#} rebanadas; el trabajo para subirlas suma {#} MJ.",
+"The integral gives {#} MJ.":
+  "La integral da {#} MJ.",
+"end view: {#} m long into the page":
+  "vista desde el extremo: {#} m de largo hacia dentro de la página",
+"Half the width at the top R":
+  "Mitad del ancho arriba R",
+"A trough with triangular ends, seen from one end, {#} m tall holds water {#} m deep; it is pumped out through a spout {#} m above the bottom.":
+  "Un canal con extremos triangulares, visto desde un extremo, de {#} m de altura tiene agua de {#} m de profundidad; se vacía por una salida {#} m arriba del fondo.",
+"{#}, {#} m, taken at its bottom":
+  "{#}, {#} m, tomada en su borde inferior",
 "Readings and fits work in the Depth, Buoyancy and Venturi scenes.":
   "Las lecturas y los ajustes funcionan en las escenas Profundidad, Flotación y Venturi.",
+"The tank is empty.":
+  "El tanque está vacío.",
+"empty":
+  "vacío",
 "Choose a metal first.":
   "Primero elige un metal.",
 "Record reading works in the Depth, Buoyancy and Venturi scenes.":
@@ -540,12 +760,8 @@ VDI18N.add('es', 'demo/fluids', {
   "No hay ajuste de lecturas para esta escena.",
 "No points to list.":
   "No hay puntos que listar.",
-"The tank, hole height and jet are to scale; the tape on the floor is in cm from the wall. Drag to turn, scroll to zoom, double click to go back; drag a grip to change a value.":
-  "El tanque, la altura del orificio y el chorro están a escala; la cinta del piso está en cm desde la pared. Arrastra para girar, desplaza para acercar, doble clic para volver; arrastra un agarre para cambiar un valor.",
 "Your readings: absolute pressure against depth, water. Not enough readings to fit.":
   "Tus lecturas: presión absoluta en función de la profundidad, agua. No hay suficientes lecturas para ajustar.",
-"depth h (m)":
-  "profundidad h (m)",
 "residual (kPa)":
   "residuo (kPa)",
 "A tank of liquid {#} m deep with a pressure probe.":
@@ -600,6 +816,14 @@ VDI18N.add('es', 'demo/fluids', {
   "Tus lecturas: fuerza de flotación W − T en función del volumen sumergido, mercurio",
 "Mystery block E in a tank of liquid, its mass and volume unknown.":
   "El bloque misterioso E en un tanque de líquido, con masa y volumen desconocidos.",
+"The block hangs from a spring scale.":
+  "El bloque cuelga de un dinamómetro de resorte.",
+"The tank is a full overflow can, with a beaker catching the spill.":
+  "El tanque es una lata de derrame llena, con un vaso que recoge lo que se derrama.",
+"The spring scale reads {#} N.":
+  "El dinamómetro marca {#} N.",
+"The beaker holds {#} cm³ of water.":
+  "El vaso contiene {#} cm³ de agua.",
 "Δh = {#} cm":
   "Δh = {#} cm",
 "Your readings: standpipe drop h₁ − h₂ against v₁², D₁ = {#} cm, D₂ = {#} cm":
@@ -622,6 +846,22 @@ VDI18N.add('es', 'demo/fluids', {
   "Rapidez en la garganta v₂ = {#} m/s.",
 "The standpipe difference Δh is {#} cm.":
   "La diferencia entre los tubos verticales Δh es {#} cm.",
+"A tank of liquid {#} m deep with a hole in its side.":
+  "Un tanque de líquido de {#} m de profundidad con un orificio en un lado.",
+"The hole is {#} m below the surface.":
+  "El orificio está {#} m bajo la superficie.",
+"The jet lands {#} m from the tank.":
+  "El chorro cae a {#} m del tanque.",
+"Exit speed {#} m/s.":
+  "Rapidez de salida {#} m/s.",
+"The range is largest, {#} m, for a hole {#} m deep.":
+  "El alcance es máximo, {#} m, para un orificio a {#} m de profundidad.",
+"strip {#}: h = {#} m, w = {#} m":
+  "franja {#}: h = {#} m, w = {#} m",
+"ρgh·w·Δh = {#} kN":
+  "ρgh·w·Δh = {#} kN",
+"A flat round plate {#} m across, standing upright in the liquid, its top {#} m below the surface.":
+  "Una placa plana redonda de {#} m de diámetro, vertical en el líquido, con su borde superior {#} m bajo la superficie.",
 "Your readings: buoyant force W − T against submerged volume, water. Not enough readings to fit.":
   "Tus lecturas: fuerza de flotación W − T en función del volumen sumergido, agua. No hay suficientes lecturas para ajustar.",
 "Your readings: buoyant force W − T against submerged volume, seawater":
@@ -630,12 +870,30 @@ VDI18N.add('es', 'demo/fluids', {
   "Tus lecturas: fuerza de flotación W − T en función del volumen sumergido, agua de mar. No hay suficientes lecturas para ajustar.",
 "The liquid is seawater, density {#} kg/m³.":
   "El líquido es agua de mar, de densidad {#} kg/m³.",
+"The block is denser than the liquid, so it sinks.":
+  "El bloque es más denso que el líquido, así que se hunde.",
 "Mystery block A in a tank of liquid, its mass and volume unknown.":
   "El bloque misterioso A en un tanque de líquido, con masa y volumen desconocidos.",
+"ρgh·w·Δh = {#} MN":
+  "ρgh·w·Δh = {#} MN",
+"A flat upright plate, a rectangle, {#} m tall and {#} m wide, its top {#} m below the surface.":
+  "Una placa plana vertical, un rectángulo, de {#} m de alto y {#} m de ancho, con su borde superior {#} m bajo la superficie.",
+"It is cut into {#} horizontal strips; their forces add to {#} MN.":
+  "Se corta en {#} franjas horizontales; sus fuerzas suman {#} MN.",
+"The integral gives {#} MN, acting {#} m below the surface.":
+  "La integral da {#} MN, que actúan {#} m bajo la superficie.",
 "The liquid is oil, density {#} kg/m³.":
   "El líquido es aceite, de densidad {#} kg/m³.",
-"Range against hole depth, H = {#} m, R = {#}√(h(H − h))":
-  "Alcance en función de la profundidad del orificio, H = {#} m, R = {#}√(h(H − h))",
+"Slices of water: height, area, lift and work; sum {#} kJ, integral {#} kJ":
+  "Rebanadas de agua: altura, área, elevación y trabajo; suma {#} kJ, integral {#} kJ",
+"slice":
+  "rebanada",
+"area A (m²)":
+  "área A (m²)",
+"lift (m)":
+  "elevación (m)",
+"ρgAΔy·lift (J)":
+  "ρgAΔy·elevación (J)",
 "Your readings: absolute pressure against depth, water":
   "Tus lecturas: presión absoluta en función de la profundidad, agua",
 "{#} of {#} Depth readings used (this liquid and pressure mode). model: slope ρg = {#} kPa/m, intercept {#} kPa":
@@ -706,6 +964,24 @@ VDI18N.add('es', 'demo/fluids', {
   "Cuatro recipientes de formas distintas, con la misma base y llenos a la misma altura, contienen cantidades de líquido muy distintas. Predice cómo se comparan la presión y la fuerza sobre sus bases, y luego desactiva A ciegas para comprobarlo.",
 "{#} readings kept from other scenes. They all go into the CSV.":
   "{#} lecturas guardadas de otras escenas. Todas van al CSV.",
+"The face of a dam {#} m wide with water {#} m deep, cut into horizontal strips. Add up ρgh times the area of each strip, then raise n and watch the sum.":
+  "La cortina de una presa de {#} m de ancho con agua de {#} m de profundidad, cortada en franjas horizontales. Suma ρgh por el área de cada franja, luego sube n y observa la suma.",
+"A round window {#} cm across, its top {#} m below the surface. Add up the strips, then raise n.":
+  "Una ventana redonda de {#} cm de diámetro, con su borde superior {#} m bajo la superficie. Suma las franjas, luego sube n.",
+"The triangular end of a full trough, point down. Add up the strips, then raise n.":
+  "El extremo triangular de un canal lleno, con la punta hacia abajo. Suma las franjas, luego sube n.",
+"A full cylindrical tank pumped out through a spout {#} m above its top. Add up the work for each slice, then raise n.":
+  "Un tanque cilíndrico lleno que se vacía por una salida {#} m arriba de su borde. Suma el trabajo de cada rebanada, luego sube n.",
+"A full cone, point down, pumped out over its rim. Add up the work for each slice, then raise n.":
+  "Un cono lleno, con la punta hacia abajo, que se vacía por encima de su borde. Suma el trabajo de cada rebanada, luego sube n.",
+"Turn on Spring scale. Record reading stores the depth ruler d, the spring scale T and the scale reading in air W. The table works out V_sub = L²·d (at most L³) and F_B = W − T; the fit is F_B = intercept + slope·V_sub. {#} readings from other scenes are kept for the CSV.":
+  "Activa Dinamómetro. Registrar lectura guarda la regla de profundidad d, el dinamómetro T y la lectura del dinamómetro en el aire W. La tabla calcula V_sub = L²·d (como máximo L³) y F_B = W − T; el ajuste es F_B = ordenada al origen + pendiente·V_sub. Se guardan {#} lecturas de otras escenas para el CSV.",
+"Graph for the current scene: pressure against depth, forces on the vessels, column heights, forces on the block, pressure along the pipe, or jet range against hole depth. Show data table in the Lab section lists the plotted values.":
+  "Gráfica de la escena actual: presión en función de la profundidad, fuerzas sobre los recipientes, alturas de columna, fuerzas sobre el bloque, presión a lo largo del tubo o alcance del chorro en función de la profundidad del orificio. Mostrar la tabla de datos, en la sección Laboratorio, lista los valores graficados.",
+"The tank, hole height and jet are to scale; the tape on the floor is in cm from the wall. Drag to turn, scroll to zoom, double click to go back; drag a grip to change a value.":
+  "El tanque, la altura del orificio y el chorro están a escala; la cinta del piso está en cm desde la pared. Arrastra para girar, desplaza para acercar, doble clic para volver; arrastra un agarre para cambiar un valor.",
+"Range against hole depth, H = {#} m, R = {#}√(h(H − h))":
+  "Alcance en función de la profundidad del orificio, H = {#} m, R = {#}√(h(H − h))",
 "Describe the picture":
   "Describir la imagen",
 "Time controls":

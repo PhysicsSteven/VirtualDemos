@@ -193,6 +193,8 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
           <button type="button" data-p="modes" aria-pressed="false">Normal modes</button>
           <button type="button" data-p="beats" aria-pressed="false">Beats</button>
           <button type="button" data-p="drop" aria-pressed="false">Drop a block on it</button>
+          <button type="button" data-p="roots" aria-pressed="false">Roots of mr² + br + k = 0</button>
+          <button type="button" data-p="rootsDriven" aria-pressed="false">Transient plus steady state</button>
         </div>
         <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
@@ -616,6 +618,37 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     const wd = Math.sqrt(q), c = (g.u0 + g.beta * g.y0) / wd;
     return { R: Math.hypot(g.y0, c), phi: Math.atan2(-c, g.y0), wd };
   }
+  // Roots of the characteristic equation m r² + b r + k = 0 (OpenStax Calculus Vol 3, 7.1): x = e^(rt) solves m x'' + b x' + k x = 0
+  // exactly when r is a root. Discriminant b² − 4mk < 0: a complex pair −b/2m ± iω_d, ω_d = √(k/m − b²/4m²); = 0: a double root
+  // −b/2m (taken so within rounding of b = 2√(km)); > 0: two real roots, the larger in size taken as (−b − √D)/2m and the other as k/(m r₁) so nothing cancels.
+  function charRoots(m, b, k) {
+    const D = b * b - 4 * m * k, re = b === 0 ? 0 : -b / (2 * m);
+    /* within rounding of b = 2√(km) (|ζ − 1| below 1e−9, as the regime readout counts it) the roots are one double root */
+    if (Math.abs(D) <= 4e-9 * 4 * m * k) return { kind: 'double', D: 0, re, wd: 0, r1: [re, 0], r2: [re, 0] };
+    if (D < 0) { const wd = Math.sqrt(k / m - re * re); return { kind: 'complex', D, re, wd, r1: [re, wd], r2: [re, -wd] }; }
+    const r1 = (-b - Math.sqrt(D)) / (2 * m), r2 = k / (m * r1);
+    return { kind: 'real', D, re, wd: 0, r1: [r1, 0], r2: [r2, 0] };
+  }
+  // The free part of a run as the textbook writes it, s = t − t₀ from the segment's start, with x_h(0) = y0, x_h'(0) = u0:
+  // complex: x_h = e^(αs)(C₁ cos ω_d s + C₂ sin ω_d s); double: (C₁ + C₂ s) e^(rs); real: C₁ e^(r₁s) + C₂ e^(r₂s).
+  function homogCoeffs(m, b, k, y0, u0) {
+    const R = charRoots(m, b, k);
+    if (R.kind === 'complex') return { R, C1: y0, C2: (u0 - R.re * y0) / R.wd };
+    if (R.kind === 'double') return { R, C1: y0, C2: u0 - R.re * y0 };
+    const r1 = R.r1[0], r2 = R.r2[0];
+    return { R, C1: (u0 - r2 * y0) / (r1 - r2), C2: (r1 * y0 - u0) / (r1 - r2) };
+  }
+  function homogFromCoeffs(H, s) {
+    const R = H.R;
+    if (R.kind === 'complex') return Math.exp(R.re * s) * (H.C1 * Math.cos(R.wd * s) + H.C2 * Math.sin(R.wd * s));
+    if (R.kind === 'double') return (H.C1 + H.C2 * s) * Math.exp(R.re * s);
+    return H.C1 * Math.exp(R.r1[0] * s) + H.C2 * Math.exp(R.r2[0] * s);
+  }
+  // a single block's run split as x = x_h + x_p: the transient (free) part and the steady (particular) part, at time t
+  function splitXhXp(g, t) {
+    const s = t - g.t0;
+    return { xh: homog(g.y0, g.u0, g.beta, g.w0sq, s)[0], xp: partic(g, s)[0] };
+  }
   // ---- lab helpers: the period model, the fit, and the readings CSV ----
   const SP_VERSION = 'springs@2026-10-22.2';     // demo version, written into every CSV
   const periodOf = (m, k) => 2 * Math.PI * Math.sqrt(m / k);          // undamped, any amplitude
@@ -1012,7 +1045,11 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     drop: { sys: 'free', vert: false, m: 1, k: 40, zeta: 0, ic: { x: 0.15, v: 0 }, drop: true,
       hint: 'A 1 kg block on a 40 N/m spring. Press Play, then Drop it now (or D) as the block passes equilibrium: a 1 kg block lands on it and sticks. Momentum along the track is kept, so the pair moves on at half the speed, and the amplitude falls to 1/√2 of what it was. Reset and drop it at a turning point instead: the amplitude stays the same. Either way the period grows by √2, since T = 2π√(m/k).' },
     beats: { sys: 'coupled', m: 0.5, k: 20, k2: 20, kc: 2, zeta: 0, ic: { x1: 0.12, v1: 0, x2: 0, v2: 0 },
-      hint: 'Only block 1 is displaced. That start is an equal mix of the two modes, and their slightly different frequencies beat: the energy moves to block 2 and back with period 2π/(ω₂ − ω₁).' }
+      hint: 'Only block 1 is displaced. That start is an equal mix of the two modes, and their slightly different frequencies beat: the energy moves to block 2 and back with period 2π/(ω₂ − ω₁).' },
+    roots: { sys: 'free', vert: false, m: 1, k: 40, zeta: 0.15, F0: 1, w: 3, ic: { x: 0.15, v: 0 }, roots: true,
+      hint: 'Try x = e^(rt) in m x″ + b x′ + k x = 0 and it works exactly when m r² + b r + k = 0. The lower pane shows the two roots r in the complex plane. Raise the damping b (drag a root, or use the Damping slider): the pair slides around a circle of radius ω₀ = √(k/m), its real part −b/2m sets the decay and its imaginary part ω_d sets the swing. At b = 2√(km) the two meet on the real axis (critical damping, a double root); past it they split along the real axis and the block creeps back with no swing. Then press Driven, or the Transient plus steady state setup.' },
+    rootsDriven: { sys: 'driven', vert: false, m: 1, k: 40, zeta: 0.1, F0: 1, w: 3, ic: { x: 0, v: 0 }, roots: true,
+      hint: 'The block starts at rest and the wall starts to move. The solution of m x″ + b x′ + k x = F₀ cos ωt is x = x_h + x_p: x_p = A cos(ωt − δ) is the steady swing at the drive frequency (thin line), and x_h solves the free equation, built from the roots in the lower pane (dashed). At t = 0, x_h = −x_p, so the two cancel and the block starts from rest. x_h dies away as e^(−bt/2m), the real part of the roots, and leaves x_p: raise b and the roots move left and the transient dies sooner; with b = 0 it never dies.' }
   };
 
   // ---------- state ----------
@@ -2246,6 +2283,8 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
       for (const sr of P.series) scan(past, sr.f);
       if (P.ghostF) { for (const q of gh) scan(q.pts, P.ghostF); for (const q of cp) scan(q.pts, P.ghostF); }
       if (P.xpanel && g.drive) hi = Math.max(hi, S.p.F0 / S.p.k, isFinite(g.A) ? g.A : 0);
+      const split = P.xpanel && rootsOn() && S.sys === 'driven' && !held;
+      if (split) { scan(past, (o) => splitXhXp(o.g, o.t).xh); scan(past, (o) => splitXhXp(o.g, o.t).xp); }
       if (P.energy) hi = Math.max(hi, book ? book.E0 : 0, enNow.total);
       if (P.sym) { const m0 = Math.max(Math.abs(lo), Math.abs(hi), P.id === 'x' || P.id === 'x1' || P.id === 'x2' ? 0.01 : 1e-3); [lo, hi] = rangeSym(P.id, m0); }
       else [lo, hi] = rangeLH(P.id, lo, hi);
@@ -2286,7 +2325,11 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
       }
       if (P.xpanel) {
         // wall motion of the drive, same units as x
-        if (g.drive && S.p.F0 > 0) {
+        /* the Roots setup, driven: x = x_h + x_p drawn as its two parts */
+        if (split) {
+          ctx.lineWidth = 1.6 * ps; ctx.strokeStyle = T.equi; line(ctx, past, (o) => splitXhXp(o.g, o.t).xp, X, Y);
+          ctx.strokeStyle = T.pos; ctx.setLineDash([6 * ps, 3 * ps]); line(ctx, past, (o) => splitXhXp(o.g, o.t).xh, X, Y); ctx.setLineDash([]);
+        } else if (g.drive && S.p.F0 > 0) {
           ctx.strokeStyle = T.equi; ctx.lineWidth = 1.4 * ps; ctx.setLineDash([5 * ps, 4 * ps]); ctx.globalAlpha = 0.9;
           line(ctx, past, (o) => (o.g.drive ? o.g.F0 / o.g.k * Math.cos(o.st.th) : 0), X, Y); ctx.setLineDash([]); ctx.globalAlpha = 1;
         }
@@ -2331,7 +2374,11 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
         ctx.font = `${10 * ps}px ${T.ui}`; ctx.fillStyle = T.xcol; ctx.textAlign = 'right'; ctx.textBaseline = 'top';
         ctx.fillText('dashed: envelope ±A e^(−bt/2m)', R - 4 * ps, b.y0 + 3 * ps);
       }
-      if (P.xpanel && g.drive && S.p.F0 > 0) {
+      if (split) {
+        ctx.font = `${10 * ps}px ${T.ui}`; ctx.textAlign = 'right'; ctx.textBaseline = 'top';
+        ctx.fillStyle = T.equi; richText(ctx, 'thin: x_p, steady', R - 4 * ps, b.y0 + 3 * ps + 10 * ps, 10 * ps, 400, 'right');
+        ctx.fillStyle = T.pos; richText(ctx, 'dashed: x_h, transient', R - 4 * ps, b.y0 + 3 * ps + 10 * ps + 12 * ps, 10 * ps, 400, 'right');
+      } else if (P.xpanel && g.drive && S.p.F0 > 0) {
         ctx.font = `${10 * ps}px ${T.ui}`; ctx.fillStyle = T.equi; ctx.textAlign = 'right'; ctx.textBaseline = 'top';
         ctx.fillText('dashed: wall, Xw cos ωt', R - 4 * ps, b.y0 + 3 * ps);
       }
@@ -2499,13 +2546,135 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     if (ctx.measureText(keyTxt).width < R - L - tw - 16 * ps) ctx.fillText(keyTxt, R, A.y0 - 32 * ps);
   }
 
+  // ---------- roots of m r² + b r + k = 0 in the complex plane (the Roots setup, OpenStax Calculus Vol 3, 7.1 to 7.3) ----------
+  const rootsOn = () => (S.preset === 'roots' || S.preset === 'rootsDriven') && (S.sys === 'free' || S.sys === 'driven');
+  let qGeom = null, qHover = false, qDrag = false;
+  /* the damping that puts a root at real part u (u ≤ 0): on the circle |r| = ω₀ while u ≥ −ω₀ (b = −2mu), and past it u is the
+     faster real root, so b = −m(u + ω₀²/u); the two agree at u = −ω₀, critical damping b = 2√(km) */
+  function bForRe(u) {
+    const m = S.p.m, wz = w0();
+    if (!(u < 0)) return 0;
+    return u >= -wz ? -2 * m * u : -m * (u + wz * wz / u);
+  }
+  function drawRoots() {
+    const [W, H] = dims.e; if (!W || !H) return;
+    const ctx = ctxs.e, ps = projScale();
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    const m = S.p.m, k = S.p.k, b = S.p.b, wz = w0(), R = charRoots(m, b, k), drv = S.sys === 'driven';
+    const fs = (W < 400 ? 10.5 : 11.5) * ps, pad = 14 * ps, lh = fs * 1.55;
+    ctx.fillStyle = T.ink; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+    richText(ctx, 'Roots of m r² + b r + k = 0', pad, 20 * ps, 11.5 * ps, 700, 'left', T.mono);
+    if (S.blind || S.unk) {
+      qGeom = null;
+      ctx.fillStyle = T.muted; ctx.font = `${fs}px ${T.ui}`;
+      ctx.fillText(S.unk ? 'Hidden: the spring is unknown.' : 'The roots are predictions: hidden in Blind.', pad, 44 * ps); return;
+    }
+    /* the words beside or under the plane */
+    const g = held ? segs[0] : lastSeg(), H0 = homogCoeffs(m, b, k, g.y0, g.u0), n3 = (v) => sig(v, 3);
+    const lines = [];
+    lines.push([`${n3(m)} r² + ${n3(b)} r + ${n3(k)} = 0`, T.ink, 600]);
+    lines.push([`b² − 4mk = ${n3(R.D)}`, T.muted, 400]);
+    if (R.kind === 'complex') {
+      lines.push(['Complex pair: underdamped', T.accent, 700]);
+      lines.push([`r = ${n3(R.re)} ± ${n3(R.wd)}i  (1/s)`, T.ink, 400]);
+      lines.push([`ω_d = √(k/m − b²/4m²) = ${n3(R.wd)} rad/s`, T.ink, 400]);
+      lines.push([`x_h = e^(${n3(R.re)}t)(C_1 cos ${n3(R.wd)}t + C_2 sin ${n3(R.wd)}t)`, T.xcol, 400]);
+    } else if (R.kind === 'double') {
+      lines.push(['Double root: critically damped', T.accent, 700]);
+      lines.push([`r = ${n3(R.re)} (1/s), twice`, T.ink, 400]);
+      lines.push([`x_h = (C_1 + C_2 t) e^(${n3(R.re)}t)`, T.xcol, 400]);
+    } else {
+      lines.push(['Two real roots: overdamped', T.accent, 700]);
+      lines.push([`r_1 = ${n3(R.r1[0])}, r_2 = ${n3(R.r2[0])}  (1/s)`, T.ink, 400]);
+      lines.push([`x_h = C_1 e^(${n3(R.r1[0])}t) + C_2 e^(${n3(R.r2[0])}t)`, T.xcol, 400]);
+    }
+    if (!held) lines.push([`C_1 = ${n3(H0.C1 * 100)} cm, C_2 = ${n3(H0.C2 * 100)} cm${R.kind === 'double' ? '/s' : ''}${g.t0 > 0 ? `, t from ${g.t0.toFixed(2)} s` : ''}`, T.muted, 400]);
+    if (drv) {
+      const st = steady(m, k, b, S.p.F0, S.p.w);
+      lines.push([isFinite(st.A) ? `x_p = ${n3(st.A * 100)} cm × cos(${n3(S.p.w)}t − ${(st.delta * 180 / Math.PI).toFixed(1)}°)` : 'x_p grows without limit: b = 0 and ω = ω₀', T.equi, 400]);
+      lines.push(['x = x_h + x_p: the roots set how x_h dies away', T.muted, 400]);
+    }
+    /* layout: the plane at the left with the words at its right on a wide pane, else the words under the plane */
+    const top = 30 * ps, wide = W > 1.3 * H && W > 520 * ps;
+    ctx.font = `600 ${fs}px ${T.ui}`;
+    const textW = Math.max(...lines.map((l) => richWidth(ctx, l[0], fs, l[2])));
+    const textH = lines.length * lh;
+    let box, tx, ty;
+    if (wide) { const pw = Math.max(160 * ps, W - pad * 3 - Math.min(textW, W * 0.52)); box = { x0: pad + 30 * ps, x1: pw, y0: top + 8 * ps, y1: H - 28 * ps }; tx = pw + pad + 8 * ps; ty = top + 8 * ps + fs; }
+    else { box = { x0: pad + 30 * ps, x1: W - pad, y0: top + 8 * ps, y1: Math.max(top + 90 * ps, H - textH - 34 * ps) }; tx = pad; ty = box.y1 + 30 * ps + fs; }
+    /* equal scales on both axes, so the circle |r| = ω₀ is round; the origin near the right edge, since roots lie on the left */
+    const fast = R.kind === 'real' ? -R.r1[0] : wz, ext = Math.max(wz, Math.min(fast, 3 * wz)), drvW = drv ? S.p.w : 0;
+    const ox = box.x1 - Math.max(74 * ps, (box.x1 - box.x0) * 0.3), oy = (box.y0 + box.y1) / 2;
+    const sc = Math.min((ox - box.x0) / (1.12 * ext), (box.y1 - box.y0) / 2 / (1.15 * Math.max(wz, drvW)));
+    const X = (u) => ox + u * sc, Y = (v) => oy - v * sc;
+    qGeom = { box, ox, oy, sc, X, Y, invU: (px) => (px - ox) / sc };
+    /* grid and axes */
+    const st0 = nice(Math.max(ext, wz) / 3);
+    ctx.save(); ctx.beginPath(); ctx.rect(box.x0, box.y0, box.x1 - box.x0, box.y1 - box.y0); ctx.clip();
+    ctx.lineWidth = 1; ctx.strokeStyle = T.grid;
+    for (let kk = Math.floor((box.x0 - ox) / sc / st0); kk * st0 * sc + ox <= box.x1; kk++) { const px = Math.round(X(kk * st0)) + 0.5; if (kk) { ctx.beginPath(); ctx.moveTo(px, box.y0); ctx.lineTo(px, box.y1); ctx.stroke(); } }
+    for (let kk = Math.floor((oy - box.y1) / sc / st0); oy - kk * st0 * sc >= box.y0; kk++) { const py = Math.round(Y(kk * st0)) + 0.5; if (kk) { ctx.beginPath(); ctx.moveTo(box.x0, py); ctx.lineTo(box.x1, py); ctx.stroke(); } }
+    ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1.2 * ps;
+    ctx.beginPath(); ctx.moveTo(box.x0, Math.round(oy) + 0.5); ctx.lineTo(box.x1, Math.round(oy) + 0.5); ctx.moveTo(Math.round(ox) + 0.5, box.y0); ctx.lineTo(Math.round(ox) + 0.5, box.y1); ctx.stroke();
+    /* the path the roots take as b grows from 0: around the circle |r| = ω₀, then apart along the real axis */
+    ctx.strokeStyle = T.muted; ctx.lineWidth = 1.4 * ps; ctx.setLineDash([4 * ps, 4 * ps]);
+    ctx.beginPath(); ctx.arc(ox, oy, wz * sc, Math.PI / 2, 3 * Math.PI / 2); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = T.muted;
+    for (const v of [wz, -wz]) { ctx.beginPath(); ctx.arc(ox, Y(v), 2.6 * ps, 0, 2 * Math.PI); ctx.fill(); }
+    ctx.beginPath(); ctx.arc(X(-wz), oy, 2.6 * ps, 0, 2 * Math.PI); ctx.fill();
+    ctx.font = `${10 * ps}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
+    ctx.fillText('iω₀ at b = 0', ox + 5 * ps, Y(wz) - 2 * ps);
+    ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    if (R.kind === 'complex') ctx.fillText('−ω₀: b = 2√(km)', X(-wz), oy + 5 * ps);
+    /* the drive: x_p ∝ e^(iωt), its exponent ±iω on the imaginary axis */
+    if (drv) {
+      ctx.strokeStyle = T.equi; ctx.lineWidth = 2 * ps;
+      for (const v of [drvW, -drvW]) { const py = Y(v), s = 5 * ps; ctx.beginPath(); ctx.moveTo(ox, py - s); ctx.lineTo(ox + s, py); ctx.lineTo(ox, py + s); ctx.lineTo(ox - s, py); ctx.closePath(); ctx.stroke(); }
+      ctx.fillStyle = T.equi; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText('±iω, drive', ox + 7 * ps, Y(-drvW) + 3 * ps);
+    }
+    /* the roots */
+    const hot = qDrag || qHover;
+    const dots = R.kind === 'complex' ? [[R.r1, 'r_1'], [R.r2, 'r_2']] : R.kind === 'double' ? [[R.r1, 'r_1 = r_2']] : [[R.r1, 'r_1'], [R.r2, 'r_2']];
+    qGeom.dots = [];
+    dots.forEach(([r, lab], i) => {
+      let px = X(r[0]); const py = Y(r[1]), off = px < box.x0 + 8 * ps;
+      if (off) px = box.x0 + 8 * ps;
+      ctx.fillStyle = T.accent; ctx.strokeStyle = T.ink; ctx.lineWidth = (hot ? 2.2 : 1.4) * ps;
+      ctx.beginPath(); ctx.arc(px, py, (hot ? 7.5 : 6.5) * ps, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
+      if (off) { ctx.fillStyle = T.accent; ctx.beginPath(); ctx.moveTo(box.x0 + 1, py); ctx.lineTo(px - 7 * ps, py - 5 * ps); ctx.lineTo(px - 7 * ps, py + 5 * ps); ctx.closePath(); ctx.fill(); }
+      ctx.fillStyle = T.ink; ctx.textBaseline = 'alphabetic';
+      const above = R.kind === 'real' ? i === 0 : r[1] > 0;
+      richText(ctx, off ? `${lab} = ${sig(r[0], 3)}` : lab, px + (R.kind === 'real' && i === 1 ? 4 : -4) * ps, py + (above ? -11 : 20) * ps, 11 * ps, 700, R.kind === 'real' && i === 1 ? 'left' : 'right');
+      qGeom.dots.push([px, py]);
+    });
+    ctx.restore();
+    ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.strokeRect(box.x0 + 0.5, box.y0 + 0.5, box.x1 - box.x0, box.y1 - box.y0);
+    /* axis labels and the tick step */
+    ctx.fillStyle = T.muted; ctx.font = `${10 * ps}px ${T.ui}`; ctx.textAlign = 'right'; ctx.textBaseline = 'top';
+    ctx.fillText(`Re r (1/s), grid ${sig(st0, 2)}`, box.x1, box.y1 + 4 * ps);
+    ctx.save(); ctx.translate(box.x0 - 6 * ps, (box.y0 + box.y1) / 2); ctx.rotate(-Math.PI / 2); ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.fillText('Im r (rad/s)', 0, 0); ctx.restore();
+    /* the words */
+    ctx.textBaseline = 'alphabetic';
+    lines.forEach(([txt, col, wt], i) => { ctx.fillStyle = col; richText(ctx, txt, tx, ty + i * lh, fs, wt, 'left'); });
+  }
+  function qHit(ev) {
+    if (!qGeom || !rootsOn()) return false;
+    const r = cans.e.getBoundingClientRect(), x = ev.clientX - r.left, y = ev.clientY - r.top, tol = 12 * projScale() * (ev.pointerType === 'touch' ? 1.8 : 1);
+    return (qGeom.dots || []).some(([px, py]) => Math.hypot(x - px, y - py) <= tol);
+  }
+  function qDragTo(px) {
+    const u = Math.min(0, qGeom.invU(px)), bv = bForRe(u);
+    setParam('b', bv > 0 ? +bv.toPrecision(3) : 0);
+  }
+
   function drawAll() {
     if (!segs.length || !T) return;
     { const c = $('cPane').querySelector('.stage-ctl'); ctlH = c.offsetTop + c.offsetHeight; }
     if (sbOn() && SB.grid) { gdDrawScene(); gdDrawPlot(); if (SB.pane === 'modes') gdDrawModes(); else gdDrawBars(); return; }
     if (sbOn()) { sbDrawScene(); sbDrawPlot(); if (SB.pane === 'modes') sbDrawModes(); else sbDrawBars(); return; }
     drawScene(); drawPlots();
-    if (S.sys === 'driven') drawRes(); else drawBars();
+    if (rootsOn()) drawRoots(); else if (S.sys === 'driven') drawRes(); else drawBars();
     if (fitDirty) { fitDirty = false; drawFit(); }
   }
 
@@ -2564,7 +2733,9 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     for (const bt of $('sysSeg').querySelectorAll('button')) bt.setAttribute('aria-pressed', String(bt.dataset.s === S.sys));
     $('tVwrap').hidden = cp; $('tAwrap').hidden = cp;
     $('tXlab').textContent = cp ? 'x₁(t), x₂(t)' : 'x(t)';
-    cans.e.setAttribute('aria-label', S.sys === 'driven'
+    cans.e.setAttribute('aria-label', rootsOn()
+      ? 'Roots of the characteristic equation m r squared + b r + k = 0 in the complex plane, with the path they take as the damping b grows. Drag a root sideways, or use the left and right arrow keys, to change the damping.'
+      : S.sys === 'driven'
       ? 'Resonance curve: steady amplitude and phase lag against drive frequency. Drag the ω marker sideways, or use the left and right arrow keys, to change the drive frequency. S starts or stops a sweep.'
       : 'Energy bars: kinetic, spring and gravitational energy, the total, and the energy lost to damping.');
     $('tCircle').disabled = S.sys !== 'free';
@@ -2590,6 +2761,8 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
         const phi0 = ph.phi - ph.wd * g.t0, phi = Math.atan2(Math.sin(phi0), Math.cos(phi0));
         h += dd(g.beta > 0 ? 'Amplitude A at t = 0' : 'Amplitude A', cm(ph.R * Math.exp(g.beta * g.t0), 2)) + dd('Phase φ', deg(phi));
         $('mFormula').innerHTML = g.beta > 0 ? 'x = A e<sup>−bt/2m</sup> cos(ω<sub>d</sub>t + φ)' : 'x = A cos(ω₀t + φ), A = √(x₀² + (v₀/ω₀)²), tan φ = −v₀/(ω₀x₀)';
+      } else if (g.drive && rootsOn()) {
+        $('mFormula').innerHTML = 'x = x<sub>h</sub> + x<sub>p</sub>: x<sub>h</sub> solves m x″ + b x′ + k x = 0 and dies away as e<sup>rt</sup>; x<sub>p</sub> = A cos(ωt − δ) is the steady swing.';
       } else if (g.drive) {
         $('mFormula').innerHTML = 'x = transient + A cos(ωt − δ); the transient dies away as e<sup>−bt/2m</sup>.';
       } else $('mFormula').innerHTML = 'Overdamped or critically damped: x returns to 0 without oscillating.';
@@ -3156,7 +3329,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
 
   // ---------- dragging ω on the resonance curve ----------
   function rHit(ev) {
-    if (!rGeom || S.sys !== 'driven') return false;
+    if (!rGeom || S.sys !== 'driven' || rootsOn()) return false;
     const r = cans.e.getBoundingClientRect(), x = ev.clientX - r.left, y = ev.clientY - r.top;
     const tol = 7 * projScale() * (ev.pointerType === 'touch' ? 2 : 1);
     if (rGeom.box) { const [bx, by, bw, bh] = rGeom.box; if (x >= bx - tol && x <= bx + bw + tol && y >= by - tol && y <= by + bh + tol) return true; }
@@ -3164,6 +3337,8 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   }
   let rQueued = null, rFrame = false;
   cans.e.addEventListener('pointermove', (ev) => {
+    if (qDrag) { const r = cans.e.getBoundingClientRect(); qDragTo(ev.clientX - r.left); return; }
+    if (rootsOn()) { qHover = qHit(ev); cans.e.style.cursor = qHover ? 'ew-resize' : 'default'; return; }
     if (rDrag) {
       const r = cans.e.getBoundingClientRect(); rQueued = ev.clientX - r.left;
       if (rFrame) return; rFrame = true;
@@ -3174,17 +3349,20 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   });
   cans.e.addEventListener('pointerdown', (ev) => {
     cans.e.focus({ preventScroll: true });
+    if (qHit(ev)) { qDrag = true; try { cans.e.setPointerCapture(ev.pointerId); } catch (_) {} ev.preventDefault(); return; }
     if (!rHit(ev)) return;
     rDrag = true;
     const r = cans.e.getBoundingClientRect(); setPos('w', rGeom.invX(ev.clientX - r.left));
     try { cans.e.setPointerCapture(ev.pointerId); } catch (_) {}
     ev.preventDefault();
   });
-  const endR = () => { if (!rDrag) return; rDrag = false; rHover = false; syncSliders(); };
+  const endR = () => { if (qDrag) { qDrag = false; qHover = false; syncSliders(); } if (!rDrag) return; rDrag = false; rHover = false; syncSliders(); };
   cans.e.addEventListener('pointerup', endR);
   cans.e.addEventListener('pointercancel', endR);
-  cans.e.addEventListener('pointerleave', () => { if (!rDrag) rHover = false; });
+  cans.e.addEventListener('pointerleave', () => { if (!rDrag) rHover = false; if (!qDrag) qHover = false; });
   cans.e.addEventListener('keydown', (e) => {
+    /* the Roots setup: left and right arrows move the roots by one step of the damping slider (more damping moves them left) */
+    if (rootsOn() && (e.key === 'ArrowLeft' || e.key === 'ArrowRight')) { if (!S.unk) setPos('b', posOfB(S.p.b) + (e.key === 'ArrowLeft' ? 1 : -1)); e.preventDefault(); return; }
     if (S.sys !== 'driven') { if (e.key === ' ') { setRunning(!running); e.preventDefault(); } return; }
     if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') setPos('w', S.p.w + (e.key === 'ArrowRight' ? 1 : -1) * (e.shiftKey ? 1 : 0.1));
     else if (e.key === 's' || e.key === 'S') { if (sweep) stopSweep(false); else startSweep(); }
@@ -4411,7 +4589,9 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     sb: { get SB() { return SB; }, load: sbLoad, add: sbAddSpring, remove: sbRemove, join(a, b) { SB.join = a; sbJoin(b); }, select: sbSelect, setMass: sbSetMass, setK: sbSetK, settle: sbSettle, letGo() { return slkLetGo(); }, hangUp: slkHangUp, get fall() { return SB.fall; },
       go(dts) { if (SB.grid) gdAdvance(dts); else sbAdvance(dts); updateReadouts(); }, gridNow() { return SB.grid ? gdNow() : null; }, startMode: sbStartMode, gridMode(ax, p, q) { gdStartMode(ax, p - 1 + SB.grid.N * (q - 1)); }, sw(on) { setSw(on); }, get swAcc() { return sw.acc; }, get rows() { return nmRows; }, y() { return Object.fromEntries(sbYNow()); }, tensions() { return sbTensions(SB.rig, SB.md, sbYp()); } },
     go(dts, step) { step = step || 0.05; for (let x = 0; x < dts - 1e-12; x += step) advance(Math.min(step, dts - x)); updateReadouts(); },
-    state() { const g = lastSeg(), st = segState(g, t); return { t, st, en: energy(g, st, S.vert), book: { ...book } }; }
+    state() { const g = lastSeg(), st = segState(g, t); return { t, st, en: energy(g, st, S.vert), book: { ...book } }; },
+    roots() { const g = lastSeg(); return { on: rootsOn(), R: charRoots(S.p.m, S.p.b, S.p.k), split: g.sys === 'single' ? splitXhXp(g, t) : null, x: segState(g, t).x, m: S.p.m, b: S.p.b, k: S.p.k }; }
+
   };
 
   tokens();
@@ -4483,6 +4663,12 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     VD.describe(cans.e, () => {
       if (sbOn()) return [SB.grid ? 'Bars for the kinetic energy, the springs and the total of the grid, or the shape of the mode.' : 'Bars for the kinetic, spring and gravitational energy of the rig, or the normal modes.'];
       if (!segs.length) return [];
+      if (rootsOn()) {
+        if (S.blind || S.unk) return ['The roots of m r squared + b r + k = 0 are hidden.'];
+        const R = charRoots(S.p.m, S.p.b, S.p.k);
+        return ['The roots of m r squared + b r + k = 0 in the complex plane, on a path around a circle of radius ω₀ and then along the real axis.',
+          R.kind === 'complex' ? `A complex pair, r = ${sig(R.re, 3)} ± ${sig(R.wd, 3)} i per second: underdamped.` : R.kind === 'double' ? `A double root at r = ${sig(R.re, 3)} per second: critically damped.` : `Two real roots, ${sig(R.r1[0], 3)} and ${sig(R.r2[0], 3)} per second: overdamped.`];
+      }
       if (S.sys === 'driven') {
         const stv = steady(S.p.m, S.p.k, S.p.b, S.p.F0, S.p.w);
         return ['Resonance curve: steady amplitude and phase lag against drive frequency, with a marker at the drive frequency.', `The drive frequency is ω = ${fx(S.p.w, 2)} rad/s.`,

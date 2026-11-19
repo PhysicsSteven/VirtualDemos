@@ -179,6 +179,8 @@ table.rows button:hover { color: var(--pos); }
           <button type="button" data-s="buoy" aria-pressed="true">Buoyancy</button>
           <button type="button" data-s="venturi" aria-pressed="false">Venturi</button>
           <button type="button" data-s="torr" aria-pressed="false">Torricelli</button>
+          <button type="button" data-s="plate" aria-pressed="false">Dam or window</button>
+          <button type="button" data-s="pump" aria-pressed="false">Pumping</button>
         </div>
         <div class="chips" id="presets">
           <button type="button" data-p="depth" aria-pressed="false">Pressure grows with depth</button>
@@ -188,6 +190,11 @@ table.rows button:hover { color: var(--pos); }
           <button type="button" data-p="mystery" aria-pressed="false">Mystery blocks: name the metal</button>
           <button type="button" data-p="venturi" aria-pressed="false">Venturi tube</button>
           <button type="button" data-p="torr" aria-pressed="false">Torricelli's tank</button>
+          <button type="button" data-p="dam" aria-pressed="false">Force on a dam</button>
+          <button type="button" data-p="window" aria-pressed="false">Window in a tank</button>
+          <button type="button" data-p="troughEnd" aria-pressed="false">End of a trough</button>
+          <button type="button" data-p="pumpCyl" aria-pressed="false">Pump out a tank</button>
+          <button type="button" data-p="pumpCone" aria-pressed="false">Pump out a cone</button>
         </div>
         <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
@@ -240,7 +247,24 @@ table.rows button:hover { color: var(--pos); }
           <details class="more"><summary>Density table</summary><div class="twrap"><table class="rows" id="densTab"><caption class="sr">Densities of the metals the blocks are made of</caption><thead><tr><th>Metal</th><th>ρ kg/m³</th></tr></thead><tbody></tbody></table></div>
             <p class="hint">Near 20 °C, from the CRC Handbook of Chemistry and Physics.</p></details>
         </div>
+        <div class="seg full" role="group" aria-label="Plate shape" id="plateSeg" hidden>
+          <button type="button" data-sh="rect" aria-pressed="true">Rectangle</button>
+          <button type="button" data-sh="tri" aria-pressed="false">Triangle</button>
+          <button type="button" data-sh="circ" aria-pressed="false">Circle</button>
+        </div>
+        <div class="seg full" role="group" aria-label="Tank shape" id="tankSeg" hidden>
+          <button type="button" data-sh="cyl" aria-pressed="true">Cylinder</button>
+          <button type="button" data-sh="cone" aria-pressed="false">Cone</button>
+          <button type="button" data-sh="trough" aria-pressed="false">Trough</button>
+        </div>
         <div id="sliders"></div>
+        <div class="inline" id="sampleWrap" hidden><span id="sampleLab">Take each strip at its</span>
+          <div class="seg" role="group" aria-label="Where each strip is sampled" id="sampleSeg">
+            <button type="button" data-k="0" aria-pressed="false">Top</button>
+            <button type="button" data-k="0.5" aria-pressed="true">Middle</button>
+            <button type="button" data-k="1" aria-pressed="false">Bottom</button>
+          </div>
+        </div>
         <div class="toggles" id="buoyToggles">
           <label><input type="checkbox" id="tScale">Spring scale</label>
           <label><input type="checkbox" id="tOver">Overflow can</label>
@@ -424,6 +448,69 @@ table.rows button:hover { color: var(--pos); }
     return { v, t, R: v * t };
   }
 
+  // Force on a flat vertical plate under a liquid at rest (OpenStax Calculus Vol 1, 6.5): a strip at depth h, width w(h) and
+  // height dh feels gauge pressure ρgh, so F = ∫ρg h w(h) dh, and the force acts at the center of pressure h_cp = ∫h² w dh / ∫h w dh.
+  // The plate {shape, a, b, d0}: rect (height a, width b), tri (width b at its top edge, narrowing to a point a below), circ
+  // (diameter a); d0 is the depth of its top edge, y is measured down from that edge. Gauge pressure: the air pushes on both sides.
+  function plateWidth(pl, y) {
+    if (!(y >= 0 && y <= pl.a)) return 0;
+    if (pl.shape === 'rect') return pl.b;
+    if (pl.shape === 'tri') return pl.b * (1 - y / pl.a);
+    const r = pl.a / 2; return 2 * Math.sqrt(Math.max(0, r * r - (y - r) * (y - r)));
+  }
+  // exact: area A, centroid yc below the top edge, second moment Ic about the horizontal line through the centroid; then
+  // F = ρg A h_c (the pressure at the centroid times the area) and h_cp = h_c + Ic/(A h_c)
+  function plateExact(pl, rho) {
+    let A, yc, Ic;
+    if (pl.shape === 'rect') { A = pl.a * pl.b; yc = pl.a / 2; Ic = pl.b * Math.pow(pl.a, 3) / 12; }
+    else if (pl.shape === 'tri') { A = pl.a * pl.b / 2; yc = pl.a / 3; Ic = pl.b * Math.pow(pl.a, 3) / 36; }
+    else { const r = pl.a / 2; A = Math.PI * r * r; yc = r; Ic = Math.PI * Math.pow(r, 4) / 4; }
+    const hc = pl.d0 + yc;
+    return { A, yc, Ic, hc, F: rho * G * A * hc, hcp: hc > 0 ? hc + Ic / (A * hc) : pl.d0 + 2 * pl.a / 3 };
+  }
+  // the sum over n horizontal strips, each taken at a depth s of the way down it (0 its top, 0.5 its middle, 1 its bottom):
+  // F_n = Σ ρg h_i w(h_i) Δh, and its center of pressure Σ h_i dF_i / F_n
+  function plateStrips(pl, rho, n, s) {
+    const dy = pl.a / n, strips = [];
+    let F = 0, M = 0;
+    for (let i = 0; i < n; i++) {
+      const y = (i + s) * dy, h = pl.d0 + y, w = plateWidth(pl, y), dF = rho * G * h * w * dy;
+      F += dF; M += h * dF; strips.push({ y0: i * dy, y1: (i + 1) * dy, y, h, w, dF });
+    }
+    return { F, hcp: F > 0 ? M / F : NaN, strips, dy };
+  }
+  // Pumping a tank empty over its rim or a spout (OpenStax Calculus Vol 1, 6.5): a slice at height y above the bottom, of area A(y)
+  // and thickness dy, weighs ρg A(y) dy and is lifted yo − y, so W = ∫₀^yw ρg A(y)(yo − y) dy for water yw deep and a spout at yo.
+  // The tank {shape, R, H, Lt, yw, yo}: cyl (radius R), cone (point down, radius R at its top, H tall), trough (length Lt, a
+  // triangular end 2R wide at its top and H deep, point down).
+  function tankArea(tk, y) {
+    if (tk.shape === 'cyl') return Math.PI * tk.R * tk.R;
+    if (tk.shape === 'cone') { const r = tk.R * y / tk.H; return Math.PI * r * r; }
+    return tk.Lt * 2 * tk.R * y / tk.H;
+  }
+  // ∫₀^a ρg A(y)(yo − y) dy in closed form: the work to lift the water below height a to the spout
+  function pumpWorkTo(tk, rho, a) {
+    const c = tk.yo;
+    if (tk.shape === 'cyl') return rho * G * Math.PI * tk.R * tk.R * (c * a - a * a / 2);
+    if (tk.shape === 'cone') return rho * G * Math.PI * tk.R * tk.R / (tk.H * tk.H) * (c * a * a * a / 3 - a * a * a * a / 4);
+    return rho * G * 2 * tk.R * tk.Lt / tk.H * (c * a * a / 2 - a * a * a / 3);
+  }
+  // the water's volume and the height of its center of mass: W also equals its weight times the lift of its center of mass, ρgV(yo − y_cm)
+  function tankWater(tk, a) {
+    if (tk.shape === 'cyl') { const V = Math.PI * tk.R * tk.R * a; return { V, ycm: a / 2 }; }
+    if (tk.shape === 'cone') { const V = Math.PI * tk.R * tk.R / (tk.H * tk.H) * a * a * a / 3; return { V, ycm: 3 * a / 4 }; }
+    const V = tk.Lt * tk.R / tk.H * a * a; return { V, ycm: 2 * a / 3 };
+  }
+  function pumpSlices(tk, rho, n, s) {
+    const dy = tk.yw / n, slices = [];
+    let W = 0;
+    for (let i = 0; i < n; i++) {
+      const y = (i + s) * dy, A = tankArea(tk, y), dW = rho * G * A * (tk.yo - y) * dy;
+      W += dW; slices.push({ y0: i * dy, y1: (i + 1) * dy, y, A, lift: tk.yo - y, dW });
+    }
+    return { W, slices, dy };
+  }
+
   // ---- readings: the student's own fits and the CSV ----
   // a number typed in a table cell ("−1.5" and "1,5" are not numbers; "" is missing)
   const num = (s) => { const t = String(s == null ? '' : s).trim().replace(/−/g, '-'); return t === '' ? NaN : Number(t); };
@@ -540,7 +627,10 @@ table.rows button:hover { color: var(--pos); }
       ['h0', 'Water depth without the block', 0.15, 0.45, 0.01, 'm', 2], ['zeta', 'Damping ratio ζ', 0.02, 1, 0.01, '', 2]],
     venturi: [['D1', 'Pipe diameter D<sub>1</sub>', 3, 10, 0.1, 'cm', 1], ['D2', 'Throat diameter D<sub>2</sub>', 1, 10, 0.1, 'cm', 1],
       ['v1', 'Inlet speed v<sub>1</sub>', 0.1, 2, 0.05, 'm/s', 2], ['h1', 'Inlet standpipe height h<sub>1</sub>', 0.2, 1.2, 0.01, 'm', 2]],
-    torr: [['H', 'Water height H', 0.2, 1.5, 0.01, 'm', 2], ['hh', 'Hole depth h', 0, 1.5, 0.01, 'm', 2]]
+    torr: [['H', 'Water height H', 0.2, 1.5, 0.01, 'm', 2], ['hh', 'Hole depth h', 0, 1.5, 0.01, 'm', 2]],
+    plate: [['a', 'Plate height a', 0.1, 20, 0.1, 'm', 1], ['b', 'Plate width b', 0.1, 40, 0.1, 'm', 1], ['d0', 'Depth of its top edge', 0, 20, 0.1, 'm', 1], ['n', 'Strips n', 1, 100, 1, '', 0]],
+    pump: [['R', 'Radius R', 0.2, 5, 0.1, 'm', 1], ['H', 'Tank height H', 0.5, 10, 0.1, 'm', 1], ['Lt', 'Trough length ℓ', 0.5, 20, 0.1, 'm', 1],
+      ['yw', 'Water depth', 0.1, 10, 0.1, 'm', 1], ['yo', 'Spout height above the bottom', 0.5, 15, 0.1, 'm', 1], ['n', 'Slices n', 1, 100, 1, '', 0]]
   };
   const DEF = {
     press: { D: 2, pd: 1.2, px: 0.62 },
@@ -548,16 +638,20 @@ table.rows button:hover { color: var(--pos); }
     baro: { Pa: 101.3, Pg: 6, Ho: 20 },
     buoy: { rho: 500, L: 10, h0: 0.3, zeta: 0.12, mat: 'wood', scale: false, over: false, xb: 0, z0: 0.48, zh: 0.6, myst: 'A' },
     venturi: { D1: 6, D2: 3, v1: 0.8, h1: 0.8 },
-    torr: { H: 1, hh: 0.3 }
+    torr: { H: 1, hh: 0.3 },
+    plate: { shape: 'rect', a: 10, b: 20, d0: 0, n: 10, s: 0, sel: 7 },
+    pump: { shape: 'cyl', R: 1.5, H: 4, Lt: 5, yw: 4, yo: 5, n: 8, s: 0.5, sel: 5 }
   };
-  const TITLES = { press: 'Tank and probe', pascal: 'Vessels', baro: 'Instrument', buoy: 'Block', venturi: 'Pipe', torr: 'Tank' };
+  const TITLES = { press: 'Tank and probe', pascal: 'Vessels', baro: 'Instrument', buoy: 'Block', venturi: 'Pipe', torr: 'Tank', plate: 'Plate', pump: 'Tank' };
   const PAR_HINT = {
     press: 'Drag the probe anywhere in the liquid, or drag the grip on the surface to change the depth. Moving the probe sideways changes nothing: only depth matters.',
     pascal: 'Drag the grip on the dashed line to fill all four vessels to the same height. Each vessel has the same base, 8 cm across.',
     baro: 'Drag the top of the liquid column (barometer) or the open arm’s level (manometer). The column height is the pressure difference divided by ρg. With two liquids, drag the top of the poured column, or pour more with the slider, and measure both heights from the interface.',
     buoy: 'Drag the block anywhere and let go; drag the square grip on its corner to resize it. With the spring scale on, drag the scale up and down to lower the block into the liquid.',
     venturi: 'Drag the grip on the throat wall to narrow or widen it, the grip on the inlet wall for D₁, the round grip on the arrow for the inlet speed, and the first standpipe’s level for the inlet pressure.',
-    torr: 'Drag the hole up and down the wall, and the grip on the surface to change the water height H.'
+    torr: 'Drag the hole up and down the wall, and the grip on the surface to change the water height H.',
+    plate: 'Drag the plate up or down to change its depth, the grip on its lower edge for its height and the grip on its side for its width. Tap a strip to read its depth, width and force.',
+    pump: 'Drag the grip on the water surface for the depth, the grip on the spout to raise or lower it, and the grip on the rim for the tank height. Tap a slice to read its area and how far it is lifted. Play pumps the tank empty slice by slice.'
   };
   const MODEL = {
     press: 'Model: a liquid at rest with constant density (incompressible), g = 9.81 m/s², and standard air pressure P₀ = 101.325 kPa on the surface. The drawing’s width is schematic; the depth scale is to size.',
@@ -565,7 +659,9 @@ table.rows button:hover { color: var(--pos); }
     baro: 'Model: incompressible liquid, g = 9.81 m/s². The space above a barometer column is taken as a vacuum (mercury vapor adds only 0.2 Pa; water vapor would add 2.3 kPa, which a real water barometer must allow for). The manometer arms have the same width. Two liquids: they do not mix, the tube has the same width all the way round, and the poured liquid stays in the left arm; at the interface’s level the pressure is the same in both arms, so ρ₁h₁ = ρ₂h₂. Surface tension and the curved meniscus are left out.',
     buoy: 'Model: a cube in a glass tank 50 cm wide and 30 cm from front to back (floor area 0.15 m²), so the level rises by V_sub/A. The liquid pushes up with ρ_f V_sub g. Motion is vertical only, with linear drag F = −b v on the wet block (b = 2ζ√(km), k = the buoyant force per meter of sinking, so ζ is the damping ratio of small bobs) and no added mass, so real blocks bob a little more slowly and real water drag grows faster than v. The floor stops the block dead. The spring scale is read with the block hanging still. Mystery blocks are solid cubes of pure metals, painted so their color gives nothing away, with densities near 20 °C from the CRC Handbook.',
     venturi: 'Model: ideal flow, meaning incompressible, inviscid and steady, with the speed uniform across each section. The pipe is horizontal; each open standpipe shows the gauge pressure at the axis. Pipe widths are drawn larger than to scale. A real pipe loses some pressure to friction, so the outlet standpipe would stand a little lower. If the absolute pressure at the throat would fall below the liquid’s vapor pressure (water 2.34 kPa, seawater about 2.3 kPa at 20 °C, mercury 0.16 Pa, oil taken as 0), the liquid boils there (cavitation) and the ideal model is invalid; the demo then says so instead of showing the numbers.',
-    torr: 'Model: ideal flow from a small hole in a wide tank, so the surface hardly moves and v = √(2gh). A supply keeps the level steady. Air drag on the jet is neglected and the hole has rounded edges, so the jet does not contract.'
+    torr: 'Model: ideal flow from a small hole in a wide tank, so the surface hardly moves and v = √(2gh). A supply keeps the level steady. Air drag on the jet is neglected and the hole has rounded edges, so the jet does not contract.',
+    plate: 'Model: a flat vertical plate in a liquid at rest with constant density, g = 9.81 m/s². Air pushes on the surface and on the dry side of the plate alike, so only the gauge pressure ρgh counts. A horizontal strip at depth h, width w(h) and height Δh feels the force ρgh·w(h)·Δh; the strips add to F_n, and as n grows F_n → ∫ρgh·w(h) dh = ρgA·h_c. The center of pressure is the depth where the whole force could act with the same turning effect, h_cp = ∫h²w dh / ∫h w dh. Drawn to scale.',
+    pump: 'Model: a liquid of constant density, g = 9.81 m/s², lifted with no losses: the work is the increase in its potential energy, as if each slice were raised slowly to the spout and left there. A slice at height y with area A(y) and thickness Δy weighs ρg·A(y)·Δy and rises y_o − y; the slices add to W_n, and as n grows W_n → ∫ρg·A(y)(y_o − y) dy, which equals the weight times the rise of the center of mass. How fast the pump works does not change the work. The trough is seen from its end, ℓ long into the page. Drawn to scale.'
   };
   const PRESETS = {
     depth: { scene: 'press', liq: 'water', p: { D: 2, pd: 1.2, px: 0.62 }, gmode: 'abs',
@@ -583,9 +679,20 @@ table.rows button:hover { color: var(--pos); }
     venturi: { scene: 'venturi', liq: 'water', p: { D1: 6, D2: 3, v1: 0.8, h1: 0.8 }, gmode: 'gauge',
       hint: 'Halving the diameter quarters the area, so the water moves 4 times faster in the throat, and the throat standpipe stands lower. Fast flow, low pressure: the pressure drop pays for the extra kinetic energy.' },
     torr: { scene: 'torr', liq: 'water', p: { H: 1, hh: 0.3 },
-      hint: 'Water leaves the hole as fast as if it had fallen freely from the surface, v = √(2gh). The jet lands farthest when the hole is halfway down; holes a quarter of the way from the top and from the bottom land at the same spot.' }
+      hint: 'Water leaves the hole as fast as if it had fallen freely from the surface, v = √(2gh). The jet lands farthest when the hole is halfway down; holes a quarter of the way from the top and from the bottom land at the same spot.' },
+    dam: { scene: 'plate', liq: 'water', p: { shape: 'rect', a: 10, b: 20, d0: 0, n: 10, s: 0, sel: 7 },
+      hint: 'The face of a dam 20 m wide with water 10 m deep. The pressure grows with depth, so cut the face into horizontal strips: each strip feels nearly one pressure, ρgh, and its force is ρgh times its area. Each strip is taken here at its top, where the pressure is lowest, so the sum falls short. Raise n, or take each strip at its middle: the sum closes in on F = ∫ρgh·w dh = ρg·b·a²/2 = 9.81 MN, and the force acts two thirds of the way down, not halfway.' },
+    window: { scene: 'plate', liq: 'water', p: { shape: 'circ', a: 0.6, b: 0.6, d0: 1.5, n: 6, s: 0.5, sel: 3 },
+      hint: 'A round window 60 cm across in the side of an aquarium, its top 1.5 m below the surface. The strips are wider in the middle than at the ends, so w(h) changes with depth too. The force is the pressure at the window’s center times its area, ρg·h_c·πr², and the center of pressure sits a little below the center.' },
+    troughEnd: { scene: 'plate', liq: 'water', p: { shape: 'tri', a: 1.5, b: 2, d0: 0, n: 5, s: 0.5, sel: 1 },
+      hint: 'The end of a full water trough: a triangle 2 m across the top and 1.5 m deep, point down. The deepest strips, where the pressure is greatest, are the narrowest. F = ρg·a²b/6, and the force acts halfway down.' },
+    pumpCyl: { scene: 'pump', liq: 'water', p: { shape: 'cyl', R: 1.5, H: 4, Lt: 5, yw: 4, yo: 5, n: 8, s: 0.5, sel: 5 },
+      hint: 'A full cylindrical tank, 3 m across and 4 m deep, pumped out through a spout 1 m above its top. Every slice weighs the same, but the slices near the bottom must be lifted farther. Press Play to pump it slice by slice. W = ∫ρg·πR²(5 − y) dy = 832 kJ, the same as lifting all the water by the 3 m its center of mass rises.' },
+    pumpCone: { scene: 'pump', liq: 'water', p: { shape: 'cone', R: 2, H: 4, Lt: 5, yw: 4, yo: 4, n: 8, s: 0.5, sel: 5 },
+      hint: 'A cone point down, 4 m across at its 4 m high rim, full of water and pumped out over the rim. Most of the water is near the top, where it hardly has to rise: the center of mass sits three quarters of the way up, so W = ρgV·(H/4).' }
   };
-  const SCENE_PRESET = { press: 'depth', buoy: 'float', venturi: 'venturi', torr: 'torr' };
+  const SCENE_PRESET = { press: 'depth', buoy: 'float', venturi: 'venturi', torr: 'torr', plate: 'dam', pump: 'pumpCyl' };
+  const FLAT_ONLY = { plate: true, pump: true };       /* drawn flat: the strips and slices are a side or face view, with no 3D model */
   // the preset hints with the worked answers left out, for Blind
   const BLIND_HINT = {
     depth: 'Move the probe down in steps. At each depth capture the pressure gauge and the depth ruler, then plot P against depth and find the slope.',
@@ -594,7 +701,12 @@ table.rows button:hover { color: var(--pos); }
     mystery: 'Weigh each mystery block in air, then lower it all the way into the full overflow can and read the water in the beaker. Work out the density and name the metal.',
     weigh: 'Lower the aluminum block into the full overflow can in steps. At each step record the spring scale and the depth ruler, then plot the buoyant force (scale reading in air minus scale reading) against the submerged volume.',
     venturi: 'Change the inlet speed v₁ and capture the flow meter and both standpipes each time, keeping the pipe and the throat fixed. Plot the drop h₁ − h₂ against v₁².',
-    torr: 'Move the hole and watch where the jet lands. Which hole depth throws the water farthest?'
+    torr: 'Move the hole and watch where the jet lands. Which hole depth throws the water farthest?',
+    dam: 'The face of a dam 20 m wide with water 10 m deep, cut into horizontal strips. Add up ρgh times the area of each strip, then raise n and watch the sum.',
+    window: 'A round window 60 cm across, its top 1.5 m below the surface. Add up the strips, then raise n.',
+    troughEnd: 'The triangular end of a full trough, point down. Add up the strips, then raise n.',
+    pumpCyl: 'A full cylindrical tank pumped out through a spout 1 m above its top. Add up the work for each slice, then raise n.',
+    pumpCone: 'A full cone, point down, pumped out over its rim. Add up the work for each slice, then raise n.'
   };
 
   // ---------- state ----------
@@ -774,6 +886,8 @@ table.rows button:hover { color: var(--pos); }
     ctx.fillStyle = col === T.vcol ? T.vcolInk : col; ctx.textBaseline = 'alphabetic'; richText(ctx, txt, x0, y, size, weight, 'left', fam);
     return w;
   }
+  /* a label kept inside the width it has: the type shrinks to as little as 0.72 of its size (long labels in Spanish on a phone) */
+  function fitSize(ctx, txt, size, weight, maxW) { const w = richWidth(ctx, txt, size, weight); return w <= maxW ? size : Math.max(0.72 * size, size * maxW / w); }
   function roundRect(ctx, x, y, w, h, r) {
     r = Math.max(0, Math.min(r, w / 2, h / 2));
     ctx.beginPath(); ctx.moveTo(x + r, y); ctx.lineTo(x + w - r, y); ctx.quadraticCurveTo(x + w, y, x + w, y + r); ctx.lineTo(x + w, y + h - r);
@@ -879,6 +993,7 @@ table.rows button:hover { color: var(--pos); }
     if (S.scene === 'press' && key === 'pd') return S.P.press.D;
     if (S.scene === 'venturi' && key === 'D2') return S.P.venturi.D1;
     if (S.scene === 'torr' && key === 'hh') return S.P.torr.H;
+    if (S.scene === 'pump' && key === 'yw') return S.P.pump.H;
     return d[3];
   }
   function snap(key, v) {
@@ -893,6 +1008,8 @@ table.rows button:hover { color: var(--pos); }
     if (S.scene === 'press') p.pd = Math.min(p.pd, p.D);
     if (S.scene === 'venturi') p.D2 = Math.min(p.D2, p.D1);
     if (S.scene === 'torr') p.hh = Math.min(p.hh, p.H);
+    if (S.scene === 'pump') { p.yw = Math.min(p.yw, p.H); p.yo = Math.max(p.yo, p.H); p.sel = Math.min(p.sel, p.n - 1); pumpL = null; }
+    if (S.scene === 'plate') p.sel = Math.min(p.sel, p.n - 1);
     if (S.scene === 'buoy') {
       if (key === 'rho') { p.mat = Object.keys(MATS).find((k) => MATS[k][1] === p.rho) || null; syncMat(); }
       clampBlock(p);
@@ -1435,6 +1552,161 @@ table.rows button:hover { color: var(--pos); }
   }
 
   // ---------- graphs ----------
+  // ---------- scene: force on a dam or a window (strips) ----------
+  const fBig = (v, u) => { const a = Math.abs(v); return a >= 1e6 ? `${sig(v / 1e6, 4)} M${u}` : a >= 1e3 ? `${sig(v / 1e3, 4)} k${u}` : `${sig(v, 4)} ${u}`; };
+  const plateP = () => { const q = S.P.plate; return { shape: q.shape, a: q.a, b: q.shape === 'circ' ? q.a : q.b, d0: q.d0 }; };
+  const plateNow = () => { const pl = plateP(), rho = rhoF(), q = S.P.plate; return { pl, q, E: plateExact(pl, rho), S: plateStrips(pl, rho, q.n, q.s) }; };
+  function drawPlate(ctx, W, H) {
+    const ps = projScale(), ls = lsc(W, H), { pl, q, E, S: St } = plateNow();
+    const top = 40 * ls, bot = H - 22 * ls, rulerW = 50 * ls, x0 = 14 * ps + rulerW, x1 = W - 16 * ls;
+    /* to scale, with room under the plate for the sums */
+    const sc = Math.max(1e-3, Math.min((bot - top - 76 * ls) / (pl.d0 + pl.a), (x1 - x0) * 0.62 / Math.max(pl.b, 1e-3))), Dtot = (bot - top) / sc;
+    const ySurf = top, Y = (h) => ySurf + h * sc, cx = x0 + (x1 - x0) * 0.4, deep = Y(Dtot);
+    // the water and its surface; a darker shade with depth
+    fillLiquid(ctx, () => { ctx.beginPath(); ctx.rect(x0, ySurf, x1 - x0, Math.min(bot, deep) - ySurf); });
+    surfaceLine(ctx, x0, x1, ySurf, 2 * ps);
+    // depth ruler
+    ctx.font = `${10.5 * ls}px ${T.mono}`; ctx.fillStyle = T.muted; ctx.strokeStyle = T.muted; ctx.lineWidth = 1;
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    const st = nice(Dtot / Math.max(2, Math.floor((bot - top) / (36 * ls))));
+    ctx.beginPath(); ctx.moveTo(x0 - 8 * ls, ySurf); ctx.lineTo(x0 - 8 * ls, Math.min(bot, deep)); ctx.stroke();
+    for (let d = 0; d <= Dtot + 1e-9; d += st) { const y = Y(d); if (y > bot + 1) break; ctx.beginPath(); ctx.moveTo(x0 - 13 * ls, y); ctx.lineTo(x0 - 8 * ls, y); ctx.stroke(); ctx.fillText(fx(d, st < 1 ? 1 : 0), x0 - 16 * ls, y); }
+    ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillText('depth h (m)', Math.max(3 * ls, x0 - 36 * ls), ySurf - 8 * ls);
+    // the plate's true outline, face on
+    const outline = () => {
+      ctx.beginPath();
+      if (pl.shape === 'rect') ctx.rect(cx - pl.b * sc / 2, Y(pl.d0), pl.b * sc, pl.a * sc);
+      else if (pl.shape === 'tri') { ctx.moveTo(cx - pl.b * sc / 2, Y(pl.d0)); ctx.lineTo(cx + pl.b * sc / 2, Y(pl.d0)); ctx.lineTo(cx, Y(pl.d0 + pl.a)); ctx.closePath(); }
+      else ctx.arc(cx, Y(pl.d0 + pl.a / 2), pl.a / 2 * sc, 0, 2 * Math.PI);
+    };
+    ctx.fillStyle = T.block; ctx.globalAlpha = 0.55; outline(); ctx.fill(); ctx.globalAlpha = 1;
+    // the strips: each a rectangle as wide as the plate at the depth it is taken at, shaded by its pressure ρgh
+    const hmax = Math.max(pl.d0 + pl.a, 1e-9), sel = clamp(q.sel, 0, q.n - 1);
+    St.strips.forEach((sp, i) => {
+      const yA = Y(pl.d0 + sp.y0), yB = Y(pl.d0 + sp.y1), wpx = sp.w * sc;
+      ctx.fillStyle = T.neg; ctx.globalAlpha = 0.18 + 0.5 * sp.h / hmax; ctx.fillRect(cx - wpx / 2, yA, wpx, yB - yA); ctx.globalAlpha = 1;
+      ctx.strokeStyle = i === sel ? T.accent : T.ink; ctx.lineWidth = (i === sel ? 2.4 : 0.8) * ps;
+      if (wpx > 0.5) ctx.strokeRect(cx - wpx / 2, yA, wpx, yB - yA);
+      handles.push({ id: 'strip' + i, cursor: 'ns-resize', box: [cx - Math.max(wpx, 8 * ps) / 2, yA, Math.max(wpx, 8 * ps), Math.max(yB - yA, 1)], tap: () => { q.sel = i; },
+        set: (x, y) => setParam('d0', (y - ySurf) / sc - (sp.y0 + sp.y1) / 2) });   /* tap a strip to read it; drag it to move the plate */
+    });
+    ctx.strokeStyle = T.wire; ctx.lineWidth = 2 * ps; outline(); ctx.stroke();
+    // where the strip is taken: a tick on its sample depth; its outline again on top of its neighbors'
+    const sp = St.strips[sel];
+    if (sp && sp.w > 0) { ctx.strokeStyle = T.accent; ctx.lineWidth = 2.4 * ps; ctx.strokeRect(cx - sp.w * sc / 2, Y(pl.d0 + sp.y0), sp.w * sc, (sp.y1 - sp.y0) * sc); }
+    if (sp) { ctx.strokeStyle = T.accent; ctx.lineWidth = 1.4 * ps; ctx.setLineDash([3 * ps, 3 * ps]); ctx.beginPath(); ctx.moveTo(x0, Y(sp.h)); ctx.lineTo(cx - sp.w * sc / 2, Y(sp.h)); ctx.stroke(); ctx.setLineDash([]); }
+    // pressure grows with depth: arrows against the plate's right edge region, at five depths over it
+    const xr = cx + pl.b * sc / 2 + 18 * ls;
+    for (let k = 0; k <= 4; k++) {
+      const h = pl.d0 + pl.a * (0.1 + 0.2 * k), len = Math.min(70 * ls, Math.max(0, 70 * ls * h / hmax));
+      if (len > 4) arrow(ctx, xr + len, Y(h), xr, Y(h), T.neg, 1.6 * ps, 7);
+    }
+    // the centroid (cross) and the center of pressure (ring with a dot: the force points into the plate)
+    const yc = Y(E.hc), ycp = Y(S.blind ? NaN : E.hcp);
+    ctx.strokeStyle = T.ink; ctx.lineWidth = 1.6 * ps; const cr = 6 * ps;
+    ctx.beginPath(); ctx.moveTo(cx - cr, yc); ctx.lineTo(cx + cr, yc); ctx.moveTo(cx, yc - cr); ctx.lineTo(cx, yc + cr); ctx.stroke();
+    if (!S.blind) {
+      ctx.strokeStyle = T.pos; ctx.fillStyle = T.canvas; ctx.lineWidth = 2.4 * ps; ctx.beginPath(); ctx.arc(cx, ycp, 8 * ps, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = T.pos; ctx.beginPath(); ctx.arc(cx, ycp, 2.6 * ps, 0, 2 * Math.PI); ctx.fill();
+    }
+    // grips: drag the plate for its depth, its lower edge for its height, its side for its width
+    handles.push({ id: 'plate', cursor: 'ns-resize', box: [cx - pl.b * sc / 2, Y(pl.d0), pl.b * sc, pl.a * sc], set: (x, y) => setParam('d0', (y - ySurf) / sc - pl.a / 2) });
+    const ga = Y(pl.d0 + pl.a);
+    grip(ctx, cx + (pl.shape === 'rect' ? 0 : 0), ga, isHot('pa'), true);
+    handles.push({ id: 'pa', cursor: 'ns-resize', pt: [cx, ga], set: (x, y) => setParam('a', (y - Y(pl.d0)) / sc) });
+    if (pl.shape !== 'circ') {
+      const gx = cx + pl.b * sc / 2, gy = Y(pl.d0 + (pl.shape === 'tri' ? 0 : pl.a / 2));
+      grip(ctx, gx, gy, isHot('pb'), false);
+      handles.push({ id: 'pb', cursor: 'ew-resize', pt: [gx, gy], set: (x) => setParam('b', 2 * (x - cx) / sc) });
+    }
+    // labels last
+    labelBox(ctx, LIQ[S.liq].name.toLowerCase(), x1 - 6 * ls, ySurf + 16 * ls, 'right', T.muted, 11 * ls);
+    labelBox(ctx, `centroid, h_c = ${fx(E.hc, 2)} m`, cx - 12 * ls, yc + 4 * ls, 'right', T.ink, 11 * ls);
+    if (!S.blind) labelBox(ctx, `F acts here, h_{cp} = ${fx(E.hcp, 2)} m`, cx + 12 * ls, ycp + 4 * ls, 'left', T.pos, 11.5 * ls, 700);
+    if (sp) {   /* on one line, or on two where it does not fit (a phone) */
+      const t1 = `strip ${sel + 1}: h = ${fx(sp.h, 2)} m, w = ${fx(sp.w, 2)} m, ρgh·w·Δh = ${fBig(sp.dF, 'N')}`, room = x1 - x0 - 10 * ls;
+      if (richWidth(ctx, t1, 11 * ls, 700) <= room) labelBox(ctx, t1, x0 + 6 * ls, bot - 46 * ls, 'left', T.accent, 11 * ls, 700);
+      else {
+        const ta = `strip ${sel + 1}: h = ${fx(sp.h, 2)} m, w = ${fx(sp.w, 2)} m`, tb = `ρgh·w·Δh = ${fBig(sp.dF, 'N')}`;
+        labelBox(ctx, ta, x0 + 6 * ls, bot - 62 * ls, 'left', T.accent, fitSize(ctx, ta, 11 * ls, 700, room), 700);
+        labelBox(ctx, tb, x0 + 6 * ls, bot - 46 * ls, 'left', T.accent, 11 * ls, 700);
+      }
+    }
+    labelBox(ctx, `n = ${q.n} strips: F_n = ${fBig(St.F, 'N')}`, x0 + 6 * ls, bot - 26 * ls, 'left', T.ink, 12 * ls, 700);
+    if (!S.blind) labelBox(ctx, `∫ρgh·w dh = ${fBig(E.F, 'N')}`, x0 + 6 * ls, bot - 9 * ls, 'left', T.pos, 12 * ls, 700);
+  }
+
+  // ---------- scene: pumping a tank empty (slices) ----------
+  let pumpL = null;           /* the water level while Play pumps the tank (m above the bottom); null: full to y_w */
+  const tankP = () => { const q = S.P.pump; return { shape: q.shape, R: q.R, H: q.H, Lt: q.Lt, yw: Math.min(q.yw, q.H), yo: Math.max(q.yo, q.H) }; };
+  const pumpNow = () => { const tk = tankP(), rho = rhoF(), q = S.P.pump; return { tk, q, rho, W: pumpWorkTo(tk, rho, tk.yw), M: tankWater(tk, tk.yw), Sl: pumpSlices(tk, rho, q.n, q.s) }; };
+  /* half the tank's width at height y, for the drawing (a cone and a trough look alike from the side and from the end) */
+  const tankHalf = (tk, y) => (tk.shape === 'cyl' ? tk.R : tk.R * y / tk.H);
+  function drawPump(ctx, W, H) {
+    const ps = projScale(), ls = lsc(W, H), { tk, q, rho, W: Wex, Sl } = pumpNow();
+    const top = 66 * ls, bot = H - 30 * ls, rulerW = 46 * ls, x0 = 14 * ps + rulerW, x1 = W - 16 * ls;
+    const Ztot = tk.yo * 1.08 + 0.1, sc = Math.max(1e-3, Math.min((bot - top) / Ztot, (x1 - x0) * 0.5 / (2 * tk.R)));
+    const Y = (y) => bot - y * sc, cx = x0 + (x1 - x0) * 0.36, X = (u) => cx + u * sc;
+    const lvl = pumpL === null ? tk.yw : pumpL;
+    hatchFloor(ctx, x0 - 10 * ls, x1, bot);
+    // height ruler from the bottom of the tank
+    ctx.font = `${10.5 * ls}px ${T.mono}`; ctx.fillStyle = T.muted; ctx.strokeStyle = T.muted; ctx.lineWidth = 1; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    const st = nice(Ztot / Math.max(2, Math.floor((bot - top) / (36 * ls))));
+    ctx.beginPath(); ctx.moveTo(x0 - 8 * ls, bot); ctx.lineTo(x0 - 8 * ls, Y(Ztot)); ctx.stroke();
+    for (let y = 0; y <= Ztot + 1e-9; y += st) { ctx.beginPath(); ctx.moveTo(x0 - 13 * ls, Y(y)); ctx.lineTo(x0 - 8 * ls, Y(y)); ctx.stroke(); ctx.fillText(fx(y, st < 1 ? 1 : 0), x0 - 16 * ls, Y(y)); }
+    ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillText('height y (m)', x0 - 40 * ls, Y(Ztot) - 4 * ls);
+    // the water left in the tank
+    if (lvl > 0) fillLiquid(ctx, () => { ctx.beginPath(); ctx.moveTo(X(-tankHalf(tk, 0)), Y(0)); ctx.lineTo(X(tankHalf(tk, 0)), Y(0)); ctx.lineTo(X(tankHalf(tk, lvl)), Y(lvl)); ctx.lineTo(X(-tankHalf(tk, lvl)), Y(lvl)); ctx.closePath(); });
+    if (lvl > 0) surfaceLine(ctx, X(-tankHalf(tk, lvl)), X(tankHalf(tk, lvl)), Y(lvl), 2 * ps);
+    // the slices: each as wide as the tank at the height it is taken at; pumped ones dashed
+    const sel = clamp(q.sel, 0, q.n - 1); let selBox = null;
+    Sl.slices.forEach((s, i) => {
+      const yA = Y(s.y1), yB = Y(s.y0), hw = tankHalf(tk, s.y) * sc, gone = s.y0 >= lvl - 1e-9;
+      ctx.strokeStyle = i === sel ? T.accent : T.ink; ctx.lineWidth = (i === sel ? 2.4 : 0.8) * ps;
+      if (gone) ctx.setLineDash([3 * ps, 3 * ps]);
+      ctx.strokeRect(cx - hw, yA, 2 * hw, yB - yA); ctx.setLineDash([]);
+      if (i === sel) selBox = [cx - hw, yA, 2 * hw, yB - yA];
+      handles.push({ id: 'slice' + i, cursor: 'pointer', box: [cx - Math.max(hw, 6 * ps), yA, 2 * Math.max(hw, 6 * ps), Math.max(yB - yA, 1)], tap: () => { q.sel = i; } });
+    });
+    if (selBox) { ctx.strokeStyle = T.accent; ctx.lineWidth = 2.4 * ps; ctx.strokeRect(...selBox); }
+    // the tank walls
+    ctx.lineJoin = 'round'; ctx.strokeStyle = T.wire; ctx.lineWidth = 2.6 * ps; ctx.beginPath();
+    ctx.moveTo(X(-tankHalf(tk, tk.H)), Y(tk.H)); ctx.lineTo(X(-tankHalf(tk, 0)), Y(0)); ctx.lineTo(X(tankHalf(tk, 0)), Y(0)); ctx.lineTo(X(tankHalf(tk, tk.H)), Y(tk.H)); ctx.stroke();
+    // the pipe from the bottom up the middle and out at the spout
+    const pw = Math.max(3 * ps, Math.min(10 * ps, 0.06 * tk.R * sc)), xs = X(tankHalf(tk, tk.H)) + 30 * ls;
+    ctx.strokeStyle = T.muted; ctx.lineWidth = pw; ctx.globalAlpha = 0.6; ctx.lineCap = 'butt';
+    ctx.beginPath(); ctx.moveTo(cx, Y(0) - pw); ctx.lineTo(cx, Y(tk.yo)); ctx.lineTo(xs, Y(tk.yo)); ctx.stroke(); ctx.globalAlpha = 1; ctx.lineCap = 'round';
+    if (pumpL !== null && running && lvl > 0) { ctx.fillStyle = liqCol(); for (let k = 0; k < 6; k++) { const u = ((simClock * 1.3 + k / 6) % 1); ctx.beginPath(); ctx.arc(xs + 6 * ls + u * 26 * ls, Y(tk.yo) + u * u * 20 * ls, 2.4 * ps, 0, 2 * Math.PI); ctx.fill(); } }
+    // the chosen slice: its lift to the spout
+    const s = Sl.slices[sel];
+    if (s) {
+      const ax = cx + tankHalf(tk, s.y) * sc + 14 * ls;
+      ctx.setLineDash([3 * ps, 3 * ps]); ctx.strokeStyle = T.accent; ctx.lineWidth = 1 * ps; ctx.beginPath(); ctx.moveTo(cx, Y(s.y)); ctx.lineTo(ax, Y(s.y)); ctx.moveTo(cx, Y(tk.yo)); ctx.lineTo(ax, Y(tk.yo)); ctx.stroke(); ctx.setLineDash([]);
+      arrow(ctx, ax, Y(s.y), ax, Y(tk.yo), T.accent, 2 * ps, 8);
+      const ly = (Y(s.y) + Y(tk.yo)) / 2, lt = [`lift y_o − y = ${fx(s.lift, 2)} m`, `slice ${sel + 1}: A = ${fx(s.A, 2)} m²`, `ρgAΔy·(y_o − y) = ${fBig(s.dW, 'J')}`];
+      /* where the three do not fit beside the tank (a phone), only the lift: the slice's area and work are in the readouts */
+      const lx = ax + 8 * ls, room = x1 - lx - 4 * ls, all = lt.every((tx) => richWidth(ctx, tx, 11 * ls, 700) <= room);
+      if (all) lt.forEach((tx, k) => labelBox(ctx, tx, lx, ly + (k - 1) * 16 * ls - 2 * ls, 'left', T.accent, 11 * ls, 700));
+      else { const fs = fitSize(ctx, lt[0], 11 * ls, 700, room), w0 = richWidth(ctx, lt[0], fs, 700); labelBox(ctx, lt[0], Math.max(x0, Math.min(lx, x1 - 4 * ls - w0)), ly + 4 * ls, 'left', T.accent, fs, 700); }
+    }
+    // grips: the water surface, the spout, the rim
+    const gw = X(-tankHalf(tk, tk.yw)) + 14 * ls;
+    if (pumpL === null) { grip(ctx, gw, Y(tk.yw), isHot('yw'), true); handles.push({ id: 'yw', cursor: 'ns-resize', pt: [gw, Y(tk.yw)], set: (x, y) => setParam('yw', (bot - y) / sc) }); }
+    grip(ctx, xs, Y(tk.yo), isHot('yo'), true);
+    handles.push({ id: 'yo', cursor: 'ns-resize', pt: [xs, Y(tk.yo)], set: (x, y) => setParam('yo', (bot - y) / sc) });
+    const gr = X(-tankHalf(tk, tk.H)) - 4 * ls;
+    grip(ctx, gr, Y(tk.H), isHot('H'), true);
+    handles.push({ id: 'H', cursor: 'ns-resize', pt: [gr, Y(tk.H)], set: (x, y) => setParam('H', (bot - y) / sc) });
+    // labels last
+    labelBox(ctx, 'spout, y_o', xs + 4 * ls, Y(tk.yo) - 10 * ls, 'left', T.muted, 11 * ls);
+    if (tk.shape === 'trough') labelBox(ctx, `end view: ${fx(tk.Lt, 1)} m long into the page`, cx, Y(tk.H) - 10 * ls, 'center', T.muted, 11 * ls);
+    const done = pumpL === null ? 0 : pumpWorkTo(tk, rho, tk.yw) - pumpWorkTo(tk, rho, Math.max(0, pumpL));
+    const tx = x1 - 4 * ls, ty = bot - 44 * ls;
+    labelBox(ctx, `n = ${q.n} slices: W_n = ${fBig(Sl.W, 'J')}`, tx, ty, 'right', T.ink, 12 * ls, 700);
+    if (!S.blind) labelBox(ctx, `∫ρgA(y)(y_o − y) dy = ${fBig(Wex, 'J')}`, tx, ty + 16 * ls, 'right', T.pos, 12 * ls, 700);
+    if (pumpL !== null && !S.blind) { const t3 = `pumped so far: ${fBig(done, 'J')}, level ${fx(Math.max(0, pumpL), 2)} m`; labelBox(ctx, t3, tx, ty + 32 * ls, 'right', T.acol, fitSize(ctx, t3, 11.5 * ls, 700, tx - x0), 700); }
+  }
+
   function axes(ctx, L, R, top, bot, xr, yr, xlab, ylab, ls, opts) {
     opts = opts || {};
     const fs = 10 * ls;
@@ -1568,6 +1840,41 @@ table.rows button:hover { color: var(--pos); }
       labelBox(ctx, `P + ½ρv² = ${fx(tot / 1000, 2)} kPa`, X(PIPE.L) - 4 * ls, Y(tot / 1000) - 5 * ls, 'right', T.ink, 11 * ls, 700);
       if (!r.cav) labelBox(ctx, `P_2 = ${fx(r.P2 / 1000, 2)} kPa`, X(0.8), Y(r.P2 / 1000) + (r.P2 > tot * 0.3 ? 14 * ls : -6 * ls), 'center', T.neg, 11 * ls, 700);
       labelBox(ctx, `P_1 = ${fx(r.P1 / 1000, 2)} kPa`, X(0.22), Y(r.P1 / 1000 * 0.5) + 4 * ls, 'center', T.neg, 11 * ls, 700);
+    } else if (S.scene === 'plate') {
+      /* the force per meter of depth, ρgh·w(h): the curve, and the strips as bars, so the sum is the area of the bars */
+      const { pl, q, E, S: St } = plateNow(), h0 = pl.d0, h1 = pl.d0 + pl.a, f = (h) => rho * G * h * plateWidth(pl, h - pl.d0);
+      let fmax = 0; for (let i = 0; i <= 200; i++) fmax = Math.max(fmax, f(h0 + pl.a * i / 200)); for (const sp of St.strips) fmax = Math.max(fmax, rho * G * sp.h * sp.w);
+      const u = fmax >= 2e6 ? [1e6, 'MN/m'] : fmax >= 2e3 ? [1e3, 'kN/m'] : [1, 'N/m'];
+      const tb = gTitle(ctx, `Force per meter of depth, ρgh·w(h): the area under the curve is F. Bars: the ${q.n} strips, area ${fBig(St.F, 'N')}${S.blind ? '' : `; under the curve ${fBig(E.F, 'N')}`}`, 12 * ls, 10 * ls, ls);
+      const hL = h0 > pl.a ? h0 - 0.1 * pl.a : 0;
+      const { X, Y } = axes(ctx, L, R, Math.max(top + 6 * ls, tb + 26 * ls), bot, [hL, h1], [0, fmax / u[0] * 1.12], 'depth h (m)', `ρgh·w (${u[1]})`, ls);
+      for (const sp of St.strips) {
+        const xa = X(h0 + sp.y0), xb = X(h0 + sp.y1), y = Y(rho * G * sp.h * sp.w / u[0]), i = St.strips.indexOf(sp);
+        ctx.fillStyle = i === clamp(q.sel, 0, q.n - 1) ? T.accent : T.neg; ctx.globalAlpha = 0.45; ctx.fillRect(xa, y, xb - xa, Y(0) - y); ctx.globalAlpha = 1;
+        ctx.strokeStyle = T.neg; ctx.lineWidth = 1 * ps; ctx.strokeRect(xa, y, xb - xa, Y(0) - y);
+      }
+      ctx.strokeStyle = T.pos; ctx.lineWidth = 2.4 * ps; ctx.beginPath();
+      for (let i = 0; i <= 240; i++) { const h = h0 + pl.a * i / 240; i ? ctx.lineTo(X(h), Y(f(h) / u[0])) : ctx.moveTo(X(h), Y(f(h) / u[0])); }
+      ctx.stroke();
+      if (h0 > hL) { ctx.strokeStyle = T.muted; ctx.setLineDash([4 * ps, 4 * ps]); ctx.lineWidth = 1 * ps; ctx.beginPath(); ctx.moveTo(X(h0), Y(0)); ctx.lineTo(X(h0), Y(fmax / u[0])); ctx.stroke(); ctx.setLineDash([]); }
+    } else if (S.scene === 'pump') {
+      /* the work per meter of height, ρg A(y)(y_o − y): the curve, and the slices as bars */
+      const { tk, q, W: Wex, Sl } = pumpNow(), f = (y) => rho * G * tankArea(tk, y) * (tk.yo - y);
+      let fmax = 0; for (let i = 0; i <= 200; i++) fmax = Math.max(fmax, f(tk.yw * i / 200)); for (const s2 of Sl.slices) fmax = Math.max(fmax, rho * G * s2.A * s2.lift);
+      fmax = Math.max(fmax, 1e-9);
+      const u = fmax >= 2e6 ? [1e6, 'MJ/m'] : fmax >= 2e3 ? [1e3, 'kJ/m'] : [1, 'J/m'];
+      const tb = gTitle(ctx, `Work per meter of height, ρg·A(y)·(y_o − y): the area under the curve is W. Bars: the ${q.n} slices, area ${fBig(Sl.W, 'J')}${S.blind ? '' : `; under the curve ${fBig(Wex, 'J')}`}`, 12 * ls, 10 * ls, ls);
+      const { X, Y } = axes(ctx, L, R, Math.max(top + 6 * ls, tb + 26 * ls), bot, [0, tk.yw], [0, fmax / u[0] * 1.12], 'height y above the bottom (m)', `ρgA·lift (${u[1]})`, ls);
+      const lv = pumpL === null ? tk.yw : pumpL;
+      Sl.slices.forEach((s2, i) => {
+        const xa = X(s2.y0), xb = X(s2.y1), y = Y(rho * G * s2.A * s2.lift / u[0]);
+        ctx.fillStyle = i === clamp(q.sel, 0, q.n - 1) ? T.accent : T.neg; ctx.globalAlpha = s2.y0 >= lv - 1e-9 ? 0.15 : 0.45; ctx.fillRect(xa, y, xb - xa, Y(0) - y); ctx.globalAlpha = 1;
+        ctx.strokeStyle = T.neg; ctx.lineWidth = 1 * ps; ctx.strokeRect(xa, y, xb - xa, Y(0) - y);
+      });
+      ctx.strokeStyle = T.pos; ctx.lineWidth = 2.4 * ps; ctx.beginPath();
+      for (let i = 0; i <= 240; i++) { const y = tk.yw * i / 240; i ? ctx.lineTo(X(y), Y(f(y) / u[0])) : ctx.moveTo(X(y), Y(f(y) / u[0])); }
+      ctx.stroke();
+      if (pumpL !== null) { ctx.fillStyle = T.acol; ctx.globalAlpha = 0.25; ctx.beginPath(); ctx.moveTo(X(lv), Y(0)); for (let i = 0; i <= 120; i++) { const y = lv + (tk.yw - lv) * i / 120; ctx.lineTo(X(y), Y(f(y) / u[0])); } ctx.lineTo(X(tk.yw), Y(0)); ctx.closePath(); ctx.fill(); ctx.globalAlpha = 1; }
     } else if (S.scene === 'torr') {
       const q = S.P.torr, tr = torricelli(q.H, q.hh);
       const tb = gTitle(ctx, `Range against hole depth: R = 2√(h(H − h)), largest (R = H = ${fx(q.H, 2)} m) for a hole halfway down`, 12 * ls, 10 * ls, ls);
@@ -1643,15 +1950,17 @@ table.rows button:hover { color: var(--pos); }
     else if (S.scene === 'baro') drawBaro(ctx, W, H);
     else if (S.scene === 'buoy') drawBuoy(ctx, W, H);
     else if (S.scene === 'venturi') drawVenturi(ctx, W, H);
+    else if (S.scene === 'plate') drawPlate(ctx, W, H);
+    else if (S.scene === 'pump') drawPump(ctx, W, H);
     else drawTorr(ctx, W, H);
   }
   function drawAll() { if (!T || !bs) return; drawScene(); drawGraph(); clock(); }
   function clock() {
     const dyn = S.scene === 'buoy' && !S.P.buoy.scale;
-    $('tclock').firstChild.textContent = dyn ? `t = ${fx(t, 2)} s` : S.scene === 'venturi' ? 'steady flow' : S.scene === 'torr' ? 'steady jet' : '';
+    $('tclock').firstChild.textContent = dyn ? `t = ${fx(t, 2)} s` : S.scene === 'venturi' ? 'steady flow' : S.scene === 'torr' ? 'steady jet' : S.scene === 'pump' ? (pumpL === null ? 'full' : pumpL <= 0 ? 'empty' : 'pumping') : '';
     $('rateTag').textContent = fmtRate(S.rate);
     /* no playback rate where nothing moves (Depth, Pascal, barometer, a block on the spring scale; student view calls, 2026-11-15) */
-    const moves = dyn || S.scene === 'venturi' || S.scene === 'torr';
+    const moves = dyn || S.scene === 'venturi' || S.scene === 'torr' || S.scene === 'pump';
     if ($('rateTag').hidden === moves) $('rateTag').hidden = !moves;
     if ($('rateSeg').hidden === moves) $('rateSeg').hidden = !moves;
   }
@@ -1734,6 +2043,24 @@ table.rows button:hover { color: var(--pos); }
         [`P₂ (${abs ? 'abs' : 'gauge'})`, r.cav ? 'below vapor pressure' : kPa(r.P2 + off), r.cav ? 'c-w' : 'c-p', false, true],
         ['P₁ − P₂', r.cav ? '—' : kPa(r.P1 - r.P2), '', false, true], ['Δh', r.cav ? '—' : r.dh < 2 ? `${fx(r.dh * 100, 1)} cm` : `${fx(r.dh, 2)} m`, '', false, true]];
       f = `A₁v₁ = A₂v₂; P₁ − P₂ = ½ρ(v₂² − v₁²) = ${kPa(r.P1 - r.P2)}`;
+    } else if (S.scene === 'plate') {
+      const { pl, q, E, S: St } = plateNow(), sp = St.strips[clamp(q.sel, 0, q.n - 1)];
+      const at = q.s === 0 ? 'top' : q.s === 1 ? 'bottom' : 'middle';
+      rows = [['Plate area A', `${sig(E.A, 4)} m²`], ['Strips n, each Δh', `${q.n}, ${sig(St.dy, 3)} m, taken at its ${at}`, '', true],
+        ['Sum of the strips F_n', fBig(St.F, 'N'), 'c-w'], ['Integral F = ∫ρgh·w dh', fBig(E.F, 'N'), 'c-p', false, true], ['F_n − F', `${fBig(St.F - E.F, 'N')} (${fx((St.F - E.F) / E.F * 100, 2)}%)`, '', false, true],
+        ['Centroid depth h_c', `${fx(E.hc, 3)} m`], ['Pressure there ρgh_c', kPa(rho * G * E.hc), '', false, true],
+        ['Center of pressure h_cp', `${fx(E.hcp, 3)} m`, 'c-p', false, true], ['h_cp from the strips', `${fx(St.hcp, 3)} m`],
+        [`Strip ${clamp(q.sel, 0, q.n - 1) + 1}: depth, width`, `${fx(sp.h, 3)} m, ${fx(sp.w, 3)} m`, '', true], ['Its force ρgh·w·Δh', fBig(sp.dF, 'N')]];
+      f = `F = ∫ρgh·w(h) dh = ρg·A·h_c = ${fx(rho, 0)}·${fx(G, 2)}·${sig(E.A, 4)}·${fx(E.hc, 3)} N; h_cp = h_c + I_c/(A·h_c)`;
+    } else if (S.scene === 'pump') {
+      const { tk, q, rho: r2, W: Wex, M, Sl } = pumpNow(), s2 = Sl.slices[clamp(q.sel, 0, q.n - 1)];
+      const at = q.s === 0 ? 'top' : q.s === 1 ? 'bottom' : 'middle', done = pumpL === null ? 0 : Wex - pumpWorkTo(tk, r2, Math.max(0, pumpL));
+      rows = [['Water volume V', `${sig(M.V, 4)} m³`], ['Its weight ρgV', fBig(r2 * G * M.V, 'N')], ['Slices n, each Δy', `${q.n}, ${sig(Sl.dy, 3)} m, taken at its ${at}`, '', true],
+        ['Sum of the slices W_n', fBig(Sl.W, 'J'), 'c-w'], ['Integral W = ∫ρgA(y)(y_o − y) dy', fBig(Wex, 'J'), 'c-p', false, true], ['W_n − W', `${fBig(Sl.W - Wex, 'J')} (${fx((Sl.W - Wex) / Wex * 100, 2)}%)`, '', false, true],
+        ['Center of mass of the water', `${fx(M.ycm, 3)} m up`, '', false, true], ['ρgV × (y_o − y_cm)', fBig(r2 * G * M.V * (tk.yo - M.ycm), 'J'), '', false, true],
+        [`Slice ${clamp(q.sel, 0, q.n - 1) + 1}: height, area, lift`, `${fx(s2.y, 3)} m, ${sig(s2.A, 4)} m², ${fx(s2.lift, 3)} m`, '', true], ['Its work ρgAΔy·(y_o − y)', fBig(s2.dW, 'J')],
+        ['Pumped so far', pumpL === null ? 'not started: press Play' : `${fBig(done, 'J')}, level ${fx(Math.max(0, pumpL), 2)} m`, 'c-d', true, true]];
+      f = `W = ∫₀^y_w ρg·A(y)·(y_o − y) dy = ρgV·(y_o − y_cm), with y_w = ${fx(tk.yw, 2)} m and y_o = ${fx(tk.yo, 2)} m`;
     } else {
       const q = S.P.torr, tr = torricelli(q.H, q.hh);
       rows = [['Hole depth h', `${fx(q.hh, 2)} m`], ['Hole height H − h', `${fx(q.H - q.hh, 2)} m`], ['Exit speed v', `${fx(tr.v, 2)} m/s`, 'c-d', false, true], ['Fall time', `${fx(tr.t, 3)} s`, '', false, true],
@@ -1777,6 +2104,12 @@ table.rows button:hover { color: var(--pos); }
       el.out.textContent = `${fx(v, d[6])}${d[5] ? ' ' + d[5] : ''}`;
     }
     if (S.scene === 'baro') { slEls['baro.Pa'].w.hidden = S.baro !== 'baro'; slEls['baro.Pg'].w.hidden = S.baro !== 'mano'; slEls['baro.Ho'].w.hidden = S.baro !== 'two'; }
+    if (S.scene === 'plate') slEls['plate.b'].w.hidden = S.P.plate.shape === 'circ';
+    if (S.scene === 'plate') slEls['plate.a'].w.querySelector('label').textContent = S.P.plate.shape === 'circ' ? 'Diameter a' : 'Plate height a';
+    if (S.scene === 'pump') { slEls['pump.Lt'].w.hidden = S.P.pump.shape !== 'trough'; slEls['pump.R'].w.querySelector('label').textContent = S.P.pump.shape === 'trough' ? 'Half the width at the top R' : S.P.pump.shape === 'cone' ? 'Radius at the top R' : 'Radius R'; }
+    for (const b of document.querySelectorAll('#plateSeg button')) b.setAttribute('aria-pressed', String(b.dataset.sh === S.P.plate.shape));
+    for (const b of document.querySelectorAll('#tankSeg button')) b.setAttribute('aria-pressed', String(b.dataset.sh === S.P.pump.shape));
+    if (FLAT_ONLY[S.scene]) for (const b of document.querySelectorAll('#sampleSeg button')) b.setAttribute('aria-pressed', String(+b.dataset.k === P().s));
     if (S.scene === 'buoy') { slEls['buoy.h0'].w.hidden = S.P.buoy.over; slEls['buoy.zeta'].w.hidden = S.P.buoy.scale; slEls['buoy.rho'].w.hidden = slEls['buoy.L'].w.hidden = isMyst(); }
   }
   function syncMat() {
@@ -1805,7 +2138,9 @@ table.rows button:hover { color: var(--pos); }
     baro: [['--neg', 'Air pressure'], ['--muted', 'Rest level']],
     buoy: [['--pos', 'Weight W = mg'], ['--vcol', 'Buoyant force F_B = ρ_f V_sub g'], ['--xcol', 'Scale tension T or floor force N'], ['--acol', 'Drag in the liquid']],
     venturi: [['--acol', 'Speed'], ['--neg', 'Gauge pressure P'], ['--acol', '½ρv², the kinetic energy per volume']],
-    torr: [['--acol', 'Exit velocity'], ['--pos', 'Range on the floor'], ['--muted', 'Jets from other holes']]
+    torr: [['--acol', 'Exit velocity'], ['--pos', 'Range on the floor'], ['--muted', 'Jets from other holes']],
+    plate: [['--neg', 'Strips, darker where the pressure ρgh is greater'], ['--accent', 'The strip you picked'], ['--pos', 'Center of pressure: where F acts'], ['--ink', 'Centroid of the plate']],
+    pump: [['--accent', 'The slice you picked and its lift to the spout'], ['--ink', 'Slices still to pump'], ['--pos', 'The integral'], ['--acol', 'Work done so far']]
   };
   function setScene(sc) {
     S.scene = sc;
@@ -1816,13 +2151,16 @@ table.rows button:hover { color: var(--pos); }
     $('liqSec').hidden = sc === 'torr';
     $('baroSeg').hidden = sc !== 'baro';
     $('matSeg').hidden = sc !== 'buoy';
+    $('plateSeg').hidden = sc !== 'plate'; $('tankSeg').hidden = sc !== 'pump'; $('sampleWrap').hidden = !FLAT_ONLY[sc];
+    $('sampleLab').textContent = sc === 'pump' ? 'Take each slice at its' : 'Take each strip at its';
+    sync3();
     $('buoyToggles').hidden = sc !== 'buoy';
     $('pModeWrap').hidden = !(sc === 'press' || sc === 'venturi');
-    const dyn = sc === 'buoy' || sc === 'venturi' || sc === 'torr';
+    const dyn = sc === 'buoy' || sc === 'venturi' || sc === 'torr' || sc === 'pump';
     for (const id of ['play', 'reset', 'tclock']) $(id).hidden = !dyn;
     $('stage').classList.toggle('cols', sc === 'buoy');
     $('timeSec').hidden = !dyn;
-    $('reset').textContent = sc === 'buoy' ? 'Drop again' : 'Reset';
+    $('reset').textContent = sc === 'buoy' ? 'Drop again' : sc === 'pump' ? 'Fill again' : 'Reset';
     $('lForces').hidden = sc !== 'buoy'; $('lGhost').hidden = sc !== 'buoy'; $('lCmp').hidden = sc !== 'torr';
     $('keyBox').innerHTML = KEYS[sc].map(([c, txt]) => `<span><i class="swatch" style="border-color: var(${c})${c === '--muted' ? '; border-top-style: dashed' : ''}"></i>${txt.replace(/_(\w+)/g, '<sub>$1</sub>')}</span>`).join('');
     S.sel = 0;
@@ -1868,6 +2206,7 @@ table.rows button:hover { color: var(--pos); }
     }
     if (c.scene === 'venturi') { seedParts(); setRate(0.25); }
     if (c.scene === 'torr') { drops = []; setRate(1); }
+    if (c.scene === 'pump') { pumpL = null; setRate(1); }
     setScene(c.scene);
     S.hintFrom = name; $('presetHint').textContent = S.blind ? BLIND_HINT[name] : c.hint;
     if (!reduce) setRunning(true);
@@ -1910,6 +2249,9 @@ table.rows button:hover { color: var(--pos); }
     q.rho = MATS[q.mat][1]; syncMat();
     buoyAfterChange(); syncSliders(); updateReadouts(); drawAll();
   });
+  $('plateSeg').addEventListener('click', (e) => { const b = e.target.closest('button'); if (!b) return; S.P.plate.shape = b.dataset.sh; S.P.plate.__touched = true; clearPreset(); syncSliders(); updateReadouts(); drawAll(); });
+  $('tankSeg').addEventListener('click', (e) => { const b = e.target.closest('button'); if (!b) return; S.P.pump.shape = b.dataset.sh; S.P.pump.__touched = true; pumpL = null; clearPreset(); syncSliders(); updateReadouts(); drawAll(); });
+  $('sampleSeg').addEventListener('click', (e) => { const b = e.target.closest('button'); if (!b || !FLAT_ONLY[S.scene]) return; P().s = +b.dataset.k; P().__touched = true; clearPreset(); syncSliders(); updateReadouts(); drawAll(); });
   $('mystSeg').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) { clearPreset(); mystPick(b.dataset.k); } });
   $('mystNew').addEventListener('click', () => {
     mset = mysterySet(Math.random); clearPreset(); mystPick('A');
@@ -1938,13 +2280,14 @@ table.rows button:hover { color: var(--pos); }
   const playBtn = $('play');
   let last = performance.now();
   function setRunning(r) { running = r; playBtn.textContent = r ? 'Pause' : 'Play'; playBtn.classList.toggle('primary', !r); last = performance.now(); }
-  playBtn.addEventListener('click', () => setRunning(!running));
+  playBtn.addEventListener('click', () => { if (!running && S.scene === 'pump' && pumpL !== null && pumpL <= 0) pumpL = null; setRunning(!running); });
   /* the shared control panel (demos/lib/vdpanel.js): the time controls in one group at the left of the strip */
   if (window.VD && VD.panel) VD.panel({ clock: '#tclock', speed: '#rateSeg', step: true });
   function restart() {
     if (S.scene === 'buoy') { const q = S.P.buoy; if (!q.scale) { bs = null; buoyReset(false); } }
     if (S.scene === 'venturi') seedParts();
     if (S.scene === 'torr') { drops = []; dropAcc = 0; }
+    if (S.scene === 'pump') pumpL = null;
     setRunning(true); drawAll();
   }
   $('reset').addEventListener('click', restart);
@@ -1999,6 +2342,7 @@ table.rows button:hover { color: var(--pos); }
       ev.preventDefault(); drawAll(); return;
     }
     const h = handleAt(ev); if (!h) return;
+    if (h.tap) { h.tap(); updateReadouts(); }      /* a strip or a slice: tapping picks it to read */
     const r = cans.s.getBoundingClientRect(), x = ev.clientX - r.left, y = ev.clientY - r.top, c = centerOf(h);
     drag = { id: h.id, off: [x - c[0], y - c[1]] };
     if (h.param) { drag.param = h.param; drag.x0 = x; drag.v0 = P()[h.param]; }
@@ -2035,6 +2379,8 @@ table.rows button:hover { color: var(--pos); }
         if (p.scale) { p.zh = clamp(+(p.zh + dir * 0.005 * sh).toFixed(4), zhMin(p), zhMax()); const h = hangState(bp(), zTautOf(p), bs.Vw); bs.zb = h.zb; spill(bp()); clearPreset(); }
         else step('L', dir);
       } else if (sc === 'venturi') step('v1', dir);
+      else if (sc === 'plate') step('d0', -dir);
+      else if (sc === 'pump') step('yw', dir);
       else step('hh', -dir);
     } else if (k === 'ArrowLeft' || k === 'ArrowRight') {
       dir = k === 'ArrowRight' ? 1 : -1;
@@ -2042,6 +2388,7 @@ table.rows button:hover { color: var(--pos); }
       else if (sc === 'buoy') step('rho', dir, 5);
       else if (sc === 'venturi') step('D2', dir);
       else if (sc === 'torr') step('H', dir);
+      else if (FLAT_ONLY[sc]) step('n', dir);
       else if (sc === 'baro') step(S.baro === 'baro' ? 'Pa' : S.baro === 'two' ? 'Ho' : 'Pg', dir);
       else step('hp', dir);
     } else if (k === ' ') { setRunning(!running); }
@@ -2320,6 +2667,16 @@ table.rows button:hover { color: var(--pos); }
       return { cap: `Gauge pressure and ½ρv² along the pipe (kPa)${r.cav ? '; the throat values are not physical: cavitation' : ''}`, head: ['x (m)', 'D (cm)', 'v (m/s)', 'P (kPa)', '½ρv² (kPa)'],
         rows: [0, 0.3, 0.55, 0.8, 1.15, 1.45].map((x) => { const D = pipeD(x, q), vv = q.v1 * (v.D1 / D) ** 2, P = tot - 0.5 * v.rho * vv * vv; return [fx(x, 2), fx(D * 100, 2), fx(vv, 2), r.cav && P + PATM < v.pv ? 'invalid' : fx(P / 1000, 2), fx(0.5 * v.rho * vv * vv / 1000, 2)]; }) };
     }
+    if (S.scene === 'plate') {
+      const { E, S: St } = plateNow();
+      return { cap: `Strips on the plate: depth, width and force; sum ${fBig(St.F, 'N')}, integral ${fBig(E.F, 'N')}`, head: ['strip', 'depth h (m)', 'width w (m)', 'ρgh·w·Δh (N)'],
+        rows: St.strips.map((sp, i) => [String(i + 1), fx(sp.h, 3), fx(sp.w, 3), sig(sp.dF, 4)]) };
+    }
+    if (S.scene === 'pump') {
+      const { W: Wex, Sl } = pumpNow();
+      return { cap: `Slices of water: height, area, lift and work; sum ${fBig(Sl.W, 'J')}, integral ${fBig(Wex, 'J')}`, head: ['slice', 'height y (m)', 'area A (m²)', 'lift (m)', 'ρgAΔy·lift (J)'],
+        rows: Sl.slices.map((s2, i) => [String(i + 1), fx(s2.y, 3), sig(s2.A, 4), fx(s2.lift, 3), sig(s2.dW, 4)]) };
+    }
     const q = S.P.torr;
     return { cap: `Range against hole depth, H = ${fx(q.H, 2)} m, R = 2√(h(H − h))`, head: ['h (m)', 'R (m)'], rows: [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9].map((k) => [fx(k * q.H, 3), fx(torricelli(q.H, k * q.H).R, 3)]) };
   }
@@ -2343,7 +2700,7 @@ table.rows button:hover { color: var(--pos); }
   function graphLabel() {
     const fit = fitOnly() || S.gview === 'fit';
     $('gCan').setAttribute('aria-label', (fit ? 'Plot of your captured readings for this scene with a least squares line and a residual strip below it.'
-      : 'Graph for the current scene: pressure against depth, forces on the vessels, column heights, forces on the block, pressure along the pipe, or jet range against hole depth.') + ' Show data table in the Lab section lists the plotted values.');
+      : 'Graph for the current scene: pressure against depth, forces on the vessels, column heights, forces on the block, pressure along the pipe, jet range against hole depth, force per meter of depth on a plate, or work per meter of height to pump a tank.') + ' Show data table in the Lab section lists the plotted values.');
   }
   function syncLab() {
     $('blindTag').hidden = !S.blind; $('blindHint').hidden = !S.blind;
@@ -2398,6 +2755,11 @@ table.rows button:hover { color: var(--pos); }
       if (t - lastT > 0.01) { trace.push([t, submerged(bp(), bs.zb, bs.Vw).s]); if (trace.length > 2000) trace.splice(0, trace.length - 2000); }
     } else if (S.scene === 'venturi') advanceParts(dts);
     else if (S.scene === 'torr') advanceDrops(dts);
+    else if (S.scene === 'pump') {
+      /* the pump lowers the level at a steady rate, emptying the tank in 8 s of the clock; how fast it works does not change the work */
+      const tk = tankP(); if (pumpL === null) pumpL = tk.yw;
+      if (pumpL > 0) { pumpL = Math.max(0, pumpL - tk.yw / 8 * dts); if (pumpL === 0) { setRunning(false); $('live').textContent = 'The tank is empty.'; } }
+    }
   }
   /* the measuring tools: a stopwatch on the simulated clock of the moving scenes (block, pipe, tank) */
   VD.tools({ el: $('sCan'), time: () => (S.scene === 'buoy' || S.scene === 'venturi' || S.scene === 'torr' ? simClock : null) });
@@ -2407,7 +2769,7 @@ table.rows button:hover { color: var(--pos); }
   function loop(now) {
     const dtr = Math.min(0.05, Math.max(0, (now - last) / 1000)); last = now;
     const t0 = performance.now();
-    const dyn = S.scene === 'buoy' || S.scene === 'venturi' || S.scene === 'torr';
+    const dyn = S.scene === 'buoy' || S.scene === 'venturi' || S.scene === 'torr' || S.scene === 'pump';
     if (running && dtr > 0 && dyn) { advance(dtr * S.rate); drawAll(); }
     else if (held) drawAll();
     frameMs = 0.9 * frameMs + 0.1 * (performance.now() - t0);
@@ -2461,18 +2823,29 @@ table.rows button:hover { color: var(--pos); }
       out.push(`A horizontal pipe narrows from ${I.D1} cm to ${I.D2} cm across, with a standpipe at each part.`, `Inlet speed v₁ = ${I.v1} m/s, flow Q = ${I.Q} L/s.`, `The first standpipe stands ${I.h1} cm.`);
       out.push(r.cav ? 'The liquid would boil at the throat, so the model is not valid.' : I.empty ? 'The second standpipe is empty, below air pressure.' : `The second standpipe stands ${I.h2} cm.`);
       if (!blind) { out.push(`Throat speed v₂ = ${fx(r.v2, 2)} m/s.`); if (!r.cav) out.push(`The standpipe difference Δh is ${r.dh < 2 ? fx(r.dh * 100, 1) + ' cm' : fx(r.dh, 2) + ' m'}.`); }
+    } else if (S.scene === 'plate') {
+      const { pl, q, E, S: St } = plateNow(), nm = { rect: 'rectangle', tri: 'triangle, point down', circ: 'circle' }[pl.shape];
+      out.push(pl.shape === 'circ' ? `A flat round plate ${fx(pl.a, 2)} m across, standing upright in the liquid, its top ${fx(pl.d0, 2)} m below the surface.` : `A flat upright plate, a ${nm}, ${fx(pl.a, 2)} m tall and ${fx(pl.b, 2)} m wide, its top ${fx(pl.d0, 2)} m below the surface.`);
+      out.push(`It is cut into ${q.n} horizontal strips; their forces add to ${fBig(St.F, 'N')}.`);
+      if (!blind) out.push(`The integral gives ${fBig(E.F, 'N')}, acting ${fx(E.hcp, 3)} m below the surface.`);
+    } else if (S.scene === 'pump') {
+      const { tk, q, W: Wex, Sl } = pumpNow(), nm = { cyl: 'A cylindrical tank', cone: 'A cone shaped tank, point down,', trough: 'A trough with triangular ends, seen from one end,' }[tk.shape];
+      out.push(`${nm} ${fx(tk.H, 2)} m tall holds water ${fx(tk.yw, 2)} m deep; it is pumped out through a spout ${fx(tk.yo, 2)} m above the bottom.`);
+      out.push(`The water is cut into ${q.n} slices; the work to lift them adds to ${fBig(Sl.W, 'J')}.`);
+      if (!blind) out.push(`The integral gives ${fBig(Wex, 'J')}.`);
+      if (pumpL !== null) out.push(run(`The water level is now ${fx(Math.max(0, pumpL), 2)} m.`));
     } else {
       const q = S.P.torr, tr = torricelli(q.H, q.hh);
       out.push(`A tank of liquid ${fx(q.H, 2)} m deep with a hole in its side.`, `The hole is ${fx(q.hh, 2)} m below the surface.`, `The jet lands ${fx(tr.R, 3)} m from the tank.`);
       if (!blind) out.push(`Exit speed ${fx(tr.v, 2)} m/s.`, `The range is largest, ${fx(q.H, 2)} m, for a hole ${fx(q.H / 2, 2)} m deep.`);
     }
-    if (S.scene !== 'pascal' && S.scene !== 'baro' && S.scene !== 'press') out.push(running ? 'Running.' : 'Paused.');
+    if (S.scene !== 'pascal' && S.scene !== 'baro' && S.scene !== 'press' && S.scene !== 'plate') out.push(running ? 'Running.' : 'Paused.');
     out.push('Below, a graph for this scene.');
     return out;
   });
   window.__fl = {
     get frameMs() { return frameMs; }, get t() { return t; }, get S() { return S; }, get bs() { return bs; }, get handles() { return handles; },
-    get running() { return running; }, get trace() { return trace; },
+    get running() { return running; }, get trace() { return trace; }, plateNow, pumpNow, get pumpL() { return pumpL; },
     applyPreset, setScene, setParam, setRunning, buoyNow, bp, mystPick, get mset() { return mset; }, capture, csvText, fitSpec, setBlind, setReduce, inst, graphData, get rows() { return rows; }, get g3() { return G3; }, h3pt(id) { const h = handles3.find((k) => k.id === id), r = cans.s.getBoundingClientRect(); if (!h) return null; const p = G3.S.project(h.at(h.v)); return [r.left + p[0], r.top + p[1]]; },
     go(dts, step) { step = step || 0.01; for (let x = 0; x < dts - 1e-12; x += step) advance(Math.min(step, dts - x)); updateReadouts(); drawAll(); }
   };
@@ -2484,7 +2857,14 @@ table.rows button:hover { color: var(--pos); }
   // manometer widths, and the Venturi pipe and standpipe widths (2 times). The labels are drawn over the picture on #sCan.
   const G3 = { S: null, on: false, o: { th: -Math.PI / 2 + 0.34, ph: 1.27, zoom: 1 }, sc: {}, env: null, lastSc: '' };
   let handles3 = [];
-  const on3 = () => G3.on && !!G3.S;
+  const on3 = () => G3.on && !!G3.S && !FLAT_ONLY[S.scene];
+  /* the Dam and Pumping scenes are drawn flat: hide the 3D layer and the 3D switch there, and bring them back elsewhere */
+  function sync3() {
+    $('viewSeg').hidden = !!FLAT_ONLY[S.scene];
+    if (G3.S) G3.S.el.hidden = !on3();
+    cans.s.style.touchAction = on3() ? 'pan-y' : 'none';
+    $('stage').classList.toggle('three', on3());
+  }
   function init3() {
     const V = VD3K.stage(panes.s, { before: cans.s, fov: 30, near: 0.02, far: 40, shadow: 1.6 }); if (!V) return false;
     G3.S = V; V.el.style.pointerEvents = 'none';
@@ -3220,11 +3600,9 @@ table.rows button:hover { color: var(--pos); }
   }
   function view3(on) {
     G3.on = on && !!G3.S;
-    if (G3.S) G3.S.el.hidden = !G3.on;
-    cans.s.style.touchAction = G3.on ? 'pan-y' : 'none';
-    cans.s.style.cursor = G3.on ? 'grab' : 'default';
+    sync3();
+    cans.s.style.cursor = on3() ? 'grab' : 'default';
     hoverId = null; drag = null; handles = []; handles3 = [];
-    $('stage').classList.toggle('three', G3.on);
     drawAll();
   }
   const VIEW = VD3K.view({ seg: '#viewSeg', init: init3, change: view3, status: (m) => { $('live').textContent = m; capStat(m); } });

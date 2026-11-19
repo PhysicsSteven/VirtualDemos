@@ -37,6 +37,17 @@ module.exports = {
       if (Math.abs(got - want) > 5.1e-4) return 'predicted shift ' + rd('Predicted boat shift \\u2212mL/(m + M)') + ', physics ' + want;
       if (S.t >= 4.0 && Math.abs(nums(rd('Boat has moved'))[0] - want) > 5.1e-4) return 'boat moved ' + rd('Boat has moved') + ', want ' + want;
       return true; })()` },
+    { name: "plate bounded by curves: the shown balance point is M_y/M, M_x/M of the plate; known semicircle, triangle and parabola values; the tilt stays within 30 degrees", fn: `(() => { ${pre}
+      if (S.mode !== 'lamina') return true; const L = C.L, n = C.lamNow();
+      if (!(L.th >= 0 && L.th <= Math.PI / 6 + 1e-9)) return 'tilt ' + L.th;
+      if (!(n.E.A > 0)) return 'plate area ' + n.E.A;
+      if (S.blind) return rd('Balance point from the strips') === null ? true : 'Blind shows the balance point';
+      const t = rd('x̄ = My/M, ȳ = Mx/M'); if (!t) return 'no balance point readout'; const got = nums(t);
+      if ( Math.abs(got[0] - n.E.xbar) > 6e-5 || Math.abs(got[1] - n.E.ybar) > 6e-5) return 'shows ' + JSON.stringify(got) + ', integrals give ' + n.E.xbar + ', ' + n.E.ybar;
+      const known = { 'sqrt(0.09 - x^2)|0|-0.3|0.3': [0, 0.4 / Math.PI], '0.4(1 - x/0.6)|0|0|0.6': [0.2, 0.4 / 3], 'x|x^2|0|1': [0.5, 0.4] }[[L.fT, L.gT, L.aT, L.bT].join('|')];
+      if (known && (Math.abs(n.E.xbar - known[0]) > 1e-9 || Math.abs(n.E.ybar - known[1]) > 1e-9)) return 'known balance point ' + known + ', got ' + n.E.xbar + ', ' + n.E.ybar;
+      if (L.verdict === 'balances' && C.pinTip(L.px, L.py).d > 0.001 + 1e-12) return 'says it balances with the pin ' + C.pinTip(L.px, L.py).d + ' m away';
+      return true; })()` },
   ],
   steps: [
     { name: 'firework: run to the end at extreme kick, then boat with extreme masses, then back to the plate with all four masses on one point', fn: `(async () => {
@@ -48,6 +59,16 @@ module.exports = {
       for (const a of C.S.ms) { a.x = 0.5; a.y = 0.3; } C.upd(); await pause(200);
       for (let i = 0; i < 6; i++) document.getElementById('delM').click(); await pause(200);
       mode('fire');
+    })()` },
+    { name: 'plate bounded by curves: every shape, 1 and 60 strips, Pappus about both axes, nonsense typed, a far pin, release, balance', fn: `(async () => {
+      const C = window.__cm, pause = (ms) => new Promise((r) => setTimeout(r, ms)), set = (id, v) => { const e = document.getElementById(id); e.value = v; e.dispatchEvent(new Event('input', { bubbles: true })); };
+      document.querySelector('#modeSeg [data-m=lamina]').click(); await pause(150);
+      for (const k of ['semi', 'tri', 'between']) { C.lamPreset(k); set('sStrips', 1); await pause(120); set('sStrips', 60); await pause(120); document.getElementById('lamPappus').click(); await pause(120);
+        document.querySelector('#axisSeg [data-a=y]').click(); await pause(120); document.querySelector('#axisSeg [data-a=x]').click(); document.getElementById('lamPappus').click(); }
+      set('lamF', 'sin(x'); set('lamF', ')x('); set('lamF', '1/x'); set('lamA', '-1'); set('lamB', '1'); set('lamF', '1e300 x'); set('lamB', 'abc'); set('lamF', 'exp(x)'); set('lamG', '-exp(x)'); set('lamA', '-2'); set('lamB', '2'); await pause(200);
+      C.lamPinTo(1e9, -1e9); document.getElementById('go').click(); await pause(1500);
+      C.lamPreset('between'); C.lamPinTo(0.5, 0.4); document.getElementById('go').click(); await pause(300);
+      C.lamPreset('semi'); set('sStrips', 8);
     })()` },
   ],
 };
