@@ -1,0 +1,1011 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="lib/theme.js"></script>
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
+<script src="lib/constants.js"></script>
+<script src="lib/vdstats.js"></script>
+<title>Linear Regression and Correlation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css: a lab notebook page of graph paper, the least squares line in amber ink,
+   your own line in violet pencil, the residual squares, and the two lower graphs (residuals, shuffled r) */
+:root { --rg-best: #b45309; --rg-best-fill: rgba(217, 119, 6, 0.22); --rg-yours: #6d28d9; --rg-yours-fill: rgba(124, 58, 237, 0.07); --rg-out: #c0262d;
+  --rg-paper: #fdfaf2; --rg-grid-minor: rgba(60, 110, 140, 0.10); --rg-grid-major: rgba(60, 110, 140, 0.24); --rg-band: rgba(21, 128, 61, 0.07); --rg-dot: #1f2937; --rg-ghost: #8a8f99; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --rg-best: #fbbf24; --rg-best-fill: rgba(251, 191, 36, 0.22); --rg-yours: #c4b5fd; --rg-yours-fill: rgba(196, 181, 253, 0.08); --rg-out: #fb7185;
+  --rg-paper: #14171c; --rg-grid-minor: rgba(140, 180, 210, 0.08); --rg-grid-major: rgba(140, 180, 210, 0.18); --rg-band: rgba(74, 222, 128, 0.07); --rg-dot: #f3f4f6; --rg-ghost: #7b8290; } }
+:root[data-theme="dark"] { --rg-best: #fbbf24; --rg-best-fill: rgba(251, 191, 36, 0.22); --rg-yours: #c4b5fd; --rg-yours-fill: rgba(196, 181, 253, 0.08); --rg-out: #fb7185;
+  --rg-paper: #14171c; --rg-grid-minor: rgba(140, 180, 210, 0.08); --rg-grid-major: rgba(140, 180, 210, 0.18); --rg-band: rgba(74, 222, 128, 0.07); --rg-dot: #f3f4f6; --rg-ghost: #7b8290; }
+.stage { position: relative; display: flex; flex-direction: column; min-height: min-content; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--rg-paper); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.stage-ctl .note { flex: 1 1 100%; font-size: 0.8rem; color: var(--muted); }
+.stage-ctl .lbl { font-size: 0.8rem; color: var(--muted); }
+.fbar { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 6px 10px; padding: 10px 12px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.fbar[hidden] { display: none; }
+.fbar .names { display: grid; grid-template-columns: max-content minmax(0, 1fr) max-content 5em; gap: 5px 6px; align-items: center; flex: 1 1 300px; font-size: 0.86rem; }
+.fbar .names input { min-width: 0; font: inherit; padding: 3px 6px; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; }
+.fbar textarea { flex: 1 1 220px; min-width: 0; height: 7.5em; resize: vertical; font-family: var(--font-mono); font-size: 0.9rem; padding: 6px 10px; color: var(--ink); background: var(--canvas); border: 2px solid var(--line); border-radius: 8px; }
+.fbar textarea:focus { outline: none; border-color: var(--rg-yours); }
+.fbar .status { flex: 1 1 100%; font-size: 0.84rem; color: var(--muted); min-height: 1.3em; }
+.fbar .status.bad { color: var(--red); }
+.pane { position: relative; flex: 1 1 auto; min-height: 360px; }
+.lower { position: relative; flex: none; height: 230px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); border-top: 1px solid var(--line); }
+.lower > div { position: relative; min-width: 0; }
+.lower > div + div { border-left: 1px solid var(--line); }
+.pane canvas, .lower canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; outline: none; touch-action: none; }
+.pane canvas { cursor: crosshair; }
+.pane canvas:focus-visible, .lower canvas:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+.shelf { display: flex; flex-wrap: wrap; align-items: stretch; gap: 10px; padding: 10px; border-top: 1px solid var(--line); background: var(--surface); }
+.shelf-card { flex: 1 1 210px; display: grid; grid-template-columns: minmax(0, 1fr); align-content: start; gap: 7px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--canvas); }
+.shelf-card > .card-title { font-size: 0.78rem; font-weight: 700; color: var(--muted); }
+.shelf-card .row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; font-size: 0.86rem; }
+.shelf-card input[type="number"], .shelf-card select { font: inherit; font-size: 0.86rem; font-family: var(--font-mono); padding: 3px 6px; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; }
+.shelf-card input[type="number"] { width: 6.4em; }
+.seg.wrap { flex-wrap: wrap; }
+.sw { display: inline-block; width: 12px; height: 12px; border-radius: 3px; vertical-align: -1px; margin-right: 5px; }
+.sw.best { background: var(--rg-best); } .sw.yours { background: var(--rg-yours); } .sw.out { background: var(--rg-out); }
+.cite { font-size: 0.8rem; color: var(--muted); }
+.cite b { color: var(--ink); }
+dl.formulas { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 6px 10px; margin: 0; }
+dl.formulas dt { font-family: var(--font-mono); font-weight: 600; white-space: nowrap; }
+dl.formulas dd { margin: 0; font-family: var(--font-mono); font-size: 0.86rem; overflow-wrap: anywhere; }
+.chips .chips-label { flex: 1 1 100%; font-size: 0.78rem; font-weight: 700; color: var(--muted); margin-top: 4px; }
+table.pts { width: 100%; border-collapse: collapse; font-family: var(--font-mono); font-size: 0.8rem; }
+table.pts th { font-family: inherit; font-weight: 600; text-align: right; color: var(--muted); padding: 2px 4px; border-bottom: 1px solid var(--line); }
+table.pts td { text-align: right; padding: 2px 4px; cursor: pointer; }
+table.pts tr.sel td { background: var(--rg-best-fill); }
+table.pts tr.off td { color: var(--muted); text-decoration: line-through; }
+table.pts tr.flag td:last-child { color: var(--rg-out); font-weight: 600; }
+.ptswrap { max-height: 300px; overflow: auto; }
+@media (min-width: 821px) { .bench > .stage { align-self: start; min-height: max(760px, 100%); } }
+@media (max-width: 820px) { .pane { min-height: 0; height: 360px; flex: none; } .lower { height: auto; grid-template-columns: minmax(0, 1fr); } .lower > div { height: 210px; }
+  .lower > div + div { border-left: 0; border-top: 1px solid var(--line); } .shelf-card { flex: 1 1 100%; } }
+</style>
+<link rel="stylesheet" id="vd-paper" href="lib/paper.css">
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Linear Regression and Correlation</h1>
+      <p>Drag the points of a scatter plot and watch the least squares line follow. Each residual is drawn as a square: the least squares line is the one line whose squares add up to the smallest total area, so drag your own line and try to beat it. Read r, r², s and the slope and intercept with their uncertainties, test r with the t test, the book's critical value and a shuffle test, predict inside and outside the data, and find the outliers that pull the line.</p>
+    </div>
+    <div class="bar-right">
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/regression.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/regression.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM12 2h1v1h-1zM14 2h1v1h-1zM19 2h1v1h-1zM23 2h1v1h-1zM30 2h1v1h-1zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM15 3h2v1h-2zM20 3h1v1h-1zM22 3h6v1h-6zM29 3h2v1h-2zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h2v1h-2zM13 4h3v1h-3zM18 4h1v1h-1zM23 4h1v1h-1zM25 4h1v1h-1zM28 4h1v1h-1zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h2v1h-2zM13 5h1v1h-1zM18 5h2v1h-2zM24 5h2v1h-2zM27 5h4v1h-4zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h1v1h-1zM12 6h2v1h-2zM15 6h1v1h-1zM17 6h1v1h-1zM19 6h1v1h-1zM21 6h3v1h-3zM25 6h1v1h-1zM27 6h2v1h-2zM30 6h1v1h-1zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h2v1h-2zM14 7h6v1h-6zM23 7h1v1h-1zM29 7h2v1h-2zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h1v1h-1zM12 9h5v1h-5zM19 9h6v1h-6zM26 9h1v1h-1zM28 9h1v1h-1zM2 10h1v1h-1zM4 10h5v1h-5zM15 10h2v1h-2zM18 10h1v1h-1zM23 10h1v1h-1zM25 10h6v1h-6zM32 10h5v1h-5zM4 11h1v1h-1zM6 11h2v1h-2zM9 11h2v1h-2zM12 11h1v1h-1zM15 11h1v1h-1zM17 11h1v1h-1zM20 11h1v1h-1zM22 11h1v1h-1zM24 11h1v1h-1zM26 11h1v1h-1zM30 11h2v1h-2zM33 11h1v1h-1zM36 11h2v1h-2zM2 12h1v1h-1zM8 12h1v1h-1zM11 12h11v1h-11zM23 12h1v1h-1zM26 12h1v1h-1zM28 12h3v1h-3zM32 12h3v1h-3zM36 12h3v1h-3zM6 13h1v1h-1zM9 13h1v1h-1zM11 13h3v1h-3zM15 13h3v1h-3zM20 13h4v1h-4zM32 13h3v1h-3zM38 13h1v1h-1zM3 14h1v1h-1zM5 14h1v1h-1zM8 14h1v1h-1zM10 14h1v1h-1zM12 14h4v1h-4zM17 14h1v1h-1zM19 14h1v1h-1zM21 14h2v1h-2zM24 14h15v1h-15zM3 15h5v1h-5zM10 15h1v1h-1zM12 15h2v1h-2zM18 15h1v1h-1zM22 15h1v1h-1zM24 15h2v1h-2zM27 15h1v1h-1zM30 15h1v1h-1zM33 15h1v1h-1zM3 16h2v1h-2zM6 16h5v1h-5zM13 16h1v1h-1zM15 16h1v1h-1zM17 16h2v1h-2zM20 16h1v1h-1zM22 16h1v1h-1zM24 16h1v1h-1zM27 16h4v1h-4zM32 16h4v1h-4zM38 16h1v1h-1zM2 17h2v1h-2zM5 17h2v1h-2zM10 17h2v1h-2zM15 17h1v1h-1zM17 17h2v1h-2zM21 17h2v1h-2zM25 17h1v1h-1zM28 17h1v1h-1zM33 17h2v1h-2zM37 17h1v1h-1zM3 18h1v1h-1zM7 18h3v1h-3zM12 18h1v1h-1zM14 18h1v1h-1zM17 18h1v1h-1zM20 18h5v1h-5zM26 18h7v1h-7zM34 18h1v1h-1zM36 18h1v1h-1zM38 18h1v1h-1zM4 19h3v1h-3zM11 19h3v1h-3zM16 19h3v1h-3zM23 19h1v1h-1zM25 19h1v1h-1zM30 19h1v1h-1zM37 19h1v1h-1zM4 20h1v1h-1zM6 20h4v1h-4zM13 20h1v1h-1zM22 20h3v1h-3zM28 20h3v1h-3zM33 20h3v1h-3zM37 20h2v1h-2zM3 21h1v1h-1zM5 21h1v1h-1zM7 21h1v1h-1zM13 21h1v1h-1zM16 21h1v1h-1zM18 21h1v1h-1zM20 21h1v1h-1zM23 21h2v1h-2zM28 21h3v1h-3zM32 21h1v1h-1zM38 21h1v1h-1zM4 22h3v1h-3zM8 22h2v1h-2zM11 22h1v1h-1zM15 22h1v1h-1zM19 22h1v1h-1zM24 22h6v1h-6zM31 22h2v1h-2zM34 22h3v1h-3zM5 23h2v1h-2zM9 23h3v1h-3zM13 23h3v1h-3zM18 23h2v1h-2zM21 23h1v1h-1zM23 23h1v1h-1zM25 23h1v1h-1zM27 23h2v1h-2zM30 23h2v1h-2zM35 23h1v1h-1zM37 23h1v1h-1zM5 24h1v1h-1zM8 24h2v1h-2zM12 24h2v1h-2zM17 24h1v1h-1zM19 24h1v1h-1zM22 24h2v1h-2zM26 24h10v1h-10zM37 24h2v1h-2zM5 25h2v1h-2zM9 25h1v1h-1zM11 25h1v1h-1zM13 25h2v1h-2zM16 25h10v1h-10zM29 25h1v1h-1zM31 25h4v1h-4zM37 25h1v1h-1zM2 26h2v1h-2zM5 26h1v1h-1zM7 26h4v1h-4zM12 26h1v1h-1zM14 26h2v1h-2zM17 26h2v1h-2zM21 26h1v1h-1zM23 26h1v1h-1zM25 26h3v1h-3zM31 26h4v1h-4zM36 26h2v1h-2zM2 27h2v1h-2zM5 27h1v1h-1zM9 27h5v1h-5zM15 27h1v1h-1zM17 27h1v1h-1zM20 27h1v1h-1zM22 27h4v1h-4zM30 27h1v1h-1zM33 27h1v1h-1zM2 28h1v1h-1zM8 28h1v1h-1zM11 28h1v1h-1zM17 28h2v1h-2zM21 28h1v1h-1zM26 28h4v1h-4zM33 28h2v1h-2zM37 28h2v1h-2zM2 29h1v1h-1zM4 29h4v1h-4zM10 29h1v1h-1zM12 29h2v1h-2zM15 29h1v1h-1zM17 29h1v1h-1zM21 29h3v1h-3zM31 29h4v1h-4zM2 30h1v1h-1zM7 30h2v1h-2zM10 30h1v1h-1zM12 30h2v1h-2zM16 30h2v1h-2zM19 30h1v1h-1zM21 30h1v1h-1zM26 30h11v1h-11zM38 30h1v1h-1zM10 31h3v1h-3zM14 31h2v1h-2zM17 31h2v1h-2zM20 31h3v1h-3zM25 31h3v1h-3zM29 31h2v1h-2zM34 31h2v1h-2zM2 32h7v1h-7zM12 32h1v1h-1zM16 32h2v1h-2zM20 32h1v1h-1zM22 32h1v1h-1zM24 32h1v1h-1zM26 32h3v1h-3zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM36 32h3v1h-3zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h1v1h-1zM17 33h2v1h-2zM25 33h1v1h-1zM30 33h1v1h-1zM34 33h2v1h-2zM37 33h2v1h-2zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h2v1h-2zM14 34h1v1h-1zM16 34h1v1h-1zM20 34h6v1h-6zM27 34h8v1h-8zM36 34h2v1h-2zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h1v1h-1zM13 35h3v1h-3zM17 35h2v1h-2zM25 35h1v1h-1zM30 35h3v1h-3zM34 35h1v1h-1zM36 35h1v1h-1zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM10 36h1v1h-1zM12 36h3v1h-3zM16 36h1v1h-1zM20 36h1v1h-1zM22 36h1v1h-1zM24 36h1v1h-1zM26 36h1v1h-1zM28 36h2v1h-2zM31 36h1v1h-1zM37 36h2v1h-2zM2 37h1v1h-1zM8 37h1v1h-1zM14 37h2v1h-2zM18 37h1v1h-1zM23 37h1v1h-1zM26 37h1v1h-1zM28 37h1v1h-1zM30 37h3v1h-3zM34 37h1v1h-1zM38 37h1v1h-1zM2 38h7v1h-7zM10 38h1v1h-1zM13 38h3v1h-3zM19 38h1v1h-1zM24 38h5v1h-5zM31 38h1v1h-1zM34 38h5v1h-5z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl" id="strip">
+        <button type="button" class="spin attn" id="play" data-vd-key="play" title="Shuffle the y values among the x values again and again and build up the histogram of r">Play</button>
+        <button type="button" class="btn" id="reset" title="Put the points, your line, the prediction and the shuffle test back the way this setup started">Reset</button>
+        <span class="lbl" id="ptsLbl">Points</span>
+        <div class="seg" role="group" aria-labelledby="ptsLbl" id="modeSeg">
+          <button type="button" data-m="move" aria-pressed="true">Move</button>
+          <button type="button" data-m="add" aria-pressed="false">Add</button>
+          <button type="button" data-m="remove" aria-pressed="false">Remove</button>
+        </div>
+        <span class="note" id="note"></span>
+      </div>
+      <div class="fbar" id="ownBar" hidden>
+        <div class="names">
+          <label for="xName">x is</label><input type="text" id="xName" value="x" autocomplete="off"><label for="xUnit">unit</label><input type="text" id="xUnit" value="" autocomplete="off">
+          <label for="yName">y is</label><input type="text" id="yName" value="y" autocomplete="off"><label for="yUnit">unit</label><input type="text" id="yUnit" value="" autocomplete="off">
+        </div>
+        <textarea id="dataIn" translate="no" spellcheck="false" aria-label="Your data: one x, y pair a line" aria-describedby="dataStatus"></textarea>
+        <div class="status" id="dataStatus" role="status" aria-live="polite"></div>
+      </div>
+      <div class="pane" id="pane">
+        <canvas id="can" tabindex="0" role="img" aria-label="Scatter plot with the least squares line, the residual squares and your own line. Drag a point to move it; drag the round handles or your line to move your line; drag the diamond on the x axis to predict. Plus and minus zoom; N selects the next point, the arrows move it and Delete removes it."></canvas>
+      </div>
+      <div class="lower" id="lower">
+        <div><canvas id="res" tabindex="0" role="img" aria-label="Residual plot: each point's residual y minus y hat against x, with lines at plus and minus two s. Click a point to select it."></canvas></div>
+        <div><canvas id="hist" tabindex="0" role="img" aria-label="Shuffle test: a histogram of r from the shuffled data, with the r of the real data and the 95 percent critical values marked."></canvas></div>
+      </div>
+      <div class="shelf" id="shelf">
+        <div class="shelf-card" role="group" aria-label="Squares">
+          <span class="card-title">Squares</span>
+          <div class="seg wrap" role="group" aria-label="Squares to draw" id="sqSeg">
+            <button type="button" data-sq="both" aria-pressed="true">Both</button>
+            <button type="button" data-sq="best" aria-pressed="false">Least squares</button>
+            <button type="button" data-sq="yours" aria-pressed="false">Your line</button>
+            <button type="button" data-sq="none" aria-pressed="false">None</button>
+          </div>
+          <div class="row"><button type="button" class="btn" id="flatLine">Your line flat at ȳ</button></div>
+          <span class="hint">Drag the two round handles of <span class="sw yours"></span>your line, or the line itself.</span>
+        </div>
+        <div class="shelf-card" role="group" aria-label="Predict">
+          <span class="card-title">Predict</span>
+          <div class="row"><label for="px">x =</label><input type="number" id="px" step="any" value="73"><span id="pxUnit"></span></div>
+          <span class="hint" id="pxNote">Or drag the diamond on the x axis.</span>
+        </div>
+        <div class="shelf-card" role="group" aria-label="Points">
+          <span class="card-title">Points</span>
+          <div class="row"><button type="button" class="btn" id="rmSel">Remove selected point</button><button type="button" class="btn" id="putBack">Put all points back</button></div>
+          <span class="hint" id="selNote">Click a point to select it and see the line without it.</span>
+        </div>
+        <div class="shelf-card" role="group" aria-label="Shuffle test">
+          <span class="card-title">Shuffle test</span>
+          <div class="row"><label for="nShuf">Shuffles</label><select id="nShuf"><option value="100">100</option><option value="1000" selected>1,000</option><option value="10000">10,000</option></select></div>
+          <div class="row"><label for="seed">Draw</label><input type="number" id="seed" min="1" max="9999" step="1" value="1"><button type="button" class="btn" id="newDraw">New draw</button></div>
+          <span class="hint" id="drawNote"></span>
+        </div>
+        <div class="shelf-card" role="group" aria-label="The view">
+          <span class="card-title">The view</span>
+          <div class="row"><button type="button" class="btn" id="zin">Zoom in</button><button type="button" class="btn" id="zout">Zoom out</button><button type="button" class="btn" id="homeView">Reset view</button></div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/regression-fit.html" target="regression-fit-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+      </section>
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <span class="chips-label">From the book</span>
+          <button type="button" data-p="exam" aria-pressed="true">Third exam and final exam</button>
+          <button type="button" data-p="scuba" aria-pressed="false">Dive depth and dive time</button>
+          <button type="button" data-p="ice" aria-pressed="false">Ice cream cones and temperature</button>
+          <button type="button" data-p="cpi" aria-pressed="false">Consumer Price Index, 1915 to 1999</button>
+          <button type="button" data-p="swim" aria-pressed="false">Olympic 100 m freestyle times</button>
+          <span class="chips-label">Physics lab (simulated)</span>
+          <button type="button" data-p="spring" aria-pressed="false">Spring: stretch against mass</button>
+          <button type="button" data-p="pendulum" aria-pressed="false">Pendulum: T² against length</button>
+          <button type="button" data-p="ohm" aria-pressed="false">Ohm's law: V against I</button>
+          <button type="button" data-p="mass" aria-pressed="false">Pendulum: period against bob mass</button>
+          <span class="chips-label">Your data</span>
+          <button type="button" data-p="own" aria-pressed="false">Type your own</button>
+        </div>
+        <details class="more" open><summary>About this setup</summary><p class="hint" id="presetHint"></p><p class="cite" id="cite" translate="no"></p></details>
+      </section>
+      <section>
+        <details class="fold" id="ptsFold"><summary>Data and residuals</summary><div class="foldbody">
+          <div class="ptswrap"><table class="pts" id="ptsTable" translate="no"><thead></thead><tbody></tbody></table></div>
+          <p class="hint">Click a row to select that point. Red: an outlier by the book's rule, |y − ŷ| ≥ 2s.</p>
+        </div></details>
+      </section>
+      <!-- vd-readings --><section class="vd-readings" data-ws="regression-fit" data-title="Linear Regression and Correlation" data-demo="regression">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings ('+(typeof window.vdDataNote==='function'&&window.vdDataNote()?'catalog data':'simulated data')+')','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:(typeof window.vdDataNote==='function'&&window.vdDataNote())||'Simulated data from '+(/^The /.test(title)?'':'the ')+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
+      <section>
+        <h2>Formulas</h2>
+        <dl class="formulas" id="formulas" translate="no">
+          <dt>ŷ</dt><dd>a + bx</dd>
+          <dt>b</dt><dd>Σ(x − x̄)(y − ȳ) / Σ(x − x̄)² = r·s_y/s_x</dd>
+          <dt>a</dt><dd>ȳ − b·x̄</dd>
+          <dt>SSE</dt><dd>Σ(y − ŷ)², the total area of the squares</dd>
+          <dt>r²</dt><dd>1 − SSE/Σ(y − ȳ)²</dd>
+          <dt>s</dt><dd>√(SSE/(n − 2))</dd>
+          <dt>SE(b)</dt><dd>s / √Σ(x − x̄)²</dd>
+          <dt>SE(a)</dt><dd>s·√(1/n + x̄²/Σ(x − x̄)²)</dd>
+          <dt>t</dt><dd>r·√(n − 2) / √(1 − r²), df = n − 2</dd>
+          <dt>r*</dt><dd>t* / √(t*² + df), t* = 95 % two sided</dd>
+          <dt>outlier</dt><dd>|y − ŷ| ≥ 2s</dd>
+        </dl>
+      </section>
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the least squares line and its numbers, to fit your own line by eye first</span></label>
+        <details class="more"><summary>What you can type</summary>
+          <p class="hint">Type your own: one reading per line, x then y, separated by a comma, a space or a tab. A line that starts with # is a note. Up to 500 points.</p>
+        </details>
+        <details class="more"><summary>How it works</summary>
+          <p class="hint">The least squares line ŷ = a + bx is the line with the smallest sum of squared vertical residuals, SSE = Σ(y − ŷ)². Each residual is drawn as a square whose side is the residual, so SSE is their total area (in the plot's units squared, on the plot's scales). The intercept is always free: the line is never forced through the origin.</p>
+          <p class="hint">Every number comes from demos/lib/vdstats.js: r, r², s = √(SSE/(n − 2)), the standard errors of the slope and intercept, and the t test for r with n − 2 degrees of freedom (two sided). The 95 % critical value of r is computed from the t distribution as t*/√(t*² + df); it agrees with the table of 95 % critical values in OpenStax Introductory Statistics 2e (end of chapter 12) to the three decimals printed there, except at df = 11, where the table prints 0.555 and the exact value is 0.553. The book calls r significant when |r| is larger than the critical value.</p>
+          <p class="hint">The shuffle test (a permutation test) is not in the book. It keeps the x values and shuffles the y values among them, so any link between x and y is broken on purpose, and computes r for each shuffle. The shuffle p value is the share of shuffles with |r| at least as large as the real |r|. It needs no assumption of normal residuals, and for well behaved data it lands close to the t test's p value. Shuffles and simulated data are seeded: the same Draw gives the same numbers every time.</p>
+          <p class="hint">Outliers follow the book's rule (§12.6): a point whose residual is at least 2s in size. The dashed lines beside the least squares line are ŷ ± 2s. A point is influential when removing it changes the line a lot; select a point to see the line without it.</p>
+          <p class="hint">Simulated physics data are made by adding random normal errors to the ideal law: spring k = 25.0 N/m, g = 9.81 m/s² (constants.js), R = 47.0 Ω, and pendulum periods with timing errors of 0.010 s. They are labeled simulated and are not measurements.</p>
+        </details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  /* Linear regression and correlation (OpenStax Introductory Statistics 2e, chapter 12), runnable in Node with
+     demos/lib/vdstats.js loaded first (curriculum/validation/test_regression.cjs). Every fit has a free intercept. */
+  const ST = (typeof VDSTATS === 'object') ? VDSTATS : globalThis.VDSTATS;
+  const G_ACC = (typeof VDC === 'object' && VDC.g) ? VDC.g : 9.81;   /* g = 9.81 m/s², demos/lib/constants.js */
+  const K_SPRING = 25.0, R_OHM = 47.0, L_FIXED = 0.800;               /* chosen values for the simulated labs, N/m, Ω, m */
+  const r3 = (v) => Math.round(v * 1000) / 1000, r2 = (v) => Math.round(v * 100) / 100, r4 = (v) => Math.round(v * 10000) / 10000;
+  const range = (a, b, step) => { const o = []; for (let i = 0; a + i * step <= b + step * 1e-9; i++) o.push(Math.round((a + i * step) * 1e6) / 1e6); return o; };
+  /* the data sets: two from the book (cited), four simulated physics labs (drawn with a seeded generator), and Type your own */
+  const SETS = {
+    exam: { book: true, xn: 'third exam score', xu: 'points', xu1: 'point', yn: 'final exam score', yu: 'points', bu: 'points per point', px: 73,
+      cite: '§12.3 The Regression Equation; the same scores are tested in §12.4, used to predict in §12.5 and checked for outliers in §12.6',
+      x: [65, 67, 71, 71, 66, 75, 67, 70, 71, 69, 69], y: [175, 133, 185, 163, 126, 198, 153, 163, 159, 151, 159] },
+    scuba: { book: true, xn: 'depth', xu: 'ft', yn: 'maximum dive time', yu: 'min', bu: 'min per ft', px: 110,
+      cite: '§12.3 The Regression Equation (Try It: SCUBA divers)',
+      x: [50, 60, 70, 80, 90, 100], y: [80, 55, 45, 35, 25, 22] },
+    ice: { book: true, xn: 'noon temperature', xu: '°F', yn: 'ice cream cones sold', yu: 'cones', bu: 'cones per °F', px: 73,
+      cite: '§12.3 The Regression Equation (example: ice cream cones sold and the noon temperature)',
+      x: [70, 85, 65, 72, 80, 61, 75, 78, 68], y: [105, 240, 49, 147, 231, 38, 193, 196, 89] },
+    cpi: { book: true, xn: 'year', xu: '', xu1: 'year', yn: 'consumer price index', yu: '', bu: 'per year', px: 1990,
+      cite: '§12.6 Outliers (example: the Consumer Price Index, 1915 to 1999)',
+      x: [1915, 1926, 1935, 1940, 1947, 1952, 1964, 1969, 1975, 1979, 1980, 1986, 1991, 1999],
+      y: [10.1, 17.7, 13.7, 14.7, 24.1, 26.5, 31.0, 36.7, 49.3, 72.6, 82.4, 109.6, 130.7, 166.6] },
+    swim: { book: true, xn: 'year', xu: '', xu1: 'year', yn: 'winning time', yu: 's', bu: 's per year', px: 2020,
+      cite: '§12.5 Prediction (homework: gold medal times in the women\'s 100 m freestyle)',
+      x: [1912, 1924, 1932, 1952, 1960, 1968, 1976, 1984, 1992, 2000, 2008, 2016], y: [82.2, 72.4, 66.8, 66.8, 61.2, 60.0, 55.65, 55.92, 54.64, 53.8, 53.1, 52.7] },
+    spring: { sim: true, xn: 'mass', xu: 'kg', yn: 'stretch', yu: 'm', bu: 'm/kg', px: 0.25, origin: true, zero: true,
+      gen: (R) => { const x = range(0.05, 0.40, 0.05); return { x, y: x.map((m) => r3(m * G_ACC / K_SPRING + R.normal(0, 0.004))) }; } },
+    pendulum: { sim: true, xn: 'length', xu: 'm', yn: 'period squared T²', yu: 's²', bu: 's²/m', px: 0.55, origin: true, zero: true,
+      gen: (R) => { const x = range(0.2, 1.0, 0.1); return { x, y: x.map((L) => { const T = r3(2 * Math.PI * Math.sqrt(L / G_ACC) + R.normal(0, 0.010)); return r4(T * T); }) }; } },
+    ohm: { sim: true, xn: 'current', xu: 'A', yn: 'voltage', yu: 'V', bu: 'V/A, that is Ω', px: 0.055, origin: true, zero: true,
+      gen: (R) => { const x = range(0.01, 0.10, 0.01); return { x, y: x.map((I) => r2(R_OHM * I + R.normal(0, 0.05))) }; } },
+    mass: { sim: true, xn: 'bob mass', xu: 'kg', yn: 'period', yu: 's', bu: 's/kg', px: 0.11,
+      gen: (R) => { const x = range(0.02, 0.20, 0.02), T0 = 2 * Math.PI * Math.sqrt(L_FIXED / G_ACC); return { x, y: x.map(() => r3(T0 + R.normal(0, 0.010))) }; } },
+  };
+  const SALT = { spring: 101, pendulum: 202, ohm: 303, mass: 404 };
+  /* the points of a set for a draw (seed); the book sets never change */
+  function dataFor(key, seed) {
+    const d = SETS[key];
+    if (!d || d.book) return d ? { x: d.x.slice(), y: d.y.slice() } : null;
+    return d.gen(ST.rng((seed >>> 0) * 7919 + SALT[key]));
+  }
+  /* the least squares fit (VDSTATS.linreg) with what the demo shows beside it: SST, the 95 % two sided critical value of r
+     (from t, as the book's table), the decision, the outliers by the book's rule |e| ≥ 2s. null with fewer than 3 points or
+     every x the same */
+  function fitOf(xs, ys) {
+    const n = xs.length; if (n < 3) return null;
+    const mx = ST.mean(xs); let sxx = 0; for (const v of xs) sxx += (v - mx) * (v - mx);
+    if (!(sxx > 0) || !isFinite(sxx)) return null;
+    const L = ST.linreg(xs, ys), my = L.my; let sst = 0; for (const v of ys) sst += (v - my) * (v - my);
+    const flat = !(sst > 0);
+    const df = n - 2, tc = ST.dist.t(df).inv(0.975), rcrit = tc / Math.sqrt(tc * tc + df);
+    const scale = Math.sqrt(sst / n) + Math.abs(my) * 1e-12;
+    const exact = !(L.s > 1e-9 * scale);                                  /* every point on the line (or every y the same) */
+    const r = flat ? NaN : Math.max(-1, Math.min(1, L.r));
+    const t = flat ? NaN : exact ? Math.sign(r) * Infinity : L.t, p = flat ? NaN : exact ? 0 : L.p;
+    const out = []; if (!exact) L.residuals.forEach((e, i) => { if (Math.abs(e) >= 2 * L.s) out.push(i); });
+    return Object.assign({}, L, { r, r2: r * r, t, p, sst, df, tcrit: tc, rcrit, sig: isFinite(r) && Math.abs(r) > rcrit, flat, exact, outliers: out });
+  }
+  /* the sum of squared residuals of any line y = a + bx */
+  function sseOf(xs, ys, a, b) { let s = 0; for (let i = 0; i < xs.length; i++) { const e = ys[i] - (a + b * xs[i]); s += e * e; } return s; }
+  /* the line through two points (x1, y1), (x2, y2) */
+  const lineThrough = (x1, y1, x2, y2) => { const b = (y2 - y1) / (x2 - x1); return { a: y1 - b * x1, b }; };
+  /* r alone, for the shuffles */
+  function corr(xs, ys) {
+    const n = xs.length; let mx = 0, my = 0; for (let i = 0; i < n; i++) { mx += xs[i]; my += ys[i]; } mx /= n; my /= n;
+    let sxx = 0, syy = 0, sxy = 0; for (let i = 0; i < n; i++) { const dx = xs[i] - mx, dy = ys[i] - my; sxx += dx * dx; syy += dy * dy; sxy += dx * dy; }
+    return sxx > 0 && syy > 0 ? sxy / Math.sqrt(sxx * syy) : NaN;
+  }
+  /* the shuffle (permutation) test: keep x, shuffle y among them with a seeded generator; next() gives one shuffle */
+  function shuffler(xs, ys, seed) {
+    const R = ST.rng(((seed >>> 0) * 104729 + 17) >>> 0), y = ys.slice();
+    return () => { R.shuffle(y); return { y: y.slice(), r: corr(xs, y) }; };
+  }
+  /* shuffle p value: the share of shuffles with |r| at least the real |r| (a relative 1e-12 allows for rounding in ties) */
+  function shuffleP(rs, r) { if (!rs.length || !isFinite(r)) return NaN; let k = 0; const lim = Math.abs(r) * (1 - 1e-12); for (const v of rs) if (Math.abs(v) >= lim) k++; return k / rs.length; }
+  function shuffleTest(xs, ys, N, seed) { const nx = shuffler(xs, ys, seed), rs = []; for (let i = 0; i < N; i++) rs.push(nx().r); return { rs, p: shuffleP(rs, corr(xs, ys)) }; }
+  /* the fit without point i (influence) */
+  function without(xs, ys, i) { return fitOf(xs.filter((_, j) => j !== i), ys.filter((_, j) => j !== i)); }
+  /* a typed table: one x, y pair a line (comma, spaces, semicolon or a tab between); # starts a note */
+  function parseXY(text) {
+    const xs = [], ys = []; const lines = String(text).split(/\r?\n/);
+    for (let i = 0; i < lines.length; i++) {
+      const s = lines[i].trim(); if (!s || /^#/.test(s)) continue;
+      const parts = s.split(/[\s,;]+/).filter(Boolean);
+      if (parts.length < 2) return { error: 'pair', line: i + 1 };
+      const x = Number(parts[0]), y = Number(parts[1]);
+      if (!isFinite(x) || !isFinite(y)) { if (!xs.length) continue; return { error: 'number', line: i + 1 }; }
+      if (Math.abs(x) > 1e12 || Math.abs(y) > 1e12) return { error: 'big', line: i + 1 };
+      xs.push(x); ys.push(y);
+      if (xs.length > 500) return { error: 'many' };
+    }
+    if (xs.length < 3) return { error: 'few' };
+    return { xs, ys };
+  }
+  /* a value with its standard error: the error to 2 significant figures and the value to the same decimal place */
+  function withSE(v, se) {
+    if (!isFinite(v)) return { v: String(v), e: '' };
+    if (!(se > 0) || !isFinite(se)) return { v: String(Number(v.toPrecision(5))), e: '0' };
+    const k = Math.floor(Math.log10(se)) - 1, f = Math.pow(10, k);
+    const dec = Math.max(0, -k), rv = Math.round(v / f) * f, re = Math.round(se / f) * f;
+    return { v: rv.toFixed(dec), e: re.toFixed(dec) };
+  }
+  /* what physics makes of the slope, for the simulated labs: k = g/b (spring), g = 4π²/b (pendulum), R = b (Ohm), with
+     the standard error carried over (relative error of b) */
+  function physics(key, F) {
+    if (!F) return null; const b = F.slope, rel = F.seSlope / Math.abs(b);
+    if (key === 'spring') { const k = G_ACC / b; return { name: 'k', what: 'spring constant k = g/b', v: k, se: Math.abs(k) * rel, unit: 'N/m', truth: K_SPRING }; }
+    if (key === 'pendulum') { const g = 4 * Math.PI * Math.PI / b; return { name: 'g', what: 'g = 4π²/b', v: g, se: Math.abs(g) * rel, unit: 'm/s²', truth: G_ACC }; }
+    if (key === 'ohm') return { name: 'R', what: 'resistance R = b', v: b, se: F.seSlope, unit: 'Ω', truth: R_OHM };
+    if (key === 'mass') return { name: 'b', what: 'slope b, which physics says is 0', v: b, se: F.seSlope, unit: 's/kg', truth: 0 };
+    return null;
+  }
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  const VDI18N = window.VDI18N || { t: (s, o) => s.replace(/\{(\w+)\}/g, (m, k) => (o && k in o ? o[k] : m)) };
+  const T = (s, o) => VDI18N.t(s, o);
+  /* unit words that are shown inside numbers (readouts are not translated as a whole), listed so the harvest finds them */
+  const UNIT_WORDS = () => [VDI18N.t('points'), VDI18N.t('point'), VDI18N.t('cones'), VDI18N.t('year'), VDI18N.t('unit')];
+  const HINTS = {
+    exam: 'Eleven statistics students\' scores on the third exam (out of 80) and the final exam (out of 200), from the book. Your violet line starts flat at the mean final score: its squares add up to Σ(y − ȳ)², and the least squares squares add up to less. Drag your line to beat them; you cannot. The point (65, 175) sits more than 2s from the line: select it to see how much the line depends on it.',
+    scuba: 'The book\'s maximum dive times for six depths. The relationship is strong and negative. Predict the dive time at 110 ft: the diamond is outside the data, so that prediction is an extrapolation.',
+    ice: 'Nine random days from the book: the noon temperature and the number of ice cream cones sold. A strong positive r, a random looking residual plot: a line is a reasonable model inside the data. Below about 58 °F the line predicts fewer than zero cones, which shows why extrapolation is risky.',
+    cpi: 'The book\'s Consumer Price Index from 1915 to 1999. r is large and significant and no point is 2s from the line, yet the residual plot is a U shape: the prices grow along a curve, not a line. Look at the residual plot before you trust a line.',
+    swim: 'Gold medal times in the women\'s 100 m freestyle, every other Summer Olympics, from the book\'s homework. The times fall fast at first and then level off. Drag the diamond to the future: far enough out, the line predicts a time below zero.',
+    spring: 'Simulated: masses from 50 g to 400 g hung on a spring with k = 25.0 N/m, each stretch read to the millimeter with a random error of about 4 mm. The slope is g/k, so k = g/b. Is the intercept within its uncertainty of zero, as Hooke\'s law says it should be?',
+    pendulum: 'Simulated: a pendulum timed at nine lengths, each period with a random timing error of about 0.010 s, then squared. T² = (4π²/g)L is a straight line through the origin, so g = 4π²/b. Fit with a free intercept and check whether it comes out within its uncertainty of zero.',
+    ohm: 'Simulated: the voltage across a 47.0 Ω resistor at ten currents, each reading with a random error of about 0.05 V. The slope is the resistance. With r this close to 1, r alone says little: read the slope and its uncertainty.',
+    mass: 'Simulated: the period of a 0.800 m pendulum with bobs from 20 g to 200 g. Physics says the period does not depend on the mass, so these are timing errors around one value. Is r significant? Press Play for the shuffle test, then press New draw a few times: about one draw in twenty gives a significant r by chance alone.',
+    own: 'Type or paste your own readings, one x, y pair a line, and name x and y with their units so the slope and intercept read in context. Your data stay in this page.',
+  };
+  const S = { p: 'exam', seed: 1, xs: [], ys: [], on: [], sel: null, edited: false, units: null, F: null, Fall: null,
+    hx: [0, 1], hy: [0, 0], sq: 'both', px: 73, mode: 'move', blind: false, run: false,
+    sh: null, view: { x0: 0, x1: 1, y0: 0, y1: 1 }, autoView: true, ghost: null };
+  const can = $('can'), ctx = can.getContext('2d'), res = $('res'), rctx = res.getContext('2d'), hist = $('hist'), hctx = hist.getContext('2d');
+  let W = 0, H = 0, RW = 0, RH = 0, HW = 0, HH = 0, dpr = 1, C = null, need = true;
+  const reduced = () => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } };
+
+  /* numbers: commas in big numbers, a sign that is a real minus */
+  function num(v, sig = 4) {
+    if (v === Infinity) return '∞'; if (v === -Infinity) return '−∞';
+    if (!isFinite(v)) return '—';
+    if (v === 0) return '0';
+    const a = Math.abs(v);
+    let s;
+    if (a >= 1e9 || a < 1e-4) { const e = Math.floor(Math.log10(a)); let m = Number((a / Math.pow(10, e)).toPrecision(sig)); let ee = e; if (m >= 10) { m /= 10; ee++; } s = m + '×10' + String(ee).replace(/-/g, '⁻').replace(/\d/g, (d) => '⁰¹²³⁴⁵⁶⁷⁸⁹'[d]); }
+    else {
+      const e = Math.floor(Math.log10(a)), dec = Math.max(0, sig - 1 - e);
+      s = a.toFixed(dec);
+      if (a >= 10000) { const [i, f] = s.split('.'); s = i.replace(/\B(?=(\d{3})+(?!\d))/g, ',') + (f ? '.' + f : ''); }
+    }
+    return (v < 0 ? '−' : '') + s;
+  }
+  /* a data value or a count as typed: up to 6 significant figures, no padding zeros, commas from 10,000 */
+  function clean(v) {
+    if (!isFinite(v)) return '—';
+    const t = String(Math.abs(Number(v.toPrecision(6)))), [i, f] = t.split('.');
+    const body = /e/.test(t) ? num(Math.abs(v), 4) : (Math.abs(v) >= 10000 ? i.replace(/\B(?=(\d{3})+(?!\d))/g, ',') : i) + (f ? '.' + f : '');
+    return (v < 0 ? '−' : '') + body;
+  }
+  const cnt = (n) => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  const dec = (v, d) => (isFinite(v) ? (v < 0 ? '−' : '') + Math.abs(v).toFixed(d) : '—');
+  const pTxt = (p) => (!isFinite(p) ? '—' : p < 0.0001 ? '< 0.0001' : p.toFixed(4));
+  const minus = (s) => String(s).replace(/^-/, '−');
+  const esc = (s) => String(s == null ? '' : s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+  function units() {
+    if (S.p === 'own') {
+      const xu = $('xUnit').value.trim(), yu = $('yUnit').value.trim();
+      return { xn: $('xName').value.trim() || 'x', xu, yn: $('yName').value.trim() || 'y', yu, bu: yu && xu ? yu + ' per ' + xu : yu ? yu + ' per unit of x' : xu ? 'per ' + xu : '' };
+    }
+    const d = SETS[S.p]; return { xn: T(d.xn), xu: T(d.xu), xu1: d.xu1 ? T(d.xu1) : '', yn: T(d.yn), yu: T(d.yu), bu: T(d.bu) };
+  }
+  const withU = (v, u) => (u ? v + ' ' + u : v);
+  const cap = (s) => s.charAt(0).toUpperCase() + s.slice(1);
+
+  /* ---------- state changes ---------- */
+  function included() { const x = [], y = [], idx = []; S.xs.forEach((v, i) => { if (S.on[i]) { x.push(v); y.push(S.ys[i]); idx.push(i); } }); return { x, y, idx }; }
+  function refit() {
+    const I = included(); S.inc = I; S.F = fitOf(I.x, I.y);
+    S.loo = null;
+    if (S.sel != null && S.on[S.sel] && S.F && I.x.length >= 4) { const k = I.idx.indexOf(S.sel); S.loo = without(I.x, I.y, k); }
+    else if (S.sel != null && !S.on[S.sel]) { S.loo = fitOf(S.xs.slice(), S.ys.slice()); S.looBack = true; }
+    if (S.sel != null && S.on[S.sel]) S.looBack = false;
+    need = true; readouts(); table();
+  }
+  function dataChanged(edited) {
+    if (edited) S.edited = true;
+    stopShuffle(true); refit();
+  }
+  function setData(x, y) {
+    S.xs = x.slice(); S.ys = y.slice(); S.on = x.map(() => true); S.sel = null; S.edited = false; S.moved = false; S.ghost = null;
+  }
+  /* your line: two handles at a quarter and three quarters of the data's x range, flat at ȳ */
+  function flatLine() {
+    const I = included(), xs = I.x.length ? I.x : S.xs;
+    const lo = Math.min(...xs), hi = Math.max(...xs), my = I.y.length ? ST.mean(I.y) : 0;
+    const span = hi - lo || 1;
+    S.hx = [lo + 0.2 * span, lo + 0.8 * span]; S.hy = [my, my]; need = true; readouts();
+  }
+  function applySetup(key, keepSeed) {
+    setRun(false);
+    S.p = key;
+    for (const b of document.querySelectorAll('#presets [data-p]')) b.setAttribute('aria-pressed', String(b.dataset.p === key));
+    $('ownBar').hidden = key !== 'own';
+    if ($('stage').classList.contains('own') !== (key === 'own')) { $('stage').classList.toggle('own', key === 'own'); window.dispatchEvent(new Event('resize')); }   /* the stage refits its height around the Type your own bar */
+    if (!keepSeed) { S.seed = 1; $('seed').value = '1'; }
+    if (key === 'own') {
+      if (!$('dataIn').value.trim()) {
+        const d = SETS.spring, g = dataFor('spring', 1);
+        $('xName').value = d.xn; $('xUnit').value = d.xu; $('yName').value = d.yn; $('yUnit').value = d.yu;
+        $('dataIn').value = '# ' + d.xn + ' (' + d.xu + '), ' + d.yn + ' (' + d.yu + ')\n' + g.x.map((v, i) => v + ', ' + g.y[i]).join('\n');
+      }
+      readOwn(true);
+    } else {
+      const g = dataFor(key, S.seed); setData(g.x, g.y);
+      S.px = SETS[key].px;
+    }
+    $('presetHint').textContent = T(HINTS[key]);
+    const d = SETS[key];
+    $('cite').innerHTML = d && d.book ? `${esc(VDI18N.t('Data from'))} <b>OpenStax <i>Introductory Statistics 2e</i></b>, ${esc(T(d.cite))} (CC BY 4.0).`
+      : d && d.sim ? esc(VDI18N.t('Simulated data, not measurements: the ideal law plus seeded random errors (Draw {s}).', { s: S.seed })) : esc(VDI18N.t('Your own data.'));
+    $('newDraw').disabled = !(d && d.sim);
+    $('drawNote').textContent = d && d.sim ? VDI18N.t('New draw makes a new set of simulated readings and new shuffles.') : VDI18N.t('The draw sets the shuffles. The book\'s data never change.');
+    $('px').value = String(S.px);
+    S.autoView = true; fitView(); flatLine(); dataChanged(false);
+  }
+  function readOwn(first) {
+    const r = parseXY($('dataIn').value), st = $('dataStatus');
+    if (r.error) {
+      st.classList.add('bad');
+      st.textContent = r.error === 'few' ? VDI18N.t('Type at least three x, y pairs.') : r.error === 'many' ? VDI18N.t('At most 500 points.') : r.error === 'big' ? VDI18N.t('Line {n}: a number is too large.', { n: r.line })
+        : r.error === 'pair' ? VDI18N.t('Line {n}: give two numbers, x then y.', { n: r.line }) : VDI18N.t('Line {n}: that is not a number.', { n: r.line });
+      if (first) { setData([], []); S.F = null; need = true; readouts(); table(); }
+      return;
+    }
+    st.classList.remove('bad'); st.textContent = VDI18N.t('{n} points read.', { n: r.xs.length });
+    setData(r.xs, r.ys);
+    if (S.px == null || first) { const lo = Math.min(...r.xs), hi = Math.max(...r.xs); S.px = Number(((lo + hi) / 2).toPrecision(3)); $('px').value = String(S.px); }
+    S.autoView = true; fitView(); flatLine(); dataChanged(false);
+  }
+  function writeOwn() {
+    if (S.p !== 'own') return;
+    const u = units(), lines = ['# ' + u.xn + (u.xu ? ' (' + u.xu + ')' : '') + ', ' + u.yn + (u.yu ? ' (' + u.yu + ')' : '')];
+    S.xs.forEach((v, i) => lines.push(v + ', ' + S.ys[i]));
+    $('dataIn').value = lines.join('\n'); $('dataStatus').textContent = VDI18N.t('{n} points read.', { n: S.xs.length });
+  }
+
+  /* ---------- the view ---------- */
+  function niceStep(span, n) { const raw = span / n, p = Math.pow(10, Math.floor(Math.log10(raw))), m = raw / p; return (m < 1.5 ? 1 : m < 3 ? 2 : m < 7 ? 5 : 10) * p; }
+  function fitView() {
+    if (!S.xs.length) { S.view = { x0: -1, x1: 1, y0: -1, y1: 1 }; return; }
+    let x0 = Math.min(...S.xs), x1 = Math.max(...S.xs), y0 = Math.min(...S.ys), y1 = Math.max(...S.ys);
+    const d = SETS[S.p];
+    if (isFinite(S.px)) { x0 = Math.min(x0, S.px); x1 = Math.max(x1, S.px); }
+    if (d && d.origin) { x0 = Math.min(x0, 0); y0 = Math.min(y0, 0); }
+    if (S.F && isFinite(S.px)) { const yp = S.F.intercept + S.F.slope * S.px; if (isFinite(yp)) { y0 = Math.min(y0, yp); y1 = Math.max(y1, yp); } }
+    if (x1 - x0 < 1e-9) { x0 -= 1; x1 += 1; } if (y1 - y0 < 1e-9) { y0 -= 1; y1 += 1; }
+    const mx = 0.08 * (x1 - x0), my = 0.12 * (y1 - y0);
+    S.view = { x0: x0 - mx, x1: x1 + mx, y0: y0 - my, y1: y1 + my };
+    if (d && d.origin) { S.view.x0 = Math.min(S.view.x0, -0.04 * (x1 - x0)); }
+  }
+  const M = { l: 62, r: 14, t: 14, b: 42 };
+  const X = (x) => M.l + (x - S.view.x0) / (S.view.x1 - S.view.x0) * (W - M.l - M.r);
+  const Y = (y) => H - M.b - (y - S.view.y0) / (S.view.y1 - S.view.y0) * (H - M.t - M.b);
+  const IX = (px) => S.view.x0 + (px - M.l) / (W - M.l - M.r) * (S.view.x1 - S.view.x0);
+  const IY = (py) => S.view.y0 + (H - M.b - py) / (H - M.t - M.b) * (S.view.y1 - S.view.y0);
+  function zoom(f) {
+    const v = S.view, cx = (v.x0 + v.x1) / 2, cy = (v.y0 + v.y1) / 2, hx = (v.x1 - v.x0) / 2 * f, hy = (v.y1 - v.y0) / 2 * f;
+    if (hx < 1e-9 || hy < 1e-9 || hx > 1e13 || hy > 1e13) return;
+    S.view = { x0: cx - hx, x1: cx + hx, y0: cy - hy, y1: cy + hy }; S.autoView = false; need = true;
+  }
+
+  /* ---------- drawing ---------- */
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    C = { paper: g('--rg-paper'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), mono: g('--font-mono') || 'monospace', best: g('--rg-best'), bestFill: g('--rg-best-fill'),
+      yours: g('--rg-yours'), yoursFill: g('--rg-yours-fill'), out: g('--rg-out'), minor: g('--rg-grid-minor'), major: g('--rg-grid-major'), band: g('--rg-band'), dot: g('--rg-dot'), ghost: g('--rg-ghost'), accent: g('--accent') };
+  }
+  function ticks(a, b, n) { const st = niceStep(b - a, n), o = []; for (let v = Math.ceil(a / st) * st; v <= b + st * 1e-9; v += st) o.push(Math.abs(v) < st * 1e-9 ? 0 : v); return { st, o }; }
+  const tickTxt = (v, st) => { const d = Math.max(0, -Math.floor(Math.log10(st) + 1e-9)); return minus(Math.abs(v) >= 10000 ? num(v, 6) : v.toFixed(d)); };
+  function axisTitle(n, u) { return u ? `${cap(n)} (${u})` : cap(n); }
+  function drawPaper(c, w, h, m, xr, yr, xi, yi) {
+    c.fillStyle = C.paper; c.fillRect(0, 0, w, h);
+    const tx = ticks(xr[0], xr[1], Math.max(3, w / 90)), ty = ticks(yr[0], yr[1], Math.max(3, h / 60));
+    c.lineWidth = 1;
+    c.strokeStyle = C.minor; c.beginPath();
+    for (let v = Math.ceil(xr[0] / (tx.st / 5)) * tx.st / 5; v <= xr[1]; v += tx.st / 5) { const p = Math.round(xi(v)) + 0.5; c.moveTo(p, m.t); c.lineTo(p, h - m.b); }
+    for (let v = Math.ceil(yr[0] / (ty.st / 5)) * ty.st / 5; v <= yr[1]; v += ty.st / 5) { const p = Math.round(yi(v)) + 0.5; c.moveTo(m.l, p); c.lineTo(w - m.r, p); }
+    c.stroke();
+    c.strokeStyle = C.major; c.beginPath();
+    for (const v of tx.o) { const p = Math.round(xi(v)) + 0.5; c.moveTo(p, m.t); c.lineTo(p, h - m.b); }
+    for (const v of ty.o) { const p = Math.round(yi(v)) + 0.5; c.moveTo(m.l, p); c.lineTo(w - m.r, p); }
+    c.stroke();
+    c.fillStyle = C.muted; c.font = `11px ${C.mono}`; c.textAlign = 'center'; c.textBaseline = 'top';
+    for (const v of tx.o) c.fillText(tickTxt(v, tx.st), xi(v), h - m.b + 4);
+    c.textAlign = 'right'; c.textBaseline = 'middle';
+    for (const v of ty.o) c.fillText(tickTxt(v, ty.st), m.l - 5, yi(v));
+    c.strokeStyle = C.muted; c.lineWidth = 1; c.strokeRect(m.l + 0.5, m.t + 0.5, w - m.l - m.r - 1, h - m.t - m.b - 1);
+  }
+  function clipLine(c, a, b, x0, x1, dash) {
+    c.save(); if (dash) c.setLineDash(dash); c.beginPath(); c.moveTo(X(x0), Y(a + b * x0)); c.lineTo(X(x1), Y(a + b * x1)); c.stroke(); c.restore();
+  }
+  function draw() {
+    if (!W || !H || !C) return;
+    const c = ctx; c.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const u = units(), F = S.F, show = !S.blind, v = S.view;
+    drawPaper(c, W, H, M, [v.x0, v.x1], [v.y0, v.y1], X, Y);
+    c.save(); c.beginPath(); c.rect(M.l, M.t, W - M.l - M.r, H - M.t - M.b); c.clip();
+    /* the range of the data: inside it a prediction is an interpolation */
+    const I = S.inc || included();
+    if (I.x.length) {
+      const lo = Math.min(...I.x), hi = Math.max(...I.x);
+      c.fillStyle = C.band; c.fillRect(X(lo), M.t, Math.max(1, X(hi) - X(lo)), H - M.t - M.b);
+      c.fillStyle = C.muted; c.font = `11px ${C.mono}`; c.textAlign = 'center'; c.textBaseline = 'top';
+      if (X(hi) - X(lo) > 90) c.fillText(VDI18N.t('range of the data'), (X(lo) + X(hi)) / 2, M.t + 3);
+    }
+    const yourL = lineThrough(S.hx[0], S.hy[0], S.hx[1], S.hy[1]);
+    /* residual squares: the side is the vertical residual on screen, drawn toward the line's right; at the right edge, to the left */
+    const squares = (a, b, fill, stroke, lw) => {
+      c.lineWidth = lw;
+      I.x.forEach((x, k) => {
+        const y = I.y[k], px = X(x), py = Y(y), pl = Y(a + b * x), side = pl - py, sz = Math.abs(side);
+        if (sz < 0.5) return;
+        const left = px + sz > W - M.r ? px - sz : px, top = Math.min(py, pl);
+        c.fillStyle = fill; c.fillRect(left, top, sz, sz); c.strokeStyle = stroke; c.strokeRect(left + 0.5, top + 0.5, sz - 1, sz - 1);
+      });
+    };
+    if (S.sq === 'yours' || S.sq === 'both') squares(yourL.a, yourL.b, C.yoursFill, C.yours, 1.2);
+    if (F && show && (S.sq === 'best' || S.sq === 'both')) squares(F.intercept, F.slope, C.bestFill, C.best, 1);
+    /* residual segments of the least squares line */
+    if (F && show) {
+      c.strokeStyle = C.best; c.lineWidth = 1.2; c.beginPath();
+      I.x.forEach((x, k) => { c.moveTo(X(x), Y(I.y[k])); c.lineTo(X(x), Y(F.intercept + F.slope * x)); }); c.stroke();
+    }
+    /* the line without the selected point */
+    if (S.loo && show) { c.strokeStyle = C.ghost; c.lineWidth = 2; clipLine(c, S.loo.intercept, S.loo.slope, v.x0, v.x1, [7, 5]); }
+    /* ŷ ± 2s and the least squares line: solid over the data, dashed outside it (extrapolation) */
+    if (F && show) {
+      const lo = Math.min(...I.x), hi = Math.max(...I.x);
+      if (!F.exact) { c.strokeStyle = C.out; c.globalAlpha = 0.55; c.lineWidth = 1; for (const sgn of [-1, 1]) clipLine(c, F.intercept + sgn * 2 * F.s, F.slope, v.x0, v.x1, [3, 4]); c.globalAlpha = 1;
+        c.fillStyle = C.out; c.font = `11px ${C.mono}`; c.textAlign = 'right'; c.textBaseline = 'bottom';
+        const xl = v.x1 - 0.02 * (v.x1 - v.x0); c.fillText('ŷ + 2s', X(xl), Y(F.intercept + 2 * F.s + F.slope * xl) - 2); }
+      c.strokeStyle = C.best; c.lineWidth = 3;
+      clipLine(c, F.intercept, F.slope, lo, hi); c.lineWidth = 2; clipLine(c, F.intercept, F.slope, v.x0, lo, [8, 6]); clipLine(c, F.intercept, F.slope, hi, v.x1, [8, 6]);
+    }
+    /* your line and its handles */
+    c.strokeStyle = C.yours; c.lineWidth = 2.2; clipLine(c, yourL.a, yourL.b, v.x0, v.x1);
+    for (let k = 0; k < 2; k++) { c.beginPath(); c.arc(X(S.hx[k]), Y(S.hy[k]), 7, 0, 2 * Math.PI); c.fillStyle = C.paper; c.fill(); c.lineWidth = 2.5; c.strokeStyle = C.yours; c.stroke(); }
+    /* the shuffle in progress: ghost points and their line */
+    if (S.ghost) {
+      const gh = S.ghost, f = gh.f;
+      c.fillStyle = C.ghost;
+      I.x.forEach((x, k) => { const y = gh.from[k] + (gh.to[k] - gh.from[k]) * f; c.beginPath(); c.arc(X(x), Y(y), 4, 0, 2 * Math.PI); c.globalAlpha = 0.7; c.fill(); c.globalAlpha = 1; });
+      if (f >= 1 && gh.fit) { c.strokeStyle = C.ghost; c.lineWidth = 2; clipLine(c, gh.fit.intercept, gh.fit.slope, v.x0, v.x1, [4, 4]); }
+    }
+    /* points */
+    const outs = new Set(F && show ? F.outliers.map((k) => I.idx[k]) : []);
+    S.xs.forEach((x, i) => {
+      const px = X(x), py = Y(S.ys[i]);
+      if (!S.on[i]) {
+        c.strokeStyle = C.ghost; c.lineWidth = 1.5; c.beginPath(); c.arc(px, py, 5, 0, 2 * Math.PI); c.stroke();
+        c.beginPath(); c.moveTo(px - 4, py - 4); c.lineTo(px + 4, py + 4); c.moveTo(px - 4, py + 4); c.lineTo(px + 4, py - 4); c.stroke(); return;
+      }
+      c.fillStyle = S.ghost ? C.ghost : C.dot; c.beginPath(); c.arc(px, py, 5, 0, 2 * Math.PI); c.fill();
+      if (outs.has(i)) { c.strokeStyle = C.out; c.lineWidth = 2.5; c.beginPath(); c.arc(px, py, 9.5, 0, 2 * Math.PI); c.stroke(); }
+    });
+    if (S.sel != null && S.xs[S.sel] != null) { c.strokeStyle = C.accent; c.lineWidth = 2; c.setLineDash([3, 3]); c.beginPath(); c.arc(X(S.xs[S.sel]), Y(S.ys[S.sel]), 14, 0, 2 * Math.PI); c.stroke(); c.setLineDash([]); }
+    /* the prediction */
+    if (F && show && isFinite(S.px)) {
+      const yp = F.intercept + F.slope * S.px, inside = I.x.length && S.px >= Math.min(...I.x) && S.px <= Math.max(...I.x);
+      c.strokeStyle = inside ? C.ink : C.out; c.lineWidth = 1.2; c.setLineDash([2, 3]); c.beginPath(); c.moveTo(X(S.px), H - M.b); c.lineTo(X(S.px), Y(yp)); c.lineTo(M.l, Y(yp)); c.stroke(); c.setLineDash([]);
+      c.fillStyle = inside ? C.ink : C.out; c.beginPath(); c.arc(X(S.px), Y(yp), 5, 0, 2 * Math.PI); c.fill();
+      c.font = `600 12px ${C.mono}`; c.textBaseline = 'bottom';
+      const lab = 'ŷ = ' + num(yp) + (inside ? '' : '  (' + VDI18N.t('extrapolation') + ')');
+      c.textAlign = X(S.px) > W - 200 ? 'right' : 'left'; c.fillText(lab, X(S.px) + (c.textAlign === 'right' ? -8 : 8), Y(yp) - 6);
+    }
+    c.restore();
+    /* the diamond on the x axis that drags the prediction */
+    if (isFinite(S.px) && X(S.px) >= M.l - 1 && X(S.px) <= W - M.r + 1) {
+      const px = X(S.px), py = H - M.b; c.fillStyle = C.accent; c.beginPath(); c.moveTo(px, py - 7); c.lineTo(px + 7, py); c.lineTo(px, py + 7); c.lineTo(px - 7, py); c.closePath(); c.fill();
+    }
+    /* axis titles */
+    c.fillStyle = C.ink; c.font = `600 12px ${C.mono}`; c.textAlign = 'center'; c.textBaseline = 'bottom';
+    c.fillText(axisTitle(u.xn, u.xu), M.l + (W - M.l - M.r) / 2, H - 3);
+    c.save(); c.translate(13, M.t + (H - M.t - M.b) / 2); c.rotate(-Math.PI / 2); c.textBaseline = 'middle'; c.fillText(axisTitle(u.yn, u.yu), 0, 0); c.restore();
+    meter(c, F, yourL, I);
+  }
+  /* the sum of squares meter: two bars, least squares and your line, on the same scale */
+  function meter(c, F, yl, I) {
+    if (!I.x.length) return;
+    const yours = sseOf(I.x, I.y, yl.a, yl.b), best = F ? F.sse : NaN, show = !S.blind && F;
+    const narrow = W < 560;
+    const lab = show && best > 0 ? (narrow ? VDI18N.t('Yours: {v} (×{k})', { v: num(yours, 5), k: (yours / best).toFixed(2) }) : VDI18N.t('Your line: {v} ({k} times as much)', { v: num(yours, 5), k: (yours / best).toFixed(2) })) : VDI18N.t('Your line: {v}', { v: num(yours, 5) });
+    const labB = VDI18N.t('Least squares: {v}', { v: show ? num(best, 5) : '?' });
+    c.font = `11px ${C.mono}`;
+    const w = Math.min(Math.max(narrow ? 120 : 200, c.measureText(lab).width + 8, c.measureText(labB).width + 8), W - M.l - M.r - 20), x = M.l + 10, y = M.t + 20, big = Math.max(yours, show ? best : 0) || 1;
+    c.fillStyle = C.paper; c.globalAlpha = 0.88; c.fillRect(x - 6, y - 6, w + 12, 70); c.globalAlpha = 1;
+    c.strokeStyle = C.line; c.lineWidth = 1; c.strokeRect(x - 5.5, y - 5.5, w + 11, 69);
+    c.font = `600 11px ${C.mono}`; c.textAlign = 'left'; c.textBaseline = 'top'; c.fillStyle = C.ink;
+    c.fillText(narrow ? VDI18N.t('Area of the squares') : VDI18N.t('Total area of the squares'), x, y - 2);
+    const bar = (yy, v, col, lab) => { c.fillStyle = col; c.fillRect(x, yy, Math.max(1, (w - 4) * (isFinite(v) ? v / big : 0)), 9);
+      c.fillStyle = C.ink; c.font = `11px ${C.mono}`; c.fillText(lab, x, yy + 12); };
+    bar(y + 14, show ? best : 0, C.best, labB);
+    bar(y + 38, yours, C.yours, lab);
+  }
+  function rView() {
+    const F = S.F; let m = 1;
+    if (F && !S.blind) { m = 0; for (const e of F.residuals) m = Math.max(m, Math.abs(e)); m = Math.max(m, 2 * F.s) * 1.3; if (!(m > 0)) m = 1; }
+    return m;
+  }
+  const RM = { l: 62, r: 14, t: 24, b: 24 };
+  function drawRes() {
+    if (!RW || !RH || !C) return;
+    const c = rctx; c.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const F = S.F, v = S.view, m = rView(), u = units();
+    const xi = (x) => RM.l + (x - v.x0) / (v.x1 - v.x0) * (RW - RM.l - RM.r), yi = (e) => RH - RM.b - (e + m) / (2 * m) * (RH - RM.t - RM.b);
+    drawPaper(c, RW, RH, RM, [v.x0, v.x1], [-m, m], xi, yi);
+    c.fillStyle = C.ink; c.font = `600 12px ${C.mono}`; c.textAlign = 'left'; c.textBaseline = 'top';
+    c.fillText(VDI18N.t('Residuals y − ŷ') + (u.yu ? ' (' + u.yu + ')' : ''), 8, 5);
+    if (!F || S.blind) { c.fillStyle = C.muted; c.font = `12px ${C.mono}`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(S.blind ? VDI18N.t('Hidden while Blind is on') : VDI18N.t('Needs three points with different x'), RW / 2, RH / 2); return; }
+    c.save(); c.beginPath(); c.rect(RM.l, RM.t, RW - RM.l - RM.r, RH - RM.t - RM.b); c.clip();
+    c.strokeStyle = C.best; c.lineWidth = 2; c.beginPath(); c.moveTo(RM.l, yi(0)); c.lineTo(RW - RM.r, yi(0)); c.stroke();
+    if (!F.exact) {
+      c.strokeStyle = C.out; c.setLineDash([3, 4]); c.lineWidth = 1; c.beginPath();
+      for (const sg of [-2, 2]) { c.moveTo(RM.l, yi(sg * F.s)); c.lineTo(RW - RM.r, yi(sg * F.s)); } c.stroke(); c.setLineDash([]);
+      c.fillStyle = C.out; c.font = `11px ${C.mono}`; c.textAlign = 'right'; c.textBaseline = 'bottom'; c.fillText('+2s', RW - RM.r - 4, yi(2 * F.s) - 2); c.textBaseline = 'top'; c.fillText('−2s', RW - RM.r - 4, yi(-2 * F.s) + 2);
+    }
+    const outs = new Set(F.outliers);
+    S.inc.x.forEach((x, k) => {
+      const e = F.residuals[k], px = xi(x), py = yi(e);
+      c.strokeStyle = C.muted; c.lineWidth = 1; c.beginPath(); c.moveTo(px, yi(0)); c.lineTo(px, py); c.stroke();
+      c.fillStyle = outs.has(k) ? C.out : C.dot; c.beginPath(); c.arc(px, py, outs.has(k) ? 5.5 : 4.5, 0, 2 * Math.PI); c.fill();
+      if (S.inc.idx[k] === S.sel) { c.strokeStyle = C.accent; c.lineWidth = 2; c.beginPath(); c.arc(px, py, 10, 0, 2 * Math.PI); c.stroke(); }
+    });
+    c.restore();
+    res._map = { xi, yi };
+  }
+  const HM = { l: 40, r: 12, t: 24, b: 24 };
+  function drawHist() {
+    if (!HW || !HH || !C) return;
+    const c = hctx; c.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const F = S.F, sh = S.sh, rs = sh ? sh.rs : [], nb = 40, counts = new Array(nb).fill(0);
+    for (const r of rs) { if (!isFinite(r)) continue; let b = Math.floor((r + 1) / 2 * nb); if (b >= nb) b = nb - 1; if (b < 0) b = 0; counts[b]++; }
+    const top = Math.max(5, ...counts) * 1.12;
+    const xi = (r) => HM.l + (r + 1) / 2 * (HW - HM.l - HM.r), yi = (k) => HH - HM.b - k / top * (HH - HM.t - HM.b);
+    drawPaper(c, HW, HH, HM, [-1, 1], [0, top], xi, yi);
+    c.fillStyle = C.ink; c.font = `600 12px ${C.mono}`; c.textAlign = 'left'; c.textBaseline = 'top';
+    c.fillText(VDI18N.t('Shuffle test: r of shuffled data'), 8, 5);
+    const rObs = F && !S.blind ? F.r : NaN, lim = Math.abs(rObs);
+    for (let b = 0; b < nb; b++) {
+      if (!counts[b]) continue;
+      const a = -1 + 2 * b / nb, z = a + 2 / nb, far = isFinite(lim) && (Math.abs(a + 1 / nb) >= lim);
+      c.fillStyle = far ? C.out : C.ghost; c.globalAlpha = far ? 0.85 : 0.6;
+      c.fillRect(xi(a) + 0.5, yi(counts[b]), xi(z) - xi(a) - 1, yi(0) - yi(counts[b])); c.globalAlpha = 1;
+    }
+    if (F && !S.blind && isFinite(F.rcrit)) {
+      c.strokeStyle = C.ink; c.lineWidth = 1; c.setLineDash([2, 3]);
+      for (const sg of [-1, 1]) { c.beginPath(); c.moveTo(xi(sg * F.rcrit), HM.t); c.lineTo(xi(sg * F.rcrit), HH - HM.b); c.stroke(); }
+      c.setLineDash([]); c.fillStyle = C.muted; c.font = `10px ${C.mono}`; c.textAlign = 'center'; c.textBaseline = 'top';
+      c.fillText('−r*', xi(-F.rcrit), HM.t + 2); c.fillText('+r*', xi(F.rcrit), HM.t + 2);
+    }
+    if (isFinite(rObs)) {
+      c.strokeStyle = C.best; c.lineWidth = 3; c.beginPath(); c.moveTo(xi(rObs), HM.t + 12); c.lineTo(xi(rObs), HH - HM.b); c.stroke();
+      c.lineWidth = 1.5; c.setLineDash([5, 4]); c.beginPath(); c.moveTo(xi(-rObs), HM.t + 12); c.lineTo(xi(-rObs), HH - HM.b); c.stroke(); c.setLineDash([]);
+      c.fillStyle = C.best; c.font = `600 11px ${C.mono}`; c.textAlign = rObs > 0.4 ? 'right' : 'left'; c.textBaseline = 'top';
+      c.fillText('r = ' + dec(rObs, 4), xi(rObs) + (rObs > 0.4 ? -5 : 5), HM.t + 14);
+    }
+    c.font = `11px ${C.mono}`; c.fillStyle = C.ink; c.textAlign = 'right'; c.textBaseline = 'top';
+    if (rs.length) c.fillText(VDI18N.t('{n} shuffles · shuffle p = {p}', { n: cnt(rs.length), p: pTxt(shuffleP(rs, rObs)) }), HW - HM.r - 4, HM.t + 28);
+    else { c.fillStyle = C.muted; c.textAlign = 'center'; c.fillText(VDI18N.t('Press Play to shuffle'), (HW + HM.l) / 2, HM.t + 40); }
+  }
+
+  /* ---------- the shuffle test (Play) ---------- */
+  function stopShuffle(clear) { if (clear) { S.sh = null; S.ghost = null; } setRun(false); }
+  function startShuffle() {
+    const I = S.inc || included();
+    if (!S.F || !isFinite(S.F.r)) return false;
+    const N = +$('nShuf').value || 1000;
+    if (!S.sh || S.sh.rs.length >= S.sh.N || S.sh.N !== N) S.sh = { N, rs: [], next: shuffler(I.x, I.y, S.seed), clock: 0, slow: reduced() ? 0 : 6 };
+    return true;
+  }
+  function setRun(on) {
+    if (on && !startShuffle()) on = false;
+    S.run = on; $('play').textContent = on ? VDI18N.t('Pause') : VDI18N.t('Play'); $('play').classList.toggle('attn', !on && !(S.sh && S.sh.rs.length >= S.sh.N));
+    if (!on && S.ghost) S.ghost.f = 1;
+    need = true; note();
+  }
+  function stepShuffle(dt) {
+    const sh = S.sh; if (!sh) return;
+    const I = S.inc;
+    if (sh.rs.length < sh.slow) {
+      /* the first shuffles one at a time, slowly enough to watch the y values change places (0.7 s each) */
+      sh.clock += dt;
+      if (!S.ghost || sh.clock >= 0.7) {
+        const g = sh.next(); sh.rs.push(g.r); sh.clock = 0;
+        S.ghost = { from: S.ghost ? S.ghost.to : I.y.slice(), to: g.y, f: 0, fit: fitOf(I.x, g.y) };
+      } else S.ghost.f = Math.min(1, sh.clock / 0.35);
+    } else {
+      /* then the rest in about three seconds */
+      const left = sh.N - sh.rs.length, per = Math.max(1, Math.ceil(sh.N * dt / 3));
+      let g = null; for (let k = 0; k < Math.min(per, left); k++) { g = sh.next(); sh.rs.push(g.r); }
+      if (g) S.ghost = { from: g.y, to: g.y, f: 1, fit: fitOf(I.x, g.y) };
+    }
+    if (sh.rs.length >= sh.N) { S.ghost = null; setRun(false); readouts(); }
+  }
+  function note() {
+    const sh = S.sh, el = $('note');
+    if (S.run && sh) el.textContent = sh.rs.length < sh.slow ? VDI18N.t('Shuffle {k} of {n}: the y values trade places among the x values, slowly for the first {m}.', { k: sh.rs.length, n: num(sh.N, 6), m: sh.slow })
+      : VDI18N.t('Shuffle {k} of {n}, about three seconds for the rest.', { k: cnt(sh.rs.length), n: num(sh.N, 6) });
+    else if (sh && sh.rs.length >= sh.N) el.textContent = VDI18N.t('Shuffle test done: {n} shuffles. Reset clears it; a change to the points clears it too.', { n: cnt(sh.N) });
+    else if (sh && sh.rs.length) el.textContent = VDI18N.t('Paused after {k} shuffles. Play goes on.', { k: cnt(sh.rs.length) });
+    else el.textContent = VDI18N.t('Play runs the shuffle test. Drag points to move them; Add and Remove change what a click does.');
+  }
+
+  /* ---------- readouts ---------- */
+  function readouts() {
+    const F = S.F, u = units(), dl = $('out'), I = S.inc || included();
+    const dd = (a, b, cls) => `<div${cls ? ` class="${cls}"` : ''}><dt>${a}</dt><dd translate="no">${b}</dd></div>`;
+    const wide = (a, b) => `<div class="wide"><dt>${a}</dt><dd class="ok">${b}</dd></div>`;
+    let h = '';
+    const yl = lineThrough(S.hx[0], S.hy[0], S.hx[1], S.hy[1]);
+    h += dd(esc(VDI18N.t('Points used, n')), String(I.x.length) + (I.x.length < S.xs.length ? ' ' + esc(VDI18N.t('of {n}', { n: S.xs.length })) : ''));
+    if (!F) { dl.innerHTML = h + wide(esc(VDI18N.t('Least squares line')), esc(VDI18N.t('Needs at least three points, not all at the same x.'))); return; }
+    const hide = S.blind;
+    const q = (s) => (hide ? '?' : s);
+    h += `<div class="wide"><dt>${esc(VDI18N.t('Least squares line'))}</dt><dd translate="no">${hide ? '?' : `ŷ = ${minus(num(F.intercept, 5))} ${F.slope < 0 ? '−' : '+'} ${num(Math.abs(F.slope), 5)}x`}</dd></div>`;
+    const sb = withSE(F.slope, F.seSlope), sa = withSE(F.intercept, F.seIntercept);
+    h += dd(esc(VDI18N.t('Slope b')), q(`${minus(sb.v)} ± ${sb.e} ${esc(u.bu)}`));
+    h += dd(esc(VDI18N.t('Intercept a')), q(`${minus(sa.v)} ± ${sa.e} ${esc(u.yu)}`));
+    h += dd('r', q(dec(F.r, 4))) + dd('r²', q(dec(F.r2, 4)));
+    h += dd(esc(VDI18N.t('s, standard error of estimate')), q(withU(num(F.s), esc(u.yu))));
+    h += dd(esc(VDI18N.t('Sum of squares, least squares')), q(num(F.sse, 5)));
+    h += dd(esc(VDI18N.t('Sum of squares, your line')), num(sseOf(I.x, I.y, yl.a, yl.b), 5));
+    h += dd(esc(VDI18N.t('Σ(y − ȳ)², your line flat at ȳ')), num(F.sst, 5));
+    /* in context */
+    if (!hide) {
+      const up = F.slope >= 0, bAbs = num(Math.abs(F.slope));
+      h += wide(esc(VDI18N.t('Slope in context')), esc(VDI18N.t('For each 1 {xu} increase in {xn}, the predicted {yn} goes {dir} by {b} {yu}.', { xu: u.xu1 || u.xu || VDI18N.t('unit'), xn: u.xn, yn: u.yn, dir: up ? VDI18N.t('up') : VDI18N.t('down'), b: bAbs, yu: u.yu }).replace(/ +\./g, '.')));
+      const lo = Math.min(...I.x), hi = Math.max(...I.x), zeroIn = lo <= 0 && hi >= 0;
+      let ic = VDI18N.t('At {xn} = 0, the predicted {yn} is {a} {yu}.', { xn: u.xn, yn: u.yn, a: minus(num(F.intercept)), yu: u.yu }).replace(/ +\./g, '.') + ' ';
+      ic += zeroIn ? VDI18N.t('x = 0 is inside the data, so the intercept is a reading of the line.') : VDI18N.t('x = 0 is outside the data ({lo} to {hi}), so the intercept is an extrapolation: it fixes the line\'s height and may mean nothing by itself.', { lo: clean(lo), hi: clean(hi) });
+      const d = SETS[S.p];
+      if (d && d.zero) ic += ' ' + (Math.abs(F.intercept) <= 2 * F.seIntercept ? VDI18N.t('Physics expects 0 here, and 0 is within 2 SE of the intercept.') : VDI18N.t('Physics expects 0 here, but 0 is more than 2 SE from the intercept.'));
+      h += wide(esc(VDI18N.t('Intercept in context')), esc(ic));
+      const ph = physics(S.p, F);
+      if (ph) { const w = withSE(ph.v, ph.se), z = Math.abs(ph.v - ph.truth) / ph.se;
+        h += wide(esc(VDI18N.t('From the slope')), esc(VDI18N.t('{what}: {v} ± {e} {u}. The simulation used {t} {u}: {z} SE away.', { what: T(ph.what), v: minus(w.v), e: w.e, u: ph.unit, t: ph.truth, z: z.toFixed(1) }))); }
+    }
+    /* testing r */
+    h += dd(esc(VDI18N.t('t, df = {df}', { df: F.df })), q(F.t === Infinity ? '∞' : F.t === -Infinity ? '−∞' : dec(F.t, 3)));
+    h += dd(esc(VDI18N.t('p value, t test (two sided)')), q(pTxt(F.p)));
+    h += dd(esc(VDI18N.t('Critical value r* (95 %, df = {df})', { df: F.df })), q(dec(F.rcrit, 3)));
+    const shP = S.sh && S.sh.rs.length ? shuffleP(S.sh.rs, F.r) : NaN;
+    h += dd(esc(VDI18N.t('Shuffle p value')), hide ? '?' : S.sh && S.sh.rs.length ? pTxt(shP) + ' ' + esc(VDI18N.t('({n} shuffles)', { n: cnt(S.sh.rs.length) })) : esc(VDI18N.t('press Play')));
+    if (!hide) h += wide(esc(VDI18N.t('Is r significant?')), F.flat ? esc(VDI18N.t('r is undefined: every y is the same.')) : esc(F.sig ? VDI18N.t('Yes: |r| = {r} is larger than r* = {c}, and p {p} is below 0.05. The data show a linear relationship.', { r: dec(Math.abs(F.r), 4), c: dec(F.rcrit, 3), p: F.p < 0.0001 ? '< 0.0001' : '= ' + pTxt(F.p) })
+      : VDI18N.t('No: |r| = {r} is not larger than r* = {c}, and p {p} is not below 0.05. The data do not show a linear relationship.', { r: dec(Math.abs(F.r), 4), c: dec(F.rcrit, 3), p: F.p < 0.0001 ? '< 0.0001' : '= ' + pTxt(F.p) })));
+    /* prediction */
+    if (isFinite(S.px)) {
+      const yp = F.intercept + F.slope * S.px, lo = Math.min(...I.x), hi = Math.max(...I.x), inside = S.px >= lo && S.px <= hi;
+      h += dd(esc(VDI18N.t('Prediction ŷ at x = {x}', { x: clean(S.px) })), q(withU(minus(num(yp)), esc(u.yu))));
+      if (!hide) h += wide(esc(VDI18N.t('Inside or outside the data?')), esc(inside ? VDI18N.t('Inside the data ({lo} to {hi}): an interpolation, as reliable as the fit.', { lo: clean(lo), hi: clean(hi) })
+        : VDI18N.t('Outside the data ({lo} to {hi}): an extrapolation. Nothing in the data says the line still holds there.', { lo: clean(lo), hi: clean(hi) })));
+    }
+    /* outliers and the selected point */
+    if (!hide) {
+      const outs = F.outliers.map((k) => `(${clean(I.x[k])}, ${clean(I.y[k])}): ${VDI18N.t('residual')} ${minus(num(F.residuals[k]))}`);
+      h += wide(esc(VDI18N.t('Outliers, |y − ŷ| ≥ 2s = {v}', { v: num(2 * F.s) })), esc(outs.length ? outs.join('; ') : F.exact ? VDI18N.t('none: every point is on the line') : VDI18N.t('none')));
+      if (S.sel != null && S.loo) {
+        const L = S.loo, x = S.xs[S.sel], y = S.ys[S.sel];
+        const ch = (a, b) => (b === 0 ? '—' : ((a - b) / Math.abs(b) * 100).toFixed(0) + ' %');
+        const base = S.looBack ? L : F, other = S.looBack ? F : L;
+        h += wide(esc(S.looBack ? VDI18N.t('Point ({x}, {y}) is removed; with it back', { x: clean(x), y: clean(y) }) : VDI18N.t('Without the selected point ({x}, {y})', { x: clean(x), y: clean(y) })),
+          esc(VDI18N.t('ŷ = {a} + {b}x, r = {r}. The slope changes by {c}.', { a: minus(num(other.intercept, 5)), b: minus(num(other.slope, 5)), r: dec(other.r, 4), c: minus(ch(other.slope, base.slope)) })));
+      }
+    }
+    dl.innerHTML = h;
+  }
+  function table() {
+    const F = S.F, t = $('ptsTable'), u = units(), I = S.inc || included();
+    t.tHead.innerHTML = `<tr><th>x</th><th>y</th><th>ŷ</th><th>y − ŷ</th><th>|y − ŷ|/s</th></tr>`;
+    const show = F && !S.blind;
+    t.tBodies[0].innerHTML = S.xs.map((x, i) => {
+      const k = I.idx.indexOf(i), e = show && k >= 0 ? F.residuals[k] : NaN, yh = show ? F.intercept + F.slope * x : NaN;
+      const flag = show && k >= 0 && F.outliers.indexOf(k) >= 0;
+      return `<tr data-i="${i}" class="${[S.sel === i ? 'sel' : '', S.on[i] ? '' : 'off', flag ? 'flag' : ''].join(' ').trim()}"><td>${clean(x)}</td><td>${clean(S.ys[i])}</td><td>${show ? minus(num(yh, 5)) : '?'}</td><td>${k >= 0 && show ? minus(num(e, 4)) : '—'}</td><td>${k >= 0 && show && F.s > 0 ? dec(Math.abs(e) / F.s, 2) : '—'}</td></tr>`;
+    }).join('');
+    $('rmSel').disabled = S.sel == null; $('putBack').disabled = S.on.every(Boolean);
+    $('selNote').textContent = S.sel == null ? VDI18N.t('Click a point to select it and see the line without it.') : S.on[S.sel] ? VDI18N.t('Selected: ({x}, {y}). The gray dashed line leaves it out.', { x: clean(S.xs[S.sel]), y: clean(S.ys[S.sel]) }) : VDI18N.t('Selected: ({x}, {y}), removed. Click it in Remove mode or Put all points back to use it again.', { x: clean(S.xs[S.sel]), y: clean(S.ys[S.sel]) });
+    $('rmSel').textContent = S.sel != null && !S.on[S.sel] ? VDI18N.t('Put selected point back') : VDI18N.t('Remove selected point');
+    $('pxUnit').textContent = u.xu;
+  }
+
+  /* ---------- pointer ---------- */
+  let drag = null;
+  const pos = (e, el) => { const r = el.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; };
+  function hitPoint(p) { let best = -1, bd = 14; S.xs.forEach((x, i) => { const d = Math.hypot(X(x) - p.x, Y(S.ys[i]) - p.y); if (d < bd) { bd = d; best = i; } }); return best; }
+  function snap(v, span) { const f = Math.pow(10, Math.floor(Math.log10(Math.abs(span) || 1)) - 3); return Math.round(v / f) * f; }
+  function pick(p) {
+    for (let k = 0; k < 2; k++) if (Math.hypot(X(S.hx[k]) - p.x, Y(S.hy[k]) - p.y) < 13) return { what: 'handle', k };
+    if (isFinite(S.px) && Math.abs(X(S.px) - p.x) < 12 && Math.abs(H - M.b - p.y) < 14) return { what: 'pred' };
+    const i = hitPoint(p); if (i >= 0) return { what: 'point', i };
+    const yl = lineThrough(S.hx[0], S.hy[0], S.hx[1], S.hy[1]);
+    if (Math.abs(Y(yl.a + yl.b * IX(p.x)) - p.y) < 8) return { what: 'line' };
+    return { what: 'pan' };
+  }
+  can.addEventListener('pointerdown', (e) => {
+    const p = pos(e, can), h = pick(p);
+    can.setPointerCapture(e.pointerId); can.focus({ preventScroll: true });
+    drag = Object.assign(h, { p0: p, moved: false, v0: Object.assign({}, S.view), hy0: S.hy.slice() });
+    if (h.what === 'point' && S.mode === 'remove') { S.on[h.i] = !S.on[h.i]; S.sel = h.i; dataChanged(true); drag = null; return; }
+    if (h.what === 'pan' && S.mode === 'add' && p.x > M.l && p.x < W - M.r && p.y > M.t && p.y < H - M.b) {
+      const sx = S.view.x1 - S.view.x0, sy = S.view.y1 - S.view.y0;
+      if (S.xs.length < 500) { S.xs.push(snap(IX(p.x), sx)); S.ys.push(snap(IY(p.y), sy)); S.on.push(true); S.moved = true; S.sel = S.xs.length - 1; writeOwn(); dataChanged(true); }
+      drag = null; return;
+    }
+  });
+  can.addEventListener('pointermove', (e) => {
+    const p = pos(e, can);
+    if (!drag) { const h = pick(p); can.style.cursor = h.what === 'handle' || h.what === 'point' || h.what === 'pred' ? 'grab' : h.what === 'line' ? 'move' : S.mode === 'add' ? 'copy' : 'crosshair'; return; }
+    if (Math.hypot(p.x - drag.p0.x, p.y - drag.p0.y) > 3) drag.moved = true;
+    if (!drag.moved) return;
+    if (drag.what === 'handle') { S.hy[drag.k] = IY(p.y); need = true; readouts(); }
+    else if (drag.what === 'line') { const d = IY(p.y) - IY(drag.p0.y); S.hy = [drag.hy0[0] + d, drag.hy0[1] + d]; need = true; readouts(); }
+    else if (drag.what === 'pred') { S.px = snap(IX(p.x), S.view.x1 - S.view.x0); $('px').value = String(S.px); need = true; readouts(); }
+    else if (drag.what === 'point' && S.mode === 'move') {
+      const sx = S.view.x1 - S.view.x0, sy = S.view.y1 - S.view.y0;
+      S.xs[drag.i] = snap(IX(Math.max(M.l, Math.min(W - M.r, p.x))), sx); S.ys[drag.i] = snap(IY(Math.max(M.t, Math.min(H - M.b, p.y))), sy); S.sel = drag.i;
+      S.edited = true; S.moved = true; stopShuffle(true); refit(); writeOwn();
+    } else if (drag.what === 'pan') {
+      const v = drag.v0, kx = (v.x1 - v.x0) / (W - M.l - M.r), ky = (v.y1 - v.y0) / (H - M.t - M.b), dx = (p.x - drag.p0.x) * kx, dy = (p.y - drag.p0.y) * ky;
+      S.view = { x0: v.x0 - dx, x1: v.x1 - dx, y0: v.y0 + dy, y1: v.y1 + dy }; S.autoView = false; need = true;
+    }
+  });
+  const up = () => {
+    if (drag && !drag.moved && drag.what === 'point') { S.sel = S.sel === drag.i ? null : drag.i; refit(); }
+    else if (drag && !drag.moved && drag.what === 'pan' && S.sel != null) { S.sel = null; refit(); }
+    drag = null;
+  };
+  can.addEventListener('pointerup', up); can.addEventListener('pointercancel', up);
+  can.addEventListener('wheel', (e) => { e.preventDefault(); zoom(e.deltaY > 0 ? 1.25 : 0.8); }, { passive: false });
+  can.addEventListener('keydown', (e) => {
+    if (e.key === '+' || e.key === '=') { zoom(0.8); e.preventDefault(); }
+    else if (e.key === '-' || e.key === '_') { zoom(1.25); e.preventDefault(); }
+    else if (e.key === 'n' || e.key === 'N') { if (S.xs.length) { S.sel = S.sel == null ? 0 : (S.sel + (e.shiftKey ? S.xs.length - 1 : 1)) % S.xs.length; refit(); } e.preventDefault(); }
+    else if ((e.key === 'Delete' || e.key === 'Backspace') && S.sel != null) { S.on[S.sel] = !S.on[S.sel]; dataChanged(true); e.preventDefault(); }
+    else if (e.key.startsWith('Arrow') && S.sel != null) {
+      const f = e.shiftKey ? 0.05 : 0.01, sx = (S.view.x1 - S.view.x0), sy = (S.view.y1 - S.view.y0);
+      if (e.key === 'ArrowLeft') S.xs[S.sel] = snap(S.xs[S.sel] - f * sx, sx); if (e.key === 'ArrowRight') S.xs[S.sel] = snap(S.xs[S.sel] + f * sx, sx);
+      if (e.key === 'ArrowUp') S.ys[S.sel] = snap(S.ys[S.sel] + f * sy, sy); if (e.key === 'ArrowDown') S.ys[S.sel] = snap(S.ys[S.sel] - f * sy, sy);
+      S.moved = true; writeOwn(); dataChanged(true); e.preventDefault();
+    }
+  });
+  res.addEventListener('pointerdown', (e) => {
+    if (!S.F || !res._map || S.blind) return; const p = pos(e, res); let best = -1, bd = 14;
+    S.inc.x.forEach((x, k) => { const d = Math.hypot(res._map.xi(x) - p.x, res._map.yi(S.F.residuals[k]) - p.y); if (d < bd) { bd = d; best = S.inc.idx[k]; } });
+    if (best >= 0) { S.sel = S.sel === best ? null : best; refit(); }
+  });
+  $('ptsTable').addEventListener('click', (e) => { const tr = e.target.closest('tr[data-i]'); if (!tr) return; const i = +tr.dataset.i; S.sel = S.sel === i ? null : i; refit(); });
+
+  /* ---------- controls ---------- */
+  for (const b of document.querySelectorAll('#presets [data-p]')) b.addEventListener('click', () => applySetup(b.dataset.p));
+  for (const b of document.querySelectorAll('#modeSeg [data-m]')) b.addEventListener('click', () => { S.mode = b.dataset.m; for (const o of document.querySelectorAll('#modeSeg [data-m]')) o.setAttribute('aria-pressed', String(o === b)); });
+  for (const b of document.querySelectorAll('#sqSeg [data-sq]')) b.addEventListener('click', () => { S.sq = b.dataset.sq; for (const o of document.querySelectorAll('#sqSeg [data-sq]')) o.setAttribute('aria-pressed', String(o === b)); need = true; });
+  $('play').addEventListener('click', () => setRun(!S.run));
+  $('reset').addEventListener('click', () => {
+    if (S.p === 'own') { setRun(false); S.sh = null; S.ghost = null; readOwn(true); }
+    else applySetup(S.p, true);
+  });
+  $('flatLine').addEventListener('click', flatLine);
+  $('px').addEventListener('input', () => { const v = parseFloat($('px').value); if (isFinite(v) && Math.abs(v) < 1e12) { S.px = v; need = true; readouts(); } });
+  $('px').addEventListener('change', () => { if (S.autoView) { fitView(); need = true; } });
+  $('rmSel').addEventListener('click', () => { if (S.sel == null) return; S.on[S.sel] = !S.on[S.sel]; dataChanged(true); });
+  $('putBack').addEventListener('click', () => { S.on = S.xs.map(() => true); dataChanged(true); });
+  $('nShuf').addEventListener('change', () => { stopShuffle(true); readouts(); });
+  const setSeed = (v) => {
+    v = Math.max(1, Math.min(9999, Math.round(+v) || 1)); S.seed = v; $('seed').value = String(v);
+    const d = SETS[S.p];
+    if (d && d.sim) applySetup(S.p, true); else { stopShuffle(true); readouts(); }
+  };
+  $('seed').addEventListener('change', () => setSeed($('seed').value));
+  $('newDraw').addEventListener('click', () => setSeed(S.seed + 1));
+  $('zin').addEventListener('click', () => zoom(0.8)); $('zout').addEventListener('click', () => zoom(1.25));
+  $('homeView').addEventListener('click', () => { S.autoView = true; fitView(); need = true; });
+  $('labBlind').addEventListener('change', () => { S.blind = $('labBlind').checked; need = true; readouts(); table(); });
+  $('dataIn').addEventListener('input', () => readOwn(false));
+  for (const id of ['xName', 'xUnit', 'yName', 'yUnit']) $(id).addEventListener('input', () => { need = true; readouts(); table(); });
+
+  /* ---------- frame ---------- */
+  let last = performance.now();
+  function frame(now) {
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    if (S.run) { stepShuffle(dt); need = true; if (S.run) note(); }
+    if (need) { need = false; draw(); drawRes(); drawHist(); if (S.run) readoutsSoon(); }
+    requestAnimationFrame(frame);
+  }
+  let rsT = 0; function readoutsSoon() { const t = performance.now(); if (t - rsT > 250) { rsT = t; readouts(); } }
+  function resize() {
+    dpr = window.devicePixelRatio || 1;
+    const r = $('pane').getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr);
+    const a = res.parentElement.getBoundingClientRect(); RW = a.width; RH = a.height; res.width = Math.round(RW * dpr); res.height = Math.round(RH * dpr);
+    const b = hist.parentElement.getBoundingClientRect(); HW = b.width; HH = b.height; hist.width = Math.round(HW * dpr); hist.height = Math.round(HH * dpr);
+    need = true;
+  }
+  const retheme = () => { tokens(); need = true; };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'data-vd-look'] });
+  VD.projector({ onChange: resize });
+  if (window.VD && VD.panel) VD.panel({ play: '#play', reset: '#reset' });
+  if (window.VD && VD.splitPanes) VD.splitPanes($('pane'), $('lower'), { key: 'lower', label: 'Divider between the scatter plot and the lower graphs' });
+  if (window.VD && VD.howTo) VD.howTo({ src: 'media/how-this-works/regression-fit.mp4', poster: 'media/how-this-works/regression-fit.jpg' });
+  /* Copy link carries edited or typed points */
+  if (window.VD && VD.share && VD.share.picture) VD.share.picture('pts', {
+    get: () => (S.edited || S.p === 'own' ? VD.share.pack({ x: S.xs, y: S.ys, o: S.on.map((b) => (b ? 1 : 0)), n: S.p === 'own' ? [$('xName').value, $('xUnit').value, $('yName').value, $('yUnit').value] : null }) : ''),
+    set: (s) => {
+      const o = s && VD.share.unpack(s); if (!o || !Array.isArray(o.x) || !Array.isArray(o.y)) return;
+      if (o.n) { $('xName').value = o.n[0]; $('xUnit').value = o.n[1]; $('yName').value = o.n[2]; $('yUnit').value = o.n[3]; }
+      S.xs = o.x.map(Number); S.ys = o.y.map(Number); S.on = S.xs.map((_, i) => !(o.o && o.o[i] === 0)); S.sel = null; S.moved = true; writeOwn(); fitView(); flatLine(); dataChanged(true);
+    },
+  });
+  /* Record reading: the data set and the fit (the worksheet regression-fit) */
+  window.vdReadingRow = () => {
+    const F = S.F; if (!F) return VDI18N.t('Needs at least three points, not all at the same x.');
+    if (S.blind) return VDI18N.t('Turn Blind off to record the fit.');
+    const I = S.inc, removed = S.xs.length - I.x.length;
+    const LABEL = { exam: 'Third exam and final exam', scuba: 'Dive depth and dive time', ice: 'Ice cream cones and temperature', cpi: 'Consumer Price Index', swim: 'Olympic 100 m freestyle',
+      spring: 'Spring', pendulum: 'Pendulum T² against length', ohm: 'Ohm\'s law', mass: 'Pendulum period against bob mass', own: 'Your own data' };
+    let set = LABEL[S.p];
+    if (S.moved) set += ' (edited)'; else if (removed) set += ' (' + removed + ' removed)';
+    const yp = isFinite(S.px) ? F.intercept + F.slope * S.px : NaN;
+    return { set, n: I.x.length, b: Number(F.slope.toPrecision(5)), se_b: Number(F.seSlope.toPrecision(3)), a: Number(F.intercept.toPrecision(5)), se_a: Number(F.seIntercept.toPrecision(3)),
+      r: Number(F.r.toFixed(4)), s: Number(F.s.toPrecision(4)), r2: Number(F.r2.toFixed(4)), t: isFinite(F.t) ? Number(F.t.toFixed(3)) : '', p: isFinite(F.p) ? Number(F.p.toFixed(4)) : '',
+      r_crit: Number(F.rcrit.toFixed(3)), shuffle_p: S.sh && S.sh.rs.length ? Number(shuffleP(S.sh.rs, F.r).toFixed(4)) : '', x_pred: isFinite(S.px) ? S.px : '', y_pred: isFinite(yp) ? Number(yp.toPrecision(5)) : '', draw: S.seed };
+  };
+  window.vdShowCols = [['set', 'Data set'], ['n', 'n'], ['b', 'Slope'], ['r', 'r']];
+  window.vdVersion = 'regression@2026-11-19';
+  /* the data note covers every recorded row: book rows are cited, the others are said to be simulated or typed in */
+  const ROWLABEL = { exam: 'Third exam and final exam', scuba: 'Dive depth and dive time', ice: 'Ice cream cones and temperature', cpi: 'Consumer Price Index', swim: 'Olympic 100 m freestyle',
+    spring: 'Spring', pendulum: 'Pendulum T² against length', ohm: 'Ohm\'s law', mass: 'Pendulum period against bob mass', own: 'Your own data' };
+  window.vdDataNote = () => {
+    const rows = typeof window.vdRows === 'function' ? window.vdRows() : [];
+    const keyOf = (set) => Object.keys(ROWLABEL).find((k) => String(set).replace(/ \(.*\)$/, '') === ROWLABEL[k]);
+    const keys = rows.length ? rows.map((r) => keyOf(r.set)) : [S.p];
+    const book = [...new Set(keys.filter((k) => SETS[k] && SETS[k].book))];
+    if (!book.length) return '';
+    const cite = 'Data from OpenStax Introductory Statistics 2e (CC BY 4.0): ' + book.map((k) => ROWLABEL[k] + ', ' + SETS[k].cite.replace(/;.*$/, '')).join('; ') + '.';
+    const sim = keys.some((k) => SETS[k] && SETS[k].gen), own = keys.some((k) => k === 'own');
+    return cite + (sim ? ' The physics lab rows are simulated by the demo.' : '') + (own ? ' Your own data rows are typed in.' : '');
+  };
+  if (window.VD && VD.describe) VD.describe(can, () => {
+    const F = S.F, u = units(), out = [];
+    out.push(VDI18N.t('{n} points: {yn} against {xn}.', { n: (S.inc || included()).x.length, yn: u.yn, xn: u.xn }));
+    if (F && !S.blind) {
+      out.push(VDI18N.t('The least squares line is y hat = {a} + {b} x, with r = {r} and s = {s}.', { a: num(F.intercept, 5), b: num(F.slope, 5), r: dec(F.r, 4), s: num(F.s) }));
+      if (F.outliers.length) out.push(VDI18N.t('{k} outliers are at least 2s from the line.', { k: F.outliers.length }));
+    }
+    const yl = lineThrough(S.hx[0], S.hy[0], S.hx[1], S.hy[1]);
+    out.push({ t: VDI18N.t('Your line has a sum of squares of {v}.', { v: num(sseOf((S.inc || included()).x, (S.inc || included()).y, yl.a, yl.b), 5) }), live: !S.run });
+    return out;
+  });
+  tokens();
+  new ResizeObserver(resize).observe($('pane')); new ResizeObserver(resize).observe(res.parentElement); new ResizeObserver(resize).observe(hist.parentElement);
+  resize(); applySetup('exam'); note();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  window.__reg = { S, SETS, fitOf, sseOf, corr, shuffler, shuffleP, shuffleTest, without, parseXY, withSE, physics, dataFor, applySetup, setRun, refit, flatLine, readouts,
+    draw: () => { need = true; } };
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

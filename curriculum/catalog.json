@@ -1416,6 +1416,20 @@
       "Snell's law",
       "projectile range"
      ]
+    },
+    {
+     "demo": "regression",
+     "title": "Linear Regression and Correlation",
+     "desc": "Drag the points of a scatter plot and watch the least squares line and its residual squares follow; try to beat it with your own line. r, r², s, the slope and intercept with their uncertainties read in context, the t test and critical value for r beside a shuffle test, prediction against extrapolation, and outliers that pull the line. Book data and simulated spring, pendulum and Ohm's law labs.",
+     "tags": [
+      "regression",
+      "least squares",
+      "correlation",
+      "residuals",
+      "outliers",
+      "permutation test",
+      "statistics"
+     ]
     }
    ]
   },

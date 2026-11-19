@@ -101,6 +101,12 @@ window.VD_SHORTCUTS = {
     ["← →", "Pan the view (Shift for bigger steps)", "on the picture"],
     ["↑ ↓", "Make ε bigger or smaller", "on the picture"]
   ],
+  "regression": [
+    ["+ −", "Zoom in or out (or scroll over the plot)", "on the scatter plot"],
+    ["N", "Select the next point (Shift for the one before)", "on the scatter plot"],
+    ["← → ↑ ↓", "Move the selected point (Shift for bigger steps)", "on the scatter plot"],
+    ["Delete", "Remove the selected point, or put it back", "on the scatter plot"]
+  ],
   "integrals": [
     ["↑ ↓", "One more or one fewer piece n (Error against n)", "on the graph"],
     ["← →", "Move x along the curve (F(x), the area so far; Shift for bigger steps)", "on the graph"],
