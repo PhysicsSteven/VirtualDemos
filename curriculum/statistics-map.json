@@ -101,7 +101,9 @@
       "measurement-uncertainty",
       "galton-board"
      ],
-     "worksheets": []
+     "worksheets": [
+      "g-statistics"
+     ]
     },
     {
      "sec": "2.3",
@@ -135,6 +137,7 @@
       "galton-board"
      ],
      "worksheets": [
+      "g-statistics",
       "measurement-uncertainty"
      ]
     },
@@ -240,7 +243,9 @@
      "demos": [
       "radioactive-decay"
      ],
-     "worksheets": []
+     "worksheets": [
+      "counting-statistics"
+     ]
     },
     {
      "sec": "4.7",
@@ -279,6 +284,7 @@
       "radioactive-decay"
      ],
      "worksheets": [
+      "counting-statistics",
       "radioactive-decay"
      ]
     },
@@ -288,7 +294,9 @@
      "demos": [
       "radioactive-decay"
      ],
-     "worksheets": []
+     "worksheets": [
+      "counting-statistics"
+     ]
     }
    ]
   },
@@ -320,7 +328,9 @@
      "demos": [
       "measurement-uncertainty"
      ],
-     "worksheets": []
+     "worksheets": [
+      "g-statistics"
+     ]
     },
     {
      "sec": "6.4",
@@ -387,8 +397,12 @@
     {
      "sec": "8.2",
      "title": "A Single Population Mean using the Student t Distribution",
-     "demos": [],
-     "worksheets": []
+     "demos": [
+      "measurement-uncertainty"
+     ],
+     "worksheets": [
+      "g-statistics"
+     ]
     },
     {
      "sec": "8.3",
@@ -466,10 +480,12 @@
      "sec": "9.6",
      "title": "Hypothesis Testing of a Single Mean and Single Proportion",
      "demos": [
-      "hypothesis-tests"
+      "hypothesis-tests",
+      "measurement-uncertainty"
      ],
      "worksheets": [
-      "errors-and-power"
+      "errors-and-power",
+      "g-statistics"
      ]
     }
    ]
@@ -514,9 +530,12 @@
      "sec": "10.5",
      "title": "Hypothesis Testing for Two Means and Two Proportions",
      "demos": [
-      "hypothesis-tests"
+      "hypothesis-tests",
+      "measurement-uncertainty"
      ],
-     "worksheets": []
+     "worksheets": [
+      "g-statistics"
+     ]
     }
    ]
   },
@@ -534,6 +553,7 @@
      "sec": "11.2",
      "title": "Goodness-of-Fit Test",
      "demos": [
+      "radioactive-decay",
       "galton-board",
       "quantum-coin"
      ],
