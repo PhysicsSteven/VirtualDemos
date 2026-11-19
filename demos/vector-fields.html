@@ -519,7 +519,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     CC = curlCheck(S.F, x0, x1, y0, y1, 36);
     POT = null;
     if (CC.free) { const nx = Math.max(16, Math.min(90, Math.round(W / (9 * p)))), ny = Math.max(10, Math.round(nx * H / W)); POT = potentialGrid(S.F, x0, x1, y0, y1, nx, ny, S.ref, S.refV); }
-    verdict();
+    verdict(); readouts();   /* the f(A), f(B) lines follow the new verdict after a setup press */
     /* shading by curl or divergence */
     if (S.shade !== 'none' && !S.blind) {
       const g = S.shade === 'curl' ? S.F.curl : S.F.div, cell = 5, nx = Math.ceil(W / cell), ny = Math.ceil(H / cell), vals = new Float64Array(nx * ny), mags = [];
