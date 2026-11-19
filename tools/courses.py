@@ -638,6 +638,9 @@ ASTRO_MAP = ROOT / 'curriculum' / 'astronomy-map.json'
 CALC_MAP = ROOT / 'curriculum' / 'calculus-map.json'
 CALC_ABOUT = {1: 'Functions, limits, derivatives and integrals', 2: 'Integration, differential equations, series and polar curves',
               3: 'Vectors, several variables, multiple integrals and vector calculus'}
+# OpenStax Introductory Statistics 2e by section (Steve 2026-11-19, the Statistics demos): curriculum/statistics-map.json, its 13
+# chapters in four parts (home page tiles and the bar on openstax-statistics.html), like the astronomy map.
+STATS_MAP = ROOT / 'curriculum' / 'statistics-map.json'
 
 
 def load_topics(cards):
@@ -759,7 +762,7 @@ def openstax_page(m, cards, notes):
       <ol class="srows">{''.join(lines)}</ol>
     </details>''')
         jump.append(f'<li><a href="#vol-{v}">Volume {v}</a></li>')
-        if v == 3: jump.append('<li><a href="openstax-astronomy.html">Astronomy 2e</a></li><li><a href="openstax-calculus.html">Calculus</a></li>')
+        if v == 3: jump.append('<li><a href="openstax-astronomy.html">Astronomy 2e</a></li><li><a href="openstax-calculus.html">Calculus</a></li><li><a href="openstax-statistics.html">Statistics</a></li>')
         vols.append(f'''  <section class="unit" id="vol-{v}" aria-labelledby="vol-{v}-h">
     <h2 id="vol-{v}-h">Volume {v}: {VOL_ABOUT[v]}</h2>
     <p class="meta"><span>Ch. {chs[0]}–{chs[-1]}</span><span>{len(ss)} sections</span><span>{sum(1 for s in ss if s['status'] == 'usable')} with an activity</span><span><a href="{BOOK_URL[v]}">Free textbook: {BOOK[v]}</a></span></p>
@@ -821,7 +824,7 @@ def openstax_astro_page(a, cards):
     <p class="meta"><span>Ch. {cs[0]['chapter']}–{cs[-1]['chapter']}</span><span>{len(ss)} sections</span><span>{sum(1 for s in ss if s['demos'])} with an activity</span><span><a href="{a['book']['url']}">Free textbook: OpenStax {a['book']['title']}</a></span></p>
 {chr(10).join(rows)}
   </section>''')
-    jump.append('<li><a href="openstax.html">University Physics</a></li><li><a href="openstax-calculus.html">Calculus</a></li>')
+    jump.append('<li><a href="openstax.html">University Physics</a></li><li><a href="openstax-calculus.html">Calculus</a></li><li><a href="openstax-statistics.html">Statistics</a></li>')
     n_d = len({d for s in secs for d in s['demos']})
     facts = (f'<li><span><strong>{len(a["chapters"])}</strong> chapters</span></li><li><span><strong>{len(secs)}</strong> sections</span></li>'
              f'<li><span><strong>{sum(1 for s in secs if s["demos"])}</strong> with an activity</span></li><li><span><strong>{n_d}</strong> demos</span></li>')
@@ -871,7 +874,7 @@ def openstax_calc_page(a, cards):
     <p class="meta"><span>Ch. {V['chapters'][0]['chapter']}–{V['chapters'][-1]['chapter']}</span><span>{len(ss)} sections</span><span>{sum(1 for s in ss if s['demos'])} with an activity</span><span><a href="{V['url']}">Free textbook: OpenStax {esc(V['title'])}</a></span></p>
 {chr(10).join(rows)}
   </section>''')
-    jump.append('<li><a href="openstax.html">University Physics</a></li><li><a href="openstax-astronomy.html">Astronomy 2e</a></li>')
+    jump.append('<li><a href="openstax.html">University Physics</a></li><li><a href="openstax-astronomy.html">Astronomy 2e</a></li><li><a href="openstax-statistics.html">Statistics</a></li>')
     n_d = len({d for s in secs for d in s['demos']})
     facts = (f'<li><span><strong>3</strong> volumes</span></li><li><span><strong>{len(secs)}</strong> sections</span></li>'
              f'<li><span><strong>{sum(1 for s in secs if s["demos"])}</strong> with an activity</span></li><li><span><strong>{n_d}</strong> demos</span></li>')
@@ -882,6 +885,57 @@ def openstax_calc_page(a, cards):
     page = page_shell('OpenStax Calculus', 'By textbook section', 'The free OpenStax calculus textbooks, section by section, with the demos and worksheets for each.',
                       facts, ''.join(jump), ALL_CH + '\n'.join(parts), how, tab='openstax')
     page = page.replace('from curriculum/textbook-map.json.', 'from curriculum/calculus-map.json.', 1)
+    return page.replace('<script src="search.js" defer></script>', '<script src="search.js" defer></script>\n' + OPEN_HASH, 1)
+
+
+def load_stats(cards):
+    """curriculum/statistics-map.json, checked: every demo in the catalog, every worksheet a student handout, parts hold every chapter."""
+    a = json.loads(STATS_MAP.read_text())
+    bad = [f'{s["sec"]} {d}' for c in a['chapters'] for s in c['sections'] for d in s['demos'] if d not in cards]
+    bad += [f'{s["sec"]} {h}' for c in a['chapters'] for s in c['sections'] for h in s.get('worksheets', [])
+            if not (ROOT / 'curriculum' / 'labs' / 'students' / f'{h}.md').exists()]
+    if bad:
+        raise SystemExit(f'curriculum/statistics-map.json: no such demo or worksheet: {bad}')
+    astro_parts(a)   # the same check: every chapter in exactly one part
+    return a
+
+
+def openstax_stats_page(a, cards):
+    plain = lambda t: esc(html.unescape(re.sub(r'<[^>]+>', '', t)))
+    secs = [s for c in a['chapters'] for s in c['sections']]
+    parts, jump = [], []
+    for p, cs in astro_parts(a):
+        rows = []
+        for c in cs:
+            lines, n_d = [], set()
+            for s in c['sections']:
+                n_d.update(s['demos'])
+                links = [f'<a href="demos/{d}.html">{plain(cards[d]["title"])}</a>' for d in s['demos']]
+                links += [f'<a class="ws" href="curriculum/labs/students/{h}.html">{esc(handout_label(h))}</a>' for h in s.get('worksheets', [])]
+                st = '' if s['demos'] else '<span class="st st-missing">no activity yet</span>'
+                lines.append(f'<li id="ss-{s["sec"].replace(".", "-")}"><span class="sec">{s["sec"]}</span><span class="stitle">{esc(s["title"])}{st}</span>'
+                             f'<span class="sdemos">{" · ".join(links)}</span></li>')
+            rows.append(f'''    <details class="ch" id="st-ch{c['chapter']}">
+      <summary><span class="chn">Chapter {c['chapter']}</span> {esc(c['title'])} <span class="n">{len(c['sections'])} sections · {len(n_d)} demo{"s" if len(n_d) != 1 else ""}</span></summary>
+      <ol class="srows">{''.join(lines)}</ol>
+    </details>''')
+        ss = [s for c in cs for s in c['sections']]
+        jump.append(f'<li><a href="#{p["id"]}">{esc(p["title"])}</a></li>')
+        parts.append(f'''  <section class="unit" id="{p['id']}" aria-labelledby="{p['id']}-h">
+    <h2 id="{p['id']}-h">{esc(p['title'])}</h2>
+    <p class="meta"><span>Ch. {cs[0]['chapter']}–{cs[-1]['chapter']}</span><span>{len(ss)} sections</span><span>{sum(1 for s in ss if s['demos'])} with an activity</span><span><a href="{a['book']['url']}">Free textbook: OpenStax {a['book']['title']}</a></span></p>
+{chr(10).join(rows)}
+  </section>''')
+    jump.append('<li><a href="openstax.html">University Physics</a></li><li><a href="openstax-calculus.html">Calculus</a></li><li><a href="openstax-astronomy.html">Astronomy 2e</a></li>')
+    n_d = len({d for s in secs for d in s['demos']})
+    facts = (f'<li><span><strong>{len(a["chapters"])}</strong> chapters</span></li><li><span><strong>{len(secs)}</strong> sections</span></li>'
+             f'<li><span><strong>{sum(1 for s in secs if s["demos"])}</strong> with an activity</span></li><li><span><strong>{n_d}</strong> demos</span></li>')
+    how = ('Every section of OpenStax Introductory Statistics 2e with the demos that serve it, the statistics demos first and then the physics '
+           'demos that use the same idea, and the worksheets that fit it. Open a chapter to see its sections. Section numbers match the book; '
+           'the lab sections at the end of each chapter are numbered as the book numbers them.')
+    page = page_shell('OpenStax Statistics', 'By textbook section', 'The free OpenStax statistics textbook, section by section, with the demos and worksheets for each.',
+                      facts, ''.join(jump), ALL_CH + '\n'.join(parts), how, tab='openstax')
+    page = page.replace('from curriculum/textbook-map.json.', 'from curriculum/statistics-map.json.', 1)
     return page.replace('<script src="search.js" defer></script>', '<script src="search.js" defer></script>\n' + OPEN_HASH, 1)
 
 
@@ -1194,6 +1248,14 @@ def tiles(m, cards, t):
         ctiles.append(tile(f'cvol-{V["vol"]}', f'Calculus Volume {V["vol"]}', CALC_ABOUT[V['vol']], f'{len(V["chapters"])} chapters · {n} sections',
                            'OpenStax Calculus, chapter by chapter, with the demos and worksheets for each section.', pick,
                            href=f'openstax-calculus.html#cvol-{V["vol"]}'))
+    stiles = []
+    for p, cs in astro_parts(load_stats(cards)):
+        seen = list(dict.fromkeys(d for c in cs for s in c['sections'] for d in s['demos']))
+        pick = [seen[round(i * (len(seen) - 1) / 3)] for i in range(4)] if len(seen) >= 4 else seen
+        n = sum(len(c['sections']) for c in cs)
+        stiles.append(tile(p['id'], p['title'], f"Chapters {cs[0]['chapter']}–{cs[-1]['chapter']}", f'{n} sections',
+                           'OpenStax Introductory Statistics 2e, chapter by chapter, with the demos and worksheets for each section.', pick,
+                           href=f'openstax-statistics.html#{p["id"]}'))
     clinks = ''.join(f'<a class="pbtn" href="{c["id"]}.html">{esc(c["title"])}</a>' for c in m['courses'] if c['id'] in LISTED)
     return f'''{TILE_START}
 <nav class="tools" aria-label="Subjects">
@@ -1225,6 +1287,13 @@ def tiles(m, cards, t):
   <p class="allnote">Every section of the free calculus textbooks with the math demos, and the physics demos that use the same idea.</p>
   <ul class="ctiles">
 {chr(10).join(ctiles)}
+  </ul>
+</section>
+<section class="wrap courses" id="openstax-stats" aria-labelledby="openstax-stats-h">
+  <h2 id="openstax-stats-h">OpenStax Statistics by section</h2>
+  <p class="allnote">Every section of the free introductory statistics textbook with the statistics demos, and the physics demos that measure and count.</p>
+  <ul class="ctiles">
+{chr(10).join(stiles)}
   </ul>
 </section>
 <section class="wrap courses" id="courses" aria-labelledby="courses-h">
@@ -1768,6 +1837,7 @@ def build():
     out[ROOT / 'openstax.html'] = openstax_page(m, cards, notes)
     out[ROOT / 'openstax-astronomy.html'] = openstax_astro_page(load_astro(cards), cards)
     out[ROOT / 'openstax-calculus.html'] = openstax_calc_page(load_calc(cards), cards)
+    out[ROOT / 'openstax-statistics.html'] = openstax_stats_page(load_stats(cards), cards)
     out[ROOT / 'courses.html'] = courses_page(m, cards, t)
     # Misc became the Chemistry and biology topic (2026-10-28); old links land there
     out[ROOT / 'misc.html'] = MISC_REDIRECT
