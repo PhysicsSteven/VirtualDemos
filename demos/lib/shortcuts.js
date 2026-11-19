@@ -63,6 +63,16 @@ window.VD_SHORTCUTS = {
   "fate-of-the-universe": [
     ["← → ↑ ↓", "Move your universe on the map of matter against dark energy (Shift for bigger steps)", "on the picture"]
   ],
+  "series": [
+    ["↑ ↓ ← →", "One more or one fewer term N (Shift for ten)", "on either graph"],
+    ["+ −", "Zoom the n axis in or out about the middle (or scroll over a graph)", "on either graph"]
+  ],
+  "solids-of-revolution": [
+    ["↑ ↓ ← →", "One slice more or fewer", "on the plane picture or the graph"],
+    ["+ −", "Zoom the plane picture in or out about its center (or scroll over it)", "on the plane picture"],
+    ["+ −", "Magnify the sums about the integral (or scroll over the graph)", "on the graph"],
+    ["Space", "Play or pause the doubling of n", "on the plane picture or the graph"]
+  ],
   "taylor": [
     ["← →", "Move the probe (Shift for ten times as far)", "on the graph"],
     ["↑ ↓", "One order higher or lower", "on the graph"],

@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="../demos/lib/theme.js"></script>
+<title>Solids of Revolution: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+@media screen { :root[data-theme="dark"] {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; overflow-wrap: break-word; }   /* a long file name breaks instead of pushing a phone sideways */
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+<link rel="stylesheet" id="vd-paper" href="../demos/lib/paper.css">
+</head>
+<body class="notes">
+<header class="top" aria-label="Site"><a class="brand" href="../index.html"><svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><ellipse cx="16" cy="16" rx="13" ry="6" fill="none" stroke="currentColor" stroke-width="1.8" transform="rotate(-30 16 16)"/><ellipse cx="16" cy="16" rx="13" ry="6" fill="none" stroke="currentColor" stroke-width="1.8" transform="rotate(30 16 16)"/><circle cx="16" cy="16" r="2.6" fill="currentColor"/></svg>Virtual Physics Demos</a><nav class="tabs" aria-label="Library"><a class="tab" href="../index.html#topics">Demos</a><a class="tab" href="../openstax.html">OpenStax</a><a class="tab" href="index.html" aria-current="page">Notes</a></nav><span class="hfind"></span><span data-vd-theme></span><a class="courses" href="../courses.html"><b>For a class</b> Courses</a></header>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Solids of Revolution</h1><ul class="meta"><li><a href="../demos/solids-of-revolution.html">Open the demo</a></li><li>Calculus I and II (OpenStax Calculus Vol 1 6.2, 6.3 and 6.4) and Physics I (moments of inertia, University Physics Vol 1 10.5)</li><li>15 to 40 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>A volume is a sum of thin slices. Each slice is a disk or washer (perpendicular to the axis), a cylindrical shell (parallel to it) or a slab of known cross section; as the slices get thinner the sum closes in on an integral.</li>
+<li>A washer's volume is π(R² − r²)Δx, not π(R − r)²Δx. Radii are measured from the axis, so turning about y = −1 adds 1 to each.</li>
+<li>Shells are the easier choice when disks would need x as a function of y: V = ∫2π(radius)(height) dx.</li>
+<li>Slicing works for any solid whose cross sections you know, turned or not: V = ∫A(x) dx.</li>
+<li>Arc length is the limit of a chain of chords, L = ∫√(1 + f′²) dx; surface area is the limit of frustum bands, A = ∫2πf√(1 + f′²) dx.</li>
+<li>A moment of inertia is a sum too: disks give ∫½ dm r², shells ∫r² dm. A solid cone has I = (3/10)MR² and a solid sphere (2/5)MR², both less than a cylinder's ½MR².</li>
+</ul>
+<h2>Before class</h2>
+<p>Nothing to install. Projector mode enlarges the pictures and labels. Blind (Lab fold) hides the integral and the errors so students can predict them first. The buttons across the top choose Disks and washers, Shells, Cross sections, Arc length or Surface area; Volume and Moment of inertia switch what is added for disks and shells. 3D shows the solid built from its slices (drag to turn, scroll to zoom); Flat shows the region and the slices in the plane. Play doubles n every second, from 1 to 256; the graph below shows the sum against n on a log axis, with the integral as a dashed line.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>The vase.</strong> The opening setup is a vase lying on its side, sliced into 6 disks. Ask students to estimate how much it holds, then press Play (Q1).</li>
+<li><strong>Washers.</strong> Washers: between x and x², then Washers about the line y = −1. Ask what the inner radius is before showing it (Q2).</li>
+<li><strong>Shells.</strong> Shells: 2x − x² about the y axis and about the line x = −1; then Water in a round bowl (Q3).</li>
+<li><strong>Cross sections.</strong> Squares on a disk, Semicircles on a disk and Triangles on a parabola; turn the 3D view so the slabs stand on the base (Q4).</li>
+<li><strong>Arc length.</strong> Arc length of x^(3/2), then Length of a hanging cable: the chain is always short (Q5).</li>
+<li><strong>Surface area.</strong> Surface of a cone (exact for n = 1), Surface of a sphere and Gabriel's horn (Q6).</li>
+<li><strong>Moments of inertia.</strong> Moment of inertia of a solid cone, The cone again, by shells and Moment of inertia of a solid sphere (Q7).</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> The vase's profile is f(x) = 4 + 1.5 sin(x/2.5) cm from x = 0 to 25 cm. Write the volume of one disk and the integral the disks close in on. How much does the vase hold, in liters? Read the error for n = 6, 12 and 24: by what factor does it fall each time n doubles?</p></div>
+
+<div class="q"><p><strong>Q2.</strong> For the region between y = x and y = x² turned about the x axis, what are R and r for the slice at x? Why is the washer's volume π(R² − r²)Δx and not π(R − r)²Δx? In Washers about the line y = −1, the region under y = x² from 0 to 1 turns about y = −1: what are R and r, and what is the volume?</p></div>
+
+<div class="q"><p><strong>Q3.</strong> For 2x − x² turned about the y axis, why are shells easier than disks? Write the shell integral and evaluate it. A bowl shaped like half a sphere of radius 10 cm is filled 6 cm deep: what volume of water does it hold?</p></div>
+
+<div class="q"><p><strong>Q4.</strong> A solid has the unit disk as its base, and its cross sections perpendicular to the x axis are squares. What is the area of the square at x, and the volume? With semicircles instead, what solid do you get, and what is its volume?</p></div>
+
+<div class="q"><p><strong>Q5.</strong> Find the length of y = x^(3/2) from 0 to 4. Why is a chain of chords always a little shorter than the curve? A cable hangs between posts 20 m apart in the shape y = 10 cosh(x/10): how long is it?</p></div>
+
+<div class="q"><p><strong>Q6.</strong> Why are frustum bands exact for a cone even with n = 1? Use the sphere's integrand to show that its area is 4πR². For Gabriel's horn, y = 1/x from 1 to b, find the volume and show that the surface area grows without bound as b grows.</p></div>
+
+<div class="q"><p><strong>Q7.</strong> A uniform solid cone has mass 2 kg, radius 0.1 m and height 0.3 m. Use disks to show that I about its axis is (3/10)MR², and give I in kg·m². Do disks and shells approach it from the same side? For a uniform 2 kg sphere of radius 0.1 m, what is I about a diameter?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"A washer is a disk of radius R − r."</strong> The volume is π(R² − r²)Δx: subtract the areas, not the radii.</li>
+<li><strong>"The radius is the height of the curve."</strong> The radius is the distance to the axis; turning about y = −1 or x = −1 changes every radius.</li>
+<li><strong>"Shells and disks give different volumes."</strong> They slice the same solid differently and close in on the same integral.</li>
+<li><strong>"Slices must be circles."</strong> Any known cross section works: squares and triangles on a base give volumes with nothing turned.</li>
+<li><strong>"A finite volume means a finite surface."</strong> Gabriel's horn holds less than π but has more surface than 2π ln b for every b.</li>
+<li><strong>"All mass at radius R."</strong> I = MR² only for a ring; a cone or sphere has mass closer to the axis, so its I is a smaller fraction of MR².</li>
+</ul>
+<h2>How the demo works</h2>
+<ul>
+<li>The curves are read by the shared parser (demos/lib/vdmath.js); nothing typed is run as code. f′ for arc length and surface area comes from the parser's exact derivative.</li>
+<li>Disks, washers, shells and cross sections are sampled at the middle of each slice; the chain of chords and the frustum bands use the end points of each piece.</li>
+<li>The integral is computed with 10 point Gauss–Legendre quadrature on 400 pieces, which never samples an end point, so an infinite slope at the edge of a sphere does no harm. Each setup with a known closed form shows it beside the value the demo finds.</li>
+<li>Moments of inertia assume uniform density ρ = M/V. Disks add ½π(R⁴ − r⁴)ρΔx, shells 2πr³hρΔr.</li>
+<li>When the region reaches across a vertical axis, the shells on the two sides overlap and the volume counts the overlap twice; the demo says so. Disks about a vertical axis and shells about a horizontal one would need x as a function of y, so the demo asks you to switch the axis.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>. © 2026 Steven Anderson. All rights reserved; see the <a href="../LICENSE.html">terms of use</a>.</footer>
+</main>
+</body>
+</html>

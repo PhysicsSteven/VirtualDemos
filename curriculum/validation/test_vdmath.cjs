@@ -118,4 +118,17 @@ group('antiderivative: the basic rules give tidy formulas whose derivative is th
   }
 });
 
+group('factorial (2026-11-19, for Sequences and Series): n! and fact(n), exact whole products, Γ(u + 1) between, printed back as n!', () => {
+  const N = { vars: ['n'] }, F = (s, v) => c.compile(c.parse(s, N).node, ['n'])(v);
+  assert.strictEqual(F('n!', 5), 120); assert.strictEqual(F('fact(n)', 0), 1); assert.strictEqual(F('factorial(n)', 10), 3628800);
+  assert.strictEqual(F('(2n)!', 3), 720); assert.strictEqual(F('2n!', 3), 12); assert.strictEqual(F('n!^2', 3), 36); assert.strictEqual(F('1/n!', 170) > 0, true);
+  assert.strictEqual(F('n!', 171), Infinity); assert(Number.isNaN(F('n!', -2)));
+  assert(Math.abs(F('n!', 0.5) - Math.sqrt(Math.PI) / 2) < 1e-14, 'half factorial');
+  assert(Math.abs(F('n!', 4.5) / 52.34277778455352 - 1) < 1e-13, 'Γ(5.5)');
+  assert.strictEqual(c.text(c.parse('n!/n^n', N).node), 'n!/n^n');
+  assert.strictEqual(c.text(c.parse('1/(2n)!', N).node), '1/(2n)!');
+  assert.strictEqual(c.text(c.parse('3^n/n!', N).node), '3^n/n!');
+  assert.throws(() => c.parse('!n', N));
+});
+
 console.log(`vdmath: ${n} groups passed`);

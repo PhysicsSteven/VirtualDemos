@@ -455,7 +455,9 @@
       "taylor",
       "vector-fields",
       "rates-and-optimization",
-      "multiple-integrals"
+      "multiple-integrals",
+      "series",
+      "solids-of-revolution"
      ]
     }
    ]
