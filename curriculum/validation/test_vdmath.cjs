@@ -99,4 +99,17 @@ group('several variables: partials, compile order, substitution, names', () => {
   assert.strictEqual(c.varsOf(c.parse('y + x', XY).node).sort().join(), 'x,y');
 });
 
+group('antiderivative: the basic rules give tidy formulas whose derivative is the function; null where it needs more', () => {
+  const A = (s) => { const r = c.parse(s), F = c.antiderivative(r.node, r.v); return F ? c.text(F) : null; };
+  const want = [['x^2', 'x³/3'], ['3x^2-2x+1', 'x³ − x² + x'], ['e^(x/2)', '2e^(x/2)'], ['1/x', 'ln(|x|)'], ['1/x^2', '−1/x'],
+    ['sqrt(x)', '2x^(3/2)/3'], ['sin(2x)', '−cos(2x)/2'], ['200x', '100x²'], ['sec(x)^2', 'tan(x)'], ['ln(x)', 'x·ln(x) − x'],
+    ['1/(2x+1)', 'ln(|2x + 1|)/2'], ['2^x', '2^x/ln(2)'], ['7', '7x']];
+  for (const [s, w] of want) assert.strictEqual(A(s), w, s);
+  for (const s of ['x e^x', '|x|', 'sin(x^2)', 'e^(-x^2)', '1/(1+x^2)', 'x sin(x)']) assert.strictEqual(A(s), null, s);
+  for (const s of ['x^3 - 3x', 'e^(-0.3t)', 'cos(4t - 1)', 'tan(x/3)', 'sinh(2x)', 'cosh(x)', 'csc(x)^2', '(3x-1)^-2.5', '1500 sin(pi t/0.008)', 'ln(2x+3)']) {
+    const r = c.parse(s), F = c.compile(c.antiderivative(r.node, r.v), [r.v]), f = c.compile(r.node, [r.v]);
+    for (const x of [0.37, 0.8, 1.3]) { const h = 1e-6, d = (F(x + h) - F(x - h)) / (2 * h); assert(Math.abs(d - f(x)) <= 1e-6 * (1 + Math.abs(f(x))), `${s} at ${x}: ${d} vs ${f(x)}`); }
+  }
+});
+
 console.log(`vdmath: ${n} groups passed`);

@@ -509,7 +509,50 @@ var VDMATH = (function () {
     for (let i = k - 1; i >= 0 && isFinite(acc); i--) { acc += integral(f, prev, xs[i], scale); prev = xs[i]; F[i] = acc; }
     return F;
   }
+
+  /* antiderivative(tree, v): one antiderivative by the basic rules (OpenStax Calculus Vol 1 5.4 and 5.5), with the constant 0:
+     sums, constant multiples, powers u^k (k ≠ −1) and 1/u → ln|u|, e^u, a^u, sin, cos, tan, sinh, cosh, ln u and sec(u)², csc(u)²,
+     where the inner u is linear in v (u = αv + β, so the substitution only divides by α). null when it needs more (integration
+     by parts, a product of two functions of v, a quotient): the caller then integrates numerically. Added 2026-11-19 for
+     Riemann Sums and Integrals; tested in test_vdmath.cjs. */
+  function antiderivative(n, v) {
+    if (v === undefined) v = firstVar(n) || 'x';
+    const V = { k: 'v', n: v }, A = (m) => antiderivative(m, v);
+    if (!hasV(n, v)) return mkMul([n, V]);
+    const lin = (u) => { const d = derivative(u, v); return !hasV(d, v) && !isNum(d, 0) ? d : null; };
+    switch (n.k) {
+      case 'v': return mkMul([HALF, mkPow(V, TWO)]);
+      case 'add': { const parts = n.a.map(A); return parts.some((q) => !q) ? null : mkAdd(parts); }
+      case 'mul': {
+        const c = n.a.filter((f) => !hasV(f, v)), r = n.a.filter((f) => hasV(f, v));
+        if (r.length !== 1) return null;
+        const q = A(r[0]); return q ? mkMul([...c, q]) : null;
+      }
+      case 'pow': {
+        if (!hasV(n.b, v)) {
+          if (n.a.k === 'fn' && isNum(n.b, 2) && (n.a.f === 'sec' || n.a.f === 'csc')) {
+            const al = lin(n.a.a); if (!al) return null;
+            return div(n.a.f === 'sec' ? mkFn('tan', n.a.a) : neg(mkFn('cot', n.a.a)), al);
+          }
+          const al = lin(n.a); if (!al) return null;
+          if (isNum(n.b, -1)) return div(mkFn('ln', mkFn('abs', n.a)), al);
+          const e1 = mkAdd([n.b, ONE]);
+          return div(mkPow(n.a, e1), mkMul([al, e1]));
+        }
+        if (!hasV(n.a, v)) { const al = lin(n.b); return al ? div(n, mkMul([al, mkFn('ln', n.a)])) : null; }
+        return null;
+      }
+      case 'fn': {
+        const u = n.a, al = lin(u); if (!al) return null;
+        const F = (g) => mkFn(g, u);
+        const r = { sin: () => neg(F('cos')), cos: () => F('sin'), exp: () => F('exp'), sinh: () => F('cosh'), cosh: () => F('sinh'),
+          tan: () => neg(mkFn('ln', mkFn('abs', F('cos')))), ln: () => sub(mkMul([u, F('ln')]), u) }[n.f];
+        return r ? div(r(), al) : null;
+      }
+    }
+    return null;
+  }
     return { parse, parseLive, derivative, compile, subst, varsOf, hasV, text, fmt, sup, integral, cumulative, simpson,
-    mkAdd, mkMul, mkPow, mkFn, num: flt, rat, ZERO, ONE, isNum };
+    mkAdd, mkMul, mkPow, mkFn, num: flt, rat, ZERO, ONE, isNum, antiderivative };
 })();
 if (typeof window !== 'undefined') window.VDMATH = VDMATH;
