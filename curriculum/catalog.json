@@ -1350,6 +1350,23 @@
       "small angle approximation",
       "binomial approximation"
      ]
+    },
+    {
+     "demo": "vector-fields",
+     "title": "Vector Fields, Work and Curl",
+     "desc": "Type a 2D field and see its arrows and flowing tracers; add up the work along a path, test path independence, find the potential of a conservative field, measure curl with a paddle wheel and divergence with a small box, and check Green's theorem around a loop.",
+     "tags": [
+      "vector field",
+      "line integral",
+      "work",
+      "conservative force",
+      "potential",
+      "curl",
+      "divergence",
+      "Green's theorem",
+      "Ampère's law",
+      "calculus"
+     ]
     }
    ]
   },
