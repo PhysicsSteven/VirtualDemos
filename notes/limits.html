@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="../demos/lib/theme.js"></script>
+<title>Limits: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+@media screen { :root[data-theme="dark"] {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; overflow-wrap: break-word; }   /* a long file name breaks instead of pushing a phone sideways */
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+<link rel="stylesheet" id="vd-paper" href="../demos/lib/paper.css">
+</head>
+<body class="notes">
+<header class="top" aria-label="Site"><a class="brand" href="../index.html"><svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><ellipse cx="16" cy="16" rx="13" ry="6" fill="none" stroke="currentColor" stroke-width="1.8" transform="rotate(-30 16 16)"/><ellipse cx="16" cy="16" rx="13" ry="6" fill="none" stroke="currentColor" stroke-width="1.8" transform="rotate(30 16 16)"/><circle cx="16" cy="16" r="2.6" fill="currentColor"/></svg>Virtual Physics Demos</a><nav class="tabs" aria-label="Library"><a class="tab" href="../index.html#topics">Demos</a><a class="tab" href="../openstax.html">OpenStax</a><a class="tab" href="index.html" aria-current="page">Notes</a></nav><span class="hfind"></span><span data-vd-theme></span><a class="courses" href="../courses.html"><b>For a class</b> Courses</a></header>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Limits</h1><ul class="meta"><li><a href="../demos/limits.html">Open the demo</a></li><li>Calculus I (OpenStax Calculus Vol 1 2.1 to 2.5, 4.6, 4.8) and Physics I (University Physics Vol 1 3.2)</li><li>15 to 40 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>The limit of f as x → a is the value f closes in on near a, never what f does at a. A hole, an undefined f(a) or a different f(a) does not change the limit.</li>
+<li>The limit exists only if both one sided limits exist and agree. A jump has two different one sided limits; 1/x blows up to −∞ and +∞; sin(1/x) never settles.</li>
+<li>The precise definition is a game: for every ε band about L there must be a δ window about a whose points (except a itself) all land in the band. The demo finds the largest δ, so "δ = ε/2 for 2x + 1" can be checked, not just claimed.</li>
+<li>Limits at infinity give horizontal asymptotes (the ratio of leading terms for a rational function); f(x) − (mx + b) → 0 gives a slant one; a bottom going to 0 with the top not gives a vertical one.</li>
+<li>L'Hôpital's rule: a 0/0 quotient has the same limit as f′/g′, applied again if that is 0/0 too.</li>
+<li>Physics is full of limits: the instantaneous velocity is the limit of average velocities, (1 − cos θ)/θ² → ½ is the small angle approximation of a pendulum's height, and terminal velocity is a limit at infinity.</li>
+</ul>
+<h2>Before class</h2>
+<p>Nothing to install. Projector mode enlarges the picture and labels. Blind (Lab fold) hides the limits and δ so students can predict them first. Type any f and any point a (a number, pi/2, inf or -inf). Play zooms in toward the point ten times every 1.5 s (or out toward infinity). The lower graph shows the values as x closes in from each side, or L'Hôpital's f/g beside f′/g′.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>sin x / x.</strong> The opening setup. Ask what f(0) is (undefined, 0/0), then press Play. The curve flattens onto the hole at (0, 1).</li>
+<li><strong>ε and δ.</strong> Press ε and δ for a line. Drag ε and ask for the largest δ before reading it (Q1).</li>
+<li><strong>A hole and a jump.</strong> Press A hole, then A jump: a switch closes. Switch From the left and From the right and read the two sides (Q2, Q3).</li>
+<li><strong>Blow ups and no limit.</strong> Press 1/x, sin(1/x) and x sin(1/x). Ask which ones have a limit, and why the squeeze one does.</li>
+<li><strong>Infinity.</strong> Press Out to infinity, then Vertical asymptotes and A slant asymptote. Ask for N for a given ε (Q4).</li>
+<li><strong>L'Hôpital.</strong> Press L'Hôpital twice and open the lower graph's L'Hôpital tab (Q5).</li>
+<li><strong>Physics.</strong> Press Average velocity → instantaneous velocity, then (1 − cos θ)/θ², γ as v → c and Terminal velocity (Q6, Q7).</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> For f(x) = 2x + 1 at a = 1, what is L? Find the largest δ for ε = 0.5 and for ε = 0.01, and explain why δ = ε/2 for every ε.</p></div>
+
+<div class="q"><p><strong>Q2.</strong> What is the limit of (x² − 1)/(x − 1) as x → 1, and what is f(1)? What is the largest δ for ε = 0.3? How could f be fixed so that it is continuous at 1?</p></div>
+
+<div class="q"><p><strong>Q3.</strong> For the switch, V = 5(1 + sign t)/2 volts, give the limits from the left and from the right at t = 0 and the value V(0). Why does no L work for any ε of 2.5 V or less?</p></div>
+
+<div class="q"><p><strong>Q4.</strong> Find the limit of (3x² + 1)/(x² − 4) as x → ∞ and the smallest N for ε = 0.1. Where are its vertical asymptotes, and what are the one sided limits at x = 2?</p></div>
+
+<div class="q"><p><strong>Q5.</strong> Use L'Hôpital's rule to find the limit of (eˣ − 1 − x)/x² as x → 0. How many times must it be applied, and why? Check sin x / x the same way.</p></div>
+
+<div class="q"><p><strong>Q6.</strong> A ball falls from rest, y = ½gt². Write its average velocity from t = 2 s to 2 s + Δt and simplify. What is it for Δt = 0.1 s, what is its limit as Δt → 0, and what is the largest δ (in seconds) for ε = 1 m/s?</p></div>
+
+<div class="q"><p><strong>Q7.</strong> A pendulum of length 1.0 m swings to θ = 0.20 rad. Compare its height h = L(1 − cos θ) with ½Lθ². Why does (1 − cos θ)/θ² → ½ justify the small angle energy? For the falling body with terminal speed 50 m/s, how long until v stays within 1 m/s of it?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"The limit is f(a)."</strong> Only when f is continuous at a. sin x / x has no value at 0 and still has limit 1; the limit never looks at a itself.</li>
+<li><strong>"If f(a) is undefined, there is no limit."</strong> A hole has a limit; a vertical asymptote or a jump does not.</li>
+<li><strong>"∞ is the limit of 1/x²."</strong> It is shorthand: the values grow past every bound, so the limit does not exist as a number.</li>
+<li><strong>"A function never crosses its horizontal asymptote."</strong> It can, many times: sin x / x crosses y = 0 at every multiple of π and still → 0 as x → ∞.</li>
+<li><strong>"0/0 = 1" or "0/0 = 0."</strong> 0/0 is a form with no value of its own; the limit depends on how fast the top and bottom go to 0.</li>
+<li><strong>"L'Hôpital means the derivative of the quotient."</strong> It is the quotient of the derivatives, f′/g′, and only for 0/0 or ∞/∞.</li>
+</ul>
+<h2>How the demo works</h2>
+<ul>
+<li>The function box is read by the shared parser (demos/lib/vdmath.js); nothing typed is run as code. The parser simplifies as it reads, so x/x becomes 1 before it is evaluated: a hole typed that way is gone.</li>
+<li>One sided limits are found by closing in: f at a ± h for h halved again and again down to rounding, with Aitken Δ² extrapolation and a settle test. Values that grow without settling blow up; values that keep turning back oscillate. Where f is continuous at a the limit is f(a), and where f is a 0/0 quotient L'Hôpital's rule is applied exactly by the derivative rules.</li>
+<li>The largest δ comes from a scan of each side at 2,000 points and halvings, refined by bisection, out to the view's half width and in to 10⁻⁵ × max(1, |a|) from a, where rounding starts to take the digits of x − a. Toward infinity, N is scanned inward from 10¹⁵.</li>
+<li>Zoomed in far, differences of nearly equal numbers (1 − cos θ, (2 + Δt)² − 4) turn to noise: that is the computer's rounding, shown on the values graph, not the function.</li>
+<li>g = 9.81 m/s² comes from constants.js; the terminal speed of 50 m/s is a chosen value.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>. © 2026 Steven Anderson. All rights reserved; see the <a href="../LICENSE.html">terms of use</a>.</footer>
+</main>
+</body>
+</html>

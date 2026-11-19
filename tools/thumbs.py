@@ -61,6 +61,7 @@ OVERRIDES = {
     "measurement-uncertainty": {"wait": 900, "crop": ".pane", "js": "const M = window.__mu; M.applyPreset('bottom'); for (const L of [0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6]) { M.S.L = L; M.repeat10(); } M.S.L = 1.0; M.S.y = [8 * Math.PI / 180, 0]; window.dispatchEvent(new Event('resize'));"},
     "curves-and-motion": {"wait": 1200, "crop": ".pane", "js": "window.__cm.applyPreset('orbit'); window.__cm.S.u = 1.2; window.__cm.draw();"},
     "function-families": {"wait": 1200, "crop": ".pane", "js": "const p = document.getElementById('pane'); p.style.flex = 'none'; p.style.minHeight = '0'; p.style.width = '768px'; p.style.height = '480px'; window.__ff.S.t = 2.2; window.__ff.refresh();"},
+    "limits": {"wait": 1200, "crop": ".pane", "js": "const p = document.getElementById('pane'); p.style.flex = 'none'; p.style.minHeight = '0'; p.style.width = '768px'; p.style.height = '480px'; window.__lim.applyPreset('sinc'); window.__lim.zoom(0.5); window.__lim.refresh();"},
     "integrals": {"wait": 900, "crop": ".pane", "js": "window.__int.setN(6); window.__int.draw();"},
     "taylor": {"wait": 1200, "crop": ".pane", "js": "window.__ty.applyPreset('poles'); window.__ty.setN(12); window.__ty.draw();"},
     "derivatives": {"wait": 900, "crop": ".pane", "js": "window.__fg.S.px = -1.6; window.__fg.draw();"},

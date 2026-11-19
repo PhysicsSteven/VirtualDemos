@@ -92,6 +92,12 @@ window.VD_SHORTCUTS = {
     ["← →", "Turn P (Unit circle), move the point on f (Stretch and shift) or slide P along f (Inverse); Shift for bigger steps", "on the picture"],
     ["+ −", "Zoom in or out about the middle of the view (or scroll over the graph)", "on the picture"]
   ],
+  "limits": [
+    ["Space", "Play: zoom in on the point ten times every 1.5 s (or out toward infinity)", "on the picture"],
+    ["+ −", "Zoom in or out about the middle of the view (or scroll over the graph)", "on the picture"],
+    ["← →", "Pan the view (Shift for bigger steps)", "on the picture"],
+    ["↑ ↓", "Make ε bigger or smaller", "on the picture"]
+  ],
   "integrals": [
     ["↑ ↓", "One more or one fewer piece n (Error against n)", "on the graph"],
     ["← →", "Move x along the curve (F(x), the area so far; Shift for bigger steps)", "on the graph"],

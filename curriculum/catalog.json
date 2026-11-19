@@ -1288,6 +1288,24 @@
      ]
     },
     {
+     "demo": "limits",
+     "title": "Limits",
+     "desc": "Zoom into a point and watch a function settle, or not: one sided limits, holes, jumps, blow ups and oscillation. Pick an ε band and see the largest δ that fits it, computed rather than guessed. Limits at infinity and asymptotes, sin x / x, and L'Hôpital's rule with f/g beside f′/g′; average velocity closing in on instantaneous velocity and the small angle limit of a pendulum.",
+     "tags": [
+      "limit",
+      "one sided limit",
+      "continuity",
+      "epsilon delta",
+      "asymptote",
+      "limit at infinity",
+      "L'Hôpital's rule",
+      "squeeze theorem",
+      "instantaneous velocity",
+      "small angle approximation",
+      "calculus"
+     ]
+    },
+    {
      "demo": "derivatives",
      "title": "Functions and Their Derivatives",
      "desc": "Type or paste any function and see it graphed with its first, second and third derivatives and its integral, updating as you type; slide a point along the curve to see the tangent slope.",
