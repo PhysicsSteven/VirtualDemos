@@ -1,0 +1,812 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="lib/theme.js"></script>
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
+<script src="lib/vdstats.js"></script>
+<title>Sampling Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css: the hall, the value colors, the picked ring and the lower graphs */
+:root { --v0: #f6e7c8; --v1: #e9a35a; --v2: #a3360f; --pick: #6d28d9; --treat: #c2410c; --ctrl: #6b7280; --truth: #15803d; --hall: #efe6d6; --sl-band: rgba(120, 80, 30, 0.07); --curve: #0f766e; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --v0: #5b4a35; --v1: #c9803d; --v2: #ffd38a; --pick: #c4b5fd; --treat: #fb923c; --ctrl: #9ca3af; --truth: #4ade80; --hall: #221d17; --sl-band: rgba(255, 220, 160, 0.06); --curve: #5eead4; } }
+:root[data-theme="dark"] { --v0: #5b4a35; --v1: #c9803d; --v2: #ffd38a; --pick: #c4b5fd; --treat: #fb923c; --ctrl: #9ca3af; --truth: #4ade80; --hall: #221d17; --sl-band: rgba(255, 220, 160, 0.06); --curve: #5eead4; }
+.stage { position: relative; display: flex; flex-direction: column; min-height: min-content; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.stage-ctl .note { flex: 1 1 100%; font-size: 0.8rem; color: var(--muted); }
+.mbar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); font-size: 0.86rem; }
+.mbar[hidden], .mbar .grp[hidden] { display: none; }
+.mbar .grp { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; }
+.mbar input[type="number"] { width: 4.6em; font: inherit; font-family: var(--font-mono); padding: 3px 6px; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; }
+.mbar input[type="range"] { width: 120px; }
+.mbar select { font: inherit; padding: 3px 6px; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; max-width: 100%; }
+.seg.wrap { flex-wrap: wrap; }
+.pane { position: relative; flex: 1 1 auto; min-height: 330px; }
+.lower { position: relative; flex: none; height: 250px; border-top: 1px solid var(--line); background: var(--canvas); }
+.pane canvas, .lower canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; outline: none; touch-action: none; }
+dl.formulas { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 6px 10px; margin: 0; }
+dl.formulas dt { font-family: var(--font-mono); font-weight: 600; white-space: nowrap; }
+dl.formulas dd { margin: 0; font-size: 0.88rem; overflow-wrap: anywhere; }
+.chips .chips-label { flex: 1 1 100%; font-size: 0.78rem; font-weight: 700; color: var(--muted); margin-top: 4px; }
+.simtag { display: inline-block; font-size: 0.74rem; font-weight: 700; color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: 1px 8px; }
+@media (min-width: 821px) { .bench > .stage { align-self: start; min-height: max(700px, 100%); } }
+@media (max-width: 820px) { .pane { min-height: 0; height: 330px; flex: none; } .lower { height: 270px; } }
+@media (max-width: 480px) { .pane { height: 280px; } }
+</style>
+<link rel="stylesheet" id="vd-paper" href="lib/paper.css">
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Sampling Lab</h1>
+      <p>A lecture hall of 400 students, every one shown. Take samples of 20 five different ways and see who gets picked, run a study where students choose for themselves against one where a coin decides, then draw thousands of samples and watch the means pile up into a normal curve whose spread shrinks as 1/√n.</p>
+    </div>
+    <div class="bar-right">
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/sampling-lab.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/sampling-lab.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM10 2h2v1h-2zM13 2h2v1h-2zM17 2h1v1h-1zM21 2h4v1h-4zM27 2h2v1h-2zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM10 3h4v1h-4zM15 3h2v1h-2zM20 3h2v1h-2zM24 3h1v1h-1zM28 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h2v1h-2zM15 4h1v1h-1zM21 4h1v1h-1zM23 4h2v1h-2zM27 4h2v1h-2zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM11 5h1v1h-1zM18 5h2v1h-2zM22 5h2v1h-2zM25 5h1v1h-1zM27 5h1v1h-1zM29 5h1v1h-1zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h3v1h-3zM15 6h1v1h-1zM18 6h1v1h-1zM21 6h1v1h-1zM30 6h1v1h-1zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM13 7h2v1h-2zM16 7h3v1h-3zM25 7h1v1h-1zM27 7h2v1h-2zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM15 9h3v1h-3zM19 9h2v1h-2zM26 9h2v1h-2zM29 9h1v1h-1zM2 10h1v1h-1zM5 10h7v1h-7zM17 10h1v1h-1zM21 10h1v1h-1zM23 10h4v1h-4zM29 10h3v1h-3zM34 10h1v1h-1zM36 10h3v1h-3zM2 11h1v1h-1zM9 11h1v1h-1zM11 11h2v1h-2zM14 11h3v1h-3zM18 11h1v1h-1zM20 11h1v1h-1zM23 11h3v1h-3zM28 11h2v1h-2zM31 11h1v1h-1zM33 11h3v1h-3zM37 11h1v1h-1zM2 12h1v1h-1zM4 12h5v1h-5zM10 12h3v1h-3zM15 12h4v1h-4zM20 12h4v1h-4zM25 12h2v1h-2zM29 12h5v1h-5zM36 12h1v1h-1zM38 12h1v1h-1zM3 13h1v1h-1zM5 13h1v1h-1zM7 13h1v1h-1zM11 13h1v1h-1zM18 13h5v1h-5zM24 13h2v1h-2zM30 13h9v1h-9zM4 14h3v1h-3zM8 14h2v1h-2zM11 14h2v1h-2zM16 14h3v1h-3zM25 14h2v1h-2zM32 14h1v1h-1zM35 14h1v1h-1zM38 14h1v1h-1zM3 15h5v1h-5zM12 15h2v1h-2zM15 15h1v1h-1zM17 15h2v1h-2zM21 15h1v1h-1zM23 15h3v1h-3zM28 15h3v1h-3zM34 15h2v1h-2zM2 16h1v1h-1zM5 16h1v1h-1zM7 16h2v1h-2zM10 16h2v1h-2zM13 16h1v1h-1zM16 16h2v1h-2zM20 16h3v1h-3zM27 16h3v1h-3zM32 16h1v1h-1zM34 16h3v1h-3zM38 16h1v1h-1zM2 17h2v1h-2zM5 17h2v1h-2zM10 17h1v1h-1zM12 17h5v1h-5zM21 17h1v1h-1zM23 17h3v1h-3zM29 17h3v1h-3zM33 17h1v1h-1zM35 17h3v1h-3zM2 18h1v1h-1zM6 18h1v1h-1zM8 18h5v1h-5zM14 18h1v1h-1zM17 18h1v1h-1zM19 18h3v1h-3zM23 18h3v1h-3zM27 18h1v1h-1zM29 18h1v1h-1zM32 18h1v1h-1zM36 18h3v1h-3zM2 19h1v1h-1zM4 19h1v1h-1zM6 19h2v1h-2zM12 19h1v1h-1zM14 19h3v1h-3zM19 19h1v1h-1zM24 19h1v1h-1zM29 19h1v1h-1zM31 19h1v1h-1zM35 19h2v1h-2zM3 20h1v1h-1zM6 20h1v1h-1zM8 20h3v1h-3zM13 20h1v1h-1zM15 20h2v1h-2zM18 20h2v1h-2zM21 20h1v1h-1zM23 20h1v1h-1zM25 20h3v1h-3zM29 20h3v1h-3zM35 20h2v1h-2zM38 20h1v1h-1zM3 21h5v1h-5zM9 21h1v1h-1zM11 21h8v1h-8zM20 21h3v1h-3zM24 21h1v1h-1zM26 21h2v1h-2zM30 21h1v1h-1zM32 21h4v1h-4zM38 21h1v1h-1zM2 22h1v1h-1zM8 22h4v1h-4zM13 22h1v1h-1zM16 22h1v1h-1zM18 22h2v1h-2zM21 22h1v1h-1zM25 22h2v1h-2zM28 22h1v1h-1zM30 22h6v1h-6zM4 23h1v1h-1zM6 23h1v1h-1zM13 23h3v1h-3zM17 23h1v1h-1zM19 23h1v1h-1zM21 23h2v1h-2zM24 23h2v1h-2zM27 23h1v1h-1zM29 23h1v1h-1zM31 23h1v1h-1zM34 23h1v1h-1zM36 23h2v1h-2zM2 24h2v1h-2zM5 24h4v1h-4zM13 24h1v1h-1zM15 24h1v1h-1zM17 24h1v1h-1zM23 24h1v1h-1zM25 24h2v1h-2zM29 24h5v1h-5zM35 24h1v1h-1zM38 24h1v1h-1zM2 25h2v1h-2zM6 25h1v1h-1zM9 25h3v1h-3zM20 25h3v1h-3zM30 25h1v1h-1zM32 25h5v1h-5zM5 26h4v1h-4zM10 26h1v1h-1zM14 26h1v1h-1zM17 26h1v1h-1zM19 26h1v1h-1zM22 26h3v1h-3zM26 26h1v1h-1zM30 26h1v1h-1zM32 26h1v1h-1zM2 27h1v1h-1zM4 27h1v1h-1zM13 27h1v1h-1zM15 27h1v1h-1zM20 27h2v1h-2zM24 27h2v1h-2zM27 27h4v1h-4zM34 27h2v1h-2zM2 28h2v1h-2zM5 28h1v1h-1zM7 28h3v1h-3zM11 28h3v1h-3zM15 28h1v1h-1zM17 28h1v1h-1zM24 28h1v1h-1zM26 28h1v1h-1zM28 28h3v1h-3zM34 28h1v1h-1zM36 28h3v1h-3zM2 29h1v1h-1zM4 29h1v1h-1zM14 29h1v1h-1zM16 29h1v1h-1zM18 29h1v1h-1zM21 29h1v1h-1zM24 29h2v1h-2zM28 29h1v1h-1zM30 29h4v1h-4zM35 29h2v1h-2zM38 29h1v1h-1zM2 30h1v1h-1zM6 30h1v1h-1zM8 30h4v1h-4zM14 30h4v1h-4zM21 30h2v1h-2zM26 30h2v1h-2zM29 30h8v1h-8zM38 30h1v1h-1zM10 31h2v1h-2zM14 31h3v1h-3zM19 31h6v1h-6zM26 31h1v1h-1zM30 31h1v1h-1zM34 31h1v1h-1zM36 31h2v1h-2zM2 32h7v1h-7zM10 32h2v1h-2zM14 32h8v1h-8zM25 32h4v1h-4zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM38 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h1v1h-1zM12 33h1v1h-1zM14 33h3v1h-3zM18 33h1v1h-1zM21 33h3v1h-3zM25 33h1v1h-1zM27 33h1v1h-1zM29 33h2v1h-2zM34 33h1v1h-1zM37 33h2v1h-2zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h4v1h-4zM15 34h1v1h-1zM18 34h1v1h-1zM20 34h1v1h-1zM22 34h2v1h-2zM25 34h2v1h-2zM28 34h7v1h-7zM37 34h1v1h-1zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h1v1h-1zM12 35h2v1h-2zM15 35h1v1h-1zM22 35h5v1h-5zM28 35h2v1h-2zM31 35h2v1h-2zM35 35h1v1h-1zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM12 36h2v1h-2zM16 36h1v1h-1zM19 36h2v1h-2zM24 36h3v1h-3zM29 36h1v1h-1zM34 36h1v1h-1zM38 36h1v1h-1zM2 37h1v1h-1zM8 37h1v1h-1zM12 37h1v1h-1zM14 37h1v1h-1zM16 37h2v1h-2zM19 37h1v1h-1zM24 37h1v1h-1zM26 37h1v1h-1zM28 37h2v1h-2zM34 37h5v1h-5zM2 38h7v1h-7zM10 38h1v1h-1zM13 38h4v1h-4zM18 38h1v1h-1zM21 38h2v1h-2zM25 38h2v1h-2zM30 38h1v1h-1zM32 38h2v1h-2zM35 38h1v1h-1zM38 38h1v1h-1z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl" id="strip">
+        <button type="button" class="spin attn" id="play" data-vd-key="play">Play</button>
+        <button type="button" class="btn" id="reset" title="Clear the samples or studies drawn in this view and start the count again">Reset</button>
+        <div class="seg wrap" role="group" aria-label="View" id="viewSeg">
+          <button type="button" data-v="methods" aria-pressed="true">Sampling methods</button>
+          <button type="button" data-v="experiment" aria-pressed="false">Experiment</button>
+          <button type="button" data-v="clt" aria-pressed="false">Central limit theorem</button>
+        </div>
+        <span class="note" id="note"></span>
+      </div>
+      <div class="mbar" id="mbar">
+        <div class="grp" id="popGrp"><label for="popSel">Population</label>
+          <select id="popSel">
+            <option value="coins">Coins in pockets (¢), skewed</option>
+            <option value="react">Reaction times (ms), skewed</option>
+            <option value="arrive">Seconds past the minute, uniform</option>
+            <option value="commute">Commute times (min), bimodal</option>
+          </select></div>
+        <div class="grp" id="methGrp">
+          <div class="seg wrap" role="group" aria-label="Sampling method" id="methSeg">
+            <button type="button" data-m="srs" aria-pressed="true">Simple random</button>
+            <button type="button" data-m="strat" aria-pressed="false">Stratified</button>
+            <button type="button" data-m="cluster" aria-pressed="false">Cluster</button>
+            <button type="button" data-m="sys" aria-pressed="false">Systematic</button>
+            <button type="button" data-m="conv" aria-pressed="false">Convenience</button>
+          </div></div>
+        <div class="grp" id="designGrp" hidden>
+          <div class="seg" role="group" aria-label="Who watches the videos" id="designSeg">
+            <button type="button" data-d="self" aria-pressed="true">Self selected</button>
+            <button type="button" data-d="random" aria-pressed="false">Randomized</button>
+          </div>
+          <label for="effect">True effect of the videos</label><input type="range" id="effect" min="0" max="10" step="1" value="0"><output id="effectOut" for="effect">0 points</output>
+          <label class="check"><input type="checkbox" id="showLurk"><span>Show study hours</span></label></div>
+        <div class="grp" id="nGrp" hidden><label for="nIn">Sample size n</label><input type="number" id="nIn" min="1" max="100" step="1" value="5">
+          <button type="button" class="btn" id="nDown" aria-label="One smaller">−1</button><button type="button" class="btn" id="nUp" aria-label="One larger">+1</button>
+          <div class="seg" role="group" aria-label="Statistic" id="statSeg">
+            <button type="button" data-s="mean" aria-pressed="true">Means</button>
+            <button type="button" data-s="sum" aria-pressed="false">Sums</button>
+          </div></div>
+        <div class="grp">
+          <button type="button" class="btn" id="draw1">Draw a sample</button><button type="button" class="btn" id="drawMany">Draw 100</button><button type="button" class="btn" id="drawMore" hidden>Draw 10,000</button>
+        </div>
+      </div>
+      <div class="pane" id="pane">
+        <canvas id="can" tabindex="0" role="img" aria-label="The lecture hall: 400 seats in 16 rows of 25, each colored by the student's value. The students in the sample are ringed. Left and right arrows switch the sampling method; up and down change n; Space plays or pauses."></canvas>
+      </div>
+      <div class="lower" id="lower">
+        <canvas id="low" tabindex="0" role="img" aria-label="The lower graph: a dot for each sample's estimate, one row per method, or the histogram of the sample means with the normal curve."></canvas>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <!-- vd-handout --><details class="handout-menu"><summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handouts and worksheets</summary><ul><li><a href="../curriculum/labs/students/sampling-methods.html" target="sampling-methods-worksheet">Worksheet 1: How You Sample Matters</a></li><li><a href="../curriculum/labs/students/central-limit-theorem.html" target="central-limit-theorem-worksheet">Worksheet 2: The Central Limit Theorem</a></li></ul></details><!-- /vd-handout -->
+      <section>
+        <h2>Readouts</h2>
+        <p><span class="simtag">Simulated data</span></p>
+        <dl class="readout" id="out"></dl>
+      </section>
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <span class="chips-label">Sampling methods (book 1.2 and 1.6)</span>
+          <button type="button" data-p="srs" aria-pressed="true">Simple random: pocket change</button>
+          <button type="button" data-p="strat" aria-pressed="false">Stratified: 5 from each section</button>
+          <button type="button" data-p="cluster" aria-pressed="false">Cluster: two blocks of seats</button>
+          <button type="button" data-p="sys" aria-pressed="false">Systematic: every 20th seat</button>
+          <button type="button" data-p="conv" aria-pressed="false">Convenience: the ones by the door</button>
+          <span class="chips-label">Experiments (book 1.4)</span>
+          <button type="button" data-p="self" aria-pressed="false">Self selected: who chooses the videos?</button>
+          <button type="button" data-p="random" aria-pressed="false">Randomized: a coin decides</button>
+          <span class="chips-label">The central limit theorem (book chapter 7)</span>
+          <button type="button" data-p="cltReact" aria-pressed="false">Means of skewed reaction times, n = 5</button>
+          <button type="button" data-p="cltCoins" aria-pressed="false">Pocket change: sums of n = 10</button>
+          <button type="button" data-p="cltUniform" aria-pressed="false">Uniform seconds: n = 2 makes a triangle</button>
+          <button type="button" data-p="cltCommute" aria-pressed="false">Bimodal commutes: n = 30</button>
+          <button type="button" data-p="cltOne" aria-pressed="false">n = 1: the means are the population</button>
+        </div>
+        <details class="more" open><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+      </section>
+      <!-- vd-readings --><section class="vd-readings" data-ws="sampling-methods" data-title="Sampling Lab" data-demo="sampling-lab">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings ('+(typeof window.vdDataNote==='function'&&window.vdDataNote()?'catalog data':'simulated data')+')','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:(typeof window.vdDataNote==='function'&&window.vdDataNote())||'Simulated data from '+(/^The /.test(title)?'':'the ')+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
+      <section>
+        <h2>Formulas</h2>
+        <dl class="formulas" id="formulas" translate="no"></dl>
+      </section>
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the population mean, the bias, the true effect and what the theorem predicts, to predict them first</span></label>
+        <div class="row"><label for="seedIn">Draw set</label> <input type="number" id="seedIn" min="1" max="9999" step="1" value="1" style="width:5em"> <span class="hint">Set 1 is the one the worksheets use. Another number seats a new population and draws new samples.</span></div>
+        <details class="more"><summary>How it works</summary>
+          <p class="hint">Everything here is simulated: no real students were measured. Each population is 400 values drawn once from a seeded random number generator: pocket change (30 % of students carry none; the rest carry 1 + a Poisson count with mean 2.5 of coins, each a penny, nickel, dime or quarter), reaction times (150 ms plus an exponential wait with mean 90 ms), seconds past the minute (uniform from 0 to 60) and commute times (45 % walkers near 28 min, 55 % drivers near 11 min). The values are then seated so that larger values tend to sit toward the back and near the door, as real habits might, which is what makes some methods biased.</p>
+          <p class="hint">Sampling methods take 20 students without replacement. Simple random: any 20. Stratified: 5 at random from each of the four sections. Cluster: two of the forty blocks of 10 seats, everyone in them. Systematic: a random start among the first 20 seats, then every 20th seat counting row by row. Convenience: 20 of the 50 students nearest the door. Each method has its own stream of random numbers, so its 100th sample is the same whatever you drew before.</p>
+          <p class="hint">The study: each student's weekly study hours and the score they would get without the videos (50 + 3 points an hour + a normal scatter with σ = 6) are simulated once. The true effect is added to every treated score. Self selected: a student with h hours joins with probability 1/(1 + e^(−(h − 6)/1.5)). Randomized: a shuffle puts exactly 200 in each group.</p>
+          <p class="hint">Central limit theorem: each sample draws n students with replacement (a student can be drawn twice), so the draws are independent and the standard deviation of the sample mean is exactly σ/√n, with σ the population's standard deviation (divided by N = 400). The normal curve drawn has mean μ and standard deviation σ/√n (or nμ and √n σ for sums). The skew of the means is the sample skewness of the means drawn; the theorem predicts the population's skewness divided by √n.</p>
+        </details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  /* Sampling Lab: a simulated population of 400 students in a lecture hall (16 rows of 25 seats), sampled five ways, a study
+     with and without random assignment, and the distribution of the sample mean and sum (OpenStax Introductory Statistics 2e,
+     1.2, 1.4, 1.6 and chapter 7). Runs in Node with demos/lib/vdstats.js loaded first (curriculum/validation/test_sampling-lab.cjs).
+     Every number is simulated from a seeded generator, so a draw set gives the same population and the same samples every time. */
+  const NR = 16, NC = 25, N = NR * NC, SAMPLE_N = 20;
+  const STRATA = 4, ROWS_PER_STRATUM = NR / STRATA;          /* four sections of four rows */
+  const CL_W = 5, CL_H = 2, CLUSTERS = (NC / CL_W) * (NR / CL_H), CL_PICK = SAMPLE_N / (CL_W * CL_H);   /* 40 blocks of 10 seats; 2 blocks make a sample */
+  const CONV_POOL = 50;                                        /* convenience: 20 of the 50 seats nearest the door */
+  const METHODS = ['srs', 'strat', 'cluster', 'sys', 'conv'];
+  const POPS = ['coins', 'react', 'arrive', 'commute'];
+  /* a seed from several whole numbers (each part mixed in by a multiply and xorshift), so every stream is its own */
+  function seedOf(...parts) {
+    let h = 0x9E3779B9;
+    for (const p of parts) { h = Math.imul(h ^ (p >>> 0), 0x85EBCA6B); h ^= h >>> 13; h = Math.imul(h, 0xC2B2AE35); h ^= h >>> 16; }
+    return (h >>> 0) || 1;
+  }
+  const round = (v, d) => { const k = Math.pow(10, d); return Math.round(v * k) / k; };
+  /* one member's value, by population (all simulated; the units and the shape are what each one is for) */
+  const POPDEF = {
+    coins: { dec: 0, unit: '¢', draw: (r) => {   /* coins in a pocket (the book's 7.4 lab, simulated): 30 % carry none */
+      if (r() < 0.3) return 0;
+      const k = 1 + r.poisson(2.5); let c = 0;
+      for (let i = 0; i < k; i++) { const u = r(); c += u < 0.4 ? 1 : u < 0.6 ? 5 : u < 0.8 ? 10 : 25; }
+      return c; } },
+    react: { dec: 0, unit: 'ms', draw: (r) => 150 + r.exp(1 / 90) },            /* reaction time: 150 ms plus an exponential wait */
+    arrive: { dec: 1, unit: 's', draw: (r) => 60 * r() },                        /* seconds past the minute: uniform on 0 to 60 */
+    commute: { dec: 1, unit: 'min', draw: (r) => Math.max(2, r() < 0.45 ? r.normal(28, 4) : r.normal(11, 2.5)) },   /* walkers and drivers */
+  };
+  const rowOf = (i) => Math.floor(i / NC), colOf = (i) => i % NC;
+  const stratumOf = (i) => Math.floor(rowOf(i) / ROWS_PER_STRATUM);
+  const clusterOf = (i) => Math.floor(rowOf(i) / CL_H) * (NC / CL_W) + Math.floor(colOf(i) / CL_W);
+  const doorDist = (i) => Math.hypot(NR - 1 - rowOf(i), colOf(i));   /* the door is at the back left, by seat (row 16, seat 1) */
+  const BY_DOOR = Array.from({ length: N }, (_, i) => i).sort((a, b) => doorDist(a) - doorDist(b) || a - b);
+  /* the population: 400 values drawn from the shape, then seated so that larger values sit toward the back and near the door
+     (the values are drawn first and only their seats are arranged, so the shape is exactly the drawn one) */
+  function makePopulation(pop, seed) {
+    const def = POPDEF[pop], r = VDSTATS.rng(seedOf(seed, 11, POPS.indexOf(pop)));
+    const vals = []; for (let i = 0; i < N; i++) vals.push(round(def.draw(r), def.dec));
+    vals.sort((a, b) => a - b);
+    const maxD = doorDist(NC - 1);
+    const score = Array.from({ length: N }, (_, i) => 0.9 * stratumOf(i) / (STRATA - 1) + 0.9 * (1 - doorDist(i) / maxD) + r.normal(0, 0.45));
+    const order = Array.from({ length: N }, (_, i) => i).sort((a, b) => score[a] - score[b] || a - b);
+    const x = new Array(N); order.forEach((seat, k) => { x[seat] = vals[k]; });
+    return { pop, seed, x, ...popStats(x), unit: def.unit, dec: def.dec };
+  }
+  /* the population's own mean, standard deviation (divided by N, as for a whole population) and skewness */
+  function popStats(x) {
+    const n = x.length, mu = VDSTATS.mean(x);
+    let m2 = 0, m3 = 0; for (const v of x) { const d = v - mu; m2 += d * d; m3 += d * d * d; }
+    m2 /= n; m3 /= n; const sigma = Math.sqrt(m2);
+    return { mu, sigma, skew: sigma > 0 ? m3 / (sigma * sigma * sigma) : 0, min: Math.min(...x), max: Math.max(...x) };
+  }
+  /* k of the indexes in list, without replacement */
+  function pickK(r, list, k) { const a = list.slice(); for (let i = 0; i < k; i++) { const j = i + r.int(a.length - i); const t = a[i]; a[i] = a[j]; a[j] = t; } return a.slice(0, k); }
+  const ALL = Array.from({ length: N }, (_, i) => i);
+  const STRATUM_SEATS = Array.from({ length: STRATA }, (_, s) => ALL.filter((i) => stratumOf(i) === s));
+  const CLUSTER_SEATS = Array.from({ length: CLUSTERS }, (_, c) => ALL.filter((i) => clusterOf(i) === c));
+  /* one sample of 20 seats by a method; returns the seats in the order they were picked, and for systematic the start */
+  function drawSample(method, r) {
+    if (method === 'srs') return { seats: pickK(r, ALL, SAMPLE_N) };
+    if (method === 'strat') { let s = []; for (const g of STRATUM_SEATS) s = s.concat(pickK(r, g, SAMPLE_N / STRATA)); return { seats: s }; }
+    if (method === 'cluster') { const cs = pickK(r, Array.from({ length: CLUSTERS }, (_, c) => c), CL_PICK); return { seats: cs.flatMap((c) => CLUSTER_SEATS[c]), clusters: cs }; }
+    if (method === 'sys') { const k = N / SAMPLE_N, start = r.int(k); return { seats: Array.from({ length: SAMPLE_N }, (_, j) => start + j * k), start, k }; }
+    return { seats: pickK(r, BY_DOOR.slice(0, CONV_POOL), SAMPLE_N) };
+  }
+  const meanOf = (P, seats) => seats.reduce((s, i) => s + P.x[i], 0) / seats.length;
+  /* a stream of samples for one method: sample k is the same whatever else was drawn before (each method has its own stream) */
+  const methodRng = (seed, pop, method) => VDSTATS.rng(seedOf(seed, 23, POPS.indexOf(pop), METHODS.indexOf(method)));
+  /* the summary of a set of estimates against the truth */
+  function summary(est, truth) {
+    const n = est.length; if (!n) return { n: 0 };
+    const m = VDSTATS.mean(est); return { n, mean: m, bias: m - truth, sd: n > 1 ? VDSTATS.sd(est) : NaN };
+  }
+
+  /* ---------- the study: does watching the review videos raise exam scores? (simulated) ---------- */
+  /* each student's weekly study hours (the lurking variable) and the score they would get without the videos */
+  function makeStudy(seed) {
+    const r = VDSTATS.rng(seedOf(seed, 31)), hours = [], base = [];
+    for (let i = 0; i < N; i++) {
+      const h = round(Math.min(20, 1 + r.exp(1 / 5)), 1);
+      hours.push(h); base.push(Math.max(0, Math.min(100, Math.round(50 + 3 * h + r.normal(0, 6)))));
+    }
+    return { hours, base };
+  }
+  /* who joins: self selected (more hours, more likely to choose the videos) or by a coin toss for each student */
+  const optIn = (h) => 1 / (1 + Math.exp(-(h - 6) / 1.5));
+  const studyRng = (seed, design) => VDSTATS.rng(seedOf(seed, 37, design === 'random' ? 1 : 2));
+  function runStudy(St, design, effect, r) {
+    const treated = new Array(N);
+    if (design === 'random') { const order = r.shuffle(ALL.slice()); for (let k = 0; k < N; k++) treated[order[k]] = k < N / 2; }
+    else for (let i = 0; i < N; i++) treated[i] = r() < optIn(St.hours[i]);
+    let nt = 0, nc = 0, st = 0, sc = 0, ht = 0, hc = 0;
+    for (let i = 0; i < N; i++) {
+      const y = St.base[i] + (treated[i] ? effect : 0);
+      if (treated[i]) { nt++; st += y; ht += St.hours[i]; } else { nc++; sc += y; hc += St.hours[i]; }
+    }
+    const mt = nt ? st / nt : NaN, mc = nc ? sc / nc : NaN;
+    return { treated, nt, nc, meanT: mt, meanC: mc, diff: mt - mc, hoursT: nt ? ht / nt : NaN, hoursC: nc ? hc / nc : NaN };
+  }
+
+  /* ---------- the central limit theorem: samples of n drawn with replacement ---------- */
+  const cltRng = (seed, pop, n) => VDSTATS.rng(seedOf(seed, 41, POPS.indexOf(pop), n));
+  function cltSample(P, n, r) { const seats = []; let s = 0; for (let k = 0; k < n; k++) { const i = r.int(N); seats.push(i); s += P.x[i]; } return { seats, sum: s, mean: s / n }; }
+  /* what the theorem predicts for the mean and the sum of n draws */
+  const predict = (P, n) => ({ meanMean: P.mu, sdMean: P.sigma / Math.sqrt(n), meanSum: n * P.mu, sdSum: Math.sqrt(n) * P.sigma, skewMean: P.skew / Math.sqrt(n) });
+  /* the share of the values within k standard errors of the center */
+  function within(vals, center, se, k) { if (!vals.length) return NaN; let c = 0; for (const v of vals) if (Math.abs(v - center) <= k * se) c++; return c / vals.length; }
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  const VDI18N = window.VDI18N || { t: (s, o) => s.replace(/\{(\w+)\}/g, (m, k) => (o && k in o ? o[k] : m)) };
+  const can = $('can'), low = $('low'), ctx = can.getContext('2d'), lctx = low.getContext('2d');
+  let W = 0, H = 0, LW = 0, LH = 0, dpr = 1, T = null, need = true;
+  const POPNAME = { coins: 'Coins in pockets', react: 'Reaction times', arrive: 'Seconds past the minute', commute: 'Commute times' };
+  const METHNAME = { srs: 'Simple random', strat: 'Stratified', cluster: 'Cluster', sys: 'Systematic', conv: 'Convenience' };
+  const DESIGNNAME = { self: 'Self selected', random: 'Randomized' };
+  const PRESETS = {
+    srs: { view: 'methods', pop: 'coins', method: 'srs', hint: 'Every set of 20 students is equally likely to be the sample. Press Play: one sample at a time, then faster, up to 100 samples. Each sample mean is a dot below; the green line is the population mean μ.' },
+    strat: { view: 'methods', pop: 'coins', method: 'strat', hint: 'The hall has four sections of four rows (the strata). A stratified sample takes 5 at random from each, so every section is always represented. Compare its row of dots with the simple random one: same center, less spread.' },
+    cluster: { view: 'methods', pop: 'coins', method: 'cluster', hint: 'The hall is cut into 40 blocks of 10 seats (the clusters). Two blocks are picked at random and everyone in them is in the sample. Neighbors are alike, so the estimates spread more than a simple random sample of the same size.' },
+    sys: { view: 'methods', pop: 'coins', method: 'sys', hint: 'Count the seats row by row, 1 to 400. Pick a random start among the first 20, then take every 20th seat. Easy to do, and here about as good as simple random, because the seat order has no pattern that repeats every 20 seats.' },
+    conv: { view: 'methods', pop: 'coins', method: 'conv', hint: 'Ask whoever is handy: 20 of the 50 students nearest the door. The estimates cluster tightly, but around the wrong value. More samples do not fix a biased method.' },
+    self: { view: 'experiment', design: 'self', effect: 0, hint: 'Does watching the review videos raise exam scores? Here the videos do nothing at all (true effect 0). Students choose for themselves, and those who study more choose the videos more often. Press Play and look at the difference in mean scores. Then tick Show study hours.' },
+    random: { view: 'experiment', design: 'random', effect: 0, hint: 'The same students, but a coin decides who watches: exactly 200 in each group. Study hours now balance out between the groups, so the difference in mean scores scatters around the true effect.' },
+    cltReact: { view: 'clt', pop: 'react', n: 5, stat: 'mean', hint: 'Reaction times are skewed to the right: most near 200 ms, a few slow ones past 500 ms. Draw samples of 5 and average each. Press Play, then raise n and watch the histogram turn normal and narrow as σ/√n.' },
+    cltCoins: { view: 'clt', pop: 'coins', n: 10, stat: 'sum', hint: 'The book\'s pocket change lab (7.4), simulated: add up the change of 10 students. The sums center on nμ with a spread of √n σ, and their histogram is close to normal although one pocket is far from it.' },
+    cltUniform: { view: 'clt', pop: 'arrive', n: 2, stat: 'mean', hint: 'Seconds past the minute are flat from 0 to 60. The mean of just two is already a triangle, peaked in the middle; by n = 5 it looks normal.' },
+    cltCommute: { view: 'clt', pop: 'commute', n: 30, stat: 'mean', hint: 'Two humps, walkers and drivers. No student commutes 19 minutes, yet the means of 30 pile up in a single normal hump right there, at μ.' },
+    cltOne: { view: 'clt', pop: 'react', n: 1, stat: 'mean', hint: 'A sample of one is just one student, so the histogram of the "means" is the population itself, skewed, and its spread is σ.' },
+  };
+  const S = { view: 'methods', pop: 'coins', method: 'srs', design: 'self', effect: 0, lurk: false, n: 5, stat: 'mean', seed: 1, blind: false, preset: 'srs',
+    run: false, est: {}, cur: null, reveal: 1, revealT: 0, study: { self: [], random: [] }, studyLast: null, clt: [], cltSums: [], cltLast: null, hist: {}, clock: 0, gap: 0.9 };
+  let P = null, St = null;
+  const streams = {};
+  const stream = (k, mk) => (streams[k] || (streams[k] = mk()));
+  function clearStreams(prefix) { for (const k of Object.keys(streams)) if (k.startsWith(prefix)) delete streams[k]; }
+  const still = () => (window.VDPrefs && VDPrefs.still && VDPrefs.still()) || (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
+
+  /* ---------- the model state ---------- */
+  function newPopulation() { P = makePopulation(S.pop, S.seed); for (const m of METHODS) S.est[m] = []; S.cur = null; clearStreams('m:'); clearClt(); }
+  function clearClt() { S.clt = []; S.cltSums = []; S.cltLast = null; clearStreams('c:'); }
+  function newStudy() { St = makeStudy(S.seed); S.study = { self: [], random: [] }; S.studyLast = null; clearStreams('s:'); }
+  function drawMethod(k) {
+    const r = stream(`m:${S.method}`, () => methodRng(S.seed, S.pop, S.method));
+    for (let i = 0; i < k; i++) { const smp = drawSample(S.method, r); smp.method = S.method; smp.mean = meanOf(P, smp.seats); S.est[S.method].push(smp.mean); S.cur = smp; }
+  }
+  function drawStudy(k) {
+    const r = stream(`s:${S.design}`, () => studyRng(S.seed, S.design));
+    for (let i = 0; i < k; i++) { const res = runStudy(St, S.design, S.effect, r); res.design = S.design; res.meanT0 = res.meanT - S.effect; S.study[S.design].push(res.diff - S.effect); S.studyLast = res; }
+  }
+  /* the study's differences are kept without the effect (the assignments do not depend on it), so moving the slider moves every dot */
+  const diffs = (d) => S.study[d].map((v) => v + S.effect);
+  function drawClt(k) {
+    const r = stream(`c:${S.n}`, () => cltRng(S.seed, S.pop, S.n));
+    for (let i = 0; i < k; i++) { const smp = cltSample(P, S.n, r); S.clt.push(smp.mean); S.cltSums.push(smp.sum); S.cltLast = smp; }
+    noteHistory();
+  }
+  const cltVals = () => (S.stat === 'sum' ? S.cltSums : S.clt);
+  function cltStats() {
+    const v = cltVals(), pr = predict(P, S.n), sum = S.stat === 'sum';
+    const center = sum ? pr.meanSum : pr.meanMean, se = sum ? pr.sdSum : pr.sdMean;
+    if (!v.length) return { count: 0, center, se };
+    const m = VDSTATS.mean(v), sd = v.length > 1 ? VDSTATS.sd(v) : NaN;
+    return { count: v.length, mean: m, sd, center, se, skew: v.length > 2 && sd > 0 ? VDSTATS.skew(v) : NaN, skewPred: pr.skewMean, w1: within(v, center, se, 1), w2: within(v, center, se, 2) };
+  }
+  /* the spread of the means measured at each n (once 100 or more samples are in), for the graph of spread against n */
+  function noteHistory() {
+    if (S.clt.length < 100) return;
+    const key = `${S.pop}:${S.seed}`; const h = S.hist[key] || (S.hist[key] = {});
+    h[S.n] = { sd: VDSTATS.sd(S.clt), count: S.clt.length };
+  }
+  function drawOne() { if (S.view === 'methods') drawMethod(1); else if (S.view === 'experiment') drawStudy(1); else drawClt(1); S.reveal = 0; S.revealT = 0; need = true; readouts(); }
+  function drawMany(k) { if (S.view === 'methods') drawMethod(k); else if (S.view === 'experiment') drawStudy(k); else drawClt(k); S.reveal = 1; need = true; readouts(); }
+  const countNow = () => (S.view === 'methods' ? S.est[S.method].length : S.view === 'experiment' ? S.study[S.design].length : S.clt.length);
+  const runTarget = () => { const step = S.view === 'clt' ? 1000 : 100, c = countNow(); return (Math.floor(c / step) + 1) * step; };
+
+  /* ---------- colors and numbers ---------- */
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), surface: g('--surface'), mono: g('--font-mono') || 'monospace', red: g('--red') || '#b91c1c',
+      v0: g('--v0'), v1: g('--v1'), v2: g('--v2'), pick: g('--pick'), treat: g('--treat'), ctrl: g('--ctrl'), truth: g('--truth'), hall: g('--hall'), band: g('--sl-band'), curve: g('--curve') };
+    T.rgb = [T.v0, T.v1, T.v2].map(hexRgb);
+  }
+  function hexRgb(h) { h = (h || '#888').replace('#', ''); if (h.length === 3) h = h.split('').map((c) => c + c).join(''); const n = parseInt(h, 16); return [(n >> 16) & 255, (n >> 8) & 255, n & 255]; }
+  /* the color of a value: by its rank in the population, so every shade is used equally (the legend gives the values) */
+  let RANK = null;
+  function ranks() { const o = P.x.map((v, i) => [v, i]).sort((a, b) => a[0] - b[0]); RANK = new Array(N); o.forEach((p, k) => { RANK[p[1]] = k / (N - 1); }); }
+  function shade(t) {
+    const [a, b, c] = T.rgb, u = t < 0.5 ? t * 2 : (t - 0.5) * 2, p = t < 0.5 ? a : b, q = t < 0.5 ? b : c;
+    return `rgb(${Math.round(p[0] + (q[0] - p[0]) * u)},${Math.round(p[1] + (q[1] - p[1]) * u)},${Math.round(p[2] + (q[2] - p[2]) * u)})`;
+  }
+  const fmtN = (v, d) => { if (!isFinite(v)) return '—'; const s = Math.abs(v).toFixed(d), parts = s.split('.'); parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ','); return (v < 0 && +s !== 0 ? '−' : '') + parts.join('.'); };
+  const dv = () => (P ? P.dec + 1 : 1);
+  const val = (v, extra = 0) => fmtN(v, dv() + extra);
+  const unit = () => (P ? ' ' + P.unit : '');
+  const pct = (v) => (isFinite(v) ? (100 * v).toFixed(1) + ' %' : '—');
+  const proj = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
+  function niceStep(span, n) { const raw = span / n, p = Math.pow(10, Math.floor(Math.log10(raw))), m = raw / p; return (m <= 1 ? 1 : m <= 2 ? 2 : m <= 5 ? 5 : 10) * p; }
+
+  /* ---------- the picture ---------- */
+  const SPL = !(window.VD && VD.split) ? { f: () => 0.58 } : VD.split(can, { key: 'clt', axis: () => (S.view === 'clt' && W ? (W > 640 ? 'x' : 'y') : null), def: (a) => (a === 'x' ? 0.58 : 0.55), min: 0.35, max: 0.75, snaps: [0.5, 2 / 3], label: 'Divider between the hall and the population histogram', onChange: () => { need = true; } });
+  /* where the hall sits: a box inside x, y, w, h; returns seat size and origin */
+  function hallGeom(x, y, w, h) {
+    const f = proj(), left = 26 * f, top = 28 * f, bottom = 30 * f;
+    const s = Math.max(4, Math.min((w - left - 8) / NC, (h - top - bottom) / NR));
+    const x0 = x + left + Math.max(0, (w - left - 8 - s * NC) / 2), y0 = y + top;
+    return { s, x0, y0, x, y, w, h };
+  }
+  const seatXY = (G, i) => [G.x0 + (colOf(i) + 0.5) * G.s, G.y0 + (rowOf(i) + 0.5) * G.s];
+  function drawHall(c, G, opt) {
+    const f = proj(), s = G.s;
+    c.fillStyle = T.hall; c.fillRect(G.x0 - 4, G.y0 - 4, s * NC + 8, s * NR + 8);
+    /* the board at the front, the four sections and the door at the back left */
+    c.fillStyle = T.muted; c.font = `${Math.round(11 * f)}px ${T.mono}`; c.textAlign = 'center'; c.textBaseline = 'bottom';
+    c.fillRect(G.x0 + s * NC * 0.3, G.y0 - 9 * f, s * NC * 0.4, 3 * f);
+    c.fillText(VDI18N.t('front (board)'), G.x0 + s * NC / 2, G.y0 - 11 * f);
+    for (let k = 0; k < STRATA; k++) {
+      const yy = G.y0 + k * ROWS_PER_STRATUM * s;
+      if (k % 2 === 0) { c.fillStyle = T.band; c.fillRect(G.x0 - 4, yy, s * NC + 8, ROWS_PER_STRATUM * s); }
+      c.fillStyle = opt.method === 'strat' ? T.ink : T.muted; c.textAlign = 'right'; c.textBaseline = 'middle';
+      c.font = `${opt.method === 'strat' ? 700 : 400} ${Math.round(12 * f)}px ${T.mono}`;
+      c.fillText('ABCD'[k], G.x0 - 8, yy + ROWS_PER_STRATUM * s / 2);
+    }
+    const dx = G.x0 - 4, dy = G.y0 + s * NR + 4;
+    c.fillStyle = T.truth; c.fillRect(dx, dy, s * 1.6, 5 * f);
+    c.fillStyle = T.muted; c.textAlign = 'left'; c.textBaseline = 'top'; c.font = `${Math.round(11 * f)}px ${T.mono}`;
+    c.fillText(VDI18N.t('door'), dx + s * 1.6 + 6, dy - 1);
+    if (opt.method === 'conv') {   /* the 50 nearest the door, outlined */
+      c.strokeStyle = T.muted; c.setLineDash([3, 3]); c.lineWidth = 1;
+      for (const i of BY_DOOR.slice(0, CONV_POOL)) { const [px, py] = seatXY(G, i); c.strokeRect(px - s / 2 + 0.5, py - s / 2 + 0.5, s - 1, s - 1); }
+      c.setLineDash([]);
+    }
+    if (opt.method === 'cluster') {   /* the 40 blocks of 10 seats */
+      c.strokeStyle = T.line; c.lineWidth = 1;
+      for (let r = 0; r <= NR; r += CL_H) { c.beginPath(); c.moveTo(G.x0, G.y0 + r * s); c.lineTo(G.x0 + NC * s, G.y0 + r * s); c.stroke(); }
+      for (let q = 0; q <= NC; q += CL_W) { c.beginPath(); c.moveTo(G.x0 + q * s, G.y0); c.lineTo(G.x0 + q * s, G.y0 + NR * s); c.stroke(); }
+    }
+    const picked = opt.picked, count = new Map();
+    if (picked) for (const i of picked) count.set(i, (count.get(i) || 0) + 1);
+    const rad = Math.max(1.6, s * 0.36);
+    for (let i = 0; i < N; i++) {
+      const [px, py] = seatXY(G, i);
+      let fill = opt.lurk ? shade(Math.min(1, St.hours[i] / 14)) : shade(RANK[i]);
+      if (opt.treated) fill = opt.treated[i] ? T.treat : T.ctrl;
+      c.globalAlpha = picked && !count.has(i) ? 0.3 : 1;
+      c.fillStyle = fill; c.beginPath(); c.arc(px, py, rad, 0, 2 * Math.PI); c.fill();
+      if (opt.treated && opt.lurk) { c.fillStyle = shade(Math.min(1, St.hours[i] / 14)); c.beginPath(); c.arc(px, py, rad * 0.5, 0, 2 * Math.PI); c.fill(); }
+    }
+    c.globalAlpha = 1;
+    if (picked) {
+      c.strokeStyle = T.pick; c.lineWidth = Math.max(1.5, s * 0.14);
+      for (const [i, k] of count) {
+        const [px, py] = seatXY(G, i); c.beginPath(); c.arc(px, py, rad + c.lineWidth * 0.9, 0, 2 * Math.PI); c.stroke();
+        if (k > 1 && s >= 12) { c.fillStyle = T.ink; c.font = `700 ${Math.round(s * 0.5)}px ${T.mono}`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(String(k), px, py); }
+      }
+    }
+  }
+  /* the legend of the value colors under the hall */
+  function legend(c, x, y, w) {
+    const f = proj(), h = 8 * f, srt = P.x.slice().sort((a, b) => a - b);
+    for (let k = 0; k < 60; k++) { c.fillStyle = shade(k / 59); c.fillRect(x + w * k / 60, y, w / 60 + 1, h); }
+    c.fillStyle = T.muted; c.font = `${Math.round(11 * f)}px ${T.mono}`; c.textBaseline = 'top';
+    c.textAlign = 'left'; c.fillText(val(srt[0], -1), x, y + h + 2);
+    c.textAlign = 'center'; c.fillText(VDI18N.t('median {m}', { m: val(VDSTATS.median(srt), -1) }), x + w / 2, y + h + 2);
+    c.textAlign = 'right'; c.fillText(val(srt[N - 1], -1) + unit(), x + w, y + h + 2);
+  }
+  function draw() {
+    if (!W || !T || !P) return;
+    const c = ctx; c.setTransform(dpr, 0, 0, dpr, 0, 0); c.clearRect(0, 0, W, H); c.fillStyle = T.canvas; c.fillRect(0, 0, W, H);
+    const f = proj();
+    if (S.view === 'methods') {
+      const G = hallGeom(0, 0, W, H - 40 * f);
+      let picked = null;
+      if (S.cur && S.cur.method === S.method) picked = S.cur.seats.slice(0, Math.max(1, Math.ceil(S.reveal * S.cur.seats.length)));
+      drawHall(c, G, { method: S.method, picked });
+      legend(c, G.x0 + G.s * NC * 0.45, G.y0 + G.s * NR + 6 * f, G.s * NC * 0.55);
+    } else if (S.view === 'experiment') {
+      const G = hallGeom(0, 0, W, H - 40 * f), L = S.studyLast && S.studyLast.design === S.design ? S.studyLast : null;
+      drawHall(c, G, { lurk: S.lurk, treated: L ? L.treated : null });
+      const ly = G.y0 + G.s * NR + 6 * f, lx = G.x0 + G.s * NC * 0.38;
+      c.font = `${Math.round(11 * f)}px ${T.mono}`; c.textBaseline = 'top'; c.textAlign = 'left';
+      if (L) {
+        c.fillStyle = T.treat; c.fillRect(lx, ly + 2, 10 * f, 10 * f); c.fillStyle = T.ink; c.fillText(VDI18N.t('watched the videos ({n})', { n: L.nt }), lx + 14 * f, ly);
+        c.fillStyle = T.ctrl; c.fillRect(lx, ly + 18 * f, 10 * f, 10 * f); c.fillStyle = T.ink; c.fillText(VDI18N.t('did not ({n})', { n: L.nc }), lx + 14 * f, ly + 16 * f);
+      } else if (!S.lurk) { c.fillStyle = T.muted; c.fillText(VDI18N.t('Press Play or Run the study to form the two groups.'), lx, ly); }
+      if (S.lurk) { c.fillStyle = T.muted; c.textAlign = 'right'; c.fillText(VDI18N.t(L ? 'inner dot: study hours, light few, dark many' : 'study hours: light few, dark many'), G.x0 + G.s * NC, ly + (L ? 32 * f : 0)); }
+    } else {
+      const wide = W > 640, fr = SPL.f(), hw = wide ? W * fr : W, hh = wide ? H : H * fr;
+      const G = hallGeom(0, 0, hw, hh - 16 * f);
+      const picked = S.cltLast ? S.cltLast.seats.slice(0, Math.max(1, Math.ceil(S.reveal * S.cltLast.seats.length))) : null;
+      drawHall(c, G, { method: null, picked });
+      const bx = wide ? hw : 0, by = wide ? 0 : hh;
+      popHist(c, bx + 10 * f, by + 22 * f, (wide ? W - hw : W) - 22 * f, (wide ? H : H - hh) - 50 * f);
+    }
+  }
+  /* the population's histogram with μ and σ marked (CLT view) */
+  function popHist(c, x, y, w, h) {
+    const f = proj(); if (w < 60 || h < 40) return;
+    const step = niceStep(P.max - P.min || 1, 24), lo = Math.floor(P.min / step) * step, nb = Math.max(1, Math.ceil((P.max - lo) / step + 1e-9));
+    const hs = VDSTATS.histogram(P.x, lo, step, nb), top = Math.max(...hs.counts);
+    const X = (v) => x + (v - lo) / (nb * step) * w;
+    c.fillStyle = T.ink; c.font = `700 ${Math.round(12 * f)}px ${T.mono}`; c.textAlign = 'left'; c.textBaseline = 'bottom';
+    c.fillText(VDI18N.t('The population: all 400'), x, y - 4);
+    hs.counts.forEach((k, j) => { const bh = k / top * (h - 4); c.fillStyle = shade((j + 0.5) / nb); c.fillRect(X(lo + j * step) + 0.5, y + h - bh, w / nb - 1, bh); });
+    c.strokeStyle = T.line; c.beginPath(); c.moveTo(x, y + h + 0.5); c.lineTo(x + w, y + h + 0.5); c.stroke();
+    c.fillStyle = T.muted; c.font = `${Math.round(11 * f)}px ${T.mono}`; c.textBaseline = 'top';
+    c.textAlign = 'left'; c.fillText(val(lo, -1), x, y + h + 3); c.textAlign = 'right'; c.fillText(val(lo + nb * step, -1) + unit(), x + w, y + h + 3);
+    const mx = X(P.mu); c.strokeStyle = T.truth; c.lineWidth = 2; c.beginPath(); c.moveTo(mx, y); c.lineTo(mx, y + h); c.stroke();
+    c.lineWidth = 1.5; c.beginPath(); c.moveTo(X(P.mu - P.sigma), y + 10 * f); c.lineTo(X(P.mu + P.sigma), y + 10 * f); c.stroke();
+    c.fillStyle = T.truth; c.textAlign = 'right'; c.textBaseline = 'top'; c.font = `700 ${Math.round(11 * f)}px ${T.mono}`;
+    c.fillText(`μ = ${val(P.mu)}`, x + w, y + 4 * f); c.fillText(`σ = ${val(P.sigma)}`, x + w, y + 20 * f);
+  }
+
+  /* ---------- the lower graph ---------- */
+  function dotRows(c, rows, lo, hi, truth, truthLabel, xName) {
+    const f = proj();
+    /* the row names set the left margin (a longer language needs more), up to 40 % of the graph; past that the names shrink */
+    let fs = Math.round(11 * f); c.font = `700 ${fs}px ${T.mono}`;
+    const nameW = Math.max(...rows.map((r) => c.measureText(VDI18N.t(r.name)).width)), maxL = LW * 0.4;
+    const padL = Math.min(maxL, Math.max((LW < 500 ? 96 : 112) * f, nameW + 14)); if (nameW + 12 > padL) fs = Math.max(8, Math.floor(fs * (padL - 12) / nameW));
+    const padR = 14 * f, top = 18 * f, bottom = 30 * f, w = LW - padL - padR, rh = (LH - top - bottom) / rows.length;
+    const X = (v) => padL + (v - lo) / (hi - lo) * w;
+    const nb = Math.max(20, Math.floor(w / Math.max(5, 6 * f)));
+    c.font = `${Math.round(11 * f)}px ${T.mono}`;
+    rows.forEach((r, k) => {
+      const y0 = top + k * rh, base = y0 + rh - 3;
+      if (r.on) { c.fillStyle = T.band; c.fillRect(0, y0, LW, rh); }
+      c.fillStyle = r.on ? T.ink : T.muted; c.textAlign = 'right'; c.textBaseline = 'middle'; c.font = `${r.on ? 700 : 400} ${fs}px ${T.mono}`;
+      c.fillText(VDI18N.t(r.name), padL - 8, y0 + rh / 2);
+      const stack = new Array(nb).fill(0), d = Math.min(Math.max(2, w / nb * 0.9), 8 * f);
+      const hmax = rh - 6;
+      for (const v of r.vals) {
+        let j = Math.floor((v - lo) / (hi - lo) * nb); const off = j < 0 || j >= nb; j = Math.max(0, Math.min(nb - 1, j));
+        const sp = Math.min(d, hmax / Math.max(1, r.maxStack || 1));
+        const cx = padL + (j + 0.5) * w / nb, cy = base - sp * (stack[j] + 0.5); stack[j]++;
+        c.fillStyle = off ? T.red : r.color; c.beginPath(); c.arc(cx, cy, Math.max(1.2, Math.min(d, sp) / 2 * 0.9), 0, 2 * Math.PI); c.fill();
+      }
+      c.strokeStyle = T.line; c.lineWidth = 1; c.beginPath(); c.moveTo(padL, base + 1.5); c.lineTo(padL + w, base + 1.5); c.stroke();
+    });
+    if (truth != null && isFinite(truth)) {
+      const tx = X(truth); c.strokeStyle = T.truth; c.lineWidth = 2; c.beginPath(); c.moveTo(tx, top - 2); c.lineTo(tx, LH - bottom); c.stroke();
+      c.fillStyle = T.truth; c.textAlign = tx > LW - 120 * f ? 'right' : 'left'; c.textBaseline = 'top'; c.font = `700 ${Math.round(11 * f)}px ${T.mono}`;
+      c.fillText(truthLabel, tx + (tx > LW - 120 * f ? -4 : 4), 2);
+    }
+    c.fillStyle = T.muted; c.textBaseline = 'top'; c.font = `${Math.round(11 * f)}px ${T.mono}`;
+    const st = niceStep(hi - lo, Math.max(3, Math.floor(w / (70 * f))));
+    c.textAlign = 'center';
+    for (let v = Math.ceil(lo / st) * st; v <= hi + 1e-9; v += st) { const xx = X(v); c.fillRect(xx, LH - bottom + 1, 1, 4); c.fillText(fmtN(v, Math.max(0, -Math.floor(Math.log10(st) + 1e-9))), xx, LH - bottom + 3); }
+    c.textAlign = 'left'; c.fillText(xName, 6, LH - bottom + 14 * f);
+  }
+  /* the tallest stack of dots in each row, so the dots shrink together once one bin fills its row */
+  function maxStack(vals, lo, hi, nb) { const st = new Array(nb).fill(0); for (const v of vals) { const j = Math.max(0, Math.min(nb - 1, Math.floor((v - lo) / (hi - lo) * nb))); st[j]++; } return Math.max(1, ...st); }
+  function drawLow() {
+    if (!LW || !T || !P) return;
+    const c = lctx; c.setTransform(dpr, 0, 0, dpr, 0, 0); c.clearRect(0, 0, LW, LH); c.fillStyle = T.canvas; c.fillRect(0, 0, LW, LH);
+    const f = proj(), nbOf = () => Math.max(20, Math.floor((LW - 126 * f) / Math.max(5, 6 * f)));
+    if (S.view === 'methods') {
+      const se = P.sigma / Math.sqrt(SAMPLE_N), lo = P.mu - 6 * se, hi = P.mu + 6 * se;
+      const rows = METHODS.map((m) => ({ name: METHNAME[m], vals: S.est[m], on: m === S.method, color: m === S.method ? T.pick : T.ink }));
+      for (const r of rows) r.maxStack = maxStack(r.vals, lo, hi, nbOf());
+      dotRows(c, rows, lo, hi, S.blind ? null : P.mu, `μ = ${val(P.mu)}`, VDI18N.t('sample mean x̄ ({u})', { u: P.unit }));
+    } else if (S.view === 'experiment') {
+      const lo = -8, hi = 30;
+      const rows = ['random', 'self'].map((d) => ({ name: DESIGNNAME[d], vals: diffs(d), on: d === S.design, color: d === S.design ? T.treat : T.ink }));
+      for (const r of rows) r.maxStack = maxStack(r.vals, lo, hi, nbOf());
+      dotRows(c, rows, lo, hi, S.blind ? null : S.effect, VDI18N.t('true effect {e}', { e: S.effect }), VDI18N.t('difference in mean scores (points)'));
+    } else cltHist(c);
+  }
+  /* the histogram of the sample means (or sums) with the normal curve of the theorem, and the spread against n */
+  function cltHist(c) {
+    const f = proj(), st = cltStats(), v = cltVals(), sum = S.stat === 'sum';
+    const inset = LW > 560, iw = inset ? Math.min(240 * f, LW * 0.32) : 0;
+    const padL = 14 * f, padR = 14 * f + iw, top = 24 * f, bottom = 30 * f, w = LW - padL - padR, h = LH - top - bottom;
+    const pmin = sum ? S.n * P.min : P.min, pmax = sum ? S.n * P.max : P.max;
+    let lo = Math.max(pmin, st.center - 4.5 * st.se), hi = Math.min(pmax, st.center + 4.5 * st.se);
+    if (!(hi > lo)) { lo = st.center - 1; hi = st.center + 1; }
+    const step = niceStep(hi - lo, w > 400 ? 40 : 26); lo = Math.floor(lo / step) * step; const nb = Math.max(1, Math.ceil((hi - lo) / step - 1e-9) + (hi === pmax ? 1 : 0)); hi = lo + nb * step;
+    const X = (u) => padL + (u - lo) / (hi - lo) * w;
+    const hs = VDSTATS.histogram(v, lo, step, nb), cnt = v.length;
+    const pdf = (u) => Math.exp(-0.5 * ((u - st.center) / st.se) ** 2) / (st.se * Math.sqrt(2 * Math.PI));
+    const curveTop = cnt ? cnt * step * pdf(st.center) : 0, top2 = Math.max(1, ...hs.counts, S.blind ? 0 : curveTop);
+    const Y = (k) => top + h - k / top2 * h;
+    c.fillStyle = T.ink; c.font = `700 ${Math.round(12 * f)}px ${T.mono}`; c.textAlign = 'left'; c.textBaseline = 'bottom';
+    c.fillText(VDI18N.t(sum ? 'Sums of n = {n}: {c} samples' : 'Means of n = {n}: {c} samples', { n: S.n, c: fmtN(cnt, 0) }), padL, top - 6);
+    hs.counts.forEach((k, j) => { if (!k) return; c.fillStyle = T.v1; c.fillRect(X(lo + j * step) + 0.5, Y(k), Math.max(1, w / nb - 1), top + h - Y(k)); });
+    if (S.cltLast && cnt) { const u = sum ? S.cltLast.sum : S.cltLast.mean, xx = X(u); if (xx >= padL && xx <= padL + w) { c.fillStyle = T.pick; c.beginPath(); c.moveTo(xx, top + h + 2); c.lineTo(xx - 5 * f, top + h + 10 * f); c.lineTo(xx + 5 * f, top + h + 10 * f); c.fill(); } }
+    if (!S.blind && cnt) {
+      c.strokeStyle = T.curve; c.lineWidth = 2; c.beginPath();
+      for (let k = 0; k <= 200; k++) { const u = lo + (hi - lo) * k / 200, yy = Y(cnt * step * pdf(u)); if (k) c.lineTo(X(u), yy); else c.moveTo(X(u), yy); }
+      c.stroke();
+    }
+    c.strokeStyle = T.line; c.lineWidth = 1; c.beginPath(); c.moveTo(padL, top + h + 0.5); c.lineTo(padL + w, top + h + 0.5); c.stroke();
+    if (!S.blind) { const mx = X(st.center); c.strokeStyle = T.truth; c.lineWidth = 2; c.beginPath(); c.moveTo(mx, top); c.lineTo(mx, top + h); c.stroke(); }
+    c.fillStyle = T.muted; c.font = `${Math.round(11 * f)}px ${T.mono}`; c.textBaseline = 'top'; c.textAlign = 'center';
+    const tk = niceStep(hi - lo, Math.max(3, Math.floor(w / (70 * f))));
+    for (let u = Math.ceil(lo / tk) * tk; u <= hi + 1e-9; u += tk) { const xx = X(u); c.fillRect(xx, top + h + 1, 1, 4); c.fillText(fmtN(u, Math.max(0, -Math.floor(Math.log10(tk) + 1e-9))), xx, top + h + 4); }
+    c.textAlign = 'left'; c.fillText(VDI18N.t(sum ? 'sum of the sample ({u})' : 'sample mean x̄ ({u})', { u: P.unit }), padL, top + h + 16 * f);
+    if (!cnt) { c.fillStyle = T.muted; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(VDI18N.t('Press Play or Draw to fill the histogram.'), padL + w / 2, top + h / 2); }
+    if (inset) spreadPlot(c, LW - iw - 4 * f, top, iw, h);
+  }
+  function spreadPlot(c, x, y, w, h) {
+    const f = proj(), hist = S.hist[`${S.pop}:${S.seed}`] || {}, X = (n) => x + 30 * f + (n - 1) / 99 * (w - 40 * f), ymax = P.sigma * 1.15, Y = (s) => y + h - s / ymax * (h - 6);
+    c.strokeStyle = T.line; c.strokeRect(x + 0.5, y + 0.5, w - 1, h - 1);
+    c.fillStyle = T.ink; c.font = `700 ${Math.round(11 * f)}px ${T.mono}`; c.textAlign = 'left'; c.textBaseline = 'bottom';
+    c.fillText(VDI18N.t('Spread of the means against n'), x, y - 6);
+    if (!S.blind) {
+      c.strokeStyle = T.curve; c.lineWidth = 1.5; c.beginPath();
+      for (let n = 1; n <= 100; n++) { const yy = Y(P.sigma / Math.sqrt(n)); if (n > 1) c.lineTo(X(n), yy); else c.moveTo(X(n), yy); }
+      c.stroke(); c.fillStyle = T.curve; c.font = `${Math.round(11 * f)}px ${T.mono}`; c.textAlign = 'right'; c.textBaseline = 'top'; c.fillText('σ/√n', x + w - 6, Y(P.sigma / Math.sqrt(100)) - 18 * f);
+    }
+    for (const k of Object.keys(hist)) { const n = +k; c.fillStyle = n === S.n ? T.pick : T.ink; c.beginPath(); c.arc(X(n), Y(hist[k].sd), 3.2 * f, 0, 2 * Math.PI); c.fill(); }
+    c.fillStyle = T.muted; c.font = `${Math.round(10 * f)}px ${T.mono}`; c.textBaseline = 'top'; c.textAlign = 'center';
+    for (const n of [1, 25, 50, 75, 100]) c.fillText(String(n), X(n), y + h + 2);
+    c.textAlign = 'left'; c.fillText('n', x + w - 10 * f, y + h + 14 * f);
+    c.textAlign = 'right'; c.textBaseline = 'middle'; c.fillText(val(P.sigma, -1), x + 28 * f, Y(P.sigma)); c.fillText('0', x + 28 * f, Y(0));
+  }
+
+  /* ---------- the rail ---------- */
+  const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
+  function readouts() {
+    if (!P) return;
+    const dd = (a, b, cls) => `<div${cls ? ` class="${cls}"` : ''}><dt>${esc(a)}</dt><dd translate="no">${b}</dd></div>`, t = VDI18N.t, hide = S.blind;
+    let h = '';
+    if (S.view === 'methods') {
+      const sm = summary(S.est[S.method], P.mu);
+      h += dd(t('Method'), esc(t(METHNAME[S.method]))) + dd(t('Samples drawn'), fmtN(sm.n, 0));
+      h += dd(t('This sample\'s mean x̄'), S.cur && S.cur.method === S.method ? val(S.cur.mean) + unit() : '—');
+      h += dd(t('Population mean μ'), hide ? '?' : val(P.mu) + unit());
+      h += dd(t('Mean of the x̄\'s'), sm.n ? val(sm.mean) + unit() : '—');
+      h += dd(t('Bias, mean of x̄\'s − μ'), hide ? '?' : sm.n ? val(sm.bias) + unit() : '—');
+      h += dd(t('Spread, s of the x̄\'s'), sm.n > 1 ? val(sm.sd) + unit() : '—');
+      h += dd(t('Sample size'), String(SAMPLE_N)) + dd(t('Population σ'), val(P.sigma) + unit());
+      if (S.method === 'sys' && S.cur && S.cur.method === 'sys') h += dd(t('Systematic start'), t('seat {s}, then every {k}th', { s: S.cur.start + 1, k: S.cur.k }), 'wide');
+    } else if (S.view === 'experiment') {
+      const L = S.studyLast && S.studyLast.design === S.design ? S.studyLast : null, ds = diffs(S.design), sm = summary(ds, S.effect);
+      h += dd(t('Design'), esc(t(DESIGNNAME[S.design]))) + dd(t('Studies run'), fmtN(sm.n, 0));
+      h += dd(t('Mean score, watched'), L ? fmtN(L.meanT0 + S.effect, 2) : '—');
+      h += dd(t('Mean score, did not'), L ? fmtN(L.meanC, 2) : '—');
+      h += dd(t('Difference, this study'), L ? fmtN(ds[ds.length - 1], 2) : '—');
+      h += dd(t('Mean difference'), sm.n ? fmtN(sm.mean, 2) : '—') + dd(t('Spread, s of the differences'), sm.n > 1 ? fmtN(sm.sd, 2) : '—');
+      h += dd(t('Study hours, watched'), L ? fmtN(L.hoursT, 2) + ' h' : '—') + dd(t('Study hours, did not'), L ? fmtN(L.hoursC, 2) + ' h' : '—');
+      h += dd(t('True effect'), hide ? '?' : t('{e} points', { e: S.effect }));
+    } else {
+      const st = cltStats(), sum = S.stat === 'sum';
+      h += dd(t('Sample size n'), String(S.n)) + dd(t('Samples drawn'), fmtN(st.count, 0));
+      h += dd(t('Population μ'), val(P.mu) + unit()) + dd(t('Population σ'), val(P.sigma) + unit());
+      h += dd(t(sum ? 'This sample\'s sum' : 'This sample\'s mean x̄'), S.cltLast ? val(sum ? S.cltLast.sum : S.cltLast.mean, 1) + unit() : '—');
+      h += dd(t(sum ? 'Mean of the sums' : 'Mean of the x̄\'s'), st.count ? val(st.mean, 1) + unit() : '—');
+      h += dd(t(sum ? 'Spread, s of the sums' : 'Spread, s of the x̄\'s'), st.count > 1 ? val(st.sd, 1) + unit() : '—');
+      h += dd(t(sum ? 'Theorem: √n σ' : 'Theorem: σ/√n'), hide ? '?' : val(st.se, 1) + unit());
+      h += dd(t(sum ? 'Theorem: nμ' : 'Theorem: μ'), hide ? '?' : val(st.center, 1) + unit());
+      h += dd(t('Skew of these'), isFinite(st.skew) ? fmtN(st.skew, 3) : '—') + dd(t('Theorem: skew of population/√n'), hide ? '?' : fmtN(st.skewPred, 3));
+      h += dd(t('Within ±1 standard error'), hide ? '?' : pct(st.w1)) + dd(t('Within ±2 standard errors'), hide ? '?' : pct(st.w2));
+      h += `<div class="wide"><dt>${esc(t('A normal curve has'))}</dt><dd class="ok">${esc(t('68.3 % within ±1 and 95.4 % within ±2 standard deviations, and skew 0'))}</dd></div>`;
+    }
+    $('out').innerHTML = h;
+  }
+  function formulas() {
+    const dl = $('formulas'); let h = '';
+    if (S.view === 'clt') {
+      h += `<dt>μ<sub>x̄</sub></dt><dd>= μ</dd><dt>σ<sub>x̄</sub></dt><dd>= σ/√n, ${esc(VDI18N.t('the standard error of the mean'))}</dd>`;
+      h += `<dt>μ<sub>ΣX</sub></dt><dd>= nμ</dd><dt>σ<sub>ΣX</sub></dt><dd>= √n σ</dd>`;
+      h += `<dt>z</dt><dd>= (x̄ − μ)/(σ/√n)</dd>`;
+    } else if (S.view === 'methods') {
+      h += `<dt>x̄</dt><dd>= Σx/n, n = 20</dd><dt>${esc(VDI18N.t('bias'))}</dt><dd>= ${esc(VDI18N.t('mean of the x̄\'s − μ'))}</dd><dt>s</dt><dd>= √(Σ(x − x̄)²/(n − 1))</dd>`;
+    } else h += `<dt>${esc(VDI18N.t('difference'))}</dt><dd>= x̄<sub>${esc(VDI18N.t('watched'))}</sub> − x̄<sub>${esc(VDI18N.t('did not'))}</sub></dd>`;
+    dl.innerHTML = h;
+  }
+  function noteText() {
+    const t = VDI18N.t;
+    $('note').textContent = S.view === 'methods' ? t('Play draws samples of 20 by the method chosen, slowly at first, up to the next 100. Each sample\'s mean drops into its row below.')
+      : S.view === 'experiment' ? t('Play runs the study again and again, up to the next 100 runs; each run forms new groups. Below: the difference in mean scores of each run.')
+      : t('Play draws samples of n with replacement, slowly at first, up to the next 1,000. Below: the histogram of their means (or sums) against the normal curve.');
+    $('drawMany').textContent = S.view === 'clt' ? t('Draw 1,000') : S.view === 'experiment' ? t('Run it 100 times') : t('Draw 100');
+    $('draw1').textContent = S.view === 'experiment' ? t('Run the study') : t('Draw a sample');
+  }
+  function syncControls() {
+    for (const b of document.querySelectorAll('#viewSeg button')) b.setAttribute('aria-pressed', String(b.dataset.v === S.view));
+    for (const b of document.querySelectorAll('#methSeg button')) b.setAttribute('aria-pressed', String(b.dataset.m === S.method));
+    for (const b of document.querySelectorAll('#designSeg button')) b.setAttribute('aria-pressed', String(b.dataset.d === S.design));
+    for (const b of document.querySelectorAll('#statSeg button')) b.setAttribute('aria-pressed', String(b.dataset.s === S.stat));
+    $('methGrp').hidden = S.view !== 'methods'; $('designGrp').hidden = S.view !== 'experiment'; $('nGrp').hidden = S.view !== 'clt'; $('popGrp').hidden = S.view === 'experiment';
+    $('drawMore').hidden = S.view !== 'clt';
+    $('popSel').value = S.pop; $('effect').value = S.effect; $('effectOut').textContent = VDI18N.t('{e} points', { e: S.effect }); $('showLurk').checked = S.lurk;
+    if (document.activeElement !== $('nIn')) $('nIn').value = S.n;
+    if (document.activeElement !== $('seedIn')) $('seedIn').value = S.seed;
+    window.vdShowCols = S.view === 'methods' ? [['method', 'Method'], ['samples', 'Samples'], ['mean_xbar', 'Mean x̄'], ['sd_xbar', 's of x̄']]
+      : S.view === 'experiment' ? [['design', 'Design'], ['runs', 'Runs'], ['mean_diff', 'Mean diff.'], ['hours_t', 'Hours, watched']]
+      : [['n', 'n'], ['samples', 'Samples'], ['sd', 's'], ['se_theory', 'Theorem']];
+    noteText();
+  }
+  function refresh() { syncControls(); formulas(); readouts(); need = true; }
+
+  /* ---------- controls ---------- */
+  const pressPreset = (k) => { for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === k)); };
+  function custom() { if (S.preset !== '') { S.preset = ''; pressPreset(''); $('presetHint').textContent = VDI18N.t('Your own setup: every control above can be changed.'); } }
+  function setPop(p) { if (p === S.pop && P) return; S.pop = p; newPopulation(); ranks(); }
+  function setN(n) { n = Math.max(1, Math.min(100, Math.round(n) || 1)); if (n === S.n) return; S.n = n; clearClt(); }
+  function applyPreset(k) {
+    const c = PRESETS[k]; setRun(false); S.preset = k; pressPreset(k);
+    S.view = c.view; if (c.pop) setPop(c.pop); if (c.method) S.method = c.method; if (c.design) S.design = c.design; if (c.effect != null) S.effect = c.effect;
+    if (c.n) { if (c.n !== S.n) { S.n = c.n; clearClt(); } } if (c.stat) S.stat = c.stat;
+    $('presetHint').textContent = VDI18N.t(c.hint); S.reveal = 1; refresh();
+  }
+  function setRun(on) { S.run = on; S.clock = 0; S.gap = 0.9; $('play').textContent = on ? VDI18N.t('Pause') : VDI18N.t('Play'); $('play').classList.toggle('attn', !on); if (on) S.target = runTarget(); }
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  for (const b of document.querySelectorAll('#viewSeg button')) b.addEventListener('click', () => { setRun(false); S.view = b.dataset.v; custom(); refresh(); });
+  for (const b of document.querySelectorAll('#methSeg button')) b.addEventListener('click', () => { setRun(false); S.method = b.dataset.m; custom(); S.reveal = 1; refresh(); });
+  for (const b of document.querySelectorAll('#designSeg button')) b.addEventListener('click', () => { setRun(false); S.design = b.dataset.d; custom(); refresh(); });
+  for (const b of document.querySelectorAll('#statSeg button')) b.addEventListener('click', () => { S.stat = b.dataset.s; custom(); refresh(); });
+  $('popSel').addEventListener('change', () => { setRun(false); setPop($('popSel').value); custom(); refresh(); });
+  $('effect').addEventListener('input', () => { S.effect = +$('effect').value; custom(); refresh(); });
+  $('showLurk').addEventListener('change', () => { S.lurk = $('showLurk').checked; need = true; });
+  $('nIn').addEventListener('input', () => { const n = +$('nIn').value; if (n >= 1 && n <= 100) { setRun(false); setN(n); custom(); refresh(); } });
+  $('nIn').addEventListener('change', () => syncControls());
+  $('nUp').addEventListener('click', () => { setRun(false); setN(S.n + 1); custom(); refresh(); });
+  $('nDown').addEventListener('click', () => { setRun(false); setN(S.n - 1); custom(); refresh(); });
+  $('seedIn').addEventListener('change', () => { const v = Math.max(1, Math.min(9999, Math.round(+$('seedIn').value) || 1)); setRun(false); S.seed = v; newPopulation(); ranks(); newStudy(); refresh(); });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; refresh(); });
+  $('draw1').addEventListener('click', () => { setRun(false); drawOne(); });
+  $('drawMany').addEventListener('click', () => { setRun(false); drawMany(S.view === 'clt' ? 1000 : 100); });
+  $('drawMore').addEventListener('click', () => { setRun(false); drawMany(10000); });
+  $('play').addEventListener('click', () => { setRun(!S.run); if (S.run) { drawOne(); } });
+  $('reset').addEventListener('click', () => {
+    setRun(false);
+    if (S.view === 'methods') { for (const m of METHODS) S.est[m] = []; S.cur = null; clearStreams('m:'); }
+    else if (S.view === 'experiment') { S.study = { self: [], random: [] }; S.studyLast = null; clearStreams('s:'); }
+    else clearClt();
+    refresh();
+  });
+  function keys(e) {
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+      const d = e.key === 'ArrowLeft' ? -1 : 1;
+      if (S.view === 'methods') { const i = (METHODS.indexOf(S.method) + d + METHODS.length) % METHODS.length; S.method = METHODS[i]; }
+      else if (S.view === 'experiment') S.design = S.design === 'self' ? 'random' : 'self';
+      else { S.stat = S.stat === 'mean' ? 'sum' : 'mean'; }
+      setRun(false); custom(); refresh(); e.preventDefault();
+    } else if ((e.key === 'ArrowUp' || e.key === 'ArrowDown') && S.view === 'clt') { setRun(false); setN(S.n + (e.key === 'ArrowUp' ? (e.shiftKey ? 10 : 1) : (e.shiftKey ? -10 : -1))); custom(); refresh(); e.preventDefault(); }
+    else if (e.key === ' ') { $('play').click(); e.preventDefault(); }
+  }
+  can.addEventListener('keydown', keys); low.addEventListener('keydown', keys);
+
+  /* Play: a sample about every 0.9 s at first (its picks appear one by one), each gap 0.75 of the last, down to many a frame */
+  let last = performance.now();
+  function frame(now) {
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    if (S.reveal < 1) { S.revealT += dt; S.reveal = still() ? 1 : Math.min(1, S.revealT / 0.55); need = true; }
+    if (S.run) {
+      S.clock += dt;
+      if (S.clock >= S.gap) {
+        const k = S.gap > 0.05 ? 1 : Math.max(1, Math.round((S.view === 'clt' ? 30 : 4) * (0.05 / Math.max(S.gap, 0.005))));
+        S.clock = 0; S.gap = Math.max(0.004, S.gap * 0.75);
+        const left = S.target - countNow(), take = Math.min(k, left);
+        if (take > 0) { if (take === 1 && S.gap > 0.12) drawOne(); else drawMany(take); }
+        if (countNow() >= S.target) setRun(false);
+      }
+    }
+    if (need) { need = false; draw(); drawLow(); }
+    requestAnimationFrame(frame);
+  }
+  function resize() {
+    dpr = window.devicePixelRatio || 1;
+    const r = $('pane').getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr);
+    const q = $('lower').getBoundingClientRect(); LW = q.width; LH = q.height; low.width = Math.round(LW * dpr); low.height = Math.round(LH * dpr);
+    need = true;
+  }
+  const retheme = () => { tokens(); need = true; };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'data-vd-look', 'data-projector'] });
+  VD.projector({ onChange: resize });
+  if (window.VD && VD.panel) VD.panel({ play: '#play', reset: '#reset' });
+  if (window.VD && VD.splitPanes) VD.splitPanes($('pane'), $('lower'), { key: 'lower', label: 'Divider between the hall and the lower graph' });
+  const wsNow = () => (window.VD && VD.ws ? VD.ws(S.view === 'clt' ? 'central-limit-theorem' : 'sampling-methods') : (S.view === 'clt' ? 'central-limit-theorem' : 'sampling-methods'));
+  if (VD.howTo) VD.howTo({ src: () => `media/how-this-works/${wsNow()}.mp4`, poster: () => `media/how-this-works/${wsNow()}.jpg` });
+  window.vdWorksheet = wsNow;
+
+  /* Record reading: one row a method (sampling methods), one row a design (experiment), or the current n (central limit theorem) */
+  window.vdReadingRow = () => {
+    const r4 = (v) => (isFinite(v) ? Number(v.toFixed(dv() + 1)) : '');
+    if (S.view === 'methods') {
+      const rows = [];
+      for (const m of METHODS) { const sm = summary(S.est[m], P.mu); if (sm.n) rows.push({ view: 'methods', population: S.pop, method: METHNAME[m], samples: sm.n, mean_xbar: r4(sm.mean), mu: r4(P.mu), bias: r4(sm.bias), sd_xbar: sm.n > 1 ? r4(sm.sd) : '' }); }
+      return rows.length ? rows : VDI18N.t('Draw some samples first: Play, or Draw 100.');
+    }
+    if (S.view === 'experiment') {
+      const rows = [];
+      for (const d of ['self', 'random']) {
+        const ds = diffs(d); if (!ds.length) continue; const sm = summary(ds, S.effect);
+        const r = studyRng(S.seed, d); let ht = 0, hc = 0; for (let k = 0; k < ds.length; k++) { const res = runStudy(St, d, S.effect, r); ht += res.hoursT; hc += res.hoursC; }
+        rows.push({ view: 'experiment', design: DESIGNNAME[d], effect: S.effect, runs: sm.n, mean_diff: Number(sm.mean.toFixed(2)), sd_diff: sm.n > 1 ? Number(sm.sd.toFixed(2)) : '', hours_t: Number((ht / ds.length).toFixed(2)), hours_c: Number((hc / ds.length).toFixed(2)) });
+      }
+      return rows.length ? rows : VDI18N.t('Run the study first: Play, or Run it 100 times.');
+    }
+    const st = cltStats(); if (st.count < 2) return VDI18N.t('Draw some samples first: Play, Draw 1,000 or Draw 10,000.');
+    const sum = S.stat === 'sum';
+    return { view: 'clt', population: S.pop, stat: sum ? 'sum' : 'mean', n: S.n, inv_sqrt_n: Number((1 / Math.sqrt(S.n)).toFixed(4)), sqrt_n: Number(Math.sqrt(S.n).toFixed(4)), samples: st.count,
+      mean: r4(st.mean), sd: r4(st.sd), se_theory: r4(st.se), skew: Number(st.skew.toFixed(3)), within1: Number((100 * st.w1).toFixed(1)), within2: Number((100 * st.w2).toFixed(1)) };
+  };
+  window.vdVersion = 'sampling-lab@2026-11-19';
+  if (window.VD && VD.describe) VD.describe(can, () => {
+    if (!P) return [];
+    const t = VDI18N.t, out = [];
+    if (S.view === 'methods') {
+      const sm = summary(S.est[S.method], P.mu);
+      out.push(t('The {m} method has drawn {k} samples of 20 from the hall of 400.', { m: t(METHNAME[S.method]), k: sm.n }));
+      if (S.cur && S.cur.method === S.method) out.push({ t: t('This sample\'s mean is {x}.', { x: val(S.cur.mean) + unit() }), live: !S.run });
+      if (sm.n > 1) out.push(t('The means average {m} with a spread of {s}.', { m: val(sm.mean) + unit(), s: val(sm.sd) + unit() }));
+      if (!S.blind) out.push(t('The population mean is {m}.', { m: val(P.mu) + unit() }));
+    } else if (S.view === 'experiment') {
+      const ds = diffs(S.design);
+      out.push(t('{d} study, run {k} times.', { d: t(DESIGNNAME[S.design]), k: ds.length }));
+      if (ds.length) out.push({ t: t('The last difference in mean scores is {x} points.', { x: fmtN(ds[ds.length - 1], 2) }), live: !S.run });
+    } else {
+      const st = cltStats();
+      out.push(t('{k} samples of n = {n}.', { k: st.count, n: S.n }));
+      if (st.count > 1) out.push({ t: t('Their spread is {s}; the theorem gives {p}.', { s: val(st.sd, 1), p: S.blind ? '?' : val(st.se, 1) }), live: !S.run });
+    }
+    return out;
+  });
+  tokens(); newPopulation(); ranks(); newStudy();
+  new ResizeObserver(resize).observe($('pane')); new ResizeObserver(resize).observe($('lower')); resize(); applyPreset('srs');
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  window.__sl = { S, get P() { return P; }, get St() { return St; }, applyPreset, setRun, drawOne, drawMany, setN, setPop, cltStats, summary, diffs, makePopulation, drawSample, methodRng, meanOf, makeStudy, runStudy, studyRng, cltRng, cltSample, predict, within, METHODS, POPS, draw: () => { need = true; } };
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

@@ -132,6 +132,14 @@ window.VD_SHORTCUTS = {
     ["+ −", "Zoom in or out about the center (or scroll over the picture)", "on the picture"],
     ["Space", "Play or pause", "on the picture"]
   ],
+  "sampling-lab": [
+    ["← →", "Switch the sampling method (or the design, or means and sums)", "on the picture"],
+    ["↑ ↓", "Change the sample size n in the central limit theorem view (Shift for steps of 10)", "on the picture"]
+  ],
+  "confidence-intervals": [
+    ["↑ ↓", "Change the sample size n (Shift for steps of 10)", "on the picture"],
+    ["← →", "Step the confidence level through 90, 95 and 99 %", "on the picture"]
+  ],
   "slope-fields": [
     ["← → ↑ ↓", "Move the start point of the curve in t or y (Shift for bigger steps)", "on the picture"],
     ["+ −", "Zoom in or out about the middle of the view (or scroll over the field)", "on the picture"]

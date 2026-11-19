@@ -1143,6 +1143,25 @@
       alt: [{ table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.setup === 'pendulum') && rows.some((r) => r.edited === 'yes'), cols: ['row', 'max', 'mean', 'median', 'sd', 'iqr'] }] },
   });
   /* ==STATS describe END== */
+  /* ==STATS sampling START== Statistics for physics worksheets on the Sampling Lab and Confidence Intervals demos (OpenStax
+     Introductory Statistics 2e, 2026-11-19). */
+  const STATS_SAMPLING = ['sampling-methods', 'central-limit-theorem', 'ci-coverage'];
+  ENABLED.push(...STATS_SAMPLING); GRAPHS.push('central-limit-theorem', 'ci-coverage'); GRAPH_EVERY_TABLE.push('central-limit-theorem', 'ci-coverage');
+  Object.assign(FROM_DEMO, {
+    /* Table 1: Reading | Method | Samples | Mean of x̄'s | μ | Bias | Spread s; a series of study rows goes to Table 2:
+       Reading | Design | True effect | Runs | Mean difference | s of the differences | Hours, watched | Hours, did not */
+    'sampling-methods': { demo: 'Sampling Lab', cols: ['row', 'method', 'samples', 'mean_xbar', 'mu', 'bias', 'sd_xbar'],
+      alt: [{ table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.view === 'experiment'), cols: ['row', 'design', 'effect', 'runs', 'mean_diff', 'sd_diff', 'hours_t', 'hours_c'] }] },
+    /* Table 1 (means): Reading | n | 1/√n | Mean of x̄'s | s of x̄'s | σ/√n | Skew | Within ±1 SE | Within ±2 SE;
+       a series of sums goes to Table 2: Reading | n | √n | Mean of the sums | s of the sums | √n σ */
+    'central-limit-theorem': { demo: 'Sampling Lab', cols: ['row', 'n', 'inv_sqrt_n', 'mean', 'sd', 'se_theory', 'skew', 'within1', 'within2'],
+      alt: [{ table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.stat === 'sum'), cols: ['row', 'n', 'sqrt_n', 'mean', 'sd', 'se_theory'] }] },
+    /* Table 1: Reading | Interval | Confidence level | n | Intervals | Caught | Caught (%) | Mean width; a series of one interval
+       and one level at several n goes to Table 2: Reading | n | 1/√n | Mean width */
+    'ci-coverage': { demo: 'Confidence Intervals', cols: ['row', 'interval', 'cl', 'n', 'intervals', 'captured', 'captured_pct', 'mean_width'],
+      alt: [{ table: 1, when: (rows) => rows.length > 2 && rows.every((r) => r.kind === rows[0].kind && +r.cl === +rows[0].cl) && new Set(rows.map((r) => r.n)).size === rows.length, cols: ['row', 'n', 'inv_sqrt_n', 'mean_width'] }] },
+  });
+  /* ==STATS sampling END== */
   /* ==FORMULAS START== */
   /* Spreadsheet formulas in the data tables, and the curve fits of the graphs. Plain functions with no page access, so
      curriculum/validation/test_worksheet_formulas.cjs runs them in Node. Formulas are read by a small parser of their own (no eval):

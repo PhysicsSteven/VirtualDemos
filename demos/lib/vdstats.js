@@ -14,7 +14,7 @@
      t for r and its two sided p value, df = n - 2, and residuals.
    - Tests: tTest1, zTest1, propTest1, tTest2 (Welch, unpooled as the book does), zTest2s (two means, sigmas known), propTest2, pairedT, chisqGOF, chisqIndep,
      anova1, fTest2 (two variances). Each returns its statistic, df and p value (tail 'two', 'left' or 'right').
-   - Intervals: zInterval, tInterval, propInterval (the book's normal approximation). */
+   - Intervals: zInterval, tInterval, propInterval (the book's normal approximation), plusFourInterval (8.3, added 2026-11-19). */
 var VDSTATS = (function () {
   'use strict';
 
@@ -245,13 +245,16 @@ var VDSTATS = (function () {
   function zInterval(xbar, sigma, n, cl) { const z = dist.normal().inv(1 - (1 - cl) / 2), E = z * sigma / Math.sqrt(n); return { lo: xbar - E, hi: xbar + E, E, crit: z }; }
   function tInterval(xbar, s, n, cl) { const t = dist.t(n - 1).inv(1 - (1 - cl) / 2), E = t * s / Math.sqrt(n); return { lo: xbar - E, hi: xbar + E, E, crit: t }; }
   function propInterval(x, n, cl) { const ph = x / n, z = dist.normal().inv(1 - (1 - cl) / 2), E = z * Math.sqrt(ph * (1 - ph) / n); return { lo: ph - E, hi: ph + E, E, crit: z, phat: ph }; }
+  /* the book's "plus four" interval for a proportion (8.3): add two successes and two failures, p′ = (x + 2)/(n + 4), then the
+     same normal approximation with n + 4 (the book uses it for confidence levels of 90 % or more and n of 10 or more) */
+  const plusFourInterval = (x, n, cl) => propInterval(x + 2, n + 4, cl);
 
   /* bin values into a histogram: edges from lo by width; returns counts and edges */
   function histogram(a, lo, width, nbins) { const c = new Array(nbins).fill(0); for (const v of a) { const i = Math.floor((v - lo) / width); if (i >= 0 && i < nbins) c[i]++; else if (i === nbins && v === lo + nbins * width) c[nbins - 1]++; } return { counts: c, edges: Array.from({ length: nbins + 1 }, (_, i) => lo + i * width) }; }
 
   return { rng, lgamma, lchoose, gammaP, gammaQ, betaI, erf, invert, dist, pval, sum, mean, median, variance, sd, sorted, fiveNum,
     quantile, percentileRank, iqrFences, skew, linreg, zTest1, tTest1, tTest1s, propTest1, tTest2, tTest2s, zTest2s, propTest2, pairedT,
-    chisqGOF, chisqIndep, anova1, fTest2, zInterval, tInterval, propInterval, histogram };
+    chisqGOF, chisqIndep, anova1, fTest2, zInterval, tInterval, propInterval, histogram, plusFourInterval };
 })();
 if (typeof window !== 'undefined') window.VDSTATS = VDSTATS;
 if (typeof globalThis !== 'undefined') globalThis.VDSTATS = VDSTATS;

@@ -342,6 +342,7 @@ HANDOUT_TOPIC = {
     'one-way-anova': 'One Way ANOVA: Gaps, Spreads and False Alarms',
     'regression-fit': 'Fitting a Line and Judging the Fit',
     'describing-data': 'Describing a Data Set: Center, Spread and One Bad Timing',
+    'sampling-methods': 'How You Sample Matters', 'central-limit-theorem': 'The Central Limit Theorem', 'ci-coverage': 'What 95 % Confident Means',
     'quantum-tunneling': 'Quantum Tunneling', 'energy-levels': 'Energy Levels in a Box and a Spring', 'uncertainty-principle': 'The Uncertainty Principle', 'hydrogen-atom': 'The Hydrogen Atom', 'laser-threshold': 'Laser Threshold, Efficiency and Cavity Modes', 'spin-resonance': 'Spin Resonance',
 }
 

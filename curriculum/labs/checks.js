@@ -525,5 +525,38 @@
       { table: 1, col: 'a₁/a₂', from: (r) => r.n('a₁ (AU)') / r.n('a₂ (AU)') }],
   };
 
+  /* ==STATS sampling START== (Sampling Lab and Confidence Intervals, 2026-11-19). Slopes are fitted here from the student's own
+     table (a free intercept), because one table may carry two graphs. */
+  const lsq = (pts) => { pts = pts.filter((q) => isFinite(q[0]) && isFinite(q[1])); const n = pts.length; if (n < 2) return NaN;
+    const mx = pts.reduce((s, q) => s + q[0], 0) / n, my = pts.reduce((s, q) => s + q[1], 0) / n;
+    let sxy = 0, sxx = 0; for (const q of pts) { sxy += (q[0] - mx) * (q[1] - my); sxx += (q[0] - mx) ** 2; } return sxx > 0 ? sxy / sxx : NaN; };
+  C['sampling-methods'] = {
+    items: {},
+    /* the bias is worked out from unrounded means, so it may differ from the difference of the two rounded ones by the rounding,
+       0.01 ¢; within that it agrees */
+    cells: [{ table: 1, col: 'Bias', from: (r) => { const w = r.n('Mean of the x') - r.n('Population mean'), b = r.n('Bias'); return Math.abs(b - w) <= 0.0101 ? b : w; } }],
+  };
+  C['central-limit-theorem'] = {
+    items: {
+      'analysis-1': { tol: 2, expect: (D) => lsq(D.rows(1).map((r) => [1 / Math.sqrt(r.n('n')), r.n('Spread')])) },
+      'analysis-3': { tol: 4, expect: (D) => lsq(D.rows(1).map((r) => [1 / Math.sqrt(r.n('n')), r.n('Skew')])) },
+      'analysis-4': { expect: (D) => { const ok = D.rows(1).filter((r) => r.n('Skew') < 0.3 && Math.abs(r.n('±2') - 95.4) <= 0.5).map((r) => r.n('n')).filter(isFinite);
+        return ok.length ? Math.min(...ok) : NaN; } },
+      'analysis-5': { tol: 2, expect: (D) => lsq(D.rows(2).map((r) => [Math.sqrt(r.n('n')), r.n('Spread')])) },
+    },
+    cells: [{ table: 1, col: '1/√n', from: (r) => 1 / Math.sqrt(r.n('n')) }, { table: 2, col: '√n', from: (r) => Math.sqrt(r.n('n')) }],
+  };
+  C['ci-coverage'] = {
+    items: {
+      'analysis-2': { expect: (D) => { const w = (cl) => D.n(1, { Interval: 'σ known', 'Confidence level': cl }, 'Mean width');
+        const a = w(99) / w(95), b = w(95) / w(90); return isFinite(a) && isFinite(b) ? [a, b] : NaN; } },
+      'analysis-3': { expect: (D) => { const t = D.n(1, { Interval: 't with', Intervals: 1100 }, 'Caught (%)'), z = D.n(1, { Interval: 'z with', Intervals: 1100 }, 'Caught (%)');
+        return isFinite(t) && isFinite(z) ? [t, z] : NaN; } },
+      'analysis-5': { tol: 2, expect: (D) => { const b = lsq(D.rows(2).map((r) => [1 / Math.sqrt(r.n('n')), r.n('Mean width')])); return isFinite(b) ? ({ any: [b, b / (2 * 1.960)] }) : NaN; } },
+    },
+    cells: [{ table: 1, col: 'Caught (%)', from: (r) => 100 * r.n('Caught the truth') / r.n('Intervals') }, { table: 2, col: '1/√n', from: (r) => 1 / Math.sqrt(r.n('n')) }],
+  };
+  /* ==STATS sampling END== */
+
   window.VD_WS_CHECKS = C;
 })();

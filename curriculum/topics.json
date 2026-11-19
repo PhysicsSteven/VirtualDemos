@@ -472,7 +472,9 @@
       "surfaces-and-gradients",
       "space-3d",
       "data-explorer",
-      "distribution-explorer"
+      "distribution-explorer",
+      "sampling-lab",
+      "confidence-intervals"
      ]
     }
    ]

@@ -12997,6 +12997,39 @@
       "title": "Distribution Explorer",
       "url": "demos/distribution-explorer.html",
       "handouts": []
+    },
+    {
+      "demo": "sampling-lab",
+      "course": [
+        "later"
+      ],
+      "sections": [],
+      "role": "demo",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "New 2026-11-19 (Claude, OpenStax Introductory Statistics, group sampling): 400 simulated students sampled five ways, a self selected against a randomized study, and the central limit theorem for means and sums. Sections in the statistics map (Introductory Statistics 2e 1.2, 1.4, 1.6, 7.1 to 7.5).",
+      "title": "Sampling Lab",
+      "url": "demos/sampling-lab.html",
+      "handouts": [
+        "sampling-methods",
+        "central-limit-theorem"
+      ]
+    },
+    {
+      "demo": "confidence-intervals",
+      "course": [
+        "later"
+      ],
+      "sections": [],
+      "role": "demo",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "New 2026-11-19 (Claude, OpenStax Introductory Statistics, group sampling): repeated simulated samples and their z, t, proportion and plus four intervals stacked against the true value; capture rates and width against n. Sections in the statistics map (Introductory Statistics 2e 8.1 to 8.6).",
+      "title": "Confidence Intervals",
+      "url": "demos/confidence-intervals.html",
+      "handouts": [
+        "ci-coverage"
+      ]
     }
   ],
   "activities": [

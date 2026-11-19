@@ -73,6 +73,8 @@ OVERRIDES = {
     "solids-of-revolution": {"wait": 2500, "crop": "#scene3", "js": "window.__sol.applyPreset('coneI'); window.__sol.setN(8); document.querySelector('#dimSeg [data-dim=\"3d\"]').click(); const v = document.getElementById('views'); v.style.height = '400px'; const s = document.getElementById('scene3'); s.style.flex = 'none'; s.style.width = '640px'; s.style.height = '400px'; for (const id of ['cap3', 'hint3']) document.getElementById(id).style.display = 'none';"},
     "series": {"wait": 1200, "crop": ".pane", "js": "const pn = document.getElementById('pane'); pn.style.flex = 'none'; pn.style.minHeight = '0'; pn.style.height = '400px'; pn.style.width = '640px'; window.__ser.applyPreset('madelung'); window.__ser.setN(9); window.__ser.draw();"},
     "taylor": {"wait": 1200, "crop": ".pane", "js": "window.__ty.applyPreset('poles'); window.__ty.setN(12); window.__ty.draw();"},
+    "sampling-lab": {"wait": 900, "crop": ".pane", "js": "window.__sl.applyPreset('conv'); window.__sl.drawMany(60); window.__sl.draw();"},
+    "confidence-intervals": {"wait": 900, "crop": ".pane", "js": "window.__ci.applyPreset('z95'); window.__ci.draw(100); window.__ci.redraw();"},
     "rates-and-optimization": {"wait": 1000, "crop": ".pane", "js": "window.__ro.applyPreset('guard'); window.__ro.setX(40); window.__ro.draw();"},
     "space-3d": {"wait": 2500, "crop": "#pane", "js": "window.__sp.applyPreset('vec'); window.__sp.draw();"},
     "surfaces-and-gradients": {"wait": 2500, "crop": ".panes", "js": "window.__sg.applyPreset('hill'); window.__sg.S.alpha = 0.6; window.__sg.draw();"},
