@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="../demos/lib/theme.js"></script>
+<title>Related Rates and Optimization: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+@media screen { :root[data-theme="dark"] {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; overflow-wrap: break-word; }   /* a long file name breaks instead of pushing a phone sideways */
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+<link rel="stylesheet" id="vd-paper" href="../demos/lib/paper.css">
+</head>
+<body class="notes">
+<header class="top" aria-label="Site"><a class="brand" href="../index.html"><svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><ellipse cx="16" cy="16" rx="13" ry="6" fill="none" stroke="currentColor" stroke-width="1.8" transform="rotate(-30 16 16)"/><ellipse cx="16" cy="16" rx="13" ry="6" fill="none" stroke="currentColor" stroke-width="1.8" transform="rotate(30 16 16)"/><circle cx="16" cy="16" r="2.6" fill="currentColor"/></svg>Virtual Physics Demos</a><nav class="tabs" aria-label="Library"><a class="tab" href="../index.html#topics">Demos</a><a class="tab" href="../openstax.html">OpenStax</a><a class="tab" href="index.html" aria-current="page">Notes</a></nav><span class="hfind"></span><span data-vd-theme></span><a class="courses" href="../courses.html"><b>For a class</b> Courses</a></header>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Related Rates and Optimization</h1><ul class="meta"><li><a href="../demos/rates-and-optimization.html">Open the demo</a></li><li>Calculus I (OpenStax Calculus Vol 1 4.1 and 4.7) for physics students; Physics I (University Physics Vol 1 4.3) for the longest throw and Physics III (Vol 3 1.3) for Snell&#x27;s law</li><li>15 to 30 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>In a related rates problem one quantity drives everything. Write the equation that ties the quantities together, differentiate it with respect to time, and the chain rule links the rates: dy/dt = (dy/dx)(dx/dt). A steady dx/dt can give a dy/dt that is far from steady.</li>
+<li>The chain rule is not just algebra: the rate it gives is the rate you would measure from the motion. The demo shows both side by side and they agree to every digit.</li>
+<li>In an optimization problem, graph the quantity against the choice. The best choice is where the graph is flat, f′ = 0, and the sign of f′ on either side tells you whether it is a largest or a smallest value.</li>
+<li>Physics is full of optimization: light takes the path of least time (Fermat's principle), which is Snell's law, and a projectile's longest range is at 45° only when it lands at the height it left.</li>
+</ul>
+<h2>Before class</h2>
+<p>Nothing to install. Projector mode enlarges the scene and labels. The opening setup is the ladder, paused at its start: Play starts the foot moving out at 0.5 m/s in real time. Blind (Lab fold) hides the rates the chain rule gives, the best choice and its marks, so students can work them out first.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>The ladder.</strong> Press Play and watch the top: slow at first, then faster and faster. Pause with the foot at 3 m (drag the red handle or use the arrow keys) and have students work out dy/dt before turning Blind off (Q1).</li>
+<li><strong>The cone.</strong> Ask whether the level rises at a steady rate when water pours in at a steady rate. Play and watch the dh/dt curve fall as 1/h² (Q2).</li>
+<li><strong>The shadow.</strong> Ask whether the shadow grows faster when the walker is far from the lamp. It does not: ds/dt is constant (Q3).</li>
+<li><strong>The box.</strong> Press Play to sweep the cut x and watch the volume graph rise and fall. Where the dashed derivative crosses zero is the best box; Go to the best jumps there (Q4).</li>
+<li><strong>The lifeguard.</strong> Ask where she should enter the water. Sweep x and read sin θ₁/v₁ and sin θ₂/v₂: they are equal exactly at the fastest path. Switch to Light into water: the same problem with v = c/n is Snell's law (Q5).</li>
+<li><strong>The longest throw.</strong> Level ground gives 45°. Raise the launch height and watch the best angle drop (Q6).</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> The foot of a 5 m ladder moves out at 0.5 m/s. How fast is the top moving down when the foot is 3 m from the wall? What happens to that speed as the top nears the floor, and why can a real ladder not do this?</p></div>
+
+<div class="q"><p><strong>Q2.</strong> Water flows at 0.5 L/s into a cone 30 cm deep with a rim radius of 15 cm, point down. How fast is the level rising when the water is 10 cm deep? Why does the level rise more slowly as the cone fills, although the flow is steady?</p></div>
+
+<div class="q"><p><strong>Q3.</strong> A 1.8 m person walks away from a 6 m lamp post at 1.4 m/s. How fast does the shadow grow, and how fast does its tip move? Does it matter how far from the post the person is?</p></div>
+
+<div class="q"><p><strong>Q4.</strong> From a 30 cm × 20 cm sheet, what size of square cut from each corner gives the biggest open box, and what is its volume? Show that for a square sheet the best cut is a sixth of the side.</p></div>
+
+<div class="q"><p><strong>Q5.</strong> Show that the time T(x) for the lifeguard has dT/dx = sin θ₁/v₁ − sin θ₂/v₂. What does dT/dx = 0 say, and how does it become Snell's law n₁ sin θ₁ = n₂ sin θ₂ for light?</p></div>
+
+<div class="q"><p><strong>Q6.</strong> Why is the longest throw on level ground at 45°? A shot put leaves the hand 2 m up at 14 m/s: is its best angle more or less than 45°, and why?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"A steady driving rate gives steady rates everywhere."</strong> Only when the relation is linear (the shadow). The ladder top and the cone level change at rates that vary a lot, even though the foot and the flow are steady.</li>
+<li><strong>"Set the quantity, not its derivative, to zero."</strong> The best box is where dV/dx = 0, not where V = 0 (those are the worst boxes, at x = 0 and at x = b/2).</li>
+<li><strong>"The shortest path is the fastest."</strong> Only when the speed is the same everywhere. The lifeguard runs further on sand, and light bends at a surface, because a longer path in the faster medium saves time.</li>
+<li><strong>"45° is always the best launch angle."</strong> Only on level ground with no air drag. From a height (or with drag) the best angle is lower.</li>
+</ul>
+<h2>How the demo works</h2>
+<ul>
+<li>Each related rates scene has a driver changing at a steady rate (the ladder's foot x, the water volume V, the walker's distance x) and an exact equation for the others: x² + y² = L², V = πR²h³/(3H²), s = px/(H − p). The rate dy/dt is (dy/dx)(dx/dt), with dy/dx from the equation. The rate from the motion is measured as the change in y over ±0.1 ms of the run divided by 0.2 ms.</li>
+<li>Each optimization scene has an exact formula for the quantity and its derivative. The best choice comes from the closed form for the box, (a + b − √(a² − ab + b²))/6, the fence, P/4, the can, ∛(V/2π), and the throw, tan θ = v₀/√(v₀² + 2gh); for the lifeguard and the light ray it is found by bisection on the derivative, which increases along the shore.</li>
+<li>The throw has no air drag and g = 9.81 m/s². The light setup uses n = 1.000293 for air and 1.333 for water (OpenStax University Physics Vol 3, Table 1.1).</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>. © 2026 Steven Anderson. All rights reserved; see the <a href="../LICENSE.html">terms of use</a>.</footer>
+</main>
+</body>
+</html>

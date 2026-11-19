@@ -175,7 +175,9 @@
       {
        "sec": "4.1",
        "title": "Related Rates",
-       "demos": []
+       "demos": [
+        "rates-and-optimization"
+       ]
       },
       {
        "sec": "4.2",
@@ -216,7 +218,9 @@
       {
        "sec": "4.7",
        "title": "Applied Optimization Problems",
-       "demos": []
+       "demos": [
+        "rates-and-optimization"
+       ]
       },
       {
        "sec": "4.8",

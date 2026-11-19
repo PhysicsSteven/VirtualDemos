@@ -14,9 +14,9 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
 /* only what this demo needs beyond demos/lib/vd.css: the curve colors, the function box and the graph */
-:root { --fg-f: #8f5000; --fg-d1: #0f766e; --fg-d2: #a21caf; --fg-d3: #4d7c0f; --fg-int: #1d4ed8; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --fg-f: #e8a440; --fg-d1: #5eead4; --fg-d2: #f0abfc; --fg-d3: #bef264; --fg-int: #93c5fd; } }
-:root[data-theme="dark"] { --fg-f: #e8a440; --fg-d1: #5eead4; --fg-d2: #f0abfc; --fg-d3: #bef264; --fg-int: #93c5fd; }
+:root { --fg-f: #8f5000; --fg-d1: #0f766e; --fg-d2: #a21caf; --fg-d3: #4d7c0f; --fg-int: #1d4ed8; --fg-sec: #be123c; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --fg-f: #e8a440; --fg-d1: #5eead4; --fg-d2: #f0abfc; --fg-d3: #bef264; --fg-int: #93c5fd; --fg-sec: #fb7185; } }
+:root[data-theme="dark"] { --fg-f: #e8a440; --fg-d1: #5eead4; --fg-d2: #f0abfc; --fg-d3: #bef264; --fg-int: #93c5fd; --fg-sec: #fb7185; }
 .stage { position: relative; display: flex; flex-direction: column; min-height: min-content; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
 .stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
 .stage-ctl .note { margin-left: auto; font-size: 0.8rem; color: var(--muted); }
@@ -43,6 +43,13 @@
 .sw.d3 { border-color: var(--fg-d3); border-top-style: dashed; border-top-width: 2px; }
 .sw.int { border-color: var(--fg-int); border-top-style: double; }
 .sw.tan { border-color: var(--muted); border-top-width: 1px; }
+.sw.sec { border-color: var(--fg-sec); }
+.sw.mvt { border-color: var(--fg-d2); border-top-style: dashed; }
+.chips .chips-label { flex: 1 1 100%; font-size: 0.78rem; font-weight: 700; color: var(--muted); margin-top: 4px; }
+.tool-tab { overflow-x: auto; margin-top: 8px; }
+.tool-tab table.rows td { font-family: var(--font-mono); white-space: nowrap; }
+.tool-tab table.rows th { white-space: normal; vertical-align: bottom; }
+.tool-tab table.rows td.good { color: var(--fg-d1); }
 dl.formulas { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 6px 10px; margin: 0; }
 dl.formulas dt { font-family: var(--font-mono); font-weight: 600; white-space: nowrap; }
 dl.formulas dd { margin: 0; font-family: var(--font-mono); font-size: 0.88rem; overflow-wrap: anywhere; }
@@ -74,6 +81,11 @@ dl.formulas .f { color: var(--fg-f); } dl.formulas .d1 { color: var(--fg-d1); } 
       <div class="stage-ctl" id="strip">
         <button type="button" class="spin attn" id="play" data-vd-key="play">Play</button>
         <button type="button" class="btn" id="reset" title="Put the point back at its starting place">Reset</button>
+        <div class="seg" role="group" aria-label="Show" id="modeSeg">
+          <button type="button" data-m="graph" aria-pressed="true">Derivatives</button>
+          <button type="button" data-m="secant" aria-pressed="false">Secant to tangent</button>
+          <button type="button" data-m="newton" aria-pressed="false">Newton's method</button>
+        </div>
         <span class="note" id="note">Play slides the point along the curve. Drag the graph to move it; scroll or pinch over it to zoom.</span>
       </div>
       <div class="fbar">
@@ -107,6 +119,18 @@ dl.formulas .f { color: var(--fg-f); } dl.formulas .d1 { color: var(--fg-d1); } 
           <div class="row"><label for="y0in">y from</label><input type="number" id="y0in" step="any"><label for="y1in">to</label><input type="number" id="y1in" step="any"></div>
           <div class="row"><button type="button" class="btn" id="zin">Zoom in</button><button type="button" class="btn" id="zout">Zoom out</button><button type="button" class="btn" id="fitY">Fit y to f</button><button type="button" class="btn" id="homeView">Reset view</button></div>
         </div>
+        <div class="shelf-card" role="group" aria-label="Secant to tangent" id="secCard" hidden>
+          <span class="card-title">Secant to tangent</span>
+          <div class="row"><label for="hIn">Step h</label><input type="number" id="hIn" step="any" value="1"><button type="button" class="btn" id="hHalf">h ÷ 2</button><button type="button" class="btn" id="hTenth">h ÷ 10</button><button type="button" class="btn" id="hFlip">−h</button></div>
+          <label class="check"><input type="checkbox" id="showLin" checked><span><span class="sw tan"></span>Tangent line as a linear approximation, with its error at x + h</span></label>
+          <label class="check"><input type="checkbox" id="showMvt" checked><span><span class="sw mvt"></span>Mean value point c, where the tangent is parallel to the secant</span></label>
+          <span class="hint">Play halves h every half second. Drag the point to move x.</span>
+        </div>
+        <div class="shelf-card" role="group" aria-label="Newton's method" id="nwCard" hidden>
+          <span class="card-title">Newton's method</span>
+          <div class="row"><button type="button" class="btn" id="nwStep">One step</button><button type="button" class="btn" id="nwClear">Clear the steps</button></div>
+          <span class="hint">x<sub>n+1</sub> = x<sub>n</sub> − f(x<sub>n</sub>)/f′(x<sub>n</sub>): follow the tangent at x<sub>n</sub> down to the axis. The point is the start x<sub>0</sub>: drag it to start somewhere else. Play takes one step a second.</span>
+        </div>
       </div>
     </div>
 
@@ -121,12 +145,29 @@ dl.formulas .f { color: var(--fg-f); } dl.formulas .d1 { color: var(--fg-d1); } 
           <button type="button" data-p="damped" aria-pressed="false">A damped oscillation</button>
           <button type="button" data-p="corner" aria-pressed="false">A corner: |x|</button>
           <button type="button" data-p="recip" aria-pressed="false">The area under 1/x is ln x</button>
+          <span class="chips-label">Secant to tangent</span>
+          <button type="button" data-p="secant" aria-pressed="false">The secant becomes the tangent</button>
+          <button type="button" data-p="dropAvg" aria-pressed="false">A dropped ball: average and instantaneous velocity</button>
+          <button type="button" data-p="linear" aria-pressed="false">Linear approximation: √x near 4</button>
+          <button type="button" data-p="mvt" aria-pressed="false">The Mean Value Theorem</button>
+          <span class="chips-label">Newton's method</span>
+          <button type="button" data-p="nwSqrt" aria-pressed="false">Newton's method: √2</button>
+          <button type="button" data-p="nwKepler" aria-pressed="false">Kepler's equation for an orbit</button>
+          <button type="button" data-p="nwCycle" aria-pressed="false">A start that cycles forever</button>
+          <button type="button" data-p="nwFlat" aria-pressed="false">A start on a flat tangent</button>
+          <button type="button" data-p="nwJump" aria-pressed="false">A start that jumps to another root</button>
         </div>
         <details class="more" open><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
       <section>
         <h2>At the point</h2>
         <dl class="readout" id="out"></dl>
+      </section>
+      <section id="toolSec" hidden>
+        <h2 id="toolH">Secant to tangent</h2>
+        <dl class="readout" id="toolOut"></dl>
+        <div class="tool-tab"><table class="rows" id="toolTab"><caption class="sr" id="toolCap">Table</caption><thead></thead><tbody></tbody></table></div>
+        <p class="hint" id="toolNote"></p>
       </section>
       <section>
         <h2>Formulas</h2>
@@ -147,6 +188,8 @@ dl.formulas .f { color: var(--fg-f); } dl.formulas .d1 { color: var(--fg-d1); } 
         <details class="more"><summary>How it works</summary>
           <p class="hint">The box is read by a small parser written for this page (nothing you type is run as code). The derivatives come from the exact rules (sum, product, quotient, power and chain rules) applied to what you typed, then tidied, so the formulas shown are exact. Each curve is drawn from those formulas.</p>
           <p class="hint">The integral F(x) is computed numerically with adaptive Simpson's rule, to about nine significant figures. Where the area does not converge (across x = 0 for 1/x), F stops. A derivative is drawn only where f itself is defined.</p>
+          <p class="hint">Secant to tangent: the secant slope is the difference quotient [f(x + h) − f(x)]/h, computed in ordinary double precision, so for very small h rounding takes over (try h = 10⁻¹²). The linear approximation is L = f(x) + f′(x)h, with f′ exact. The mean value points c in the interval are found by stepping along f′ − (secant slope) and bisecting where it changes sign.</p>
+          <p class="hint">Newton's method: each step is x − f(x)/f′(x) with the exact f′. The root it is heading for is found by running it on until a step no longer changes x; the correct digits of each step are counted against that root. It stops at a flat tangent (f′ = 0) and says when the steps repeat.</p>
           <p class="hint">Angles are in radians. A jump in a curve is left as a gap rather than joined with a vertical line.</p>
         </details>
         </div></details>
@@ -607,6 +650,65 @@ dl.formulas .f { color: var(--fg-f); } dl.formulas .d1 { color: var(--fg-d1); } 
     for (let i = k - 1; i >= 0 && isFinite(acc); i--) { acc += integral(f, prev, xs[i], scale); prev = xs[i]; F[i] = acc; }
     return F;
   }
+
+  /* Secant to tangent (OpenStax Calculus Vol 1 2.1, 3.1, 4.4). The difference quotient [f(x + h) − f(x)]/h is the slope of the
+     secant through x and x + h; it tends to f′(x) as h shrinks, until rounding in f(x + h) − f(x) takes over. */
+  const diffQuot = (f, x, h) => (f(x + h) - f(x)) / h;
+  /* The Mean Value Theorem: the points c between a and b where f′(c) equals the secant slope m, by stepping along f′ − m and
+     bisecting each change of sign (at most 6; none when f′ is undefined somewhere between, as for |x| across its corner) */
+  function mvtPoints(d, a, b, m) {
+    const lo = Math.min(a, b), hi = Math.max(a, b), n = 800, out = [], g = (t) => d(t) - m;
+    if (!(hi > lo) || !isFinite(m)) return out;
+    let t0 = lo + (hi - lo) * 1e-9, g0 = g(t0);
+    for (let i = 1; i <= n && out.length < 6; i++) {
+      const t1 = i === n ? hi - (hi - lo) * 1e-9 : lo + (hi - lo) * i / n, g1 = g(t1);
+      if (!isFinite(g0) || !isFinite(g1)) { t0 = t1; g0 = g1; continue; }
+      if (g1 === 0) { out.push(t1); t0 = t1; g0 = g1; continue; }
+      if (g0 !== 0 && (g0 < 0) !== (g1 < 0)) {
+        let a1 = t0, b1 = t1, ga = g0;
+        for (let k = 0; k < 80; k++) { const mid = (a1 + b1) / 2, gm = g(mid); if (!isFinite(gm)) { a1 = NaN; break; } if ((gm < 0) === (ga < 0)) { a1 = mid; ga = gm; } else b1 = mid; }
+        /* a jump in f′ (a corner) also changes sign: keep only a real crossing, where f′ − m is small there */
+        const c = (a1 + b1) / 2, scale = Math.abs(m) + Math.abs(d(t0)) + Math.abs(d(t1)) + 1e-12;
+        if (isFinite(c) && Math.abs(g(c)) < 1e-6 * scale) out.push(c);
+      }
+      t0 = t1; g0 = g1;
+    }
+    return out;
+  }
+
+  /* Newton's method (Calculus Vol 1 4.9): x(n+1) = x(n) − f(x(n))/f′(x(n)). newtonSteps runs up to n steps from x0 and says why it
+     stopped: 'root' (f(x) = 0 exactly, or a step no longer changes x), 'flat' (f′ = 0: the tangent never meets the axis),
+     'undefined' (f or f′ has no value there), 'cycle' (a value repeats without converging), or '' (still going). */
+  function newtonSteps(f, d, x0, n) {
+    const xs = [x0]; let stop = '';
+    for (let k = 0; k < n; k++) {
+      const x = xs[k], fx = f(x), dx = d(x);
+      if (!isFinite(x) || !isFinite(fx) || !isFinite(dx)) { stop = 'undefined'; break; }
+      if (fx === 0) { stop = 'root'; break; }
+      if (dx === 0) { stop = 'flat'; break; }
+      const y = x - fx / dx;
+      if (!isFinite(y)) { stop = 'undefined'; break; }
+      if (y === x) { stop = 'root'; break; }
+      xs.push(y);
+      /* a step of a few units in the last place: as close as double precision gets (it would flicker between neighbors) */
+      if (Math.abs(y - x) <= 4 * Number.EPSILON * Math.abs(y)) { stop = 'root'; break; }
+      const tol = 1e-12 * Math.max(1, Math.abs(y));
+      if (Math.abs(y - x) > 1e-9 * Math.max(1, Math.abs(y)) && xs.slice(0, -2).some((v) => Math.abs(v - y) <= tol)) { stop = 'cycle'; break; }
+    }
+    return { xs, stop };
+  }
+  /* the root the steps from x0 settle on, or NaN when they never settle within 200 steps */
+  function newtonRoot(f, d, x0) {
+    const r = newtonSteps(f, d, x0, 200), last = r.xs[r.xs.length - 1];
+    return r.stop === 'root' ? last : NaN;
+  }
+  /* correct significant digits of x as an estimate of r: −log10 of the relative error (absolute when r = 0), 0 to 16 */
+  function correctDigits(x, r) {
+    if (!isFinite(x) || !isFinite(r)) return NaN;
+    if (x === r) return 16;
+    const e = r === 0 ? Math.abs(x) : Math.abs(x - r) / Math.abs(r);
+    return Math.max(0, Math.min(16, Math.floor(-Math.log10(e))));
+  }
   // ==CORE END==
   if (typeof document === 'undefined') return;
 
@@ -619,16 +721,26 @@ dl.formulas .f { color: var(--fg-f); } dl.formulas .d1 { color: var(--fg-d1); } 
     drop: { src: '20 - 4.905t^2', x: [0, 2.5], p: 0.2, a: 0, hint: 'The height in meters of a ball dropped from 20 m, with g = 9.81 m/s² and no air drag, t in seconds. The first derivative is the velocity, v = −9.81t, and the second is the acceleration, a constant −9.81 m/s². The third derivative (the jerk) is zero. The ball lands at t = 2.02 s.' },
     damped: { src: 'e^(-0.3t) cos(4t)', x: [0, 10], p: 0.4, a: 0, hint: 'A damped oscillation, like a car on worn shock absorbers. The velocity f′ peaks about a quarter cycle before the position does, and the acceleration f″ stays close to −16 times the position (−ω² with ω = 4 per second), because the damping is light.' },
     corner: { src: '|x|', x: [-3, 3], p: -2.5, a: 0, hint: '|x| has a corner at x = 0. Its slope jumps from −1 to +1 there, so f′ is a step and has no value at the corner itself (the grapher shows sign(0) = 0 at that one point). Away from the corner f″ is 0.' },
+    secant: { src: 'x^2', x: [-1, 3.5], p: 1, a: 0, mode: 'secant', h: 1, hint: 'The secant through x = 1 and x = 1 + h has slope [(1 + h)² − 1]/h = 2 + h exactly. Press Play: h halves every half second and the secant swings into the tangent, whose slope is f′(1) = 2. The table shows the difference quotient from both sides closing in on 2, until at very small h rounding in f(x + h) − f(x) spoils it.' },
+    dropAvg: { src: '20 - 4.905t^2', x: [0, 2.5], p: 1, a: 0, mode: 'secant', h: 0.5, vel: true, hint: 'The height in meters of a ball dropped from 20 m (g = 9.81 m/s², no air drag), t in seconds. The secant slope over [t, t + h] is the average velocity; the tangent slope is the instantaneous velocity. From t = 1 s to 1.5 s the average is −12.26 m/s, while at t = 1 s the ball moves at −9.81 m/s. Shrink h and the average closes in on −9.81 m/s. The mean value point c is always the middle of the interval here, because the acceleration is constant.' },
+    linear: { src: 'sqrt(x)', x: [0, 9], p: 4, a: 0, mode: 'secant', h: 1, hint: 'Near x = 4 the tangent to √x is L = 2 + (x − 4)/4, the linear approximation. Set h = 0.1: L gives 2.025 while √4.1 = 2.02485, an error of −0.00015. The error shrinks like h²: halve h and it falls to about a quarter, and error/h² tends to f″(4)/2 = −1/64. Every small change approximation in physics is this idea.' },
+    mvt: { src: 'x^3 - 3x', x: [-3, 3], p: -2, a: 0, mode: 'secant', h: 4, hint: 'The Mean Value Theorem: between x and x + h there is a point c where the tangent is parallel to the secant, f′(c) = [f(x + h) − f(x)]/h. From −2 to 2 the secant slope is 1 and there are two such points, c = ±2/√3 = ±1.155. For motion: if your average velocity over a trip was 20 m/s, at some moment you were moving at exactly 20 m/s. Try |x| from −1 to 2: there is no such point, because |x| has a corner.' },
+    nwSqrt: { src: 'x^2 - 2', x: [-0.5, 3], p: 1, a: 0, mode: 'newton', hint: 'The positive root of x² − 2 is √2. Start at x₀ = 1 and press One step: each step follows the tangent down to the axis. Once close, the number of correct digits roughly doubles every step (1, 2, 5, 11, then all 16 of double precision), which is why calculators find square roots this way.' },
+    nwKepler: { src: 'x - 0.6sin(x) - 1', x: [-0.5, 3.5], p: 1, a: 0, mode: 'newton', hint: 'Where is a planet on its elliptical orbit at a given time? Kepler\'s equation M = E − e sin E has no solution in closed form, so astronomers solve it by Newton\'s method. Here the eccentricity is e = 0.6 and the mean anomaly (the time since the closest approach, as an angle) is M = 1 rad, so the eccentric anomaly E is the root of x − 0.6 sin x − 1. From x₀ = M = 1 it reaches E = 1.5997 rad to full precision in 5 steps.' },
+    nwCycle: { src: 'x^3 - 2x + 2', x: [-2.5, 2], p: 0, a: 0, mode: 'newton', hint: 'From x₀ = 0 the tangent lands at x₁ = 1, and the tangent there lands back at 0: the steps cycle 0, 1, 0, 1, … forever and never reach the root at −1.7693. Starts near 0, such as 0.1, are drawn into the same cycle. Start at −1.5 and it converges in 5 steps.' },
+    nwFlat: { src: 'x^3 - 3x', x: [-3, 3], p: 1, a: 0, mode: 'newton', hint: 'At x₀ = 1, the valley of x³ − 3x, the tangent is flat: f′(1) = 0, so it never meets the axis and the step x − f(x)/f′(x) divides by zero. A start near a flat tangent is almost as bad: from 1.05 the first step flies out to 7.5. A start beyond the outer root, x₀ = 2.5, goes straight in to √3.' },
+    nwJump: { src: 'sin(x)', x: [-15, 5], p: 1.5, a: 0, mode: 'newton', hint: 'From x₀ = 1.5 you might expect Newton\'s method to find π, the nearest root. But the tangent there is nearly flat, so the first step lands at −12.6 and the steps settle on −4π = −12.566 instead. Start at 2.5 and it finds π.' },
     recip: { src: '1/x', x: [-4, 6], p: 0.5, a: 1, int: true, hint: 'Start the integral at a = 1: the area under 1/x from 1 to x is ln x, which keeps growing but ever more slowly. Move the point left of 1 and the area counts as negative. The integral cannot cross x = 0, where the area is infinite, so F stops there.' },
   };
-  const S = { preset: 'cubic', src: '', node: null, v: 'x', fns: null, txt: null, x0: -3, x1: 3, y0: -3, y1: 3, autoY: true, px: -2.5, a: 0, run: false, blind: false };
+  const S = { preset: 'cubic', src: '', node: null, v: 'x', fns: null, txt: null, x0: -3, x1: 3, y0: -3, y1: 3, autoY: true, px: -2.5, a: 0, run: false, blind: false,
+    mode: 'graph', h: 1, nwN: 0, acc: 0 };
   const can = $('can'), ctx = can.getContext('2d');
   let W = 0, H = 0, dpr = 1, T = null, need = true;
   const f4 = (v) => (isFinite(v) ? fmt(Math.abs(v) < 1e-12 ? 0 : v) : VDI18N.t('undefined'));
   function tokens() {
     const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
     T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), mono: g('--font-mono') || 'monospace',
-      f: g('--fg-f'), d1: g('--fg-d1'), d2: g('--fg-d2'), d3: g('--fg-d3'), int: g('--fg-int') };
+      f: g('--fg-f'), d1: g('--fg-d1'), d2: g('--fg-d2'), d3: g('--fg-d3'), int: g('--fg-int'), sec: g('--fg-sec') };
   }
   const proj = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.35 : 1);
   const X = (x) => (x - S.x0) / (S.x1 - S.x0) * W, Y = (y) => H - (y - S.y0) / (S.y1 - S.y0) * H;
@@ -816,6 +928,8 @@ dl.formulas .f { color: var(--fg-f); } dl.formulas .d1 { color: var(--fg-d1); } 
       ctx.moveTo(0, Y(fv + sv * (S.x0 - S.px))); ctx.lineTo(W, Y(fv + sv * (S.x1 - S.px))); ctx.stroke(); ctx.globalAlpha = 1;
     }
     const dot = (y, c) => { if (!isFinite(y)) return; const w = Y(y); if (w < -10 || w > H + 10) return; ctx.fillStyle = c; ctx.strokeStyle = T.canvas; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(u, w, 5 * p, 0, 7); ctx.fill(); ctx.stroke(); };
+    if (S.mode === 'secant') drawSecant(p);
+    if (S.mode === 'newton') drawNewton(p);
     if (show.int) dot(Fat(S.px) * K.int, T.int);
     if (show.d3) dot(S.fns.d3(S.px) * K.d3, T.d3);
     if (show.d2) dot(S.fns.d2(S.px) * K.d2, T.d2);
@@ -830,6 +944,95 @@ dl.formulas .f { color: var(--fg-f); } dl.formulas .d1 { color: var(--fg-d1); } 
     ctx.fillStyle = T.muted; ctx.font = `${12 * p}px ${T.mono}`; ctx.textBaseline = 'top';
     const lab = `${S.v} = ${f4(S.px)}`, wl = ctx.measureText(lab).width;
     ctx.textAlign = u + wl + 12 > W ? 'right' : 'left'; label(lab, u + (u + wl + 12 > W ? -6 : 6) * p, 8 * p);
+  }
+  /* Secant to tangent: the secant through x and x + h across the view, the error of the tangent line at x + h, and the mean value
+     points c with their tangents parallel to the secant */
+  function drawSecant(p) {
+    const f = S.fns.f, d = S.fns.d1, x = S.px, h = S.h, fx = f(x), fh = f(x + h), m = (fh - fx) / h, u1 = X(x + h);
+    if (!isFinite(fx)) return;
+    ctx.fillStyle = T.sec; ctx.globalAlpha = 0.07; ctx.fillRect(Math.min(X(x), u1), 0, Math.abs(u1 - X(x)), H); ctx.globalAlpha = 1;
+    ctx.strokeStyle = T.sec; ctx.lineWidth = 1; ctx.setLineDash([4 * p, 4 * p]); ctx.beginPath(); ctx.moveTo(u1, 0); ctx.lineTo(u1, H); ctx.stroke(); ctx.setLineDash([]);
+    if (!isFinite(fh)) return;
+    const clipY = (y) => Math.max(-4 * H, Math.min(5 * H, Y(y)));
+    ctx.strokeStyle = T.sec; ctx.lineWidth = 2.2 * p; ctx.beginPath(); ctx.moveTo(0, clipY(fx + m * (S.x0 - x))); ctx.lineTo(W, clipY(fx + m * (S.x1 - x))); ctx.stroke();
+    const sv = d(x);
+    if ($('showLin').checked && isFinite(sv) && !S.blind) {
+      const L = fx + sv * h; ctx.strokeStyle = T.sec; ctx.lineWidth = 3 * p; ctx.beginPath(); ctx.moveTo(u1, clipY(L)); ctx.lineTo(u1, clipY(fh)); ctx.stroke();
+      if (Math.abs(Y(L) - Y(fh)) > 14 * p) { ctx.fillStyle = T.sec; ctx.font = `${12 * p}px ${T.mono}`; ctx.textAlign = u1 > W - 80 * p ? 'right' : 'left'; ctx.textBaseline = 'middle'; label(VDI18N.t('error'), u1 + (u1 > W - 80 * p ? -6 : 6) * p, (clipY(L) + clipY(fh)) / 2); }
+    }
+    if ($('showMvt').checked && !S.blind) {
+      const span = (S.x1 - S.x0) * 0.12;
+      for (const c of mvtPoints(d, x, x + h, m)) {
+        const fc = f(c); if (!isFinite(fc)) continue;
+        ctx.strokeStyle = T.d2; ctx.lineWidth = 2 * p; ctx.setLineDash([8 * p, 5 * p]); ctx.beginPath(); ctx.moveTo(X(c - span), clipY(fc - m * span)); ctx.lineTo(X(c + span), clipY(fc + m * span)); ctx.stroke(); ctx.setLineDash([]);
+        ctx.fillStyle = T.d2; ctx.beginPath(); ctx.arc(X(c), Y(fc), 4.5 * p, 0, 7); ctx.fill();
+        ctx.font = `700 ${12 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; label('c', X(c), Y(fc) + 7 * p);
+      }
+    }
+    ctx.fillStyle = T.sec; ctx.strokeStyle = T.canvas; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(u1, Y(fh), 5 * p, 0, 7); ctx.fill(); ctx.stroke();
+    ctx.font = `${12 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillStyle = T.sec; label(`${S.v} + h`, u1, 24 * p);
+  }
+  const SUB = '₀₁₂₃₄₅₆₇₈₉', subN = (n) => String(n).split('').map((c) => SUB[+c]).join('');
+  /* Newton's method: from each x(n) on the curve, the tangent down to the axis at x(n+1), then up to the curve again */
+  function nwRun() { return newtonSteps(S.fns.f, S.fns.d1, S.px, S.nwN); }
+  function drawNewton(p) {
+    const r = nwRun(), xs = r.xs, f = S.fns.f, axisY = Math.min(Math.max(Y(0), 0), H);
+    let lastLab = -1e9;
+    for (let k = 0; k < xs.length; k++) {
+      const a = xs[k], fa = f(a), u = X(a);
+      if (k > 0) { ctx.strokeStyle = T.muted; ctx.lineWidth = 1; ctx.setLineDash([3 * p, 4 * p]); ctx.beginPath(); ctx.moveTo(u, Y(0)); ctx.lineTo(u, Y(fa)); ctx.stroke(); ctx.setLineDash([]); }
+      if (k < xs.length - 1) {
+        const b = xs[k + 1]; ctx.strokeStyle = T.sec; ctx.lineWidth = 2.2 * p; ctx.beginPath(); ctx.moveTo(u, Y(fa)); ctx.lineTo(X(b), Y(0)); ctx.stroke();
+      }
+      if (isFinite(fa)) { ctx.fillStyle = T.sec; ctx.strokeStyle = T.canvas; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(u, Y(fa), 4.5 * p, 0, 7); ctx.fill(); ctx.stroke(); }
+      ctx.fillStyle = T.sec; ctx.fillRect(u - 1, axisY - 5 * p, 2, 10 * p);
+      if (Math.abs(u - lastLab) > 22 * p && u > -10 && u < W + 10) { ctx.font = `700 ${12 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; label(S.v + subN(k), u, axisY + 7 * p); lastLab = u; }
+    }
+    if (r.stop === 'flat') {
+      const a = xs[xs.length - 1], fa = f(a); ctx.strokeStyle = T.sec; ctx.lineWidth = 2 * p; ctx.setLineDash([8 * p, 5 * p]); ctx.beginPath(); ctx.moveTo(0, Y(fa)); ctx.lineTo(W, Y(fa)); ctx.stroke(); ctx.setLineDash([]);
+      ctx.font = `${12 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillStyle = T.sec; label(VDI18N.t('flat tangent: it never meets the axis'), 8 * p, Y(fa) - 5 * p);
+    }
+  }
+  const f16 = (v) => (isFinite(v) ? (Math.abs(v) < 1e-300 ? '0' : Number(v.toPrecision(16)).toString().replace('e', '×10^').replace('-', '−')) : VDI18N.t('undefined'));
+  function toolReadouts() {
+    const sec = $('toolSec'); sec.hidden = S.mode === 'graph'; if (S.mode === 'graph' || !S.fns) return;
+    const dd = (a, b, wide) => `<div${wide ? ' class="wide"' : ''}><dt>${a}</dt><dd translate="no">${b}</dd></div>`;
+    const f = S.fns.f, d = S.fns.d1, x = S.px, v = S.v, hide = S.blind, tab = $('toolTab'), c = PRESETS[S.preset], vel = !!(c && c.vel && S.preset === 'dropAvg');
+    if (S.mode === 'secant') {
+      $('toolH').textContent = VDI18N.t('Secant to tangent');
+      const h = S.h, fx = f(x), fh = f(x + h), m = diffQuot(f, x, h), sv = d(x), L = fx + sv * h, err = fh - L, un = vel ? ' m/s' : '';
+      let o = dd('h', f4(h)) + dd(`f(${v} + h)`, f4(fh));
+      o += dd(vel ? VDI18N.t('Average velocity over [t, t + h]') : VDI18N.t('Secant slope [f(x + h) − f(x)]/h'), f4(m) + un, true);
+      o += dd(vel ? VDI18N.t('Instantaneous velocity at t, f′(t)') : VDI18N.t('Tangent slope f′(x)'), hide ? '?' : f4(sv) + un, true);
+      o += dd(VDI18N.t('Secant slope minus tangent slope'), hide ? '?' : f4(m - sv) + un, true);
+      if ($('showLin').checked) {
+        o += dd(`L = f(${v}) + f′(${v})·h`, hide ? '?' : f4(L)) + dd(`${VDI18N.t('Error')} f(${v} + h) − L`, hide ? '?' : f4(err));
+        o += dd(`${VDI18N.t('Error')}/h²`, hide ? '?' : f4(err / (h * h))) + dd(`f″(${v})/2`, hide ? '?' : f4(S.fns.d2(x) / 2));
+      }
+      if ($('showMvt').checked && !hide) {
+        const cs = mvtPoints(d, x, x + h, m);
+        o += dd(VDI18N.t('Mean value points c, where f′(c) = secant slope'), cs.length ? cs.map(f4).join(', ') : VDI18N.t('none: f′ is not defined everywhere between'), true);
+      }
+      $('toolOut').innerHTML = o;
+      const hs = [1, 0.1, 0.01, 0.001, 1e-4, 1e-6, 1e-8, 1e-12], hh = (q) => (q >= 1e-3 ? String(q) : '10' + sup(Math.round(Math.log10(q))));
+      tab.tHead.innerHTML = `<tr><th>h</th><th>${VDI18N.t('From the right')}</th><th>${VDI18N.t('From the left')}</th></tr>`;
+      const cell = (q) => { const good = !hide && isFinite(sv) && Math.abs(q - sv) <= 1e-6 * (1 + Math.abs(sv)); return `<td${good ? ' class="good"' : ''}>${f4(q)}</td>`; };
+      tab.tBodies[0].innerHTML = hs.map((q) => `<tr><td>${hh(q)}</td>${cell(diffQuot(f, x, q))}${cell(diffQuot(f, x, -q))}</tr>`).join('');
+      $('toolCap').textContent = VDI18N.t('Difference quotients from the right, [f(x + h) − f(x)]/h, and from the left, [f(x) − f(x − h)]/h');
+      $('toolNote').textContent = VDI18N.t('From the right: [f(x + h) − f(x)]/h. From the left: [f(x) − f(x − h)]/h. Both close in on f′(x) as h shrinks (green: within a millionth), until rounding takes over at the smallest h. Where they close in on different numbers, f has a corner and no derivative there.');
+    } else {
+      $('toolH').textContent = VDI18N.t('Newton\'s method');
+      const r = nwRun(), root = newtonRoot(f, d, x), xs = r.xs, last = xs[xs.length - 1];
+      let o = dd(`${v}${subN(0)}`, f4(x)) + dd(VDI18N.t('Steps taken'), String(xs.length - 1));
+      o += dd(VDI18N.t('Root it settles on'), isFinite(root) ? f16(root) : VDI18N.t('none: the steps never settle'), true);
+      $('toolOut').innerHTML = o;
+      tab.tHead.innerHTML = `<tr><th>n</th><th>${v}<sub>n</sub></th><th>f(${v}<sub>n</sub>)</th><th>${VDI18N.t('Correct digits')}</th></tr>`;
+      tab.tBodies[0].innerHTML = xs.map((q, k) => { const dg = correctDigits(q, root); return `<tr><td>${k}</td><td>${f16(q)}</td><td>${f4(Number(f(q).toPrecision(3)))}</td><td${dg >= 15 ? ' class="good"' : ''}>${isFinite(dg) ? dg : '—'}</td></tr>`; }).join('');
+      $('toolCap').textContent = VDI18N.t('Each step of Newton\'s method, with the value of f and the correct digits');
+      const why = { flat: VDI18N.t('Stopped: the tangent here is flat (f′ = 0), so it never meets the axis.'), undefined: VDI18N.t('Stopped: f or f′ has no value here.'), cycle: VDI18N.t('Stopped: the steps repeat, a cycle that never reaches a root.'), root: VDI18N.t('Converged: one more step would not change the value.') }[r.stop];
+      $('toolNote').textContent = (why ? why + ' ' : xs.length === 1 ? VDI18N.t('Press One step or Play. ') : '') + (isFinite(root) && r.stop !== 'cycle' ? VDI18N.t('Near the root the correct digits roughly double with each step.') : '');
+      if (!isFinite(last)) $('toolNote').textContent = why || '';
+    }
   }
   function kStr(k) { if (k === 1) return '1'; const e = Math.round(Math.log10(k)); if (Math.abs(e) <= 3) return fmt(Number(k.toPrecision(2))); const m = Number((k / Math.pow(10, e)).toPrecision(2)); return (m === 1 ? '' : fmt(m) + '×') + '10' + sup(e); }
   function Fat(x) { return S.fns ? integral(S.fns.f, S.a, x, 1) : NaN; }
@@ -860,6 +1063,7 @@ dl.formulas .f { color: var(--fg-f); } dl.formulas .d1 { color: var(--fg-d1); } 
       h += `<div class="wide"><dt>${VDI18N.t('Shape')}</dt><dd class="ok">${rise}${bend ? '<br>' + bend : ''}</dd></div>`;
     }
     $('out').innerHTML = h;
+    toolReadouts();
   }
   function viewInputs() {
     const set = (id, v) => { const el = $(id); if (document.activeElement !== el) el.value = Math.abs(v) >= 1e5 || (v !== 0 && Math.abs(v) < 1e-3) ? v.toExponential(1).replace('+', '') : Number(v.toPrecision(5)); };
@@ -872,19 +1076,58 @@ dl.formulas .f { color: var(--fg-f); } dl.formulas .d1 { color: var(--fg-d1); } 
     const c = PRESETS[k]; S.preset = k;
     $('fx').value = c.src; S.x0 = c.x[0]; S.x1 = c.x[1]; S.px = c.p; S.a = c.a; $('aLow').value = c.a; S.autoY = true;
     if (c.int) $('showInt').checked = true;
+    if (c.mode) setMode(c.mode, true);
+    if (c.h) setH(c.h);
+    S.nwN = 0;
     $('presetHint').textContent = c.hint; pressPreset(k); setRun(false);
     S.src = null; read(); fitY(); formulas(); need = true;
   }
   for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
   $('fx').addEventListener('input', () => {
     if (S.preset !== 'custom') { S.preset = 'custom'; pressPreset(''); $('presetHint').textContent = VDI18N.t('Your own function. Every setup above can be edited in the box, too.'); }
-    S.autoY = true; read(); need = true;
+    S.autoY = true; S.nwN = 0; read(); need = true;
   });
   function setRun(on) {
     S.run = on; $('play').textContent = on ? VDI18N.t('Pause') : VDI18N.t('Play'); $('play').classList.toggle('attn', !on);
   }
-  $('play').addEventListener('click', () => setRun(!S.run));
-  $('reset').addEventListener('click', () => { setRun(false); S.px = PRESETS[S.preset] ? PRESETS[S.preset].p : S.x0 + 0.08 * (S.x1 - S.x0); need = true; });
+  $('play').addEventListener('click', () => {
+    /* a finished run starts over: h back to where the setup began, or Newton's steps cleared */
+    if (!S.run && S.mode === 'secant' && Math.abs(S.h) / 2 < 1e-3) setH(PRESETS[S.preset] && PRESETS[S.preset].h ? PRESETS[S.preset].h : 1);
+    if (!S.run && S.mode === 'newton' && nwRun().stop) { S.nwN = 0; need = true; lastRead = ''; }
+    S.acc = 0; setRun(!S.run);
+  });
+  $('reset').addEventListener('click', () => {
+    setRun(false); S.px = PRESETS[S.preset] ? PRESETS[S.preset].p : S.x0 + 0.08 * (S.x1 - S.x0); S.nwN = 0;
+    if (S.mode === 'secant') setH(PRESETS[S.preset] && PRESETS[S.preset].h ? PRESETS[S.preset].h : 1);
+    need = true;
+  });
+  /* the three ways to use the graph: Derivatives (as it always was), Secant to tangent, Newton's method */
+  const NOTE = {
+    graph: 'Play slides the point along the curve. Drag the graph to move it; scroll or pinch over it to zoom.',
+    secant: 'Play halves h every half second, so the secant turns into the tangent. Drag the point to move x; scroll or pinch to zoom.',
+    newton: 'Play takes one step of Newton\'s method a second. Drag the point to choose the start x₀; scroll or pinch to zoom.',
+  };
+  function setMode(m, quiet) {
+    /* the secant and Newton pictures are clearer with f alone: f′ and f″ are turned off there and come back with Derivatives */
+    if (S.mode === 'graph' && m !== 'graph') { S.keep = { d1: $('showD1').checked, d2: $('showD2').checked }; $('showD1').checked = false; $('showD2').checked = false; formulas(); }
+    if (S.mode !== 'graph' && m === 'graph' && S.keep) { $('showD1').checked = S.keep.d1; $('showD2').checked = S.keep.d2; S.keep = null; formulas(); }
+    S.mode = m; S.nwN = 0; S.acc = 0;
+    for (const b of document.querySelectorAll('#modeSeg button')) b.setAttribute('aria-pressed', String(b.dataset.m === m));
+    $('secCard').hidden = m !== 'secant'; $('nwCard').hidden = m !== 'newton';
+    $('note').textContent = VDI18N.t(NOTE[m]);
+    if (!quiet) setRun(false);
+    need = true; lastRead = '';
+  }
+  for (const b of document.querySelectorAll('#modeSeg button')) b.addEventListener('click', () => setMode(b.dataset.m));
+  function setH(h) { if (!isFinite(h) || h === 0) return; S.h = h; $('hIn').value = Number(h.toPrecision(6)); need = true; lastRead = ''; }
+  $('hIn').addEventListener('input', () => { const v = parseFloat($('hIn').value); if (isFinite(v) && v !== 0) { S.h = v; need = true; lastRead = ''; } });
+  $('hHalf').addEventListener('click', () => { setRun(false); setH(S.h / 2); });
+  $('hTenth').addEventListener('click', () => { setRun(false); setH(S.h / 10); });
+  $('hFlip').addEventListener('click', () => setH(-S.h));
+  for (const id of ['showLin', 'showMvt']) $(id).addEventListener('change', () => { need = true; lastRead = ''; });
+  function nwStep() { const r = nwRun(); if (r.stop || r.xs.length > 60) return false; S.nwN++; need = true; lastRead = ''; return !nwRun().stop; }
+  $('nwStep').addEventListener('click', () => { setRun(false); nwStep(); });
+  $('nwClear').addEventListener('click', () => { setRun(false); S.nwN = 0; need = true; lastRead = ''; });
   for (const id of ['showF', 'showD1', 'showD2', 'showD3', 'showInt', 'showTan', 'showArea', 'ownScale']) $(id).addEventListener('change', () => { formulas(); need = true; });
   $('aLow').addEventListener('input', () => { const v = parseFloat($('aLow').value); if (isFinite(v)) { S.a = v; formulas(); need = true; } });
   $('aHere').addEventListener('click', () => { S.a = Number(S.px.toPrecision(6)); $('aLow').value = S.a; if (!$('showInt').checked) $('showInt').checked = true; formulas(); need = true; });
@@ -931,7 +1174,7 @@ dl.formulas .f { color: var(--fg-f); } dl.formulas .d1 { color: var(--fg-d1); } 
       S.autoY = false; setView(cx - (cx - x0) * f, cx + (x1 - cx) * f, cy - (cy - y0) * f, cy + (y1 - cy) * f); return;
     }
     if (Math.hypot(x - drag.x, y - drag.y) > 4) drag.moved = true;
-    if (drag.mode === 'point') { S.px = Xi(x); need = true; return; }
+    if (drag.mode === 'point') { S.px = Xi(x); if (S.mode === 'newton') S.nwN = 0; need = true; return; }
     if (!drag.moved) return;
     const [x0, x1, y0, y1] = drag.view, dx = (x - drag.x) / W * (x1 - x0), dy = (y - drag.y) / H * (y1 - y0);
     if (Math.abs(y - drag.y) > 2) S.autoY = false;
@@ -940,7 +1183,7 @@ dl.formulas .f { color: var(--fg-f); } dl.formulas .d1 { color: var(--fg-d1); } 
   const up = (e) => {
     if (!ptrs.has(e.pointerId)) return;
     ptrs.delete(e.pointerId);
-    if (drag && drag.mode === 'pan' && !drag.moved && !ptrs.size) { const r = can.getBoundingClientRect(); S.px = Xi(e.clientX - r.left); setRun(false); need = true; }
+    if (drag && drag.mode === 'pan' && !drag.moved && !ptrs.size) { const r = can.getBoundingClientRect(); S.px = Xi(e.clientX - r.left); if (S.mode === 'newton') S.nwN = 0; setRun(false); need = true; }
     if (drag && drag.mode === 'pan' && drag.moved && S.autoY) fitY();
     if (!ptrs.size) drag = null; else if (drag && drag.pinch) drag = null;
   };
@@ -955,7 +1198,7 @@ dl.formulas .f { color: var(--fg-f); } dl.formulas .d1 { color: var(--fg-d1); } 
   }, { passive: false });
   can.addEventListener('keydown', (e) => {
     const step = (S.x1 - S.x0) / (e.shiftKey ? 10 : 100);
-    if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') { setRun(false); S.px += e.key === 'ArrowLeft' ? -step : step; need = true; e.preventDefault(); }
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') { setRun(false); S.px += e.key === 'ArrowLeft' ? -step : step; if (S.mode === 'newton') S.nwN = 0; need = true; e.preventDefault(); }
     else if (e.key === '+' || e.key === '=') { zoom(1 / 1.5); e.preventDefault(); }
     else if (e.key === '-' || e.key === '_') { zoom(1.5); e.preventDefault(); }
     else if (e.key === ' ') { $('play').click(); e.preventDefault(); }
@@ -965,8 +1208,10 @@ dl.formulas .f { color: var(--fg-f); } dl.formulas .d1 { color: var(--fg-d1); } 
   let last = performance.now(), lastRead = '';
   function frame(now) {
     const dt = Math.min(0.05, (now - last) / 1000); last = now;
-    if (S.run) { S.px += (S.x1 - S.x0) / 8 * dt; if (S.px > S.x1) S.px = S.x0; need = true; }
-    if (need) { need = false; draw(); const k = `${S.px},${S.a},${S.src},${S.blind},${$('showD3').checked},${$('showInt').checked}`; if (k !== lastRead) { lastRead = k; readouts(); } }
+    if (S.run && S.mode === 'graph') { S.px += (S.x1 - S.x0) / 8 * dt; if (S.px > S.x1) S.px = S.x0; need = true; }
+    else if (S.run && S.mode === 'secant') { S.acc += dt; if (S.acc >= 0.5) { S.acc = 0; if (Math.abs(S.h) / 2 < 1e-3) setRun(false); else setH(S.h / 2); } }
+    else if (S.run && S.mode === 'newton') { S.acc += dt; if (S.acc >= 1) { S.acc = 0; if (!nwStep()) setRun(false); } }
+    if (need) { need = false; draw(); const k = `${S.px},${S.a},${S.src},${S.blind},${$('showD3').checked},${$('showInt').checked},${S.mode},${S.h},${S.nwN}`; if (k !== lastRead) { lastRead = k; readouts(); } }
     requestAnimationFrame(frame);
   }
   function resize() {
@@ -1008,7 +1253,7 @@ dl.formulas .f { color: var(--fg-f); } dl.formulas .d1 { color: var(--fg-d1); } 
   });
   tokens(); new ResizeObserver(resize).observe($('pane')); resize(); applyPreset('cubic');
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
-  window.__fg = { S, applyPreset, parse, parseLive, derivative, text, setRun, draw: () => { need = true; } };
+  window.__fg = { S, applyPreset, parse, parseLive, derivative, text, setRun, setMode, setH, nwStep, nwRun, newtonSteps, newtonRoot, mvtPoints, diffQuot, draw: () => { need = true; } };
   requestAnimationFrame(frame);
 })();
 </script>

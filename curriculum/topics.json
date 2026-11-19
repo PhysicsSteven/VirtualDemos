@@ -453,7 +453,8 @@
       "slope-fields",
       "integrals",
       "taylor",
-      "vector-fields"
+      "vector-fields",
+      "rates-and-optimization"
      ]
     }
    ]
