@@ -3598,7 +3598,8 @@
       "status": "usable",
       "demos": [
         "rotation",
-        "rotational-dynamics"
+        "rotational-dynamics",
+        "solids-of-revolution"
       ],
       "unit": "rotation",
       "note": "Rotational Dynamics lab (2026-10-22, Claude): falling mass spins a turntable; time the drop, α from a = 2h/t², I from the τ against α slope; disk, ring, two masses at an adjustable distance (parallel axis), mystery object. Continuous bodies still use supplied coefficients (no ∫r²dm activity)."
@@ -12651,6 +12652,25 @@
       "note": "New 2026-11-19 (Claude, Steve's approved Calculus plan): a math tool for OpenStax Calculus Vol 2 ch 5 (5.1 to 5.6). Terms of any typed series as bars and its partial sums (Kahan, up to 1,000,000 terms), the sum by the closed form of each setup or found by the divergence, ratio, alternating series or integral test (Euler–Maclaurin tail), the integral test rectangles with the remainder bounds, direct and limit comparison, ratio and root, the alternating bound |S − S_N| ≤ a(N+1), terms to pass a total (H_N passes 10 at 12,367), and sequences with L and N(ε). Physics setups: bouncing ball distance and time, Zeno, book stacking overhang, Madelung constant of an ion chain, oscillator partition function. Power series stay in Taylor Polynomials and Series.",
       "title": "Sequences and Series",
       "url": "demos/series.html"
+    },
+    {
+      "demo": "solids-of-revolution",
+      "course": [
+        "later"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "10.5",
+          "title": "Calculating Moments of Inertia"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "New 2026-11-19 (Claude, Steve's approved Calculus plan): a math tool for OpenStax Calculus Vol 1 6.2, 6.3 and 6.4. Type f and g, a and b and an axis y = k or x = k; slice by disks and washers, shells or cross sections (square, semicircle, equilateral triangle) with n from 1 to 256, in 3D (vd3kit) or flat, with the sum against n and the integral (Gauss–Legendre). Arc length as a chain of chords, surface area as frustum bands. Moments of inertia by disks and shells: cone (3/10)MR², sphere (2/5)MR², which serves 10.5. Physics setups: a vase's capacity, water in a hemispherical bowl, a catenary cable, Gabriel's horn.",
+      "title": "Solids of Revolution",
+      "url": "demos/solids-of-revolution.html"
     }
   ],
   "activities": [

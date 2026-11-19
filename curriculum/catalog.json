@@ -1385,6 +1385,23 @@
       "Madelung constant",
       "calculus"
      ]
+    },
+    {
+     "demo": "solids-of-revolution",
+     "title": "Solids of Revolution",
+     "desc": "Spin the region under any typed curve about an axis and slice the solid into disks, washers or cylindrical shells with an n slider, in 3D or flat: the sum of the slices closes in on the integral. Cross sections standing on a base (squares, semicircles, triangles), arc length as a chain of segments, surface area as frustum bands, the moment of inertia of a cone, (3/10)MR², and a sphere, (2/5)MR², and the volume of a vase and of water in a bowl.",
+     "tags": [
+      "volume",
+      "disk method",
+      "washer method",
+      "shell method",
+      "cross sections",
+      "arc length",
+      "surface area",
+      "moment of inertia",
+      "solids of revolution",
+      "calculus"
+     ]
     }
    ]
   },
