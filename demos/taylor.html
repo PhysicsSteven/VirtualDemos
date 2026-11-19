@@ -1,0 +1,1130 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="lib/theme.js"></script>
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
+<script src="lib/constants.js"></script>
+<script src="lib/vdmath.js"></script>
+<title>Taylor Polynomials and Series</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css: the curve colors, the function box, the graph and the complex plane */
+:root { --fg-f: #8f5000; --fg-t: #0f766e; --fg-old: #94a3a0; --fg-good: #4d7c0f; --fg-conv: #7e22ce; --fg-sing: #b91c1c; --fg-err: #c2410c; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --fg-f: #e8a440; --fg-t: #5eead4; --fg-old: #4b5f5c; --fg-good: #bef264; --fg-conv: #d8b4fe; --fg-sing: #fca5a5; --fg-err: #fdba74; } }
+:root[data-theme="dark"] { --fg-f: #e8a440; --fg-t: #5eead4; --fg-old: #4b5f5c; --fg-good: #bef264; --fg-conv: #d8b4fe; --fg-sing: #fca5a5; --fg-err: #fdba74; }
+.stage { position: relative; display: flex; flex-direction: column; min-height: min-content; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.stage-ctl .note { margin-left: auto; font-size: 0.8rem; color: var(--muted); }
+.fbar { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; padding: 10px 12px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.fbar label.fx { font-family: var(--font-mono); font-weight: 600; font-size: 1.05rem; color: var(--fg-f); white-space: nowrap; }
+.fbar input[type="text"] { flex: 1 1 260px; min-width: 0; font-family: var(--font-mono); font-size: 1.1rem; padding: 7px 10px; color: var(--ink); background: var(--canvas);
+  border: 2px solid var(--line2, var(--line)); border-radius: 8px; }
+.fbar input[type="text"]:focus { outline: none; border-color: var(--fg-f); }
+.fbar input[type="text"]:focus-visible { box-shadow: 0 0 0 1px var(--fg-f); }
+.fbar input.bad { border-color: var(--red); }
+.fbar .status { flex: 1 1 100%; font-size: 0.84rem; color: var(--muted); min-height: 1.3em; }
+.fbar .status.bad { color: var(--red); }
+.fbar .grp { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.fbar .grp > .lbl { font-size: 0.8rem; color: var(--muted); margin-right: 2px; }
+.fbar .btn[disabled] { opacity: 0.45; cursor: default; }
+.fbar .chain { flex: 1 1 100%; font-family: var(--font-mono); font-size: 0.95rem; color: var(--fg-f); overflow-wrap: anywhere; }
+.nbar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 18px; padding: 8px 12px; border-bottom: 1px solid var(--line); background: var(--surface); font-size: 0.9rem; }
+.nbar .grp { display: flex; align-items: center; gap: 6px; }
+.nbar .grp.n { flex: 1 1 300px; }
+.nbar input[type="range"] { flex: 1 1 140px; min-width: 100px; }
+.nbar output { font-family: var(--font-mono); font-weight: 600; min-width: 2.4em; color: var(--fg-t); }
+.nbar input[type="number"] { width: 6.4em; font: inherit; font-family: var(--font-mono); font-size: 0.9rem; padding: 3px 6px; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; }
+.nbar .btn { min-width: 2.2em; padding: 3px 8px; }
+.pane { position: relative; flex: 1 1 auto; min-height: 460px; }
+.pane canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; outline: none; touch-action: none; cursor: crosshair; }
+.shelf { display: flex; flex-wrap: wrap; align-items: stretch; gap: 12px; padding: 10px; border-top: 1px solid var(--line); background: var(--surface); }
+.shelf-card { flex: 1 1 230px; display: grid; grid-template-columns: minmax(0, 1fr); align-content: start; gap: 7px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--canvas); min-width: 0; }
+.shelf-card.wide { flex: 2 1 380px; }
+.shelf-card > .card-title { font-size: 0.78rem; font-weight: 700; color: var(--muted); }
+.shelf-card .row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; font-size: 0.86rem; }
+.shelf-card input[type="number"] { width: 6.6em; font: inherit; font-size: 0.84rem; font-family: var(--font-mono); padding: 3px 6px; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; }
+.shelf-card select { font: inherit; font-size: 0.84rem; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 2px 4px; }
+.poly { font-family: var(--font-mono); font-size: 0.98rem; color: var(--fg-t); overflow-wrap: anywhere; line-height: 1.5; }
+.poly .f { color: var(--fg-f); }
+.ctab { width: 100%; border-collapse: collapse; font-family: var(--font-mono); font-size: 0.8rem; font-variant-numeric: tabular-nums; }
+.ctab th { text-align: left; font-family: var(--font-ui); font-weight: 700; color: var(--muted); padding: 2px 6px; border-bottom: 1px solid var(--line); position: sticky; top: 0; background: var(--canvas); }
+.ctab td { padding: 2px 6px; border-bottom: 1px solid var(--line); overflow-wrap: anywhere; }
+.ctab tr.on td { color: var(--fg-t); }
+.ctab tr.off td { color: var(--muted); }
+.cwrap { max-height: 210px; overflow: auto; }
+.cplane { position: relative; width: 100%; max-width: 340px; aspect-ratio: 1; justify-self: center; }
+.cplane canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; border-radius: 6px; }
+.sw { display: inline-block; width: 26px; height: 0; border-top: 3px solid; vertical-align: middle; margin-right: 6px; }
+.sw.f { border-color: var(--fg-f); } .sw.t { border-color: var(--fg-t); } .sw.old { border-color: var(--fg-old); border-top-width: 2px; }
+.sw.band { height: 10px; border: 0; background: color-mix(in srgb, var(--fg-t) 22%, transparent); }
+.sw.good { height: 10px; border: 0; background: color-mix(in srgb, var(--fg-good) 22%, transparent); }
+.sw.conv { border-color: var(--fg-conv); border-top-width: 4px; }
+.rail ul.typing { margin: 6px 0 0; padding-left: 1.2em; font-size: 0.86rem; color: var(--muted); }
+.rail ul.typing code { font-family: var(--font-mono); color: var(--ink); }
+.readout dd.yes { color: var(--fg-good); } .readout dd.no { color: var(--fg-sing); }
+@media (min-width: 821px) { .bench > .stage { align-self: start; min-height: max(760px, 100%); } }
+@media (max-width: 820px) { .pane { min-height: 0; height: 400px; flex: none; } .shelf-card, .shelf-card.wide { flex: 1 1 100%; } }
+@media (max-width: 520px) { .stage-ctl .note { margin-left: 0; } .pane { height: 360px; } }
+</style>
+<link rel="stylesheet" id="vd-paper" href="lib/paper.css">
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Taylor Polynomials and Series</h1>
+      <p>Type any function and add the terms of its Taylor polynomial one at a time: watch the polynomial hug the curve near the center a, see how far it stays within 1%, and find the error bound. The radius of convergence comes from the complex plane. Then build new series from known ones by substitution, differentiation and integration.</p>
+    </div>
+    <div class="bar-right">
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/taylor.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 37 37" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/taylor.html" shape-rendering="crispEdges"><rect width="37" height="37" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM11 2h1v1h-1zM15 2h1v1h-1zM18 2h1v1h-1zM20 2h2v1h-2zM25 2h1v1h-1zM28 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM12 3h1v1h-1zM14 3h1v1h-1zM16 3h2v1h-2zM20 3h1v1h-1zM24 3h1v1h-1zM28 3h1v1h-1zM34 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h1v1h-1zM12 4h3v1h-3zM16 4h1v1h-1zM18 4h1v1h-1zM21 4h4v1h-4zM26 4h1v1h-1zM28 4h1v1h-1zM30 4h3v1h-3zM34 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h1v1h-1zM12 5h2v1h-2zM15 5h2v1h-2zM19 5h1v1h-1zM21 5h1v1h-1zM24 5h3v1h-3zM28 5h1v1h-1zM30 5h3v1h-3zM34 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h2v1h-2zM13 6h1v1h-1zM15 6h1v1h-1zM18 6h2v1h-2zM21 6h3v1h-3zM25 6h2v1h-2zM28 6h1v1h-1zM30 6h3v1h-3zM34 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h2v1h-2zM13 7h1v1h-1zM17 7h1v1h-1zM19 7h1v1h-1zM28 7h1v1h-1zM34 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h7v1h-7zM10 9h3v1h-3zM16 9h3v1h-3zM20 9h1v1h-1zM22 9h5v1h-5zM2 10h1v1h-1zM4 10h5v1h-5zM11 10h1v1h-1zM15 10h3v1h-3zM19 10h1v1h-1zM24 10h1v1h-1zM26 10h1v1h-1zM28 10h5v1h-5zM5 11h1v1h-1zM7 11h1v1h-1zM11 11h2v1h-2zM14 11h2v1h-2zM19 11h7v1h-7zM28 11h2v1h-2zM31 11h2v1h-2zM34 11h1v1h-1zM6 12h4v1h-4zM13 12h2v1h-2zM16 12h2v1h-2zM20 12h1v1h-1zM22 12h3v1h-3zM27 12h2v1h-2zM30 12h1v1h-1zM32 12h2v1h-2zM2 13h2v1h-2zM7 13h1v1h-1zM9 13h1v1h-1zM12 13h3v1h-3zM22 13h2v1h-2zM25 13h2v1h-2zM30 13h3v1h-3zM34 13h1v1h-1zM2 14h1v1h-1zM4 14h6v1h-6zM11 14h1v1h-1zM17 14h3v1h-3zM22 14h1v1h-1zM24 14h1v1h-1zM27 14h1v1h-1zM29 14h3v1h-3zM33 14h1v1h-1zM4 15h2v1h-2zM10 15h6v1h-6zM18 15h1v1h-1zM20 15h4v1h-4zM25 15h1v1h-1zM33 15h2v1h-2zM4 16h1v1h-1zM8 16h3v1h-3zM14 16h4v1h-4zM19 16h1v1h-1zM22 16h1v1h-1zM27 16h2v1h-2zM31 16h3v1h-3zM3 17h2v1h-2zM6 17h1v1h-1zM11 17h1v1h-1zM13 17h1v1h-1zM16 17h2v1h-2zM21 17h5v1h-5zM27 17h3v1h-3zM31 17h2v1h-2zM2 18h2v1h-2zM5 18h5v1h-5zM12 18h2v1h-2zM19 18h1v1h-1zM21 18h1v1h-1zM24 18h2v1h-2zM27 18h1v1h-1zM29 18h3v1h-3zM34 18h1v1h-1zM3 19h2v1h-2zM6 19h2v1h-2zM9 19h1v1h-1zM13 19h3v1h-3zM18 19h8v1h-8zM27 19h3v1h-3zM31 19h3v1h-3zM2 20h2v1h-2zM5 20h1v1h-1zM8 20h1v1h-1zM10 20h1v1h-1zM13 20h3v1h-3zM17 20h2v1h-2zM23 20h2v1h-2zM27 20h1v1h-1zM29 20h2v1h-2zM32 20h2v1h-2zM4 21h1v1h-1zM7 21h1v1h-1zM9 21h1v1h-1zM12 21h1v1h-1zM17 21h2v1h-2zM20 21h5v1h-5zM26 21h1v1h-1zM29 21h6v1h-6zM6 22h4v1h-4zM12 22h3v1h-3zM16 22h2v1h-2zM19 22h1v1h-1zM24 22h4v1h-4zM29 22h3v1h-3zM33 22h2v1h-2zM2 23h1v1h-1zM4 23h2v1h-2zM7 23h1v1h-1zM18 23h4v1h-4zM23 23h1v1h-1zM25 23h1v1h-1zM28 23h1v1h-1zM32 23h1v1h-1zM34 23h1v1h-1zM2 24h1v1h-1zM5 24h4v1h-4zM10 24h2v1h-2zM15 24h1v1h-1zM17 24h1v1h-1zM20 24h1v1h-1zM22 24h1v1h-1zM33 24h1v1h-1zM2 25h1v1h-1zM6 25h1v1h-1zM9 25h1v1h-1zM14 25h2v1h-2zM18 25h1v1h-1zM21 25h1v1h-1zM23 25h2v1h-2zM31 25h2v1h-2zM34 25h1v1h-1zM2 26h1v1h-1zM7 26h6v1h-6zM15 26h2v1h-2zM18 26h2v1h-2zM22 26h1v1h-1zM24 26h8v1h-8zM33 26h2v1h-2zM10 27h2v1h-2zM14 27h2v1h-2zM18 27h2v1h-2zM21 27h2v1h-2zM24 27h3v1h-3zM30 27h1v1h-1zM32 27h1v1h-1zM34 27h1v1h-1zM2 28h7v1h-7zM11 28h1v1h-1zM15 28h1v1h-1zM17 28h1v1h-1zM19 28h1v1h-1zM22 28h5v1h-5zM28 28h1v1h-1zM30 28h1v1h-1zM32 28h1v1h-1zM2 29h1v1h-1zM8 29h1v1h-1zM10 29h1v1h-1zM14 29h4v1h-4zM22 29h5v1h-5zM30 29h5v1h-5zM2 30h1v1h-1zM4 30h3v1h-3zM8 30h1v1h-1zM10 30h1v1h-1zM12 30h4v1h-4zM19 30h1v1h-1zM22 30h1v1h-1zM24 30h1v1h-1zM26 30h6v1h-6zM33 30h2v1h-2zM2 31h1v1h-1zM4 31h3v1h-3zM8 31h1v1h-1zM10 31h1v1h-1zM14 31h1v1h-1zM16 31h1v1h-1zM21 31h3v1h-3zM26 31h2v1h-2zM30 31h5v1h-5zM2 32h1v1h-1zM4 32h3v1h-3zM8 32h1v1h-1zM10 32h1v1h-1zM12 32h2v1h-2zM17 32h1v1h-1zM22 32h3v1h-3zM28 32h2v1h-2zM32 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM11 33h1v1h-1zM13 33h2v1h-2zM16 33h1v1h-1zM20 33h4v1h-4zM27 33h1v1h-1zM30 33h3v1h-3zM2 34h7v1h-7zM10 34h3v1h-3zM14 34h1v1h-1zM16 34h2v1h-2zM19 34h1v1h-1zM21 34h1v1h-1zM24 34h4v1h-4zM29 34h1v1h-1zM31 34h1v1h-1zM33 34h1v1h-1z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl" id="strip">
+        <button type="button" class="spin attn" id="play" data-vd-key="play">Play</button>
+        <button type="button" class="btn" id="reset" title="Back to the setup's own order and probe">Reset</button>
+        <div class="seg" role="group" aria-label="Mode" id="modeSeg">
+          <button type="button" data-m="expand" aria-pressed="true">Expand a function</button>
+          <button type="button" data-m="build" aria-pressed="false">Build a series</button>
+        </div>
+        <span class="note" id="note">Play adds one term each second. Drag the diamond to move the center a, drag elsewhere to move the probe.</span>
+      </div>
+      <div class="fbar" id="fbarExpand">
+        <label class="fx" for="fx" id="fxLabel" translate="no">f(x) =</label>
+        <input type="text" id="fx" translate="no" spellcheck="false" autocomplete="off" autocapitalize="off" autocorrect="off" inputmode="text" aria-describedby="fxStatus" value="sin(θ)">
+        <div class="status" id="fxStatus" role="status" aria-live="polite"></div>
+      </div>
+      <div class="fbar" id="fbarBuild" hidden>
+        <div class="grp" role="group" aria-label="Start from a known series"><span class="lbl">Start from</span>
+          <button type="button" class="btn" data-base="geom" translate="no">1/(1 − x)</button>
+          <button type="button" class="btn" data-base="exp" translate="no">eˣ</button>
+          <button type="button" class="btn" data-base="sin" translate="no">sin x</button>
+          <button type="button" class="btn" data-base="cos" translate="no">cos x</button>
+        </div>
+        <div class="grp" role="group" aria-label="Then apply"><span class="lbl">then</span>
+          <button type="button" class="btn" data-op="neg" title="Put −x in place of x">x → −x</button>
+          <button type="button" class="btn" data-op="sq" title="Put x² in place of x">x → x²</button>
+          <button type="button" class="btn" data-op="negsq" title="Put −x² in place of x">x → −x²</button>
+          <button type="button" class="btn" data-op="diff" title="Differentiate term by term">d/dx</button>
+          <button type="button" class="btn" data-op="int" title="Integrate term by term from 0 to x">∫₀ˣ</button>
+          <button type="button" class="btn" data-op="mulx" title="Multiply every term by x">× x</button>
+          <button type="button" class="btn" id="undo">Undo</button>
+        </div>
+        <div class="chain" id="chain" translate="no"></div>
+        <div class="status" id="buildStatus" role="status" aria-live="polite"></div>
+      </div>
+      <div class="nbar" id="nbar">
+        <div class="grp n"><label for="nIn">Order n</label><button type="button" class="btn" id="nDown" aria-label="One order lower">−</button><input type="range" id="nIn" min="0" max="30" step="1" value="1"><button type="button" class="btn" id="nUp" aria-label="One order higher">+</button><output id="nOut" for="nIn">1</output></div>
+        <div class="grp"><label for="aIn">Center a</label><input type="number" id="aIn" step="0.1" value="0"></div>
+        <div class="grp"><label for="xIn" id="xInLabel">Probe x</label><input type="number" id="xIn" step="0.01" value="0.5"></div>
+      </div>
+      <div class="pane" id="pane">
+        <canvas id="can" tabindex="0" role="img" aria-label="Graph of the function and its Taylor polynomial about the center a. Left and right arrows move the probe; up and down change the order; plus and minus zoom; Space plays or pauses."></canvas>
+      </div>
+      <div class="shelf" id="shelf">
+        <div class="shelf-card wide" role="group" aria-label="The Taylor polynomial">
+          <span class="card-title">The Taylor polynomial</span>
+          <div class="poly" id="poly" translate="no"></div>
+          <div class="cwrap"><table class="ctab" id="ctab"><caption class="vd-sr">Taylor coefficients</caption><thead><tr><th>k</th><th id="thD">f⁽ᵏ⁾(a)</th><th>c<sub>k</sub> = f⁽ᵏ⁾(a)/k!</th></tr></thead><tbody></tbody></table></div>
+        </div>
+        <div class="shelf-card" role="group" aria-label="The complex plane">
+          <span class="card-title">The complex plane: where the series converges</span>
+          <div class="cplane"><canvas id="cpl" role="img" aria-label="The complex plane around the center a, colored by the value of f, with the disk of convergence and the singular points."></canvas></div>
+          <span class="hint" id="cplNote"></span>
+        </div>
+        <div class="shelf-card" role="group" aria-label="Show">
+          <span class="card-title">Show</span>
+          <label class="check"><input type="checkbox" id="showBand" checked><span><span class="sw band"></span>Lagrange error band, T<sub>n</sub> ± bound</span></label>
+          <label class="check"><input type="checkbox" id="showGood" checked><span><span class="sw good"></span>Where T<sub>n</sub> is within</span></label>
+          <div class="row"><label for="tolSel">tolerance</label><select id="tolSel"><option value="0.1">10 %</option><option value="0.01" selected>1 %</option><option value="0.001">0.1 %</option></select><span class="hint">of f</span></div>
+          <label class="check"><input type="checkbox" id="showConv" checked><span><span class="sw conv"></span>Interval of convergence</span></label>
+          <label class="check"><input type="checkbox" id="showOld"><span><span class="sw old"></span>The lower order polynomials</span></label>
+        </div>
+        <div class="shelf-card" role="group" aria-label="The view">
+          <span class="card-title">The view</span>
+          <div class="row"><label for="x0in">x from</label><input type="number" id="x0in" step="any"><label for="x1in">to</label><input type="number" id="x1in" step="any"></div>
+          <div class="row"><label for="y0in">y from</label><input type="number" id="y0in" step="any"><label for="y1in">to</label><input type="number" id="y1in" step="any"></div>
+          <div class="row"><button type="button" class="btn" id="zin">Zoom in</button><button type="button" class="btn" id="zout">Zoom out</button><button type="button" class="btn" id="fitY">Fit y to f</button><button type="button" class="btn" id="homeView">Reset view</button></div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/taylor-small-angle.html" target="taylor-small-angle-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="pendulum" aria-pressed="true">Pendulum: sin θ ≈ θ</button>
+          <button type="button" data-p="binomial" aria-pressed="false">Binomial: √(1 + x) ≈ 1 + x/2</button>
+          <button type="button" data-p="relativity" aria-pressed="false">Relativistic kinetic energy</button>
+          <button type="button" data-p="gravity" aria-pressed="false">Gravity above Earth</button>
+          <button type="button" data-p="dipole" aria-pressed="false">Field of a dipole</button>
+          <button type="button" data-p="exp" aria-pressed="false">eˣ near 0</button>
+          <button type="button" data-p="ln" aria-pressed="false">ln(1 + x) near 0</button>
+          <button type="button" data-p="poles" aria-pressed="false">1/(1 + x²): poles at ±i</button>
+          <button type="button" data-p="linear" aria-pressed="false">Linear approximation: √x near 4</button>
+          <button type="button" data-p="arctan" aria-pressed="false">Build arctan x</button>
+          <button type="button" data-p="lnInt" aria-pressed="false">Build ln(1 + x)</button>
+          <button type="button" data-p="gauss" aria-pressed="false">Build e^(−x²)</button>
+          <button type="button" data-p="geomD" aria-pressed="false">Build 1/(1 − x)²</button>
+        </div>
+        <details class="more" open><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+      </section>
+      <section>
+        <h2>At the probe</h2>
+        <dl class="readout" id="out"></dl>
+      </section>
+      <section>
+        <h2>Convergence</h2>
+        <dl class="readout" id="conv"></dl>
+      </section>
+      <!-- vd-readings --><section class="vd-readings" data-ws="taylor-small-angle" data-title="Taylor Polynomials and Series" data-demo="taylor">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings ('+(typeof window.vdDataNote==='function'&&window.vdDataNote()?'catalog data':'simulated data')+')','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:(typeof window.vdDataNote==='function'&&window.vdDataNote())||'Simulated data from '+(/^The /.test(title)?'':'the ')+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the polynomial, its coefficients and how good it is, to work them out first</span></label>
+        <details class="more"><summary>What you can type</summary>
+          <ul class="typing">
+            <li>Use one variable: <code>x</code>, <code>t</code>, <code>θ</code> (or <code>theta</code>), <code>v</code> or <code>h</code>.</li>
+            <li><code>+ − * / ^</code> and parentheses; <code>2x</code>, <code>3sin(x)</code> and <code>(x+1)(x−1)</code> multiply.</li>
+            <li><code>sin cos tan sec csc cot</code>, <code>asin acos atan</code>, <code>sinh cosh tanh</code>, <code>exp</code> or <code>e^x</code>, <code>ln</code>, <code>log</code> (base 10), <code>sqrt</code>, <code>cbrt</code>, <code>abs</code> or <code>|x|</code>, <code>pi</code></li>
+          </ul>
+        </details>
+        <details class="more"><summary>How it works</summary>
+          <p class="hint">The box is read by the site's own parser (nothing you type is run as code). Each derivative f⁽ᵏ⁾ is worked out exactly by the rules of calculus, so c<sub>k</sub> = f⁽ᵏ⁾(a)/k! is exact; the table prints it as a fraction when it is one. The polynomial is T<sub>n</sub>(x) = c₀ + c₁(x − a) + … + c<sub>n</sub>(x − a)ⁿ.</p>
+          <p class="hint">Lagrange's remainder: f(x) − T<sub>n</sub>(x) = f⁽ⁿ⁺¹⁾(ξ)(x − a)ⁿ⁺¹/(n + 1)! for some ξ between a and x, so |f − T<sub>n</sub>| ≤ M|x − a|ⁿ⁺¹/(n + 1)!, with M the largest |f⁽ⁿ⁺¹⁾| between a and x. M is found on a grid of 400 steps, so the band is the bound to within that sampling.</p>
+          <p class="hint">The radius of convergence R is the distance from a to the nearest point where f, continued into the complex plane, is not analytic: a pole (a zero of a denominator, or of cos inside tan) or a branch point (a zero inside ln or a fractional power, ±1 inside arcsin). They are found by Newton's method on the complex plane and checked with a small loop around each point (a removable point such as x = 0 in sin x/x is not one). |x| and sign(x) are not analytic at their corners, which count too. The root test from the terms, |c<sub>n</sub>|<sup>−1/n</sup>, tends to the same R as n grows.</p>
+          <p class="hint">In Build a series the coefficients are exact fractions, carried through each step: x → s·xᵐ moves c<sub>k</sub>sᵏ to the power km and makes R into (R/|s|)<sup>1/m</sup>; d/dx and ∫₀ˣ keep R. The curve is the function the steps make: its formula where one is known, otherwise the integral computed numerically.</p>
+          <p class="hint">Angles are in radians. In the physics setups the variable is a ratio: θ in radians, v in units of c, h in Earth radii (R = 6,371 km, the mean radius), d/r for the dipole.</p>
+        </details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  /* Taylor polynomials and series, runnable in Node (curriculum/validation/test_taylor.cjs). Needs the shared math library
+     demos/lib/vdmath.js (VDMATH): the typed function is read by its parser and differentiated exactly by its rules, so every
+     coefficient c_k = f⁽ᵏ⁾(a)/k! comes from an exact derivative, evaluated at the center a. */
+  const VM = typeof VDMATH !== 'undefined' ? VDMATH : null;
+  const TVARS = ['x', 't', 'theta', 'v', 'h'];
+  const MAXN = 30, CAP = 150000;
+  const tsize = (n) => 1 + (n.k === 'add' || n.k === 'mul' ? n.a.reduce((s, m) => s + tsize(m), 0) : n.k === 'pow' ? tsize(n.a) + tsize(n.b) : n.k === 'fn' ? tsize(n.a) : 0);
+  const FACT = [1]; for (let k = 1; k <= 40; k++) FACT[k] = FACT[k - 1] * k;
+  /* read the box: one variable, x, t, θ (theta), v or h */
+  function readFn(src) {
+    const r = VM.parseLive(src, { vars: TVARS });
+    if (r.node) { const vs = VM.varsOf(r.node); if (vs.length > 1) return { error: { code: 'twovars', at: 0 } }; r.v = vs[0] || 'x'; }
+    return r;
+  }
+  /* the exact derivatives of f up to order k (made as they are needed; a derivative whose formula passes CAP nodes is not made) */
+  function makeTaylor(node, v) { return { node, v, D: [node], F: [VM.compile(node, [v])], full: false }; }
+  function ensure(T, k) {
+    while (T.D.length <= k && !T.full) {
+      const d = VM.derivative(T.D[T.D.length - 1], T.v);
+      if (tsize(d) > CAP) { T.full = true; break; }
+      T.D.push(d); T.F.push(VM.compile(d, [T.v]));
+    }
+    return Math.min(k, T.D.length - 1);
+  }
+  /* c_k = f⁽ᵏ⁾(a)/k! for k = 0 … n */
+  function coeffs(T, a, n) { const top = ensure(T, n), c = []; for (let k = 0; k <= top; k++) c.push(T.F[k](a) / FACT[k]); return c; }
+  /* T_n(x) = Σ c_k (x − a)^k, by Horner's rule */
+  function polyAt(c, a, x) { const u = x - a; let s = 0; for (let k = c.length - 1; k >= 0; k--) s = s * u + c[k]; return s; }
+  /* the center as an exact number where it is a short decimal, so f⁽ᵏ⁾(a) prints exactly: 0.5 stays 1/2, π stays π */
+  function centerNode(a) {
+    for (let d = 0; d <= 6; d++) { const p = Math.round(a * Math.pow(10, d)); if (Math.abs(p / Math.pow(10, d) - a) < 1e-12 * (1 + Math.abs(a))) return VM.rat(p, Math.pow(10, d)); }
+    return VM.num(a);
+  }
+  /* the exact coefficient c_k = f⁽ᵏ⁾(a)/k! as a formula tree (a number when it simplifies to one) */
+  function exactCoeff(T, k, a) {
+    if (ensure(T, k) < k) return null;
+    const t = VM.mkMul([VM.subst(T.D[k], T.v, centerNode(a)), FACT[k] < 1e15 ? VM.rat(1, FACT[k]) : VM.num(1 / FACT[k])]);
+    return t.k === 'n' ? t : ratOf(t) || t;
+  }
+  /* a formula of rational numbers and rational powers only (4^(−3/2)/2 at a = 4 for √x) that is in fact a fraction: found by
+     continued fractions with a denominator up to 10⁶ and kept only when it matches to 10⁻¹⁵ (an irrational such as √2 cannot) */
+  function ratOf(t) {
+    const pure = (n) => (n.k === 'n' ? n.p !== undefined && !n.dec : n.k === 'add' || n.k === 'mul' ? n.a.every(pure) : n.k === 'pow' ? pure(n.a) && pure(n.b) : false);
+    if (!pure(t)) return null;
+    const v = VM.compile(t, ['x'])(0); if (!isFinite(v)) return null;
+    let x = Math.abs(v), h0 = 1, h1 = 0, k0 = 0, k1 = 1;
+    for (let i = 0; i < 40; i++) {
+      const q = Math.floor(x); [h0, h1] = [q * h0 + h1, h0]; [k0, k1] = [q * k0 + k1, k0];
+      if (k0 > 1e6) return null;
+      if (Math.abs(h0 / k0 - Math.abs(v)) <= 1e-15 * Math.abs(v)) return VM.rat(Math.sign(v) * h0, k0);
+      if (x === q) return null; x = 1 / (x - q);
+    }
+    return null;
+  }
+  /* Lagrange's form of the remainder: |f(x) − T_n(x)| ≤ M |x − a|^(n+1)/(n+1)!, M the largest |f⁽ⁿ⁺¹⁾| between a and x
+     (found on a grid of 400 steps and both ends; NaN when f⁽ⁿ⁺¹⁾ is not defined all the way) */
+  function lagrangeM(T, n, a, x, steps) {
+    if (ensure(T, n + 1) < n + 1) return NaN;
+    const g = T.F[n + 1], m = steps || 400; let M = 0;
+    for (let i = 0; i <= m; i++) { const y = Math.abs(g(a + (x - a) * i / m)); if (!isFinite(y)) return NaN; if (y > M) M = y; }
+    return M;
+  }
+  function lagrange(T, n, a, x) { const M = lagrangeM(T, n, a, x); return M * Math.pow(Math.abs(x - a), n + 1) / FACT[n + 1]; }
+  /* the stretch around a where T_n is within tol of f, relative to |f|: stepped outward from a, the edge found by bisection.
+     Each side gives its end, or null when it runs past `reach` (the series is still that good there) */
+  function goodWithin(f, c, a, tol, reach) {
+    const bad = (x) => { const y = f(x); if (!isFinite(y)) return true; const e = Math.abs(polyAt(c, a, x) - y); return y === 0 ? e > 0 : e > tol * Math.abs(y); };
+    const side = (s) => {
+      const h = reach / 2000; let x0 = a;
+      for (let i = 1; i <= 2000; i++) {
+        const x = a + s * h * i;
+        if (bad(x)) { let lo = x0, hi = x; for (let j = 0; j < 60; j++) { const m = (lo + hi) / 2; if (m === lo || m === hi) break; if (bad(m)) hi = m; else lo = m; } return (lo + hi) / 2; }
+        x0 = x;
+      }
+      return null;
+    };
+    return { lo: side(-1), hi: side(1) };
+  }
+
+  /* complex numbers as [re, im]: the function continued into the complex plane, for the disk of convergence */
+  const C = {
+    add: (a, b) => [a[0] + b[0], a[1] + b[1]], mul: (a, b) => [a[0] * b[0] - a[1] * b[1], a[0] * b[1] + a[1] * b[0]],
+    div: (a, b) => { const d = b[0] * b[0] + b[1] * b[1]; return [(a[0] * b[0] + a[1] * b[1]) / d, (a[1] * b[0] - a[0] * b[1]) / d]; },
+    exp: (a) => { const r = Math.exp(a[0]); return [r * Math.cos(a[1]), r * Math.sin(a[1])]; },
+    log: (a) => [Math.log(Math.hypot(a[0], a[1])), Math.atan2(a[1], a[0])],
+  };
+  C.pow = (a, b) => {
+    if (a[0] === 0 && a[1] === 0) return b[0] > 0 ? [0, 0] : b[0] === 0 && b[1] === 0 ? [1, 0] : [Infinity, 0];
+    if (b[1] === 0 && Number.isInteger(b[0]) && Math.abs(b[0]) <= 64) { let r = [1, 0], q = a, n = Math.abs(b[0]); while (n) { if (n & 1) r = C.mul(r, q); q = C.mul(q, q); n >>= 1; } return b[0] < 0 ? C.div([1, 0], r) : r; }
+    return C.exp(C.mul(b, C.log(a)));
+  };
+  C.sin = (a) => [Math.sin(a[0]) * Math.cosh(a[1]), Math.cos(a[0]) * Math.sinh(a[1])];
+  C.cos = (a) => [Math.cos(a[0]) * Math.cosh(a[1]), -Math.sin(a[0]) * Math.sinh(a[1])];
+  C.sinh = (a) => [Math.sinh(a[0]) * Math.cos(a[1]), Math.cosh(a[0]) * Math.sin(a[1])];
+  C.cosh = (a) => [Math.cosh(a[0]) * Math.cos(a[1]), Math.sinh(a[0]) * Math.sin(a[1])];
+  C.sqrt = (a) => C.pow(a, [0.5, 0]);
+  const I1 = [0, 1], ONE1 = [1, 0];
+  const CFN = {
+    sin: C.sin, cos: C.cos, tan: (a) => C.div(C.sin(a), C.cos(a)), sec: (a) => C.div(ONE1, C.cos(a)), csc: (a) => C.div(ONE1, C.sin(a)), cot: (a) => C.div(C.cos(a), C.sin(a)),
+    sinh: C.sinh, cosh: C.cosh, tanh: (a) => C.div(C.sinh(a), C.cosh(a)), exp: C.exp, ln: C.log, log: (a) => { const l = C.log(a); return [l[0] / Math.LN10, l[1] / Math.LN10]; },
+    asin: (a) => { const w = C.log(C.add(C.mul(I1, a), C.sqrt(C.add(ONE1, C.mul([-1, 0], C.mul(a, a)))))); return [w[1], -w[0]]; },
+    acos: (a) => { const s = CFN.asin(a); return [Math.PI / 2 - s[0], -s[1]]; },
+    atan: (a) => { const p = C.log(C.add(ONE1, C.mul([0, -1], a))), q = C.log(C.add(ONE1, C.mul(I1, a))), d = [p[0] - q[0], p[1] - q[1]]; return [-d[1] / 2, d[0] / 2]; },
+  };
+  /* a tree as a function of one complex number; null when it uses |u| or sign(u), which have no complex continuation */
+  function ccompile(n, v) {
+    const C1 = (m) => ccompile(m, v);
+    switch (n.k) {
+      case 'n': { const c = [n.v, 0]; return () => c; }
+      case 'c': { const c = [n.name === 'pi' ? Math.PI : Math.E, 0]; return () => c; }
+      case 'v': return n.n === v ? (z) => z : () => [NaN, NaN];
+      case 'add': { const fs = n.a.map(C1); if (fs.includes(null)) return null; return (z) => { let r = 0, i = 0; for (const f of fs) { const w = f(z); r += w[0]; i += w[1]; } return [r, i]; }; }
+      case 'mul': { const fs = n.a.map(C1); if (fs.includes(null)) return null; return (z) => { let s = ONE1; for (const f of fs) s = C.mul(s, f(z)); return s; }; }
+      case 'pow': { const fa = C1(n.a), fb = C1(n.b); if (!fa || !fb) return null; return (z) => C.pow(fa(z), fb(z)); }
+      case 'fn': { const g = CFN[n.f], fa = C1(n.a); if (!g || !fa) return null; return (z) => g(fa(z)); }
+    }
+    return null;
+  }
+  /* where f can stop being analytic: zeros of a denominator or of the inside of ln, √ and other powers; poles of tan, sec, cot,
+     csc, tanh; ±1 inside arcsin and arccos, ±i inside arctan; and (real only) zeros inside |u| and sign(u) */
+  function singularConditions(n, v, out) {
+    out = out || [];
+    const has = (m) => VM.hasV(m, v), X = VM;
+    if (n.k === 'add' || n.k === 'mul') n.a.forEach((m) => singularConditions(m, v, out));
+    else if (n.k === 'pow') {
+      singularConditions(n.a, v, out); singularConditions(n.b, v, out);
+      const posInt = n.b.k === 'n' && Number.isInteger(n.b.v) && n.b.v >= 0;
+      if (has(n.a) && !posInt) out.push({ g: n.a, kind: n.b.k === 'n' && Number.isInteger(n.b.v) ? 'pole' : 'branch' });
+    } else if (n.k === 'fn') {
+      singularConditions(n.a, v, out);
+      const u = n.a;
+      if (has(u)) {
+        const sq = X.mkPow(u, X.rat(2, 1));
+        switch (n.f) {
+          case 'ln': case 'log': out.push({ g: u, kind: 'branch' }); break;
+          case 'tan': case 'sec': out.push({ g: X.mkFn('cos', u), kind: 'pole' }); break;
+          case 'cot': case 'csc': out.push({ g: X.mkFn('sin', u), kind: 'pole' }); break;
+          case 'tanh': out.push({ g: X.mkFn('cosh', u), kind: 'pole' }); break;
+          case 'asin': case 'acos': out.push({ g: X.mkAdd([X.ONE, X.mkMul([X.rat(-1, 1), sq])]), kind: 'branch' }); break;
+          case 'atan': out.push({ g: X.mkAdd([X.ONE, sq]), kind: 'branch' }); break;
+          case 'abs': case 'sign': out.push({ g: u, kind: 'corner', real: true }); break;
+        }
+      }
+    }
+    return out;
+  }
+  /* the zeros of g in the complex plane near a, by Newton's method from seeds on circles about a (radii 0.01 to about 1,900) */
+  function zerosNear(g, v, a) {
+    const f = ccompile(g, v), df = ccompile(VM.derivative(g, v), v); if (!f || !df) return [];
+    const out = [];
+    const seeds = [[a, 0]];
+    for (let j = 0; j <= 30; j++) { const r = 0.01 * Math.pow(1.5, j); for (let q = 0; q < 12; q++) { const ph = q * Math.PI / 6 + (q % 3 ? 0.1 : 0); seeds.push([a + r * Math.cos(ph), r * Math.sin(ph)]); } }
+    for (const s of seeds) {
+      let z = s, ok = false;
+      for (let it = 0; it < 60; it++) {
+        const w = f(z), d = df(z); if (!isFinite(w[0] + w[1] + d[0] + d[1]) || (d[0] === 0 && d[1] === 0)) break;
+        const st = C.div(w, d); z = [z[0] - st[0], z[1] - st[1]];
+        if (Math.hypot(st[0], st[1]) < 1e-13 * (1 + Math.hypot(z[0], z[1]))) { ok = true; break; }
+      }
+      if (!ok) continue;
+      const w = f(z); if (!(Math.hypot(w[0], w[1]) < 1e-8)) continue;
+      if (Math.abs(z[1]) < 1e-11 * (1 + Math.abs(z[0]))) z = [z[0], 0];
+      if (Math.hypot(z[0] - a, z[1]) > 1e4) continue;
+      if (!out.some((p) => Math.hypot(p[0] - z[0], p[1] - z[1]) < 1e-7 * (1 + Math.hypot(z[0], z[1])))) out.push(z);
+    }
+    return out;
+  }
+  /* is f analytic at z after all (sin z / z at 0)? The Laurent coefficients of f on a small circle about z: those of negative
+     order vanish for an analytic (or removable) point and not for a pole or branch point */
+  function analyticAt(fc, z, rho) {
+    const N = 64, neg = [[0, 0], [0, 0], [0, 0]]; let big = 0;
+    for (let j = 0; j < N; j++) {
+      const th = (j + 0.5) * 2 * Math.PI / N, w = fc([z[0] + rho * Math.cos(th), z[1] + rho * Math.sin(th)]);
+      if (!isFinite(w[0] + w[1])) return false;
+      big = Math.max(big, Math.hypot(w[0], w[1]));
+      for (let k = 1; k <= 3; k++) { neg[k - 1][0] += w[0] * Math.cos(k * th) - w[1] * Math.sin(k * th); neg[k - 1][1] += w[0] * Math.sin(k * th) + w[1] * Math.cos(k * th); }
+    }
+    return neg.every((c) => Math.hypot(c[0], c[1]) / N <= 1e-7 * (big || 1));
+  }
+  /* the singular points of f nearest the center a, nearest first, and the radius of convergence R (Infinity for none) */
+  function singularities(node, v, a) {
+    const conds = singularConditions(node, v), fc = ccompile(node, v), pts = [];
+    for (const c of conds) for (const z of zerosNear(c.g, v, a)) { if (c.real && z[1] !== 0) continue; pts.push({ re: z[0], im: z[1], kind: c.kind, d: Math.hypot(z[0] - a, z[1]) }); }
+    pts.sort((p, q) => p.d - q.d);
+    const uniq = []; for (const p of pts) if (!uniq.some((q) => Math.hypot(q.re - p.re, q.im - p.im) < 1e-7 * (1 + p.d))) uniq.push(p);
+    const real = [];
+    for (const p of uniq) {
+      if (p.kind !== 'corner' && fc) {
+        let gap = Infinity; for (const q of uniq) if (q !== p) gap = Math.min(gap, Math.hypot(q.re - p.re, q.im - p.im));
+        const rho = Math.max(1e-7, Math.min(1e-3 * (1 + Math.hypot(p.re, p.im)), 0.3 * gap, 0.3 * (p.d || 1)));
+        if (analyticAt(fc, [p.re, p.im], rho)) continue;
+      }
+      real.push(p);
+    }
+    return { pts: real, R: real.length ? real[0].d : Infinity, complex: !!fc };
+  }
+  /* the root test from the terms: |c_k|^(−1/k) for the highest k with c_k ≠ 0 tends to R */
+  function rootTest(c) { for (let k = c.length - 1; k >= 1; k--) if (c[k] !== 0 && isFinite(c[k]) && Math.abs(c[k]) > 1e-300) return { k, R: Math.pow(Math.abs(c[k]), -1 / k) }; return null; }
+
+  /* Build a series: exact rational coefficients (BigInt fractions) of a known series, then new series from it by substitution,
+     differentiation, integration from 0 and multiplication by x. K terms are kept. */
+  const BK = 41;
+  const bgcd = (a, b) => { a = a < 0n ? -a : a; b = b < 0n ? -b : b; while (b) [a, b] = [b, a % b]; return a; };
+  function Q(p, q) { p = BigInt(p); q = BigInt(q === undefined ? 1 : q); if (q < 0n) { p = -p; q = -q; } const g = bgcd(p, q) || 1n; return [p / g, q / g]; }
+  const qadd = (a, b) => Q(a[0] * b[1] + b[0] * a[1], a[1] * b[1]), qmul = (a, b) => Q(a[0] * b[0], a[1] * b[1]);
+  const qval = (a) => Number(a[0]) / Number(a[1]);
+  const BASES = {
+    geom: { src: '1/(1 - x)', R: 1, c: (k) => Q(1) },
+    exp: { src: 'e^x', R: Infinity, c: (k) => Q(1, FACTB(k)) },
+    sin: { src: 'sin(x)', R: Infinity, c: (k) => (k % 2 ? Q(k % 4 === 1 ? 1 : -1, FACTB(k)) : Q(0)) },
+    cos: { src: 'cos(x)', R: Infinity, c: (k) => (k % 2 ? Q(0) : Q(k % 4 === 0 ? 1 : -1, FACTB(k))) },
+  };
+  function FACTB(k) { let r = 1n; for (let i = 2n; i <= BigInt(k); i++) r *= i; return r; }
+  function baseSeries(key) { const b = BASES[key], c = []; for (let k = 0; k < BK; k++) c.push(b.c(k)); return { c, R: b.R, n: BK }; }
+  /* x → s·x^m: c_k s^k goes to the power k·m; R becomes (R/|s|)^(1/m). n counts the coefficients known exactly */
+  function seriesSub(S, s, m) { const c = Array.from({ length: BK }, () => Q(0)); let sk = Q(1); for (let k = 0; k * m < BK; k++) { c[k * m] = qmul(S.c[k], sk); sk = qmul(sk, Q(s)); } return { c, R: Math.pow(S.R / Math.abs(s), 1 / m), n: Math.min(BK, S.n * m) }; }
+  function seriesDiff(S) { const c = []; for (let k = 1; k < BK; k++) c.push(qmul(S.c[k], Q(k))); c.push(Q(0)); return { c, R: S.R, n: S.n - 1 }; }
+  function seriesInt(S) { const c = [Q(0)]; for (let k = 0; k < BK - 1; k++) c.push(qmul(S.c[k], Q(1, k + 1))); return { c, R: S.R, n: Math.min(BK, S.n + 1) }; }
+  function seriesMulX(S) { return { c: [Q(0)].concat(S.c.slice(0, BK - 1)), R: S.R, n: Math.min(BK, S.n + 1) }; }
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  const VDI18N = window.VDI18N || { t: (s, o) => s.replace(/\{(\w+)\}/g, (m, k) => (o && k in o ? o[k] : m)) };
+  const RE_KM = (typeof VDC === 'object' && VDC.RearthMean ? VDC.RearthMean : 6.3710088e6) / 1000;   /* Earth mean radius, demos/lib/constants.js */
+  const C_MS = typeof VDC === 'object' && VDC.c ? VDC.c : 299792458;
+  /* each setup: the function (or the series to build), the center, the order, the probe, the view, the order Play goes up to,
+     the axis titles and what the variable means physically */
+  const PRESETS = {
+    pendulum: { src: 'sin(θ)', a: 0, n: 1, p: 0.5, x: [-3.4, 3.4], to: 9, xt: 'θ (rad)', yt: 'sin θ', unit: 'deg',
+      hint: 'The restoring torque on a pendulum is −mgL sin θ. Keep only the first Taylor term, sin θ ≈ θ, and the equation of motion becomes simple harmonic, with a period 2π√(L/g) that does not depend on the swing. The green band is where θ is within 1% of sin θ: out to 0.2441 rad, 13.99°. Press + to add the next term, θ − θ³/6: it stays within 1% out to 1.008 rad, 57.74°. The Pendulums demo shows what each approximation does to the period.' },
+    binomial: { src: '(1 + x)^(1/2)', a: 0, n: 1, p: 0.2, x: [-1.4, 3], to: 10, xt: 'x', yt: '√(1 + x)',
+      hint: 'The binomial approximation (1 + x)ⁿ ≈ 1 + nx, here with n = 1/2. It turns the length √(L² + y²) = L√(1 + y²/L²) of a slanted path into L + y²/2L, the step behind the path differences in interference and the sag of a stretched string. Type another power in the box, like (1 + x)^(-2) or (1 + x)^3: a whole number power gives a polynomial that ends, every other power gives a series that converges only for |x| < 1, because (1 + x)ⁿ is not analytic at x = −1.' },
+    relativity: { src: '1/sqrt(1 - v^2) - 1', a: 0, n: 2, p: 0.3, x: [-1.1, 1.1], to: 12, xt: 'v/c', yt: 'K/mc²', unit: 'c',
+      hint: 'Kinetic energy is K = (γ − 1)mc², with γ = 1/√(1 − v²/c²) and v measured in units of c here. The series is γ − 1 = v²/2c² + 3v⁴/8c⁴ + …: the first term is Newton’s ½mv². It is within 1% of the exact K up to v = 0.115c, faster than anything but particles and the fastest spacecraft move. The radius of convergence is c itself: the branch points at v = ±c, where K grows without limit.' },
+    gravity: { src: '1/(1 + h)^2', a: 0, n: 1, p: 400 / RE_KM, x: [-0.3, 1.2], to: 10, xt: 'h/R', yt: 'g/g₀', unit: 'km',
+      hint: 'At a height h above Earth’s surface, g = g₀R²/(R + h)² = g₀/(1 + h/R)², with h in Earth radii here (R = 6,371 km). The first two terms give g ≈ g₀(1 − 2h/R). The probe is at 400 km, about where the International Space Station orbits: the exact g is 88.53% of g₀ and the straight line gives 87.44%. The series converges only for h < R, because of the pole at h = −R, the center of the Earth.' },
+    dipole: { src: '1/(1 - x)^2 - 1/(1 + x)^2', a: 0, n: 1, p: 0.2, x: [-0.95, 0.95], to: 11, xt: 'd/r', yt: 'Er²/kq',
+      hint: 'Charges +q and −q a distance 2d apart, and a point on their axis a distance r from the middle. The exact field is E = kq/(r − d)² − kq/(r + d)², so Er²/kq = 1/(1 − x)² − 1/(1 + x)² with x = d/r. The first term, 4x, is the dipole field E = 2kp/r³ with p = 2qd; the next, 8x³, is the first correction. Far away (small x) the dipole term is all you need. The series converges only for r > d: inside that, you have passed a charge.' },
+    exp: { src: 'e^x', a: 0, n: 2, p: 1, x: [-4, 3], to: 14, xt: 'x', yt: 'eˣ',
+      hint: 'eˣ = 1 + x + x²/2 + x³/6 + … Every term is positive for x > 0, and the polynomials hug the curve further out as terms are added, at any x: the radius of convergence is infinite, because eˣ has no singular point anywhere in the complex plane. For a decay, e^(−t/τ) ≈ 1 − t/τ while t is much less than τ.' },
+    ln: { src: 'ln(1 + x)', a: 0, n: 3, p: 0.5, x: [-1.2, 2.6], to: 16, xt: 'x', yt: 'ln(1 + x)',
+      hint: 'ln(1 + x) = x − x²/2 + x³/3 − … The log is defined for every x > −1, but the series converges only for −1 < x ≤ 1: the singular point at x = −1 caps the radius at 1 on both sides. Past x = 1 the terms grow and the polynomials swing wider with each one, though ln(1 + x) itself is perfectly smooth there. A small fractional change has ln(1 + x) ≈ x, the rule behind percentages and decibels for small changes.' },
+    poles: { src: '1/(1 + x^2)', a: 0, n: 8, p: 0.9, x: [-2.2, 2.2], to: 24, xt: 'x', yt: '1/(1 + x²)',
+      hint: '1/(1 + x²) is smooth along the whole real line, yet its series 1 − x² + x⁴ − … diverges for |x| > 1, however many terms you add. The reason is in the complex plane: poles at x = ±i, a distance 1 from the center. Drag the center a to 1: the disk grows to radius √2, the distance from 1 to i, and the interval of convergence moves with it.' },
+    linear: { src: 'sqrt(x)', a: 4, n: 1, p: 4.1, x: [-0.5, 10], to: 8, xt: 'x', yt: '√x',
+      hint: 'The tangent line is the Taylor polynomial of order 1: L(x) = f(a) + f′(a)(x − a). At a = 4, √x ≈ 2 + (x − 4)/4, so √4.1 ≈ 2.025, against the exact 2.0248457. The next term, −(x − 4)²/64, is the curvature correction. The series about 4 converges out to 4 on each side: x = 0 is a branch point of √x.' },
+    arctan: { build: 'geom', ops: ['negsq', 'int'], n: 7, p: 0.8, x: [-2, 2], to: 25, xt: 'x', yt: '',
+      hint: 'Start from the geometric series 1/(1 − x) = 1 + x + x² + …, put −x² in place of x to get 1/(1 + x²) = 1 − x² + x⁴ − …, then integrate term by term from 0: arctan x = x − x³/3 + x⁵/5 − … Substitution and integration keep the radius 1. At x = 1 the series still converges, slowly, to π/4 (Leibniz’s series).' },
+    lnInt: { build: 'geom', ops: ['neg', 'int'], n: 5, p: 0.5, x: [-1.2, 2], to: 20, xt: 'x', yt: '',
+      hint: 'Put −x in place of x in 1/(1 − x) to get 1/(1 + x) = 1 − x + x² − …, then integrate from 0 to x: ln(1 + x) = x − x²/2 + x³/3 − … Integrating divides the coefficient of xᵏ by k + 1, which is why the log’s coefficients shrink like 1/k.' },
+    gauss: { build: 'exp', ops: ['negsq'], n: 6, p: 1, x: [-3, 3], to: 24, xt: 'x', yt: '',
+      hint: 'Put −x² in place of x in eˣ: e^(−x²) = 1 − x² + x⁴/2 − x⁶/6 + … The bell curve of the normal distribution and of a Gaussian beam. Its integral has no formula in elementary functions, but integrating the series term by term gives it to any accuracy: press ∫₀ˣ to see it.' },
+    geomD: { build: 'geom', ops: ['diff'], n: 6, p: 0.5, x: [-1.5, 1], to: 22, xt: 'x', yt: '',
+      hint: 'Differentiate 1/(1 − x) = 1 + x + x² + … term by term: 1/(1 − x)² = 1 + 2x + 3x² + 4x³ + … The radius stays 1. Multiply by x and you get Σ k xᵏ, the sum behind the average energy of a quantum oscillator.' },
+  };
+  const OPS = { neg: { s: -1, m: 1, t: '−x' }, sq: { s: 1, m: 2, t: 'x²' }, negsq: { s: -1, m: 2, t: '−x²' } };
+  const S = { mode: 'expand', preset: 'pendulum', src: '', node: null, v: 'x', T: null, a: 0, n: 1, px: 0.5, x0: -3, x1: 3, y0: -2, y1: 2, autoY: true,
+    run: false, blind: false, sing: null, singAll: [], singKey: '', c: [], f: null, build: null, xt: 'x', yt: '', unit: '', to: 12 };
+  const can = $('can'), ctx = can.getContext('2d'), cpl = $('cpl'), cctx = cpl.getContext('2d');
+  let W = 0, H = 0, dpr = 1, T = null, need = true, needText = true, needPlane = true;
+  const SHOWV = { theta: 'θ' }, vname = () => SHOWV[S.v] || S.v;
+  const fmt = VDMATH.fmt, sup = VDMATH.sup;
+  const g6 = (v) => (isFinite(v) ? fmt(Math.abs(v) < 1e-14 ? 0 : Number(v.toPrecision(6))) : VDI18N.t('undefined'));
+  const g4 = (v) => (isFinite(v) ? fmt(Math.abs(v) < 1e-14 ? 0 : Number(v.toPrecision(4))) : VDI18N.t('undefined'));
+  const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif',
+      f: g('--fg-f'), t: g('--fg-t'), old: g('--fg-old'), good: g('--fg-good'), conv: g('--fg-conv'), sing: g('--fg-sing'), err: g('--fg-err'),
+      dark: document.documentElement.getAttribute('data-theme') === 'dark' || (document.documentElement.getAttribute('data-theme') !== 'light' && matchMedia('(prefers-color-scheme: dark)').matches) };
+  }
+  const proj = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.35 : 1);
+  const X = (x) => (x - S.x0) / (S.x1 - S.x0) * W, Y = (y) => H - (y - S.y0) / (S.y1 - S.y0) * H;
+  const Xi = (px) => S.x0 + px / W * (S.x1 - S.x0);
+
+  /* ---------- the function: typed (Expand) or built from a known series (Build) ---------- */
+  const MSG = {
+    name: (e) => VDI18N.t('“{n}” is not a name I know. Use one variable (x, t, θ, v or h) and functions like sin, ln, sqrt.', { n: e.name2 }),
+    char: (e) => VDI18N.t('“{n}” is not something I can read here.', { n: e.name2 }),
+    unexpected: (e) => VDI18N.t('“{n}” is out of place.', { n: e.name2 }),
+    close: () => VDI18N.t('There is a ) without a matching (.'),
+    comma: () => VDI18N.t('Functions here take one input; there is no comma form.'),
+    arg: (e) => VDI18N.t('{n} needs something to act on, like {n}(x).', { n: e.name2 }),
+    twovars: () => VDI18N.t('Use one variable, not two.'),
+    end: () => VDI18N.t('Not finished yet.'),
+    empty: () => VDI18N.t('Type a function, like sin(x) or 1/(1 + x^2).'),
+  };
+  function read() {
+    const src = $('fx').value, st = $('fxStatus');
+    if (src === S.src && S.node) return;
+    S.src = src;
+    const r = readFn(src);
+    if (r.empty) { st.textContent = MSG.empty(); st.classList.remove('bad'); $('fx').classList.remove('bad'); return; }
+    if (!r.node) { st.innerHTML = (S.node ? `<span>${esc(VDI18N.t('Still showing the last graph.'))}</span> ` : '') + `<span>${esc((MSG[r.error.code] || MSG.end)(r.error))}</span>`; st.classList.add('bad'); $('fx').classList.add('bad'); return; }
+    st.classList.remove('bad'); $('fx').classList.remove('bad');
+    st.textContent = r.partial ? VDI18N.t('Graphing what is finished so far, while you type.') : '';
+    setTree(r.node, r.v);
+  }
+  function setTree(node, v) {
+    S.node = node; S.v = v; S.T = makeTaylor(node, v); S.f = S.T.F[0]; S.singAll = []; S.singKey = ''; S.sing = null;
+    $('fxLabel').textContent = `f(${vname()}) =`; $('xInLabel').textContent = VDI18N.t('Probe {v}', { v: vname() });
+    update(true);
+  }
+
+  /* Build a series: the steps so far, the exact series they make, and the function (a formula when one is known) */
+  const LIB = ['atan(x)', 'ln(1 + x)', '-ln(1 - x)', 'ln(1 + x^2)/2', '-ln(1 - x^2)/2', 'ln((1 + x)/(1 - x))/2', 'e^x - 1', '1 - e^(-x)', '1 - cos(x)', 'sin(x)', '-sin(x)', 'cos(x) - 1',
+    'x/(1 - x)', '-x/(1 + x)', 'x - ln(1 + x)', '-x - ln(1 - x)', 'x - atan(x)', 'e^x (x - 1) + 1', 'sin(x) - x cos(x)', 'x sin(x) + cos(x) - 1', 'sinh(x)', 'cosh(x) - 1', 'x^2/2', 'x - sin(x)', 'atan(x^2)/2', 'asinh(x)'];
+  let LIBC = null;
+  function recognize(ser) {
+    if (!LIBC) LIBC = LIB.map((s) => { try { const r = VDMATH.parse(s, { vars: ['x'] }); const t = makeTaylor(r.node, 'x'); return { node: r.node, c: coeffs(t, 0, 12) }; } catch (_) { return null; } }).filter(Boolean);
+    const want = ser.c.slice(0, 13).map(qval);
+    for (const L of LIBC) if (L.c.length === 13 && L.c.every((v, k) => Math.abs(v - want[k]) <= 1e-12 * Math.max(1, Math.abs(want[k])))) return L.node;
+    return null;
+  }
+  const XN = { k: 'v', n: 'x' };
+  function buildState(base, ops) {
+    let ser = baseSeries(base), node = VDMATH.parse(BASES[base].src, { vars: ['x'] }).node, f = null;
+    const hist = [{ node, f: null, name: '' }];
+    let name = null;
+    for (const op of ops) {
+      const prev = hist[hist.length - 1];
+      if (OPS[op]) {
+        const { s, m } = OPS[op]; ser = seriesSub(ser, s, m);
+        if (prev.node) node = VDMATH.subst(prev.node, 'x', VDMATH.mkMul([VDMATH.rat(s, 1), VDMATH.mkPow(XN, VDMATH.rat(m, 1))]));
+        else { const g = prev.f; node = null; f = (x) => g(s * Math.pow(x, m)); }
+        name = prev.node ? null : `${prev.name}, x → ${OPS[op].t}`;
+      } else if (op === 'diff') {
+        ser = seriesDiff(ser);
+        if (prev.node) node = VDMATH.derivative(prev.node, 'x');
+        else { const back = hist[hist.length - 2]; node = back.node; f = back.f; name = back.name; }
+      } else if (op === 'int') {
+        ser = seriesInt(ser);
+        const known = recognize(ser);
+        if (known) node = known;
+        else { const g = prev.node ? VDMATH.compile(prev.node, ['x']) : prev.f; node = null; f = (x) => VDMATH.integral(g, 0, x, 1); name = `∫₀ˣ ${prev.node ? '(' + VDMATH.text(prev.node).replace(/x/g, 't') + ')' : '…'} dt`; }
+      } else if (op === 'mulx') {
+        ser = seriesMulX(ser);
+        if (prev.node) node = VDMATH.mkMul([XN, prev.node]); else { const g = prev.f; node = null; f = (x) => x * g(x); name = `x · (${prev.name})`; }
+      }
+      hist.push({ node, f: node ? null : f, name: node ? '' : name });
+    }
+    const last = hist[hist.length - 1];
+    return { base, ops: ops.slice(), ser, node: last.node, f: last.node ? null : last.f, name: last.name, hist };
+  }
+  function setBuild(base, ops) {
+    S.build = buildState(base, ops);
+    const B = S.build;
+    if (B.node) { S.node = B.node; S.v = 'x'; S.T = makeTaylor(B.node, 'x'); S.f = S.T.F[0]; }
+    else { S.node = null; S.v = 'x'; S.T = null; S.f = B.f; }
+    S.singAll = []; S.singKey = ''; S.sing = null; S.a = 0; $('aIn').value = 0;
+    $('fxLabel').textContent = 'f(x) ='; $('xInLabel').textContent = VDI18N.t('Probe {v}', { v: 'x' });
+    const steps = [VDMATH.text(VDMATH.parse(BASES[base].src, { vars: ['x'] }).node)].concat(ops.map((o) => (OPS[o] ? `x → ${OPS[o].t}` : o === 'diff' ? 'd/dx' : o === 'int' ? '∫₀ˣ' : '× x')));
+    $('chain').textContent = steps.join('   ⟶   ') + '   =   ' + (B.node ? VDMATH.text(B.node) : B.name);
+    const last = ops[ops.length - 1], prevNode = B.hist.length > 1 ? B.hist[B.hist.length - 2].node : null;
+    $('buildStatus').textContent = !ops.length ? VDI18N.t('A known series. Apply a step to make a new one.')
+      : last === 'int' && !B.node ? VDI18N.t('This integral has no formula in elementary functions: the curve is the integral computed numerically.')
+      : last === 'int' ? VDI18N.t('Integrated term by term from 0. Every coefficient of xᵏ is divided by k + 1.')
+      : last === 'diff' ? VDI18N.t('Differentiated term by term: the term c xᵏ becomes k c xᵏ⁻¹.')
+      : last === 'mulx' ? VDI18N.t('Every term moved up one power.') : VDI18N.t('Substituted: R changes to (R/|s|)^(1/m) for x → s·xᵐ.');
+    for (const b of document.querySelectorAll('[data-op="diff"]')) b.disabled = !B.node && !(last === 'int');
+    void prevNode;
+    update(true);
+  }
+
+  /* ---------- the series about a: coefficients, singular points, readouts ---------- */
+  function current() {
+    if (S.mode === 'build' && S.build) {
+      const B = S.build, top = Math.min(S.n, B.ser.n - 1), c = []; for (let k = 0; k <= top; k++) c.push(qval(B.ser.c[k]));
+      return c;
+    }
+    return S.T ? coeffs(S.T, S.a, S.n) : [];
+  }
+  let singTimer = 0;
+  function singular(now) {
+    if (!S.node) { S.sing = null; return; }
+    const key = `${S.src}|${S.mode}|${S.build ? S.build.ops.join() + S.build.base : ''}|${S.a}`;
+    if (key === S.singKey) return;
+    /* while the center is dragged, the points already found give R at once; the full search runs when it stops */
+    if (!now && S.singAll.length) {
+      const pts = S.singAll.map((p) => Object.assign({}, p, { d: Math.hypot(p.re - S.a, p.im) })).sort((p, q) => p.d - q.d);
+      S.sing = { pts, R: pts.length ? pts[0].d : Infinity, complex: S.sing ? S.sing.complex : true, rough: true };
+      clearTimeout(singTimer); singTimer = setTimeout(() => { singular(true); needText = true; needPlane = true; need = true; }, 220);
+      return;
+    }
+    S.singKey = key;
+    const r = singularities(S.node, S.v, S.a);
+    for (const p of r.pts) if (!S.singAll.some((q) => Math.hypot(q.re - p.re, q.im - p.im) < 1e-7 * (1 + p.d))) S.singAll.push(p);
+    S.sing = r;
+  }
+  function radius() {
+    if (S.mode === 'build' && S.build) return S.build.ser.R;
+    return S.sing ? S.sing.R : NaN;
+  }
+  function update(fresh) {
+    if (S.mode === 'expand' && !S.T) return;
+    if (S.T && S.mode === 'expand') { const top = ensure(S.T, S.n + 1); if (top < S.n) S.n = Math.max(0, top); }
+    singular(!!fresh);
+    S.c = current();
+    if (fresh && S.autoY) fitY();
+    sync(); needText = true; needPlane = true; need = true;
+  }
+  function fitY() {
+    if (!S.f || !W) return;
+    const ys = [];
+    for (let i = 0; i <= 400; i++) { const y = S.f(S.x0 + (S.x1 - S.x0) * i / 400); if (isFinite(y)) ys.push(y); }
+    if (!ys.length) return;
+    ys.sort((p, q) => p - q);
+    let lo = ys[Math.floor(ys.length * 0.02)], hi = ys[Math.ceil(ys.length * 0.98) - 1];
+    if (hi - lo < 1e-9 * (1 + Math.abs(hi))) { lo -= 1; hi += 1; }
+    const span = hi - lo;
+    if (lo > 0 && lo < 0.5 * span) lo = 0;
+    if (hi < 0 && -hi < 0.5 * span) hi = 0;
+    const pad = 0.18 * (hi - lo);
+    S.y0 = lo - pad; S.y1 = hi + pad; S.autoY = true; viewInputs();
+  }
+
+  /* the exact coefficients, as fractions where they are numbers: [p, q] or null */
+  function exactList(upto) {
+    const out = [], cnt = upto || S.c.length;
+    if (S.mode === 'build' && S.build) { for (let k = 0; k < Math.min(cnt, S.build.ser.n); k++) { const q = S.build.ser.c[k]; out.push({ pq: [Number(q[0]), Number(q[1])], d: k <= 20 ? fracText([q[0] * FACTB(k), q[1]]) : '' }); } return out; }
+    for (let k = 0; k <= Math.min(cnt - 1, S.T.D.length - 1); k++) {
+      const t = exactCoeff(S.T, k, S.a);
+      let pq = null, d = '';
+      if (t && t.k === 'n' && t.p !== undefined && !t.dec && Math.abs(t.p) < 1e15) pq = [t.p, t.q];
+      const dk0 = VDMATH.subst(S.T.D[k], S.v, centerNode(S.a)), dk = dk0.k === 'n' ? dk0 : ratOf(dk0) || dk0;
+      if (dk.k === 'n' && dk.p !== undefined && !dk.dec) d = dk.q === 1 ? String(dk.p) : dk.p + '/' + dk.q;
+      else { const s = VDMATH.text(dk); if (s.length <= 26 && !/\(0\)|\^\(|\d\^/.test(s)) d = s; }
+      out.push({ pq, d: d.replace(/-/g, '−') });
+    }
+    return out;
+  }
+  function fracText(q) { const g = bgcd(q[0], q[1]) || 1n, p = q[0] / g, d = q[1] / g; return (d === 1n ? String(p) : p + '/' + d).replace('-', '−'); }
+  /* T_n as it is printed: c₀ + c₁(x − a) + …, fractions kept, the rest to 6 significant figures */
+  function polyText(c, ex) {
+    const V = vname(), A = S.a, base = A === 0 ? V : `(${V} ${A < 0 ? '+' : '−'} ${fmt(Math.abs(A))})`;
+    let s = '';
+    for (let k = 0; k < c.length; k++) {
+      const pq = ex[k] && ex[k].pq; let neg, body;
+      const pw = k === 0 ? '' : k === 1 ? base : base + sup(k);
+      if (pq) {
+        if (pq[0] === 0) continue;
+        neg = pq[0] < 0; const p = Math.abs(pq[0]), q = pq[1];
+        body = k === 0 ? (q === 1 ? String(p) : `${p}/${q}`) : (p === 1 ? '' : String(p)) + pw + (q === 1 ? '' : '/' + q);
+      } else {
+        if (!isFinite(c[k])) return null;
+        if (Math.abs(c[k]) < 1e-15) continue;
+        neg = c[k] < 0; const m = g6(Math.abs(c[k]));
+        body = k === 0 ? m : (m === '1' ? '' : m) + pw;
+      }
+      s += s ? (neg ? ' − ' : ' + ') + body : (neg ? '−' : '') + body;
+    }
+    return s || '0';
+  }
+  function texts() {
+    const n = S.c.length - 1, V = vname(), hide = S.blind;
+    const show = Math.max(n + 3, 8);
+    if (S.mode === 'expand' && S.T) ensure(S.T, show);
+    const ex = exactList(show + 1);
+    const pt = hide ? '?' : polyText(S.c, ex);
+    const fname = S.mode === 'build' && S.build ? (S.build.node ? VDMATH.text(S.build.node) : S.build.name) : VDMATH.text(S.node);
+    $('poly').innerHTML = `<span class="f">f(${V}) = ${esc(fname)}</span><br>T${String(n).split('').map((d) => '₀₁₂₃₄₅₆₇₈₉'[d]).join('')}(${V}) = ${pt == null ? esc(VDI18N.t('undefined: f is not defined at a')) : esc(pt)}`;
+    $('thD').textContent = S.a === 0 ? 'f⁽ᵏ⁾(0)' : `f⁽ᵏ⁾(${fmt(S.a)})`;
+    const rows = [];
+    let extra = [];
+    if (S.mode === 'expand' && S.T) { const top = ensure(S.T, show); for (let k = n + 1; k <= top; k++) extra.push(S.T.F[k](S.a) / FACT[k]); }
+    else if (S.build) for (let k = n + 1; k <= Math.min(show, S.build.ser.n - 1); k++) extra.push(qval(S.build.ser.c[k]));
+    const all = S.c.concat(extra);
+    for (let k = 0; k < all.length; k++) {
+      const e = ex[k], on = k <= n;
+      const cs = hide ? '?' : e && e.pq ? (e.pq[1] === 1 ? String(e.pq[0]) : e.pq[0] + '/' + e.pq[1]).replace('-', '−') : g6(all[k]);
+      const ds = hide ? '?' : e && e.d ? e.d : g6(all[k] * FACT[k]);
+      rows.push(`<tr class="${on ? 'on' : 'off'}"><td>${k}</td><td>${esc(ds)}</td><td>${esc(cs)}</td></tr>`);
+    }
+    $('ctab').tBodies[0].innerHTML = rows.join('');
+    readouts();
+  }
+  function physX(x) {
+    if (S.unit === 'deg') return `${g4(x * 180 / Math.PI)}°`;
+    if (S.unit === 'km') return `${g4(x * RE_KM)} km`;
+    if (S.unit === 'c') return `${g4(x * C_MS)} m/s`;
+    return '';
+  }
+  let goodCache = null;
+  function good() {
+    const tol = +$('tolSel').value, key = `${S.c.join()}|${S.a}|${tol}|${S.x0}|${S.x1}`;
+    if (goodCache && goodCache.key === key) return goodCache.r;
+    const r = S.f && S.c.length ? goodWithin(S.f, S.c, S.a, tol, Math.max(S.x1 - S.a, S.a - S.x0, 1e-9) * 1.02) : { lo: null, hi: null };
+    goodCache = { key, r }; return r;
+  }
+  function readouts() {
+    if (!S.f) return;
+    const dd = (a, b, cls) => `<div><dt>${a}</dt><dd translate="no"${cls ? ` class="${cls}"` : ''}>${b}</dd></div>`, wide = (a, b, cls) => `<div class="wide"><dt>${a}</dt><dd translate="no"${cls ? ` class="${cls}"` : ''}>${b}</dd></div>`;
+    const x = S.px, V = vname(), n = S.c.length - 1, fx = S.f(x), tx = polyAt(S.c, S.a, x), err = fx - tx, hide = S.blind;
+    const ph = physX(x);
+    let h = dd(V, g6(x) + (ph ? ` <span class="ok">(${ph})</span>` : '')) + dd(`f(${V})`, g6(fx));
+    h += dd(`T<sub>${n}</sub>(${V})`, hide ? '?' : g6(tx)) + dd(VDI18N.t('Error f − T<sub>n</sub>'), hide ? '?' : g6(err));
+    h += dd(VDI18N.t('Relative error'), hide ? '?' : isFinite(err / fx) && fx !== 0 ? `${g4(Math.abs(err / fx) * 100)} %` : '—');
+    if (S.T && !hide) {
+      const M = lagrangeM(S.T, n, S.a, x), B = M * Math.pow(Math.abs(x - S.a), n + 1) / FACT[n + 1];
+      h += dd(VDI18N.t('Lagrange bound'), isFinite(B) ? g4(B) : '—', isFinite(B) ? (Math.abs(err) <= B * (1 + 1e-9) + 1e-15 ? 'yes' : 'no') : '');
+      if (isFinite(M)) h += wide(VDI18N.t('M = largest |f⁽ⁿ⁺¹⁾| from a to {v}', { v: V }), `${g4(M)} <span class="ok">${VDI18N.t('bound = M|{v} − a|ⁿ⁺¹/(n + 1)!', { v: V })}</span>`);
+    }
+    $('out').innerHTML = h;
+    const R = radius(), A = S.a;
+    let c = dd(VDI18N.t('Center a'), g6(A)) + dd(VDI18N.t('Radius R'), isFinite(R) ? g6(R) : '∞');
+    c += wide(VDI18N.t('Interval of convergence'), isFinite(R) ? `${g6(A - R)} < ${V} < ${g6(A + R)}` : VDI18N.t('every {v}', { v: V }));
+    const pts = S.sing && S.sing.pts ? S.sing.pts : [];
+    if (pts.length) {
+      const p = pts[0], kind = p.kind === 'pole' ? VDI18N.t('pole') : p.kind === 'corner' ? VDI18N.t('corner') : VDI18N.t('branch point');
+      c += wide(VDI18N.t('Nearest singular point'), `${cnum(p.re, p.im)} <span class="ok">(${kind}${pts[1] && Math.abs(pts[1].d - p.d) < 1e-9 * (1 + p.d) ? VDI18N.t(', and {z}', { z: cnum(pts[1].re, pts[1].im) }) : ''})</span>`);
+    } else if (S.mode === 'expand' || (S.build && S.build.node)) c += wide(VDI18N.t('Nearest singular point'), `<span class="ok">${VDI18N.t('none: f is analytic everywhere')}</span>`);
+    const rt = rootTest(S.c);
+    if (rt && n >= 2) c += wide(VDI18N.t('Root test |c<sub>n</sub>|<sup>−1/n</sup>'), `${g4(rt.R)} <span class="ok">(k = ${rt.k}; ${VDI18N.t('tends to R')})</span>`);
+    if (!hide) {
+      const gd = good(), tolp = { '0.1': '10', '0.01': '1', '0.001': '0.1' }[$('tolSel').value];
+      const lo = gd.lo == null ? '…' : g4(gd.lo), hi = gd.hi == null ? '…' : g4(gd.hi);
+      c += wide(VDI18N.t('T<sub>n</sub> within {p}% of f', { p: tolp }), `${lo} < ${V} < ${hi}` + (S.unit === 'deg' && gd.hi != null ? ` <span class="ok">(${VDI18N.t('up to')} ${g4(gd.hi * 180 / Math.PI)}°)</span>` : S.unit === 'c' && gd.hi != null ? ` <span class="ok">(${VDI18N.t('up to')} ${g4(gd.hi)}c)</span>` : S.unit === 'km' && gd.hi != null ? ` <span class="ok">(${VDI18N.t('up to')} ${g4(gd.hi * RE_KM)} km)</span>` : ''));
+    }
+    $('conv').innerHTML = c;
+  }
+  function cnum(re, im) {
+    const r = Math.abs(re) < 1e-12 ? 0 : re, i = Math.abs(im) < 1e-12 ? 0 : im;
+    if (i === 0) return g4(r);
+    const ip = Math.abs(i) === 1 ? 'i' : g4(Math.abs(i)) + 'i';
+    return r === 0 ? (i < 0 ? '−' : '') + ip : `${g4(r)} ${i < 0 ? '−' : '+'} ${ip}`;
+  }
+
+  /* ---------- drawing the graph ---------- */
+  function niceStep(span, px) { const raw = span / Math.max(2, px), p10 = Math.pow(10, Math.floor(Math.log10(raw))), m = raw / p10; return (m <= 1 ? 1 : m <= 2 ? 2 : m <= 5 ? 5 : 10) * p10; }
+  function tick(v, step) {
+    if (Math.abs(v) < step * 1e-6) return '0';
+    if (step >= 1e5 || step < 1e-3) { const e = Math.floor(Math.log10(Math.abs(v))), m = Number((v / Math.pow(10, e)).toPrecision(3)); return (m === 1 ? '' : m === -1 ? '−' : fmt(m) + '×') + '10' + sup(e); }
+    return fmt(Number(v.toFixed(Math.max(0, -Math.floor(Math.log10(step)) + 1))));
+  }
+  /* canvas text that is already translated, or a formula: drawn without being looked up or harvested again */
+  const raw = (f) => (window.VDI18N && VDI18N.raw ? VDI18N.raw(f) : f());
+  const label = (t, x, y, c) => { ctx.save(); ctx.strokeStyle = c || T.canvas; ctx.lineWidth = 4; ctx.lineJoin = 'round'; ctx.strokeText(t, x, y); ctx.restore(); ctx.fillText(t, x, y); };
+  function grid(p) {
+    const sx = niceStep(S.x1 - S.x0, W / (90 * p)), sy = niceStep(S.y1 - S.y0, H / (60 * p));
+    ctx.lineWidth = 1; ctx.strokeStyle = T.line; ctx.beginPath();
+    for (let x = Math.ceil(S.x0 / sx) * sx; x <= S.x1; x += sx) { const u = Math.round(X(x)) + 0.5; ctx.moveTo(u, 0); ctx.lineTo(u, H); }
+    for (let y = Math.ceil(S.y0 / sy) * sy; y <= S.y1; y += sy) { const u = Math.round(Y(y)) + 0.5; ctx.moveTo(0, u); ctx.lineTo(W, u); }
+    ctx.stroke();
+    const ax = Math.min(Math.max(Y(0), 0), H), ay = Math.min(Math.max(X(0), 0), W);
+    ctx.strokeStyle = T.muted; ctx.lineWidth = 1.5; ctx.beginPath();
+    if (Y(0) >= 0 && Y(0) <= H) { ctx.moveTo(0, Y(0)); ctx.lineTo(W, Y(0)); }
+    if (X(0) >= 0 && X(0) <= W) { ctx.moveTo(X(0), 0); ctx.lineTo(X(0), H); }
+    ctx.stroke();
+    ctx.fillStyle = T.muted; ctx.font = `${11 * p}px ${T.mono}`;
+    const below = ax + 16 * p < H - 14 * p; ctx.textAlign = 'center'; ctx.textBaseline = below ? 'top' : 'bottom';
+    for (let x = Math.ceil(S.x0 / sx) * sx; x <= S.x1; x += sx) { if (Math.abs(x) < sx / 2) continue; label(tick(x, sx), X(x), below ? ax + 4 * p : ax - 4 * p); }
+    const right = ay + 50 * p < W; ctx.textAlign = right ? 'left' : 'right'; ctx.textBaseline = 'middle';
+    for (let y = Math.ceil(S.y0 / sy) * sy; y <= S.y1; y += sy) { if (Math.abs(y) < sy / 2) continue; const u = Y(y); if (u < 30 * p || u > H - 10) continue; label(tick(y, sy), right ? ay + 5 * p : ay - 5 * p, u); }
+    /* axis titles: the variable and what it means, at the right end of the x axis; f at the top of the y axis */
+    ctx.font = `600 ${12 * p}px ${T.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'bottom';
+    raw(() => label(S.xt || vname(), W - 8 * p, (Y(0) >= 20 * p && Y(0) <= H ? Y(0) : H - 14 * p) - 5 * p));
+    if (S.yt) { ctx.textAlign = right ? 'left' : 'right'; ctx.textBaseline = 'top'; raw(() => label(S.yt, right ? ay + 6 * p : ay - 6 * p, 8 * p)); }
+  }
+  function curve(ys, xs, color, width, dash) {
+    ctx.strokeStyle = color; ctx.lineWidth = width; ctx.setLineDash(dash || []); ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.beginPath();
+    const lo = -H, hi = 2 * H; let have = false, at = false, pu = 0, pw = 0;
+    for (let i = 0; i < xs.length; i++) {
+      const u = X(xs[i]), w = Y(ys[i]);
+      if (!isFinite(w)) { have = false; at = false; continue; }
+      if (have && Math.abs(w - pw) < 4 * H) {
+        const dw = w - pw; let t0 = 0, t1 = 1;
+        if (dw === 0) { if (pw < lo || pw > hi) t0 = 2; } else { let ta = (lo - pw) / dw, tb = (hi - pw) / dw; if (ta > tb) [ta, tb] = [tb, ta]; t0 = Math.max(0, ta); t1 = Math.min(1, tb); }
+        if (t0 <= t1) { if (!at || t0 > 0) ctx.moveTo(pu + (u - pu) * t0, pw + dw * t0); ctx.lineTo(pu + (u - pu) * t1, pw + dw * t1); at = t1 === 1; } else at = false;
+      } else at = false;
+      have = true; pu = u; pw = w;
+    }
+    ctx.stroke(); ctx.setLineDash([]);
+  }
+  const subN = (n) => String(n).split('').map((d) => '₀₁₂₃₄₅₆₇₈₉'[d]).join('');
+  function draw() {
+    if (!T || !W) return;
+    const p = proj();
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    if (!S.f) { grid(p); return; }
+    const n = S.c.length - 1, A = S.a, R = radius();
+    const m = Math.min(1400, Math.ceil(W)), xs = new Float64Array(m + 1);
+    for (let i = 0; i <= m; i++) xs[i] = S.x0 + (S.x1 - S.x0) * i / m;
+    /* where T_n is within the tolerance: a green column */
+    if ($('showGood').checked && !S.blind) {
+      const gd = good(), l = gd.lo == null ? S.x0 : gd.lo, r = gd.hi == null ? S.x1 : gd.hi;
+      ctx.fillStyle = T.good; ctx.globalAlpha = 0.13; ctx.fillRect(X(l), 0, X(r) - X(l), H); ctx.globalAlpha = 1;
+    }
+    grid(p);
+    const fy = new Float64Array(m + 1), ty = new Float64Array(m + 1);
+    for (let i = 0; i <= m; i++) { fy[i] = S.f(xs[i]); ty[i] = polyAt(S.c, A, xs[i]); }
+    /* the Lagrange band T_n ± M|x − a|^(n+1)/(n+1)!, M the running largest |f⁽ⁿ⁺¹⁾| outward from a on the pixel grid */
+    if ($('showBand').checked && S.T && !S.blind && ensure(S.T, n + 1) >= n + 1) {
+      const g = S.T.F[n + 1], B = new Float64Array(m + 1).fill(NaN), ia = Math.max(0, Math.min(m, Math.round((A - S.x0) / (S.x1 - S.x0) * m)));
+      const ga = Math.abs(g(A));
+      if (isFinite(ga)) {
+        for (const dir of [1, -1]) { let M = ga; for (let i = ia; i >= 0 && i <= m; i += dir) { const v = Math.abs(g(xs[i])); if (!isFinite(v)) break; if (v > M) M = v; B[i] = M * Math.pow(Math.abs(xs[i] - A), n + 1) / FACT[n + 1]; } }
+        ctx.fillStyle = T.t; ctx.globalAlpha = 0.12; ctx.beginPath();
+        let open = false, start = 0;
+        const clamp = (w) => Math.max(-2 * H, Math.min(3 * H, w));
+        const close = (end) => { for (let j = end; j >= start; j--) ctx.lineTo(X(xs[j]), clamp(Y(ty[j] - B[j]))); ctx.closePath(); };
+        for (let i = 0; i <= m; i++) {
+          const ok = isFinite(B[i]) && isFinite(ty[i]);
+          if (ok && !open) { open = true; start = i; ctx.moveTo(X(xs[i]), clamp(Y(ty[i] + B[i]))); }
+          else if (ok) ctx.lineTo(X(xs[i]), clamp(Y(ty[i] + B[i])));
+          else if (open) { close(i - 1); open = false; }
+        }
+        if (open) close(m);
+        ctx.fill(); ctx.globalAlpha = 1;
+      }
+    }
+    /* the interval of convergence: a bar along the bottom, dashed lines at a ± R */
+    if ($('showConv').checked && isFinite(R) || ($('showConv').checked && R === Infinity)) {
+      const l = R === Infinity ? S.x0 : A - R, r = R === Infinity ? S.x1 : A + R, yb = H - 7 * p;
+      ctx.strokeStyle = T.conv; ctx.lineWidth = 5 * p; ctx.lineCap = 'butt'; ctx.beginPath(); ctx.moveTo(Math.max(-5, X(l)), yb); ctx.lineTo(Math.min(W + 5, X(r)), yb); ctx.stroke();
+      if (R !== Infinity) { ctx.lineWidth = 1.2; ctx.setLineDash([5 * p, 5 * p]); ctx.beginPath(); for (const e of [l, r]) { ctx.moveTo(X(e), 0); ctx.lineTo(X(e), H); } ctx.stroke(); ctx.setLineDash([]); }
+      ctx.font = `${11 * p}px ${T.mono}`; ctx.fillStyle = T.conv; ctx.textBaseline = 'bottom'; ctx.textAlign = 'left';
+      const lab = R === Infinity ? VDI18N.t('the series converges for every {v}', { v: vname() }) : `|${vname()} − a| < R = ${g4(R)}`;
+      raw(() => label(lab, Math.max(6 * p, Math.min(W - ctx.measureText(lab).width - 6 * p, X(A) - ctx.measureText(lab).width / 2)), yb - 5 * p));
+    }
+    if ($('showOld').checked) {
+      for (let j = Math.max(0, n - 6); j < n; j++) { const cj = S.c.slice(0, j + 1), oy = new Float64Array(m + 1); for (let i = 0; i <= m; i++) oy[i] = polyAt(cj, A, xs[i]); curve(oy, xs, T.old, 1.4 * p, [6 * p, 4 * p]); }
+    }
+    curve(fy, xs, T.f, 3.4 * p);
+    curve(ty, xs, T.t, 2.4 * p);
+    /* the center: a diamond on the axis that can be dragged, and the point (a, f(a)) where the two curves touch */
+    const ua = X(A), ya = Math.min(Math.max(Y(0), 14 * p), H - 22 * p), fa = S.f(A);
+    ctx.strokeStyle = T.t; ctx.lineWidth = 1; ctx.setLineDash([2 * p, 4 * p]); ctx.beginPath(); ctx.moveTo(ua, 0); ctx.lineTo(ua, H); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = S.mode === 'build' ? T.muted : T.t; ctx.strokeStyle = T.canvas; ctx.lineWidth = 2; ctx.beginPath(); const d = 8 * p;
+    ctx.moveTo(ua, ya - d); ctx.lineTo(ua + d, ya); ctx.lineTo(ua, ya + d); ctx.lineTo(ua - d, ya); ctx.closePath(); ctx.fill(); ctx.stroke();
+    ctx.font = `700 ${12 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillStyle = T.t; label('a', ua + 10 * p, ya + 2 * p);
+    const dot = (u, w, c, r) => { if (!isFinite(w) || w < -10 || w > H + 10) return; ctx.fillStyle = c; ctx.strokeStyle = T.canvas; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(u, w, r * p, 0, 7); ctx.fill(); ctx.stroke(); };
+    dot(ua, Y(fa), T.t, 4);
+    /* the probe: the error f − T_n drawn as a segment between the curves */
+    const ux = X(S.px), fv = S.f(S.px), tv = polyAt(S.c, A, S.px);
+    ctx.strokeStyle = T.muted; ctx.lineWidth = 1; ctx.setLineDash([4 * p, 4 * p]); ctx.beginPath(); ctx.moveTo(ux, 0); ctx.lineTo(ux, H); ctx.stroke(); ctx.setLineDash([]);
+    if (isFinite(fv) && isFinite(tv) && !S.blind) {
+      const w1 = Math.max(-5, Math.min(H + 5, Y(fv))), w2 = Math.max(-5, Math.min(H + 5, Y(tv)));
+      ctx.strokeStyle = T.err; ctx.lineWidth = 3 * p; ctx.beginPath(); ctx.moveTo(ux, w1); ctx.lineTo(ux, w2); ctx.stroke();
+    }
+    dot(ux, Y(tv), T.t, 5); dot(ux, Y(fv), T.f, 5);
+    /* the key, top left */
+    ctx.font = `600 ${13 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    const lx = (X(0) > 4 && X(0) < 190 * p ? Math.max(X(0) + 60 * p, 12 * p) : 12 * p), V = vname();
+    const ord = VDI18N.t('order {n}', { n });
+    raw(() => { ctx.fillStyle = T.f; label(`f(${V})`, lx, 10 * p); ctx.fillStyle = T.t; label(`T${subN(n)}(${V}), ${ord}`, lx, 28 * p); });
+    ctx.fillStyle = T.muted; ctx.font = `${12 * p}px ${T.mono}`; ctx.textBaseline = 'top';
+    const lab = `${V} = ${g4(S.px)}`, wl = ctx.measureText(lab).width;
+    ctx.textAlign = ux + wl + 12 > W ? 'right' : 'left'; raw(() => label(lab, ux + (ux + wl + 12 > W ? -6 : 6) * p, H - 40 * p));
+  }
+
+  /* ---------- the complex plane: f(z) colored by phase (hue) and size (rings at each doubling), with the disk of convergence ---------- */
+  function hsl(h, s, l) { const k = (n) => (n + h * 12) % 12, a = s * Math.min(l, 1 - l), f = (n) => l - a * Math.max(-1, Math.min(k(n) - 3, 9 - k(n), 1)); return [f(0) * 255, f(8) * 255, f(4) * 255]; }
+  function plane() {
+    const r = cpl.getBoundingClientRect(), w = Math.round(r.width), h = Math.round(r.height); if (!w || !h || !T) return;
+    const k = window.devicePixelRatio || 1; if (cpl.width !== Math.round(w * k)) { cpl.width = Math.round(w * k); cpl.height = Math.round(h * k); }
+    cctx.setTransform(k, 0, 0, k, 0, 0); cctx.fillStyle = T.canvas; cctx.fillRect(0, 0, w, h);
+    const p = proj(), A = S.a, R = radius();
+    const fc = S.node ? ccompile(S.node, S.v) : null;
+    let note = '';
+    const hw = isFinite(R) && R > 0 ? Math.min(60, Math.max(0.6, 1.45 * R)) : Math.max(2, (S.x1 - S.x0) / 2);
+    const PX = (re) => (re - (A - hw)) / (2 * hw) * w, PY = (im) => h / 2 - im / (2 * hw) * w;
+    if (fc) {
+      const N = 110, img = cctx.createImageData(N, N), dk = T.dark;
+      for (let j = 0; j < N; j++) for (let i = 0; i < N; i++) {
+        const z = [A - hw + (i + 0.5) / N * 2 * hw, hw - (j + 0.5) / N * 2 * hw], v = fc(z), o = (j * N + i) * 4;
+        const mod = Math.hypot(v[0], v[1]);
+        if (!isFinite(mod)) { img.data[o] = img.data[o + 1] = img.data[o + 2] = dk ? 240 : 30; img.data[o + 3] = 255; continue; }
+        const ring = Math.log2(mod || 1e-300), fr = ring - Math.floor(ring);
+        const l = (dk ? 0.3 : 0.62) + (dk ? 0.16 : 0.14) * (fr - 0.5), c = hsl((Math.atan2(v[1], v[0]) / (2 * Math.PI) + 1) % 1, dk ? 0.5 : 0.55, l);
+        img.data[o] = c[0]; img.data[o + 1] = c[1]; img.data[o + 2] = c[2]; img.data[o + 3] = 255;
+      }
+      const tmp = document.createElement('canvas'); tmp.width = N; tmp.height = N; tmp.getContext('2d').putImageData(img, 0, 0);
+      cctx.imageSmoothingEnabled = true; cctx.globalAlpha = 0.8; cctx.drawImage(tmp, 0, 0, w, h); cctx.globalAlpha = 1;
+      note = VDI18N.t('Colors show f(z) for complex z: the hue is its phase, and the shading repeats each time |f| doubles. The real axis is the graph above.');
+    } else {
+      cctx.fillStyle = T.line; cctx.globalAlpha = 0.35; cctx.fillRect(0, 0, w, h); cctx.globalAlpha = 1;
+      note = S.mode === 'build' && !S.node ? VDI18N.t('No formula for this function, so it is not drawn in the complex plane; R comes from the steps.') : VDI18N.t('|u| and sign(u) have no complex continuation. The series stops at the corner on the real axis.');
+    }
+    /* axes and ticks */
+    cctx.strokeStyle = T.ink; cctx.globalAlpha = 0.55; cctx.lineWidth = 1; cctx.beginPath(); cctx.moveTo(0, PY(0)); cctx.lineTo(w, PY(0));
+    if (PX(0) >= 0 && PX(0) <= w) { cctx.moveTo(PX(0), 0); cctx.lineTo(PX(0), h); }
+    cctx.stroke(); cctx.globalAlpha = 1;
+    const st = niceStep(2 * hw, w / (70 * p));
+    cctx.font = `${10 * p}px ${T.mono}`; cctx.fillStyle = T.ink; cctx.textAlign = 'center'; cctx.textBaseline = 'top';
+    const halo = (t, x, y) => { cctx.save(); cctx.strokeStyle = T.canvas; cctx.lineWidth = 3; cctx.strokeText(t, x, y); cctx.restore(); cctx.fillText(t, x, y); };
+    for (let x = Math.ceil((A - hw) / st) * st; x <= A + hw; x += st) { if (Math.abs(x) < st / 2) continue; halo(tick(x, st), PX(x), PY(0) + 3); }
+    cctx.textAlign = 'left'; cctx.textBaseline = 'middle';
+    const ix = PX(0) >= 0 && PX(0) <= w - 30 ? PX(0) + 4 : 4;
+    for (let y = Math.ceil(-hw / st) * st; y <= hw; y += st) { if (Math.abs(y) < st / 2) continue; const t = tick(y, st); halo((t === '1' ? '' : t === '−1' ? '−' : t) + 'i', ix, PY(y)); }
+    cctx.textAlign = 'right'; cctx.textBaseline = 'top'; halo(VDI18N.t('Re z'), w - 4, PY(0) + 16 * p); cctx.textAlign = 'left'; halo(VDI18N.t('Im z'), ix + 18 * p, 4);
+    /* the disk of convergence and its diameter on the real axis */
+    if (isFinite(R) && R > 0) {
+      cctx.strokeStyle = T.conv; cctx.lineWidth = 2.5 * p; cctx.setLineDash([6, 4]); cctx.beginPath(); cctx.arc(PX(A), PY(0), R / (2 * hw) * w, 0, 7); cctx.stroke(); cctx.setLineDash([]);
+      cctx.lineWidth = 5 * p; cctx.beginPath(); cctx.moveTo(PX(A - R), PY(0)); cctx.lineTo(PX(A + R), PY(0)); cctx.stroke();
+    } else if (R === Infinity) { cctx.strokeStyle = T.conv; cctx.lineWidth = 5 * p; cctx.beginPath(); cctx.moveTo(0, PY(0)); cctx.lineTo(w, PY(0)); cctx.stroke(); }
+    /* the singular points: × for a pole, ○ for a branch point or corner */
+    const pts = S.sing && S.sing.pts ? S.sing.pts : [];
+    for (const q of pts) {
+      const u = PX(q.re), v = PY(q.im); if (u < -10 || u > w + 10 || v < -10 || v > h + 10) continue;
+      cctx.strokeStyle = T.canvas; cctx.lineWidth = 5; const s = 6 * p;
+      const mark = () => { cctx.beginPath(); if (q.kind === 'pole') { cctx.moveTo(u - s, v - s); cctx.lineTo(u + s, v + s); cctx.moveTo(u + s, v - s); cctx.lineTo(u - s, v + s); } else cctx.arc(u, v, s, 0, 7); cctx.stroke(); };
+      mark(); cctx.strokeStyle = T.sing; cctx.lineWidth = 2.5; mark();
+      cctx.fillStyle = T.sing; cctx.font = `700 ${11 * p}px ${T.mono}`; cctx.textAlign = u > w - 70 ? 'right' : 'left'; cctx.textBaseline = 'bottom';
+      raw(() => halo(cnum(q.re, q.im), u + (u > w - 70 ? -9 : 9) * p, v - 4 * p));
+    }
+    cctx.fillStyle = T.t; cctx.strokeStyle = T.canvas; cctx.lineWidth = 2; cctx.beginPath(); cctx.arc(PX(A), PY(0), 4.5 * p, 0, 7); cctx.fill(); cctx.stroke();
+    cctx.fillStyle = T.ink; cctx.font = `700 ${11 * p}px ${T.mono}`; cctx.textAlign = 'left'; cctx.textBaseline = 'bottom'; halo('a', PX(A) + 6, PY(0) - 5);
+    $('cplNote').innerHTML = `<span>${esc(note)}</span> <span>${esc(isFinite(R) ? VDI18N.t('The dashed circle is the disk of convergence, radius R = {r}: it reaches out to the nearest singular point.', { r: g4(R) }) : VDI18N.t('No singular point anywhere: the disk of convergence is the whole plane.'))}</span>`;
+  }
+
+  /* ---------- controls ---------- */
+  function viewInputs() {
+    const set = (id, v) => { const el = $(id); if (document.activeElement !== el) el.value = Math.abs(v) >= 1e5 || (v !== 0 && Math.abs(v) < 1e-3) ? v.toExponential(1).replace('+', '') : Number(v.toPrecision(5)); };
+    set('x0in', S.x0); set('x1in', S.x1); set('y0in', S.y0); set('y1in', S.y1);
+  }
+  function sync() {
+    $('nIn').value = S.n; $('nOut').textContent = String(S.c.length ? S.c.length - 1 : S.n);
+    if (document.activeElement !== $('aIn')) $('aIn').value = Number(S.a.toPrecision(10));
+    if (document.activeElement !== $('xIn')) $('xIn').value = Number(S.px.toPrecision(6));
+    $('aIn').disabled = S.mode === 'build';
+  }
+  const pressPreset = (k) => { for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === k)); };
+  function setMode(m) {
+    S.mode = m;
+    for (const b of document.querySelectorAll('#modeSeg button')) b.setAttribute('aria-pressed', String(b.dataset.m === m));
+    $('fbarExpand').hidden = m !== 'expand'; $('fbarBuild').hidden = m !== 'build';
+    $('note').textContent = m === 'expand' ? VDI18N.t('Play adds one term each second. Drag the diamond to move the center a, drag elsewhere to move the probe.') : VDI18N.t('Pick a known series, then apply steps. The center stays at 0. Play adds one term each second.');
+  }
+  function applyPreset(k) {
+    const c = PRESETS[k]; S.preset = k; setRun(false);
+    S.x0 = c.x[0]; S.x1 = c.x[1]; S.px = c.p; S.n = c.n; S.to = c.to; S.xt = c.xt; S.yt = c.yt; S.unit = c.unit || ''; S.autoY = true;
+    $('presetHint').textContent = c.hint; pressPreset(k); viewInputs();
+    if (c.build) { setMode('build'); setBuild(c.build, c.ops); }
+    else { setMode('expand'); S.a = c.a; $('aIn').value = c.a; $('fx').value = c.src; S.src = null; read(); }
+    fitY(); need = true;
+  }
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  for (const b of document.querySelectorAll('#modeSeg button')) b.addEventListener('click', () => {
+    if (b.dataset.m === S.mode) return;
+    if (b.dataset.m === 'build') applyPreset('arctan'); else applyPreset('pendulum');
+  });
+  const custom = () => { if (S.preset !== 'custom') { S.preset = 'custom'; pressPreset(''); $('presetHint').textContent = S.mode === 'build' ? VDI18N.t('Your own series. Start again from any known one, or undo a step.') : VDI18N.t('Your own function. Every setup can be edited in the box, too.'); S.xt = ''; S.yt = ''; S.unit = ''; } };
+  $('fx').addEventListener('input', () => { custom(); S.autoY = true; read(); });
+  for (const b of document.querySelectorAll('[data-base]')) b.addEventListener('click', () => { custom(); setBuild(b.dataset.base, []); fitY(); });
+  for (const b of document.querySelectorAll('[data-op]')) b.addEventListener('click', () => { if (!S.build || b.disabled) return; custom(); setBuild(S.build.base, S.build.ops.concat(b.dataset.op)); fitY(); });
+  $('undo').addEventListener('click', () => { if (!S.build || !S.build.ops.length) return; custom(); setBuild(S.build.base, S.build.ops.slice(0, -1)); fitY(); });
+  function setN(n) { S.n = Math.max(0, Math.min(MAXN, n)); update(false); }
+  $('nIn').addEventListener('input', () => { setRun(false); setN(+$('nIn').value); });
+  $('nUp').addEventListener('click', () => { setRun(false); setN(S.n + 1); });
+  $('nDown').addEventListener('click', () => { setRun(false); setN(S.n - 1); });
+  function setA(a, settle) { if (!isFinite(a) || S.mode === 'build') return; S.a = a; update(!!settle); }
+  $('aIn').addEventListener('change', () => { const v = parseFloat($('aIn').value); if (isFinite(v)) setA(v, true); });
+  $('xIn').addEventListener('change', () => { const v = parseFloat($('xIn').value); if (isFinite(v)) { S.px = v; needText = true; need = true; } });
+  for (const id of ['showBand', 'showGood', 'showConv', 'showOld', 'tolSel']) $(id).addEventListener('change', () => { needText = true; need = true; });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; needText = true; need = true; });
+  function setRun(on) { S.run = on; $('play').textContent = on ? VDI18N.t('Pause') : VDI18N.t('Play'); $('play').classList.toggle('attn', !on); }
+  /* the next order whose term is not zero (sin has only odd powers: Play goes 1, 3, 5, …) */
+  function nextOrder() {
+    let k = S.n + 1;
+    const cAt = (j) => (S.mode === 'build' && S.build ? (j < S.build.ser.n ? qval(S.build.ser.c[j]) : NaN) : (ensure(S.T, j) >= j ? S.T.F[j](S.a) : NaN));
+    while (k < MAXN && Math.abs(cAt(k)) < 1e-14) k++;
+    return Math.min(MAXN, k);
+  }
+  function stepUp() { if (S.n >= MAXN) return; setN(nextOrder()); }
+  let tick0 = 0;
+  $('play').addEventListener('click', () => {
+    if (S.run) { setRun(false); return; }
+    if (S.n >= (S.to || MAXN)) S.n = 0;
+    setRun(true); stepUp(); tick0 = performance.now();
+  });
+  $('reset').addEventListener('click', () => { setRun(false); const c = PRESETS[S.preset]; if (c) { S.n = c.n; S.px = c.p; } else { S.n = 1; } update(false); });
+  function setView(x0, x1, y0, y1) {
+    if (!(x1 > x0) || !(y1 > y0) || !isFinite(x0 + x1 + y0 + y1)) return;
+    const span = Math.min(1e6, Math.max(1e-6, x1 - x0));
+    if (span !== x1 - x0) { const k = span / (x1 - x0), c = (x0 + x1) / 2; x0 = c - (c - x0) * k; x1 = c + (x1 - c) * k; }
+    S.x0 = x0; S.x1 = x1; S.y0 = y0; S.y1 = y1; viewInputs(); needText = true; needPlane = true; need = true;
+  }
+  function zoom(fct) {
+    const cx = (S.x0 + S.x1) / 2, cy = (S.y0 + S.y1) / 2;
+    const span = S.x1 - S.x0; fct = Math.min(1e6, Math.max(1e-6, span * fct)) / span; if (fct === 1) return;
+    if (S.autoY) { setView(cx - (cx - S.x0) * fct, cx + (S.x1 - cx) * fct, S.y0, S.y1); fitY(); return; }
+    setView(cx - (cx - S.x0) * fct, cx + (S.x1 - cx) * fct, cy - (cy - S.y0) * fct, cy + (S.y1 - cy) * fct);
+  }
+  $('zin').addEventListener('click', () => zoom(1 / 1.5));
+  $('zout').addEventListener('click', () => zoom(1.5));
+  $('fitY').addEventListener('click', () => { fitY(); need = true; });
+  $('homeView').addEventListener('click', () => { const c = PRESETS[S.preset]; S.x0 = c ? c.x[0] : -5; S.x1 = c ? c.x[1] : 5; fitY(); viewInputs(); needPlane = true; need = true; });
+  for (const id of ['x0in', 'x1in']) $(id).addEventListener('change', () => { setView(+$('x0in').value, +$('x1in').value, S.y0, S.y1); if (S.autoY) fitY(); });
+  for (const id of ['y0in', 'y1in']) $(id).addEventListener('change', () => { S.autoY = false; setView(S.x0, S.x1, +$('y0in').value, +$('y1in').value); });
+
+  /* the graph: drag the diamond to move the center, the probe line to move the probe, elsewhere to pan; a tap places the probe */
+  const ptrs = new Map(); let drag = null;
+  const centerHit = (x, y) => S.mode === 'expand' && Math.abs(x - X(S.a)) < 16 && Math.abs(y - Math.min(Math.max(Y(0), 14 * proj()), H - 22 * proj())) < 22;
+  const snapA = (a) => { const st = Math.pow(10, Math.floor(Math.log10((S.x1 - S.x0) / 200))); return Number((Math.round(a / st) * st).toPrecision(10)); };
+  can.addEventListener('pointerdown', (e) => {
+    const r = can.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
+    ptrs.set(e.pointerId, { x, y }); can.setPointerCapture(e.pointerId);
+    if (ptrs.size === 2) { const [a, b] = [...ptrs.values()]; drag = { pinch: Math.hypot(a.x - b.x, a.y - b.y), view: [S.x0, S.x1, S.y0, S.y1], mid: [(a.x + b.x) / 2, (a.y + b.y) / 2] }; return; }
+    drag = { mode: centerHit(x, y) ? 'center' : Math.abs(x - X(S.px)) < 12 ? 'probe' : 'pan', x, y, view: [S.x0, S.x1, S.y0, S.y1], moved: false };
+    if (drag.mode !== 'pan') setRun(false);
+  });
+  can.addEventListener('pointermove', (e) => {
+    const r = can.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
+    if (!ptrs.has(e.pointerId) || !drag) { can.style.cursor = centerHit(x, y) ? 'grab' : Math.abs(x - X(S.px)) < 12 ? 'ew-resize' : 'crosshair'; return; }
+    ptrs.set(e.pointerId, { x, y });
+    if (drag.pinch) {
+      const [a, b] = [...ptrs.values()], d = Math.hypot(a.x - b.x, a.y - b.y); if (d < 10) return;
+      const f = drag.pinch / d, [x0, x1, y0, y1] = drag.view, cx = (x0 + x1) / 2, cy = (y0 + y1) / 2;
+      S.autoY = false; setView(cx - (cx - x0) * f, cx + (x1 - cx) * f, cy - (cy - y0) * f, cy + (y1 - cy) * f); return;
+    }
+    if (Math.hypot(x - drag.x, y - drag.y) > 4) drag.moved = true;
+    if (drag.mode === 'center') { setA(snapA(Xi(x)), false); return; }
+    if (drag.mode === 'probe') { S.px = Xi(x); needText = true; need = true; sync(); return; }
+    if (!drag.moved) return;
+    const [x0, x1, y0, y1] = drag.view, dx = (x - drag.x) / W * (x1 - x0), dy = (y - drag.y) / H * (y1 - y0);
+    if (Math.abs(y - drag.y) > 2) S.autoY = false;
+    setView(x0 - dx, x1 - dx, S.autoY ? y0 : y0 + dy, S.autoY ? y1 : y1 + dy);
+  });
+  const up = (e) => {
+    if (!ptrs.has(e.pointerId)) return;
+    ptrs.delete(e.pointerId);
+    if (drag && drag.mode === 'center') update(true);
+    if (drag && drag.mode === 'pan' && !drag.moved && !ptrs.size) { const r = can.getBoundingClientRect(); S.px = Xi(e.clientX - r.left); needText = true; need = true; sync(); }
+    if (drag && drag.mode === 'pan' && drag.moved && S.autoY) fitY();
+    if (!ptrs.size) drag = null; else if (drag && drag.pinch) drag = null;
+  };
+  can.addEventListener('pointerup', up); can.addEventListener('pointercancel', up);
+  /* the wheel zooms about the middle of the view (Steve 2026-11-12) */
+  can.addEventListener('wheel', (e) => { e.preventDefault(); const d = e.deltaY * (e.deltaMode === 1 ? 33 : e.deltaMode === 2 ? 400 : 1); zoom(Math.exp(Math.max(-100, Math.min(100, d)) * 0.0018)); }, { passive: false });
+  can.addEventListener('keydown', (e) => {
+    const step = (S.x1 - S.x0) / (e.shiftKey ? 10 : 100);
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') { S.px += e.key === 'ArrowLeft' ? -step : step; needText = true; need = true; sync(); e.preventDefault(); }
+    else if (e.key === 'ArrowUp') { setRun(false); setN(S.n + 1); e.preventDefault(); }
+    else if (e.key === 'ArrowDown') { setRun(false); setN(S.n - 1); e.preventDefault(); }
+    else if (e.key === '+' || e.key === '=') { zoom(1 / 1.5); e.preventDefault(); }
+    else if (e.key === '-' || e.key === '_') { zoom(1.5); e.preventDefault(); }
+    else if (e.key === ' ') { $('play').click(); e.preventDefault(); }
+  });
+
+  /* Play adds the next nonzero term once a second, up to the setup's own highest order */
+  let textAt = 0;
+  function frame(now) {
+    if (S.run && now - tick0 >= 1000) { tick0 = now; if (S.n >= (S.to || MAXN) || S.n >= MAXN) setRun(false); else stepUp(); }
+    if (needText && (!drag || now - textAt > 120)) { needText = false; textAt = now; texts(); }
+    if (needPlane && (!drag || now - (frame.pAt || 0) > 90)) { needPlane = false; frame.pAt = now; plane(); }
+    if (need) { need = false; draw(); }
+    requestAnimationFrame(frame);
+  }
+  function resize() {
+    dpr = window.devicePixelRatio || 1; const r = $('pane').getBoundingClientRect(); W = r.width; H = r.height;
+    can.width = Math.round(W * dpr); can.height = Math.round(H * dpr); if (S.autoY) fitY(); need = true; needPlane = true;
+  }
+  const retheme = () => { tokens(); need = true; needPlane = true; };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'data-vd-look', 'data-projector'] });
+  VD.projector({ onChange: resize });
+  if (window.VD && VD.panel) VD.panel({ play: '#play', reset: '#reset', step: { run: () => stepUp(), label: 'Step', title: 'Add the next nonzero term' } });
+  if (window.VD && VD.share && VD.share.picture) VD.share.picture('f', {
+    get: () => (S.preset === 'custom' && S.mode === 'expand' ? $('fx').value : S.preset === 'custom' && S.build ? 'build:' + S.build.base + ':' + S.build.ops.join('.') : ''),
+    set: (s) => { if (!s) return; if (/^build:/.test(s)) { const [, b, o] = s.split(':'); if (BASES[b]) { setMode('build'); custom(); setBuild(b, (o || '').split('.').filter((q) => q in OPS || ['diff', 'int', 'mulx'].includes(q))); } } else { $('fx').value = s; $('fx').dispatchEvent(new Event('input')); } },
+  });
+  /* readings for the worksheet: one row per Record reading */
+  window.vdVersion = 'taylor@2026-11-19';
+  window.vdShowCols = [['n', 'n'], ['x', 'x'], ['f_x', 'f(x)'], ['rel_err_pct', 'rel. err. %']];
+  window.vdReadingRow = () => {
+    if (!S.f) return VDI18N.t('Type a function first.');
+    const x = S.px, fx = S.f(x), tx = polyAt(S.c, S.a, x), n = S.c.length - 1;
+    const B = S.T ? lagrange(S.T, n, S.a, x) : NaN;
+    const sg = (v) => (isFinite(v) ? String(Number(v.toPrecision(6))) : '');
+    return { f: S.mode === 'build' && S.build ? (S.build.node ? VDMATH.text(S.build.node) : S.build.name) : S.src, a: sg(S.a), n, x: sg(x), x_deg: S.unit === 'deg' ? sg(x * 180 / Math.PI) : '',
+      f_x: sg(fx), Tn_x: sg(tx), error: sg(fx - tx), rel_err_pct: fx ? sg(Math.abs((fx - tx) / fx) * 100) : '', bound: sg(B) };
+  };
+  if (window.VD && VD.describe) VD.describe(can, () => {
+    if (!S.f) return [];
+    const n = S.c.length - 1, x = S.px, R = radius(), live = !S.run;
+    const out = [`The graph shows the function and its Taylor polynomial of order ${n} about a = ${g6(S.a)}; both formulas are printed under the graph.`];
+    out.push({ t: `At the probe, at ${g6(x)}, f is ${g6(S.f(x))}` + (S.blind ? '.' : ` and the polynomial gives ${g6(polyAt(S.c, S.a, x))}.`), live });
+    out.push(isFinite(R) ? `The radius of convergence is ${g4(R)}.` : 'The series converges for every value.');
+    out.push(`The view runs from ${g4(S.x0)} to ${g4(S.x1)}.`, S.run ? 'Play is adding terms.' : 'Play is stopped.');
+    return out;
+  });
+  if (window.VD && VD.howTo) VD.howTo({ src: 'media/how-this-works/taylor-small-angle.mp4', poster: 'media/how-this-works/taylor-small-angle.jpg' });
+  tokens(); new ResizeObserver(resize).observe($('pane')); new ResizeObserver(() => { needPlane = true; }).observe(cpl);
+  resize(); applyPreset('pendulum');
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  window.__ty = { S, applyPreset, setN, setA, setRun, setBuild, setMode, draw: () => { need = true; needText = true; needPlane = true; }, good, radius, polyText, exactList, lagrange: (x) => lagrange(S.T, S.c.length - 1, S.a, x) };
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

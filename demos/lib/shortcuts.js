@@ -63,6 +63,11 @@ window.VD_SHORTCUTS = {
   "fate-of-the-universe": [
     ["← → ↑ ↓", "Move your universe on the map of matter against dark energy (Shift for bigger steps)", "on the picture"]
   ],
+  "taylor": [
+    ["← →", "Move the probe (Shift for ten times as far)", "on the graph"],
+    ["↑ ↓", "One order higher or lower", "on the graph"],
+    ["+ −", "Zoom in or out about the middle of the view", "on the graph"]
+  ],
   "measurement-uncertainty": [
     ["← →", "Change the release angle θ₀ by 1°", "on the picture"],
     ["↑ ↓", "Make the pendulum shorter (↑) or longer (↓) by 1 cm (Shift for 10 cm)", "on the picture"]

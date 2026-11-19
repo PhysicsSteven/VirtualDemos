@@ -37,7 +37,8 @@
     'normal-modes' /* chain of ten and grid of pucks, Springs Sandbox, 2026-10-31 */,
     'measurement-uncertainty' /* random scatter and bias in g, Measurement Uncertainty demo, 2026-11-16 */,
     'numerical-methods' /* Euler, symplectic Euler, Verlet and RK4, Numerical Methods for Motion demo, 2026-11-16 */,
-    'spherical-pendulum' /* conical pendulum and Airy's turning ellipse, Spherical pendulum scene of Pendulums, 2026-11-16 */];
+    'spherical-pendulum' /* conical pendulum and Airy's turning ellipse, Spherical pendulum scene of Pendulums, 2026-11-16 */,
+    'taylor-small-angle' /* sin θ ≈ θ to 1%, then the Pendulums demo's exact period, Taylor Polynomials and Series demo, 2026-11-19 */];
   const ENABLED = PHYSICS_I.slice();
   /* Readings a demo hands over with its Export to worksheet button (localStorage key vd-handoff:<worksheet>). For each worksheet:
      the demo's name and, for each column of the worksheet's first data table, what fills it: a column of the demo's CSV, '#name' for
@@ -49,6 +50,8 @@
     pendulum: { demo: 'Pendulums', cols: ['row', 'type', 'L_m', 'theta0_deg', 'm_kg', 'T_s', 'T2_s2', null] },
     /* Row | L as read (m) | θ₀ (°) | Timer | Swings N | Time t (s) | Period T = t/N (s) | T² (s²) | Length read to */
     /* Reading | θ₀ (°) | Sideways push | Narrowest θ (°) | Widest θ (°) | Swing (s) | Turn in that swing (°) | δ (°) | One turn round (s) | cos θ₀ | T² | a b */
+    /* Reading | Order n | θ (rad) | sin θ | Tₙ(θ) | Relative error (%); Table 2 (the Pendulums demo's periods) is typed */
+    'taylor-small-angle': { demo: 'Taylor Polynomials and Series', cols: ['row', 'n', 'x', 'f_x', 'Tn_x', 'rel_err_pct'] },
     'spherical-pendulum': { demo: 'Pendulums', cols: ['row', 'theta0_deg', 'push', 'thmin_deg', 'thmax_deg', 'swing_s', 'turn_deg', 'orbit_turn_deg', 'turn_round_s', null, null, null] },
     'measurement-uncertainty': { demo: 'Measurement Uncertainty', cols: ['row', 'L_m', 'theta0_deg', 'timer', 'swings', 't_s', 'T_s', 'T2_s2', 'read_to'] },
     /* Bumper | m (kg) | v_before (m/s) | v_after (m/s) | Rate (Hz) | Area A (N s) | Δp (kg m/s, the student's) | Peak (N) | Contact time (s, from the demo's ms) */
