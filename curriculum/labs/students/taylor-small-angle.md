@@ -1,5 +1,5 @@
 # The Small Angle Approximation: How Small Is Small?
-Student laboratory · Physics I
+Student laboratory · Calculus for physics
 
 Textbook: OpenStax *University Physics*, Vol. 1, §15.4 (pendulums); OpenStax *Calculus*, Vol. 1, §4.2 (linear approximations) and Vol. 2, §6.3 (Taylor and Maclaurin series). Access for free at https://openstax.org/details/books/university-physics-volume-1 and https://openstax.org/details/books/calculus-volume-2.
 
@@ -56,9 +56,9 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**A. The first term, sin θ ≈ θ.** Open the Taylor Polynomials and Series demo and press the **Pendulum: sin θ ≈ θ** setup (Order n = 1). Type 0.1 in the **Probe θ** box and press Enter, then press **Record reading**. Repeat for θ = 0.2, 0.3, 0.4 and 0.5 rad. Read **Tₙ within 1% of f** in the Convergence readouts and write its upper end, in radians and degrees, in your answer to Analysis 2.
+**A. The first term, sin θ ≈ θ.** Open the Taylor Polynomials and Series demo and press the **Pendulum: sin θ ≈ θ** setup (Order n = 1). Type 0.1 in the **Probe θ** box and press Enter, then press **Record reading**. Repeat for θ = 0.2, 0.3, 0.4 and 0.5 rad. Read **Tₙ within 1% of f** in the Convergence readouts and write its upper end, in radians and degrees, in your answer to Analysis 2. Press **Export to worksheet** (the five n = 1 rows go to Table 1), then **Clear**.
 
-**B. Two terms, θ − θ³/6.** Press **+** twice so that Order n = 3 (n = 2 adds nothing, since sin θ has no θ² term). Record readings at θ = 0.2, 0.4, 0.6, 0.8 and 1.0 rad the same way. Read **Tₙ within 1% of f** again. Press **Export to worksheet**: all ten rows go to Table 1.
+**B. Two terms, θ − θ³/6.** Press **+** twice so that Order n = 3 (n = 2 adds nothing, since sin θ has no θ² term). Record readings at θ = 0.2, 0.4, 0.6, 0.8 and 1.0 rad the same way. Read **Tₙ within 1% of f** again. Press **Export to worksheet** again: the five n = 3 rows go to a second copy of Table 1, so each order gets its own graph and fit.
 
 **C. The real pendulum.** Open the Pendulums demo (Photogate lab scene) and press the **Simple pendulum** setup (L = 1.00 m on Earth). Make sure **Blind** in its Lab fold is not ticked. Set **Release angle θ₀** to 14° and read **Exact period at θ₀** and **Longer than T₀ by** in its readouts. Repeat at 23°, 30°, 45° and 58°. Record each in Table 2, and record T₀ = 2π√(L/g) once.
 
@@ -82,7 +82,7 @@ Table 2. A pendulum with L = 1.00 m, from the Pendulums demo.
 
 ## Analysis
 
-1. Graph Table 1 with **Log scales** ticked: relative error (vertical) against θ (horizontal), one line for n = 1 and one for n = 3. Find the slope of each line between its first and last points and compare with the powers 2 and 4 from the Background.
+1. Graph Table 1 with **Log scales** ticked: relative error (vertical) against θ (horizontal), the n = 1 copy and the n = 3 copy each on its own graph. Find the slope of each line between its first and last points and compare with the powers 2 and 4 from the Background.
 2. Compare the 1% angles the demo gave in steps A and B with your estimates in Before the lab 2. Which estimate is closer, and why does the first term left out predict the n = 1 edge so well?
 3. At θ = 0.5 rad, check Lagrange's bound for n = 3: here f⁽⁴⁾ = sin θ, so M = sin 0.5. Work out M(0.5)⁴/4! and compare it with the error \|sin 0.5 − T₃(0.5)\|: set Probe θ to 0.5 at Order n = 3 and read the error under **At the probe**.
 4. Fill in the θ₀ (rad) and 100 θ₀²/16 columns of Table 2. How well does θ₀²/16 alone predict how much longer the period is, and where does it start to fall short?
