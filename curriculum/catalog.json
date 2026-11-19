@@ -1293,6 +1293,19 @@
       "energy conservation",
       "phase portrait"
      ]
+    },
+    {
+     "demo": "taylor",
+     "title": "Taylor Polynomials and Series",
+     "desc": "Type any function and add the terms of its Taylor polynomial about any center: watch it hug the curve, see where it stays within 1% and the Lagrange error bound, and find the radius of convergence from the poles and branch points in the complex plane. Physics setups: the small angle pendulum, the binomial approximation, relativistic kinetic energy, gravity above Earth and the dipole field. Build new series by substitution, differentiation and integration.",
+     "tags": [
+      "Taylor series",
+      "Maclaurin series",
+      "radius of convergence",
+      "Lagrange remainder",
+      "small angle approximation",
+      "binomial approximation"
+     ]
     }
    ]
   },

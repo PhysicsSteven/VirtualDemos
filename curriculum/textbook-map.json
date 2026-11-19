@@ -3751,7 +3751,8 @@
       "status": "usable",
       "demos": [
         "gravity-near-earth",
-        "cavendish"
+        "cavendish",
+        "taylor"
       ],
       "unit": "gravitation",
       "note": "Gravity Near Earth (2026-10-22, Claude): g = GM/(R + h)² against height, the near surface approximation g₀(1 − 2h/R), rotation and latitude (effective g, plumb line tilt), sphere vs WGS 84, Moon and Mars."
@@ -4091,7 +4092,8 @@
       "status": "usable",
       "demos": [
         "pendulum",
-        "measurement-uncertainty"
+        "measurement-uncertainty",
+        "taylor"
       ],
       "unit": "oscillations",
       "note": "Pendulums: simple and physical (rod) pendulums, photogate period, g from T² against L, Mystery planet; exact period at any amplitude with the phase portrait; double pendulum normal modes and chaos."
@@ -12229,6 +12231,33 @@
       "url": "demos/numerical-methods.html",
       "handouts": [
         "numerical-methods"
+      ]
+    },
+    {
+      "demo": "taylor",
+      "course": [
+        "later"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "13.2",
+          "title": "Gravitation Near Earth's Surface"
+        },
+        {
+          "vol": 1,
+          "sec": "15.4",
+          "title": "Pendulums"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "New 2026-11-19 (Claude, Steve's approved Calculus plan): a math tool for OpenStax Calculus Vol 2 ch 6 (6.1 to 6.4) and Vol 1 4.2. Taylor polynomials of any typed function about any center, exact coefficients from vdmath.js, the 1% range, Lagrange's bound, the radius of convergence from the complex plane, and series built by substitution, differentiation and integration. Physics setups: small angle pendulum, binomial, relativistic K, g(h), dipole. Worksheet taylor-small-angle checks sin θ ≈ θ against the Pendulums demo's exact period.",
+      "title": "Taylor Polynomials and Series",
+      "url": "demos/taylor.html",
+      "handouts": [
+        "taylor-small-angle"
       ]
     },
     {
