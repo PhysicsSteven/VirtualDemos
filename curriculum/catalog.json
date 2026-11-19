@@ -1282,6 +1282,22 @@
      ]
     },
     {
+     "demo": "integrals",
+     "title": "Riemann Sums and Integrals",
+     "desc": "Fill the area under any typed function with left, right, midpoint, trapezoid or Simpson pieces, raise n and watch the sum close in on the exact integral, read each rule's order from its error on log axes, and follow the area as it builds up: work, impulse, charge, displacement and improper integrals.",
+     "tags": [
+      "integral",
+      "Riemann sum",
+      "trapezoid rule",
+      "Simpson's rule",
+      "numerical integration",
+      "area between curves",
+      "improper integral",
+      "fundamental theorem of calculus",
+      "calculus"
+     ]
+    },
+    {
      "demo": "numerical-methods",
      "title": "Numerical Methods for Motion",
      "desc": "Run Euler, symplectic Euler, Verlet and RK4 side by side on a spring, a pendulum and an orbit, against the exact motion; watch the energy drift, and plot the error against the time step to find each method's order.",

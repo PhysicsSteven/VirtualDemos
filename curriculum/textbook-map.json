@@ -2945,7 +2945,8 @@
       "status": "usable",
       "demos": [
         "motion-graphs",
-        "derivatives"
+        "derivatives",
+        "integrals"
       ],
       "unit": "kinematics",
       "note": "Motion Graphs: position, velocity and acceleration graphs with slopes (tangents) and areas, for stages of constant acceleration; Walk the graph for x(t) and v(t)."
@@ -3251,7 +3252,8 @@
       "status": "usable",
       "demos": [
         "potential-curves",
-        "forces"
+        "forces",
+        "integrals"
       ],
       "unit": "energy",
       "note": "Forces and Friction, Work and energy since release: work by each force, ΣW = ΔK, friction work as thermal energy, power P = F·v. Potential Curves for energy diagrams."
@@ -3425,7 +3427,8 @@
       "status": "usable",
       "demos": [
         "collisions",
-        "impulse"
+        "impulse",
+        "integrals"
       ],
       "unit": "momentum",
       "note": "Impulse and Momentum (2026-10-22, Claude): force sensor F(t) with sample rate choice, area = Δp, soft vs stiff bumpers (same impulse, different peak force), clay vs springs (restitution). Collisions gives the collision context."
@@ -12200,6 +12203,38 @@
       "note": "New 2026-11-09 (Claude, at Steve's request): a math tool. Type a function and see f, its first, second and third derivatives (exact, symbolic) and its integral from a (numerical), with a tangent line at a point. No worksheet, notes or video for now (Steve).",
       "title": "Functions and Their Derivatives",
       "url": "demos/derivatives.html"
+    },
+    {
+      "demo": "integrals",
+      "course": [
+        "later"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "3.6",
+          "title": "Finding Velocity and Displacement from Acceleration"
+        },
+        {
+          "vol": 1,
+          "sec": "7.1",
+          "title": "Work"
+        },
+        {
+          "vol": 1,
+          "sec": "9.2",
+          "title": "Impulse and Collisions"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "New 2026-11-19 (Claude, from Steve's approved Calculus plan): a math tool for OpenStax Calculus Vol 1 5.1 to 5.4, 6.1 and 6.5 (work) and Vol 2 3.6 and 3.7. Left, right, midpoint, trapezoid and Simpson sums of any typed function against the exact integral (antiderivative by the basic rules, else adaptive Simpson), error against n on log axes (slopes −1, −2, −2, −4), signed area, area between curves, F(x) with F′ = f, improper integrals, and physics setups: spring work, impulse, charge, displacement and a table of readings by trapezoids. Worksheet integrals-error-order.",
+      "title": "Riemann Sums and Integrals",
+      "url": "demos/integrals.html",
+      "handouts": [
+        "integrals-error-order"
+      ]
     },
     {
       "demo": "numerical-methods",
