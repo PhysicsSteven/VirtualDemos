@@ -423,38 +423,54 @@
     {
      "sec": "9.1",
      "title": "Null and Alternative Hypotheses",
-     "demos": [],
+     "demos": [
+      "hypothesis-tests"
+     ],
      "worksheets": []
     },
     {
      "sec": "9.2",
      "title": "Outcomes and the Type I and Type II Errors",
-     "demos": [],
-     "worksheets": []
+     "demos": [
+      "hypothesis-tests"
+     ],
+     "worksheets": [
+      "errors-and-power"
+     ]
     },
     {
      "sec": "9.3",
      "title": "Probability Distribution Needed for Hypothesis Testing",
-     "demos": [],
+     "demos": [
+      "hypothesis-tests"
+     ],
      "worksheets": []
     },
     {
      "sec": "9.4",
      "title": "Rare Events, the Sample, Decision and Conclusion",
-     "demos": [],
+     "demos": [
+      "hypothesis-tests"
+     ],
      "worksheets": []
     },
     {
      "sec": "9.5",
      "title": "Additional Information and Full Hypothesis Test Examples",
-     "demos": [],
+     "demos": [
+      "hypothesis-tests"
+     ],
      "worksheets": []
     },
     {
      "sec": "9.6",
      "title": "Hypothesis Testing of a Single Mean and Single Proportion",
-     "demos": [],
-     "worksheets": []
+     "demos": [
+      "hypothesis-tests"
+     ],
+     "worksheets": [
+      "errors-and-power"
+     ]
     }
    ]
   },
@@ -465,31 +481,41 @@
     {
      "sec": "10.1",
      "title": "Two Population Means with Unknown Standard Deviations",
-     "demos": [],
+     "demos": [
+      "hypothesis-tests"
+     ],
      "worksheets": []
     },
     {
      "sec": "10.2",
      "title": "Two Population Means with Known Standard Deviations",
-     "demos": [],
+     "demos": [
+      "hypothesis-tests"
+     ],
      "worksheets": []
     },
     {
      "sec": "10.3",
      "title": "Comparing Two Independent Population Proportions",
-     "demos": [],
+     "demos": [
+      "hypothesis-tests"
+     ],
      "worksheets": []
     },
     {
      "sec": "10.4",
      "title": "Matched or Paired Samples",
-     "demos": [],
+     "demos": [
+      "hypothesis-tests"
+     ],
      "worksheets": []
     },
     {
      "sec": "10.5",
      "title": "Hypothesis Testing for Two Means and Two Proportions",
-     "demos": [],
+     "demos": [
+      "hypothesis-tests"
+     ],
      "worksheets": []
     }
    ]
@@ -622,32 +648,46 @@
     {
      "sec": "13.1",
      "title": "One-Way ANOVA",
-     "demos": [],
-     "worksheets": []
+     "demos": [
+      "anova"
+     ],
+     "worksheets": [
+      "one-way-anova"
+     ]
     },
     {
      "sec": "13.2",
      "title": "The F Distribution and the F-Ratio",
-     "demos": [],
+     "demos": [
+      "anova"
+     ],
      "worksheets": []
     },
     {
      "sec": "13.3",
      "title": "Facts About the F Distribution",
-     "demos": [],
+     "demos": [
+      "anova"
+     ],
      "worksheets": []
     },
     {
      "sec": "13.4",
      "title": "Test of Two Variances",
-     "demos": [],
+     "demos": [
+      "anova"
+     ],
      "worksheets": []
     },
     {
      "sec": "13.5",
      "title": "Lab: One-Way ANOVA",
-     "demos": [],
-     "worksheets": []
+     "demos": [
+      "anova"
+     ],
+     "worksheets": [
+      "one-way-anova"
+     ]
     }
    ]
   }
