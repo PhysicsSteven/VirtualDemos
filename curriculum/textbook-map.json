@@ -12753,6 +12753,11 @@
         },
         {
           "vol": 1,
+          "sec": "10.2",
+          "title": "Rotation with Constant Angular Acceleration"
+        },
+        {
+          "vol": 1,
           "sec": "10.5",
           "title": "Calculating Moments of Inertia"
         }
