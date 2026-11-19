@@ -1367,6 +1367,23 @@
       "Ampère's law",
       "calculus"
      ]
+    },
+    {
+     "demo": "surfaces-and-gradients",
+     "title": "Surfaces and Gradients",
+     "desc": "Type z = f(x, y) and see the surface beside its contour map: partial derivatives as slopes of slices, the tangent plane, the directional derivative and the gradient pointing uphill across the level curves, peaks, pits and saddles by the second derivative test, Lagrange multipliers on a constraint, and limits along different paths. E = −∇V for two charges, a potential energy surface with a rolling ball, the ideal gas P(V, T).",
+     "tags": [
+      "partial derivatives",
+      "gradient",
+      "directional derivative",
+      "tangent plane",
+      "level curves",
+      "critical points",
+      "second derivative test",
+      "Lagrange multipliers",
+      "potential",
+      "calculus"
+     ]
     }
    ]
   },

@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="../demos/lib/theme.js"></script>
+<title>Surfaces and Gradients: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+@media screen { :root[data-theme="dark"] {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; overflow-wrap: break-word; }   /* a long file name breaks instead of pushing a phone sideways */
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+<link rel="stylesheet" id="vd-paper" href="../demos/lib/paper.css">
+</head>
+<body class="notes">
+<header class="top" aria-label="Site"><a class="brand" href="../index.html"><svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><ellipse cx="16" cy="16" rx="13" ry="6" fill="none" stroke="currentColor" stroke-width="1.8" transform="rotate(-30 16 16)"/><ellipse cx="16" cy="16" rx="13" ry="6" fill="none" stroke="currentColor" stroke-width="1.8" transform="rotate(30 16 16)"/><circle cx="16" cy="16" r="2.6" fill="currentColor"/></svg>Virtual Physics Demos</a><nav class="tabs" aria-label="Library"><a class="tab" href="../index.html#topics">Demos</a><a class="tab" href="../openstax.html">OpenStax</a><a class="tab" href="index.html" aria-current="page">Notes</a></nav><span class="hfind"></span><span data-vd-theme></span><a class="courses" href="../courses.html"><b>For a class</b> Courses</a></header>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Surfaces and Gradients</h1><ul class="meta"><li><a href="../demos/surfaces-and-gradients.html">Open the demo</a></li><li>Calculus III (OpenStax Calculus Vol 3, 4.1 to 4.8) and Physics I and II (Vol 1 8.4; Vol 2 7.4)</li><li>15 to 40 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>A function of two variables is a surface z = f(x, y), and its contour map is the same information seen from above: each level curve is where the surface has one height.</li>
+<li>A partial derivative is the slope of the surface cut by a plane that holds the other variable fixed. The tangent plane at a point carries both slopes at once.</li>
+<li>The gradient ∇f = (∂f/∂x, ∂f/∂y) points straight uphill, across the level curve, and its size is the steepest slope. The slope in any other direction is D_u f = ∇f · u = |∇f| cos θ, zero along the level curve. In physics the field is the downhill gradient of a potential: E = −∇V, F = −∇U.</li>
+<li>Where ∇f = 0 the second derivative test sorts the point by D = f_xx f_yy − f_xy²: a pit, a peak, a saddle, or no verdict when D = 0.</li>
+<li>On a constraint g(x, y) = c, f is largest or smallest where the constraint just touches a level curve of f, so ∇f = λ∇g. The multiplier has a meaning: how fast the best value changes with c, or a constraint force.</li>
+<li>A limit in two variables must be the same along every path. Two paths that disagree prove it does not exist; any number of paths that agree prove nothing.</li>
+</ul>
+<h2>Before class</h2>
+<p>Nothing to install. The surface needs WebGL; without it (or with Flat pressed) the contour map takes the whole picture and every tool still works. Projector mode thickens the lines. Blind (Lab fold) hides the second derivative test, λ and the values along the limit paths, so students predict first. Every setup's function is typed in the box and can be edited.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>A hill.</strong> Open on A hill and its contour map. Turn the surface and compare it with the map: close contours are steep ground. Press Play to turn the direction arrow u and watch the graph of D_u h: it is a cosine, largest along ∇h, zero along the level curve (Q1).</li>
+<li><strong>Slopes.</strong> Press Ideal gas. The two slices are an isotherm and a constant volume line; their slopes are ∂P/∂V and ∂P/∂T (Q2). Press Play to slide along V.</li>
+<li><strong>E = −∇V.</strong> Press Two opposite charges. Turn on the arrows of E: they cross every equipotential at right angles and run downhill from the positive charge to the negative one.</li>
+<li><strong>Peaks, pits and saddles.</strong> Press A peak, a pit and two saddles and click each critical point in the list; read D. Then Two equal charges: a saddle where E = 0 (Q3), and the monkey saddle, where the test says nothing.</li>
+<li><strong>Where a ball rolls.</strong> Press Where a ball rolls and Play. The ball swings across a pit and settles; with drag 0 its total energy U + K stays constant on the graph. Try starting it right on the saddle.</li>
+<li><strong>A constraint.</strong> Press The most area for 8 m of fence and Play: the point slides along x + y = 4 until ∇A lines up with ∇g at the square (Q4). Then A bead on a hoop: λ∇g is the push of the hoop.</li>
+<li><strong>Limits.</strong> Press xy/(x² + y²) and drag m. Then x²y/(x⁴ + y²): every line gives 0 but the parabola gives ½ (Q5).</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> On the hill at the point (−1, −0.8) km, the slope along u is largest when u points one way and zero for two directions. Which directions, and how are they related to the level curve through the point?</p></div>
+
+<div class="q"><p><strong>Q2.</strong> For 1 mol of ideal gas, P = nRT/V. Find ∂P/∂V and ∂P/∂T at V = 20 L, T = 300 K, give their units, and say what each one means for a gas in a cylinder.</p></div>
+
+<div class="q"><p><strong>Q3.</strong> Two equal positive charges sit at (±1, 0) cm. Why must the midpoint be a critical point of V, and why is it a saddle rather than a pit? Is a positive test charge placed there stable?</p></div>
+
+<div class="q"><p><strong>Q4.</strong> A rectangle has 8 m of fence around it. Use ∇A = λ∇g with A = xy and g = x + y = 4 to find the best rectangle and λ. What does λ = 2 m tell you?</p></div>
+
+<div class="q"><p><strong>Q5.</strong> Along every straight line y = mx into the origin, f = x²y/(x⁴ + y²) goes to 0. Does the limit at the origin exist? Explain with a path.</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"The gradient is a vector pointing up the surface."</strong> ∇f lives in the xy plane (the map), pointing in the direction to walk to climb fastest; its size is the slope, not a length on the surface.</li>
+<li><strong>"∇f = 0 means a maximum or a minimum."</strong> It can be a saddle (the pass between two pits, the midpoint of two equal charges), or the test can fail (the monkey saddle).</li>
+<li><strong>"If the limit along every line is the same, the limit exists."</strong> x²y/(x⁴ + y²) agrees along every line and still has no limit: the parabola y = x² gives ½.</li>
+<li><strong>"Lagrange's λ is just a number to eliminate."</strong> It is how fast the best value changes with the constraint (the fence: 2 m² more area per meter), and in mechanics it gives the constraint force (the hoop's push).</li>
+</ul>
+<h2>How the demo works</h2>
+<ul>
+<li>The boxes are read by the site's math parser (demos/lib/vdmath.js), never run as code. Every first and second partial derivative is an exact formula, shown in the Formulas list, so slopes, the gradient, D_u f, the Hessian and D are exact at the point.</li>
+<li>Critical points are found by Newton's method from a grid of starting points over the square the surface shows; constrained extremes by Newton's method on ∇f = λ∇g, g = c, from the highest and lowest points along the traced constraint. Both reach about twelve significant figures. A point outside the square is not searched for.</li>
+<li>Level curves are traced by marching squares on a grid. The surface is drawn on a 72 by 72 grid and cut off where it leaves its box, which the charges' 1/r spikes always do.</li>
+<li>The ball is a particle of mass 1 kg with acceleration −∇U − bv, stepped by fourth order Runge Kutta: a particle in a potential, not a real ball rolling on a hill.</li>
+<li>The values along limit paths are read at a distance of 10⁻⁶ of the view from the point. These are computed values: the same settings always give the same digits.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>. © 2026 Steven Anderson. All rights reserved; see the <a href="../LICENSE.html">terms of use</a>.</footer>
+</main>
+</body>
+</html>

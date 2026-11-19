@@ -3378,7 +3378,8 @@
       "requirement": "required",
       "status": "usable",
       "demos": [
-        "potential-curves"
+        "potential-curves",
+        "surfaces-and-gradients"
       ],
       "unit": "energy"
     },
@@ -4382,7 +4383,8 @@
       "requirement": "required",
       "status": "usable",
       "demos": [
-        "coulomb-sandbox"
+        "coulomb-sandbox",
+        "surfaces-and-gradients"
       ],
       "unit": "potential"
     },
@@ -12638,6 +12640,30 @@
       "handouts": [
         "vector-fields-work"
       ]
+    },
+    {
+      "demo": "surfaces-and-gradients",
+      "course": [
+        "later"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "8.4",
+          "title": "Potential Energy Diagrams and Stability"
+        },
+        {
+          "vol": 2,
+          "sec": "7.4",
+          "title": "Determining Field from Potential"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "New 2026-11-19 (Claude, Steve's approved Calculus plan): a math tool for OpenStax Calculus Vol 3 4.1 to 4.8. A typed z = f(x, y) as a 3D surface beside its contour map, with slices and the tangent plane, the gradient and directional derivative, critical points sorted by the second derivative test, Lagrange multipliers along a typed constraint, and limits along paths. Mapped here only where it serves University Physics: E = −∇V for two charges (Vol 2 7.4) and a potential energy surface with its pits and saddle, where a ball rolls (Vol 1 8.4). No worksheet yet.",
+      "title": "Surfaces and Gradients",
+      "url": "demos/surfaces-and-gradients.html"
     }
   ],
   "activities": [
