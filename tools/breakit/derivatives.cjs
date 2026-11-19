@@ -1,5 +1,7 @@
 /* Known values for the break-it test (tools/breakit.cjs). While the function is x³ − 3x:
-   the f′ curve is drawn through (0, −3) at any zoom or pan, and the readout's f′ equals 3x² − 3 at the point's x. */
+   the f′ curve is drawn through (0, −3) at any zoom or pan, and the readout's f′ equals 3x² − 3 at the point's x. In Secant to
+   tangent the secant slope readout is [f(x + h) − f(x)]/h; in Newton's method every step is x − f(x)/f′(x), and a settled root
+   has f = 0 to rounding. Steps: √2 from 1, −4π from 1.5 for sin x, the cycle of x³ − 2x + 2 from 0, and the MVT points ±2/√3. */
 const cubic = `document.getElementById('fx').value.replace(/\\s/g, '') === 'x^3-3x'`;
 module.exports = {
   checks: [
@@ -25,5 +27,26 @@ module.exports = {
       const got = parseFloat(row.querySelector('dd').textContent.replace('−', '-').replace(/,/g, ''));
       return Math.abs(got - want) <= 1e-3 * Math.max(1, Math.abs(want)) ? true : 'readout says ' + got + ' at x = ' + S.px + ', should be ' + want;
     })()` },
+    { name: 'secant slope readout is the difference quotient', fn: `(() => {
+      const F = window.__fg, S = F && F.S; if (!S || S.mode !== 'secant' || S.blind || !S.fns) return true;
+      const want = F.diffQuot(S.fns.f, S.px, S.h); if (!isFinite(want)) return true;
+      const row = [...document.querySelectorAll('#toolOut div')][2]; if (!row) return 'no secant slope readout';
+      const got = parseFloat(row.querySelector('dd').textContent.replace(/−/g, '-').replace(/,/g, ''));
+      return Math.abs(got - want) <= 1e-3 * Math.max(1, Math.abs(want)) ? true : 'readout ' + got + ', [f(x + h) − f(x)]/h = ' + want;
+    })()` },
+    { name: "every Newton step is x − f/f′, and a settled root has f = 0", fn: `(() => {
+      const F = window.__fg, S = F && F.S; if (!S || S.mode !== 'newton' || !S.fns) return true;
+      const f = S.fns.f, d = S.fns.d1, xs = F.nwRun().xs;
+      for (let k = 1; k < xs.length; k++) { const w = xs[k - 1] - f(xs[k - 1]) / d(xs[k - 1]); if (w !== xs[k]) return 'step ' + k + ' is ' + xs[k] + ', should be ' + w; }
+      const r = F.newtonRoot(f, d, S.px); if (!isFinite(r)) return true;
+      const sc = Math.abs(d(r)) * Math.max(1, Math.abs(r)) * 1e-13 + 1e-300;
+      return Math.abs(f(r)) <= Math.max(sc, 1e-12) ? true : 'root ' + r + ' has f = ' + f(r);
+    })()` },
+  ],
+  steps: [
+    { name: 'Newton from 1 on x² − 2 settles on √2', fn: `(() => { const F = window.__fg; F.applyPreset('nwSqrt'); let k = 0; while (F.nwStep() && k < 50) k++; F.nwStep(); const xs = F.nwRun().xs, x = xs[xs.length - 1]; return Math.abs(x - Math.SQRT2) <= 2 * Number.EPSILON ? true : 'ended at ' + x; })()` },
+    { name: 'Newton from 1.5 on sin x jumps to −4π', fn: `(() => { const F = window.__fg; F.applyPreset('nwJump'); const S = F.S, r = F.newtonRoot(S.fns.f, S.fns.d1, S.px); return Math.abs(r + 4 * Math.PI) < 1e-12 ? true : 'root ' + r; })()` },
+    { name: 'Newton from 0 on x³ − 2x + 2 cycles', fn: `(() => { const F = window.__fg; F.applyPreset('nwCycle'); for (let k = 0; k < 10; k++) F.nwStep(); const r = F.nwRun(); return r.stop === 'cycle' ? true : 'stop ' + r.stop + ' after ' + r.xs.join(', '); })()` },
+    { name: 'MVT on x³ − 3x from −2 to 2: c = ±2/√3', fn: `(() => { const F = window.__fg; F.applyPreset('mvt'); const S = F.S, m = F.diffQuot(S.fns.f, S.px, S.h), c = F.mvtPoints(S.fns.d1, S.px, S.px + S.h, m); return c.length === 2 && Math.abs(c[0] + 2 / Math.sqrt(3)) < 1e-12 && Math.abs(c[1] - 2 / Math.sqrt(3)) < 1e-12 ? true : 'c = ' + c.join(', '); })()` },
   ],
 };

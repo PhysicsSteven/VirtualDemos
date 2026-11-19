@@ -2,10 +2,11 @@
 // Functions and Their Derivatives: the parser reads what students type (implied multiplication, function powers, pasted
 // "y =", Unicode signs), the symbolic derivatives agree with finite differences for a spread of functions, the printed formulas
 // are the tidy ones, unfinished input still graphs, nothing typed is ever run as code, and the integral matches known areas
-// and stops at a pole.
+// and stops at a pole. Secant to tangent: the difference quotient tends to f′, the MVT points are exact; Newton's method doubles
+// its correct digits near a simple root and fails as the textbook says (cycle, flat tangent, jump to another root).
 const assert = require('node:assert');
 const { core } = require('./demo_source.cjs');
-const c = core('derivatives', 'parse,parseLive,derivative,text,compile,integral,cumulative');
+const c = core('derivatives', 'parse,parseLive,derivative,text,compile,integral,cumulative,diffQuot,mvtPoints,newtonSteps,newtonRoot,correctDigits');
 let n = 0;
 function group(name, f) { f(); n++; console.log('PASS', name); }
 const T = (s, k = 0) => { const r = c.parse(s); let e = r.node; for (let i = 0; i < k; i++) e = c.derivative(e); return c.text(e, r.v); };
@@ -67,6 +68,43 @@ group('integral: known areas, and it stops at a pole', () => {
   assert(Number.isNaN(c.integral(f('1/x'), 1, -1)), 'the area under 1/x across 0 diverges');
   const xs = Float64Array.from({ length: 9 }, (_, i) => -2 + 0.5 * i), F = c.cumulative(f('1/x'), xs, 1, 1);
   for (let i = 0; i < xs.length; i++) if (xs[i] > 0) near(F[i], Math.log(xs[i]), 1e-9); else assert(Number.isNaN(F[i]));
+});
+
+const fd = (s) => { const r = c.parse(s); return [c.compile(r.node), c.compile(c.derivative(r.node))]; };
+group('secant to tangent: the difference quotient tends to f′(x); the MVT points', () => {
+  const [f, d] = fd('x^3 - 3x');
+  assert.strictEqual(c.diffQuot(f, 1, 1), 4);
+  let prev = Infinity;
+  for (const h of [1, 0.1, 0.01, 0.001]) { const e = Math.abs(c.diffQuot(f, 1, h) - d(1)); assert(e < prev, `error shrinks at h = ${h}`); prev = e; }
+  assert(Math.abs(c.diffQuot(f, 1, 1e-6) - 0) < 1e-5);
+  const m = (f(2) - f(-2)) / 4, pts = c.mvtPoints(d, -2, 2, m);
+  assert.strictEqual(pts.length, 2);
+  for (const [p, w] of [[pts[0], -2 / Math.sqrt(3)], [pts[1], 2 / Math.sqrt(3)]]) assert(Math.abs(p - w) < 1e-12, `${p} vs ${w}`);
+  const [fa, da] = fd('|x|');
+  assert.strictEqual(c.mvtPoints(da, -1, 2, (fa(2) - fa(-1)) / 3).length, 0, '|x| has no MVT point: the theorem needs f′ everywhere between');
+  const [fb, db] = fd('20 - 4.905t^2'), avg = (fb(2) - fb(0)) / 2, cs = c.mvtPoints(db, 0, 2, avg);
+  assert(cs.length === 1 && Math.abs(cs[0] - 1) < 1e-12, 'a falling ball has its average velocity at the midpoint time');
+});
+
+group("Newton's method: digits double near a simple root, and the textbook failures", () => {
+  const [f, d] = fd('x^2 - 2'), r = c.newtonSteps(f, d, 1, 20);
+  assert.strictEqual(r.stop, 'root');
+  assert.strictEqual(r.xs.slice(0, 6).map((x) => c.correctDigits(x, Math.SQRT2)).join(), '0,1,2,5,11,16');
+  assert(Math.abs(c.newtonRoot(f, d, 1) - Math.SQRT2) <= 2 * Number.EPSILON);
+  const [fk, dk] = fd('x - 0.6sin(x) - 1'), E = c.newtonRoot(fk, dk, 1);
+  assert(Math.abs(E - 0.6 * Math.sin(E) - 1) < 1e-15 && Math.abs(E - 1.5997485482) < 1e-9, `Kepler E ${E}`);
+  const [fc, dc] = fd('x^3 - 2x + 2');
+  assert.strictEqual(c.newtonSteps(fc, dc, 0, 20).stop, 'cycle');
+  assert(Number.isNaN(c.newtonRoot(fc, dc, 0)));
+  { const x = c.newtonRoot(fc, dc, -1.5); assert(Math.abs(x + 1.7692923542386) < 1e-12 && Math.abs(fc(x)) < 1e-14, `cubic root ${x}`); }
+  const [ff, dff] = fd('x^3 - 3x');
+  assert.strictEqual(c.newtonSteps(ff, dff, 1, 20).stop, 'flat');
+  assert(Math.abs(c.newtonRoot(ff, dff, 2.5) - Math.sqrt(3)) < 1e-15);
+  const [fs, ds] = fd('sin(x)');
+  assert(Math.abs(c.newtonRoot(fs, ds, 1.5) + 4 * Math.PI) < 1e-12, 'from 1.5 it jumps past π to −4π');
+  assert(Math.abs(c.newtonRoot(fs, ds, 2.5) - Math.PI) < 1e-15);
+  assert.strictEqual(c.correctDigits(1, 1), 16);
+  assert.strictEqual(c.correctDigits(1e-5, 0), 5);
 });
 
 console.log(`derivatives: ${n} groups passed`);
