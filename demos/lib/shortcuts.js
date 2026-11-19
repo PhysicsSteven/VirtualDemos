@@ -76,6 +76,11 @@ window.VD_SHORTCUTS = {
     ["← → ↑ ↓", "Pan the view (Shift for bigger steps)", "on the picture"],
     ["+ −", "Zoom in or out about the middle of the view (or scroll over the picture)", "on the picture"]
   ],
+  "multiple-integrals": [
+    ["← → ↑ ↓", "Pan the flat view, or turn a solid (Shift for bigger steps)", "on the picture"],
+    ["+ −", "Zoom in or out about the middle of the view (or scroll over the picture)", "on the picture"],
+    [", .", "Turn the 3D view", "on the 3D picture"]
+  ],
   "derivatives": [
     ["← →", "Move the point along the curve (Shift for bigger steps)", "on the picture"],
     ["+ −", "Zoom in or out (or scroll over the graph)", "on the picture"]

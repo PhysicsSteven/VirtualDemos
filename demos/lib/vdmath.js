@@ -382,8 +382,8 @@ var VDMATH = (function () {
   }
   /* parse(text, { vars }): vars lists the variable names allowed (default: one variable, x or t). Greek names can be typed as
      words (theta) or letters (θ). A name that is neither a variable nor a function is an error ('name'). */
-  const GREEK = { 'θ': 'theta', 'φ': 'phi', 'ω': 'omega', 'α': 'alpha', 'τ': 'tau' };
-  const greek = (s) => s.replace(/[θφωατ]/g, (c) => GREEK[c]);
+  const GREEK = { 'θ': 'theta', 'φ': 'phi', 'ω': 'omega', 'α': 'alpha', 'τ': 'tau', 'ρ': 'rho' };   /* ρ added 2026-11-19 for spherical coordinates */
+  const greek = (s) => s.replace(/[θφωατρ]/g, (c) => GREEK[c]);
   function parse(src, o) {
     const vars = o && o.vars, s = greek(clean(src, o));
     return parseTokens(tokenize(s, namesFor(vars || ['x', 't'])), s.length, vars);
@@ -417,7 +417,7 @@ var VDMATH = (function () {
   }
   const numStr = (n) => (exact(n) && !n.dec ? (n.q === 1 ? String(n.p) : n.p + '/' + n.q) : fmt(n.v)).replace('-', '−');
   const isNeg = (t) => (t.k === 'n' && t.v < 0) || (t.k === 'mul' && t.a[0].k === 'n' && t.a[0].v < 0);
-  const SHOW = { theta: 'θ', phi: 'φ', omega: 'ω', alpha: 'α', tau: 'τ' };
+  const SHOW = { theta: 'θ', phi: 'φ', omega: 'ω', alpha: 'α', tau: 'τ', rho: 'ρ' };
   function text(node) {
     const wrap = (r, min) => (r[1] < min ? '(' + r[0] + ')' : r[0]);
     function join(coef, list) {

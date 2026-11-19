@@ -90,6 +90,12 @@ group('several variables: partials, compile order, substitution, names', () => {
   assert.strictEqual(c.text(p.node), '2 cos(3θ)');
   assert.strictEqual(c.compile(p.node, ['theta'])(Math.PI / 3), -2);
   assert.strictEqual(c.compile(c.parse('2cos(3 theta)', { vars: ['theta'] }).node, ['theta'])(0), 2);
+  /* spherical coordinates (2026-11-19, Multiple Integrals): ρ typed as a letter or as rho, printed as ρ */
+  const SPH = { vars: ['rho', 'phi', 'theta', 'r'] }, sph = c.parse('ρ^2 sin φ', SPH).node;
+  assert.strictEqual(c.text(sph), 'ρ²·sin(φ)');
+  assert.strictEqual(c.compile(sph, ['rho', 'phi'])(2, Math.PI / 2), 4);
+  assert.strictEqual(c.text(c.parse('rho^2 sin(phi)', SPH).node), 'ρ²·sin(φ)');
+  assert.strictEqual(c.compile(c.parse('r rho', SPH).node, ['r', 'rho'])(2, 3), 6);
   const xyz = c.parse('x y^2 z', { vars: ['x', 'y', 'z'] }).node;
   assert.strictEqual(c.compile(xyz, ['x', 'y', 'z'])(2, 3, 0.5), 9);
   assert.strictEqual(c.compile(xyz, ['x', 'y', 'z', 'w'])(2, 3, 0.5, 7), 9);

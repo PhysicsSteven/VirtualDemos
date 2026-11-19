@@ -451,7 +451,8 @@
       "slope-fields",
       "integrals",
       "taylor",
-      "vector-fields"
+      "vector-fields",
+      "multiple-integrals"
      ]
     }
    ]

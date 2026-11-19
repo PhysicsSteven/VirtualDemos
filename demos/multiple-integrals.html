@@ -1,0 +1,1370 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="lib/theme.js"></script>
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
+<script src="lib/vdmath.js"></script>
+<script src="lib/vd3.js"></script>
+<script src="lib/vd3kit.js"></script>
+<title>Multiple Integrals</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css: its colors, the typed boxes, the bounds and the picture */
+:root { --mi-pos: #c2410c; --mi-neg: #0f766e; --mi-surf: #8f5000; --mi-slice: #a21caf; --mi-edge: #5a4630; --mi-lo: #f3e3c6; --mi-hi: #b45309; --mi-bad: #dc2626; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --mi-pos: #fb8c4c; --mi-neg: #5eead4; --mi-surf: #e8a440; --mi-slice: #f0abfc; --mi-edge: #cbbca4; --mi-lo: #4a3a24; --mi-hi: #f5a524; --mi-bad: #f87171; } }
+:root[data-theme="dark"] { --mi-pos: #fb8c4c; --mi-neg: #5eead4; --mi-surf: #e8a440; --mi-slice: #f0abfc; --mi-edge: #cbbca4; --mi-lo: #4a3a24; --mi-hi: #f5a524; --mi-bad: #f87171; }
+.stage { position: relative; display: flex; flex-direction: column; min-height: min-content; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.stage-ctl .seg { flex-wrap: wrap; }
+.stage-ctl .note { flex: 1 1 100%; font-size: 0.8rem; color: var(--muted); }
+.fbar { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; padding: 10px 12px; border-bottom: 1px solid var(--line); background: var(--surface); font-family: var(--font-mono); }
+.fbar .pq { display: flex; align-items: center; gap: 6px; flex: 1 1 260px; min-width: 0; }
+.fbar .pq[hidden], .fbar .bounds[hidden], .fbar .brow[hidden] { display: none; }
+.fbar label { font-weight: 600; color: var(--mi-surf); white-space: nowrap; }
+.fbar input { min-width: 0; font-family: var(--font-mono); font-size: 1rem; padding: 5px 8px; color: var(--ink); background: var(--canvas); border: 2px solid var(--line2, var(--line)); border-radius: 8px; }
+.fbar .pq input { flex: 1 1 auto; width: 100%; }
+.fbar input:focus { outline: none; border-color: var(--mi-surf); }
+.fbar input:focus-visible { box-shadow: 0 0 0 1px var(--mi-surf); }
+.fbar input.bad { border-color: var(--mi-bad); }
+.fbar .bounds { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; gap: 4px 6px; flex: 1 1 300px; min-width: 0; }
+.fbar .bounds .ord { grid-column: 1 / -1; font-size: 0.8rem; font-weight: 700; color: var(--muted); font-family: var(--font-body, inherit); }
+.fbar .bounds.alt .ord { color: var(--mi-slice); }
+.fbar .bounds input { width: 100%; font-size: 0.92rem; }
+.fbar .bounds .bv { white-space: nowrap; color: var(--muted); font-size: 0.92rem; text-align: center; }
+.fbar .brow { display: contents; }
+.fbar .status { flex: 1 1 100%; font-family: var(--font-body, inherit); font-size: 0.84rem; color: var(--muted); min-height: 1.3em; }
+.fbar .status.bad { color: var(--mi-bad); }
+.pane { position: relative; flex: 1 1 auto; min-height: 520px; }
+.pane canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; outline: none; touch-action: none; }
+.pane #can { cursor: grab; }
+.pane.is3d #can { pointer-events: none; }
+.shelf { display: flex; flex-wrap: wrap; align-items: stretch; gap: 12px; padding: 10px; border-top: 1px solid var(--line); background: var(--surface); }
+.shelf-card { flex: 1 1 230px; display: grid; grid-template-columns: minmax(0, 1fr); align-content: start; gap: 7px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--canvas); }
+.shelf-card[hidden], .shelf-card .row[hidden], .shelf-card .check[hidden] { display: none; }
+.shelf-card > .card-title { font-size: 0.78rem; font-weight: 700; color: var(--muted); }
+.shelf-card .row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; font-size: 0.86rem; }
+.shelf-card .row label { white-space: nowrap; }
+.shelf-card input[type="number"] { width: 5.6em; font: inherit; font-size: 0.84rem; font-family: var(--font-mono); padding: 3px 6px; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; }
+.shelf-card select { font: inherit; font-size: 0.86rem; padding: 3px 6px; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; max-width: 100%; }
+.shelf-card input[type="range"] { flex: 1 1 120px; min-width: 90px; }
+.shelf-card output { font-family: var(--font-mono); font-size: 0.86rem; }
+dl.formulas { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 5px 10px; margin: 0; }
+dl.formulas dt { font-family: var(--font-mono); font-weight: 600; white-space: nowrap; }
+dl.formulas dd { margin: 0; font-family: var(--font-mono); font-size: 0.86rem; overflow-wrap: anywhere; }
+.verdict { margin: 8px 0 0; font-size: 0.88rem; }
+.verdict.no { color: var(--mi-bad); }
+.rail ul.typing { margin: 6px 0 0; padding-left: 1.2em; font-size: 0.86rem; color: var(--muted); }
+.rail ul.typing code { font-family: var(--font-mono); color: var(--ink); }
+.chips .grp { flex: 1 1 100%; font-size: 0.74rem; font-weight: 700; color: var(--muted); margin-top: 4px; }
+@media (min-width: 821px) { .bench > .stage { align-self: start; min-height: max(780px, 100%); } }
+@media (max-width: 820px) { .pane { min-height: 0; height: 430px; flex: none; } .shelf-card { flex: 1 1 100%; } }
+@media (max-width: 520px) { .fbar .pq, .fbar .bounds { flex-basis: 100%; } .pane { height: 400px; } }
+</style>
+<link rel="stylesheet" id="vd-paper" href="lib/paper.css">
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Multiple Integrals</h1>
+      <p>Add up a quantity spread over an area or a volume. Boxes under a surface turn into a double integral as the grid gets finer; slices taken in either order give the same answer; polar wedges, cylindrical and spherical cells fill round regions; the same sums give the mass, center of mass and moment of inertia of a body; and a change of variables stretches a grid by its Jacobian. Integrals are computed numerically; derivatives and Jacobians are exact.</p>
+    </div>
+    <div class="bar-right">
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/multiple-integrals.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/multiple-integrals.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM11 2h1v1h-1zM16 2h4v1h-4zM23 2h1v1h-1zM25 2h1v1h-1zM30 2h1v1h-1zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM12 3h3v1h-3zM18 3h1v1h-1zM20 3h1v1h-1zM22 3h3v1h-3zM27 3h1v1h-1zM29 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h1v1h-1zM12 4h2v1h-2zM15 4h4v1h-4zM23 4h1v1h-1zM26 4h1v1h-1zM28 4h3v1h-3zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h1v1h-1zM12 5h2v1h-2zM17 5h1v1h-1zM19 5h1v1h-1zM24 5h1v1h-1zM27 5h2v1h-2zM30 5h1v1h-1zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h1v1h-1zM12 6h2v1h-2zM15 6h3v1h-3zM19 6h1v1h-1zM21 6h2v1h-2zM25 6h1v1h-1zM28 6h1v1h-1zM30 6h1v1h-1zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h1v1h-1zM14 7h1v1h-1zM16 7h1v1h-1zM18 7h2v1h-2zM23 7h2v1h-2zM28 7h3v1h-3zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h2v1h-2zM13 9h2v1h-2zM18 9h6v1h-6zM26 9h1v1h-1zM28 9h1v1h-1zM2 10h1v1h-1zM4 10h5v1h-5zM11 10h1v1h-1zM13 10h2v1h-2zM16 10h3v1h-3zM24 10h4v1h-4zM29 10h1v1h-1zM32 10h5v1h-5zM4 11h3v1h-3zM11 11h2v1h-2zM16 11h2v1h-2zM20 11h1v1h-1zM22 11h1v1h-1zM24 11h2v1h-2zM30 11h1v1h-1zM33 11h1v1h-1zM36 11h2v1h-2zM4 12h5v1h-5zM10 12h1v1h-1zM13 12h1v1h-1zM15 12h1v1h-1zM17 12h5v1h-5zM23 12h1v1h-1zM26 12h1v1h-1zM28 12h2v1h-2zM32 12h3v1h-3zM36 12h3v1h-3zM2 13h1v1h-1zM4 13h4v1h-4zM11 13h4v1h-4zM17 13h1v1h-1zM20 13h4v1h-4zM25 13h2v1h-2zM29 13h1v1h-1zM32 13h3v1h-3zM38 13h1v1h-1zM2 14h4v1h-4zM8 14h1v1h-1zM10 14h3v1h-3zM15 14h3v1h-3zM19 14h1v1h-1zM21 14h2v1h-2zM24 14h1v1h-1zM26 14h13v1h-13zM3 15h1v1h-1zM6 15h2v1h-2zM10 15h1v1h-1zM13 15h1v1h-1zM15 15h1v1h-1zM18 15h1v1h-1zM22 15h4v1h-4zM27 15h1v1h-1zM30 15h1v1h-1zM33 15h1v1h-1zM2 16h2v1h-2zM5 16h1v1h-1zM7 16h2v1h-2zM11 16h3v1h-3zM16 16h3v1h-3zM20 16h1v1h-1zM22 16h1v1h-1zM28 16h4v1h-4zM33 16h3v1h-3zM38 16h1v1h-1zM4 17h4v1h-4zM9 17h1v1h-1zM11 17h8v1h-8zM21 17h5v1h-5zM28 17h1v1h-1zM31 17h4v1h-4zM37 17h1v1h-1zM3 18h3v1h-3zM7 18h2v1h-2zM11 18h1v1h-1zM14 18h2v1h-2zM17 18h1v1h-1zM20 18h2v1h-2zM27 18h6v1h-6zM34 18h1v1h-1zM36 18h1v1h-1zM38 18h1v1h-1zM2 19h1v1h-1zM5 19h3v1h-3zM10 19h1v1h-1zM12 19h2v1h-2zM15 19h4v1h-4zM23 19h1v1h-1zM25 19h1v1h-1zM30 19h2v1h-2zM37 19h1v1h-1zM3 20h1v1h-1zM5 20h1v1h-1zM8 20h2v1h-2zM12 20h3v1h-3zM16 20h1v1h-1zM23 20h2v1h-2zM28 20h3v1h-3zM33 20h3v1h-3zM37 20h2v1h-2zM4 21h1v1h-1zM11 21h1v1h-1zM13 21h1v1h-1zM18 21h1v1h-1zM20 21h1v1h-1zM22 21h4v1h-4zM28 21h2v1h-2zM32 21h1v1h-1zM38 21h1v1h-1zM3 22h3v1h-3zM7 22h2v1h-2zM10 22h3v1h-3zM15 22h1v1h-1zM19 22h1v1h-1zM21 22h1v1h-1zM24 22h1v1h-1zM26 22h3v1h-3zM31 22h2v1h-2zM34 22h3v1h-3zM2 23h4v1h-4zM16 23h1v1h-1zM18 23h2v1h-2zM21 23h1v1h-1zM25 23h1v1h-1zM27 23h2v1h-2zM30 23h2v1h-2zM35 23h1v1h-1zM37 23h1v1h-1zM4 24h3v1h-3zM8 24h1v1h-1zM13 24h5v1h-5zM19 24h1v1h-1zM22 24h1v1h-1zM24 24h1v1h-1zM26 24h1v1h-1zM29 24h7v1h-7zM37 24h2v1h-2zM5 25h2v1h-2zM11 25h2v1h-2zM16 25h8v1h-8zM25 25h1v1h-1zM28 25h2v1h-2zM31 25h4v1h-4zM37 25h1v1h-1zM5 26h1v1h-1zM7 26h4v1h-4zM13 26h3v1h-3zM17 26h2v1h-2zM21 26h1v1h-1zM24 26h5v1h-5zM31 26h4v1h-4zM36 26h2v1h-2zM2 27h1v1h-1zM6 27h1v1h-1zM9 27h1v1h-1zM15 27h1v1h-1zM17 27h1v1h-1zM20 27h4v1h-4zM25 27h1v1h-1zM30 27h1v1h-1zM33 27h1v1h-1zM2 28h1v1h-1zM5 28h2v1h-2zM8 28h1v1h-1zM12 28h1v1h-1zM17 28h2v1h-2zM22 28h1v1h-1zM27 28h3v1h-3zM33 28h2v1h-2zM37 28h2v1h-2zM2 29h1v1h-1zM4 29h2v1h-2zM10 29h1v1h-1zM12 29h4v1h-4zM17 29h1v1h-1zM22 29h2v1h-2zM29 29h6v1h-6zM2 30h1v1h-1zM4 30h1v1h-1zM7 30h2v1h-2zM11 30h7v1h-7zM19 30h1v1h-1zM21 30h1v1h-1zM26 30h11v1h-11zM10 31h1v1h-1zM14 31h2v1h-2zM17 31h2v1h-2zM20 31h3v1h-3zM25 31h3v1h-3zM29 31h2v1h-2zM34 31h2v1h-2zM2 32h7v1h-7zM11 32h1v1h-1zM13 32h5v1h-5zM20 32h1v1h-1zM22 32h2v1h-2zM26 32h3v1h-3zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM36 32h3v1h-3zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h1v1h-1zM12 33h2v1h-2zM16 33h3v1h-3zM23 33h1v1h-1zM25 33h1v1h-1zM30 33h1v1h-1zM34 33h2v1h-2zM37 33h2v1h-2zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h3v1h-3zM20 34h2v1h-2zM24 34h11v1h-11zM36 34h2v1h-2zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h2v1h-2zM17 35h2v1h-2zM21 35h2v1h-2zM24 35h2v1h-2zM28 35h1v1h-1zM30 35h3v1h-3zM34 35h1v1h-1zM36 35h1v1h-1zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM10 36h2v1h-2zM13 36h2v1h-2zM20 36h1v1h-1zM24 36h1v1h-1zM26 36h1v1h-1zM28 36h2v1h-2zM31 36h1v1h-1zM37 36h2v1h-2zM2 37h1v1h-1zM8 37h1v1h-1zM12 37h2v1h-2zM16 37h1v1h-1zM18 37h1v1h-1zM22 37h2v1h-2zM28 37h1v1h-1zM30 37h2v1h-2zM34 37h1v1h-1zM38 37h1v1h-1zM2 38h7v1h-7zM10 38h1v1h-1zM13 38h3v1h-3zM19 38h1v1h-1zM24 38h1v1h-1zM26 38h3v1h-3zM32 38h1v1h-1zM34 38h5v1h-5z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl" id="strip">
+        <div class="seg" id="modeSeg" role="group" aria-label="Mode">
+          <button type="button" data-m="boxes" aria-pressed="true">Boxes</button>
+          <button type="button" data-m="slices" aria-pressed="false">Slices</button>
+          <button type="button" data-m="polar" aria-pressed="false">Polar</button>
+          <button type="button" data-m="triple" aria-pressed="false">Triple</button>
+          <button type="button" data-m="mass" aria-pressed="false">Mass and inertia</button>
+          <button type="button" data-m="cov" aria-pressed="false">Change of variables</button>
+        </div>
+        <div class="seg" id="dimSeg" role="group" aria-label="View"><button type="button" data-dim="3d" aria-pressed="true">3D</button><button type="button" data-dim="flat" aria-pressed="false">Flat</button></div>
+        <button type="button" class="spin attn" id="play" data-vd-key="play">Play</button>
+        <button type="button" class="btn" id="reset" title="Back to the start of this run: the coarse grid, the first slice, no cells yet">Reset</button>
+        <span class="note" id="note"></span>
+      </div>
+      <div class="fbar" id="fbar">
+        <div class="pq" id="mapRow"><label for="xIn" translate="no">x =</label><input type="text" id="xIn" translate="no" spellcheck="false" autocomplete="off" autocapitalize="off" autocorrect="off" aria-describedby="fStatus"><label for="yIn" translate="no">y =</label><input type="text" id="yIn" translate="no" spellcheck="false" autocomplete="off" autocapitalize="off" autocorrect="off" aria-describedby="fStatus"></div>
+        <div class="pq" id="fRow"><label for="fIn" id="fLab" translate="no">f(x, y) =</label><input type="text" id="fIn" translate="no" spellcheck="false" autocomplete="off" autocapitalize="off" autocorrect="off" aria-describedby="fStatus"></div>
+        <div class="bounds" id="bndA" role="group" aria-label="Bounds">
+          <span class="ord" id="ordA"></span>
+          <div class="brow" id="r1"><input type="text" id="b1lo" translate="no" spellcheck="false" autocomplete="off" aria-label="Lower bound 1"><span class="bv" id="b1v" translate="no">≤ x ≤</span><input type="text" id="b1hi" translate="no" spellcheck="false" autocomplete="off" aria-label="Upper bound 1"></div>
+          <div class="brow" id="r2"><input type="text" id="b2lo" translate="no" spellcheck="false" autocomplete="off" aria-label="Lower bound 2"><span class="bv" id="b2v" translate="no">≤ y ≤</span><input type="text" id="b2hi" translate="no" spellcheck="false" autocomplete="off" aria-label="Upper bound 2"></div>
+          <div class="brow" id="r3"><input type="text" id="b3lo" translate="no" spellcheck="false" autocomplete="off" aria-label="Lower bound 3"><span class="bv" id="b3v" translate="no">≤ z ≤</span><input type="text" id="b3hi" translate="no" spellcheck="false" autocomplete="off" aria-label="Upper bound 3"></div>
+        </div>
+        <div class="bounds alt" id="bndB" role="group" aria-label="Bounds in the other order">
+          <span class="ord" id="ordB"></span>
+          <div class="brow"><input type="text" id="c1lo" translate="no" spellcheck="false" autocomplete="off" aria-label="Lower bound of y, outer"><span class="bv" translate="no">≤ y ≤</span><input type="text" id="c1hi" translate="no" spellcheck="false" autocomplete="off" aria-label="Upper bound of y, outer"></div>
+          <div class="brow"><input type="text" id="c2lo" translate="no" spellcheck="false" autocomplete="off" aria-label="Lower bound of x, inner"><span class="bv" translate="no">≤ x ≤</span><input type="text" id="c2hi" translate="no" spellcheck="false" autocomplete="off" aria-label="Upper bound of x, inner"></div>
+        </div>
+        <div class="status" id="fStatus" role="status" aria-live="polite"></div>
+      </div>
+      <div class="pane" id="pane">
+        <canvas id="can" tabindex="0" role="img" aria-label="The region, its cells and the surface above it. Drag to pan or turn, scroll or pinch to zoom, plus and minus zoom, Space plays or pauses."></canvas>
+      </div>
+      <div class="shelf" id="shelf">
+        <div class="shelf-card" role="group" aria-label="The grid">
+          <span class="card-title">Grid</span>
+          <div class="row"><label for="nS" id="nLab">Cells per side</label><input type="range" id="nS" min="0" max="6" step="1" value="2"><output id="nOut" for="nS" translate="no"></output></div>
+          <div class="row" id="sampRow"><span>Sample point</span><div class="seg" id="sampSeg" role="group" aria-label="Sample point in each box">
+            <button type="button" data-s="0" aria-pressed="false">Low corner</button>
+            <button type="button" data-s="0.5" aria-pressed="true">Middle</button>
+            <button type="button" data-s="1" aria-pressed="false">High corner</button>
+          </div></div>
+          <div class="row" id="orderRow"><span>Slice order</span><div class="seg" id="orderSeg" role="group" aria-label="Order of integration">
+            <button type="button" data-o="A" aria-pressed="true" translate="no">dy dx</button>
+            <button type="button" data-o="B" aria-pressed="false" translate="no">dx dy</button>
+          </div></div>
+          <div class="row" id="posRow"><label for="posS">Slice at</label><input type="range" id="posS" min="0" max="1000" step="1" value="350"><output id="posOut" for="posS" translate="no"></output></div>
+          <div class="row" id="sysRow"><span>Coordinates</span><div class="seg" id="sysSeg" role="group" aria-label="Coordinates for the triple integral">
+            <button type="button" data-y="rect" aria-pressed="false">Rectangular</button>
+            <button type="button" data-y="cyl" aria-pressed="false">Cylindrical</button>
+            <button type="button" data-y="sph" aria-pressed="true">Spherical</button>
+          </div></div>
+        </div>
+        <div class="shelf-card" role="group" aria-label="The body" id="bodyCard">
+          <span class="card-title">Body</span>
+          <div class="row"><label for="shape">Shape</label><select id="shape">
+            <option value="rod">Thin rod</option>
+            <option value="plate">Rectangular plate</option>
+            <option value="disk">Disk</option>
+            <option value="sphere">Solid sphere</option>
+            <option value="cone">Solid cone</option>
+          </select></div>
+          <div class="row"><label for="dimA" id="dimALab">Radius R (m)</label><input type="number" id="dimA" step="any" min="0"></div>
+          <div class="row" id="dimBRow"><label for="dimB" id="dimBLab">Height h (m)</label><input type="number" id="dimB" step="any" min="0"></div>
+          <div class="row"><label for="mIn">Mass M (kg)</label><input type="number" id="mIn" step="any" min="0"></div>
+          <div class="row"><label for="dens">Density</label><select id="dens">
+            <option value="uniform">Uniform</option>
+            <option value="edge">Growing outward, ∝ distance</option>
+            <option value="center">Heavier at the center, ∝ 1 − distance/size</option>
+            <option value="custom">Your own (type it above)</option>
+          </select></div>
+          <div class="row"><label for="axis">Axis</label><select id="axis"></select></div>
+        </div>
+        <div class="shelf-card" role="group" aria-label="What to show">
+          <span class="card-title">Show</span>
+          <label class="check" id="surfChk"><input type="checkbox" id="showSurf" checked><span>The surface z = f(x, y)</span></label>
+          <label class="check"><input type="checkbox" id="showCells" checked><span>Boxes, slices and cells</span></label>
+          <label class="check"><input type="checkbox" id="showElem" checked><span>One area or volume element, labeled</span></label>
+          <label class="check" id="cutChk"><input type="checkbox" id="cut"><span>Cut away a quarter to see inside</span></label>
+          <div class="row"><button type="button" class="btn" id="zin">Zoom in</button><button type="button" class="btn" id="zout">Zoom out</button><button type="button" class="btn" id="homeView">Reset view</button></div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets"></div>
+        <details class="more" open><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+      </section>
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+        <p class="verdict" id="verdict" aria-live="polite"></p>
+      </section>
+      <section>
+        <h2>Formulas</h2>
+        <dl class="formulas" id="formulas" translate="no"></dl>
+      </section>
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the exact integrals and closed forms, to predict first</span></label>
+        <details class="more"><summary>What you can type</summary>
+          <ul class="typing">
+            <li>Use <code>x</code>, <code>y</code>, <code>z</code>, and <code>r</code>, <code>θ</code> (or <code>theta</code>), <code>ρ</code> (<code>rho</code>), <code>φ</code> (<code>phi</code>) where they mean something. <code>+ − * / ^</code>; <code>2x</code> and <code>x y</code> multiply.</li>
+            <li><code>sin cos tan exp ln sqrt abs</code>, <code>pi</code>, <code>e</code>: <code>e^(-r^2)</code>, <code>sqrt(1-x^2)</code>, <code>2pi</code>.</li>
+            <li>A bound may use only the coordinates outside it: the bounds on y may use x, the bounds on z may use x and y.</li>
+          </ul>
+        </details>
+        <details class="more"><summary>How it works</summary>
+          <p class="hint">Each box is read by the site's small parser (nothing you type is run as code). Partial derivatives and the Jacobian of a change of variables come from the exact rules of calculus.</p>
+          <p class="hint">An iterated integral is computed one coordinate at a time, inner first, by adaptive Gauss–Kronrod quadrature (7 and 15 points), splitting any piece until the two rules agree to about ten significant figures (eight for triple integrals). Where a bound has a square root that meets zero, as at the edge of a disk, the last few figures are less certain.</p>
+          <p class="hint">The Riemann sums use cells fitted to the region: the outer coordinate in equal steps, each inner coordinate in equal steps between its bounds there. Each cell's size is its steps times the Jacobian at its sample point: 1 for x, y, z; r for polar and cylindrical; ρ² sin φ for spherical. As the cells shrink the sum approaches the integral.</p>
+          <p class="hint">In Mass and inertia the density shape is scaled so the whole body has the mass M you type. The rod, plate and disk are thin: their density is per length or per area. The moment of inertia is I = ∫ d² dm, with d the distance from the axis.</p>
+        </details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  /* Multiple integrals, runnable in Node with the shared math library loaded first (VDMATH, demos/lib/vdmath.js;
+     curriculum/validation/test_multiple_integrals.cjs). A region is a list of coordinates from the outer to the inner one, each
+     with a lower and an upper bound that may depend on the coordinates outside it (x, then y from g1(x) to g2(x); θ, then r;
+     θ, then φ, then ρ). Integrals over it are iterated one dimension at a time by adaptive Gauss–Kronrod (7, 15) quadrature
+     with the Jacobian of the coordinates (1, r or ρ² sin φ) put in; Riemann sums use cells fitted to the region. */
+  const VM = typeof VDMATH !== 'undefined' ? VDMATH : null;
+  const XK = [0.991455371120812639206854697526329, 0.949107912342758524526189684047851, 0.864864423359769072789712788640926, 0.741531185599394439863864773280788,
+    0.586087235467691130294144845693013, 0.405845151377397166906606412076961, 0.207784955007898467600689403773245, 0];
+  const WK = [0.022935322010529224963732008058970, 0.063092092629978553290700663189204, 0.104790010322250183839876322541518, 0.140653259715525918745189590510238,
+    0.169004726639267902826583426598550, 0.190350578064785409913256402421014, 0.204432940075298892414161999234649, 0.209482141084727828012999174891714];
+  const WG = [0.129484966168869693270611432679082, 0.279705391489276667901467771423780, 0.381830050505118944950369775488975, 0.417959183673469387755102040816327];
+  /* a budget of function evaluations shared by one whole (nested) integral, so a wild input gives "too costly", never a frozen page */
+  const BUDGET = { n: 0, max: 4e6 };
+  function gk(f, a, b) {
+    const c = (a + b) / 2, h = (b - a) / 2, fc = f(c);
+    let k = WK[7] * fc, g = WG[3] * fc, ka = WK[7] * Math.abs(fc);
+    for (let j = 0; j < 7; j++) {
+      const d = h * XK[j], f1 = f(c - d), f2 = f(c + d);
+      k += WK[j] * (f1 + f2); ka += WK[j] * (Math.abs(f1) + Math.abs(f2));
+      if (j % 2 === 1) g += WG[(j - 1) / 2] * (f1 + f2);
+    }
+    BUDGET.n += 15; if (BUDGET.n > BUDGET.max) throw new Error('budget');
+    return [k * h, g * h, ka * Math.abs(h)];
+  }
+  /* ∫ f from a to b: Kronrod 15 point sums, halving any piece whose Gauss 7 point sum differs by more than its share of eps times ∫|f| */
+  function quad(f, a, b, eps, depth) {
+    if (a === b) return 0;
+    if (!isFinite(a) || !isFinite(b)) return NaN;
+    eps = eps || 1e-10; depth = depth || 14;
+    const r0 = gk(f, a, b); if (!isFinite(r0[0])) return NaN;
+    const tol = eps * Math.max(r0[2], 1e-300);
+    const rec = (a, b, r, tl, d) => {
+      if (!isFinite(r[0])) return NaN;
+      if (Math.abs(r[0] - r[1]) <= tl || d >= depth) return r[0];
+      const m = (a + b) / 2;
+      return rec(a, m, gk(f, a, m), tl / 2, d + 1) + rec(m, b, gk(f, m, b), tl / 2, d + 1);
+    };
+    return rec(a, b, r0, tol, 0);
+  }
+
+  /* typed text: an expression tree, with the names a student may use there */
+  const VARS = ['x', 'y', 'z', 'r', 'theta', 'rho', 'phi'];
+  const SHOWN = { theta: 'θ', rho: 'ρ', phi: 'φ' };
+  function parseIn(src, names) { return VM.parse(String(src), { vars: names }).node; }
+  function fn0(tree, names) { const c = VM.compile(tree, names.length ? names : ['x']); return names.length ? c : () => c(0); }
+  /* the integrand: g(P) of a point P = { x, y, z, r, theta, rho, phi } */
+  function makeFn(src, names) {
+    const t = parseIn(src, names || VARS), c = VM.compile(t, VARS);
+    return { tree: t, f: (P) => c(P.x, P.y, P.z, P.r, P.theta, P.rho, P.phi) };
+  }
+
+  /* a region from its coordinate names, outer first, and the typed bounds [[lo, hi], ...]; a bound may use only the names outside it */
+  function makeRegion(names, bounds) {
+    const lo = [], hi = [], trees = [];
+    names.forEach((nm, i) => {
+      const outer = names.slice(0, i), t = [0, 1].map((s) => {
+        try { return parseIn(bounds[i][s], outer); } catch (e) { e.level = i; e.side = s; throw e; }
+      });
+      trees.push(t);
+      const [a, b] = t.map((tr) => fn0(tr, outer));
+      lo.push(i === 0 ? () => a() : i === 1 ? (V) => a(V[0]) : (V) => a(V[0], V[1]));
+      hi.push(i === 0 ? () => b() : i === 1 ? (V) => b(V[0]) : (V) => b(V[0], V[1]));
+    });
+    return regionOf(names, lo, hi, trees);
+  }
+  function regionOf(names, lo, hi, trees) {
+    const ix = {}; names.forEach((n, i) => { ix[n] = i; });
+    const kind = 'rho' in ix ? 'sph' : 'r' in ix && 'theta' in ix ? 'cyl' : 'rect';
+    return { names, lo, hi, trees, ix, kind, dim: names.length };
+  }
+  /* the point with coordinates V (in the region's order), and the Jacobian of its coordinates there */
+  function pointOf(R, V, P) {
+    P = P || {}; const I = R.ix, g = (n) => (n in I ? V[I[n]] : 0);
+    let x, y, z, J;
+    if (R.kind === 'sph') { const rh = g('rho'), ph = g('phi'), th = g('theta'), s = Math.sin(ph); x = rh * s * Math.cos(th); y = rh * s * Math.sin(th); z = rh * Math.cos(ph); J = rh * rh * s; P.theta = th; P.rho = rh; P.phi = ph; P.r = rh * s; }
+    else if (R.kind === 'cyl') { const r = g('r'), th = g('theta'); x = r * Math.cos(th); y = r * Math.sin(th); z = g('z'); J = r; P.theta = th; P.r = r; }
+    else { x = g('x'); y = g('y'); z = g('z'); J = 1; P.r = Math.hypot(x, y); P.theta = Math.atan2(y, x); }
+    P.x = x; P.y = y; P.z = z; P.J = J;
+    if (R.kind !== 'sph') { P.rho = Math.hypot(x, y, z); P.phi = P.rho > 0 ? Math.acos(Math.max(-1, Math.min(1, z / P.rho))) : 0; }
+    return P;
+  }
+  /* ∫ over the region of g(P) times the Jacobian, iterated outer to inner. Returns { v, ok, why }. */
+  function integrate(R, g, o) {
+    o = o || {}; const eps = o.eps || (R.dim === 3 ? 1e-8 : 1e-10), V = new Array(R.dim).fill(0), P = {};
+    const depth = R.dim === 3 ? [12, 10, 10] : R.dim === 2 ? [14, 12] : [16];
+    BUDGET.n = 0; BUDGET.max = o.max || 4e6;
+    const rec = (i) => {
+      const a = R.lo[i](V), b = R.hi[i](V);
+      if (!isFinite(a) || !isFinite(b)) return NaN;
+      return quad((t) => { V[i] = t; return i + 1 < R.dim ? rec(i + 1) : (pointOf(R, V, P), g(P) * P.J); }, a, b, eps, depth[i]);
+    };
+    try { const v = rec(0); return { v, ok: isFinite(v), why: isFinite(v) ? '' : 'undefined' }; }
+    catch (e) { if (e.message === 'budget') return { v: NaN, ok: false, why: 'costly' }; throw e; }
+  }
+  /* the region's inner integral at a value t of the outer coordinate (the area of a slice, A(x) = ∫ f dy) */
+  function sliceAt(R, g, t) {
+    const V = [t, 0], P = {}; BUDGET.n = 0; BUDGET.max = 4e5;
+    try { return quad((s) => { V[1] = s; pointOf(R, V, P); return g(P) * P.J; }, R.lo[1](V), R.hi[1](V), 1e-10, 12); } catch (_) { return NaN; }
+  }
+
+  /* cells fitted to the region: the outer coordinate in n equal steps, each inner one in n equal steps between its bounds there.
+     off (0, 0.5 or 1) places the sample point in each step (low end, middle, high end). Each cell carries its sample point P, its
+     weight w (its size in its coordinates times the Jacobian, so Σ w → the volume) and, when corners is set, its corners in x, y, z
+     (2, 4 or 8 of them, in binary order of the steps). Σ g w is the Riemann sum. */
+  function cells(R, n, off, g, corners) {
+    const d = R.dim, out = [], V = new Array(d).fill(0), C = new Array(d).fill(0);
+    let sum = 0, vol = 0;
+    const at = (u) => {   /* coordinates for step fractions u (an array) */
+      const q = new Array(d);
+      for (let i = 0; i < d; i++) { const a = R.lo[i](q), b = R.hi[i](q); q[i] = a + (b - a) * u[i]; }
+      return q;
+    };
+    const idx = new Array(d).fill(0), total = Math.pow(n, d);
+    for (let k = 0; k < total; k++) {
+      let m = k; for (let i = d - 1; i >= 0; i--) { idx[i] = m % n; m = Math.floor(m / n); }
+      let w = 1;
+      for (let i = 0; i < d; i++) { const a = R.lo[i](V), b = R.hi[i](V); V[i] = a + (b - a) * (idx[i] + off) / n; w *= (b - a) / n; }
+      const P = pointOf(R, V, {}); w *= P.J;
+      const val = g ? g(P) : 1;
+      sum += val * w; vol += w;
+      const cell = { i: idx.slice(), P, w, v: val, q: V.slice() };
+      if (corners) {
+        cell.c = [];
+        for (let b = 0; b < (1 << d); b++) {
+          for (let i = 0; i < d; i++) C[i] = (idx[i] + ((b >> (d - 1 - i)) & 1)) / n;
+          const Q = pointOf(R, at(C), {}); cell.c.push([Q.x, Q.y, Q.z]);
+        }
+      }
+      out.push(cell);
+    }
+    return { list: out, sum, vol };
+  }
+
+  /* the two orders of a region in the plane agree when the same points are inside: the fraction of a grid over both regions
+     that is inside one and not the other */
+  function inside(R, x, y) {
+    const t = R.names[0] === 'x' ? x : y, s = R.names[0] === 'x' ? y : x, a = R.lo[0](), b = R.hi[0]();
+    if (!(t >= Math.min(a, b) && t <= Math.max(a, b))) return false;
+    const V = [t], c = R.lo[1](V), e = R.hi[1](V);
+    return s >= Math.min(c, e) && s <= Math.max(c, e);
+  }
+  function compareRegions(R1, R2, box, N) {
+    N = N || 120; let diff = 0, any = 0; const [x0, x1, y0, y1] = box, bad = [];
+    for (let i = 0; i < N; i++) for (let j = 0; j < N; j++) {
+      const x = x0 + (x1 - x0) * (i + 0.5) / N, y = y0 + (y1 - y0) * (j + 0.5) / N, a = inside(R1, x, y), b = inside(R2, x, y);
+      if (a || b) any++; if (a !== b) { diff++; bad.push([x, y, a ? 1 : 2]); }
+    }
+    return { frac: any ? diff / any : 0, bad, cell: [(x1 - x0) / N, (y1 - y0) / N] };
+  }
+  /* the box around a region: sample its bounds along the outer coordinate */
+  function boundsBox(R) {
+    const a = R.lo[0](), b = R.hi[0](); let lo = Infinity, hi = -Infinity;
+    for (let i = 0; i <= 200; i++) { const V = [a + (b - a) * i / 200], c = R.lo[1](V), e = R.hi[1](V); for (const v of [c, e]) if (isFinite(v)) { lo = Math.min(lo, v); hi = Math.max(hi, v); } }
+    return R.names[0] === 'x' ? [Math.min(a, b), Math.max(a, b), lo, hi] : [lo, hi, Math.min(a, b), Math.max(a, b)];
+  }
+
+  /* bodies for mass, center of mass and moment of inertia (lengths in m, mass in kg). d: { L } rod, { a, b } plate, { R } disk and
+     sphere, { R, h } cone. dist(P) and dmax set the densities that grow outward or fall off from the center or end. Each axis is
+     a point p and a unit direction u. */
+  function body(shape, d) {
+    const c = (v) => () => v, TWO_PI = 2 * Math.PI;
+    if (shape === 'rod') return { dim: 1, R: regionOf(['x'], [c(0)], [c(d.L)]), dist: (P) => P.x, dmax: d.L, len: d.L,
+      axes: { end: { p: [0, 0, 0], u: [0, 0, 1] }, center: { p: [d.L / 2, 0, 0], u: [0, 0, 1] } } };
+    if (shape === 'plate') return { dim: 2, R: regionOf(['x', 'y'], [c(-d.a / 2), c(-d.b / 2)], [c(d.a / 2), c(d.b / 2)]), dist: (P) => P.x + d.a / 2, dmax: d.a,
+      axes: { perp: { p: [0, 0, 0], u: [0, 0, 1] }, edge: { p: [-d.a / 2, 0, 0], u: [0, 1, 0] } } };
+    if (shape === 'disk') return { dim: 2, R: regionOf(['theta', 'r'], [c(0), c(0)], [c(TWO_PI), c(d.R)]), dist: (P) => P.r, dmax: d.R,
+      axes: { perp: { p: [0, 0, 0], u: [0, 0, 1] }, diameter: { p: [0, 0, 0], u: [1, 0, 0] }, rim: { p: [d.R, 0, 0], u: [0, 0, 1] } } };
+    if (shape === 'sphere') return { dim: 3, R: regionOf(['theta', 'phi', 'rho'], [c(0), c(0), c(0)], [c(TWO_PI), c(Math.PI), c(d.R)]), dist: (P) => P.rho, dmax: d.R,
+      axes: { diameter: { p: [0, 0, 0], u: [0, 0, 1] }, tangent: { p: [d.R, 0, 0], u: [0, 0, 1] } } };
+    if (shape === 'cone') return { dim: 3, R: regionOf(['theta', 'z', 'r'], [c(0), c(0), c(0)], [c(TWO_PI), c(d.h), (V) => d.R * (1 - V[1] / d.h)]), dist: (P) => P.r, dmax: d.R,
+      axes: { axis: { p: [0, 0, 0], u: [0, 0, 1] }, base: { p: [0, 0, 0], u: [1, 0, 0] } } };
+    throw new Error('shape');
+  }
+  /* density shapes, scaled later so the total is M: uniform, growing outward (∝ dist), heavier at the center or end (∝ 1 − dist/dmax), or typed */
+  function densityOf(B, kind, typed) {
+    if (kind === 'edge') return (P) => B.dist(P) / B.dmax;
+    if (kind === 'center') return (P) => 1 - B.dist(P) / B.dmax;
+    if (kind === 'custom') return typed;
+    return () => 1;
+  }
+  const dist2 = (P, ax) => { const q = [P.x - ax.p[0], P.y - ax.p[1], P.z - ax.p[2]], t = q[0] * ax.u[0] + q[1] * ax.u[1] + q[2] * ax.u[2]; return q[0] * q[0] + q[1] * q[1] + q[2] * q[2] - t * t; };
+  /* M, the center of mass and I about the chosen axis, for total mass M (the typed density is used as it is when M is null) */
+  function massProps(B, dens, axisName, M) {
+    const ax = B.axes[axisName], R = B.R;
+    const m0 = integrate(R, dens), mx = integrate(R, (P) => dens(P) * P.x), my = integrate(R, (P) => dens(P) * P.y), mz = integrate(R, (P) => dens(P) * P.z), i0 = integrate(R, (P) => dens(P) * dist2(P, ax));
+    const ok = m0.ok && mx.ok && my.ok && mz.ok && i0.ok;
+    const k = M == null ? 1 : M / m0.v, mass = m0.v * k;
+    return { ok, why: [m0, mx, my, mz, i0].map((r) => r.why).find((w) => w) || '', M: mass, k, cm: [mx.v / m0.v, my.v / m0.v, mz.v / m0.v], I: i0.v * k, m0: m0.v };
+  }
+  /* closed forms: I as a multiple of M times a squared length, and the center of mass, for the uniform and the two graded densities */
+  const CLOSED = {
+    rod: { L2: (d) => d.L * d.L, sym: 'ML²', I: { end: { uniform: [1, 3], edge: [1, 2], center: [1, 6] }, center: { uniform: [1, 12], edge: [1, 12], center: [1, 12] } },
+      cm: { uniform: (d) => [d.L / 2, 0, 0], edge: (d) => [2 * d.L / 3, 0, 0], center: (d) => [d.L / 3, 0, 0] } },
+    plate: { L2: (d, ax) => (ax === 'perp' ? d.a * d.a + d.b * d.b : d.a * d.a), sym: (ax) => (ax === 'perp' ? 'M(a² + b²)' : 'Ma²'),
+      I: { perp: { uniform: [1, 12], edge: [1, 12], center: [1, 12] }, edge: { uniform: [1, 3], edge: [1, 2], center: [1, 6] } },
+      cm: { uniform: () => [0, 0, 0], edge: (d) => [d.a / 6, 0, 0], center: (d) => [-d.a / 6, 0, 0] } },
+    disk: { L2: (d) => d.R * d.R, sym: 'MR²', I: { perp: { uniform: [1, 2], edge: [3, 5], center: [3, 10] }, diameter: { uniform: [1, 4], edge: [3, 10], center: [3, 20] }, rim: { uniform: [3, 2], edge: [8, 5], center: [13, 10] } },
+      cm: { uniform: () => [0, 0, 0], edge: () => [0, 0, 0], center: () => [0, 0, 0] } },
+    sphere: { L2: (d) => d.R * d.R, sym: 'MR²', I: { diameter: { uniform: [2, 5], edge: [4, 9], center: [4, 15] }, tangent: { uniform: [7, 5], edge: [13, 9], center: [19, 15] } },
+      cm: { uniform: () => [0, 0, 0], edge: () => [0, 0, 0], center: () => [0, 0, 0] } },
+    cone: { L2: (d) => d.R * d.R, sym: 'MR²', I: { axis: { uniform: [3, 10], edge: [2, 5], center: [1, 5] } },
+      cm: { uniform: (d) => [0, 0, d.h / 4], edge: (d) => [0, 0, d.h / 5], center: (d) => [0, 0, 3 * d.h / 10] } },
+  };
+  /* the closed form of I for total mass M, or null; the cone about a diameter of its base is M(3R²/20 + h²/10) when uniform */
+  function closedI(shape, dens, axis, d, M) {
+    if (shape === 'cone' && axis === 'base') return dens === 'uniform' ? { I: M * (3 * d.R * d.R / 20 + d.h * d.h / 10), text: 'M(3R²/20 + h²/10)' } : null;
+    const C = CLOSED[shape], f = C && C.I[axis] && C.I[axis][dens]; if (!f) return null;
+    const sym = typeof C.sym === 'function' ? C.sym(axis) : C.sym;
+    return { I: M * C.L2(d, axis) * f[0] / f[1], frac: f, text: (f[0] === 1 && f[1] === 1 ? '' : f[0] + '/' + f[1] + ' ') + sym };
+  }
+  function closedCM(shape, dens, d) { const C = CLOSED[shape], f = C && C.cm[dens]; return f ? f(d) : null; }
+
+  /* a change of variables x = X(u, v), y = Y(u, v): the partial derivatives and the Jacobian ∂(x, y)/∂(u, v) are exact */
+  function makeMap(xs, ys) {
+    const o = ['u', 'v'], X = parseIn(xs, o), Y = parseIn(ys, o), D = VM.derivative;
+    const xu = D(X, 'u'), xv = D(X, 'v'), yu = D(Y, 'u'), yv = D(Y, 'v');
+    const J = VM.mkAdd([VM.mkMul([xu, yv]), VM.mkMul([VM.rat(-1, 1), xv, yu])]), C = (t) => VM.compile(t, o);
+    return { X: C(X), Y: C(Y), Xu: C(xu), Xv: C(xv), Yu: C(yu), Yv: C(yv), J: C(J), tree: { X, Y, xu, xv, yu, yv, J } };
+  }
+  /* ∬ f(x, y) dA over the image of the rectangle [u0, u1] × [v0, v1], as ∬ f(X, Y) |J| du dv */
+  function mapIntegral(Mp, f, u0, u1, v0, v1) {
+    const R = regionOf(['x', 'y'], [() => u0, () => v0], [() => u1, () => v1]), P = {};
+    return integrate(R, (Q) => { const u = Q.x, v = Q.y, x = Mp.X(u, v), y = Mp.Y(u, v); P.x = x; P.y = y; P.z = 0; P.r = Math.hypot(x, y); P.theta = Math.atan2(y, x); P.rho = P.r; P.phi = Math.PI / 2; return f(P) * Math.abs(Mp.J(u, v)); });
+  }
+  /* the area of the image of one small cell, from its boundary (k points a side, shoelace formula) */
+  function imageArea(Mp, u0, u1, v0, v1, k) {
+    k = k || 32; const pts = [];
+    for (let i = 0; i < k; i++) pts.push([u0 + (u1 - u0) * i / k, v0]);
+    for (let i = 0; i < k; i++) pts.push([u1, v0 + (v1 - v0) * i / k]);
+    for (let i = 0; i < k; i++) pts.push([u1 - (u1 - u0) * i / k, v1]);
+    for (let i = 0; i < k; i++) pts.push([u0, v1 - (v1 - v0) * i / k]);
+    let s = 0; for (let i = 0; i < pts.length; i++) { const a = pts[i], b = pts[(i + 1) % pts.length], ax = Mp.X(a[0], a[1]), ay = Mp.Y(a[0], a[1]), bx = Mp.X(b[0], b[1]), by = Mp.Y(b[0], b[1]); s += ax * by - bx * ay; }
+    return Math.abs(s) / 2;
+  }
+  /* the one variable Gaussian ∫ e^(−x²) dx from −a to a */
+  function gauss1(a) { BUDGET.n = 0; BUDGET.max = 1e6; return quad((x) => Math.exp(-x * x), -a, a, 1e-13, 20); }
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  const VDI18N = window.VDI18N || { t: (s, o) => s.replace(/\{(\w+)\}/g, (m, k) => (o && k in o ? o[k] : m)) };
+  const T_ = (s, o) => VDI18N.t(s, o);
+  const NS = [1, 2, 4, 8, 16, 32, 64];
+  /* each mode: its coordinate names, the names its integrand may use, and the finest grid (index into NS) */
+  const MODES = {
+    boxes: { nMax: 6, fv: ['x', 'y', 'r', 'theta'] }, slices: { nMax: 6, fv: ['x', 'y', 'r', 'theta'] }, polar: { nMax: 6, fv: ['x', 'y', 'r', 'theta'] },
+    triple: { nMax: 4, fv: VARS }, mass: { nMax: 4, fv: VARS }, cov: { nMax: 5, fv: ['x', 'y', 'r', 'theta'] },
+  };
+  const SYSN = { rect: ['x', 'y', 'z'], cyl: ['theta', 'r', 'z'], sph: ['theta', 'phi', 'rho'] };
+  /* the same ball of radius 1 in each coordinate system, for a setup that has no description in the one chosen */
+  const BALL = { rect: [['-1', '1'], ['-sqrt(1-x^2)', 'sqrt(1-x^2)'], ['-sqrt(1-x^2-y^2)', 'sqrt(1-x^2-y^2)']], cyl: [['0', '2pi'], ['0', '1'], ['-sqrt(1-r^2)', 'sqrt(1-r^2)']], sph: [['0', '2pi'], ['0', 'pi'], ['0', '1']] };
+  /* units: L for lengths, f for the integrand, I for the integral; null for pure math */
+  const PRESETS = {
+    plate: { mode: 'boxes', group: 'Boxes under a surface', name: 'A plate\'s mass from its density', f: '1 + x y^2', b: [['0', '2'], ['0', '1']], n: 2, u: { L: 'm', f: 'kg/m²', I: 'kg' },
+      hint: 'A metal plate 2 m by 1 m whose density grows across it, σ(x, y) = 1 + xy² kg/m². The height of the surface is the density, so each box holds σ ΔA, the mass of one small piece. Press Play: as the boxes shrink the sum settles on the double integral, 8/3 kg = 2.6667 kg. Try the low and high corners: they settle more slowly than the middle.' },
+    dome: { mode: 'boxes', group: 'Boxes under a surface', name: 'Volume under a dome', f: '16 - x^2 - 2y^2', b: [['0', '2'], ['0', '2']], n: 1, u: null,
+      hint: 'The solid under z = 16 − x² − 2y² over the square 0 ≤ x ≤ 2, 0 ≤ y ≤ 2. Its volume is exactly 48. With the high corner the boxes sit under the surface (the sum is too small); with the low corner they poke above it. The average height is the volume divided by the area, 48/4 = 12.' },
+    saddle: { mode: 'boxes', group: 'Boxes under a surface', name: 'Signed volume: a saddle', f: 'x^2 - y^2', b: [['0', '2'], ['0', '1']], n: 2, u: null,
+      hint: 'Where f is negative its boxes hang below the plane and count as negative volume. Over 0 ≤ x ≤ 2, 0 ≤ y ≤ 1 the double integral of x² − y² is 8/3 − 2/3 = 2: what is above the plane minus what is below it.' },
+    between: { mode: 'slices', group: 'Slices in either order', name: 'Between y = x² and y = x', f: 'x + y', b: [['0', '1'], ['x^2', 'x']], c: [['0', '1'], ['y', 'sqrt(y)']], n: 3, u: null,
+      hint: 'The region between the parabola y = x² and the line y = x. Sliced at fixed x, y runs from x² to x; sliced at fixed y, x runs from y to √y. Both orders give ∬ (x + y) dA = 3/20 = 0.15. A(x) below is the area of one slice under the surface; the integral is the area under A(x).' },
+    swap: { mode: 'slices', group: 'Slices in either order', name: 'Reverse the order: e^(y²)', f: 'e^(y^2)', b: [['0', '1'], ['x', '1']], c: [['0', '1'], ['0', 'y']], n: 3, u: null,
+      hint: 'In the order dy dx the inner integral ∫ e^(y²) dy has no formula, so this cannot be done by hand. Reversed, the triangle is 0 ≤ x ≤ y, 0 ≤ y ≤ 1, the inner integral is y e^(y²) and the answer is (e − 1)/2 = 0.85914. The computer gets the same number either way.' },
+    halfdisk: { mode: 'slices', group: 'Slices in either order', name: 'Half disk: ∬ y dA', f: 'y', b: [['-1', '1'], ['0', 'sqrt(1-x^2)']], c: [['0', '1'], ['-sqrt(1-y^2)', 'sqrt(1-y^2)']], n: 3, u: { L: 'm', f: 'm', I: 'm³' },
+      hint: 'The first moment of a half disk of radius 1 m about its flat edge, ∬ y dA = 2/3 m³. Divided by the area π/2 it gives the height of the centroid, ȳ = 4/(3π) = 0.4244 m: where a uniform half disk balances.' },
+    mistake: { mode: 'slices', group: 'Slices in either order', name: 'A common mistake in reversing', f: '1', b: [['0', '1'], ['x^2', '1']], c: [['0', '1'], ['y^2', '1']], n: 3, u: null,
+      hint: 'The region above y = x² and below y = 1 has area 2/3. The reversed bounds typed here, y² ≤ x ≤ 1, describe a different region: the picture marks where the two disagree. Fix the inner bounds of the second order to 0 ≤ x ≤ √y and the two areas match.' },
+    gauss: { mode: 'polar', group: 'Polar wedges', name: 'The Gaussian integral ∫e^(−x²) dx = √π', f: 'e^(-x^2 - y^2)', b: [['0', '2pi'], ['0', '3']], n: 3, u: null, gauss: true,
+      hint: 'The bell surface e^(−x² − y²) = e^(−r²) over a disk of radius R. In polar form ∬ e^(−r²) r dr dθ = π(1 − e^(−R²)), which tends to π. The same volume over the whole plane is (∫ e^(−x²) dx)², so ∫ e^(−x²) dx = √π. Make R larger (6 is plenty) and compare the readouts.' },
+    cardioid: { mode: 'polar', group: 'Polar wedges', name: 'Area inside a cardioid', f: '1', b: [['0', '2pi'], ['0', '1 + cos(θ)']], n: 3, u: null,
+      hint: 'The heart shaped curve r = 1 + cos θ. With f = 1 the integral ∬ r dr dθ is the area, 3π/2 = 4.7124. Each wedge has area r Δr Δθ: wedges far from the origin are bigger than those near it, even with the same Δr and Δθ.' },
+    charge: { mode: 'polar', group: 'Polar wedges', name: 'Charge on a disk, σ = r', f: 'r', b: [['0', '2pi'], ['0', '2']], n: 3, u: { L: 'm', f: 'μC/m²', I: 'μC' },
+      hint: 'A disk of radius 2 m with surface charge density σ = r μC/m², zero at the center and largest at the rim. The charge is ∬ σ r dr dθ = 2πR³/3 = 16π/3 μC = 16.755 μC. The extra r in dA = r dr dθ is why the rim holds most of the charge.' },
+    ball: { mode: 'triple', group: 'Triple integrals', name: 'Volume of a ball, three ways', f: '1', sys: 'sph', t: BALL, n: 2, u: null,
+      hint: 'The ball ρ ≤ 1. In spherical coordinates the bounds are constants and the cells are pieces of shells, each of volume ρ² sin φ Δρ Δφ Δθ. Switch to cylindrical or rectangular: the bounds now have square roots, but the volume is the same, 4π/3 = 4.18879.' },
+    icecream: { mode: 'triple', group: 'Triple integrals', name: 'An ice cream cone', f: '1', sys: 'sph', t: { sph: [['0', '2pi'], ['0', 'pi/4'], ['0', '1']], cyl: [['0', '2pi'], ['0', 'sqrt(2)/2'], ['r', 'sqrt(1-r^2)']], rect: [['-sqrt(2)/2', 'sqrt(2)/2'], ['-sqrt(1/2-x^2)', 'sqrt(1/2-x^2)'], ['sqrt(x^2+y^2)', 'sqrt(1-x^2-y^2)']] }, n: 2, u: null,
+      hint: 'The cone φ ≤ π/4 capped by the sphere ρ = 1. In spherical coordinates the volume is (2π/3)(1 − cos(π/4)) = 0.61343. In cylindrical coordinates z runs from the cone z = r up to the sphere; in rectangular coordinates every bound has a root.' },
+    paraboloid: { mode: 'triple', group: 'Triple integrals', name: 'Under a paraboloid', f: '1', sys: 'cyl', t: { cyl: [['0', '2pi'], ['0', '2'], ['0', '4 - r^2']], rect: [['-2', '2'], ['-sqrt(4-x^2)', 'sqrt(4-x^2)'], ['0', '4 - x^2 - y^2']] }, n: 2, u: null,
+      hint: 'The solid between the plane z = 0 and the bowl z = 4 − r². In cylindrical coordinates each cell has volume r Δr Δθ Δz and the volume is 8π = 25.133. Change f to z to find ∭ z dV, and divide by the volume for the height of the centroid.' },
+    tetra: { mode: 'triple', group: 'Triple integrals', name: 'A tetrahedron', f: '1', sys: 'rect', t: { rect: [['0', '1'], ['0', '1 - x'], ['0', '1 - x - y']] }, n: 3, u: null,
+      hint: 'The corner cut off by the plane x + y + z = 1. Its volume is 1/6: each bound uses the coordinates outside it. Change f to x and divide by 1/6: the centroid is at x̄ = 1/4.' },
+    disk: { mode: 'mass', group: 'Mass, center of mass, moment of inertia', name: 'Disk: I = ½MR²', shape: 'disk', d: { R: 0.5 }, M: 2, dens: 'uniform', axis: 'perp', n: 2,
+      hint: 'A uniform disk of 2 kg and radius 0.5 m spinning about the axis through its center, perpendicular to it. I = ∬ r² dm = ½MR² = 0.25 kg·m². Try the axis along a diameter (¼MR²) and the density that grows outward (⅗MR²).' },
+    sphere: { mode: 'mass', group: 'Mass, center of mass, moment of inertia', name: 'Solid sphere: I = ⅖MR²', shape: 'sphere', d: { R: 0.3 }, M: 2, dens: 'uniform', axis: 'diameter', n: 2,
+      hint: 'A uniform ball of 2 kg and radius 0.3 m about a diameter: I = ⅖MR² = 0.072 kg·m². The cells are spherical, each of mass δ ρ² sin φ Δρ Δφ Δθ. About an axis touching the surface, the parallel axis theorem adds MR²: 7/5 MR².' },
+    rod: { mode: 'mass', group: 'Mass, center of mass, moment of inertia', name: 'Rod about its end: I = ⅓ML²', shape: 'rod', d: { L: 1.2 }, M: 0.5, dens: 'uniform', axis: 'end', n: 3,
+      hint: 'A uniform rod of 0.5 kg and length 1.2 m turning about one end, like a door seen from above or a swinging leg: I = ∫ x² dm = ⅓ML² = 0.24 kg·m². About its center, 1/12 ML²: four times smaller.' },
+    cone: { mode: 'mass', group: 'Mass, center of mass, moment of inertia', name: 'Cone: center of mass at h/4', shape: 'cone', d: { R: 0.4, h: 1 }, M: 3, dens: 'uniform', axis: 'axis', n: 2,
+      hint: 'A uniform cone with its base on the floor. Most of its volume is near the base, so its center of mass is only a quarter of the way up, z̄ = h/4. About its axis I = 3/10 MR².' },
+    core: { mode: 'mass', group: 'Mass, center of mass, moment of inertia', name: 'A sphere denser at the center', shape: 'sphere', d: { R: 0.3 }, M: 2, dens: 'center', axis: 'diameter', n: 2,
+      hint: 'A ball whose density falls from the center to zero at the surface, like a planet with a dense core. With its mass nearer the axis, I = 4/15 MR², less than ⅖MR².' },
+    plateI: { mode: 'mass', group: 'Mass, center of mass, moment of inertia', name: 'Plate about an edge', shape: 'plate', d: { a: 0.8, b: 0.5 }, M: 1.5, dens: 'uniform', axis: 'edge', n: 3,
+      hint: 'A thin plate 0.8 m by 0.5 m hinged along one edge, like a door: I = ⅓Ma² = 0.32 kg·m², whatever the height b. About the axis through its center, perpendicular to it, I = 1/12 M(a² + b²).' },
+    polarMap: { mode: 'cov', group: 'Change of variables', name: 'Polar coordinates as a map', map: ['u cos(v)', 'u sin(v)'], f: '1', b: [['0', '2'], ['0', 'pi']], n: 3, u: null,
+      hint: 'x = u cos v, y = u sin v is polar coordinates with u = r and v = θ. Its Jacobian is u: a cell of the u, v grid becomes a curved cell u times as big. That is where the r in r dr dθ comes from. The half disk of radius 2 has area 2π.' },
+    ellipse: { mode: 'cov', group: 'Change of variables', name: 'Area of an ellipse: πab', map: ['3u cos(v)', '2u sin(v)'], f: '1', b: [['0', '1'], ['0', '2pi']], n: 3, u: null,
+      hint: 'Stretching polar coordinates by a = 3 along x and b = 2 along y maps the unit disk onto an ellipse. The Jacobian is abu = 6u, so the area is ∬ 6u du dv = πab = 6π = 18.850.' },
+    squareMap: { mode: 'cov', group: 'Change of variables', name: 'x = u² − v², y = 2uv', map: ['u^2 - v^2', '2u v'], f: '1', b: [['0', '1'], ['0', '1']], n: 3, u: null,
+      hint: 'The map that squares a complex number, u + iv. Straight grid lines become parabolas, the cells grow away from the origin, and J = 4(u² + v²). The unit square maps onto a region of area ∬ 4(u² + v²) du dv = 8/3.' },
+    linear: { mode: 'cov', group: 'Change of variables', name: 'A linear map: J is constant', map: ['2u + v', 'u - v'], f: 'x', b: [['0', '1'], ['0', '1']], n: 3, u: null,
+      hint: 'A linear map sends squares to identical parallelograms, every one of area |J| Δu Δv with J = −3: the minus sign means the map flips orientation, and the area uses |J| = 3. ∬ x dA over the parallelogram is ∬ (2u + v) · 3 du dv = 4.5.' },
+  };
+  const BODY = {
+    rod: { dims: [['L', 'Length L (m)']], axes: [['end', 'Perpendicular, through one end'], ['center', 'Perpendicular, through the middle']], unit: 'kg/m' },
+    plate: { dims: [['a', 'Width a (m)'], ['b', 'Height b (m)']], axes: [['perp', 'Perpendicular, through the center'], ['edge', 'Along the left edge']], unit: 'kg/m²' },
+    disk: { dims: [['R', 'Radius R (m)']], axes: [['perp', 'Perpendicular, through the center'], ['diameter', 'Along a diameter'], ['rim', 'Perpendicular, through the rim']], unit: 'kg/m²' },
+    sphere: { dims: [['R', 'Radius R (m)']], axes: [['diameter', 'Along a diameter'], ['tangent', 'Touching the surface']], unit: 'kg/m³' },
+    cone: { dims: [['R', 'Radius R (m)'], ['h', 'Height h (m)']], axes: [['axis', 'Its symmetry axis'], ['base', 'A diameter of the base']], unit: 'kg/m³' },
+  };
+  const DEF_D = { rod: { L: 1.2 }, plate: { a: 0.8, b: 0.5 }, disk: { R: 0.5 }, sphere: { R: 0.3 }, cone: { R: 0.4, h: 1 } };
+
+  const S = { mode: 'boxes', preset: 'plate', ni: 2, samp: 0.5, ord: 'A', pos: 0.35, sys: 'sph', run: false, fill: 1, spin: 0, hold: 0, blind: false,
+    shape: 'disk', d: { R: 0.5 }, M: 2, dens: 'uniform', axis: 'perp', units: null, gaussP: false, vw: { cx: 0, cy: 0, s: 0.01 }, pick: 0, src: '' };
+  let R = null, R2 = null, G = null, F = null, MAP = null, B = null, res = null, cellsNow = null, extra = {}, need = true, dirty3 = true, is3d = false;
+  const can = $('can'), ctx = can.getContext('2d'), pane = $('pane');
+  let W = 0, H = 0, dpr = 1, T = null;
+  const orb = { th: -Math.PI / 2 + 0.75, ph: 1.05, zoom: 1 };
+
+  /* numbers on screen */
+  const fmt = (v, sig, scale) => {
+    if (!isFinite(v)) return T_('undefined');
+    if (Math.abs(v) < 1e-12 * (scale || 1)) v = 0;
+    const a = Math.abs(v); sig = sig || 5;
+    let s = a !== 0 && (a >= 1e6 || a < 1e-4) ? v.toExponential(sig - 1).replace(/e\+?(-?)(\d+)/, (m, sg, e) => '×10' + VM.sup((sg ? '-' : '') + e)) : String(Number(v.toPrecision(sig)));
+    if (a >= 1000 && a < 1e6) s = s.replace(/^(-?\d+)(\d{3})(\.|$)/, '$1,$2$3');
+    return s.replace(/-/g, '−');
+  };
+  const un = (k) => (S.units && S.units[k] ? ' ' + S.units[k] : '');
+  const show = (n) => SHOWN[n] || n;
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), surface: g('--surface'), mono: g('--font-mono') || 'monospace', accent: g('--accent'),
+      pos: g('--mi-pos'), neg: g('--mi-neg'), surf: g('--mi-surf'), slice: g('--mi-slice'), edge: g('--mi-edge'), lo: g('--mi-lo'), hi: g('--mi-hi'), bad: g('--mi-bad') };
+    for (const k of ['canvas', 'ink', 'muted', 'pos', 'neg', 'surf', 'slice', 'edge', 'lo', 'hi', 'accent']) T['rgb_' + k] = rgb(T[k]);
+    dirty3 = true; need = true;
+  }
+  function rgb(c) { const t = document.createElement('canvas').getContext('2d'); t.fillStyle = c; t.fillRect(0, 0, 1, 1); return Array.from(t.getImageData(0, 0, 1, 1).data.slice(0, 3)).map((v) => v / 255); }
+  const mix = (a, b, t) => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t];
+  const css = (c, a) => `rgba(${Math.round(c[0] * 255)},${Math.round(c[1] * 255)},${Math.round(c[2] * 255)},${a == null ? 1 : a})`;
+
+  /* ---------- reading the boxes ---------- */
+  const MSG = {
+    name: (e) => T_('“{n}” is not a name I can use here.', { n: show(e.name2) }),
+    char: (e) => T_('“{n}” is not something I can read here.', { n: e.name2 }),
+    unexpected: (e) => T_('“{n}” is out of place.', { n: e.name2 }),
+    close: () => T_('There is a ) without a matching (.'),
+    comma: () => T_('Functions here take one input; there is no comma form.'),
+    arg: (e) => T_('{n} needs something to act on, like {n}(x).', { n: e.name2 }),
+    end: () => T_('Not finished yet.'),
+  };
+  const errText = (e) => (MSG[e && e.code] || MSG.end)(e || {});
+  const val = (id) => $(id).value;
+  function boundsOf(ids) { return ids.map((k) => [val(k + 'lo'), val(k + 'hi')]); }
+  function markBad(ids) { for (const id of ['fIn', 'xIn', 'yIn', 'b1lo', 'b1hi', 'b2lo', 'b2hi', 'b3lo', 'b3hi', 'c1lo', 'c1hi', 'c2lo', 'c2hi']) $(id).classList.toggle('bad', ids.includes(id)); }
+  function status(msg, bad) { const st = $('fStatus'); st.textContent = msg || ''; st.classList.toggle('bad', !!bad); }
+  /* read everything the mode uses; returns false (and says why) when something cannot be read */
+  function read() {
+    const m = S.mode, fv = MODES[m].fv;
+    try {
+      if (m === 'mass') {
+        B = body(S.shape, S.d); G = null;
+        if (S.dens === 'custom') { try { G = makeFn(val('fIn'), VARS); } catch (e) { markBad(['fIn']); status(T_('Density: ') + errText(e), true); return false; } }
+        markBad([]); status(''); return true;
+      }
+      try { G = makeFn(val('fIn'), fv); } catch (e) { markBad(['fIn']); status(errText(e), true); return false; }
+      if (m === 'cov') {
+        for (const id of ['xIn', 'yIn']) { try { parseIn(val(id), ['u', 'v']); } catch (e) { markBad([id]); status((id === 'xIn' ? 'x: ' : 'y: ') + errText(e), true); return false; } }
+        MAP = makeMap(val('xIn'), val('yIn'));
+        R = makeRegion(['u', 'v'], boundsOf(['b1', 'b2']).map((b) => b));
+      } else if (m === 'triple') R = makeRegion(SYSN[S.sys], boundsOf(['b1', 'b2', 'b3']));
+      else if (m === 'polar') R = makeRegion(['theta', 'r'], boundsOf(['b1', 'b2']));
+      else R = makeRegion(['x', 'y'], boundsOf(['b1', 'b2']));
+      if (m === 'boxes' && R.trees[1].some((t) => VM.hasV(t))) { markBad(['b2lo', 'b2hi']); status(T_('Boxes need a rectangle: use numbers for the bounds on y. For curved sides switch modes to Slices.'), true); return false; }
+      if (m === 'slices') { try { R2 = makeRegion(['y', 'x'], boundsOf(['c1', 'c2'])); } catch (e) { markBad(['c' + (e.level + 1) + (e.side ? 'hi' : 'lo')]); status(T_('Second order: ') + errText(e), true); return false; } }
+    } catch (e) {
+      if (e.level == null) throw e;
+      markBad(['b' + (e.level + 1) + (e.side ? 'hi' : 'lo')]); status(errText(e), true); return false;
+    }
+    markBad([]); status(''); return true;
+  }
+
+  /* ---------- computing ---------- */
+  const one = () => 1;
+  function compute() {
+    if (!read()) { need = true; return; }
+    extra = {}; res = null;
+    const m = S.mode;
+    if (m === 'mass') {
+      const dens = densityOf(B, S.dens, G && G.f);
+      res = massProps(B, dens, S.axis, S.M);
+      extra.dens = dens; extra.cI = S.dens === 'custom' ? null : closedI(S.shape, S.dens, S.axis, S.d, S.M); extra.cCM = S.dens === 'custom' ? null : closedCM(S.shape, S.dens, S.d);
+      if (res.ok && !(res.m0 > 0)) status(T_('The density adds up to zero or less: a mass needs a density that is positive.'), true);
+    } else if (m === 'cov') {
+      res = mapIntegral(MAP, G.f, R.lo[0](), R.hi[0](), R.lo[1]([0]), R.hi[1]([0]));
+      extra.area = mapIntegral(MAP, one, R.lo[0](), R.hi[0](), R.lo[1]([0]), R.hi[1]([0]));
+      if (R.trees[1].some((t) => VM.hasV(t))) { status(T_('Here the bounds on v must be numbers, so the u, v region is a rectangle.'), true); }
+    } else {
+      res = integrate(R, G.f);
+      extra.area = integrate(R, one);
+      if (m === 'slices') {
+        extra.res2 = integrate(R2, G.f); extra.area2 = integrate(R2, one);
+        const b1 = boundsBox(R), b2 = boundsBox(R2), bx = [Math.min(b1[0], b2[0]), Math.max(b1[1], b2[1]), Math.min(b1[2], b2[2]), Math.max(b1[3], b2[3])];
+        extra.cmp = bx.every(isFinite) ? compareRegions(R, R2, bx, 140) : null;
+      }
+      if (m === 'polar' && PRESETS[S.preset] && PRESETS[S.preset].gauss) {
+        const Rr = R.hi[1]([0]); extra.g1 = gauss1(Rr); extra.R = Rr;
+        extra.sq = integrate(makeRegion(['x', 'y'], [['-' + Rr, String(Rr)], ['-' + Rr, String(Rr)]]), G.f);
+      }
+    }
+    if (res && res.why === 'costly') status(T_('This one needs too many steps to compute here: try simpler bounds or a smaller region.'), true);
+    grid(); fitView(); readouts(); formulas();
+  }
+  /* the cells for the grid size now chosen */
+  function grid() {
+    cellsNow = null; extra.slabs = null;
+    if (!res) return;
+    const n = NS[S.ni], m = S.mode;
+    try {
+      if (m === 'mass') cellsNow = cells(B.R, n, 0.5, extra.dens, false);
+      else if (m === 'cov') cellsNow = null;
+      else if (m === 'slices') {
+        const Ro = S.ord === 'A' ? R : R2, a = Ro.lo[0](), b = Ro.hi[0](), h = (b - a) / n, list = [];
+        let sum = 0;
+        for (let i = 0; i < n; i++) { const t = a + (i + 0.5) * h, A = sliceAt(Ro, G.f, t); list.push({ t0: a + i * h, t1: a + (i + 1) * h, t, A }); sum += A * h; }
+        extra.slabs = { list, sum, h };
+      } else cellsNow = cells(R, n, m === 'boxes' ? S.samp : 0.5, G.f, false);
+    } catch (e) { cellsNow = null; }
+    dirty3 = true; need = true;
+  }
+  /* the inner integral's curve A(t) for the slice graph */
+  function sliceCurve() {
+    const Ro = S.ord === 'A' ? R : R2, a = Ro.lo[0](), b = Ro.hi[0](), pts = [];
+    for (let i = 0; i <= 120; i++) { const t = a + (b - a) * i / 120; pts.push([t, sliceAt(Ro, G.f, t)]); }
+    return { a, b, pts };
+  }
+
+  /* ---------- the box around what is drawn ---------- */
+  function mapU(Rg, u) { const q = []; for (let i = 0; i < Rg.dim; i++) { const a = Rg.lo[i](q), b = Rg.hi[i](q); q[i] = a + (b - a) * u[i]; } const P = pointOf(Rg, q, {}); return [P.x, P.y, P.z]; }
+  const solid = () => S.mode === 'triple' || S.mode === 'mass';
+  const SC = { cx: 0, cy: 0, cz: 0, s: 1, kz: 1, fmax: 1, zTop: 1 };
+  function fitView() {
+    const m = S.mode; let bb = null;
+    if (!res) return;
+    if (m === 'boxes' || m === 'slices') { bb = boundsBox(R); if (m === 'slices') { const b2 = boundsBox(R2); bb = [Math.min(bb[0], b2[0]), Math.max(bb[1], b2[1]), Math.min(bb[2], b2[2]), Math.max(bb[3], b2[3])]; } }
+    else if (m === 'polar' || m === 'cov' || solid()) {
+      const Rg = m === 'mass' ? B.R : R, d = Rg.dim, lo = [Infinity, Infinity, Infinity], hi = [-Infinity, -Infinity, -Infinity], k = d === 3 ? 10 : 40;
+      const u = new Array(d).fill(0), tot = Math.pow(k + 1, d);
+      for (let i = 0; i < tot; i++) {
+        let r = i; for (let j = d - 1; j >= 0; j--) { u[j] = (r % (k + 1)) / k; r = Math.floor(r / (k + 1)); }
+        const p = m === 'cov' ? [MAP.X(Rg.lo[0]() + (Rg.hi[0]() - Rg.lo[0]()) * u[0], Rg.lo[1]([0]) + (Rg.hi[1]([0]) - Rg.lo[1]([0])) * u[1]), MAP.Y(Rg.lo[0]() + (Rg.hi[0]() - Rg.lo[0]()) * u[0], Rg.lo[1]([0]) + (Rg.hi[1]([0]) - Rg.lo[1]([0])) * u[1]), 0] : mapU(Rg, u);
+        for (let j = 0; j < 3; j++) if (isFinite(p[j])) { lo[j] = Math.min(lo[j], p[j]); hi[j] = Math.max(hi[j], p[j]); }
+      }
+      if (m === 'polar') { lo[0] = Math.min(lo[0], 0); hi[0] = Math.max(hi[0], 0); lo[1] = Math.min(lo[1], 0); hi[1] = Math.max(hi[1], 0); }
+      if (m === 'mass' && S.shape === 'rod') { lo[1] = -0.1 * S.d.L; hi[1] = 0.1 * S.d.L; }
+      bb = [lo[0], hi[0], lo[1], hi[1], lo[2], hi[2]];
+    }
+    if (!bb || !bb.slice(0, 4).every(isFinite)) bb = [-1, 1, -1, 1, 0, 0];
+    if (!(bb[1] > bb[0])) { bb[0] -= 0.5; bb[1] += 0.5; } if (!(bb[3] > bb[2])) { bb[2] -= 0.5; bb[3] += 0.5; }
+    S.bb = bb;
+    /* the 3D scale: the larger side 2.2 units; heights of a surface scaled to fit when far from that size */
+    SC.cx = (bb[0] + bb[1]) / 2; SC.cy = (bb[2] + bb[3]) / 2;
+    const ext = Math.max(bb[1] - bb[0], bb[3] - bb[2], solid() && isFinite(bb[5]) ? bb[5] - bb[4] : 0);
+    SC.s = 2.2 / ext;
+    if (solid()) { SC.cz = isFinite(bb[4]) ? (bb[4] + bb[5]) / 2 : 0; SC.kz = 1; }
+    else {
+      SC.cz = 0; let fm = 0; const Rg = R, P = {}, q = [0, 0];
+      if (m !== 'cov') for (let i = 0; i <= 24; i++) for (let j = 0; j <= 24; j++) { q[0] = Rg.lo[0]() + (Rg.hi[0]() - Rg.lo[0]()) * i / 24; q[1] = Rg.lo[1](q) + (Rg.hi[1](q) - Rg.lo[1](q)) * j / 24; pointOf(Rg, q, P); const v = Math.abs(G.f(P)); if (isFinite(v)) fm = Math.max(fm, v); }
+      SC.fmax = fm || 1; const h = SC.fmax * SC.s;
+      SC.kz = h >= 0.6 && h <= 1.6 ? 1 : niceK(0.9 / h);
+    }
+    homeFlat();
+  }
+  function niceK(k) { const p = Math.pow(10, Math.floor(Math.log10(k))), r = k / p; return (r < 1.5 ? 1 : r < 3.5 ? 2 : r < 7.5 ? 5 : 10) * p; }
+  /* the flat view: world box into the drawing area, with a margin */
+  function flatArea() { return S.mode === 'slices' ? [0, 0, W, H * 0.6] : [0, 0, W, H]; }
+  function homeFlat() {
+    if (!S.bb || !W) return;
+    const [x0, x1, y0, y1] = S.bb, a = flatArea(), mg = 0.14;
+    if (S.mode === 'cov') { S.vw = { cx: 0, cy: 0, s: 1 }; return; }
+    S.vw = { cx: (x0 + x1) / 2, cy: (y0 + y1) / 2, s: Math.max((x1 - x0) / (a[2] * (1 - 2 * mg)), (y1 - y0) / (a[3] * (1 - 2 * mg))) };
+  }
+  const X = (x) => flatArea()[2] / 2 + (x - S.vw.cx) / S.vw.s, Y = (y) => flatArea()[3] / 2 - (y - S.vw.cy) / S.vw.s;
+  const Xi = (u) => S.vw.cx + (u - flatArea()[2] / 2) * S.vw.s, Yi = (v) => S.vw.cy - (v - flatArea()[3] / 2) * S.vw.s;
+
+  /* ---------- geometry shared by the 3D view and the flat drawing of solids ---------- */
+  const toS = (p) => [(p[0] - SC.cx) * SC.s, (p[1] - SC.cy) * SC.s, (p[2] - SC.cz) * SC.s * SC.kz];
+  const toS2 = (x, y, f) => [(x - SC.cx) * SC.s, (y - SC.cy) * SC.s, f * SC.s * SC.kz];
+  function geo() { return { p: [], c: [], l: [], q: [] }; }
+  function tri(g, a, b, c, col) { g.p.push(a[0], a[1], a[2], b[0], b[1], b[2], c[0], c[1], c[2]); for (let i = 0; i < 3; i++) g.c.push(col[0], col[1], col[2]); }
+  function face(g, a, b, c, d, col) { tri(g, a, b, c, col); tri(g, a, c, d, col); g.q.push([a, b, c, d, col]); }
+  function seg(g, a, b) { g.l.push(a[0], a[1], a[2], b[0], b[1], b[2]); }
+  /* a prism over a cell of a plane region: its outline in x, y (a closed list of points) from height z0 to z1 (scene units) */
+  function prism(g, ring, z0, z1, col, top) {
+    const n = ring.length, b = ring.map((p) => toS2(p[0], p[1], 0)), lift = (p, z) => [p[0], p[1], z];
+    for (let i = 0; i < n; i++) { const a = b[i], c = b[(i + 1) % n]; face(g, lift(a, z0), lift(c, z0), lift(c, z1), lift(a, z1), mix(col, [0, 0, 0], 0.12)); seg(g, lift(a, z1), lift(c, z1)); seg(g, lift(a, z0), lift(c, z0)); }
+    seg(g, lift(b[0], z0), lift(b[0], z1));
+    /* top and bottom as fans from the middle */
+    const mx = b.reduce((s, p) => s + p[0], 0) / n, my = b.reduce((s, p) => s + p[1], 0) / n;
+    for (let i = 0; i < n; i++) { const a = b[i], c = b[(i + 1) % n]; tri(g, [mx, my, z1], lift(a, z1), lift(c, z1), top || col); tri(g, [mx, my, z0], lift(c, z0), lift(a, z0), col); }
+    g.q.push(null);
+  }
+  /* the outline of cell (i, j) of a plane region with n steps a side, m points along each side */
+  function ring2(Rg, i, j, n, m, gap) {
+    const pts = [], e = gap || 0, at = (u, v) => mapU(Rg, [u, v]);
+    const u0 = (i + e) / n, u1 = (i + 1 - e) / n, v0 = (j + e) / n, v1 = (j + 1 - e) / n;
+    for (let k = 0; k < m; k++) pts.push(at(u0 + (u1 - u0) * k / m, v0));
+    for (let k = 0; k < m; k++) pts.push(at(u1, v0 + (v1 - v0) * k / m));
+    for (let k = 0; k < m; k++) pts.push(at(u1 - (u1 - u0) * k / m, v1));
+    for (let k = 0; k < m; k++) pts.push(at(u0, v1 - (v1 - v0) * k / m));
+    return pts;
+  }
+  /* a solid cell of a region in space: the six faces of its box in the region's own coordinates, each in m by m pieces */
+  function cell3(g, Rg, idx, n, m, gap, col) {
+    const lo = idx.map((i) => (i + gap) / n), hi = idx.map((i) => (i + 1 - gap) / n), P = (u) => toS(mapU(Rg, u));
+    for (let k = 0; k < 3; k++) for (const side of [0, 1]) {
+      const a = (k + 1) % 3, b = (k + 2) % 3;
+      for (let s = 0; s < m; s++) for (let t = 0; t < m; t++) {
+        const u = [0, 0, 0], q = [];
+        for (const [ds, dt] of [[0, 0], [1, 0], [1, 1], [0, 1]]) { u[k] = side ? hi[k] : lo[k]; u[a] = lo[a] + (hi[a] - lo[a]) * (s + ds) / m; u[b] = lo[b] + (hi[b] - lo[b]) * (t + dt) / m; q.push(P(u)); }
+        face(g, q[0], q[1], q[2], q[3], col);
+      }
+    }
+    /* the twelve edges */
+    for (let k = 0; k < 3; k++) { const a = (k + 1) % 3, b = (k + 2) % 3; for (const sa of [0, 1]) for (const sb of [0, 1]) for (let s = 0; s < m; s++) {
+      const u = [0, 0, 0], w = [0, 0, 0]; u[a] = w[a] = sa ? hi[a] : lo[a]; u[b] = w[b] = sb ? hi[b] : lo[b]; u[k] = lo[k] + (hi[k] - lo[k]) * s / m; w[k] = lo[k] + (hi[k] - lo[k]) * (s + 1) / m; seg(g, P(u), P(w));
+    } }
+  }
+  const heat = (t) => mix(T.rgb_lo, T.rgb_hi, 0.15 + 0.85 * Math.max(0, Math.min(1, t)));
+  const signCol = (v, ref) => mix(T.rgb_lo, v >= 0 ? T.rgb_pos : T.rgb_neg, 0.4 + 0.6 * Math.min(1, Math.abs(v) / (ref || 1)));
+  /* which cells show: all, the first part while Play fills them, none of the quarter cut away */
+  function shown(c) { if (S.mode === 'triple' || S.mode === 'mass') { if ($('cut').checked && c.P.x > SC.cx + 1e-12 && c.P.y < SC.cy - 1e-12 && (S.mode === 'triple' || B.dim === 3)) return false; } return true; }
+  /* the element singled out and labeled: the middle cell of a plane region; in space, a cell on the outside (the last step of the
+     inner coordinate), turned toward the opening view when the outer coordinate is θ */
+  const midIdx = (d, n, Rg) => {
+    const idx = new Array(d).fill(Math.floor(n / 2)); if (d < 3) return idx;
+    idx[2] = n - 1;
+    if (Rg && Rg.names[0] === 'theta') { const a = Rg.lo[0](), b = Rg.hi[0](), th = ((-Math.PI / 2 + 0.75) % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI); if (b > a && th >= a && th <= b) idx[0] = Math.min(n - 1, Math.floor((th - a) / (b - a) * n)); }
+    return idx;
+  };
+  const EL = { rect: { x: 'Δx', y: 'Δy', z: 'Δz' }, cyl: { r: 'Δr', theta: 'r Δθ', z: 'Δz' }, sph: { rho: 'Δρ', phi: 'ρ Δφ', theta: 'ρ sin φ Δθ' } };
+  /* everything drawn in 3D, as plain lists: main (cells or prisms), surface, slabs, element (with its edge labels), lines */
+  function buildGeo() {
+    const out = { cells: geo(), surf: geo(), slab: geo(), el: geo(), labels: [], lines: geo() };
+    if (!res) return out;
+    const m = S.mode, n = NS[S.ni], show = $('showCells').checked;
+    if (m === 'cov') return out;
+    if (!solid()) {
+      const Rg = S.mode === 'slices' ? (S.ord === 'A' ? R : R2) : R, curved = m === 'polar' || m === 'slices', mm = curved ? Math.max(1, Math.ceil(24 / n)) : 1;
+      /* the surface over the region, on a fitted grid */
+      if ($('showSurf').checked) {
+        const k = 40, P = {}, q = [0, 0], pts = [];
+        for (let i = 0; i <= k; i++) { pts.push([]); for (let j = 0; j <= k; j++) { q[0] = Rg.lo[0]() + (Rg.hi[0]() - Rg.lo[0]()) * i / k; q[1] = Rg.lo[1](q) + (Rg.hi[1](q) - Rg.lo[1](q)) * j / k; pointOf(Rg, q, P); let f = G.f(P); if (!isFinite(f)) f = 0; f = Math.max(-3 * SC.fmax, Math.min(3 * SC.fmax, f)); pts[i].push([toS2(P.x, P.y, f), f]); } }
+        for (let i = 0; i < k; i++) for (let j = 0; j < k; j++) { const a = pts[i][j], b = pts[i + 1][j], c = pts[i + 1][j + 1], d = pts[i][j + 1], f = (a[1] + c[1]) / 2; face(out.surf, a[0], b[0], c[0], d[0], mix(T.rgb_surf, f >= 0 ? T.rgb_pos : T.rgb_neg, Math.min(1, Math.abs(f) / SC.fmax) * 0.35)); if (i % 5 === 0) seg(out.surf, a[0], d[0]); if (j % 5 === 0) seg(out.surf, a[0], b[0]); }
+      }
+      /* the region's outline on the floor */
+      const edge = [];
+      for (let k = 0; k <= 4 * 60; k++) { const s = k / 60, side = Math.floor(s), t = s - side, u = [[t, 0], [1, t], [1 - t, 1], [0, 1 - t]][Math.min(3, side)]; const p = mapU(Rg, u); edge.push(toS2(p[0], p[1], 0)); }
+      for (let k = 0; k + 1 < edge.length; k++) seg(out.lines, edge[k], edge[k + 1]);
+      if (m === 'slices' && extra.slabs) {
+        const L = extra.slabs.list, upto = S.run ? S.pos : 1, cur = posT(), P = {};
+        L.forEach((sl, i) => {
+          if (sl.t0 > Rg.lo[0]() + (Rg.hi[0]() - Rg.lo[0]()) * upto + 1e-12 && S.run) return;
+          if (!show) return;
+          const k = 24, q = [sl.t, 0], lo = Rg.lo[1](q), hi = Rg.hi[1](q), col = mix(T.rgb_slice, T.rgb_lo, i % 2 ? 0.45 : 0.25), ring = [];
+          for (let j = 0; j <= k; j++) { q[1] = lo + (hi - lo) * j / k; pointOf(Rg, q, P); let f = G.f(P); if (!isFinite(f)) f = 0; ring.push([q[1], f]); }
+          const pt = (t, s, f) => (Rg.names[0] === 'x' ? toS2(t, s, f) : toS2(s, t, f));
+          for (let j = 0; j < k; j++) {
+            const [s0, f0] = ring[j], [s1, f1] = ring[j + 1];
+            face(out.slab, pt(sl.t0, s0, 0), pt(sl.t0, s1, 0), pt(sl.t0, s1, f1), pt(sl.t0, s0, f0), col);
+            face(out.slab, pt(sl.t1, s0, 0), pt(sl.t1, s1, 0), pt(sl.t1, s1, f1), pt(sl.t1, s0, f0), col);
+            face(out.slab, pt(sl.t0, s0, f0), pt(sl.t0, s1, f1), pt(sl.t1, s1, f1), pt(sl.t1, s0, f0), mix(col, [1, 1, 1], 0.15));
+          }
+        });
+        /* the slice now: a curtain under the surface */
+        const k = 40, q = [cur, 0], lo = Rg.lo[1](q), hi = Rg.hi[1](q), pt = (s, f) => (Rg.names[0] === 'x' ? toS2(cur, s, f) : toS2(s, cur, f));
+        let prev = null;
+        for (let j = 0; j <= k; j++) { q[1] = lo + (hi - lo) * j / k; pointOf(Rg, q, P); let f = G.f(P); if (!isFinite(f)) f = 0; const now = [q[1], f]; if (prev) { face(out.el, pt(prev[0], 0), pt(now[0], 0), pt(now[0], now[1]), pt(prev[0], prev[1]), T.rgb_slice); seg(out.el, pt(prev[0], prev[1]), pt(now[0], now[1])); } prev = now; }
+        seg(out.el, pt(lo, 0), pt(hi, 0));
+      } else if (cellsNow && show) {
+        const ref = cellsNow.list.reduce((s, c) => Math.max(s, isFinite(c.v) ? Math.abs(c.v) : 0), 0) || 1;
+        for (const c of cellsNow.list) { if (!isFinite(c.v)) continue; prism(out.cells, ring2(Rg, c.i[0], c.i[1], n, mm, 0), 0, c.v * SC.s * SC.kz, signCol(c.v, ref)); }
+      }
+      /* the area element: one cell outlined on the floor, with its sides labeled */
+      if ($('showElem').checked && cellsNow && m !== 'slices') {
+        const [i, j] = midIdx(2, n), ring = ring2(Rg, i, j, n, Math.max(4, mm), 0), c = cellsNow.list[i * n + j];
+        for (let k = 0; k < ring.length; k++) seg(out.el, toS2(ring[k][0], ring[k][1], 0.002 / SC.s), toS2(ring[(k + 1) % ring.length][0], ring[(k + 1) % ring.length][1], 0.002 / SC.s));
+        elemLabels(out, Rg, [i, j], n, (p) => toS2(p[0], p[1], 0), c);
+      }
+      return out;
+    }
+    /* solids */
+    const Rg = m === 'mass' ? B.R : R, list = cellsNow ? cellsNow.list : [];
+    let vmin = Infinity, vmax = -Infinity; for (const c of list) if (isFinite(c.v)) { vmin = Math.min(vmin, c.v); vmax = Math.max(vmax, c.v); }
+    const span = vmax - vmin > 1e-12 * Math.max(1, Math.abs(vmax)) ? vmax - vmin : 0, colOf = (v) => (span ? heat((v - vmin) / span) : signCol(v, Math.abs(vmax) || 1));
+    const upto = S.mode === 'triple' && S.run ? Math.floor(S.fill * list.length) : list.length, gap = m === 'mass' ? 0.04 : 0.08;
+    const thin = m === 'mass' && B.dim < 3, t = (m === 'mass' ? (S.shape === 'rod' ? 0.03 * S.d.L : 0.035 * Math.max(S.bb[1] - S.bb[0], S.bb[3] - S.bb[2])) : 0);
+    if (show) list.forEach((c, k) => {
+      if (k >= upto || !shown(c) || !isFinite(c.v)) return;
+      const col = colOf(c.v);
+      if (!thin) cell3(out.cells, Rg, c.i, n, Math.max(1, Math.ceil(8 / n)), gap, col);
+      else if (B.dim === 2) { const ring = ring2(Rg, c.i[0], c.i[1], n, Math.max(1, Math.ceil(24 / n)), gap / 2); prism(out.cells, ring, -t * SC.s, t * SC.s, col); }
+      else { const x0 = Rg.lo[0]() + (Rg.hi[0]() - Rg.lo[0]()) * (c.i[0] + gap) / n, x1 = Rg.lo[0]() + (Rg.hi[0]() - Rg.lo[0]()) * (c.i[0] + 1 - gap) / n; prism(out.cells, [[x0, -t], [x1, -t], [x1, t], [x0, t]], -t * SC.s, t * SC.s, col); }
+    });
+    if ($('showElem').checked && list.length && Rg.dim === 3) {
+      const idx = midIdx(3, n, Rg), c = list[idx.reduce((s, i) => s * n + i, 0)], g2 = geo();
+      cell3(g2, Rg, idx, n, Math.max(2, Math.ceil(8 / n)), 0, T.rgb_slice); out.el = g2;
+      elemLabels(out, Rg, idx, n, (p) => toS(p), c);
+    }
+    return out;
+  }
+  /* labels on the edges of the element from its corner: the length of each edge, named for its coordinate */
+  function elemLabels(out, Rg, idx, n, to, c) {
+    const d = Rg.dim, base = idx.map((i) => i / n), p0 = mapU(Rg, base), names = EL[Rg.kind] || EL.rect;
+    for (let k = 0; k < d; k++) {
+      const u = base.slice(); u[k] = (idx[k] + 1) / n; const p1 = mapU(Rg, u), len = Math.hypot(p1[0] - p0[0], p1[1] - p0[1], p1[2] - p0[2]), mid = mapU(Rg, base.map((b, j) => (j === k ? b + 0.5 / n : b)));
+      out.labels.push({ at: to(mid), text: `${names[Rg.names[k]] || 'Δ' + show(Rg.names[k])} ≈ ${fmt(len, 3)}` });
+    }
+    if (c) out.labels.push({ at: to(mapU(Rg, idx.map((i) => (i + 1) / n))), text: (Rg.dim === 3 ? 'ΔV' : 'ΔA') + ` = ${fmt(c.w, 3)}` });
+  }
+  const posT = () => { const Ro = S.ord === 'A' ? R : R2, a = Ro.lo[0](), b = Ro.hi[0](); return a + (b - a) * S.pos; };
+
+  /* ---------- the 3D view ---------- */
+  let K3 = null;
+  function init3() {
+    const st = VD3K.stage(pane, { before: can, fov: 30, near: 0.05, far: 100 }); if (!st) return false;
+    K3 = { st, root: new THREE.Group(), spin: new THREE.Group(), sprites: [] };
+    K3.root.add(K3.spin); st.scene.add(K3.root);
+    K3.mats = {
+      cells: new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.75, metalness: 0, side: THREE.DoubleSide, polygonOffset: true, polygonOffsetFactor: 1, polygonOffsetUnits: 1 }),
+      surf: new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.6, metalness: 0, side: THREE.DoubleSide, transparent: true, opacity: 0.55, depthWrite: false }),
+      slab: new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.7, side: THREE.DoubleSide, transparent: true, opacity: 0.5, depthWrite: false, polygonOffset: true, polygonOffsetFactor: 1, polygonOffsetUnits: 1 }),
+      el: new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.5, side: THREE.DoubleSide, transparent: true, opacity: 0.85 }),
+      line: new THREE.LineBasicMaterial({ transparent: true, opacity: 0.55 }), line2: new THREE.LineBasicMaterial({ transparent: true, opacity: 0.9 }), axis: new THREE.LineBasicMaterial({}),
+    };
+    st.orbit(st.el, orb, () => { need = true; }, { zMin: 0.4, zMax: 4, phMin: 0.05, phMax: 2.2 }); st.el.tabIndex = 0;
+    st.el.setAttribute('aria-hidden', 'true');
+    dirty3 = true; return true;
+  }
+  /* a typed bound like x^1000 can put a point at infinity: leave out every triangle (k = 9) or segment (k = 6) that has one */
+  function finiteOnly(a, k, b) {
+    let ok = true; for (let i = 0; i < a.length && ok; i++) ok = isFinite(a[i]);
+    if (ok) return;
+    const pa = [], pb = [];
+    for (let i = 0; i + k <= a.length; i += k) {
+      let f = true; for (let j = 0; j < k; j++) if (!isFinite(a[i + j])) { f = false; break; }
+      if (f) { for (let j = 0; j < k; j++) { pa.push(a[i + j]); if (b) pb.push(b[i + j]); } }
+    }
+    a.length = pa.length; for (let i = 0; i < pa.length; i++) a[i] = pa[i];
+    if (b) { b.length = pb.length; for (let i = 0; i < pb.length; i++) b[i] = pb[i]; }
+  }
+  function meshOf(g, mat) {
+    const grp = new THREE.Group();
+    finiteOnly(g.p, 9, g.c);
+    if (g.p.length) { const bg = new THREE.BufferGeometry(); bg.setAttribute('position', new THREE.Float32BufferAttribute(g.p, 3)); bg.setAttribute('color', new THREE.Float32BufferAttribute(g.c, 3)); bg.computeVertexNormals(); grp.add(new THREE.Mesh(bg, mat)); }
+    return grp;
+  }
+  function linesOf(g, mat) { const grp = new THREE.Group(); finiteOnly(g.l, 6); if (g.l.length) { const bg = new THREE.BufferGeometry(); bg.setAttribute('position', new THREE.Float32BufferAttribute(g.l, 3)); grp.add(new THREE.LineSegments(bg, mat)); } return grp; }
+  function sprite(text, at, color, size) {
+    const sp = VD3K.label(text, { size: (size || 0.075) * 1.5, color: color || T.ink, bg: css(T.rgb_canvas, 0.72) }); sp.position.set(at[0], at[1], at[2]); sp.material.depthTest = false; sp.renderOrder = 9; return sp;
+  }
+  let GEO = null;
+  function build3() {
+    dirty3 = false;
+    GEO = buildGeo();
+    if (!K3) return;
+    const { st, root, spin, mats } = K3;
+    for (const o of [...root.children]) if (o !== spin) { st.dispose(o); }
+    for (const o of [...spin.children]) st.dispose(o);
+    mats.line.color.setRGB(...T.rgb_edge); mats.line2.color.setRGB(...T.rgb_slice); mats.axis.color.setRGB(...T.rgb_muted);
+    const holder = S.mode === 'mass' ? spin : root;
+    holder.add(meshOf(GEO.cells, mats.cells), linesOf(GEO.cells, mats.line), meshOf(GEO.el, mats.el), linesOf(GEO.el, mats.line2));
+    root.add(meshOf(GEO.surf, mats.surf), linesOf(GEO.surf, mats.line), meshOf(GEO.slab, mats.slab), linesOf(GEO.slab, mats.line), linesOf(GEO.lines, mats.axis));
+    /* axes from the origin (or the near corner when the origin is far away) */
+    const ax = geo(), bb = S.bb, o = [bb[0] <= 0 && bb[1] >= 0 ? 0 : bb[0], bb[2] <= 0 && bb[3] >= 0 ? 0 : bb[2], 0];
+    const sz = solid() && isFinite(bb[5]) ? [bb[4], bb[5]] : [Math.min(0, -SC.fmax * (S.mode === 'boxes' || S.mode === 'polar' || S.mode === 'slices' ? 0 : 1)), SC.fmax];
+    const tz = (z) => (solid() ? toS([o[0], o[1], z]) : toS2(o[0], o[1], z));
+    const ends = [[[bb[0], o[1], o[2]], [bb[1] + 0.12 * (bb[1] - bb[0]), o[1], o[2]], 'x'], [[o[0], bb[2], o[2]], [o[0], bb[3] + 0.12 * (bb[3] - bb[2]), o[2]], 'y']];
+    for (const [a, b, nm] of ends) { const A = solid() ? toS(a) : toS2(a[0], a[1], 0), Bp = solid() ? toS(b) : toS2(b[0], b[1], 0); seg(ax, A, Bp); root.add(sprite(nm + (S.units && S.units.L ? ` (${S.units.L})` : ''), Bp, T.muted)); }
+    const zA = tz(Math.min(0, sz[0])), zB = tz(sz[1] * 1.15 + (solid() ? 0.05 * (bb[5] - bb[4]) : 0));
+    seg(ax, zA, zB); root.add(sprite(solid() ? 'z' + (S.units && S.units.L ? ` (${S.units.L})` : '') : zName(), zB, T.muted));
+    root.add(linesOf(ax, mats.axis));
+    /* tick values at the ends of the region */
+    if (!solid()) { root.add(sprite(fmt(bb[1], 3), toS2(bb[1], o[1], 0).map((v, i) => v + (i === 1 ? -0.1 : 0)), T.muted, 0.06)); root.add(sprite(fmt(bb[3], 3), toS2(o[0], bb[3], 0).map((v, i) => v + (i === 0 ? -0.1 : 0)), T.muted, 0.06)); root.add(sprite(fmt(SC.fmax, 3), toS2(o[0], o[1], SC.fmax), T.muted, 0.06)); }
+    for (const L of GEO.labels) holder.add(sprite(L.text, L.at, T.ink, 0.07));
+    if (S.mode === 'mass' && res && res.ok) {
+      const A = B.axes[S.axis], big = 1.6 / SC.s, p0 = A.p.map((v, i) => v - A.u[i] * big), p1 = A.p.map((v, i) => v + A.u[i] * big), g2 = geo();
+      seg(g2, toS(p0), toS(p1)); const axl = linesOf(g2, mats.line2); root.add(axl);
+      root.add(sprite(T_('axis'), toS(A.p.map((v, i) => v + A.u[i] * big * 0.75)), T.slice, 0.07));
+      const cm = new THREE.Mesh(new THREE.SphereGeometry(0.035, 20, 12), new THREE.MeshStandardMaterial({ color: new THREE.Color(...T.rgb_ink), roughness: 0.4 }));
+      cm.position.set(...toS(res.cm)); spin.add(cm); spin.add(sprite('CM', toS(res.cm).map((v, i) => v + (i === 2 ? 0.1 : 0)), T.ink, 0.07));
+    }
+    need = true;
+  }
+  const zName = () => (S.units && S.units.f ? `f (${S.units.f})` : 'z = f');
+  /* the spin of a body about its axis, as a matrix on the group that holds it */
+  function setSpin() {
+    if (!K3) return; const g = K3.spin;
+    if (S.mode !== 'mass' || !B || !B.axes[S.axis]) { g.matrixAutoUpdate = true; g.rotation.set(0, 0, 0); return; }
+    const A = B.axes[S.axis], p = toS(A.p), M = new THREE.Matrix4().makeTranslation(p[0], p[1], p[2]);
+    M.multiply(new THREE.Matrix4().makeRotationAxis(new THREE.Vector3(...A.u).normalize(), S.spin)).multiply(new THREE.Matrix4().makeTranslation(-p[0], -p[1], -p[2]));
+    g.matrixAutoUpdate = false; g.matrix.copy(M); g.matrixWorldNeedsUpdate = true;
+  }
+  function render3() {
+    const st = K3.st, r = pane.getBoundingClientRect(); st.size(r.width, r.height);
+    const tz = solid() ? 0 : 0.35 * SC.fmax * SC.s * SC.kz;
+    setSpin(); st.place(orb, [0, 0, tz], st.fit(5.4)); st.render();
+  }
+
+  /* ---------- the flat drawing ---------- */
+  const proj = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.35 : 1);
+  function niceStep(raw) { const p = Math.pow(10, Math.floor(Math.log10(raw))), m = raw / p; return (m <= 1 ? 1 : m <= 2 ? 2 : m <= 2.5 ? 2.5 : m <= 5 ? 5 : 10) * p; }
+  const tick = (v, st) => fmt(Number(v.toFixed(Math.max(0, -Math.floor(Math.log10(st)) + 1))), 6);
+  function lab(t, u, v) { ctx.save(); ctx.strokeStyle = T.canvas; ctx.lineWidth = 4; ctx.lineJoin = 'round'; ctx.strokeText(t, u, v); ctx.restore(); ctx.fillText(t, u, v); }
+  function axes2(p, area, Xf, Yf, Xr, Yr, s, names) {
+    const [ax0, ay0, aw, ah] = area, x0 = Xr(ax0), x1 = Xr(ax0 + aw), y0 = Yr(ay0 + ah), y1 = Yr(ay0), st = niceStep(80 * p * s);
+    ctx.save(); ctx.beginPath(); ctx.rect(ax0, ay0, aw, ah); ctx.clip();
+    ctx.lineWidth = 1; ctx.strokeStyle = T.line; ctx.beginPath();
+    for (let x = Math.ceil(x0 / st) * st; x <= x1; x += st) { const u = Math.round(Xf(x)) + 0.5; ctx.moveTo(u, ay0); ctx.lineTo(u, ay0 + ah); }
+    for (let y = Math.ceil(y0 / st) * st; y <= y1; y += st) { const u = Math.round(Yf(y)) + 0.5; ctx.moveTo(ax0, u); ctx.lineTo(ax0 + aw, u); }
+    ctx.stroke(); ctx.strokeStyle = T.muted; ctx.lineWidth = 1.3; ctx.beginPath();
+    ctx.moveTo(ax0, Yf(0)); ctx.lineTo(ax0 + aw, Yf(0)); ctx.moveTo(Xf(0), ay0); ctx.lineTo(Xf(0), ay0 + ah); ctx.stroke();
+    ctx.fillStyle = T.muted; ctx.font = `${11 * p}px ${T.mono}`;
+    const yA = Math.min(Math.max(Yf(0), ay0), ay0 + ah - 16 * p), xA = Math.min(Math.max(Xf(0), ax0), ax0 + aw - 40 * p);
+    ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    for (let x = Math.ceil(x0 / st) * st; x <= x1; x += st) if (Math.abs(x) > st / 2) lab(tick(x, st), Xf(x), yA + 4 * p);
+    ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    for (let y = Math.ceil(y0 / st) * st; y <= y1; y += st) if (Math.abs(y) > st / 2 && Yf(y) > ay0 + 12 && Yf(y) < ay0 + ah - 12) lab(tick(y, st), xA + 5 * p, Yf(y));
+    const L = S.units && S.units.L ? ` (${S.units.L})` : '';
+    ctx.textAlign = 'right'; ctx.textBaseline = 'bottom'; lab(names[0] + L, ax0 + aw - 6 * p, yA - 3 * p);
+    ctx.textAlign = 'left'; ctx.textBaseline = 'top'; lab(names[1] + L, xA + 5 * p, ay0 + 6 * p);
+    ctx.restore();
+  }
+  function poly(pts, Xf, Yf) { ctx.beginPath(); pts.forEach((q, k) => (k ? ctx.lineTo(Xf(q[0]), Yf(q[1])) : ctx.moveTo(Xf(q[0]), Yf(q[1])))); ctx.closePath(); }
+  function outline(Rg) { const pts = []; for (let k = 0; k < 4 * 80; k++) { const s = k / 80, side = Math.floor(s), t = s - side, u = [[t, 0], [1, t], [1 - t, 1], [0, 1 - t]][side]; pts.push(mapU(Rg, u)); } return pts; }
+  function drawFlat2(p) {
+    const area = flatArea(), n = NS[S.ni], m = S.mode, Rg = m === 'slices' ? (S.ord === 'A' ? R : R2) : R;
+    axes2(p, area, X, Y, Xi, Yi, S.vw.s, ['x', 'y']);
+    if (!res) return;
+    ctx.save(); ctx.beginPath(); ctx.rect(area[0], area[1], area[2], area[3]); ctx.clip();
+    const edge = outline(Rg);
+    poly(edge, X, Y); ctx.fillStyle = css(T.rgb_lo, 0.45); ctx.fill();
+    if ((m === 'boxes' || m === 'polar') && cellsNow && $('showCells').checked) {
+      const ref = cellsNow.list.reduce((s, c) => Math.max(s, isFinite(c.v) ? Math.abs(c.v) : 0), 0) || 1, mm = m === 'polar' ? Math.max(1, Math.ceil(24 / n)) : 1;
+      ctx.lineWidth = 1; ctx.strokeStyle = css(T.rgb_edge, 0.55);
+      for (const c of cellsNow.list) { poly(ring2(Rg, c.i[0], c.i[1], n, mm, 0), X, Y); ctx.fillStyle = isFinite(c.v) ? css(signCol(c.v, ref), 0.75) : 'transparent'; ctx.fill(); ctx.stroke(); }
+      ctx.fillStyle = T.ink; const r = Math.max(1.5, Math.min(3.5, 240 / n / 12)) * p;
+      if (n <= 32) for (const c of cellsNow.list) { ctx.beginPath(); ctx.arc(X(c.P.x), Y(c.P.y), r, 0, 2 * Math.PI); ctx.fill(); }
+      if (n <= 4) { ctx.font = `${11 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; for (const c of cellsNow.list) lab('f = ' + fmt(c.v, 3), X(c.P.x), Y(c.P.y) - 5 * p); }
+    }
+    if (m === 'slices' && extra.slabs && $('showCells').checked) {
+      const a = Rg.lo[0](), b = Rg.hi[0]();
+      extra.slabs.list.forEach((sl, i) => { const pts = []; for (const [t, side] of [[sl.t0, 0], [sl.t1, 1]]) for (let k = 0; k <= 24; k++) { const q = [t]; const lo = Rg.lo[1](q), hi = Rg.hi[1](q), s = side ? hi + (lo - hi) * k / 24 : lo + (hi - lo) * k / 24; pts.push(Rg.names[0] === 'x' ? [t, s] : [s, t]); } poly(pts, X, Y); ctx.fillStyle = css(T.rgb_slice, i % 2 ? 0.1 : 0.2); ctx.fill(); });
+      void a; void b;
+    }
+    /* both orders' outlines in Slices, and where they disagree */
+    if (m === 'slices') {
+      ctx.lineWidth = 2.4 * p; ctx.strokeStyle = T.surf; poly(outline(R), X, Y); ctx.stroke();
+      ctx.setLineDash([7 * p, 5 * p]); ctx.strokeStyle = T.slice; poly(outline(R2), X, Y); ctx.stroke(); ctx.setLineDash([]);
+      if (extra.cmp && extra.cmp.frac > 0.002) { ctx.fillStyle = css(rgb(T.bad), 0.55); const [cw, ch] = extra.cmp.cell; for (const [x, y] of extra.cmp.bad) ctx.fillRect(X(x - cw / 2), Y(y + ch / 2), Math.max(1, cw / S.vw.s), Math.max(1, ch / S.vw.s)); }
+      const t = posT(), q = [t], lo = Rg.lo[1](q), hi = Rg.hi[1](q), A = Rg.names[0] === 'x' ? [[t, lo], [t, hi]] : [[lo, t], [hi, t]];
+      ctx.strokeStyle = T.slice; ctx.lineWidth = 3.5 * p; ctx.beginPath(); ctx.moveTo(X(A[0][0]), Y(A[0][1])); ctx.lineTo(X(A[1][0]), Y(A[1][1])); ctx.stroke();
+    } else { ctx.lineWidth = 2 * p; ctx.strokeStyle = T.surf; poly(edge, X, Y); ctx.stroke(); }
+    if ($('showElem').checked && cellsNow && m !== 'slices') {
+      const [i, j] = midIdx(2, n); ctx.lineWidth = 3 * p; ctx.strokeStyle = T.slice; poly(ring2(Rg, i, j, n, 24, 0), X, Y); ctx.stroke();
+      const o = { labels: [] }; elemLabels(o, Rg, [i, j], n, (q) => q, cellsNow.list[i * n + j]);
+      ctx.font = `600 ${11.5 * p}px ${T.mono}`; ctx.fillStyle = T.slice; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+      o.labels.forEach((L, k) => lab(L.text, X(L.at[0]) + 6 * p, Y(L.at[1]) + (k - 1) * 14 * p));
+    }
+    ctx.restore();
+    if (m === 'slices') sliceGraph(p, [0, H * 0.6, W, H * 0.4], false);
+  }
+  /* A(t), the area of one slice under the surface, against the outer coordinate: its area is the double integral */
+  function sliceGraph(p, box, inset) {
+    if (!res || !extra.curve) return;
+    const [bx, by, bw, bh] = box, C = extra.curve, Ro = S.ord === 'A' ? R : R2, tn = show(Ro.names[0]), sn = show(Ro.names[1]);
+    let lo = 0, hi = 0; for (const [, v] of C.pts) if (isFinite(v)) { lo = Math.min(lo, v); hi = Math.max(hi, v); }
+    if (!(hi > lo)) hi = lo + 1;
+    const ml = 54 * p, mr = 14 * p, mt = 22 * p, mb = 26 * p, gx = (t) => bx + ml + (t - C.a) / (C.b - C.a || 1) * (bw - ml - mr), gy = (v) => by + mt + (hi - v) / (hi - lo) * (bh - mt - mb);
+    ctx.save();
+    if (inset) { ctx.fillStyle = css(T.rgb_canvas, 0.85); ctx.fillRect(bx, by, bw, bh); ctx.strokeStyle = T.line; ctx.strokeRect(bx + 0.5, by + 0.5, bw - 1, bh - 1); }
+    else { ctx.strokeStyle = T.line; ctx.beginPath(); ctx.moveTo(bx, by + 0.5); ctx.lineTo(bx + bw, by + 0.5); ctx.stroke(); }
+    ctx.strokeStyle = T.muted; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(gx(C.a), gy(0)); ctx.lineTo(gx(C.b), gy(0)); ctx.moveTo(gx(C.a), gy(lo)); ctx.lineTo(gx(C.a), gy(hi)); ctx.stroke();
+    /* the slabs as bars, then the curve, the slice now */
+    if (extra.slabs && $('showCells').checked) for (const [i, sl] of extra.slabs.list.entries()) { if (!isFinite(sl.A)) continue; ctx.fillStyle = css(T.rgb_slice, i % 2 ? 0.18 : 0.3); const y0 = gy(0), y1 = gy(sl.A); ctx.fillRect(gx(sl.t0), Math.min(y0, y1), gx(sl.t1) - gx(sl.t0), Math.abs(y1 - y0)); }
+    ctx.strokeStyle = T.surf; ctx.lineWidth = 2.2 * p; ctx.beginPath(); let on = false;
+    for (const [t, v] of C.pts) { if (!isFinite(v)) { on = false; continue; } if (on) ctx.lineTo(gx(t), gy(v)); else ctx.moveTo(gx(t), gy(v)); on = true; } ctx.stroke();
+    const t = posT(), A = sliceAt(Ro, G.f, t);
+    ctx.strokeStyle = T.slice; ctx.lineWidth = 2.5 * p; ctx.beginPath(); ctx.moveTo(gx(t), gy(0)); ctx.lineTo(gx(t), gy(isFinite(A) ? A : 0)); ctx.stroke();
+    ctx.fillStyle = T.muted; ctx.font = `${11 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    lab(`A(${tn}) = ∫ f d${sn}`, bx + ml + 4 * p, by + 5 * p);
+    ctx.textAlign = 'right'; lab(fmt(hi, 3), bx + ml - 4 * p, gy(hi) - 6 * p); ctx.textBaseline = 'top'; ctx.textAlign = 'center'; lab(fmt(C.a, 3), gx(C.a), gy(0) + 4 * p); lab(fmt(C.b, 3), gx(C.b), gy(0) + 4 * p);
+    ctx.textAlign = 'right'; ctx.textBaseline = 'bottom'; lab(tn, bx + bw - mr, by + bh - 4 * p);
+    ctx.restore();
+  }
+  /* solids in the flat view: the same faces as the 3D view, drawn back to front from the same angle */
+  const VIEW = { k: 1 };
+  function painter(p) {
+    const st = Math.sin(orb.ph), dir = [st * Math.cos(orb.th), st * Math.sin(orb.th), Math.cos(orb.ph)], rt = [-Math.sin(orb.th), Math.cos(orb.th), 0], up = [-Math.cos(orb.ph) * Math.cos(orb.th), -Math.cos(orb.ph) * Math.sin(orb.th), st];
+    const k = Math.min(W, H) * 0.36 * orb.zoom, cx = W / 2, cy = H / 2, dot = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2], pr = (q) => [cx + dot(q, rt) * k, cy - dot(q, up) * k];
+    VIEW.pr = pr;
+    if (!GEO) return;
+    /* a body turning about its axis (Play in Mass and inertia): each point turned by the spin angle about the axis */
+    const A = S.mode === 'mass' && B && B.axes[S.axis]; let rot = (q) => q;
+    if (A && S.spin) {
+      const p0 = toS(A.p), u = A.u, c = Math.cos(S.spin), s = Math.sin(S.spin);
+      rot = (q) => { const v = [q[0] - p0[0], q[1] - p0[1], q[2] - p0[2]], d = v[0] * u[0] + v[1] * u[1] + v[2] * u[2], cr = [u[1] * v[2] - u[2] * v[1], u[2] * v[0] - u[0] * v[2], u[0] * v[1] - u[1] * v[0]]; return [0, 1, 2].map((i) => p0[i] + v[i] * c + cr[i] * s + u[i] * d * (1 - c)); };
+    }
+    VIEW.rot = rot;
+    const faces = [];
+    const add = (g, alpha) => { for (const f0 of g.q) if (f0) { const f = [rot(f0[0]), rot(f0[1]), rot(f0[2]), rot(f0[3]), f0[4]]; const c = [(f[0][0] + f[2][0]) / 2, (f[0][1] + f[2][1]) / 2, (f[0][2] + f[2][2]) / 2], e1 = f[1].map((v, i) => v - f[0][i]), e2 = f[3].map((v, i) => v - f[0][i]), nx = [e1[1] * e2[2] - e1[2] * e2[1], e1[2] * e2[0] - e1[0] * e2[2], e1[0] * e2[1] - e1[1] * e2[0]], nl = Math.hypot(...nx) || 1; faces.push([dot(c, dir), f, Math.abs(dot(nx, [0.3, -0.5, 0.8]) / nl / 1.0), alpha]); } };
+    add(GEO.cells, 1); add(GEO.el, 0.85);
+    faces.sort((a, b) => a[0] - b[0]);
+    ctx.lineJoin = 'round'; ctx.lineWidth = 0.6;
+    for (const [, f, li, al] of faces) {
+      const sh = 0.6 + 0.4 * Math.min(1, li), col = f[4].map((v) => v * sh);
+      ctx.beginPath(); for (let i = 0; i < 4; i++) { const q = pr(f[i]); if (i) ctx.lineTo(q[0], q[1]); else ctx.moveTo(q[0], q[1]); } ctx.closePath();
+      ctx.fillStyle = css(col, al); ctx.fill(); ctx.strokeStyle = css(mix(col, T.rgb_edge, 0.5), 0.6); ctx.stroke();
+    }
+    /* axes, the axis of rotation and the center of mass */
+    ctx.strokeStyle = T.muted; ctx.lineWidth = 1.2 * p; ctx.fillStyle = T.muted; ctx.font = `${12 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    const o = toS([0, 0, 0]), ext = 1.35;
+    for (const [d, nm] of [[[ext, 0, 0], 'x'], [[0, ext, 0], 'y'], [[0, 0, ext], 'z']]) { const a = pr(o), b = pr(o.map((v, i) => v + d[i])); ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke(); lab(nm, b[0], b[1]); }
+    if (S.mode === 'mass' && res && res.ok) {
+      const A = B.axes[S.axis], big = 1.6 / SC.s, a = pr(toS(A.p.map((v, i) => v - A.u[i] * big))), b = pr(toS(A.p.map((v, i) => v + A.u[i] * big)));
+      ctx.strokeStyle = T.slice; ctx.lineWidth = 2 * p; ctx.setLineDash([8, 5]); ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke(); ctx.setLineDash([]);
+      const c = pr(spunCM()); ctx.fillStyle = T.ink; ctx.beginPath(); ctx.arc(c[0], c[1], 5 * p, 0, 2 * Math.PI); ctx.fill(); ctx.textAlign = 'left'; lab('CM', c[0] + 8 * p, c[1] - 8 * p);
+    }
+    ctx.fillStyle = T.slice; ctx.font = `600 ${11.5 * p}px ${T.mono}`; ctx.textAlign = 'left';
+    for (const L of GEO.labels) { const q = pr(rot(L.at)); lab(L.text, q[0] + 6 * p, q[1]); }
+  }
+  /* the center of mass in scene units, turned with the body */
+  const spunCM = () => (VIEW.rot || ((q) => q))(toS(res.cm));
+  /* change of variables: the u, v grid beside its image in x, y */
+  function drawCov(p) {
+    if (!res) return;
+    const wide = W > 640, a1 = wide ? [0, 0, W * 0.4, H] : [0, 0, W, H * 0.42], a2 = wide ? [W * 0.4, 0, W * 0.6, H] : [0, H * 0.42, W, H * 0.58], n = NS[S.ni];
+    const u0 = R.lo[0](), u1 = R.hi[0](), v0 = R.lo[1]([0]), v1 = R.hi[1]([0]);
+    const fit = (ar, b, z) => { const s = Math.max((b[1] - b[0]) / (ar[2] * 0.72), (b[3] - b[2]) / (ar[3] * 0.72)) / (z || 1); return { s, cx: (b[0] + b[1]) / 2 + S.vw.cx * 0, cy: (b[2] + b[3]) / 2 }; };
+    const V1 = fit(a1, [Math.min(0, u0), u1, Math.min(0, v0), v1]), V2 = fit(a2, S.bb, 1 / (S.vw.s || 1));
+    V2.cx += S.vw.cx; V2.cy += S.vw.cy;
+    const mk = (ar, V) => [(x) => ar[0] + ar[2] / 2 + (x - V.cx) / V.s, (y) => ar[1] + ar[3] / 2 - (y - V.cy) / V.s, (u) => V.cx + (u - ar[0] - ar[2] / 2) * V.s, (v) => V.cy - (v - ar[1] - ar[3] / 2) * V.s];
+    const [Xa, Ya, Xai, Yai] = mk(a1, V1), [Xb, Yb, Xbi, Ybi] = mk(a2, V2);
+    axes2(p, a1, Xa, Ya, Xai, Yai, V1.s, ['u', 'v']); axes2(p, a2, Xb, Yb, Xbi, Ybi, V2.s, ['x', 'y']);
+    ctx.strokeStyle = T.line; ctx.lineWidth = 1; if (wide) { ctx.beginPath(); ctx.moveTo(a2[0] + 0.5, 0); ctx.lineTo(a2[0] + 0.5, H); ctx.stroke(); } else { ctx.beginPath(); ctx.moveTo(0, a2[1] + 0.5); ctx.lineTo(W, a2[1] + 0.5); ctx.stroke(); }
+    const U = (i) => u0 + (u1 - u0) * i / n, Vv = (j) => v0 + (v1 - v0) * j / n, img = (u, v) => [MAP.X(u, v), MAP.Y(u, v)];
+    /* cells: the u, v squares and their images, shaded by |J| */
+    let jm = 0; for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) { const J = Math.abs(MAP.J((U(i) + U(i + 1)) / 2, (Vv(j) + Vv(j + 1)) / 2)); if (isFinite(J)) jm = Math.max(jm, J); }
+    const cellPts = (i, j, k) => { const pts = []; for (let s = 0; s < k; s++) pts.push([U(i) + (U(i + 1) - U(i)) * s / k, Vv(j)]); for (let s = 0; s < k; s++) pts.push([U(i + 1), Vv(j) + (Vv(j + 1) - Vv(j)) * s / k]); for (let s = 0; s < k; s++) pts.push([U(i + 1) - (U(i + 1) - U(i)) * s / k, Vv(j + 1)]); for (let s = 0; s < k; s++) pts.push([U(i), Vv(j + 1) - (Vv(j + 1) - Vv(j)) * s / k]); return pts; };
+    const kk = Math.max(2, Math.ceil(32 / n)), pick = S.pick % (n * n), pi = Math.floor(pick / n), pj = pick % n;
+    for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) {
+      const J = Math.abs(MAP.J((U(i) + U(i + 1)) / 2, (Vv(j) + Vv(j + 1)) / 2)), col = css(heat(jm ? J / jm : 0.5), 0.6), pts = cellPts(i, j, kk);
+      ctx.fillStyle = col; ctx.strokeStyle = css(T.rgb_edge, 0.6); ctx.lineWidth = 1;
+      poly([[U(i), Vv(j)], [U(i + 1), Vv(j)], [U(i + 1), Vv(j + 1)], [U(i), Vv(j + 1)]], Xa, Ya); ctx.fill(); ctx.stroke();
+      poly(pts.map((q) => img(q[0], q[1])), Xb, Yb); ctx.fill(); ctx.stroke();
+    }
+    /* the marked cell, its image and the tangent parallelogram J predicts */
+    ctx.lineWidth = 3 * p; ctx.strokeStyle = T.slice;
+    poly([[U(pi), Vv(pj)], [U(pi + 1), Vv(pj)], [U(pi + 1), Vv(pj + 1)], [U(pi), Vv(pj + 1)]], Xa, Ya); ctx.stroke();
+    poly(cellPts(pi, pj, 24).map((q) => img(q[0], q[1])), Xb, Yb); ctx.stroke();
+    const uc = U(pi), vc = Vv(pj), du = U(pi + 1) - uc, dv = Vv(pj + 1) - vc, o = img(uc, vc), a = [MAP.Xu(uc, vc) * du, MAP.Yu(uc, vc) * du], b = [MAP.Xv(uc, vc) * dv, MAP.Yv(uc, vc) * dv];
+    ctx.setLineDash([5 * p, 4 * p]); ctx.lineWidth = 1.8 * p; ctx.strokeStyle = T.ink;
+    poly([o, [o[0] + a[0], o[1] + a[1]], [o[0] + a[0] + b[0], o[1] + a[1] + b[1]], [o[0] + b[0], o[1] + b[1]]], Xb, Yb); ctx.stroke(); ctx.setLineDash([]);
+    ctx.font = `${12 * p}px ${T.mono}`; ctx.fillStyle = T.muted; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    lab(T_('the u, v plane'), a1[0] + 10 * p, a1[1] + 8 * p); lab(T_('its image in the x, y plane'), a2[0] + 10 * p, a2[1] + 8 * p);
+    ctx.textBaseline = 'bottom'; lab(T_('dashed: the parallelogram with sides (∂x/∂u, ∂y/∂u) Δu and (∂x/∂v, ∂y/∂v) Δv'), a2[0] + 10 * p, a2[1] + a2[3] - 8 * p);
+    extra.covCell = { u: uc, v: vc, du, dv, img: imageArea(MAP, uc, uc + du, vc, vc + dv, 32), J: MAP.J(uc + du / 2, vc + dv / 2) };
+    void Xai; void Yai; void Xbi; void Ybi;
+  }
+  /* notes drawn over either view */
+  function hud(p) {
+    ctx.font = `${11.5 * p}px ${T.mono}`; ctx.fillStyle = T.muted; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
+    const line = [];
+    if (is3d && !solid() && S.mode !== 'cov' && SC.kz !== 1) line.push(T_('Heights drawn {k} times the horizontal scale', { k: fmt(SC.kz, 3) }));
+    if (S.mode === 'mass' && S.run) line.push(T_('Turning at one turn every 4 s, to show the axis'));
+    if (S.mode === 'triple' && S.fill < 1 && cellsNow) line.push(T_('{k} of {n} cells added', { k: Math.floor(S.fill * cellsNow.list.length), n: cellsNow.list.length }));
+    line.forEach((t, i) => lab(t, 10 * p, H - 10 * p - i * 16 * p));
+    if (is3d && S.mode === 'slices') sliceGraph(p, [W - Math.min(W * 0.5, 330 * p) - 8, 8, Math.min(W * 0.5, 330 * p), Math.min(H * 0.3, 170 * p)], true);
+  }
+  function draw() {
+    const p = proj();
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const flat3 = is3d && S.mode !== 'cov';
+    if (flat3) ctx.clearRect(0, 0, W, H); else { ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H); }
+    if (!res) { ctx.fillStyle = T.muted; ctx.font = `${13 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(T_('Waiting for something I can read in the boxes above.'), W / 2, H / 2); return; }
+    if (!flat3) { if (S.mode === 'cov') drawCov(p); else if (solid()) painter(p); else drawFlat2(p); }
+    hud(p);
+  }
+
+  /* ---------- the rail ---------- */
+  const dd = (a, b, cls) => `<div class="${cls || ''}"><dt>${a}</dt><dd translate="no">${b}</dd></div>`;
+  const hid = (s) => (S.blind ? '?' : s);
+  const FR = { '1/2': '½', '1/3': '⅓', '1/4': '¼', '1/5': '⅕', '1/6': '⅙', '2/5': '⅖', '3/5': '⅗', '3/10': '3/10', '1/12': '1/12' };
+  function readouts() {
+    const out = $('out'), vd = $('verdict'); vd.textContent = ''; vd.className = 'verdict';
+    if (!res) { out.innerHTML = ''; return; }
+    const n = NS[S.ni], m = S.mode, sc = Math.abs(res.v || 0) + 1e-300; let h = '';
+    if (m === 'boxes' || m === 'polar' || m === 'triple') {
+      const word = m === 'boxes' ? T_('Boxes') : m === 'polar' ? T_('Wedges') : T_('Cells'), cs = cellsNow;
+      h += dd(word, m === 'triple' ? `${n} × ${n} × ${n} = ${fmt(n * n * n, 6)}` : `${n} × ${n} = ${fmt(n * n, 6)}`);
+      if (cs) h += dd(m === 'boxes' ? T_('Riemann sum Σ f ΔA') : m === 'polar' ? T_('Wedge sum Σ f r Δr Δθ') : T_('Cell sum Σ f ΔV'), fmt(cs.sum, 7) + un('I'));
+      h += dd(m === 'triple' ? '∭ f dV' : m === 'polar' ? '∬ f r dr dθ' : '∬ f dA', hid(fmt(res.v, m === 'triple' ? 8 : 10)) + un('I'), 'wide');
+      if (cs) h += dd(T_('Sum − integral'), hid(fmt(cs.sum - res.v, 3, sc)));
+      h += dd(m === 'triple' ? T_('Volume') : T_('Area'), fmt(extra.area.v, 7) + (S.units && S.units.L ? ` ${S.units.L}${m === 'triple' ? '³' : '²'}` : ''));
+      if (extra.area.v) h += dd(T_('Average value of f'), hid(fmt(res.v / extra.area.v, 6)) + un('f'));
+      if (m === 'boxes' && cs) h += dd('ΔA', fmt(extra.area.v / (n * n), 5) + (S.units && S.units.L ? ` ${S.units.L}²` : ''));
+      if (extra.g1 != null) {
+        const Rr = extra.R;
+        h += dd(`π(1 − e^(−R²)), R = ${fmt(Rr, 4)}`, fmt(Math.PI * (1 - Math.exp(-Rr * Rr)), 10), 'wide');
+        h += dd(T_('Same surface over the square |x|, |y| ≤ R'), hid(fmt(extra.sq.v, 10)), 'wide');
+        h += dd(`(∫ e^(−x²) dx from −R to R)²`, fmt(extra.g1 * extra.g1, 10), 'wide');
+        h += dd('√(∬ over the disk)', hid(fmt(Math.sqrt(res.v), 10))) + dd('√π', fmt(Math.sqrt(Math.PI), 10));
+      }
+    } else if (m === 'slices') {
+      const o1 = 'dy dx', o2 = 'dx dy', r2 = extra.res2;
+      h += dd(`∬ f dA, ${o1}`, hid(fmt(res.v, 10))) + dd(`∬ f dA, ${o2}`, hid(fmt(r2.v, 10)));
+      h += dd(T_('Difference'), hid(fmt(res.v - r2.v, 3, sc))) + dd(T_('Areas'), `${fmt(extra.area.v, 7)}, ${fmt(extra.area2.v, 7)}`);
+      const Ro = S.ord === 'A' ? R : R2, t = posT(), tn = show(Ro.names[0]);
+      h += dd(`A(${tn}) at ${tn} = ${fmt(t, 4)}`, fmt(sliceAt(Ro, G.f, t), 6));
+      if (extra.slabs) h += dd(T_('Slabs Σ A Δ{t}, {n} of them', { t: tn, n }), fmt(extra.slabs.sum, 7));
+      if (extra.cmp) {
+        if (extra.cmp.frac > 0.002) { vd.className = 'verdict no'; vd.textContent = T_('The two orders describe different regions: they disagree on about {p} % of it, marked on the picture. Check the bounds of the second order.', { p: fmt(100 * extra.cmp.frac, 2) }); }
+        else vd.textContent = T_('Both orders describe the same region, so they give the same integral (Fubini\'s theorem).');
+      }
+    } else if (m === 'mass') {
+      if (!res.ok) { out.innerHTML = dd(T_('Mass M'), T_('undefined')); return; }
+      const u = BODY[S.shape].unit, cI = extra.cI, cCM = extra.cCM, L2 = CLOSED[S.shape].L2(S.d, S.axis), sym = S.shape === 'cone' && S.axis === 'base' ? 'MR²' : (typeof CLOSED[S.shape].sym === 'function' ? CLOSED[S.shape].sym(S.axis) : CLOSED[S.shape].sym);
+      h += dd(T_('Mass M'), fmt(res.M, 6) + ' kg') + dd(T_('Density scale k'), fmt(res.k, 5) + ' ' + u);
+      h += dd(T_('Center of mass (x̄, ȳ, z̄)'), '(' + res.cm.map((v) => fmt(v, 5, S.bb ? Math.abs(S.bb[1] - S.bb[0]) : 1)).join(', ') + ') m', 'wide');
+      if (cCM) h += dd(T_('Closed form'), hid('(' + cCM.map((v) => fmt(v, 5)).join(', ') + ') m'), 'wide');
+      h += dd(T_('I about the axis'), hid(fmt(res.I, 8)) + ' kg·m²');
+      h += dd(`I ÷ ${sym.replace(/^M/, 'M')}`, hid(fmt(res.I / (S.M * L2), 8)));
+      if (cI) { const fr = cI.frac ? FR[cI.frac.join('/')] || cI.frac.join('/') : ''; h += dd(T_('Closed form'), hid(`${fr}${fr.includes('/') ? ' ' : ''}${cI.frac ? sym : cI.text} = ${fmt(cI.I, 8)} kg·m²`), 'wide'); }
+      else h += dd(T_('Closed form'), T_('none listed for this density and axis'), 'wide');
+      h += dd(T_('Radius of gyration √(I/M)'), hid(fmt(Math.sqrt(res.I / res.M), 6)) + ' m');
+      if (cellsNow) { const ax = B.axes[S.axis]; let s = 0; for (const c of cellsNow.list) s += c.v * res.k * dist2(c.P, ax) * c.w; h += dd(T_('Cell sum Σ d² Δm, {n} a side', { n }), fmt(s, 6) + ' kg·m²'); }
+    } else if (m === 'cov') {
+      h += dd('∬ f dA = ∬ f |J| du dv', hid(fmt(res.v, 10)), 'wide') + dd(T_('Area of the image'), hid(fmt(extra.area.v, 10)));
+      const c = extra.covCell;
+      if (c) h += dd(T_('Marked cell: J at its middle'), fmt(c.J, 6)) + dd(T_('Its image\'s area'), fmt(c.img, 6)) + dd('|J| Δu Δv', fmt(Math.abs(c.J) * c.du * c.dv, 6));
+    }
+    out.innerHTML = h;
+  }
+  /* the iterated integral written out, with the typed bounds */
+  const tx = (t) => VM.text(t), esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
+  function iter(Rg, body, ds) { return Rg.names.map((nm, i) => `∫[${show(nm)}: ${tx(Rg.trees[i][0])} → ${tx(Rg.trees[i][1])}]`).join(' ') + ` ${body} ${ds}`; }
+  function formulas() {
+    const el = $('formulas'), m = S.mode, row = (a, b) => `<dt>${a}</dt><dd>${esc(b.length > 400 ? T_('too long to show') : b)}</dd>`;
+    if (!res) { el.innerHTML = ''; return; }
+    let h = '';
+    if (m === 'mass') {
+      h += row('M', '∫ δ dV') + row('x̄', '(1/M) ∫ x δ dV') + row('I', '∫ d² δ dV, d = distance from the axis');
+      h += row(T_('density'), S.dens === 'custom' ? 'k·(' + tx(G.tree) + ')' : { uniform: 'k', edge: 'k · d/size', center: 'k · (1 − d/size)' }[S.dens]);
+      h += row('dV', { rod: 'dx', plate: 'dx dy', disk: 'r dr dθ', sphere: 'ρ² sin φ dρ dφ dθ', cone: 'r dr dz dθ' }[S.shape]);
+      el.innerHTML = h; return;
+    }
+    h += row('f', tx(G.tree));
+    if (m === 'cov') {
+      const t = MAP.tree; h += row('x', tx(t.X)) + row('y', tx(t.Y)) + row('∂x/∂u', tx(t.xu)) + row('∂x/∂v', tx(t.xv)) + row('∂y/∂u', tx(t.yu)) + row('∂y/∂v', tx(t.yv));
+      h += row('J', tx(t.J)) + row('dA', '|J| du dv') + row('∬', iter(R, 'f(x(u, v), y(u, v)) |J|', 'dv du')); el.innerHTML = h; return;
+    }
+    if (m === 'boxes') h += row('Σ', 'Σ f(xᵢ*, yⱼ*) ΔA') + row('∬', iter(R, 'f', 'dy dx'));
+    if (m === 'slices') h += row('dy dx', iter(R, 'f', 'dy dx')) + row('dx dy', iter(R2, 'f', 'dx dy')) + row('A', S.ord === 'A' ? 'A(x) = ∫ f dy' : 'A(y) = ∫ f dx');
+    if (m === 'polar') h += row('dA', 'r dr dθ') + row('∬', iter(R, 'f r', 'dr dθ'));
+    if (m === 'triple') { const dV = { rect: 'dz dy dx', cyl: 'r dz dr dθ', sph: 'ρ² sin φ dρ dφ dθ' }[S.sys]; h += row('dV', dV) + row('∭', iter(R, 'f', dV)); }
+    el.innerHTML = h;
+  }
+
+  /* ---------- controls ---------- */
+  const NM = { x: 'x', y: 'y', z: 'z', r: 'r', theta: 'θ', phi: 'φ', rho: 'ρ', u: 'u', v: 'v' };
+  function syncUI() {
+    const m = S.mode;
+    for (const b of document.querySelectorAll('#modeSeg button')) b.setAttribute('aria-pressed', String(b.dataset.m === m));
+    const names = m === 'triple' ? SYSN[S.sys] : m === 'polar' ? ['theta', 'r'] : m === 'cov' ? ['u', 'v'] : ['x', 'y'];
+    $('mapRow').hidden = m !== 'cov'; $('fRow').hidden = m === 'mass' && S.dens !== 'custom';
+    $('fLab').textContent = m === 'mass' ? 'density ∝' : m === 'triple' ? 'f(x, y, z) =' : 'f(x, y) =';
+    $('bndA').hidden = m === 'mass'; $('bndB').hidden = m !== 'slices';
+    $('r3').hidden = m !== 'triple';
+    names.forEach((nm, i) => { $('b' + (i + 1) + 'v').textContent = `≤ ${NM[nm]} ≤`; });
+    $('ordA').textContent = m === 'slices' ? T_('Order dy dx: x outside, y inside') : m === 'polar' ? T_('θ outside, r inside') : m === 'triple' ? T_('Outer to inner') : m === 'cov' ? T_('The rectangle in u and v') : T_('The rectangle R');
+    $('ordB').textContent = T_('Order dx dy: y outside, x inside');
+    $('sampRow').hidden = m !== 'boxes'; $('orderRow').hidden = m !== 'slices'; $('posRow').hidden = m !== 'slices'; $('sysRow').hidden = m !== 'triple';
+    $('bodyCard').hidden = m !== 'mass'; $('surfChk').hidden = solid() || m === 'cov'; $('cutChk').hidden = !(m === 'triple' || m === 'mass' && S.shape !== 'rod' && S.shape !== 'plate' && S.shape !== 'disk');
+    $('fbar').hidden = m === 'mass' && S.dens !== 'custom';
+    $('dimSeg').hidden = m === 'cov';
+    for (const b of document.querySelectorAll('#sampSeg button')) b.setAttribute('aria-pressed', String(+b.dataset.s === S.samp));
+    for (const b of document.querySelectorAll('#orderSeg button')) b.setAttribute('aria-pressed', String(b.dataset.o === S.ord));
+    for (const b of document.querySelectorAll('#sysSeg button')) b.setAttribute('aria-pressed', String(b.dataset.y === S.sys));
+    $('nS').max = MODES[m].nMax; S.ni = Math.min(S.ni, MODES[m].nMax); $('nS').value = S.ni; $('nOut').textContent = String(NS[S.ni]);
+    $('nLab').textContent = m === 'slices' ? T_('Slabs') : m === 'polar' ? T_('Wedges per side') : m === 'cov' ? T_('Grid lines per side') : T_('Cells per side');
+    $('posS').value = Math.round(S.pos * 1000); if (res && (m === 'slices')) $('posOut').textContent = `${show((S.ord === 'A' ? R : R2).names[0])} = ${fmt(posT(), 4)}`;
+    if (m === 'mass') {
+      const bd = BODY[S.shape]; $('shape').value = S.shape; $('dens').value = S.dens; $('mIn').value = S.M;
+      $('dimALab').textContent = T_(bd.dims[0][1]); $('dimA').value = S.d[bd.dims[0][0]];
+      $('dimBRow').hidden = bd.dims.length < 2; if (bd.dims[1]) { $('dimBLab').textContent = T_(bd.dims[1][1]); $('dimB').value = S.d[bd.dims[1][0]]; }
+      const ax = $('axis'); if (ax.dataset.for !== S.shape) { ax.innerHTML = bd.axes.map(([k, t]) => `<option value="${k}">${t}</option>`).join(''); ax.dataset.for = S.shape; }
+      ax.value = S.axis;
+    }
+    const notes = { boxes: 'Play makes the boxes smaller and smaller. Drag to turn the 3D view; scroll or pinch to zoom.', slices: 'Play sweeps a slice across the region: each slice\'s area A is an inner integral, and adding up the slabs gives the double integral.', polar: 'Play makes the wedges smaller. Each wedge has area about r Δr Δθ.', triple: 'Play fills the region with cells one layer at a time. Drag to turn; Cut away a quarter shows the inside.', mass: 'Play turns the body about its axis. The cells are colored by density.', cov: 'Play walks the marked cell across the grid; its image has area about |J| Δu Δv.' };
+    $('note').textContent = T_(notes[m]);
+    pane.classList.toggle('is3d', is3d && m !== 'cov');
+    if (K3) K3.st.el.hidden = !(is3d && m !== 'cov');
+  }
+  function setRun(on) { S.run = on; $('play').textContent = on ? T_('Pause') : T_('Play'); $('play').classList.toggle('attn', !on); if (!on) dirty3 = true; need = true; }
+  const pressPreset = (k) => { for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === k)); };
+  function setBounds(list, pre) { list.forEach((b, i) => { $(pre + (i + 1) + 'lo').value = b[0]; $(pre + (i + 1) + 'hi').value = b[1]; }); }
+  function applyPreset(k) {
+    const c = PRESETS[k]; S.preset = k; S.mode = c.mode; S.units = c.u || null; setRun(false);
+    S.fill = 1; S.spin = 0; S.pos = 0.35;
+    if (c.f != null) $('fIn').value = c.f;
+    if (c.b) setBounds(c.b, 'b');
+    if (c.c) setBounds(c.c, 'c');
+    if (c.mode === 'triple') { S.sys = c.sys; setBounds((c.t[c.sys] || BALL[c.sys]), 'b'); }
+    if (c.mode === 'mass') { S.shape = c.shape; S.d = Object.assign({}, c.d); S.M = c.M; S.dens = c.dens; S.axis = c.axis; S.units = { L: 'm' }; $('fIn').value = c.f || '1 + z'; }
+    if (c.map) { $('xIn').value = c.map[0]; $('yIn').value = c.map[1]; }
+    if (c.n != null) S.ni = c.n;
+    S.pick = Math.floor(NS[S.ni] / 2) * NS[S.ni] + Math.floor(NS[S.ni] / 2);
+    if (c.mode === 'mass') $('cut').checked = c.shape === 'cone' || c.shape === 'sphere';
+    if (c.mode === 'slices') S.ord = 'A';
+    $('presetHint').textContent = T_(c.hint); pressPreset(k);
+    orbHome();
+    syncUI(); compute(); extra.curve = S.mode === 'slices' && res ? sliceCurve() : null; syncUI(); need = true;
+  }
+  function custom() { if (S.preset !== 'custom') { S.preset = 'custom'; pressPreset(''); $('presetHint').textContent = T_('Your own integral. Every setup can be edited in the boxes, too.'); if (S.mode !== 'mass') S.units = null; } }
+  function recompute() { compute(); extra.curve = S.mode === 'slices' && res ? sliceCurve() : null; syncUI(); need = true; }
+  let typeTimer = 0;
+  for (const id of ['fIn', 'xIn', 'yIn', 'b1lo', 'b1hi', 'b2lo', 'b2hi', 'b3lo', 'b3hi', 'c1lo', 'c1hi', 'c2lo', 'c2hi']) $(id).addEventListener('input', () => {
+    if (!(S.mode === 'mass' && id === 'fIn')) custom();
+    clearTimeout(typeTimer); typeTimer = setTimeout(recompute, 180);
+  });
+  /* the modes: each opens on its first setup */
+  const FIRST = { boxes: 'plate', slices: 'between', polar: 'gauss', triple: 'ball', mass: 'disk', cov: 'polarMap' };
+  for (const b of document.querySelectorAll('#modeSeg button')) b.addEventListener('click', () => { if (b.dataset.m !== S.mode) applyPreset(FIRST[b.dataset.m]); });
+  $('nS').addEventListener('input', () => { S.ni = +$('nS').value; $('nOut').textContent = String(NS[S.ni]); grid(); readouts(); need = true; });
+  for (const b of document.querySelectorAll('#sampSeg button')) b.addEventListener('click', () => { S.samp = +b.dataset.s; syncUI(); grid(); readouts(); });
+  for (const b of document.querySelectorAll('#orderSeg button')) b.addEventListener('click', () => { S.ord = b.dataset.o; orbHome(); extra.curve = sliceCurve(); syncUI(); grid(); readouts(); formulas(); fitView(); });
+  $('posS').addEventListener('input', () => { S.pos = +$('posS').value / 1000; syncUI(); readouts(); dirty3 = true; need = true; });
+  for (const b of document.querySelectorAll('#sysSeg button')) b.addEventListener('click', () => {
+    S.sys = b.dataset.y; const c = PRESETS[S.preset], t = c && c.t && c.t[S.sys];
+    setBounds(t || BALL[S.sys], 'b'); if (!t && S.preset !== 'ball') { S.preset = 'ball'; pressPreset('ball'); $('presetHint').textContent = T_(PRESETS.ball.hint); $('fIn').value = '1'; }
+    syncUI(); recompute();
+  });
+  $('shape').addEventListener('change', () => { S.shape = $('shape').value; S.d = Object.assign({}, DEF_D[S.shape]); S.axis = BODY[S.shape].axes[0][0]; custom(); syncUI(); recompute(); });
+  $('dens').addEventListener('change', () => { S.dens = $('dens').value; custom(); syncUI(); recompute(); });
+  $('axis').addEventListener('change', () => { S.axis = $('axis').value; custom(); recompute(); });
+  const numIn = (id, fn) => $(id).addEventListener('input', () => { const v = parseFloat($(id).value); if (isFinite(v) && v > 0 && v < 1e4) { fn(v); custom(); recompute(); } });
+  numIn('dimA', (v) => { S.d[BODY[S.shape].dims[0][0]] = v; }); numIn('dimB', (v) => { const d = BODY[S.shape].dims[1]; if (d) S.d[d[0]] = v; }); numIn('mIn', (v) => { S.M = v; });
+  for (const id of ['showSurf', 'showCells', 'showElem', 'cut']) $(id).addEventListener('change', () => { dirty3 = true; need = true; });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; readouts(); });
+  $('play').addEventListener('click', () => {
+    if (!S.run) {
+      const m = S.mode;
+      if ((m === 'boxes' || m === 'polar' || m === 'triple' && false) && S.ni >= MODES[m].nMax) { S.ni = 0; grid(); }
+      if (m === 'slices' && S.pos >= 1) S.pos = 0;
+      if (m === 'triple' && S.fill >= 1) S.fill = 0;
+      S.hold = 0;
+    }
+    setRun(!S.run);
+  });
+  $('reset').addEventListener('click', () => {
+    setRun(false); const m = S.mode;
+    if (m === 'boxes' || m === 'polar') { S.ni = 0; grid(); } if (m === 'slices') S.pos = 0; if (m === 'triple') S.fill = 0; if (m === 'mass') S.spin = 0; if (m === 'cov') S.pick = 0;
+    syncUI(); readouts(); dirty3 = true; need = true;
+  });
+  /* zoom: about the middle of the view (Steve 2026-11-12); the 3D view and the flat solids share the turn and zoom */
+  function zoom(f) {
+    if (is3d && S.mode !== 'cov' || solid()) orb.zoom = Math.min(4, Math.max(0.4, orb.zoom / f));
+    else S.vw.s = Math.min(1e6, Math.max(1e-6, S.vw.s * f));
+    need = true;
+  }
+  $('zin').addEventListener('click', () => zoom(1 / 1.4)); $('zout').addEventListener('click', () => zoom(1.4));
+  /* the opening angle of the 3D view: slices are seen across their faces */
+  function orbHome() { orb.th = S.mode === 'slices' ? (S.ord === 'A' ? -0.5 : -Math.PI / 2 + 0.5) : -Math.PI / 2 + 0.75; orb.ph = solid() ? 1.15 : S.mode === 'slices' ? 1.2 : 1.05; orb.zoom = 1; }
+  $('homeView').addEventListener('click', () => { orbHome(); homeFlat(); need = true; });
+  /* the flat picture: drag pans (turns, for solids); wheel and pinch zoom about the middle */
+  const ptrs = new Map(); let drag = null;
+  can.addEventListener('pointerdown', (e) => {
+    const r = can.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top; ptrs.set(e.pointerId, { x, y });
+    try { can.setPointerCapture(e.pointerId); } catch (_) {}
+    if (ptrs.size === 2) { const [a, b] = [...ptrs.values()]; drag = { pinch: Math.hypot(a.x - b.x, a.y - b.y), s: S.vw.s, z: orb.zoom }; return; }
+    drag = { x, y, cx: S.vw.cx, cy: S.vw.cy, th: orb.th, ph: orb.ph };
+  });
+  can.addEventListener('pointermove', (e) => {
+    if (!ptrs.has(e.pointerId) || !drag) return;
+    const r = can.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top; ptrs.set(e.pointerId, { x, y });
+    if (drag.pinch) { const [a, b] = [...ptrs.values()], d = Math.hypot(a.x - b.x, a.y - b.y); if (d > 10) { if (solid()) orb.zoom = Math.min(4, Math.max(0.4, drag.z * d / drag.pinch)); else S.vw.s = drag.s * drag.pinch / d; need = true; } return; }
+    if (solid()) { orb.th = drag.th - (x - drag.x) * 0.01; orb.ph = Math.min(2.2, Math.max(0.05, drag.ph - (y - drag.y) * 0.01)); }
+    else if (S.mode === 'cov') { S.vw.cx = drag.cx - (x - drag.x) * covScale(); S.vw.cy = drag.cy + (y - drag.y) * covScale(); }
+    else { S.vw.cx = drag.cx - (x - drag.x) * S.vw.s; S.vw.cy = drag.cy + (y - drag.y) * S.vw.s; }
+    need = true;
+  });
+  const covScale = () => { if (!S.bb) return 0.01; const w = W > 640 ? W * 0.6 : W, h = W > 640 ? H : H * 0.58; return Math.max((S.bb[1] - S.bb[0]) / (w * 0.72), (S.bb[3] - S.bb[2]) / (h * 0.72)) * S.vw.s; };
+  const up = (e) => { ptrs.delete(e.pointerId); if (!ptrs.size) drag = null; else if (drag && drag.pinch) drag = null; };
+  can.addEventListener('pointerup', up); can.addEventListener('pointercancel', up);
+  can.addEventListener('wheel', (e) => { e.preventDefault(); const d = e.deltaY * (e.deltaMode === 1 ? 33 : e.deltaMode === 2 ? 400 : 1); zoom(Math.exp(Math.max(-100, Math.min(100, d)) * 0.0018)); }, { passive: false });
+  can.addEventListener('keydown', (e) => {
+    const st = solid() ? 0.08 : W * S.vw.s / (e.shiftKey ? 4 : 20);
+    if (e.key === 'ArrowLeft') { if (solid()) orb.th += st; else S.vw.cx -= st; } else if (e.key === 'ArrowRight') { if (solid()) orb.th -= st; else S.vw.cx += st; }
+    else if (e.key === 'ArrowUp') { if (solid()) orb.ph = Math.max(0.05, orb.ph - st); else S.vw.cy += st; } else if (e.key === 'ArrowDown') { if (solid()) orb.ph = Math.min(2.2, orb.ph + st); else S.vw.cy -= st; }
+    else if (e.key === '+' || e.key === '=') zoom(1 / 1.4); else if (e.key === '-' || e.key === '_') zoom(1.4);
+    else if (e.key === ' ') $('play').click(); else return;
+    e.preventDefault(); need = true;
+  });
+
+  /* ---------- the presets as chips, grouped ---------- */
+  (() => { let last = '', h = ''; for (const [k, c] of Object.entries(PRESETS)) { if (c.group !== last) { h += `<span class="grp">${c.group}</span>`; last = c.group; } h += `<button type="button" data-p="${k}" aria-pressed="false">${c.name}</button>`; } $('presets').innerHTML = h; })();
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+
+  /* ---------- the clock ---------- */
+  let last = performance.now(), lastFill = -1;
+  function frame(now) {
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    if (S.run && res) {
+      const m = S.mode;
+      if (m === 'boxes' || m === 'polar') { S.hold += dt; if (S.hold > 1.1) { S.hold = 0; if (S.ni < MODES[m].nMax) { S.ni++; syncUI(); grid(); readouts(); } else setRun(false); } }
+      else if (m === 'slices') { S.pos = Math.min(1, S.pos + dt / 6); if (S.pos >= 1) setRun(false); syncUI(); readouts(); dirty3 = true; }
+      else if (m === 'triple') { S.fill = Math.min(1, S.fill + dt / 6); const k = Math.floor(S.fill * 60); if (k !== lastFill) { lastFill = k; dirty3 = true; } if (S.fill >= 1) setRun(false); }
+      else if (m === 'mass') S.spin += dt * Math.PI / 2;
+      else if (m === 'cov') { S.hold += dt; if (S.hold > 0.6) { S.hold = 0; S.pick++; readouts(); } }
+      need = true;
+    }
+    if (need || dirty3) {
+      if (dirty3) build3();
+      need = false; draw();
+      if (is3d && K3 && S.mode !== 'cov') render3();
+      if (S.mode === 'cov') readouts();
+    }
+    requestAnimationFrame(frame);
+  }
+  function resize() {
+    dpr = window.devicePixelRatio || 1; const r = pane.getBoundingClientRect();
+    W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr);
+    homeFlat(); need = true;
+  }
+  const retheme = () => { tokens(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'data-vd-look'] });
+  VD.projector({ onChange: () => { resize(); dirty3 = true; } });
+  if (window.VD && VD.panel) VD.panel({ play: '#play', reset: '#reset' });
+  if (window.VD && VD.describe) VD.describe(can, () => {
+    if (!res) return [];
+    const T = VDI18N.t, m = S.mode, out = [];
+    if (m === 'mass') { if (isFinite(res.I)) out.push(T('The body has mass {M} kg and moment of inertia {I} kg·m² about the axis.', { M: fmt(S.M, 4), I: fmt(res.I, 5) })); }
+    else if (isFinite(res.v)) out.push(T('The integral is {v}.', { v: fmt(res.v, 6) }));
+    else out.push(T('The integral could not be found for this input.'));
+    if (cellsNow && isFinite(cellsNow.sum)) out.push(T('The sum over {n} cells is {s}.', { n: cellsNow.list.length, s: fmt(cellsNow.sum, 6) }));
+    out.push(is3d ? T('Shown in 3D.') : T('Shown flat.'));
+    return out;
+  });
+  tokens(); new ResizeObserver(resize).observe(pane); resize(); applyPreset('plate');
+  const view = VD3K.view({ seg: '#dimSeg', init: init3, status: (msg) => status(msg), change: (on) => { is3d = on; syncUI(); dirty3 = true; need = true; } });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  window.__mi = { S, SC, toS2, get K3() { return K3; }, get GEO() { return GEO; }, applyPreset, recompute, setRun, get res() { return res; }, get extra() { return extra; }, get cells() { return cellsNow; }, get R() { return R; }, get R2() { return R2; }, get B() { return B; }, view: () => view,
+    integrate, makeRegion, makeFn, cells, body, densityOf, massProps, closedI, closedCM, makeMap, mapIntegral, imageArea, gauss1, quad };
+  window.vdDemo = window.__mi;
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
