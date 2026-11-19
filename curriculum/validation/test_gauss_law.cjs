@@ -73,5 +73,50 @@ test('CSV carries the demo version line',()=>{
  // the export writes it as the second comment line, right after the title
  assert.match(src,/\[\'# Gauss\\'s Law: numerical flux readings \(simulated data;[^\n]*\n\s*`# demo version,\$\{GL_VERSION\}`,/);
 });
+/* Typed field mode: the divergence theorem with fields typed by the student (here plain functions; the page compiles them with vdmath) */
+const fv=(fx,fy,fz)=>(x,y,z,o)=>{o[0]=fx(x,y,z);o[1]=fy(x,y,z);o[2]=fz(x,y,z);return o;};
+const rel=(a,b,t=1e-9)=>assert(Math.abs(a-b)<=t*Math.max(1,Math.abs(b)),`expected ${b}, got ${a}`);
+const PL=[[-6,-5],[7,-4],[5,6],[-4,7]],TRI=g.triangulate(PL);
+const SH={sphere:{kind:'sphere',cx:-2,cy:1,R:6},box:{kind:'box',cx:1,cy:2,w:16,h:10,d:12},cyl:{kind:'cyl',cx:1,cy:2,w:16,h:10},prism:{kind:'prism',P:PL,d:12,tris:TRI}};
+const VOL={sphere:4/3*Math.PI*216,box:16*10*12,cyl:Math.PI*25*16,prism:g.signedArea(PL)*12};
+test('typed field: F = (x, y, z) gives flux = 3V = triple integral of div F on every shape',()=>{
+  for(const [k,S] of Object.entries(SH)){const r=g.fieldFlux(fv((x)=>x,(x,y)=>y,(x,y,z)=>z),()=>3,S);assert(!r.error,k);rel(r.total,3*VOL[k]);rel(r.vol,3*VOL[k]);assert(r.converged);
+    rel(r.pieces.reduce((a,p)=>a+p.flux,0),r.total,1e-12);assert(r.pieces.some(p=>p.key===g.OPEN_PIECE[k]),k+' has its open piece');}
+});
+test('typed field: divergence theorem for smooth fields that are not polynomials',()=>{
+  const F1=fv(Math.sin,(x,y)=>Math.exp(-y*y/20),(x,y,z)=>Math.cos(z)*x),d1=(x,y)=>Math.cos(x)-y/10*Math.exp(-y*y/20);
+  const F2=fv((x,y,z)=>x*x/10,(x,y)=>y*y/10,(x,y,z)=>z*z/10),d2=(x,y,z)=>(x+y+z)/5;
+  for(const [k,S] of Object.entries(SH)){for(const [Fv,dv] of [[F1,d1],[F2,d2]]){const r=g.fieldFlux(Fv,dv,S);assert(!r.error&&r.converged,k);assert(Math.abs(r.total-r.vol)<=1e-9*r.scale,`${k}: ${r.total} vs ${r.vol}`);}}
+  /* (x², y², z²)/10 over a box centered at (cx, cy, 0): the triple integral is V(cx + cy)/5 */
+  rel(g.fieldFlux(F2,d2,SH.box).total,VOL.box*(1+2)/5);
+});
+test('typed field: an open hemisphere from the closed sphere less its lower half',()=>{
+  /* F = (xz, y + x², z), div F = z + 2, ball of radius 5 at the origin: closed flux 2V = 1000π/3; the upper half alone,
+     closed by the disk z = 0 (where F·n = −z = 0), is ∫∫∫ over the half ball = (2/3)πR³·2 + πR⁴/4 */
+  const R=5,r=g.fieldFlux(fv((x,y,z)=>x*z,(x,y)=>y+x*x,(x,y,z)=>z),(x,y,z)=>z+2,{kind:'sphere',cx:0,cy:0,R});
+  rel(r.total,1000*Math.PI/3);rel(r.vol,1000*Math.PI/3);
+  const up=r.pieces.find(p=>p.key==='zPos').flux,down=r.pieces.find(p=>p.key==='zNeg').flux;
+  rel(up,4/3*Math.PI*R**3+Math.PI*R**4/4);rel(up+down,r.vol);assert.equal(g.OPEN_PIECE.sphere,'zNeg');
+});
+test('typed field: zero divergence and the inverse square field',()=>{
+  const r0=g.fieldFlux(fv((x,y)=>x*x-y*y,(x,y)=>-2*x*y,()=>0),()=>0,{kind:'box',cx:1,cy:0,w:14,h:10,d:10});
+  assert(Math.abs(r0.total)<1e-9*r0.scale);assert(r0.out>1000);rel(r0.out,-r0.inw);
+  const inv=fv((x,y,z)=>x/(x*x+y*y+z*z)**1.5,(x,y,z)=>y/(x*x+y*y+z*z)**1.5,(x,y,z)=>z/(x*x+y*y+z*z)**1.5);
+  const div=(x,y,z)=>{const r2=x*x+y*y+z*z;return 3/r2**1.5-3*r2/r2**2.5;};
+  const a=g.fieldFlux(inv,div,{kind:'sphere',cx:1.5,cy:0.5,R:5});rel(a.total,4*Math.PI,1e-8);assert(Math.abs(a.vol)<1e-6,'div F = 0 away from the origin');
+  const b=g.fieldFlux(inv,div,{kind:'sphere',cx:9,cy:0.5,R:5});assert(Math.abs(b.total)<1e-9&&Math.abs(b.vol)<1e-9,'origin outside: both 0');
+});
+test('typed field: a field that blows up ends with an error, not a hang',()=>{
+  const t0=Date.now(),r=g.fieldFlux(fv((x)=>1/x,()=>0,()=>0),(x)=>-1/(x*x),{kind:'box',cx:0,cy:0,w:4,h:4,d:4});
+  assert(r.error==='nonfinite'||r.error==='budget',JSON.stringify(r));assert(Date.now()-t0<20000);
+  const s=g.fieldFlux(fv((x)=>1/(x-0.3),()=>0,()=>0),(x)=>-1/((x-0.3)**2),{kind:'box',cx:0,cy:0,w:4,h:4,d:4});
+  assert(s.error==='nonfinite'||s.error==='budget',JSON.stringify(s));
+});
+test('typed field mode keeps every existing control and loads vdmath',()=>{
+  for(const id of ['modeSeg','viewSeg','play','reset','drawBtn','surfSeg','sR','sW','sH','sD','addPos','addNeg','delQ','sQ','qX','qY','tLines','tArrows','tCross','tGrid','tPatch','tReduce','sDen','capture','expTab','clearTab','tPred','symSeg','sphSeg','yQ','yR','yL','yS','yr','yLen'])assert.match(src,new RegExp(`id="${id}"`),id);
+  for(const m of ['flux','sym','field'])assert.match(src,new RegExp(`data-m="${m}"`));
+  assert.match(src,/<script src="lib\/vdmath\.js"><\/script>/);
+  for(const p of ['fSource','fNone','fGrow','fOpen','fPoint'])assert.match(src,new RegExp(`data-p="${p}"`));
+});
 console.log(`Completed ${count} Gauss-law test groups.`);
 console.log(`${count} gauss-law test groups passed`);
