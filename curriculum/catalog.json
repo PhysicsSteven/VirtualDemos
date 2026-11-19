@@ -1416,6 +1416,34 @@
       "Snell's law",
       "projectile range"
      ]
+    },
+    {
+     "demo": "sampling-lab",
+     "title": "Sampling Lab",
+     "desc": "A lecture hall of 400 simulated students, every one shown. Sample them five ways (simple random, stratified, cluster, systematic, convenience) and see who gets picked and how biased and spread each method's estimates are; compare a self selected study with a randomized one and find the lurking variable; then draw thousands of samples and watch the means and sums pile up into a normal curve with spread σ/√n: the central limit theorem.",
+     "tags": [
+      "statistics",
+      "sampling methods",
+      "bias",
+      "lurking variable",
+      "randomized experiment",
+      "central limit theorem",
+      "standard error"
+     ]
+    },
+    {
+     "demo": "confidence-intervals",
+     "title": "Confidence Intervals",
+     "desc": "Draw sample after sample and stack their intervals against the true value: z with σ known, z with s, t, a proportion and plus four. Count how many of 100 catch the truth at 90, 95 and 99 %, see z with s fail at small n, and watch the width shrink as 1/√n. A pendulum timed by hand, heights, decay times and photons through a polarizer, all simulated.",
+     "tags": [
+      "statistics",
+      "confidence interval",
+      "t distribution",
+      "proportion",
+      "plus four",
+      "error bound",
+      "standard error"
+     ]
     }
    ]
   },

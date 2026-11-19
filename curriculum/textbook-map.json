@@ -12716,6 +12716,39 @@
       "note": "New 2026-11-19 (Claude, from Steve's approved Calculus plan): a math tool for OpenStax Calculus Vol 1 4.1 (related rates) and 4.7 (applied optimization). A sliding ladder, a filling cone and a lengthening shadow with live rates and the chain rule checked against the motion; the biggest box, a fence along a river, the can with least metal; the lifeguard and Fermat's principle giving Snell's law; the longest throw, 45° on level ground and less from a height.",
       "title": "Related Rates and Optimization",
       "url": "demos/rates-and-optimization.html"
+    },
+    {
+      "demo": "sampling-lab",
+      "course": [
+        "later"
+      ],
+      "sections": [],
+      "role": "demo",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "New 2026-11-19 (Claude, OpenStax Introductory Statistics, group sampling): 400 simulated students sampled five ways, a self selected against a randomized study, and the central limit theorem for means and sums. Sections in the statistics map (Introductory Statistics 2e 1.2, 1.4, 1.6, 7.1 to 7.5).",
+      "title": "Sampling Lab",
+      "url": "demos/sampling-lab.html",
+      "handouts": [
+        "sampling-methods",
+        "central-limit-theorem"
+      ]
+    },
+    {
+      "demo": "confidence-intervals",
+      "course": [
+        "later"
+      ],
+      "sections": [],
+      "role": "demo",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "New 2026-11-19 (Claude, OpenStax Introductory Statistics, group sampling): repeated simulated samples and their z, t, proportion and plus four intervals stacked against the true value; capture rates and width against n. Sections in the statistics map (Introductory Statistics 2e 8.1 to 8.6).",
+      "title": "Confidence Intervals",
+      "url": "demos/confidence-intervals.html",
+      "handouts": [
+        "ci-coverage"
+      ]
     }
   ],
   "activities": [

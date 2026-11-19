@@ -1,0 +1,558 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="lib/theme.js"></script>
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
+<script src="lib/constants.js"></script>
+<script src="lib/vdstats.js"></script>
+<title>Confidence Intervals</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css: the interval colors, the strip of controls and the two graphs */
+:root { --ci-hit: #44403c; --ci-miss: #dc2626; --ci-thin: #a16207; --ci-truth: #15803d; --ci-dot: #c2410c; --ci-band: rgba(120, 80, 30, 0.07); --ci-curve: #0f766e; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --ci-hit: #e7e0d4; --ci-miss: #f87171; --ci-thin: #facc15; --ci-truth: #4ade80; --ci-dot: #fb923c; --ci-band: rgba(255, 220, 160, 0.06); --ci-curve: #5eead4; } }
+:root[data-theme="dark"] { --ci-hit: #e7e0d4; --ci-miss: #f87171; --ci-thin: #facc15; --ci-truth: #4ade80; --ci-dot: #fb923c; --ci-band: rgba(255, 220, 160, 0.06); --ci-curve: #5eead4; }
+.stage { position: relative; display: flex; flex-direction: column; min-height: min-content; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.stage-ctl .note { flex: 1 1 100%; font-size: 0.8rem; color: var(--muted); }
+.mbar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); font-size: 0.86rem; }
+.mbar .grp { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; }
+.mbar .grp[hidden] { display: none; }
+.mbar input[type="number"] { width: 4.8em; font: inherit; font-family: var(--font-mono); padding: 3px 6px; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; }
+.mbar input[type="range"] { width: 110px; }
+.mbar select { font: inherit; padding: 3px 6px; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; max-width: 100%; }
+.seg.wrap { flex-wrap: wrap; }
+.pane { position: relative; flex: 1 1 auto; min-height: 400px; }
+.lower { position: relative; flex: none; height: 200px; border-top: 1px solid var(--line); background: var(--canvas); }
+.pane canvas, .lower canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; outline: none; touch-action: none; }
+dl.formulas { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 6px 10px; margin: 0; }
+dl.formulas dt { font-family: var(--font-mono); font-weight: 600; white-space: nowrap; }
+dl.formulas dd { margin: 0; font-size: 0.88rem; overflow-wrap: anywhere; }
+.chips .chips-label { flex: 1 1 100%; font-size: 0.78rem; font-weight: 700; color: var(--muted); margin-top: 4px; }
+.simtag { display: inline-block; font-size: 0.74rem; font-weight: 700; color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: 1px 8px; }
+@media (min-width: 821px) { .bench > .stage { align-self: start; min-height: max(700px, 100%); } }
+@media (max-width: 820px) { .pane { min-height: 0; height: 400px; flex: none; } .lower { height: 230px; } }
+</style>
+<link rel="stylesheet" id="vd-paper" href="lib/paper.css">
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Confidence Intervals</h1>
+      <p>Draw a sample, build its interval, and stack it under the last one against the true value. About 95 of every 100 intervals at 95 % catch the truth; the rest miss, and you can see which. Try a small n with t and with z, a proportion, and watch the width shrink as 1/√n.</p>
+    </div>
+    <div class="bar-right">
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/confidence-intervals.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/confidence-intervals.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM14 2h7v1h-7zM23 2h3v1h-3zM30 2h1v1h-1zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM13 3h5v1h-5zM20 3h1v1h-1zM23 3h2v1h-2zM26 3h2v1h-2zM29 3h2v1h-2zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h1v1h-1zM14 4h1v1h-1zM16 4h2v1h-2zM22 4h2v1h-2zM25 4h2v1h-2zM28 4h3v1h-3zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h2v1h-2zM16 5h4v1h-4zM21 5h1v1h-1zM24 5h1v1h-1zM27 5h4v1h-4zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h4v1h-4zM15 6h1v1h-1zM18 6h2v1h-2zM21 6h3v1h-3zM25 6h1v1h-1zM27 6h2v1h-2zM30 6h1v1h-1zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h2v1h-2zM14 7h2v1h-2zM17 7h1v1h-1zM19 7h1v1h-1zM24 7h1v1h-1zM27 7h4v1h-4zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h2v1h-2zM16 9h1v1h-1zM18 9h6v1h-6zM26 9h1v1h-1zM2 10h1v1h-1zM4 10h5v1h-5zM11 10h4v1h-4zM16 10h1v1h-1zM18 10h1v1h-1zM24 10h2v1h-2zM27 10h3v1h-3zM32 10h5v1h-5zM2 11h3v1h-3zM6 11h1v1h-1zM11 11h1v1h-1zM16 11h2v1h-2zM20 11h3v1h-3zM25 11h1v1h-1zM30 11h1v1h-1zM33 11h1v1h-1zM36 11h2v1h-2zM5 12h1v1h-1zM7 12h3v1h-3zM15 12h6v1h-6zM22 12h2v1h-2zM28 12h2v1h-2zM32 12h3v1h-3zM36 12h3v1h-3zM2 13h6v1h-6zM9 13h2v1h-2zM12 13h2v1h-2zM15 13h3v1h-3zM20 13h1v1h-1zM22 13h2v1h-2zM29 13h2v1h-2zM32 13h3v1h-3zM38 13h1v1h-1zM2 14h4v1h-4zM7 14h2v1h-2zM10 14h1v1h-1zM14 14h4v1h-4zM19 14h1v1h-1zM21 14h2v1h-2zM24 14h1v1h-1zM26 14h13v1h-13zM4 15h2v1h-2zM7 15h1v1h-1zM9 15h2v1h-2zM13 15h1v1h-1zM16 15h1v1h-1zM18 15h1v1h-1zM22 15h4v1h-4zM30 15h1v1h-1zM33 15h1v1h-1zM2 16h1v1h-1zM4 16h1v1h-1zM6 16h1v1h-1zM8 16h1v1h-1zM11 16h3v1h-3zM16 16h3v1h-3zM20 16h1v1h-1zM22 16h2v1h-2zM27 16h1v1h-1zM29 16h2v1h-2zM32 16h4v1h-4zM38 16h1v1h-1zM2 17h1v1h-1zM6 17h1v1h-1zM9 17h2v1h-2zM17 17h2v1h-2zM21 17h5v1h-5zM28 17h1v1h-1zM31 17h1v1h-1zM33 17h2v1h-2zM37 17h1v1h-1zM2 18h2v1h-2zM5 18h4v1h-4zM10 18h2v1h-2zM13 18h2v1h-2zM16 18h2v1h-2zM20 18h2v1h-2zM24 18h1v1h-1zM26 18h4v1h-4zM31 18h2v1h-2zM34 18h1v1h-1zM36 18h1v1h-1zM38 18h1v1h-1zM5 19h1v1h-1zM7 19h1v1h-1zM13 19h1v1h-1zM16 19h3v1h-3zM21 19h3v1h-3zM25 19h1v1h-1zM30 19h1v1h-1zM37 19h1v1h-1zM3 20h2v1h-2zM6 20h1v1h-1zM8 20h3v1h-3zM13 20h2v1h-2zM16 20h1v1h-1zM23 20h2v1h-2zM26 20h1v1h-1zM28 20h3v1h-3zM33 20h3v1h-3zM37 20h2v1h-2zM3 21h4v1h-4zM11 21h2v1h-2zM16 21h1v1h-1zM18 21h1v1h-1zM20 21h1v1h-1zM22 21h3v1h-3zM28 21h2v1h-2zM32 21h1v1h-1zM38 21h1v1h-1zM2 22h1v1h-1zM7 22h2v1h-2zM11 22h1v1h-1zM13 22h1v1h-1zM15 22h2v1h-2zM19 22h1v1h-1zM24 22h1v1h-1zM26 22h3v1h-3zM31 22h2v1h-2zM34 22h3v1h-3zM2 23h4v1h-4zM9 23h1v1h-1zM11 23h2v1h-2zM18 23h2v1h-2zM21 23h1v1h-1zM25 23h1v1h-1zM28 23h1v1h-1zM30 23h2v1h-2zM35 23h1v1h-1zM37 23h1v1h-1zM2 24h1v1h-1zM5 24h2v1h-2zM8 24h5v1h-5zM14 24h2v1h-2zM17 24h1v1h-1zM19 24h1v1h-1zM22 24h3v1h-3zM26 24h1v1h-1zM28 24h4v1h-4zM33 24h3v1h-3zM37 24h2v1h-2zM2 25h1v1h-1zM5 25h1v1h-1zM7 25h1v1h-1zM10 25h3v1h-3zM14 25h1v1h-1zM16 25h8v1h-8zM25 25h1v1h-1zM28 25h2v1h-2zM31 25h1v1h-1zM33 25h2v1h-2zM37 25h1v1h-1zM3 26h3v1h-3zM7 26h6v1h-6zM15 26h4v1h-4zM21 26h2v1h-2zM24 26h2v1h-2zM27 26h1v1h-1zM31 26h4v1h-4zM36 26h2v1h-2zM2 27h1v1h-1zM6 27h2v1h-2zM12 27h2v1h-2zM16 27h2v1h-2zM20 27h6v1h-6zM30 27h1v1h-1zM33 27h1v1h-1zM2 28h1v1h-1zM4 28h2v1h-2zM7 28h3v1h-3zM12 28h1v1h-1zM17 28h2v1h-2zM26 28h4v1h-4zM33 28h2v1h-2zM37 28h2v1h-2zM2 29h1v1h-1zM4 29h2v1h-2zM7 29h1v1h-1zM9 29h5v1h-5zM17 29h1v1h-1zM23 29h1v1h-1zM25 29h1v1h-1zM30 29h5v1h-5zM38 29h1v1h-1zM2 30h1v1h-1zM6 30h5v1h-5zM17 30h1v1h-1zM19 30h1v1h-1zM21 30h1v1h-1zM25 30h13v1h-13zM10 31h2v1h-2zM13 31h6v1h-6zM20 31h4v1h-4zM25 31h3v1h-3zM29 31h2v1h-2zM34 31h2v1h-2zM2 32h7v1h-7zM12 32h1v1h-1zM16 32h2v1h-2zM20 32h1v1h-1zM22 32h1v1h-1zM26 32h1v1h-1zM28 32h1v1h-1zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM36 32h3v1h-3zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h1v1h-1zM13 33h6v1h-6zM23 33h3v1h-3zM28 33h1v1h-1zM30 33h1v1h-1zM34 33h2v1h-2zM37 33h2v1h-2zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h1v1h-1zM12 34h3v1h-3zM20 34h2v1h-2zM25 34h10v1h-10zM36 34h2v1h-2zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h1v1h-1zM13 35h2v1h-2zM17 35h2v1h-2zM21 35h2v1h-2zM25 35h1v1h-1zM30 35h3v1h-3zM34 35h1v1h-1zM36 35h1v1h-1zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM10 36h2v1h-2zM13 36h2v1h-2zM16 36h1v1h-1zM20 36h1v1h-1zM24 36h1v1h-1zM28 36h2v1h-2zM31 36h1v1h-1zM37 36h2v1h-2zM2 37h1v1h-1zM8 37h1v1h-1zM11 37h3v1h-3zM15 37h1v1h-1zM18 37h1v1h-1zM21 37h3v1h-3zM26 37h1v1h-1zM28 37h4v1h-4zM34 37h1v1h-1zM38 37h1v1h-1zM2 38h7v1h-7zM10 38h1v1h-1zM12 38h3v1h-3zM19 38h1v1h-1zM21 38h1v1h-1zM24 38h5v1h-5zM34 38h5v1h-5z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl" id="strip">
+        <button type="button" class="spin attn" id="play" data-vd-key="play">Play</button>
+        <button type="button" class="btn" id="reset" title="Clear the intervals drawn and start the count again">Reset</button>
+        <button type="button" class="btn" id="draw1">Draw one</button><button type="button" class="btn" id="draw100">Draw 100</button><button type="button" class="btn" id="draw1000">Draw 1,000</button>
+        <span class="note" id="note"></span>
+      </div>
+      <div class="mbar">
+        <div class="grp"><label for="popSel">Population</label>
+          <select id="popSel">
+            <option value="pendulum">Pendulum period, hand timed (s)</option>
+            <option value="heights">Heights (cm), normal</option>
+            <option value="decay">Times between decays (s), skewed</option>
+            <option value="polar">Photons through a polarizer: a proportion</option>
+          </select></div>
+        <div class="grp" id="angleGrp" hidden><label for="angle">Polarizer angle θ</label><input type="range" id="angle" min="0" max="90" step="1" value="60"><output id="angleOut" for="angle">60°</output></div>
+        <div class="grp"><label for="nIn">Sample size n</label><input type="number" id="nIn" min="2" max="400" step="1" value="10">
+          <button type="button" class="btn" id="nDown" aria-label="One smaller">−1</button><button type="button" class="btn" id="nUp" aria-label="One larger">+1</button></div>
+        <div class="grp"><span id="kindLabel">Interval</span>
+          <div class="seg wrap" role="group" aria-labelledby="kindLabel" id="kindSeg">
+            <button type="button" data-k="z" aria-pressed="true">z, σ known</button>
+            <button type="button" data-k="zs" aria-pressed="false">z with s</button>
+            <button type="button" data-k="t" aria-pressed="false">t with s</button>
+            <button type="button" data-k="prop" aria-pressed="false">Normal approximation</button>
+            <button type="button" data-k="plus4" aria-pressed="false">Plus four</button>
+          </div>
+          <label class="check" id="compareWrap"><input type="checkbox" id="compare"><span>Also draw z with s (thin)</span></label></div>
+        <div class="grp"><label for="clIn">Confidence level (%)</label><input type="number" id="clIn" min="50" max="99.9" step="0.1" value="95">
+          <div class="seg" role="group" aria-label="Quick confidence levels" id="clSeg">
+            <button type="button" data-c="90" aria-pressed="false">90</button>
+            <button type="button" data-c="95" aria-pressed="true">95</button>
+            <button type="button" data-c="99" aria-pressed="false">99</button>
+          </div></div>
+      </div>
+      <div class="pane" id="pane">
+        <canvas id="can" tabindex="0" role="img" aria-label="The latest sample as dots above a stack of confidence intervals, newest on top, against a green line at the true value. Intervals that miss are red. Up and down arrows change n; left and right change the confidence level; Space plays or pauses."></canvas>
+      </div>
+      <div class="lower" id="lower">
+        <canvas id="low" tabindex="0" role="img" aria-label="The lower graph: the share of intervals that captured the true value as they pile up, or the width of the intervals against n."></canvas>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/ci-coverage.html" target="ci-coverage-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
+      <section>
+        <h2>Readouts</h2>
+        <p><span class="simtag">Simulated data</span></p>
+        <dl class="readout" id="out"></dl>
+        <div class="seg wrap" role="group" aria-label="Lower graph" id="tabSeg" style="margin-top:8px">
+          <button type="button" data-t="rate" aria-pressed="true">Capture rate as they pile up</button>
+          <button type="button" data-t="width" aria-pressed="false">Width against n</button>
+        </div>
+      </section>
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <span class="chips-label">A mean (book 8.1 and 8.2)</span>
+          <button type="button" data-p="z95" aria-pressed="true">A pendulum's period: 95 % z intervals</button>
+          <button type="button" data-p="levels" aria-pressed="false">90, 95 or 99 %: the same samples</button>
+          <button type="button" data-p="tsmall" aria-pressed="false">n = 4: t against z with s</button>
+          <button type="button" data-p="skew" aria-pressed="false">Skewed decay times, t at n = 5</button>
+          <button type="button" data-p="heights" aria-pressed="false">Heights, t intervals, n = 25</button>
+          <button type="button" data-p="width" aria-pressed="false">Width shrinks as 1/√n</button>
+          <span class="chips-label">A proportion (book 8.3)</span>
+          <button type="button" data-p="prop" aria-pressed="false">Photons through a polarizer at 60°</button>
+          <button type="button" data-p="plus4" aria-pressed="false">A rare event, n = 15: plus four</button>
+        </div>
+        <details class="more" open><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+      </section>
+      <!-- vd-readings --><section class="vd-readings" data-ws="ci-coverage" data-title="Confidence Intervals" data-demo="confidence-intervals">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings ('+(typeof window.vdDataNote==='function'&&window.vdDataNote()?'catalog data':'simulated data')+')','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:(typeof window.vdDataNote==='function'&&window.vdDataNote())||'Simulated data from '+(/^The /.test(title)?'':'the ')+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
+      <section>
+        <h2>Formulas</h2>
+        <dl class="formulas" id="formulas" translate="no"></dl>
+      </section>
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the true value and which intervals caught it, to predict the share first</span></label>
+        <div class="row"><label for="seedIn">Draw set</label> <input type="number" id="seedIn" min="1" max="9999" step="1" value="1" style="width:5em"> <span class="hint">Set 1 is the one the worksheet uses. Another number draws new samples.</span></div>
+        <details class="more"><summary>How it works</summary>
+          <p class="hint">Every sample is simulated by a seeded random number generator; nothing here was measured. The pendulum: a 1.000 m simple pendulum at small amplitude, true period T = 2π√(L/g) with g = 9.81 m/s², timed by hand once a swing; each timing is T plus a normal error with σ = 0.080 s. Heights: normal with μ = 165.0 cm and σ = 7.0 cm. Times between decays: exponential with mean 2.00 s (and σ = 2.00 s), strongly skewed. Photons: each photon passes a polarizer at angle θ to the light's polarization with probability p = cos²θ (Malus's law), independently.</p>
+          <p class="hint">Intervals, as in the book: z with σ known, x̄ ± z(σ/√n); z with s puts the sample's s in place of σ, which the book warns against; t with s, x̄ ± t(s/√n) with n − 1 degrees of freedom; a proportion, p′ ± z√(p′q′/n) (a normal approximation to the binomial, good when np′ and nq′ are both above 5); plus four, the same with two successes and two failures added. The critical values z and t come from the exact normal and t distributions (demos/lib/vdstats.js).</p>
+          <p class="hint">The samples are kept, so changing the confidence level or the interval recounts the same samples. A new n, population, angle or draw set starts new samples. Each n has its own stream of random numbers, so the 100 samples at n = 10 are the same whatever you drew before.</p>
+          <p class="hint">Width against n: each dot is the mean width of the intervals drawn at that n, at the level and interval shown; the curve is 2z σ/√n (or 2z√(pq/n)) at that level, the width an interval with σ known would have.</p>
+        </details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  /* Confidence intervals by repeated sampling (OpenStax Introductory Statistics 2e, chapter 8): a population with a known true
+     value, samples of n drawn from it, and each sample's interval by the book's formulas. Runs in Node with demos/lib/constants.js
+     and demos/lib/vdstats.js loaded first (curriculum/validation/test_confidence-intervals.cjs). All data simulated, seeded. */
+  const G_SITE = typeof VDC !== 'undefined' ? VDC.g : 9.81;   /* the site's g (constants.js) */
+  const PEND_L = 1.000;                                         /* m */
+  const POPS = ['pendulum', 'heights', 'decay', 'polar'];
+  const POPDEF = {
+    pendulum: { kind: 'mean', mu: 2 * Math.PI * Math.sqrt(PEND_L / G_SITE), sigma: 0.080, unit: 's', dec: 3, draw: (r, d) => r.normal(d.mu, d.sigma) },
+    heights: { kind: 'mean', mu: 165.0, sigma: 7.0, unit: 'cm', dec: 1, draw: (r, d) => r.normal(d.mu, d.sigma) },
+    decay: { kind: 'mean', mu: 2.00, sigma: 2.00, unit: 's', dec: 2, draw: (r, d) => r.exp(1 / d.mu) },
+    polar: { kind: 'prop', unit: '', dec: 3 },
+  };
+  const malus = (deg) => Math.cos(deg * Math.PI / 180) ** 2;
+  function seedOf(...parts) {
+    let h = 0x9E3779B9;
+    for (const p of parts) { h = Math.imul(h ^ (p >>> 0), 0x85EBCA6B); h ^= h >>> 13; h = Math.imul(h, 0xC2B2AE35); h ^= h >>> 16; }
+    return (h >>> 0) || 1;
+  }
+  /* the population: its true value and spread (for a proportion, p = cos²θ and σ = √(p(1 − p)) for one photon) */
+  function population(pop, angle) {
+    const d = POPDEF[pop];
+    if (d.kind === 'prop') { const p = malus(angle); return { pop, kind: 'prop', truth: p, sigma: Math.sqrt(p * (1 - p)), unit: '', dec: 3 }; }
+    return { pop, kind: 'mean', truth: d.mu, sigma: d.sigma, unit: d.unit, dec: d.dec, def: d };
+  }
+  /* a stream of samples: sample k is the same whatever was drawn before, for one draw set, population, angle and n */
+  const sampleRng = (seed, pop, angle, n) => VDSTATS.rng(seedOf(seed, 53, POPS.indexOf(pop), Math.round(angle * 10), n));
+  /* one sample of n: its values (or, for photons, the number x that passed of n), mean and s */
+  function drawSample(Pp, n, r) {
+    if (Pp.kind === 'prop') { const vals = []; let x = 0; for (let i = 0; i < n; i++) { const v = r() < Pp.truth ? 1 : 0; vals.push(v); x += v; } return { vals, x, n }; }
+    const vals = []; for (let i = 0; i < n; i++) vals.push(Pp.def.draw(r, Pp.def));
+    return { vals, mean: VDSTATS.mean(vals), s: VDSTATS.sd(vals), n };
+  }
+  /* the critical value z or t for a confidence level, from vdstats' exact normal and t distributions, kept once found (a
+     thousand intervals share it) */
+  const CRIT = new Map();
+  function crit(df, cl) {
+    const key = df + ':' + cl; let v = CRIT.get(key);
+    if (v == null) { const q = 1 - (1 - cl) / 2; v = df ? VDSTATS.dist.t(df).inv(q) : VDSTATS.dist.normal().inv(q); CRIT.set(key, v); }
+    return v;
+  }
+  /* the interval of one sample by kind, by the book's formulas (the same as VDSTATS.zInterval, tInterval, propInterval and
+     plusFourInterval, with the critical value kept): z (σ known), zs (z with s in place of σ), t, prop (normal approximation), plus4 */
+  function interval(Pp, smp, kind, cl) {
+    const n = smp.n;
+    if (kind === 'prop' || kind === 'plus4') {
+      const x = kind === 'plus4' ? smp.x + 2 : smp.x, m = kind === 'plus4' ? n + 4 : n, ph = x / m, z = crit(0, cl), E = z * Math.sqrt(ph * (1 - ph) / m);
+      return { lo: ph - E, hi: ph + E, E, crit: z, phat: ph };
+    }
+    const k = kind === 't' ? crit(n - 1, cl) : crit(0, cl), sd = kind === 'z' ? Pp.sigma : smp.s, E = k * sd / Math.sqrt(n);
+    return { lo: smp.mean - E, hi: smp.mean + E, E, crit: k };
+  }
+  const estimate = (smp) => (smp.x != null ? smp.x / smp.n : smp.mean);
+  const captures = (iv, truth) => iv.lo <= truth && truth <= iv.hi;
+  /* the share of the samples whose intervals capture the truth, and their mean width */
+  function coverage(Pp, samples, kind, cl) {
+    let hit = 0, w = 0;
+    for (const smp of samples) { const iv = interval(Pp, smp, kind, cl); if (captures(iv, Pp.truth)) hit++; w += iv.hi - iv.lo; }
+    return { count: samples.length, hit, rate: samples.length ? hit / samples.length : NaN, meanWidth: samples.length ? w / samples.length : NaN };
+  }
+  /* the width an interval with σ known has: 2z σ/√n (for a proportion, 2z √(p(1 − p)/n)) */
+  const knownWidth = (Pp, n, cl) => 2 * crit(0, cl) * Pp.sigma / Math.sqrt(n);
+  /* the exact capture rate of z with s for a normal population: P(|T| ≤ z) with n − 1 degrees of freedom */
+  const zsCoverage = (n, cl) => { const z = crit(0, cl), F = VDSTATS.dist.t(n - 1).cdf; return F(z) - F(-z); };
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  const VDI18N = window.VDI18N || { t: (s, o) => s.replace(/\{(\w+)\}/g, (m, k) => (o && k in o ? o[k] : m)) };
+  const can = $('can'), low = $('low'), ctx = can.getContext('2d'), lctx = low.getContext('2d');
+  let W = 0, H = 0, LW = 0, LH = 0, dpr = 1, T = null, need = true;
+  const KINDNAME = { z: 'z, σ known', zs: 'z with s', t: 't with s', prop: 'Normal approximation', plus4: 'Plus four' };
+  const PRESETS = {
+    z95: { pop: 'pendulum', n: 10, kind: 'z', cl: 95, hint: 'A 1.000 m pendulum has a true period of 2.006 s. Each sample is 10 hand timings (simulated, σ = 0.080 s known). Press Play: each sample\'s interval x̄ ± z σ/√n joins the stack. Count the red ones.' },
+    levels: { pop: 'pendulum', n: 10, kind: 'z', cl: 99, hint: 'Draw 100, then switch between 90, 95 and 99. The samples stay the same; only the intervals change. Higher confidence: wider intervals, fewer misses.' },
+    tsmall: { pop: 'pendulum', n: 4, kind: 't', cl: 95, compare: true, hint: 'With only 4 timings and σ unknown, s is often well below σ. The thin interval uses z with s and is too narrow: it misses far more than 5 %. The thick t interval with 3 degrees of freedom is wider and catches about 95 %.' },
+    skew: { pop: 'decay', n: 5, kind: 't', cl: 95, hint: 'Times between decays are strongly skewed, not normal. The t interval assumes a normal population; at n = 5 it catches fewer than 95 %. Raise n to 40 and the central limit theorem rescues it.' },
+    heights: { pop: 'heights', n: 25, kind: 't', cl: 95, hint: 'Heights, simulated as normal with μ = 165.0 cm and σ = 7.0 cm (the book\'s 8.6 lab measures real ones). With σ unknown, t intervals from samples of 25.' },
+    width: { pop: 'pendulum', n: 40, kind: 'z', cl: 95, tab: 'width', hint: 'Draw 100 at n = 40, then at n = 10, 20, 80 and 160. Each dot is the mean width at that n. Four times the sample, half the width: the width goes as 1/√n.' },
+    prop: { pop: 'polar', angle: 60, n: 50, kind: 'prop', cl: 95, hint: 'A photon passes a polarizer at 60° with probability cos² 60° = 0.25 (Malus\'s law). Each sample is 50 photons; p′ is the share that passed, and the interval is p′ ± z√(p′q′/n).' },
+    plus4: { pop: 'polar', angle: 72, n: 15, kind: 'prop', cl: 95, hint: 'At 72° only p = 0.095 of the photons pass. With n = 15, np′ is often below 5 and the normal approximation misses far more than 5 % (a sample with no photons gives an interval of zero width). Switch to Plus four: add two successes and two failures.' },
+  };
+  const S = { pop: 'pendulum', angle: 60, n: 10, kind: 'z', cl: 95, compare: false, seed: 1, blind: false, tab: 'rate', preset: 'z95', run: false, clock: 0, gap: 0.6,
+    samples: [], hist: {}, target: 100, reveal: 1 };
+  let Pp = population(S.pop, S.angle), rngNow = null;
+  const still = () => (window.VDPrefs && VDPrefs.still && VDPrefs.still()) || (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
+  const isProp = () => Pp.kind === 'prop';
+  const cl = () => S.cl / 100;
+
+  function restart() { Pp = population(S.pop, S.angle); S.samples = []; rngNow = null; }
+  function draw(k) {
+    if (!rngNow) rngNow = sampleRng(S.seed, S.pop, S.angle, S.n);
+    for (let i = 0; i < k; i++) S.samples.push(drawSample(Pp, S.n, rngNow));
+    noteHistory(); need = true; readouts();
+  }
+  function noteHistory() {
+    if (S.samples.length < 20) return;
+    const key = `${S.pop}:${S.angle}:${S.kind}:${S.cl}:${S.seed}`, h = S.hist[key] || (S.hist[key] = {});
+    h[S.n] = coverage(Pp, S.samples, S.kind, cl()).meanWidth;
+  }
+
+  /* ---------- colors and numbers ---------- */
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), mono: g('--font-mono') || 'monospace',
+      hit: g('--ci-hit'), miss: g('--ci-miss'), thin: g('--ci-thin'), truth: g('--ci-truth'), dot: g('--ci-dot'), band: g('--ci-band'), curve: g('--ci-curve') };
+  }
+  const fmtN = (v, d) => { if (!isFinite(v)) return '—'; const s = Math.abs(v).toFixed(d), parts = s.split('.'); parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ','); return (v < 0 && +s !== 0 ? '−' : '') + parts.join('.'); };
+  const val = (v, extra = 0) => fmtN(v, Pp.dec + extra);
+  const unit = () => (Pp.unit ? ' ' + Pp.unit : '');
+  const pct = (v) => (isFinite(v) ? (100 * v).toFixed(1) + ' %' : '—');
+  const proj = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
+  function niceStep(span, n) { const raw = span / n, p = Math.pow(10, Math.floor(Math.log10(raw))), m = raw / p; return (m <= 1 ? 1 : m <= 2 ? 2 : m <= 5 ? 5 : 10) * p; }
+  const decOf = (st) => Math.max(0, -Math.floor(Math.log10(st) + 1e-9));
+
+  /* ---------- the picture: the latest sample, then the stack of intervals ---------- */
+  function xRange() {
+    const se = isProp() ? Math.sqrt(Math.max(Pp.truth * (1 - Pp.truth), 0.01) / S.n) : Pp.sigma / Math.sqrt(S.n);
+    let half = Math.max((isProp() ? 5.2 : 4.2) * se, 1e-6);
+    if (S.kind === 't' || S.compare) half *= S.n <= 3 ? 2.6 : S.n <= 5 ? 1.7 : 1.15;
+    let lo = Pp.truth - half, hi = Pp.truth + half;
+    if (isProp()) { lo = Math.max(-0.05, lo); hi = Math.min(1.05, hi); }
+    return [lo, hi];
+  }
+  function drawPic() {
+    if (!W || !T) return;
+    const c = ctx, f = proj(); c.setTransform(dpr, 0, 0, dpr, 0, 0); c.fillStyle = T.canvas; c.fillRect(0, 0, W, H);
+    const padL = 16 * f, padR = 16 * f, w = W - padL - padR, stripH = 64 * f, axisH = 30 * f;
+    const [lo, hi] = xRange(), X = (v) => padL + (v - lo) / (hi - lo) * w, inX = (v) => Math.min(padL + w + 6, Math.max(padL - 6, X(v)));
+    const last = S.samples[S.samples.length - 1];
+    /* the latest sample's values as dots, with x̄ (or p′) and its interval */
+    c.fillStyle = T.band; c.fillRect(0, 0, W, stripH);
+    c.fillStyle = T.muted; c.font = `${Math.round(11 * f)}px ${T.mono}`; c.textAlign = 'left'; c.textBaseline = 'top';
+    if (!last) c.fillText(VDI18N.t('Press Play or Draw one: each sample of n appears here, its interval joins the stack below.'), padL, 8 * f);
+    else if (isProp()) {
+      const say = VDI18N.t('This sample: {x} of {n} photons passed, p′ = {p}', { x: last.x, n: last.n, p: fmtN(last.x / last.n, 3) });
+      const room = W - padL - 4, wide = c.measureText(say).width; if (wide > room) c.font = `${Math.max(8, Math.floor(11 * f * room / wide))}px ${T.mono}`;
+      c.fillText(say, padL, 6 * f); c.font = `${Math.round(11 * f)}px ${T.mono}`;
+      const cols = Math.min(last.n, Math.floor(w / (9 * f))), sz = Math.min(8 * f, w / Math.max(1, cols) - 1);
+      const shown = Math.max(1, Math.ceil(S.reveal * last.n));
+      for (let i = 0; i < Math.min(shown, cols * 3); i++) { const r = Math.floor(i / cols), q = i % cols; c.fillStyle = last.vals[i] ? T.dot : T.line; c.fillRect(padL + q * (sz + 1), 24 * f + r * (sz + 2), sz, sz); }
+    } else {
+      const say = VDI18N.t('This sample: n = {n} values, x̄ = {m}, s = {s}', { n: last.n, m: val(last.mean, 1) + unit(), s: val(last.s, 1) + unit() });
+      /* on a narrow phone the line shrinks to fit rather than run off the edge */
+      const room = W - padL - 4, wide = c.measureText(say).width; if (wide > room) c.font = `${Math.max(8, Math.floor(11 * f * room / wide))}px ${T.mono}`;
+      c.fillText(say, padL, 6 * f); c.font = `${Math.round(11 * f)}px ${T.mono}`;
+      const shown = Math.max(1, Math.ceil(S.reveal * last.n));
+      c.fillStyle = T.dot; c.globalAlpha = last.n > 60 ? 0.45 : 0.85;
+      for (let i = 0; i < shown; i++) { const x = inX(last.vals[i]); c.beginPath(); c.arc(x, 38 * f + ((i * 7) % 5) * 3 * f, 3 * f, 0, 2 * Math.PI); c.fill(); }
+      c.globalAlpha = 1;
+      if (S.reveal >= 1) { c.fillStyle = T.ink; c.beginPath(); const xm = inX(last.mean); c.moveTo(xm, 54 * f); c.lineTo(xm - 5 * f, 62 * f); c.lineTo(xm + 5 * f, 62 * f); c.fill(); }
+    }
+    /* the stack: newest on top */
+    const top = stripH + 10 * f, bottom = H - axisH, avail = bottom - top;
+    const rows = Math.max(10, Math.min(100, Math.floor(avail / (2.9 * f))));
+    const rh = avail / rows, show = S.samples.slice(-rows).reverse();
+    const truth = Pp.truth;
+    show.forEach((smp, k) => {
+      if (k === 0 && S.reveal < 1) return;
+      const y = top + (k + 0.5) * rh, iv = interval(Pp, smp, S.kind, cl()), hit = captures(iv, truth);
+      c.strokeStyle = S.blind ? T.hit : hit ? T.hit : T.miss; c.lineWidth = Math.max(1, Math.min(3 * f, rh * (S.compare && S.kind === 't' ? 0.4 : 0.55)));
+      c.beginPath(); c.moveTo(inX(iv.lo), y); c.lineTo(inX(iv.hi), y); c.stroke();
+      if (S.compare && S.kind === 't' && !isProp()) {
+        const zs = interval(Pp, smp, 'zs', cl()), zh = captures(zs, truth);
+        c.strokeStyle = S.blind ? T.thin : zh ? T.thin : T.miss; c.lineWidth = Math.max(1, rh * 0.18);
+        c.beginPath(); c.moveTo(inX(zs.lo), y + rh * 0.32); c.lineTo(inX(zs.hi), y + rh * 0.32); c.stroke();
+      }
+      c.fillStyle = T.dot; c.fillRect(inX(estimate(smp)) - 1, y - Math.max(1.5, rh * 0.35), 2, Math.max(3, rh * 0.7));
+    });
+    if (!S.blind) {
+      const tx = X(truth); c.strokeStyle = T.truth; c.lineWidth = 2; c.beginPath(); c.moveTo(tx, top - 6 * f); c.lineTo(tx, bottom); c.stroke();
+      c.fillStyle = T.truth; c.font = `700 ${Math.round(11 * f)}px ${T.mono}`; c.textBaseline = 'bottom'; c.textAlign = tx > W - 140 * f ? 'right' : 'left';
+      c.fillText((isProp() ? 'p = ' : 'μ = ') + val(truth, 1) + unit(), tx + (tx > W - 140 * f ? -5 : 5), top - 1);
+    }
+    /* the axis */
+    c.strokeStyle = T.line; c.lineWidth = 1; c.beginPath(); c.moveTo(padL, bottom + 0.5); c.lineTo(padL + w, bottom + 0.5); c.stroke();
+    c.fillStyle = T.muted; c.font = `${Math.round(11 * f)}px ${T.mono}`; c.textBaseline = 'top'; c.textAlign = 'center';
+    const st = niceStep(hi - lo, Math.max(3, Math.floor(w / (80 * f))));
+    for (let v = Math.ceil(lo / st) * st; v <= hi + 1e-12; v += st) { const x = X(v); c.fillRect(x, bottom + 1, 1, 4); c.fillText(fmtN(v, decOf(st)), x, bottom + 5); }
+    const axisName = isProp() ? VDI18N.t('proportion') : VDI18N.t('value ({u})', { u: Pp.unit });
+    let tally = '';
+    if (show.length) { const cv = coverage(Pp, S.samples.slice(-rows), S.kind, cl()); tally = S.blind ? VDI18N.t('{k} intervals shown', { k: show.length }) : VDI18N.t('{h} of the {k} shown catch the truth', { h: cv.hit, k: show.length }); }
+    const axisW = c.measureText(axisName).width;
+    c.font = `700 ${Math.round(11 * f)}px ${T.mono}`; const tallyW = c.measureText(tally).width;
+    /* the count and the axis name share one line; when both do not fit (a phone, a longer language), the axis name goes */
+    if (!tally || tallyW + axisW + 12 * f <= w) { c.font = `${Math.round(11 * f)}px ${T.mono}`; c.textAlign = 'right'; c.fillStyle = T.muted; c.fillText(axisName, padL + w, bottom + 17 * f); }
+    if (tally) { c.textAlign = 'left'; c.fillStyle = T.ink; c.font = `700 ${Math.round(11 * f)}px ${T.mono}`; c.fillText(tally, padL, bottom + 17 * f); }
+  }
+
+  /* ---------- the lower graph ---------- */
+  function drawLow() {
+    if (!LW || !T) return;
+    const c = lctx, f = proj(); c.setTransform(dpr, 0, 0, dpr, 0, 0); c.fillStyle = T.canvas; c.fillRect(0, 0, LW, LH);
+    const padL = 46 * f, padR = 14 * f, top = 22 * f, bottom = 30 * f, w = LW - padL - padR, h = LH - top - bottom;
+    c.font = `700 ${Math.round(11 * f)}px ${T.mono}`; c.fillStyle = T.ink; c.textAlign = 'left'; c.textBaseline = 'bottom';
+    if (S.tab === 'rate') {
+      c.fillText(LW < 520 ? VDI18N.t('Share that caught the truth') : VDI18N.t('Share that caught the truth, as the intervals pile up'), padL, top - 6);
+      const N = S.samples.length, maxN = Math.max(100, Math.pow(10, Math.ceil(Math.log10(Math.max(1, N)))));
+      const X = (k) => padL + Math.log10(k) / Math.log10(maxN) * w;
+      const Yr = (r) => top + h - (r - 0.5) / 0.5 * h;
+      c.strokeStyle = T.line; c.lineWidth = 1; c.strokeRect(padL + 0.5, top + 0.5, w, h);
+      c.fillStyle = T.muted; c.font = `${Math.round(10 * f)}px ${T.mono}`; c.textAlign = 'right'; c.textBaseline = 'middle';
+      for (const r of [0.5, 0.75, 1]) c.fillText(Math.round(r * 100) + ' %', padL - 4, Yr(r));
+      c.textAlign = 'center'; c.textBaseline = 'top';
+      for (let k = 1; k <= maxN; k *= 10) c.fillText(fmtN(k, 0), X(k), top + h + 3);
+      c.fillText(VDI18N.t('intervals drawn (log scale)'), padL + w / 2, top + h + 15 * f);
+      const ty = Yr(cl()); c.strokeStyle = T.truth; c.setLineDash([5, 4]); c.beginPath(); c.moveTo(padL, ty); c.lineTo(padL + w, ty); c.stroke(); c.setLineDash([]);
+      c.fillStyle = T.truth; c.textAlign = 'right'; c.textBaseline = 'bottom'; c.fillText(VDI18N.t('confidence level {c} %', { c: fmtN(S.cl, S.cl % 1 ? 1 : 0) }), padL + w - 4, ty - 2);
+      if (N && !S.blind) {
+        c.strokeStyle = T.dot; c.lineWidth = 2; c.beginPath(); let hit = 0;
+        const stepK = Math.max(1, Math.floor(N / 2000));
+        for (let k = 1; k <= N; k++) { if (captures(interval(Pp, S.samples[k - 1], S.kind, cl()), Pp.truth)) hit++; if (k % stepK && k !== N) continue; const x = X(k), y = Yr(Math.max(0.5, hit / k)); if (k === 1) c.moveTo(x, y); else c.lineTo(x, y); }
+        c.stroke();
+      }
+    } else {
+      const key = `${S.pop}:${S.angle}:${S.kind}:${S.cl}:${S.seed}`, hist = S.hist[key] || {}, ns = Object.keys(hist).map(Number);
+      c.fillText(VDI18N.t('Mean width of the intervals against n ({k}, {c} %)', { k: VDI18N.t(KINDNAME[S.kind]), c: fmtN(S.cl, S.cl % 1 ? 1 : 0) }), padL, top - 6);
+      const nmax = Math.max(100, ...ns, S.n) <= 100 ? 100 : 400, X = (n) => padL + (n - 2) / (nmax - 2) * w;
+      const wmax = Math.max(knownWidth(Pp, 2, cl()) * 1.05, ...ns.map((n) => hist[n] * 1.05)), Y = (v) => top + h - v / wmax * h;
+      c.strokeStyle = T.line; c.lineWidth = 1; c.strokeRect(padL + 0.5, top + 0.5, w, h);
+      c.strokeStyle = T.curve; c.lineWidth = 2; c.beginPath();
+      for (let n = 2; n <= nmax; n++) { const y = Y(knownWidth(Pp, n, cl())); if (n === 2) c.moveTo(X(n), y); else c.lineTo(X(n), y); }
+      c.stroke();
+      c.fillStyle = T.curve; c.font = `${Math.round(10 * f)}px ${T.mono}`; c.textAlign = 'right'; c.textBaseline = 'bottom';
+      c.fillText(isProp() ? '2z√(pq/n)' : '2zσ/√n', padL + w - 4, Y(knownWidth(Pp, nmax, cl())) - 4);
+      for (const n of ns) { c.fillStyle = n === S.n ? T.dot : T.ink; c.beginPath(); c.arc(X(n), Y(hist[n]), 3.5 * f, 0, 2 * Math.PI); c.fill(); }
+      c.fillStyle = T.muted; c.textAlign = 'right'; c.textBaseline = 'middle';
+      const st = niceStep(wmax, 4); for (let v = 0; v <= wmax + 1e-12; v += st) c.fillText(fmtN(v, decOf(st)), padL - 4, Y(v));
+      c.textAlign = 'center'; c.textBaseline = 'top';
+      for (let k = 0; k <= 4; k++) { const n = k === 0 ? 2 : nmax * k / 4; c.fillText(String(n), X(n), top + h + 3); }
+      c.fillText(VDI18N.t('sample size n'), padL + w / 2, top + h + 15 * f);
+    }
+  }
+
+  /* ---------- the rail ---------- */
+  const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;');
+  function critText() {
+    if (S.kind === 't') return `t = ${fmtN(crit(S.n - 1, cl()), 3)} (df = ${S.n - 1})`;
+    return `z = ${fmtN(crit(0, cl()), 3)}`;
+  }
+  function readouts() {
+    const dd = (a, b, cls) => `<div${cls ? ` class="${cls}"` : ''}><dt>${esc(a)}</dt><dd translate="no">${b}</dd></div>`, t = VDI18N.t, hide = S.blind;
+    const cv = coverage(Pp, S.samples, S.kind, cl()), last = S.samples[S.samples.length - 1];
+    let h = dd(t('Interval'), esc(t(KINDNAME[S.kind])), 'wide') + dd(t('Confidence level'), fmtN(S.cl, S.cl % 1 ? 1 : 0) + ' %');
+    h += dd(t('Sample size n'), String(S.n)) + dd(t('Critical value'), critText());
+    h += dd(t('Intervals drawn'), fmtN(cv.count, 0)) + dd(t('Caught the truth'), hide ? '?' : `${fmtN(cv.hit, 0)} (${pct(cv.rate)})`);
+    h += dd(t('Mean width'), cv.count ? val(cv.meanWidth, 1) + unit() : '—') + dd(isProp() ? t('True p = cos²θ') : t('True mean μ'), hide ? '?' : val(Pp.truth, 1) + unit());
+    if (S.compare && S.kind === 't' && !isProp()) { const z = coverage(Pp, S.samples, 'zs', cl()); h += dd(t('z with s caught'), hide ? '?' : `${fmtN(z.hit, 0)} (${pct(z.rate)})`) + dd(t('z with s, mean width'), z.count ? val(z.meanWidth, 1) + unit() : '—'); }
+    if (last) {
+      const iv = interval(Pp, last, S.kind, cl());
+      h += dd(isProp() ? (S.kind === 'plus4' ? t('This p′ = (x + 2)/(n + 4)') : t('This p′ = x/n')) : t('This x̄'), val(isProp() ? iv.phat : last.mean, 1) + unit());
+      h += dd(isProp() ? 'EBP' : 'EBM', val(iv.E, 1) + unit());
+      h += dd(t('This interval'), `(${val(iv.lo, 1)}, ${val(iv.hi, 1)})${unit()}`, 'wide');
+      if (S.kind === 'prop') { const ok = last.x > 5 && last.n - last.x > 5; h += dd(t('np′ and nq′ above 5?'), ok ? t('yes: {a} and {b}', { a: last.x, b: last.n - last.x }) : t('no: {a} and {b}', { a: last.x, b: last.n - last.x })); }
+    }
+    if (!isProp()) h += dd(t('Population σ'), (S.kind === 'z' || !hide ? val(Pp.sigma, 1) : '?') + unit());
+    $('out').innerHTML = h;
+  }
+  function formulas() {
+    const dl = $('formulas'), t = VDI18N.t; let h = '';
+    if (isProp()) {
+      h += `<dt>p′</dt><dd>= x/n, q′ = 1 − p′</dd><dt>EBP</dt><dd>= z<sub>α/2</sub>√(p′q′/n)</dd><dt>${esc(t('interval'))}</dt><dd>(p′ − EBP, p′ + EBP)</dd>`;
+      h += `<dt>${esc(t('plus four'))}</dt><dd>p′ = (x + 2)/(n + 4), ${esc(t('then n + 4 in EBP'))}</dd><dt>n</dt><dd>= z²p′q′/EBP²</dd>`;
+    } else {
+      h += `<dt>EBM</dt><dd>= z<sub>α/2</sub>(σ/√n) ${esc(t('(σ known)'))}</dd><dt>EBM</dt><dd>= t<sub>α/2</sub>(s/√n), df = n − 1</dd>`;
+      h += `<dt>${esc(t('interval'))}</dt><dd>(x̄ − EBM, x̄ + EBM)</dd><dt>n</dt><dd>= z²σ²/EBM²</dd>`;
+    }
+    h += `<dt>CL</dt><dd>= 1 − α</dd>`;
+    dl.innerHTML = h;
+  }
+  function noteText() { $('note').textContent = VDI18N.t('Play draws one sample about every half second at first, then faster, up to the next 100. Red intervals missed the true value.'); }
+  function syncControls() {
+    for (const b of document.querySelectorAll('#kindSeg button')) { const pr = b.dataset.k === 'prop' || b.dataset.k === 'plus4'; b.hidden = pr !== isProp(); b.setAttribute('aria-pressed', String(b.dataset.k === S.kind)); }
+    for (const b of document.querySelectorAll('#clSeg button')) b.setAttribute('aria-pressed', String(+b.dataset.c === S.cl));
+    for (const b of document.querySelectorAll('#tabSeg button')) b.setAttribute('aria-pressed', String(b.dataset.t === S.tab));
+    $('compareWrap').hidden = S.kind !== 't'; $('compare').checked = S.compare; $('angleGrp').hidden = !isProp();
+    $('popSel').value = S.pop; $('angle').value = S.angle; $('angleOut').textContent = `${S.angle}°`;
+    if (document.activeElement !== $('nIn')) $('nIn').value = S.n;
+    if (document.activeElement !== $('clIn')) $('clIn').value = S.cl;
+    if (document.activeElement !== $('seedIn')) $('seedIn').value = S.seed;
+    $('nIn').min = isProp() ? 1 : 2;
+    noteText();
+  }
+  function refresh() { syncControls(); formulas(); readouts(); need = true; }
+
+  /* ---------- controls ---------- */
+  const pressPreset = (k) => { for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === k)); };
+  function custom() { if (S.preset !== '') { S.preset = ''; pressPreset(''); $('presetHint').textContent = VDI18N.t('Your own setup: every control above can be changed.'); } }
+  function applyPreset(k) {
+    const c = PRESETS[k]; setRun(false); S.preset = k; pressPreset(k);
+    const again = c.pop !== S.pop || (c.angle != null && c.angle !== S.angle) || c.n !== S.n;
+    S.pop = c.pop; if (c.angle != null) S.angle = c.angle; S.n = c.n; S.kind = c.kind; S.cl = c.cl; S.compare = !!c.compare; if (c.tab) S.tab = c.tab;
+    if (again) restart();
+    $('presetHint').textContent = VDI18N.t(c.hint); S.reveal = 1; refresh();
+  }
+  function setRun(on) { S.run = on; S.clock = 0; S.gap = 0.6; $('play').textContent = on ? VDI18N.t('Pause') : VDI18N.t('Play'); $('play').classList.toggle('attn', !on); if (on) S.target = (Math.floor(S.samples.length / 100) + 1) * 100; }
+  function setN(n) { n = Math.max(isProp() ? 1 : 2, Math.min(400, Math.round(n) || 2)); if (n === S.n) return; S.n = n; restart(); }
+  function setCl(v) { if (!(v >= 50 && v <= 99.9)) return; S.cl = Math.round(v * 10) / 10; noteHistory(); }
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  $('popSel').addEventListener('change', () => {
+    setRun(false); S.pop = $('popSel').value; const pr = POPDEF[S.pop].kind === 'prop';
+    if (pr && S.kind !== 'prop' && S.kind !== 'plus4') S.kind = 'prop'; if (!pr && (S.kind === 'prop' || S.kind === 'plus4')) S.kind = 't';
+    if (!pr && S.n < 2) S.n = 2; restart(); custom(); refresh();
+  });
+  $('angle').addEventListener('input', () => { setRun(false); S.angle = +$('angle').value; restart(); custom(); refresh(); });
+  for (const b of document.querySelectorAll('#kindSeg button')) b.addEventListener('click', () => { S.kind = b.dataset.k; noteHistory(); custom(); refresh(); });
+  $('compare').addEventListener('change', () => { S.compare = $('compare').checked; custom(); refresh(); });
+  for (const b of document.querySelectorAll('#clSeg button')) b.addEventListener('click', () => { setCl(+b.dataset.c); custom(); refresh(); });
+  $('clIn').addEventListener('input', () => { const v = +$('clIn').value; if (v >= 50 && v <= 99.9) { setCl(v); custom(); refresh(); } });
+  $('clIn').addEventListener('change', () => syncControls());
+  $('nIn').addEventListener('input', () => { const v = +$('nIn').value; if (v >= (isProp() ? 1 : 2) && v <= 400) { setRun(false); setN(v); custom(); refresh(); } });
+  $('nIn').addEventListener('change', () => syncControls());
+  $('nUp').addEventListener('click', () => { setRun(false); setN(S.n + 1); custom(); refresh(); });
+  $('nDown').addEventListener('click', () => { setRun(false); setN(S.n - 1); custom(); refresh(); });
+  for (const b of document.querySelectorAll('#tabSeg button')) b.addEventListener('click', () => { S.tab = b.dataset.t; refresh(); });
+  $('seedIn').addEventListener('change', () => { setRun(false); S.seed = Math.max(1, Math.min(9999, Math.round(+$('seedIn').value) || 1)); restart(); refresh(); });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; refresh(); });
+  $('draw1').addEventListener('click', () => { setRun(false); S.reveal = 0; S.revealT = 0; draw(1); });
+  $('draw100').addEventListener('click', () => { setRun(false); S.reveal = 1; draw(100); });
+  $('draw1000').addEventListener('click', () => { setRun(false); S.reveal = 1; draw(1000); });
+  $('play').addEventListener('click', () => { setRun(!S.run); if (S.run) { S.reveal = 0; S.revealT = 0; draw(1); } });
+  $('reset').addEventListener('click', () => { setRun(false); restart(); refresh(); });
+  function keys(e) {
+    if (e.key === 'ArrowUp' || e.key === 'ArrowDown') { setRun(false); setN(S.n + (e.key === 'ArrowUp' ? 1 : -1) * (e.shiftKey ? 10 : 1)); custom(); refresh(); e.preventDefault(); }
+    else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') { const L = [90, 95, 99], i = L.indexOf(S.cl), j = i < 0 ? 1 : Math.max(0, Math.min(2, i + (e.key === 'ArrowLeft' ? -1 : 1))); setCl(L[j]); custom(); refresh(); e.preventDefault(); }
+    else if (e.key === ' ') { $('play').click(); e.preventDefault(); }
+  }
+  can.addEventListener('keydown', keys); low.addEventListener('keydown', keys);
+
+  let last = performance.now();
+  function frame(now) {
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    if (S.reveal < 1) { S.revealT = (S.revealT || 0) + dt; S.reveal = still() ? 1 : Math.min(1, S.revealT / 0.35); need = true; }
+    if (S.run) {
+      S.clock += dt;
+      if (S.clock >= S.gap) {
+        const slow = S.gap > 0.15, k = slow ? 1 : Math.max(1, Math.round(0.15 / Math.max(S.gap, 0.01)));
+        S.clock = 0; S.gap = Math.max(0.02, S.gap * 0.8);
+        const take = Math.min(k, S.target - S.samples.length);
+        if (take > 0) { S.reveal = slow && !still() ? 0 : 1; S.revealT = 0; draw(take); }
+        if (S.samples.length >= S.target) setRun(false);
+      }
+    }
+    if (need) { need = false; drawPic(); drawLow(); }
+    requestAnimationFrame(frame);
+  }
+  function resize() {
+    dpr = window.devicePixelRatio || 1;
+    const r = $('pane').getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr);
+    const q = $('lower').getBoundingClientRect(); LW = q.width; LH = q.height; low.width = Math.round(LW * dpr); low.height = Math.round(LH * dpr);
+    need = true;
+  }
+  const retheme = () => { tokens(); need = true; };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'data-vd-look', 'data-projector'] });
+  VD.projector({ onChange: resize });
+  if (window.VD && VD.panel) VD.panel({ play: '#play', reset: '#reset' });
+  if (window.VD && VD.splitPanes) VD.splitPanes($('pane'), $('lower'), { key: 'lower', label: 'Divider between the intervals and the lower graph' });
+  if (VD.howTo) VD.howTo({ src: 'media/how-this-works/ci-coverage.mp4', poster: 'media/how-this-works/ci-coverage.jpg' });
+
+  /* Record reading: the interval, the level, n, how many were drawn and caught, the mean width (worksheet ci-coverage) */
+  window.vdReadingRow = () => {
+    if (!S.samples.length) return VDI18N.t('Draw some intervals first: Play, or Draw 100.');
+    const rows = [], one = (kind) => {
+      const cv = coverage(Pp, S.samples, kind, cl());
+      rows.push({ population: S.pop, interval: KINDNAME[kind], kind, cl: S.cl, n: S.n, inv_sqrt_n: Number((1 / Math.sqrt(S.n)).toFixed(4)), intervals: cv.count, captured: cv.hit,
+        captured_pct: Number((100 * cv.rate).toFixed(1)), mean_width: Number(cv.meanWidth.toFixed(Pp.dec + 1)), truth: Number(Pp.truth.toFixed(Pp.dec + 1)) });
+    };
+    one(S.kind); if (S.compare && S.kind === 't' && !isProp()) one('zs');
+    return rows.length > 1 ? rows : rows[0];
+  };
+  window.vdShowCols = [['interval', 'Interval'], ['cl', 'Level (%)'], ['n', 'n'], ['captured_pct', 'Caught (%)']];
+  window.vdVersion = 'confidence-intervals@2026-11-19';
+  if (window.VD && VD.describe) VD.describe(can, () => {
+    const t = VDI18N.t, cv = coverage(Pp, S.samples, S.kind, cl()), out = [];
+    out.push(t('{k} intervals at {c} %, n = {n}.', { k: cv.count, c: fmtN(S.cl, S.cl % 1 ? 1 : 0), n: S.n }));
+    if (cv.count && !S.blind) out.push({ t: t('{h} of them caught the true value, {p}.', { h: cv.hit, p: pct(cv.rate) }), live: !S.run });
+    return out;
+  });
+  tokens(); new ResizeObserver(resize).observe($('pane')); new ResizeObserver(resize).observe($('lower')); resize(); applyPreset('z95');
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  window.__ci = { S, get P() { return Pp; }, applyPreset, setRun, draw, setN, setCl, restart, population, sampleRng, drawSample, interval, coverage, captures, knownWidth, zsCoverage, malus, redraw: () => { need = true; } };
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
