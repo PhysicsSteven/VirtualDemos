@@ -12,6 +12,10 @@ VDI18N.add('es', 'demo/osmosis', {
   "barras: moléculas simuladas",
 "Diffusion and Osmosis":
   "Difusión y ósmosis",
+"<a>Fluids</a>":
+  "<a>Fluidos</a>",
+"<span><a><span>←</span> <span>Surface Tension and Capillarity</span></a></span>":
+  "<span><a><span>←</span> <span>Tensión superficial y capilaridad</span></a></span>",
 "Molecules wander at random, so spreading out takes four times as long to go twice as far. Watch a drop spread and a layer leak through, then let water cross a membrane that holds back sugar or salt: it lifts a column of liquid, swells a red blood cell until it bursts, and moves fluid out of a capillary at one end and back in at the other.":
   "Las moléculas vagan al azar, así que dispersarse el doble de lejos toma cuatro veces más tiempo. Mira cómo se dispersa una gota y cómo una capa deja pasar moléculas, luego deja que el agua cruce una membrana que retiene azúcar o sal: levanta una columna de líquido, hincha un glóbulo rojo hasta que revienta y saca líquido de un capilar por un extremo y lo regresa por el otro.",
 "SI units · x_rms = √(2Dt) · J = DΔC/L · Π = iMRT":

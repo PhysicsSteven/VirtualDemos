@@ -48,6 +48,10 @@ VDI18N.add('es', 'demo/nerve-signals', {
   "Láminas de mielina",
 "Nerve Signals and the ECG":
   "Señales nerviosas y el ECG",
+"<a>Chemistry and biology</a>":
+  "<a>Química y biología</a>",
+"<a><span>←</span> <span>DNA in 3D</span></a><a><span>Hearing and the Ear</span> <span>→</span></a>":
+  "<a><span>←</span> <span>ADN en 3D</span></a><a><span>La audición y el oído</span> <span>→</span></a>",
 "A nerve fiber is a leaky cable: a small kick of charge fades, but a kick past threshold fires an action potential that runs the whole length. Time it between two electrodes and see myelin make it jump from node to node. Then watch the heart, a turning dipole, draw ECG leads I, II and III.":
   "Una fibra nerviosa es un cable con fugas: un pequeño impulso de carga se desvanece, pero uno que pasa el umbral dispara un potencial de acción que recorre toda la fibra. Mide su tiempo entre dos electrodos y ve cómo la mielina lo hace saltar de nodo en nodo. Luego observa cómo el corazón, un dipolo que gira, traza las derivaciones I, II y III del ECG.",
 "Advance a little and pause":
@@ -341,5 +345,11 @@ VDI18N.add('es', 'demo/nerve-signals', {
 "dipole {#} mV at {#}°":
   "dipolo de {#} mV a {#}°",
 "dipole {#} mV at −{#}°":
-  "dipolo de {#} mV a −{#}°"
+  "dipolo de {#} mV a −{#}°",
+"Pick recording electrode A or B (Axon)":
+  "Elige el electrodo de registro A o B (Axón)",
+"Move the picked electrode along the axon":
+  "Mueve el electrodo elegido a lo largo del axón",
+"Move it ten times farther":
+  "Muévelo diez veces más lejos"
 });

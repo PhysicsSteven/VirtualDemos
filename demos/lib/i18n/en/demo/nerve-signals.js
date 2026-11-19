@@ -24,6 +24,8 @@ VDI18N.add('en', 'demo/nerve-signals', [
 "Internode length",
 "Myelin lamellae",
 "Nerve Signals and the ECG",
+"<a>Chemistry and biology</a>",
+"<a><span>←</span> <span>DNA in 3D</span></a><a><span>Hearing and the Ear</span> <span>→</span></a>",
 "A nerve fiber is a leaky cable: a small kick of charge fades, but a kick past threshold fires an action potential that runs the whole length. Time it between two electrodes and see myelin make it jump from node to node. Then watch the heart, a turning dipole, draw ECG leads I, II and III.",
 "Advance a little and pause",
 "Slow motion: simulated time per second",
@@ -170,5 +172,8 @@ VDI18N.add('en', 'demo/nerve-signals', [
 "{#} beats per minute: more than six big boxes ({#} s) between R waves. Measure the time between R waves and work out the rate.",
 "dipole {m} mV at {a}°",
 "dipole {#} mV at {#}°",
-"dipole {#} mV at −{#}°"
+"dipole {#} mV at −{#}°",
+"Pick recording electrode A or B (Axon)",
+"Move the picked electrode along the axon",
+"Move it ten times farther"
 ]);

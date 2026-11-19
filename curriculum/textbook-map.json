@@ -12918,9 +12918,12 @@
       "role": "demo",
       "beyond_book": true,
       "status": "usable",
-      "note": "New 2026-11-19 (Claude), from College Physics 2e 20.7 (Nerve Conduction and Electrocardiograms); no University Physics section covers it. Nernst and Goldman resting potential (Purves 2018 concentrations, Hodgkin and Katz 1949 permeabilities); the Hodgkin-Huxley membrane on a cable at 18.5 °C, bare and myelinated, with threshold, refractoriness, timing between two electrodes, v ∝ √d bare and v ∝ d myelinated, thinned and lost myelin; the heart as a turning dipole drawing leads I, II, III and aVR, aVL, aVF on Einthoven's triangle. No worksheet yet.",
+      "note": "New 2026-11-19 (Claude), from College Physics 2e 20.7 (Nerve Conduction and Electrocardiograms); no University Physics section covers it. Nernst and Goldman resting potential (Purves 2018 concentrations, Hodgkin and Katz 1949 permeabilities); the Hodgkin-Huxley membrane on a cable at 18.5 °C, bare and myelinated, with threshold, refractoriness, timing between two electrodes, v ∝ √d bare and v ∝ d myelinated, thinned and lost myelin; the heart as a turning dipole drawing leads I, II, III and aVR, aVL, aVF on Einthoven's triangle. Interactive worksheet nerve-signals (2026-11-19): conduction speed from the electrode gap against the delay, bare and myelinated, v² against d bare and v against d myelinated, threshold, and the mean QRS axis from leads I and aVF; key from a real demo run in TeacherKeys.",
       "title": "Nerve Signals and the ECG",
-      "url": "demos/nerve-signals.html"
+      "url": "demos/nerve-signals.html",
+      "handouts": [
+        "nerve-signals"
+      ]
     },
     {
       "demo": "hearing",
@@ -12938,9 +12941,12 @@
       "role": "demo",
       "beyond_book": false,
       "status": "usable",
-      "note": "New 2026-11-19 (Claude), from College Physics 2e 17.6 (Hearing); University Physics 17.3 discusses human hearing, phons and the equal loudness curves. A relative audiogram with headphones (Web Audio, capped level), the ISO 226:2003 equal loudness contours, the Greenwood map of the cochlea, and preset audiograms for noise induced loss and presbycusis. No worksheet yet.",
+      "note": "New 2026-11-19 (Claude), from College Physics 2e 17.6 (Hearing); University Physics 17.3 discusses human hearing, phons and the equal loudness curves. A relative audiogram with headphones (Web Audio, capped level), the ISO 226:2003 equal loudness contours, the Greenwood map of the cochlea, and preset audiograms for noise induced loss and presbycusis. Interactive worksheet hearing (2026-11-19): the place of the peak against log f from 1 to 16 kHz, phons against dB at 1 kHz and 100 Hz, a loudness match at 8 kHz, the preset audiograms read and banded (never the student's own test). Key from a real run in TeacherKeys.",
       "title": "Hearing and the Ear",
-      "url": "demos/hearing.html"
+      "url": "demos/hearing.html",
+      "handouts": [
+        "hearing"
+      ]
     },
     {
       "demo": "surface-tension",
@@ -12951,9 +12957,12 @@
       "role": "demo",
       "beyond_book": true,
       "status": "usable",
-      "note": "New 2026-11-19 (Claude). University Physics has no surface tension section; it follows College Physics 2e 11.8 and 11.9. Scenes: capillary tubes (h = 2γcosθ/(ρgr) in tubes r, 2r, 4r, Washburn rise with gravity, exact meniscus), drops and bubbles (2γ/r and 4γ/r; two bubbles on a pipe, the small one empties into the big one, Poiseuille flow in the pipe), resting on water (a needle or a water strider, weight against 2γL), soap film on a sliding wire (F = 2γl). γ and contact angles from Tables 11.3 and 11.4 in constants.js. No worksheet yet.",
+      "note": "New 2026-11-19 (Claude). University Physics has no surface tension section; it follows College Physics 2e 11.8 and 11.9. Scenes: capillary tubes (h = 2γcosθ/(ρgr) in tubes r, 2r, 4r, Washburn rise with gravity, exact meniscus), drops and bubbles (2γ/r and 4γ/r; two bubbles on a pipe, the small one empties into the big one, Poiseuille flow in the pipe), resting on water (a needle or a water strider, weight against 2γL), soap film on a sliding wire (F = 2γl). γ and contact angles from Tables 11.3 and 11.4 in constants.js. Interactive worksheet surface-tension (2026-11-19): water in glass tubes, h against 1/r gives γ; h against cos θ with the student's own angle; θ of mercury on glass and water on wax from their heights (a predict, observe, explain item); key from a real run in TeacherKeys.",
       "title": "Surface Tension and Capillarity",
-      "url": "demos/surface-tension.html"
+      "url": "demos/surface-tension.html",
+      "handouts": [
+        "surface-tension"
+      ]
     },
     {
       "demo": "osmosis",
@@ -12964,9 +12973,12 @@
       "role": "demo",
       "beyond_book": true,
       "status": "usable",
-      "note": "New 2026-11-19 (Claude). University Physics has no diffusion or osmosis section; it follows College Physics 2e 12.7. Scenes: diffusion (simulated molecules spreading as √(2Dt), and through a still layer against Crank's solution), osmosis in a U tube (van 't Hoff Π = iΔcRT, height Π/ρg, dilution, a piston for reverse osmosis), a red blood cell in saline (Boyle and van 't Hoff osmometer, bursting at the sphere of its area), and Starling forces along a capillary (OpenStax Anatomy and Physiology 2e 20.3 and Guyton values). D values from Table 12.2 in constants.js. No worksheet yet.",
+      "note": "New 2026-11-19 (Claude). University Physics has no diffusion or osmosis section; it follows College Physics 2e 12.7. Scenes: diffusion (simulated molecules spreading as √(2Dt), and through a still layer against Crank's solution), osmosis in a U tube (van 't Hoff Π = iΔcRT, height Π/ρg, dilution, a piston for reverse osmosis), a red blood cell in saline (Boyle and van 't Hoff osmometer, bursting at the sphere of its area), and Starling forces along a capillary (OpenStax Anatomy and Physiology 2e 20.3 and Guyton values). D values from Table 12.2 in constants.js. Worksheet osmosis (2026-11-19, algebra based): x_rms² against t for glucose and hemoglobin (D from the slope), the piston that just turns the flow against c for sugar and salt (R and i from the slopes), and a red cell's volume against 1/c (Boyle and van 't Hoff: solid volume from the intercept, bursting strength from the line).",
       "title": "Diffusion and Osmosis",
-      "url": "demos/osmosis.html"
+      "url": "demos/osmosis.html",
+      "handouts": [
+        "osmosis"
+      ]
     },
     {
       "demo": "data-explorer",

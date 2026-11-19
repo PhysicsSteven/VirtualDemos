@@ -324,7 +324,8 @@
     'sound-waves', 'kundts-tube', 'wave-power', 'two-speaker', 'ultrasound', 'sound-intensity',
     'room-acoustics' /* Room Acoustics demo, Reverberation time */, 'anechoic-chamber' /* Room Acoustics demo, Level against distance */,
     'sampling-aliasing' /* Timbre and Harmonics demo, Sampling and aliasing section, 2026-11-16 */,
-    'faraday-waves' /* Chladni Plates demo, Vibrating: Liquid layer, 2026-11-19 */];
+    'faraday-waves' /* Chladni Plates demo, Vibrating: Liquid layer, 2026-11-19 */,
+    'hearing' /* Hearing and the Ear demo: place on the cochlea, phons against dB, the preset audiograms, 2026-11-19 */];
   ENABLED.push(...ACOUSTICS);
   /* Room Acoustics rows: the walls (and the floor, unless the room is lined with wedges) in words */
   const roomWalls = (r) => (r.walls === 'panels' ? `${r.panels_n} ${r.panel_material} panels` : r.walls === 'wedges' ? `wedges ${r.wedge_depth_m} m deep` : 'hard walls')
@@ -364,6 +365,10 @@
     'room-acoustics': { demo: 'Room Acoustics', cols: ['row', 'band_Hz', (r) => `${r.room_L_m} × ${r.room_W_m} × ${r.room_H_m}`, roomWalls, 'V_m3', 'S_m2', 'T_measured_s', null, null, null] },
     /* Reading | Walls | Band (Hz) | Distance r (m) | log₂ r | Level L (dB) */
     'anechoic-chamber': { demo: 'Room Acoustics', cols: ['row', roomWalls, 'band_Hz', 'r_m', null, 'L_dB'] },
+    /* Table 1 (Cochlea rows): Reading | f (Hz) | log₁₀ f (typed) | Place of the peak from the base (mm) | λ in air (m);
+       a Loudness series goes to Table 2: Reading | f (Hz) | β (dB) | I (typed) | phons | sones. Table 3 (audiograms) is typed. */
+    hearing: { demo: 'Hearing and the Ear', cols: ['row', 'f_Hz', null, 'x_base_mm', 'lambda_m'],
+      alt: [{ table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.view === 'loud'), cols: ['row', 'f_Hz', 'L_dB', null, 'phons', 'sones'] }] },
   });
   /* ==ACOUSTICS END== */
   /* ==THERMO START== Thermodynamics worksheets (thermo.html) and their demo column maps. */
@@ -1028,6 +1033,16 @@
     'hs-heat-engines': { demo: 'Heat Engine Cycles', cols: ['row', (r) => `${r.cycle}, ${r.gas}${r.run === 'backward' ? ', backward' : ''}`,
       (r) => (r.T_h_K !== '' && r.T_h_K != null ? `T_h ${r.T_h_K} K, T_c ${r.T_c_K} K` : `lowest ${r.T_min_K} K, highest ${r.T_max_K} K`), 'Q_in_J', 'Q_out_J', 'W_net_J', null, null] },
   });
+  /* Nerve Signals and the ECG (College Physics 2e 20.7, 2026-11-19): Table 1 Reading | Fiber | d | Δx | Δt | v | v² (typed); a
+     series recorded in the Heart and ECG view goes to the ECG table: Reading | Setup (typed) | rate | net QRS I, II, III, aVF |
+     axis from I and aVF, axis set (typed) */
+  ALGEBRA.push('nerve-signals'); ENABLED.push('nerve-signals');
+  FROM_DEMO['nerve-signals'] = { demo: 'Nerve Signals and the ECG', cols: ['row', 'fiber', 'd_um', 'dx_mm', 'dt_ms', 'v_m_s', null],
+    alt: [{ table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.view === 'ecg'), cols: ['row', null, 'rate_bpm', 'I_mV', 'II_mV', 'III_mV', 'aVF_mV', null, null] }] };
+  /* Surface Tension and Capillary Rise (College Physics 2e 11.8, 2026-11-19): Reading | Tube | r | 1/r | h, three rows per Record
+     reading (tubes r, 2r, 4r); Table 2 (h against cos θ) and Table 3 (θ from h) are typed from the readouts */
+  ALGEBRA.push('surface-tension'); ENABLED.push('surface-tension');
+  FROM_DEMO['surface-tension'] = { demo: 'Surface Tension and Capillarity', cols: ['row', 'tube', 'r_mm', 'inv_r_per_mm', 'h_mm'] };
   /* Worksheets with a live graph under each copy of the first data table. The student chooses which column goes on each axis; the
      graph shows the points, a least squares line (free intercept, equal weights), its residuals, and the slope and intercept with
      their standard errors. The student may choose a quadratic instead (y = a + bx + cx², all three coefficients free), for data
@@ -1040,6 +1055,7 @@
   GRAPH_EVERY_TABLE.push('black-holes-near', 'hr-diagram-cluster');
   GRAPH_EVERY_TABLE.push('hydrogen-in-stars');
   GRAPH_EVERY_TABLE.push('atwood');   /* a against x, then 1/a against the total mass */
+  GRAPH_EVERY_TABLE.push('surface-tension');   /* h against 1/r, then h against cos θ */
   GRAPH_EVERY_TABLE.push('bose-einstein-condensation');   /* λ_T² against 1/T in the box, then N₀/N against T² in the trap */
   GRAPH_EVERY_TABLE.push('binary-masses');   /* the graph is of the second table: v₂ against v₁ for the spectroscopic pair */
   GRAPH_EVERY_TABLE.push('intro-aberrations');   /* the graph is of the second table: half light diameter against the star's angle (coma) */
@@ -1066,6 +1082,7 @@
   const CURVE_TABLES = { 'franck-hertz': [0], 'intro-retrograde': [0], 'intro-retrograde-venus': [0] };
   CURVE_TABLES['mp-radiobiology'] = [1]; CURVE_TABLES['mp-radiobiology-fractionation'] = [0];   /* the oxygen curve and EQD2 against n: curves, read rather than fitted */
   CURVE_TABLES['color-vision'] = [0];
+  GRAPH_EVERY_TABLE.push('hearing'); CURVE_TABLES['hearing'] = [2];   /* place against log₁₀ f, phons against β (fits); Table 3 the audiograms, read as curves */
   CURVE_TABLES['hs-half-life'] = [0];   /* the number left against time: a decay curve, read by hand (no logs at this level) */
   CURVE_TABLES['slope-fields-cooling'] = [2];   /* the culture's S curve, read for its steepest stretch */
   for (const [k, v] of CURVE_TABLES_LATER) CURVE_TABLES[k] = v;   /* Y and the cone signals against wavelength: the eye's sensitivity curve, read rather than fitted */
@@ -1162,6 +1179,12 @@
       alt: [{ table: 1, when: (rows) => rows.length > 2 && rows.every((r) => r.kind === rows[0].kind && +r.cl === +rows[0].cl) && new Set(rows.map((r) => r.n)).size === rows.length, cols: ['row', 'n', 'inv_sqrt_n', 'mean_width'] }] },
   });
   /* ==STATS sampling END== */
+  /* Diffusion and Osmosis (College Physics 2e 12.7, 2026-11-19). Table 1: x_rms² (typed) against t; Table 2: the first piston
+     setting that turns the flow, against c; Table 3: the red cell's volume against 1000/c (typed). Each table has its graph. */
+  ENABLED.push('osmosis'); GRAPHS.push('osmosis'); GRAPH_EVERY_TABLE.push('osmosis');
+  FROM_DEMO.osmosis = { demo: 'Diffusion and Osmosis', cols: ['row', 'molecule', 't_s', 'xrms_sim_um', null],
+    alt: [{ table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.part === 'U tube'), cols: ['row', 'solute', 'i', 'cR_mM', 'T_C', 'piston_kPa'] },
+      { table: 2, when: (rows) => rows.length > 0 && rows.every((r) => r.part === 'red cell'), cols: ['row', 'NaCl_pct', 'c_out_mOsm', 'V_um3', 'fate', null] }] };
   /* ==FORMULAS START== */
   /* Spreadsheet formulas in the data tables, and the curve fits of the graphs. Plain functions with no page access, so
      curriculum/validation/test_worksheet_formulas.cjs runs them in Node. Formulas are read by a small parser of their own (no eval):

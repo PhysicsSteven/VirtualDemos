@@ -634,10 +634,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   for (const b of document.querySelectorAll('#viewSeg button')) b.addEventListener('click', () => { if (b.dataset.v === S.view) return; S.view = b.dataset.v; applyPreset(FIRST[S.view]); });
   const setF = (f) => { S.f = Math.max(F_LO, Math.min(F_HI, f)); S.preset = null; if (S.tone) holdTone(true); sync(); draw(); readouts(); };
   const setLoud = (f, L) => { S.lf = Math.max(F_LO, Math.min(FL_HI, f)); S.L = Math.max(-10, Math.min(110, Math.round(L))); S.preset = null; sync(); draw(); readouts(); };
-  $('sF').addEventListener('input', (e) => setF(sToF(+e.target.value, F_HI)));
+  /* a slider step smaller than the rounding of f (one arrow key press) would round back to the same f and stick: move it on to the
+     next rounded value in the direction the slider moved */
+  const fromSlider = (v, hi, cur) => { const f = sToF(v, hi), d = Math.sign(v - fToS(cur, hi)); return f === cur && d ? cur + d * (cur < 100 || (cur === 100 && d < 0) ? 1 : cur < 1000 || (cur === 1000 && d < 0) ? 5 : 50) : f; };
+  $('sF').addEventListener('input', (e) => setF(fromSlider(+e.target.value, F_HI, S.f)));
   $('dmg').addEventListener('change', (e) => { S.dmg = e.target.checked; S.preset = null; sync(); draw(); readouts(); });
   $('tone').addEventListener('change', (e) => { S.tone = e.target.checked; holdTone(S.tone); readouts(); });
-  $('sLF').addEventListener('input', (e) => setLoud(sToF(+e.target.value, FL_HI), S.L));
+  $('sLF').addEventListener('input', (e) => setLoud(fromSlider(+e.target.value, FL_HI, S.lf), S.L));
   $('sL').addEventListener('input', (e) => setLoud(S.lf, +e.target.value));
   $('playLoud').addEventListener('click', () => burst(S.lf, loudDb(S.L), 0.05, 1.2));
   $('playPair').addEventListener('click', () => { const P = loudNow().P; burst(1000, loudDb(P === null ? S.L : phonToSPL(P, 1000)), 0.05, 1); burst(S.lf, loudDb(S.L), 1.4, 1); });
@@ -706,6 +709,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   if (window.VD && VD.panel) VD.panel({ play: '#play', reset: '#reset', end: ['#viewSeg', '#hush'],
     step: { label: 'Step', title: 'Advance a quarter cycle and pause', run: () => { if (S.view !== 'cochlea') return; setRun(false); S.t += 0.25; draw(); } } });
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  VD.howTo({ src: 'media/how-this-works/hearing.mp4', poster: 'media/how-this-works/hearing.jpg' });
   window.__hear = { S, PRESETS, applyPreset, draw, readouts, answer, startTest, stopTest, ownHL, audValues, cochleaNow, loudNow };
   requestAnimationFrame(frame);
 })();

@@ -3968,3 +3968,63 @@ x | One data value | same unit as the data
 n | Number of data values
 s | Sample standard deviation | same unit as the data
 z | z score, (x − x̄)/s: standard deviations from the mean
+
+== surface-tension ==
+gamma | Surface tension: the pull of the surface on each meter of edge | N/m | water at 20 °C: 0.0728 N/m
+theta | Contact angle where the liquid surface meets the tube wall, measured inside the liquid | °
+r | Radius of the tube | m | in mm in the tables
+h | Height of the liquid in the tube above the level outside; negative when it is pushed down | m | in mm in the tables
+rho | Density of the liquid | kg/m³
+g | Acceleration of gravity, 9.81 m/s² | m/s²
+eta | Viscosity of the liquid | Pa·s
+F | Upward pull of the surface on the column, 2πrγ cos θ | N
+m | Mass of the liquid column | kg
+s | Slope of the straight line fit: of h against 1/r, 2γ cos θ/(ρg); of h against cos θ in Analysis 3, 2γ/(ρgr) | m² | in mm² (mm in Analysis 3) from the graph
+
+== osmosis ==
+D | Diffusion constant of the molecule in its medium | m²/s | glucose in water 6.7 × 10⁻¹⁰ m²/s (Table 12.2)
+x_rms | Root mean square distance of the molecules from the starting line, along one direction | m | in µm in the tables
+t | Time since the molecules left the line | s
+Pi | Osmotic pressure: the pressure on the solution that just stops water crossing into it | Pa | in kPa in the tables
+i | Number of particles each unit of solute makes in water: 1 for sugar, 2 for salt |
+c | Concentration of the solute, moles per cubic meter (1 mmol/L = 1 mol/m³); for the red cell, the outside osmolarity | mol/m³
+R | Gas constant | J/(mol·K) | 8.314 J/(mol·K)
+T | Temperature in kelvins | K | 20 °C = 293.15 K
+h | Height of the water column | m
+rho | Density of water | kg/m³ | 1000 kg/m³
+g | Acceleration of gravity, 9.81 m/s² | m/s²
+V | Volume of the red cell | µm³
+V_s | Volume of the hemoglobin and other solids in the cell, which takes no part in osmosis | µm³
+k | Constant of the cell: its water volume times the outside osmolarity | µm³·Osm/L
+c_out | Osmolarity of the salt water outside the cell | mOsm/L
+P | Piston pressure at which the flow through the membrane turns around | kPa
+c' | Concentration of the sugar after the water that crossed has diluted it | mmol/L
+
+== nerve-signals ==
+E | Nernst potential of one kind of ion: the voltage of the inside relative to the outside at which it stops leaking | mV
+z | Charge of the ion in units of e: +1 for K⁺ and Na⁺, −1 for Cl⁻ |
+e | @e
+k | Boltzmann constant | J/K | 1.380649 × 10⁻²³ J/K, exact
+T | Temperature in kelvins | K | 37 °C = 310.15 K
+c_out | Concentration of the ion outside the cell | mM
+c_in | Concentration of the ion inside the cell | mM
+E_K | Nernst potential of potassium | mV
+v | Speed of the impulse along the axon | m/s
+x | Position along the axon; Δx is the gap from electrode A to electrode B | mm
+t | Time; Δt is the delay from electrode A to electrode B | ms
+d | Diameter of the axon (without its myelin) | µm
+v_bare | Speed of the impulse on a bare axon | m/s
+v_myelinated | Speed of the impulse on a myelinated axon | m/s
+p_x | Horizontal component of the heart's dipole, toward the patient's left (equal to lead I) | mV
+p_y | Vertical component of the heart's dipole, toward the feet | mV
+theta | Mean QRS axis: the dipole's average direction during the QRS, from the patient's left toward the feet | °
+
+== hearing ==
+I | Intensity of the sound | W/m²
+beta | Sound level | dB
+I_0 | Reference intensity of the decibel scale | W/m² | 10⁻¹² W/m²
+N | Loudness | sones
+L_N | Loudness level | phons
+f | Frequency of the tone | Hz
+x | Fraction of the basilar membrane's length, measured from the apex | | 0 at the apex, 1 at the base
+lambda | Wavelength of the tone in air | m

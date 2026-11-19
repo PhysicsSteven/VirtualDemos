@@ -30,6 +30,8 @@ VDI18N.add('es', 'demo/hearing', {
   "Lugar del máximo, desde el ápice",
 "Hearing and the Ear":
   "La audición y el oído",
+"<a><span>←</span> <span>Room Acoustics and the Anechoic Chamber</span></a><a><span>Timbre and Harmonics</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Acústica de salas y la cámara anecoica</span></a><a><span>Timbre y armónicos</span> <span>→</span></a>",
 "The cochlea sorts sound by frequency: each tone makes a traveling wave on the basilar membrane that peaks at its own place. Loudness is not intensity: the equal loudness contours show how many decibels each frequency needs to sound as loud. Then take your own audiogram with headphones and compare it with the {#} kHz notch that noise leaves.":
   "La cóclea separa el sonido por frecuencia: cada tono produce una onda viajera en la membrana basilar que alcanza su máximo en su propio lugar. La sonoridad no es la intensidad: las curvas de igual sonoridad muestran cuántos decibeles necesita cada frecuencia para sonar igual de fuerte. Luego haz tu propio audiograma con audífonos y compáralo con la muesca de {#} kHz que deja el ruido.",
 "Hz · dB · phon":
