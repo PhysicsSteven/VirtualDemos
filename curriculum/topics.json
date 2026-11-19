@@ -452,7 +452,8 @@
       "integrals",
       "taylor",
       "vector-fields",
-      "surfaces-and-gradients"
+      "surfaces-and-gradients",
+      "space-3d"
      ]
     }
    ]

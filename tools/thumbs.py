@@ -62,6 +62,7 @@ OVERRIDES = {
     "curves-and-motion": {"wait": 1200, "crop": ".pane", "js": "window.__cm.applyPreset('orbit'); window.__cm.S.u = 1.2; window.__cm.draw();"},
     "integrals": {"wait": 900, "crop": ".pane", "js": "window.__int.setN(6); window.__int.draw();"},
     "taylor": {"wait": 1200, "crop": ".pane", "js": "window.__ty.applyPreset('poles'); window.__ty.setN(12); window.__ty.draw();"},
+    "space-3d": {"wait": 2500, "crop": "#pane", "js": "window.__sp.applyPreset('vec'); window.__sp.draw();"},
     "surfaces-and-gradients": {"wait": 2500, "crop": ".panes", "js": "window.__sg.applyPreset('hill'); window.__sg.S.alpha = 0.6; window.__sg.draw();"},
     "derivatives": {"wait": 900, "crop": ".pane", "js": "window.__fg.S.px = -1.6; window.__fg.draw();"},
     "slope-fields": {"wait": 900, "crop": ".pane", "js": "const pn = document.getElementById('pane'); pn.style.flex = 'none'; pn.style.minHeight = '0'; pn.style.height = '400px'; pn.style.width = '640px'; window.__sf.applyPreset('harvest'); window.__sf.S.prog = 99; window.__sf.draw();"},

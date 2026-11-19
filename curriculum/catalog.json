@@ -1384,6 +1384,24 @@
       "potential",
       "calculus"
      ]
+    },
+    {
+     "demo": "space-3d",
+     "title": "Vectors and Surfaces in Space",
+     "desc": "A space you can turn: vectors by their x, y and z components with their sum, dot product and angle, and cross product with the right hand rule and its area; a line and a plane and where they meet; the quadric surfaces with their traces; a point in rectangular, cylindrical and spherical coordinates with its coordinate surfaces. Torque r × F, the magnetic force qv × B, work F · d and the potential of a point charge.",
+     "tags": [
+      "vectors",
+      "dot product",
+      "cross product",
+      "right hand rule",
+      "lines and planes",
+      "quadric surfaces",
+      "traces",
+      "cylindrical coordinates",
+      "spherical coordinates",
+      "torque",
+      "calculus"
+     ]
     }
    ]
   },
