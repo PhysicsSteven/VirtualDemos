@@ -1,7 +1,7 @@
 /* site in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'site', {
-"Gas in a Box":
-  "Gas en una caja",
+"Terminal Velocity":
+  "Velocidad terminal",
 "See the recent changes to the site":
   "Ve los cambios recientes del sitio",
 "What’s new":
@@ -26,8 +26,8 @@ VDI18N.add('es', 'site', {
   "<span>Celular, laptop o proyector</span>",
 "<a><span>Teaching notes</span></a>":
   "<a><span>Notas para la enseñanza</span></a>",
-"<span>Gas in a Box →</span>":
-  "<span>Gas en una caja →</span>",
+"<span>Terminal Velocity →</span>":
+  "<span>Velocidad terminal →</span>",
 "Teaching with the site":
   "Enseñar con el sitio",
 "Projector mode and a QR code on every demo, so students follow on their phones":
@@ -116,16 +116,14 @@ VDI18N.add('es', 'site', {
   "<span>Empieza aquí</span><span>{#} hojas de trabajo</span>",
 "Measurement Uncertainty":
   "Incertidumbre de medición",
-"Measure g with a pendulum and judge what the data can tell you: time it by hand or with a photogate, one swing or many, repeat, read the length to the right place or the wrong one, and release from small or big angles. Random scatter, resolution, bias, propagation, fits and residuals, with every instrument error simulated and labeled.":
-  "Mide g con un péndulo y juzga qué pueden decirte los datos: cronométralo a mano o con una fotocompuerta, una oscilación o varias, repite, lee la longitud en el lugar correcto o en el equivocado, y suelta desde ángulos pequeños o grandes. Dispersión aleatoria, resolución, sesgo, propagación, ajustes y residuos, con cada error de los instrumentos simulado y señalado como tal.",
-"<span>{#} worksheet</span>":
-  "<span>{#} hoja de trabajo</span>",
+"Measure g with a pendulum and judge what the data can tell you: time it by hand or with a photogate, one swing or many, repeat, read the length to the right place or the wrong one, and release from small or big angles. Random scatter, resolution, bias, propagation, fits and residuals, with every instrument error simulated and labeled. A Histogram graph shows {#} timings against the normal curve.":
+  "Mide g con un péndulo y juzga lo que te pueden decir los datos: cronometra a mano o con una fotocompuerta, una oscilación o muchas, repite, lee la longitud en el lugar correcto o en el equivocado, y suelta desde ángulos pequeños o grandes. Dispersión aleatoria, resolución, sesgo, propagación, ajustes y residuos, con cada error del instrumento simulado y etiquetado. Una gráfica de histograma muestra {#} mediciones de tiempo junto a la curva normal.",
+"<span>{#} worksheets</span>":
+  "<span>{#} hojas de trabajo</span>",
 "Vectors and Relative Motion":
   "Vectores y movimiento relativo",
 "Drag arrow tips to see components, sums, differences, and dot and cross products, steer a boat across a river where its velocity adds to the current's, and balance hanging masses on a force table.":
   "Arrastra las puntas de las flechas para ver componentes, sumas, diferencias y productos punto y cruz, dirige una lancha a través de un río donde su velocidad se suma a la de la corriente y equilibra masas colgantes en una mesa de fuerzas.",
-"<span>{#} worksheets</span>":
-  "<span>{#} hojas de trabajo</span>",
 "Motion Graphs":
   "Gráficas de movimiento",
 "Position, velocity and acceleration graphs of a cart, linked: each is the slope of the one above and the area under it is the change in the one above. Then try to walk a target graph yourself.":
@@ -140,6 +138,8 @@ VDI18N.add('es', 'site', {
   "Pelota lanzada desde un carrito en movimiento",
 "A cart fires a ball straight up. At constant speed the ball lands back in the launcher; make the cart speed up or brake and it misses. Watch from the ground or from the cart, with velocity vectors and strobe images.":
   "Un carrito dispara una pelota hacia arriba. A rapidez constante la pelota cae de vuelta en el lanzador; haz que el carrito acelere o frene y falla. Obsérvalo desde el suelo o desde el carrito, con vectores de velocidad e imágenes estroboscópicas.",
+"<span>{#} worksheet</span>":
+  "<span>{#} hoja de trabajo</span>",
 "Circular Motion":
   "Movimiento circular",
 "What supplies mv²/r? Whirl a ball on a string and cut it, take a car round a flat or banked curve until it slides, speed up or brake on the curve, and send a ball round a vertical loop, with the free body diagram for each.":
@@ -152,8 +152,6 @@ VDI18N.add('es', 'site', {
   "Elevador: peso aparente",
 "Ride an elevator standing on a scale. It reads more or less than your weight only while the elevator speeds up or slows down, and zero if the cable snaps.":
   "Viaja en un elevador parado sobre una báscula. Marca más o menos que tu peso solo mientras el elevador acelera o frena, y cero si el cable se rompe.",
-"Terminal Velocity":
-  "Velocidad terminal",
 "Jump with the textbook's skydiver and watch the drag grow until it matches the weight. Switch between spread eagle and head first, open the parachute, jump from {#} km where the air is thin, or drop stacks of coffee filters, and measure the terminal speed.":
   "Salta con el paracaidista del libro de texto y observa cómo crece el arrastre hasta igualar el peso. Cambia entre la posición extendida y de cabeza, abre el paracaídas, salta desde {#} km donde el aire es tenue o deja caer pilas de filtros de café, y mide la rapidez terminal.",
 "Granular Flow: Sorting and Landslides":
@@ -368,6 +366,8 @@ VDI18N.add('es', 'site', {
   "Temperatura y calor",
 "Join a hot block to cold water and watch them reach one temperature; calibrate a gas thermometer and extrapolate to absolute zero; measure a rod's expansion and water's odd behavior near {#} °C; and probe the temperature through a layered wall.":
   "Pon en contacto un bloque caliente con agua fría y observa cómo llegan a una misma temperatura; calibra un termómetro de gas y extrapola al cero absoluto; mide la dilatación de una varilla y el comportamiento raro del agua cerca de {#} °C; y explora la temperatura a través de una pared de varias capas.",
+"Gas in a Box":
+  "Gas en una caja",
 "Watch pressure and temperature emerge from molecules hitting the walls, speeds relax to Maxwell-Boltzmann, and a moving piston heat the gas. Then let two gases mix through a divider: measure diffusion from the mean square displacement and test Graham's law through a small hole.":
   "Observa cómo la presión y la temperatura surgen de las moléculas que chocan con las paredes, cómo las rapideces se relajan a la distribución de Maxwell-Boltzmann y cómo un pistón en movimiento calienta el gas. Luego deja que dos gases se mezclen a través de un divisor: mide la difusión a partir del desplazamiento cuadrático medio y pon a prueba la ley de Graham a través de un orificio pequeño.",
 "Heat Capacities of Gases":
@@ -664,8 +664,8 @@ VDI18N.add('es', 'site', {
   "La curva de energía de enlace a partir de {#} masas medidas de AME2020: por qué fusionar núcleos ligeros y dividir núcleos pesados liberan energía, por qué las estrellas se detienen en el hierro, el modelo de la gota líquida término por término, los números mágicos y la carta de nucleidos.",
 "Radioactive Decay":
   "Decaimiento radiactivo",
-"A grid of nuclei that each decay at random, and a count that halves every half life anyway. Carbon {#} dating, iodine {#} and decay chains where a daughter builds up and dies away.":
-  "Una cuadrícula de núcleos que decaen cada uno al azar, y una cuenta que de todos modos se reduce a la mitad en cada vida media. Datación con carbono {#}, yodo {#} y cadenas de decaimiento donde un núcleo hijo se acumula y luego desaparece.",
+"A grid of nuclei that each decay at random, and a count that halves every half life anyway. Carbon {#} dating, iodine {#} and decay chains where a daughter builds up and dies away. A Counting view counts a steady source again and again: Poisson counts, √N and exponential waits.":
+  "Una cuadrícula de núcleos que se desintegran al azar cada uno, y un conteo que de todos modos se reduce a la mitad en cada vida media. Fechado con carbono {#}, yodo {#} y cadenas de decaimiento donde un núcleo hijo se acumula y luego desaparece. Una vista de conteo cuenta una fuente constante una y otra vez: conteos de Poisson, √N y tiempos de espera exponenciales.",
 "Nuclear Reactions, Fission and Fusion":
   "Reacciones nucleares, fisión y fusión",
 "Balance a nuclear reaction and weigh it with AME2020 masses to find Q and the threshold energy; grow a chain reaction and find the critical size of a uranium or plutonium sphere; see how the Gamow peak lets the Sun fuse protons at {#} million kelvin; measure the dose from a gamma source with distance and shielding.":
@@ -912,6 +912,62 @@ VDI18N.add('es', 'site', {
   "Razones de cambio relacionadas y optimización",
 "One quantity drives a whole scene: a ladder slides down a wall, a cone fills with water, a shadow grows as you walk from a lamp, with every rate shown and the chain rule checked against the motion. Then find the best box, field and can, where the derivative is zero, and the physics: the lifeguard's fastest path is Snell's law (Fermat's principle), and the longest throw is at {#}° on level ground and lower from a height.":
   "Una cantidad mueve toda una escena: una escalera se desliza por una pared, un cono se llena de agua, una sombra crece al alejarte de una lámpara, con cada razón de cambio a la vista y la regla de la cadena comprobada con el movimiento. Luego halla la mejor caja, el mejor terreno y la mejor lata, donde la derivada es cero, y la física: la trayectoria más rápida del salvavidas es la ley de Snell (el principio de Fermat), y el lanzamiento más largo es a {#}° en terreno plano y a menos desde una altura.",
+"Multiple Integrals":
+  "Integrales múltiples",
+"Boxes under a surface turning into a double integral as the grid refines; slices in either order over a region you type, with the reversed bounds checked; polar wedges and the Gaussian integral √π; triple integrals filled with rectangular, cylindrical or spherical cells; the mass, center of mass and moment of inertia of a rod, plate, disk, sphere or cone (½MR², ⅖MR², ⅓ML² checked); and a grid stretched by a change of variables and its Jacobian.":
+  "Cajas bajo una superficie que se convierten en una integral doble al refinar la cuadrícula; rebanadas en cualquier orden sobre una región que tú escribes, con los límites invertidos verificados; sectores polares y la integral gaussiana √π; integrales triples rellenas con celdas rectangulares, cilíndricas o esféricas; la masa, el centro de masa y el momento de inercia de una barra, placa, disco, esfera o cono (½MR², ⅖MR², ⅓ML² verificados); y una cuadrícula deformada por un cambio de variables y su jacobiano.",
+"Sequences and Series":
+  "Sucesiones y series",
+"Type the terms of any series and add them one at a time: terms as bars, partial sums as a running total. Geometric sums of a bouncing ball's distance and time, the harmonic series passing every bound, the integral test as rectangles under a curve, comparison, the ratio and root tests, the alternating series bound, and sequences with their limits.":
+  "Escribe los términos de cualquier serie y súmalos uno por uno: los términos como barras y las sumas parciales como un total acumulado. Sumas geométricas de la distancia y el tiempo de una pelota que rebota, la serie armónica que rebasa cualquier cota, la prueba de la integral como rectángulos bajo una curva, la comparación, las pruebas de la razón y de la raíz, la cota de las series alternantes, y sucesiones con sus límites.",
+"Solids of Revolution":
+  "Sólidos de revolución",
+"Spin the region under any typed curve about an axis and slice the solid into disks, washers or cylindrical shells with an n slider, in 3D or flat: the sum of the slices closes in on the integral. Cross sections standing on a base (squares, semicircles, triangles), arc length as a chain of segments, surface area as frustum bands, the moment of inertia of a cone, ({#}/{#})MR², and a sphere, ({#}/{#})MR², and the volume of a vase and of water in a bowl.":
+  "Gira la región bajo cualquier curva que escribas alrededor de un eje y rebana el sólido en discos, arandelas o capas cilíndricas con un control deslizante de n, en 3D o plano: la suma de las rebanadas se acerca a la integral. Secciones transversales sobre una base (cuadrados, semicírculos, triángulos), longitud de arco como una cadena de segmentos, área superficial como bandas de tronco de cono, el momento de inercia de un cono, ({#}/{#})MR², y de una esfera, ({#}/{#})MR², y el volumen de un florero y del agua en un tazón.",
+"Surfaces and Gradients":
+  "Superficies y gradientes",
+"Type z = f(x, y) and see the surface beside its contour map: partial derivatives as slopes of slices, the tangent plane, the directional derivative and the gradient pointing uphill across the level curves, peaks, pits and saddles by the second derivative test, Lagrange multipliers on a constraint, and limits along different paths. E = −∇V for two charges, a potential energy surface with a rolling ball, the ideal gas P(V, T).":
+  "Escribe z = f(x, y) y mira la superficie junto a su mapa de contorno: derivadas parciales como pendientes de rebanadas, el plano tangente, la derivada direccional y el gradiente que apunta cuesta arriba a través de las curvas de nivel, picos, valles y puntos silla con el criterio de la segunda derivada, multiplicadores de Lagrange con una restricción, y límites a lo largo de distintas trayectorias. E = −∇V para dos cargas, una superficie de energía potencial con una bola que rueda, el gas ideal P(V, T).",
+"Vectors and Surfaces in Space":
+  "Vectores y superficies en el espacio",
+"A space you can turn: vectors by their x, y and z components with their sum, dot product and angle, and cross product with the right hand rule and its area; a line and a plane and where they meet; the quadric surfaces with their traces; a point in rectangular, cylindrical and spherical coordinates with its coordinate surfaces. Torque r × F, the magnetic force qv × B, work F · d and the potential of a point charge.":
+  "Un espacio que puedes girar: vectores con sus componentes x, y y z, con su suma, producto punto y ángulo, y producto cruz con la regla de la mano derecha y su área; una recta y un plano y dónde se cortan; las superficies cuádricas con sus trazas; un punto en coordenadas rectangulares, cilíndricas y esféricas con sus superficies coordenadas. Torque r × F, la fuerza magnética qv × B, el trabajo F · d y el potencial de una carga puntual.",
+"Data Explorer":
+  "Explorador de datos",
+"One data set shown every way the statistics book draws it, all at once: frequency table with relative and cumulative relative frequency, stemplot, dot plot, histogram with a draggable start and bin width, box plot and time series. Drag a point and watch the mean and median, quartiles and percentiles, IQR and the outlier fences, s and skew respond. Simulated lab readings (pendulum timings, lap times, decay counts) and data sets from OpenStax Introductory Statistics, or your own.":
+  "Un conjunto de datos mostrado de todas las formas en que lo dibuja el libro de estadística, todas a la vez: tabla de frecuencias con frecuencia relativa y relativa acumulada, diagrama de tallo y hojas, diagrama de puntos, histograma con inicio y ancho de clase que puedes arrastrar, diagrama de caja y serie de tiempo. Arrastra un punto y observa cómo responden la media y la mediana, los cuartiles y percentiles, el rango intercuartílico y los límites de valores atípicos, s y el sesgo. Lecturas simuladas de laboratorio (tiempos de un péndulo, tiempos por vuelta, conteos de decaimiento) y conjuntos de datos de OpenStax Introductory Statistics, o los tuyos.",
+"Chance Lab: Dice, Cards and Candies":
+  "Laboratorio de azar: dados, cartas y dulces",
+"Roll dice, deal cards with or without putting them back, and draw candies from a cup. Pick two events and watch every trial land in a Venn diagram, a tree diagram and a contingency table; check the addition and multiplication rules and independence; and watch relative frequencies settle toward probabilities and averages toward expected values.":
+  "Lanza dados, reparte cartas con o sin reemplazo y saca dulces de un vaso. Elige dos eventos y observa cómo cada ensayo cae en un diagrama de Venn, un diagrama de árbol y una tabla de contingencia; verifica las reglas de la suma y de la multiplicación y la independencia; y observa cómo las frecuencias relativas se acercan a las probabilidades y los promedios a los valores esperados.",
+"Distribution Explorer":
+  "Explorador de distribuciones",
+"Ten probability distributions from the statistics book with sliders: binomial, geometric, hypergeometric, Poisson, uniform, exponential, normal, t, chi square and F. Shade P(a < X < b) and read it with the calculator command the book would use, find z scores and percentiles, and draw random values to watch a histogram fill against the curve. Compare t with the normal as df grows, and the binomial with its normal and Poisson approximations.":
+  "Diez distribuciones de probabilidad del libro de estadística con controles deslizantes: binomial, geométrica, hipergeométrica, Poisson, uniforme, exponencial, normal, t, chi cuadrada y F. Sombrea P(a < X < b) y léela con el comando de calculadora que usaría el libro, encuentra puntuaciones z y percentiles, y genera valores aleatorios para ver cómo se llena un histograma junto a la curva. Compara t con la normal conforme crecen los grados de libertad, y la binomial con sus aproximaciones normal y de Poisson.",
+"Sampling Lab":
+  "Laboratorio de muestreo",
+"A lecture hall of {#} simulated students, every one shown. Sample them five ways (simple random, stratified, cluster, systematic, convenience) and see who gets picked and how biased and spread each method's estimates are; compare a self selected study with a randomized one and find the lurking variable; then draw thousands of samples and watch the means and sums pile up into a normal curve with spread σ/√n: the central limit theorem.":
+  "Un salón de clases con {#} estudiantes simulados, todos a la vista. Tómales una muestra de cinco maneras (muestreo aleatorio simple, estratificado, por conglomerados, sistemático y por conveniencia) y mira a quién se elige y qué tan sesgadas y dispersas son las estimaciones de cada método; compara un estudio de autoselección con uno aleatorizado y encuentra la variable oculta (lurking variable); luego toma miles de muestras y observa cómo las medias y las sumas se acumulan en una curva normal con dispersión σ/√n: el teorema del límite central.",
+"Confidence Intervals":
+  "Intervalos de confianza",
+"Draw sample after sample and stack their intervals against the true value: z with σ known, z with s, t, a proportion and plus four. Count how many of {#} catch the truth at {#}, {#} and {#} %, see z with s fail at small n, and watch the width shrink as {#}/√n. A pendulum timed by hand, heights, decay times and photons through a polarizer, all simulated.":
+  "Toma muestra tras muestra y apila sus intervalos frente al valor verdadero: z con σ conocida, z con s, t, una proporción y el método de más cuatro. Cuenta cuántos de {#} capturan el valor verdadero con {#}, {#} y {#} % de confianza, mira cómo z con s falla con n pequeña, y observa cómo el ancho se reduce como {#}/√n. Un péndulo cronometrado a mano, estaturas, tiempos de decaimiento y fotones a través de un polarizador, todo simulado.",
+"Hypothesis Tests":
+  "Pruebas de hipótesis",
+"Test a claim in the book's four steps: hypotheses, the null distribution with your statistic and the shaded p value, and a decision with a conclusion in words. One mean (z or t), one proportion, two means (σ known, or Welch's unpooled t), two proportions and matched pairs, set in the lab: is this g {#}, did the new photogate change the period? Run a thousand studies to count Type I and Type II errors and draw the power curve.":
+  "Prueba una afirmación en los cuatro pasos del libro: hipótesis, la distribución nula con tu estadístico y el valor p sombreado, y una decisión con una conclusión en palabras. Una media (z o t), una proporción, dos medias (σ conocida, o la t de Welch sin agrupar), dos proporciones y pares emparejados, planteados en el laboratorio: ¿este g es {#}?, ¿la nueva fotocompuerta cambió el periodo? Corre mil estudios para contar los errores tipo I y tipo II y dibuja la curva de potencia.",
+"Chi-Square Tests":
+  "Pruebas de chi cuadrada",
+"Observed against expected counts with each cell's (O − E)²/E drawn: a loaded die, Mendel's peas, Geiger counts against a Poisson distribution, tables of two variables, and the spread of stopwatch timings. Simulate data sets where the hypothesis is true and watch their chi square values fill a histogram under the curve.":
+  "Conteos observados contra esperados, con el (O − E)²/E de cada celda dibujado: un dado cargado, los chícharos de Mendel, conteos Geiger contra una distribución de Poisson, tablas de dos variables y la dispersión de tiempos de cronómetro. Simula conjuntos de datos donde la hipótesis es verdadera y observa cómo sus valores de chi cuadrada llenan un histograma bajo la curva.",
+"Linear Regression and Correlation":
+  "Regresión lineal y correlación",
+"Drag the points of a scatter plot and watch the least squares line and its residual squares follow; try to beat it with your own line. r, r², s, the slope and intercept with their uncertainties read in context, the t test and critical value for r beside a shuffle test, prediction against extrapolation, and outliers that pull the line. Book data and simulated spring, pendulum and Ohm's law labs.":
+  "Arrastra los puntos de un diagrama de dispersión y observa cómo la recta de mínimos cuadrados y sus cuadrados de los residuos los siguen; intenta superarla con tu propia recta. r, r², s, la pendiente y la ordenada al origen con sus incertidumbres leídas en contexto, la prueba t y el valor crítico de r junto a una prueba de permutación, predicción contra extrapolación, y valores atípicos que jalan la recta. Datos del libro y laboratorios simulados de resorte, péndulo y ley de Ohm.",
+"One Way ANOVA":
+  "ANOVA de un factor",
+"Three to five groups as dot plots: drag each group's mean and spread and see the mean squares between and within groups as two squares, the F ratio and its p value. Run many studies with every mean equal and watch the F distribution fill in, false alarms and all, and test whether two variances are equal.":
+  "De tres a cinco grupos como diagramas de puntos: arrastra la media y la dispersión de cada grupo y mira los cuadrados medios entre grupos y dentro de grupos como dos cuadrados, la razón F y su valor p. Corre muchos estudios con todas las medias iguales y observa cómo se llena la distribución F, con todo y falsas alarmas, y prueba si dos varianzas son iguales.",
 "OpenStax University Physics by section":
   "OpenStax Física universitaria por sección",
 "Every section of the free textbook with the demos that serve it.":
@@ -970,6 +1026,20 @@ VDI18N.add('es', 'site', {
   "Calor, ondas, sonido y luz",
 "Quanta, atoms and particles":
   "Cuantos, átomos y partículas",
+"OpenStax Introductory Statistics by section":
+  "OpenStax Introductory Statistics por sección",
+"Every section of the free introductory statistics textbook with the statistics demos, and the physics demos that measure and count.":
+  "Todas las secciones del libro de texto gratuito de estadística introductoria con las demos de estadística, y las demos de física que miden y cuentan.",
+"Data and describing it":
+  "Datos y cómo describirlos",
+"OpenStax Statistics, chapter by chapter, with the demos and worksheets for each section.":
+  "OpenStax Statistics, capítulo por capítulo, con las demos y hojas de trabajo de cada sección.",
+"Probability and distributions":
+  "Probabilidad y distribuciones",
+"Sampling, intervals and tests":
+  "Muestreo, intervalos y pruebas",
+"Chi square, regression and ANOVA":
+  "Chi cuadrada, regresión y ANOVA",
 "OpenStax Calculus by section":
   "OpenStax Cálculo por sección",
 "Every section of the free calculus textbooks with the math demos, and the physics demos that use the same idea.":
@@ -1002,14 +1072,26 @@ VDI18N.add('es', 'site', {
   "<a>Péndulos</a><span>Laboratorio</span>",
 "<a>Physics I</a><a>Oscillations and waves</a><a>Worksheet {#}: Measuring g</a><a>Worksheet {#}: Normal Modes and Chaos</a><a>Worksheet {#}: Spherical Pendulum</a><span><span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span></span>":
   "<a>Física I</a><a>Oscilaciones y ondas</a><a>Hoja de trabajo {#}: Medir g</a><a>Hoja de trabajo {#}: Modos normales y caos</a><a>Hoja de trabajo {#}: Péndulo esférico</a><span><span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span></span>",
+"<a>Confidence Intervals</a><span>Demo</span>":
+  "<a>Intervalos de confianza</a><span>Demo</span>",
+"<a>Math for physics</a><a>Worksheet: What {#} % Confident Means</a>":
+  "<a>Matemáticas para física</a><a>Hoja de trabajo: Qué significa tener {#} % de confianza</a>",
+"<a>Data Explorer</a><span>Demo</span>":
+  "<a>Explorador de datos</a><span>Demo</span>",
+"<a>Math for physics</a><a>Worksheet: Describing a Data Set: Center, Spread and One Bad Timing</a>":
+  "<a>Matemáticas para física</a><a>Hoja de trabajo: Cómo describir un conjunto de datos: centro, dispersión y una medición mala</a>",
 "<a>Limits</a><span>Demo</span>":
   "<a>Límites</a><span>Demo</span>",
 "<a>Math for physics</a><span><span>{#}:{#}</span></span>":
   "<a>Matemáticas para la física</a><span><span>{#}:{#}</span></span>",
+"<a>Linear Regression and Correlation</a><span>Demo</span>":
+  "<a>Regresión lineal y correlación</a><span>Demo</span>",
+"<a>Math for physics</a><a>Worksheet: Fitting a Line and Judging the Fit</a>":
+  "<a>Matemáticas para física</a><a>Hoja de trabajo: Ajustar una recta y juzgar el ajuste</a>",
 "<a>Measurement Uncertainty</a><span>Lab</span>":
   "<a>Incertidumbre de medición</a><span>Laboratorio</span>",
-"<a>Physics I</a><a>Kinematics</a><a>Oscillations and waves</a><a>Worksheet: Random Scatter and Bias</a><span><span>{#}:{#}</span> <span>{#}:{#}</span></span>":
-  "<a>Física I</a><a>Cinemática</a><a>Oscilaciones y ondas</a><a>Hoja de trabajo: Dispersión aleatoria y sesgo</a><span><span>{#}:{#}</span> <span>{#}:{#}</span></span>",
+"<a>Physics I</a><a>Kinematics</a><a>Oscillations and waves</a><a>Worksheet {#}: Random Scatter and Bias</a><a>Worksheet {#}: Is g Really {#}? Statistics on a Pendulum</a><span><span>{#}:{#}</span> <span>{#}:{#}</span></span>":
+  "<a>Física I</a><a>Cinemática</a><a>Oscilaciones y ondas</a><a>Hoja de trabajo {#}: Dispersión aleatoria y sesgo</a><a>Hoja de trabajo {#}: ¿Realmente g es {#}? Estadística con un péndulo</a><span><span>{#}:{#}</span> <span>{#}:{#}</span></span>",
 "<a>Numerical Methods for Motion</a><span>Demo</span>":
   "<a>Métodos numéricos para el movimiento</a><span>Demo</span>",
 "<a>Physics I</a><a>Math for physics</a><a>Worksheet: How Good Is a Computed Motion?</a><span><span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span></span>":
@@ -1102,8 +1184,8 @@ VDI18N.add('es', 'site', {
   "<span>Laboratorio</span>",
 "<a>Measurement Uncertainty</a>":
   "<a>Incertidumbre de medición</a>",
-"<a>Open demo</a> <a>Worksheet: Random Scatter and Bias<span>{#} min · algebra</span></a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Dispersión aleatoria y sesgo<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Random Scatter and Bias<span>{#} min · algebra</span></a> <a>Worksheet {#}: Is g Really {#}? Statistics on a Pendulum<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Dispersión aleatoria y sesgo<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: ¿Realmente g es {#}? Estadística con un péndulo<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Vectors and Relative Motion</a>":
   "<a>Vectores y movimiento relativo</a>",
 "<span>{#}:{#}</span> Scalars and Vectors":
@@ -2070,8 +2152,8 @@ VDI18N.add('es', 'site', {
   "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Superposición y medición<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Radioactive Decay</a>":
   "<a>Decaimiento radiactivo</a>",
-"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet {#}: Measuring a Half Life<span>{#} min · algebra</span></a> <a>Worksheet {#}: Parent and Daughter<span>{#} min · algebra</span></a> <a>Worksheet {#}: Alpha and Beta Decay<span>{#} min · algebra</span></a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo {#}: Medir una vida media<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Núcleo padre y núcleo hijo<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Decaimiento alfa y beta<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet {#}: Measuring a Half Life<span>{#} min · algebra</span></a> <a>Worksheet {#}: Parent and Daughter<span>{#} min · algebra</span></a> <a>Worksheet {#}: Alpha and Beta Decay<span>{#} min · algebra</span></a> <a>Worksheet {#}: Counting Statistics<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo {#}: Medición de una vida media<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Núcleo padre y núcleo hijo<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Decaimiento alfa y beta<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Estadística de conteo<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "Also used in this unit: <a>Condensates: Interference and Vortices</a> <span>(card under <a>Photons and matter waves</a>; {#}:{#})</span>":
   "También se usa en esta unidad: <a>Condensados: interferencia y vórtices</a> <span>(tarjeta en <a>Fotones y ondas de materia</a>; {#}:{#})</span>",
 "Atomic structure":
@@ -2740,8 +2822,6 @@ VDI18N.add('es', 'site', {
   "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo {#}: Tiempo de reverberación<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Cámara anecoica<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Hearing and the Ear</a>":
   "<a>La audición y el oído</a>",
-"<a>Open demo</a> <a>Start here<span>{#} min</span></a>":
-  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a>",
 "<a>Timbre and Harmonics</a>":
   "<a>Timbre y armónicos</a>",
 "<a>Open demo</a> <a>Worksheet {#}: Timbre and Harmonics<span>{#} min · algebra</span></a> <a>Worksheet {#}: Sampling and Aliasing<span>{#} min · algebra</span></a> <a>Notes</a>":
@@ -2792,8 +2872,8 @@ VDI18N.add('es', 'site', {
   "{#} · Fuentes y decaimiento",
 "Decay laws, the medical isotopes and the ⁹⁹Mo to ⁹⁹ᵐTc generator with transient equilibrium, Q values for isotope production, and the X-ray tube with its filtration and half value layer.":
   "Leyes de decaimiento, los isótopos médicos y el generador de ⁹⁹Mo a ⁹⁹ᵐTc con equilibrio transitorio, valores Q para la producción de isótopos, y el tubo de rayos X con su filtración y su capa hemirreductora.",
-"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet {#}: A Technetium Generator (Medical Physics)<span>{#} min · calculus</span></a> <a>Worksheet {#}: Measuring a Half Life (warm up)<span>{#} min · algebra</span></a> <a>Worksheet {#}: Parent and Daughter (warm up)<span>{#} min · algebra</span></a> <a>Worksheet {#}: Alpha and Beta Decay (warm up)<span>{#} min · algebra</span></a> <a>Worksheet {#}: Half Life and Radioactive Dating (warm up)</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo {#}: Un generador de tecnecio (Física médica)<span>{#} min · cálculo</span></a> <a>Hoja de trabajo {#}: Medir una vida media (calentamiento)<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Núcleo padre y núcleo hijo (calentamiento)<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Decaimiento alfa y beta (calentamiento)<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Vida media y datación radiactiva (calentamiento)</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet {#}: A Technetium Generator (Medical Physics)<span>{#} min · calculus</span></a> <a>Worksheet {#}: Counting Statistics<span>{#} min · algebra</span></a> <a>Worksheet {#}: Measuring a Half Life (warm up)<span>{#} min · algebra</span></a> <a>Worksheet {#}: Parent and Daughter (warm up)<span>{#} min · algebra</span></a> <a>Worksheet {#}: Alpha and Beta Decay (warm up)<span>{#} min · algebra</span></a> <a>Worksheet {#}: Half Life and Radioactive Dating (warm up)</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo {#}: Un generador de tecnecio (física médica)<span>{#} min · cálculo</span></a> <a>Hoja de trabajo {#}: Estadística de conteo<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Medición de una vida media (calentamiento)<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Núcleo padre y núcleo hijo (calentamiento)<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Decaimiento alfa y beta (calentamiento)<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Vida media y fechado radiactivo (calentamiento)</a> <a>Notas</a>",
 "<a>Open demo</a> <a>Worksheet: The Curve of Binding Energy (warm up)<span>{#} min · algebra</span></a> <a>Notes</a>":
   "<a>Abrir demo</a> <a>Hoja de trabajo: La curva de energía de enlace (calentamiento)<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Open demo</a> <a>Worksheet {#}: Filtration and Half Value Layer (Medical Physics)<span>{#} min · calculus</span></a> <a>Worksheet {#}: Shells and the Periodic Table (warm up)<span>{#} min · algebra</span></a> <a>Worksheet {#}: X-Ray Spectra and Moseley's Law (warm up)<span>{#} min · algebra</span></a> <a>Notes</a>":
@@ -2914,6 +2994,8 @@ VDI18N.add('es', 'site', {
   "<a>College Physics 2e</a>",
 "<a>High school Physics</a>":
   "<a>Física de preparatoria</a>",
+"<a>Statistics</a>":
+  "<a>Estadística</a>",
 "<a>Calculus</a>":
   "<a>Cálculo</a>",
 "Every section of OpenStax University Physics with the demos that serve it, chapter by chapter. Open a chapter to see its sections; search for a section number such as {#} to jump straight to its demos. Section numbers match the book.":
@@ -2942,16 +3024,18 @@ VDI18N.add('es', 'site', {
   "<a>Unidades, escalas y estimaciones</a> · <a>Incertidumbre de medición</a>",
 "<span>{#}:{#}</span><span>Solving Problems in Physics</span><span><a>Units, Scales and Estimates</a></span>":
   "<span>{#}:{#}</span><span>Resolución de problemas en física</span><span><a>Unidades, escalas y estimaciones</a></span>",
-"<span>Chapter {#}</span> Vectors <span>{#} sections · {#} demo</span>":
-  "<span>Capítulo {#}</span> Vectores <span>{#} secciones · {#} demo</span>",
+"<span>Chapter {#}</span> Vectors <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> Vectores <span>{#} secciones · {#} demos</span>",
 "<span>{#}:{#}</span><span>Scalars and Vectors</span><span><a>Vectors and Relative Motion</a></span>":
   "<span>{#}:{#}</span><span>Escalares y vectores</span><span><a>Vectores y movimiento relativo</a></span>",
-"<span>{#}:{#}</span><span>Coordinate Systems and Components of a Vector</span><span><a>Vectors and Relative Motion</a></span>":
-  "<span>{#}:{#}</span><span>Sistemas de coordenadas y componentes de un vector</span><span><a>Vectores y movimiento relativo</a></span>",
+"<span>{#}:{#}</span><span>Coordinate Systems and Components of a Vector</span>":
+  "<span>{#}:{#}</span><span>Sistemas de coordenadas y componentes de un vector</span>",
+"<a>Vectors and Relative Motion</a> · <a>Vectors and Surfaces in Space</a>":
+  "<a>Vectores y movimiento relativo</a> · <a>Vectores y superficies en el espacio</a>",
 "<span>{#}:{#}</span><span>Algebra of Vectors</span><span><a>Vectors and Relative Motion</a></span>":
   "<span>{#}:{#}</span><span>Álgebra de vectores</span><span><a>Vectores y movimiento relativo</a></span>",
-"<span>{#}:{#}</span><span>Products of Vectors</span><span><a>Vectors and Relative Motion</a></span>":
-  "<span>{#}:{#}</span><span>Productos de vectores</span><span><a>Vectores y movimiento relativo</a></span>",
+"<span>{#}:{#}</span><span>Products of Vectors</span>":
+  "<span>{#}:{#}</span><span>Productos de vectores</span>",
 "<span>Chapter {#}</span> Motion Along a Straight Line <span>{#} sections · {#} demos</span>":
   "<span>Capítulo {#}</span> Movimiento rectilíneo <span>{#} secciones · {#} demos</span>",
 "<span>{#}:{#}</span><span>Position, Displacement, and Average Velocity</span><span><a>Motion Graphs</a></span>":
@@ -3060,8 +3144,10 @@ VDI18N.add('es', 'site', {
   "<a>Curvas de energía potencial</a> · <a>Fuerzas y fricción</a> · <a>Energía en una pista</a> · <a>Campos vectoriales, trabajo y rotacional</a>",
 "<span>{#}:{#}</span><span>Conservation of Energy</span>":
   "<span>{#}:{#}</span><span>Conservación de la energía</span>",
-"<span>{#}:{#}</span><span>Potential Energy Diagrams and Stability</span><span><a>Potential Energy Curves</a></span>":
-  "<span>{#}:{#}</span><span>Diagramas de energía potencial y estabilidad</span><span><a>Curvas de energía potencial</a></span>",
+"<span>{#}:{#}</span><span>Potential Energy Diagrams and Stability</span>":
+  "<span>{#}:{#}</span><span>Diagramas de energía potencial y estabilidad</span>",
+"<a>Potential Energy Curves</a> · <a>Surfaces and Gradients</a>":
+  "<a>Curvas de energía potencial</a> · <a>Superficies y gradientes</a>",
 "<span>{#}:{#}</span><span>Sources of Energy</span><span><a>Sources of Energy</a></span>":
   "<span>{#}:{#}</span><span>Fuentes de energía</span><span><a>Fuentes de energía</a></span>",
 "<span>Chapter {#}</span> Linear Momentum and Collisions <span>{#} sections · {#} demos</span>":
@@ -3084,8 +3170,8 @@ VDI18N.add('es', 'site', {
   "<span>{#}:{#}</span><span>Colisiones en varias dimensiones</span><span><a>Colisiones y momento</a></span>",
 "<span>{#}:{#}</span><span>Center of Mass</span>":
   "<span>{#}:{#}</span><span>Centro de masa</span>",
-"<a>Collisions and Momentum</a> · <a>Center of Mass</a>":
-  "<a>Colisiones y momento</a> · <a>Centro de masa</a>",
+"<a>Collisions and Momentum</a> · <a>Center of Mass</a> · <a>Multiple Integrals</a>":
+  "<a>Colisiones y momento lineal</a> · <a>Centro de masa</a> · <a>Integrales múltiples</a>",
 "<span>{#}:{#}</span><span>Rocket Propulsion</span><span><a>Rocket Propulsion</a></span>":
   "<span>{#}:{#}</span><span>Propulsión de cohetes</span><span><a>Propulsión de cohetes</a></span>",
 "<span>Chapter {#}</span> Fixed-Axis Rotation <span>{#} sections · {#} demos</span>":
@@ -3094,20 +3180,24 @@ VDI18N.add('es', 'site', {
   "<span>{#}:{#}</span><span>Variables de rotación</span><span><a>Rotación y torca</a></span>",
 "<span>{#}:{#}</span><span>Rotation with Constant Angular Acceleration</span>":
   "<span>{#}:{#}</span><span>Rotación con aceleración angular constante</span>",
-"<a>Rotation and Torque</a> · <a>Rotational Dynamics</a>":
-  "<a>Rotación y torca</a> · <a>Dinámica de rotación</a>",
+"<a>Rotation and Torque</a> · <a>Rotational Dynamics</a> · <a>Multiple Integrals</a>":
+  "<a>Rotación y torque</a> · <a>Dinámica rotacional</a> · <a>Integrales múltiples</a>",
 "<span>{#}:{#}</span><span>Relating Angular and Translational Quantities</span><span><a>Rotation and Torque</a></span>":
   "<span>{#}:{#}</span><span>Relación entre cantidades angulares y de traslación</span><span><a>Rotación y torca</a></span>",
 "<span>{#}:{#}</span><span>Moment of Inertia and Rotational Kinetic Energy</span><span><a>Rotation and Torque</a></span>":
   "<span>{#}:{#}</span><span>Momento de inercia y energía cinética de rotación</span><span><a>Rotación y torca</a></span>",
 "<span>{#}:{#}</span><span>Calculating Moments of Inertia</span>":
   "<span>{#}:{#}</span><span>Cálculo de momentos de inercia</span>",
+"<a>Rotation and Torque</a> · <a>Rotational Dynamics</a> · <a>Solids of Revolution</a>":
+  "<a>Rotación y torque</a> · <a>Dinámica rotacional</a> · <a>Sólidos de revolución</a>",
 "<span>{#}:{#}</span><span>Torque</span>":
   "<span>{#}:{#}</span><span>Torca</span>",
-"<a>Rotation and Torque</a> · <a>Rotational Dynamics</a> · <a>Pendulums</a>":
-  "<a>Rotación y torca</a> · <a>Dinámica de rotación</a> · <a>Péndulos</a>",
+"<a>Rotation and Torque</a> · <a>Rotational Dynamics</a> · <a>Pendulums</a> · <a>Vectors and Surfaces in Space</a>":
+  "<a>Rotación y torque</a> · <a>Dinámica rotacional</a> · <a>Péndulos</a> · <a>Vectores y superficies en el espacio</a>",
 "<span>{#}:{#}</span><span>Newton’s Second Law for Rotation</span>":
   "<span>{#}:{#}</span><span>Segunda ley de Newton para la rotación</span>",
+"<a>Rotation and Torque</a> · <a>Rotational Dynamics</a> · <a>Pendulums</a>":
+  "<a>Rotación y torca</a> · <a>Dinámica de rotación</a> · <a>Péndulos</a>",
 "<span>{#}:{#}</span><span>Work and Power for Rotational Motion</span><span><a>Rotational Dynamics</a></span>":
   "<span>{#}:{#}</span><span>Trabajo y potencia en el movimiento de rotación</span><span><a>Dinámica de rotación</a></span>",
 "<span>Chapter {#}</span> Angular Momentum <span>{#} sections · {#} demos</span>":
@@ -3356,8 +3446,10 @@ VDI18N.add('es', 'site', {
   "<span>{#}:{#}</span><span>Potencial eléctrico y diferencia de potencial</span><span><a>Arenero de Coulomb</a></span>",
 "<span>{#}:{#}</span><span>Calculations of Electric Potential</span><span><a>Coulomb Sandbox</a></span>":
   "<span>{#}:{#}</span><span>Cálculos del potencial eléctrico</span><span><a>Arenero de Coulomb</a></span>",
-"<span>{#}:{#}</span><span>Determining Field from Potential</span><span><a>Coulomb Sandbox</a></span>":
-  "<span>{#}:{#}</span><span>Determinación del campo a partir del potencial</span><span><a>Arenero de Coulomb</a></span>",
+"<span>{#}:{#}</span><span>Determining Field from Potential</span>":
+  "<span>{#}:{#}</span><span>Cómo obtener el campo a partir del potencial</span>",
+"<a>Coulomb Sandbox</a> · <a>Surfaces and Gradients</a>":
+  "<a>Simulador de Coulomb</a> · <a>Superficies y gradientes</a>",
 "<span>{#}:{#}</span><span>Equipotential Surfaces and Conductors</span><span><a>Coulomb Sandbox</a></span>":
   "<span>{#}:{#}</span><span>Superficies equipotenciales y conductores</span><span><a>Arenero de Coulomb</a></span>",
 "<span>{#}:{#}</span><span>Applications of Electrostatics</span><span><a>Electrostatics at Work</a></span>":
@@ -3414,8 +3506,8 @@ VDI18N.add('es', 'site', {
   "<span>{#}:{#}</span><span>El magnetismo y sus descubrimientos históricos</span><span><a>Campos magnéticos de corrientes</a></span>",
 "<span>{#}:{#}</span><span>Magnetic Fields and Lines</span>":
   "<span>{#}:{#}</span><span>Campos y líneas magnéticas</span>",
-"<a>Charges in Magnetic Fields</a> · <a>Magnetic Fields of Currents</a>":
-  "<a>Cargas en campos magnéticos</a> · <a>Campos magnéticos de corrientes</a>",
+"<a>Charges in Magnetic Fields</a> · <a>Magnetic Fields of Currents</a> · <a>Vectors and Surfaces in Space</a>":
+  "<a>Cargas en campos magnéticos</a> · <a>Campos magnéticos de corrientes</a> · <a>Vectores y superficies en el espacio</a>",
 "<span>{#}:{#}</span><span>Motion of a Charged Particle in a Magnetic Field</span>":
   "<span>{#}:{#}</span><span>Movimiento de una partícula cargada en un campo magnético</span>",
 "<a>Charges in Magnetic Fields</a> · <a>e/m of the Electron</a> · <a>Curves and Motion</a>":
@@ -5686,14 +5778,16 @@ VDI18N.add('es', 'site', {
   "<span>{#}:{#}</span><span>Definición de la derivada</span><span><a>Funciones y sus derivadas</a></span>",
 "<span>{#}:{#}</span><span>The Derivative as a Function</span>":
   "<span>{#}:{#}</span><span>La derivada como función</span>",
-"<a>Functions and Their Derivatives</a> · <a>Motion Graphs</a> · <a>Worksheet: Motion Graphs</a>":
-  "<a>Funciones y sus derivadas</a> · <a>Gráficas de movimiento</a> · <a>Hoja de trabajo: Gráficas de movimiento</a>",
-"<span>{#}:{#}</span><span>Differentiation Rules</span><span><a>Functions and Their Derivatives</a></span>":
-  "<span>{#}:{#}</span><span>Reglas de derivación</span><span><a>Funciones y sus derivadas</a></span>",
+"<a>Functions and Their Derivatives</a> · <a>Motion Graphs</a> · <a>Worksheet: Reading Derivatives from a Graph</a> · <a>Worksheet: Motion Graphs</a>":
+  "<a>Funciones y sus derivadas</a> · <a>Gráficas de movimiento</a> · <a>Hoja de trabajo: Lectura de derivadas en una gráfica</a> · <a>Hoja de trabajo: Gráficas de movimiento</a>",
+"<span>{#}:{#}</span><span>Differentiation Rules</span>":
+  "<span>{#}:{#}</span><span>Reglas de derivación</span>",
+"<a>Functions and Their Derivatives</a> · <a>Worksheet: Reading Derivatives from a Graph</a>":
+  "<a>Funciones y sus derivadas</a> · <a>Hoja de trabajo: Lectura de derivadas en una gráfica</a>",
 "<span>{#}:{#}</span><span>Derivatives as Rates of Change</span>":
   "<span>{#}:{#}</span><span>Las derivadas como razones de cambio</span>",
-"<a>Motion Graphs</a> · <a>Functions and Their Derivatives</a> · <a>Worksheet: Motion Graphs</a>":
-  "<a>Gráficas de movimiento</a> · <a>Funciones y sus derivadas</a> · <a>Hoja de trabajo: Gráficas de movimiento</a>",
+"<a>Motion Graphs</a> · <a>Functions and Their Derivatives</a> · <a>Worksheet: Reading Derivatives from a Graph</a> · <a>Worksheet: Motion Graphs</a>":
+  "<a>Gráficas de movimiento</a> · <a>Funciones y sus derivadas</a> · <a>Hoja de trabajo: Lectura de derivadas en una gráfica</a> · <a>Hoja de trabajo: Gráficas de movimiento</a>",
 "<span>{#}:{#}</span><span>Derivatives of Trigonometric Functions</span>":
   "<span>{#}:{#}</span><span>Derivadas de funciones trigonométricas</span>",
 "<a>Functions and Their Derivatives</a> · <a>Springs and Oscillations</a>":
@@ -5730,6 +5824,8 @@ VDI18N.add('es', 'site', {
   "<span>{#}:{#}</span><span>Método de Newton</span><span><a>Funciones y sus derivadas</a></span>",
 "<span>{#}:{#}</span><span>Antiderivatives</span>":
   "<span>{#}:{#}</span><span>Antiderivadas</span>",
+"<a>Functions and Their Derivatives</a> · <a>Motion Graphs</a> · <a>Worksheet: Motion Graphs</a>":
+  "<a>Funciones y sus derivadas</a> · <a>Gráficas de movimiento</a> · <a>Hoja de trabajo: Gráficas de movimiento</a>",
 "<span>Chapter {#}</span> Integration <span>{#} sections · {#} demos</span>":
   "<span>Capítulo {#}</span> Integración <span>{#} secciones · {#} demos</span>",
 "<span>{#}:{#}</span><span>Approximating Areas</span><span><a>Riemann Sums and Integrals</a></span>":
@@ -5756,12 +5852,12 @@ VDI18N.add('es', 'site', {
   "<span>Capítulo {#}</span> Aplicaciones de la integración <span>{#} secciones · {#} demos</span>",
 "<span>{#}:{#}</span><span>Areas between Curves</span><span><a>Riemann Sums and Integrals</a></span>":
   "<span>{#}:{#}</span><span>Áreas entre curvas</span><span><a>Sumas de Riemann e integrales</a></span>",
-"<span>{#}:{#}</span><span>Determining Volumes by Slicing<span>no activity yet</span></span><span></span>":
-  "<span>{#}:{#}</span><span>Cálculo de volúmenes por rebanadas<span>sin actividad todavía</span></span><span></span>",
-"<span>{#}:{#}</span><span>Volumes of Revolution: Cylindrical Shells<span>no activity yet</span></span><span></span>":
-  "<span>{#}:{#}</span><span>Volúmenes de revolución: capas cilíndricas<span>sin actividad todavía</span></span><span></span>",
-"<span>{#}:{#}</span><span>Arc Length of a Curve and Surface Area<span>no activity yet</span></span><span></span>":
-  "<span>{#}:{#}</span><span>Longitud de arco de una curva y área superficial<span>sin actividad todavía</span></span><span></span>",
+"<span>{#}:{#}</span><span>Determining Volumes by Slicing</span><span><a>Solids of Revolution</a></span>":
+  "<span>{#}:{#}</span><span>Cálculo de volúmenes por rebanadas</span><span><a>Sólidos de revolución</a></span>",
+"<span>{#}:{#}</span><span>Volumes of Revolution: Cylindrical Shells</span><span><a>Solids of Revolution</a></span>":
+  "<span>{#}:{#}</span><span>Volúmenes de revolución: capas cilíndricas</span><span><a>Sólidos de revolución</a></span>",
+"<span>{#}:{#}</span><span>Arc Length of a Curve and Surface Area</span><span><a>Solids of Revolution</a></span>":
+  "<span>{#}:{#}</span><span>Longitud de arco de una curva y área superficial</span><span><a>Sólidos de revolución</a></span>",
 "<span>{#}:{#}</span><span>Physical Applications</span>":
   "<span>{#}:{#}</span><span>Aplicaciones físicas</span>",
 "<a>Fluids: Pressure, Buoyancy and Flow</a> · <a>Springs and Oscillations</a> · <a>Inverse Square Force Lab</a>":
@@ -5822,18 +5918,18 @@ VDI18N.add('es', 'site', {
   "<span>{#}:{#}</span><span>Ecuaciones lineales de primer orden</span>",
 "<a>Slope Fields and Euler's Method</a> · <a>Circuits</a> · <a>Terminal Velocity</a> · <a>Worksheet: RC Time Constant</a>":
   "<a>Campos de pendientes y el método de Euler</a> · <a>Circuitos</a> · <a>Velocidad terminal</a> · <a>Hoja de trabajo: Constante de tiempo RC</a>",
-"<span>Chapter {#}</span> Sequences and Series <span>{#} sections · {#} demos</span>":
-  "<span>Capítulo {#}</span> Sucesiones y series <span>{#} secciones · {#} demos</span>",
-"<span>{#}:{#}</span><span>Sequences<span>no activity yet</span></span><span></span>":
-  "<span>{#}:{#}</span><span>Sucesiones<span>sin actividad todavía</span></span><span></span>",
-"<span>{#}:{#}</span><span>Infinite Series<span>no activity yet</span></span><span></span>":
-  "<span>{#}:{#}</span><span>Series infinitas<span>sin actividad todavía</span></span><span></span>",
-"<span>{#}:{#}</span><span>The Divergence and Integral Tests<span>no activity yet</span></span><span></span>":
-  "<span>{#}:{#}</span><span>Las pruebas de divergencia y de la integral<span>sin actividad todavía</span></span><span></span>",
-"<span>{#}:{#}</span><span>Comparison Tests<span>no activity yet</span></span><span></span>":
-  "<span>{#}:{#}</span><span>Pruebas de comparación<span>sin actividad todavía</span></span><span></span>",
-"<span>{#}:{#}</span><span>Alternating Series<span>no activity yet</span></span><span></span>":
-  "<span>{#}:{#}</span><span>Series alternantes<span>sin actividad todavía</span></span><span></span>",
+"<span>Chapter {#}</span> Sequences and Series <span>{#} sections · {#} demo</span>":
+  "<span>Capítulo {#}</span> Sucesiones y series <span>{#} secciones · {#} demo</span>",
+"<span>{#}:{#}</span><span>Sequences</span><span><a>Sequences and Series</a></span>":
+  "<span>{#}:{#}</span><span>Sucesiones</span><span><a>Sucesiones y series</a></span>",
+"<span>{#}:{#}</span><span>Infinite Series</span><span><a>Sequences and Series</a></span>":
+  "<span>{#}:{#}</span><span>Series infinitas</span><span><a>Sucesiones y series</a></span>",
+"<span>{#}:{#}</span><span>The Divergence and Integral Tests</span><span><a>Sequences and Series</a></span>":
+  "<span>{#}:{#}</span><span>Las pruebas de la divergencia y de la integral</span><span><a>Sucesiones y series</a></span>",
+"<span>{#}:{#}</span><span>Comparison Tests</span><span><a>Sequences and Series</a></span>":
+  "<span>{#}:{#}</span><span>Pruebas de comparación</span><span><a>Sucesiones y series</a></span>",
+"<span>{#}:{#}</span><span>Alternating Series</span><span><a>Sequences and Series</a></span>":
+  "<span>{#}:{#}</span><span>Series alternantes</span><span><a>Sucesiones y series</a></span>",
 "<span>{#}:{#}</span><span>Ratio and Root Tests<span>no activity yet</span></span><span></span>":
   "<span>{#}:{#}</span><span>Pruebas del cociente y de la raíz<span>sin actividad todavía</span></span><span></span>",
 "<span>Chapter {#}</span> Power Series <span>{#} sections · {#} demos</span>":
@@ -5868,22 +5964,24 @@ VDI18N.add('es', 'site', {
   "<a>Curvas y movimiento</a> · <a>Leyes de Kepler</a> · <a>Hoja de trabajo: Tercera ley de Kepler</a>",
 "Volume {#}: Vectors, several variables, multiple integrals and vector calculus":
   "Volumen {#}: vectores, varias variables, integrales múltiples y cálculo vectorial",
-"<span>Chapter {#}</span> Vectors in Space <span>{#} sections · {#} demo</span>":
-  "<span>Capítulo {#}</span> Vectores en el espacio <span>{#} secciones · {#} demo</span>",
+"<span>Chapter {#}</span> Vectors in Space <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> Vectores en el espacio <span>{#} secciones · {#} demos</span>",
 "<span>{#}:{#}</span><span>Vectors in the Plane</span>":
   "<span>{#}:{#}</span><span>Vectores en el plano</span>",
-"<span>{#}:{#}</span><span>Vectors in Three Dimensions</span><span><a>Vectors and Relative Motion</a></span>":
-  "<span>{#}:{#}</span><span>Vectores en tres dimensiones</span><span><a>Vectores y movimiento relativo</a></span>",
+"<span>{#}:{#}</span><span>Vectors in Three Dimensions</span>":
+  "<span>{#}:{#}</span><span>Vectores en tres dimensiones</span>",
+"<a>Vectors and Surfaces in Space</a> · <a>Vectors and Relative Motion</a>":
+  "<a>Vectores y superficies en el espacio</a> · <a>Vectores y movimiento relativo</a>",
 "<span>{#}:{#}</span><span>The Dot Product</span>":
   "<span>{#}:{#}</span><span>El producto punto</span>",
 "<span>{#}:{#}</span><span>The Cross Product</span>":
   "<span>{#}:{#}</span><span>El producto cruz</span>",
-"<span>{#}:{#}</span><span>Equations of Lines and Planes in Space<span>no activity yet</span></span><span></span>":
-  "<span>{#}:{#}</span><span>Ecuaciones de rectas y planos en el espacio<span>sin actividad todavía</span></span><span></span>",
-"<span>{#}:{#}</span><span>Quadric Surfaces<span>no activity yet</span></span><span></span>":
-  "<span>{#}:{#}</span><span>Superficies cuádricas<span>sin actividad todavía</span></span><span></span>",
-"<span>{#}:{#}</span><span>Cylindrical and Spherical Coordinates<span>no activity yet</span></span><span></span>":
-  "<span>{#}:{#}</span><span>Coordenadas cilíndricas y esféricas<span>sin actividad todavía</span></span><span></span>",
+"<span>{#}:{#}</span><span>Equations of Lines and Planes in Space</span><span><a>Vectors and Surfaces in Space</a></span>":
+  "<span>{#}:{#}</span><span>Ecuaciones de rectas y planos en el espacio</span><span><a>Vectores y superficies en el espacio</a></span>",
+"<span>{#}:{#}</span><span>Quadric Surfaces</span><span><a>Vectors and Surfaces in Space</a></span>":
+  "<span>{#}:{#}</span><span>Superficies cuádricas</span><span><a>Vectores y superficies en el espacio</a></span>",
+"<span>{#}:{#}</span><span>Cylindrical and Spherical Coordinates</span><span><a>Vectors and Surfaces in Space</a></span>":
+  "<span>{#}:{#}</span><span>Coordenadas cilíndricas y esféricas</span><span><a>Vectores y superficies en el espacio</a></span>",
 "<span>Chapter {#}</span> Vector-Valued Functions <span>{#} sections · {#} demos</span>":
   "<span>Capítulo {#}</span> Funciones con valores vectoriales <span>{#} secciones · {#} demos</span>",
 "<span>{#}:{#}</span><span>Vector-Valued Functions and Space Curves</span><span><a>Curves and Motion</a></span>":
@@ -5898,42 +5996,46 @@ VDI18N.add('es', 'site', {
   "<span>{#}:{#}</span><span>Movimiento en el espacio</span>",
 "<a>Curves and Motion</a> · <a>Circular Motion</a> · <a>Projectile Range</a> · <a>Kepler's Laws</a> · <a>Worksheet: Kepler's Third Law</a>":
   "<a>Curvas y movimiento</a> · <a>Movimiento circular</a> · <a>Alcance de un proyectil</a> · <a>Leyes de Kepler</a> · <a>Hoja de trabajo: Tercera ley de Kepler</a>",
-"<span>Chapter {#}</span> Differentiation of Functions of Several Variables <span>{#} sections · {#} demo</span>":
-  "<span>Capítulo {#}</span> Derivación de funciones de varias variables <span>{#} secciones · {#} demo</span>",
-"<span>{#}:{#}</span><span>Functions of Several Variables</span><span><a>Coulomb Sandbox</a></span>":
-  "<span>{#}:{#}</span><span>Funciones de varias variables</span><span><a>Arenero de Coulomb</a></span>",
-"<span>{#}:{#}</span><span>Limits and Continuity<span>no activity yet</span></span><span></span>":
-  "<span>{#}:{#}</span><span>Límites y continuidad<span>sin actividad todavía</span></span><span></span>",
-"<span>{#}:{#}</span><span>Partial Derivatives<span>no activity yet</span></span><span></span>":
-  "<span>{#}:{#}</span><span>Derivadas parciales<span>sin actividad todavía</span></span><span></span>",
-"<span>{#}:{#}</span><span>Tangent Planes and Linear Approximations<span>no activity yet</span></span><span></span>":
-  "<span>{#}:{#}</span><span>Planos tangentes y aproximaciones lineales<span>sin actividad todavía</span></span><span></span>",
+"<span>Chapter {#}</span> Differentiation of Functions of Several Variables <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> Derivación de funciones de varias variables <span>{#} secciones · {#} demos</span>",
+"<span>{#}:{#}</span><span>Functions of Several Variables</span>":
+  "<span>{#}:{#}</span><span>Funciones de varias variables</span>",
+"<a>Surfaces and Gradients</a> · <a>Coulomb Sandbox</a>":
+  "<a>Superficies y gradientes</a> · <a>Simulador de Coulomb</a>",
+"<span>{#}:{#}</span><span>Limits and Continuity</span><span><a>Surfaces and Gradients</a></span>":
+  "<span>{#}:{#}</span><span>Límites y continuidad</span><span><a>Superficies y gradientes</a></span>",
+"<span>{#}:{#}</span><span>Partial Derivatives</span><span><a>Surfaces and Gradients</a></span>":
+  "<span>{#}:{#}</span><span>Derivadas parciales</span><span><a>Superficies y gradientes</a></span>",
+"<span>{#}:{#}</span><span>Tangent Planes and Linear Approximations</span><span><a>Surfaces and Gradients</a></span>":
+  "<span>{#}:{#}</span><span>Planos tangentes y aproximaciones lineales</span><span><a>Superficies y gradientes</a></span>",
 "<span>{#}:{#}</span><span>The Chain Rule<span>no activity yet</span></span><span></span>":
   "<span>{#}:{#}</span><span>La regla de la cadena<span>sin actividad todavía</span></span><span></span>",
-"<span>{#}:{#}</span><span>Directional Derivatives and the Gradient</span><span><a>Coulomb Sandbox</a></span>":
-  "<span>{#}:{#}</span><span>Derivadas direccionales y el gradiente</span><span><a>Arenero de Coulomb</a></span>",
-"<span>{#}:{#}</span><span>Maxima/Minima Problems<span>no activity yet</span></span><span></span>":
-  "<span>{#}:{#}</span><span>Problemas de máximos y mínimos<span>sin actividad todavía</span></span><span></span>",
-"<span>{#}:{#}</span><span>Lagrange Multipliers<span>no activity yet</span></span><span></span>":
-  "<span>{#}:{#}</span><span>Multiplicadores de Lagrange<span>sin actividad todavía</span></span><span></span>",
+"<span>{#}:{#}</span><span>Directional Derivatives and the Gradient</span>":
+  "<span>{#}:{#}</span><span>Derivadas direccionales y el gradiente</span>",
+"<span>{#}:{#}</span><span>Maxima/Minima Problems</span><span><a>Surfaces and Gradients</a></span>":
+  "<span>{#}:{#}</span><span>Problemas de máximos y mínimos</span><span><a>Superficies y gradientes</a></span>",
+"<span>{#}:{#}</span><span>Lagrange Multipliers</span><span><a>Surfaces and Gradients</a></span>":
+  "<span>{#}:{#}</span><span>Multiplicadores de Lagrange</span><span><a>Superficies y gradientes</a></span>",
 "<span>Chapter {#}</span> Multiple Integration <span>{#} sections · {#} demos</span>":
   "<span>Capítulo {#}</span> Integración múltiple <span>{#} secciones · {#} demos</span>",
-"<span>{#}:{#}</span><span>Double Integrals over Rectangular Regions<span>no activity yet</span></span><span></span>":
-  "<span>{#}:{#}</span><span>Integrales dobles sobre regiones rectangulares<span>sin actividad todavía</span></span><span></span>",
-"<span>{#}:{#}</span><span>Double Integrals over General Regions<span>no activity yet</span></span><span></span>":
-  "<span>{#}:{#}</span><span>Integrales dobles sobre regiones generales<span>sin actividad todavía</span></span><span></span>",
-"<span>{#}:{#}</span><span>Double Integrals in Polar Coordinates<span>no activity yet</span></span><span></span>":
-  "<span>{#}:{#}</span><span>Integrales dobles en coordenadas polares<span>sin actividad todavía</span></span><span></span>",
-"<span>{#}:{#}</span><span>Triple Integrals<span>no activity yet</span></span><span></span>":
-  "<span>{#}:{#}</span><span>Integrales triples<span>sin actividad todavía</span></span><span></span>",
-"<span>{#}:{#}</span><span>Triple Integrals in Cylindrical and Spherical Coordinates<span>no activity yet</span></span><span></span>":
-  "<span>{#}:{#}</span><span>Integrales triples en coordenadas cilíndricas y esféricas<span>sin actividad todavía</span></span><span></span>",
+"<span>{#}:{#}</span><span>Double Integrals over Rectangular Regions</span><span><a>Multiple Integrals</a></span>":
+  "<span>{#}:{#}</span><span>Integrales dobles sobre regiones rectangulares</span><span><a>Integrales múltiples</a></span>",
+"<span>{#}:{#}</span><span>Double Integrals over General Regions</span><span><a>Multiple Integrals</a></span>":
+  "<span>{#}:{#}</span><span>Integrales dobles sobre regiones generales</span><span><a>Integrales múltiples</a></span>",
+"<span>{#}:{#}</span><span>Double Integrals in Polar Coordinates</span><span><a>Multiple Integrals</a></span>":
+  "<span>{#}:{#}</span><span>Integrales dobles en coordenadas polares</span><span><a>Integrales múltiples</a></span>",
+"<span>{#}:{#}</span><span>Triple Integrals</span><span><a>Multiple Integrals</a></span>":
+  "<span>{#}:{#}</span><span>Integrales triples</span><span><a>Integrales múltiples</a></span>",
+"<span>{#}:{#}</span><span>Triple Integrals in Cylindrical and Spherical Coordinates</span>":
+  "<span>{#}:{#}</span><span>Integrales triples en coordenadas cilíndricas y esféricas</span>",
+"<a>Multiple Integrals</a> · <a>Vectors and Surfaces in Space</a>":
+  "<a>Integrales múltiples</a> · <a>Vectores y superficies en el espacio</a>",
 "<span>{#}:{#}</span><span>Calculating Centers of Mass and Moments of Inertia</span>":
   "<span>{#}:{#}</span><span>Cálculo de centros de masa y momentos de inercia</span>",
-"<a>Center of Mass</a> · <a>Rotation and Torque</a> · <a>Rotational Dynamics</a>":
-  "<a>Centro de masa</a> · <a>Rotación y torca</a> · <a>Dinámica de rotación</a>",
-"<span>{#}:{#}</span><span>Change of Variables in Multiple Integrals<span>no activity yet</span></span><span></span>":
-  "<span>{#}:{#}</span><span>Cambio de variables en integrales múltiples<span>sin actividad todavía</span></span><span></span>",
+"<a>Multiple Integrals</a> · <a>Center of Mass</a> · <a>Rotation and Torque</a> · <a>Rotational Dynamics</a>":
+  "<a>Integrales múltiples</a> · <a>Centro de masa</a> · <a>Rotación y torque</a> · <a>Dinámica rotacional</a>",
+"<span>{#}:{#}</span><span>Change of Variables in Multiple Integrals</span><span><a>Multiple Integrals</a></span>":
+  "<span>{#}:{#}</span><span>Cambio de variables en integrales múltiples</span><span><a>Integrales múltiples</a></span>",
 "<span>Chapter {#}</span> Vector Calculus <span>{#} sections · {#} demos</span>":
   "<span>Capítulo {#}</span> Cálculo vectorial <span>{#} secciones · {#} demos</span>",
 "<span>{#}:{#}</span><span>Vector Fields</span>":
@@ -5978,6 +6080,276 @@ VDI18N.add('es', 'site', {
   "<a>Resortes y oscilaciones</a> · <a>Circuitos</a> · <a>Péndulos</a> · <a>Hoja de trabajo: Constante del resorte</a> · <a>Hoja de trabajo: Oscilador forzado y resonancia</a> · <a>Hoja de trabajo: Oscilaciones RLC y amortiguamiento</a>",
 "<span>{#}:{#}</span><span>Series Solutions of Differential Equations<span>no activity yet</span></span><span></span>":
   "<span>{#}:{#}</span><span>Soluciones en serie de ecuaciones diferenciales<span>sin actividad todavía</span></span><span></span>",
+"OpenStax Statistics · Virtual Physics Demos":
+  "OpenStax Statistics · Demos de física virtual",
+"OpenStax Statistics":
+  "OpenStax Statistics",
+"The free OpenStax introductory statistics textbook, section by section, with the demos and worksheets for each.":
+  "El libro de texto gratuito de estadística introductoria de OpenStax, sección por sección, con las demos y hojas de trabajo de cada una.",
+"<a>Data and describing it</a>":
+  "<a>Datos y cómo describirlos</a>",
+"<a>Probability and distributions</a>":
+  "<a>Probabilidad y distribuciones</a>",
+"<a>Sampling, intervals and tests</a>":
+  "<a>Muestreo, intervalos y pruebas</a>",
+"<a>Chi square, regression and ANOVA</a>":
+  "<a>Chi cuadrada, regresión y ANOVA</a>",
+"Every section of OpenStax Introductory Statistics 2e with the demos that serve it, chapter by chapter, then the worksheets that fit the section best. Open a chapter to see its sections. Section numbers match the book. The statistics demos come first, then the physics demos that measure and count. The lab sections at the end of each chapter are numbered as the book numbers them.":
+  "Todas las secciones de OpenStax Introductory Statistics 2e con las demos que les sirven, capítulo por capítulo, y después las hojas de trabajo que mejor van con cada sección. Abre un capítulo para ver sus secciones. Los números de sección coinciden con los del libro. Primero van las demos de estadística y luego las demos de física que miden y cuentan. Las secciones de laboratorio al final de cada capítulo se numeran como las numera el libro.",
+"<span>Ch. {#}–{#}</span><span>{#} sections</span><span>{#} with an activity</span><span><a>Free textbook: OpenStax Introductory Statistics 2e</a></span>":
+  "<span>Cap. {#}–{#}</span><span>{#} secciones</span><span>{#} con actividad</span><span><a>Libro de texto gratuito: OpenStax Introductory Statistics 2e</a></span>",
+"<span>Chapter {#}</span> Sampling and Data <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> Muestreo y datos <span>{#} secciones · {#} demos</span>",
+"<span>{#}</span><span>Definitions of Statistics, Probability, and Key Terms<span>no activity yet</span></span><span></span>":
+  "<span>{#}</span><span>Definiciones de estadística, probabilidad y términos clave<span>aún sin actividad</span></span><span></span>",
+"<span>{#}</span><span>Data, Sampling, and Variation in Data and Sampling</span>":
+  "<span>{#}</span><span>Datos, muestreo y variación en los datos y el muestreo</span>",
+"<a>Sampling Lab</a> · <a>Worksheet: How You Sample Matters</a>":
+  "<a>Laboratorio de muestreo</a> · <a>Hoja de trabajo: Importa cómo muestreas</a>",
+"<span>{#}</span><span>Frequency, Frequency Tables, and Levels of Measurement</span><span><a>Data Explorer</a></span>":
+  "<span>{#}</span><span>Frecuencia, tablas de frecuencias y niveles de medición</span><span><a>Explorador de datos</a></span>",
+"<span>{#}</span><span>Experimental Design and Ethics</span>":
+  "<span>{#}</span><span>Diseño experimental y ética</span>",
+"<span>{#}</span><span>Data Collection Experiment</span><span><a>Sampling Lab</a></span>":
+  "<span>{#}</span><span>Experimento de recolección de datos</span><span><a>Laboratorio de muestreo</a></span>",
+"<span>{#}</span><span>Sampling Experiment</span>":
+  "<span>{#}</span><span>Experimento de muestreo</span>",
+"<span>Chapter {#}</span> Descriptive Statistics <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> Estadística descriptiva <span>{#} secciones · {#} demos</span>",
+"<span>{#}</span><span>Stem-and-Leaf Graphs (Stemplots), Line Graphs, and Bar Graphs</span><span><a>Data Explorer</a></span>":
+  "<span>{#}</span><span>Diagramas de tallo y hojas, gráficas de líneas y gráficas de barras</span><span><a>Explorador de datos</a></span>",
+"<span>{#}</span><span>Histograms, Frequency Polygons, and Time Series Graphs</span>":
+  "<span>{#}</span><span>Histogramas, polígonos de frecuencias y gráficas de series de tiempo</span>",
+"<a>Measurement Uncertainty</a> · <a>Data Explorer</a> · <a>Galton Board</a> · <a>Worksheet: Is g Really {#}? Statistics on a Pendulum</a>":
+  "<a>Incertidumbre de medición</a> · <a>Explorador de datos</a> · <a>Tablero de Galton</a> · <a>Hoja de trabajo: ¿Realmente g es {#}? Estadística con un péndulo</a>",
+"<span>{#}</span><span>Measures of the Location of the Data</span>":
+  "<span>{#}</span><span>Medidas de posición de los datos</span>",
+"<a>Data Explorer</a> · <a>Worksheet: Describing a Data Set: Center, Spread and One Bad Timing</a>":
+  "<a>Explorador de datos</a> · <a>Hoja de trabajo: Cómo describir un conjunto de datos: centro, dispersión y una medición mala</a>",
+"<span>{#}</span><span>Box Plots</span>":
+  "<span>{#}</span><span>Diagramas de caja</span>",
+"<span>{#}</span><span>Measures of the Center of the Data</span>":
+  "<span>{#}</span><span>Medidas del centro de los datos</span>",
+"<span>{#}</span><span>Skewness and the Mean, Median, and Mode</span>":
+  "<span>{#}</span><span>Asimetría, media, mediana y moda</span>",
+"<span>{#}</span><span>Measures of the Spread of the Data</span>":
+  "<span>{#}</span><span>Medidas de dispersión de los datos</span>",
+"<a>Measurement Uncertainty</a> · <a>Data Explorer</a> · <a>Galton Board</a> · <a>Worksheet: Is g Really {#}? Statistics on a Pendulum</a> · <a>Worksheet: Describing a Data Set: Center, Spread and One Bad Timing</a> · <a>Worksheet: Random Scatter and Bias</a>":
+  "<a>Incertidumbre de medición</a> · <a>Explorador de datos</a> · <a>Tablero de Galton</a> · <a>Hoja de trabajo: ¿Realmente g es {#}? Estadística con un péndulo</a> · <a>Hoja de trabajo: Cómo describir un conjunto de datos: centro, dispersión y una medición mala</a> · <a>Hoja de trabajo: Dispersión aleatoria y sesgo</a>",
+"<span>{#}</span><span>Descriptive Statistics</span>":
+  "<span>{#}</span><span>Estadística descriptiva</span>",
+"<span>Chapter {#}</span> Probability Topics <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> Temas de probabilidad <span>{#} secciones · {#} demos</span>",
+"<span>{#}</span><span>Terminology</span>":
+  "<span>{#}</span><span>Terminología</span>",
+"<a>Chance Lab: Dice, Cards and Candies</a> · <a>Quantum Coin Toss</a> · <a>Galton Board</a>":
+  "<a>Laboratorio de azar: dados, cartas y dulces</a> · <a>Lanzamiento de moneda cuántica</a> · <a>Tablero de Galton</a>",
+"<span>{#}</span><span>Independent and Mutually Exclusive Events</span>":
+  "<span>{#}</span><span>Eventos independientes y mutuamente excluyentes</span>",
+"<a>Chance Lab: Dice, Cards and Candies</a> · <a>Galton Board</a>":
+  "<a>Laboratorio de azar: dados, cartas y dulces</a> · <a>Tablero de Galton</a>",
+"<span>{#}</span><span>Two Basic Rules of Probability</span><span><a>Chance Lab: Dice, Cards and Candies</a></span>":
+  "<span>{#}</span><span>Dos reglas básicas de probabilidad</span><span><a>Laboratorio de azar: dados, cartas y dulces</a></span>",
+"<span>{#}</span><span>Contingency Tables</span>":
+  "<span>{#}</span><span>Tablas de contingencia</span>",
+"<a>Chance Lab: Dice, Cards and Candies</a> · <a>Chi-Square Tests</a>":
+  "<a>Laboratorio de azar: dados, cartas y dulces</a> · <a>Pruebas de chi cuadrada</a>",
+"<span>{#}</span><span>Tree and Venn Diagrams</span><span><a>Chance Lab: Dice, Cards and Candies</a></span>":
+  "<span>{#}</span><span>Diagramas de árbol y de Venn</span><span><a>Laboratorio de azar: dados, cartas y dulces</a></span>",
+"<span>{#}</span><span>Probability Topics</span>":
+  "<span>{#}</span><span>Temas de probabilidad</span>",
+"<a>Chance Lab: Dice, Cards and Candies</a> · <a>Worksheet: Dice and Cards: Predict, Simulate, Compare</a>":
+  "<a>Laboratorio de azar: dados, cartas y dulces</a> · <a>Hoja de trabajo: Dados y cartas: predice, simula, compara</a>",
+"<span>Chapter {#}</span> Discrete Random Variables <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> Variables aleatorias discretas <span>{#} secciones · {#} demos</span>",
+"<span>{#}</span><span>Probability Distribution Function (PDF) for a Discrete Random Variable</span>":
+  "<span>{#}</span><span>Función de distribución de probabilidad (PDF) de una variable aleatoria discreta</span>",
+"<a>Distribution Explorer</a> · <a>Chance Lab: Dice, Cards and Candies</a>":
+  "<a>Explorador de distribuciones</a> · <a>Laboratorio de azar: dados, cartas y dulces</a>",
+"<span>{#}</span><span>Mean or Expected Value and Standard Deviation</span>":
+  "<span>{#}</span><span>Media o valor esperado y desviación estándar</span>",
+"<span>{#}</span><span>Binomial Distribution</span>":
+  "<span>{#}</span><span>Distribución binomial</span>",
+"<a>Distribution Explorer</a> · <a>Galton Board</a> · <a>Quantum Coin Toss</a> · <a>Worksheet: Chance, the Binomial and the Bell Curve</a>":
+  "<a>Explorador de distribuciones</a> · <a>Tablero de Galton</a> · <a>Lanzamiento de moneda cuántica</a> · <a>Hoja de trabajo: El azar, la binomial y la curva de campana</a>",
+"<span>{#}</span><span>Geometric Distribution</span><span><a>Distribution Explorer</a></span>":
+  "<span>{#}</span><span>Distribución geométrica</span><span><a>Explorador de distribuciones</a></span>",
+"<span>{#}</span><span>Hypergeometric Distribution</span>":
+  "<span>{#}</span><span>Distribución hipergeométrica</span>",
+"<span>{#}</span><span>Poisson Distribution</span>":
+  "<span>{#}</span><span>Distribución de Poisson</span>",
+"<a>Radioactive Decay</a> · <a>Distribution Explorer</a> · <a>Worksheet: Counting Statistics</a>":
+  "<a>Decaimiento radiactivo</a> · <a>Explorador de distribuciones</a> · <a>Hoja de trabajo: Estadística de conteo</a>",
+"<span>{#}</span><span>Discrete Distribution (Playing Card Experiment)</span>":
+  "<span>{#}</span><span>Distribución discreta (experimento con cartas)</span>",
+"<span>{#}</span><span>Discrete Distribution (Dice Experiment Using Three Regular Dice)</span>":
+  "<span>{#}</span><span>Distribución discreta (experimento con tres dados normales)</span>",
+"<span>Chapter {#}</span> Continuous Random Variables <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> Variables aleatorias continuas <span>{#} secciones · {#} demos</span>",
+"<span>{#}</span><span>Continuous Probability Functions</span><span><a>Distribution Explorer</a></span>":
+  "<span>{#}</span><span>Funciones de probabilidad continuas</span><span><a>Explorador de distribuciones</a></span>",
+"<span>{#}</span><span>The Uniform Distribution</span><span><a>Distribution Explorer</a></span>":
+  "<span>{#}</span><span>La distribución uniforme</span><span><a>Explorador de distribuciones</a></span>",
+"<span>{#}</span><span>The Exponential Distribution</span>":
+  "<span>{#}</span><span>La distribución exponencial</span>",
+"<a>Radioactive Decay</a> · <a>Distribution Explorer</a> · <a>Worksheet: Counting Statistics</a> · <a>Worksheet: Measuring a Half Life</a>":
+  "<a>Decaimiento radiactivo</a> · <a>Explorador de distribuciones</a> · <a>Hoja de trabajo: Estadística de conteo</a> · <a>Hoja de trabajo: Medición de una vida media</a>",
+"<span>{#}</span><span>Continuous Distribution</span>":
+  "<span>{#}</span><span>Distribución continua</span>",
+"<a>Radioactive Decay</a> · <a>Worksheet: Counting Statistics</a>":
+  "<a>Decaimiento radiactivo</a> · <a>Hoja de trabajo: Estadística de conteo</a>",
+"<span>Chapter {#}</span> The Normal Distribution <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> La distribución normal <span>{#} secciones · {#} demos</span>",
+"<span>{#}</span><span>The Standard Normal Distribution</span>":
+  "<span>{#}</span><span>La distribución normal estándar</span>",
+"<a>Distribution Explorer</a> · <a>Galton Board</a>":
+  "<a>Explorador de distribuciones</a> · <a>Tablero de Galton</a>",
+"<span>{#}</span><span>Using the Normal Distribution</span>":
+  "<span>{#}</span><span>Uso de la distribución normal</span>",
+"<a>Distribution Explorer</a> · <a>Galton Board</a> · <a>Worksheet: Chance, the Binomial and the Bell Curve</a>":
+  "<a>Explorador de distribuciones</a> · <a>Tablero de Galton</a> · <a>Hoja de trabajo: El azar, la binomial y la curva de campana</a>",
+"<span>{#}</span><span>Normal Distribution (Lap Times)</span>":
+  "<span>{#}</span><span>Distribución normal (tiempos por vuelta)</span>",
+"<a>Measurement Uncertainty</a> · <a>Data Explorer</a> · <a>Worksheet: Is g Really {#}? Statistics on a Pendulum</a>":
+  "<a>Incertidumbre de medición</a> · <a>Explorador de datos</a> · <a>Hoja de trabajo: ¿Realmente g es {#}? Estadística con un péndulo</a>",
+"<span>{#}</span><span>Normal Distribution (Pinkie Length)</span>":
+  "<span>{#}</span><span>Distribución normal (longitud del dedo meñique)</span>",
+"<a>Measurement Uncertainty</a> · <a>Data Explorer</a>":
+  "<a>Incertidumbre de medición</a> · <a>Explorador de datos</a>",
+"<span>Chapter {#}</span> The Central Limit Theorem <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> El teorema del límite central <span>{#} secciones · {#} demos</span>",
+"<span>{#}</span><span>The Central Limit Theorem for Sample Means (Averages)</span>":
+  "<span>{#}</span><span>El teorema del límite central para medias muestrales (promedios)</span>",
+"<a>Sampling Lab</a> · <a>Measurement Uncertainty</a> · <a>Worksheet: The Central Limit Theorem</a>":
+  "<a>Laboratorio de muestreo</a> · <a>Incertidumbre de medición</a> · <a>Hoja de trabajo: El teorema del límite central</a>",
+"<span>{#}</span><span>The Central Limit Theorem for Sums</span>":
+  "<span>{#}</span><span>El teorema del límite central para sumas</span>",
+"<a>Sampling Lab</a> · <a>Galton Board</a> · <a>Worksheet: The Central Limit Theorem</a>":
+  "<a>Laboratorio de muestreo</a> · <a>Tablero de Galton</a> · <a>Hoja de trabajo: El teorema del límite central</a>",
+"<span>{#}</span><span>Using the Central Limit Theorem</span>":
+  "<span>{#}</span><span>Uso del teorema del límite central</span>",
+"<a>Sampling Lab</a> · <a>Worksheet: The Central Limit Theorem</a>":
+  "<a>Laboratorio de muestreo</a> · <a>Hoja de trabajo: El teorema del límite central</a>",
+"<span>{#}</span><span>Central Limit Theorem (Pocket Change)</span><span><a>Sampling Lab</a></span>":
+  "<span>{#}</span><span>Teorema del límite central (monedas sueltas)</span><span><a>Laboratorio de muestreo</a></span>",
+"<span>{#}</span><span>Central Limit Theorem (Cookie Recipes)</span><span><a>Sampling Lab</a></span>":
+  "<span>{#}</span><span>Teorema del límite central (recetas de galletas)</span><span><a>Laboratorio de muestreo</a></span>",
+"<span>Chapter {#}</span> Confidence Intervals <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> Intervalos de confianza <span>{#} secciones · {#} demos</span>",
+"<span>{#}</span><span>A Single Population Mean using the Normal Distribution</span>":
+  "<span>{#}</span><span>Una sola media poblacional con la distribución normal</span>",
+"<a>Confidence Intervals</a> · <a>Measurement Uncertainty</a> · <a>Worksheet: What {#} % Confident Means</a>":
+  "<a>Intervalos de confianza</a> · <a>Incertidumbre de medición</a> · <a>Hoja de trabajo: Qué significa tener {#} % de confianza</a>",
+"<span>{#}</span><span>A Single Population Mean using the Student t Distribution</span>":
+  "<span>{#}</span><span>Una sola media poblacional con la distribución t de Student</span>",
+"<a>Measurement Uncertainty</a> · <a>Distribution Explorer</a> · <a>Confidence Intervals</a> · <a>Worksheet: Is g Really {#}? Statistics on a Pendulum</a> · <a>Worksheet: What {#} % Confident Means</a>":
+  "<a>Incertidumbre de medición</a> · <a>Explorador de distribuciones</a> · <a>Intervalos de confianza</a> · <a>Hoja de trabajo: ¿Realmente g es {#}? Estadística con un péndulo</a> · <a>Hoja de trabajo: Qué significa tener {#} % de confianza</a>",
+"<span>{#}</span><span>A Population Proportion</span>":
+  "<span>{#}</span><span>Una proporción poblacional</span>",
+"<a>Confidence Intervals</a> · <a>Worksheet: What {#} % Confident Means</a>":
+  "<a>Intervalos de confianza</a> · <a>Hoja de trabajo: Qué significa tener {#} % de confianza</a>",
+"<span>{#}</span><span>Confidence Interval (Home Costs)</span><span><a>Confidence Intervals</a></span>":
+  "<span>{#}</span><span>Intervalo de confianza (costos de vivienda)</span><span><a>Intervalos de confianza</a></span>",
+"<span>{#}</span><span>Confidence Interval (Place of Birth)</span><span><a>Confidence Intervals</a></span>":
+  "<span>{#}</span><span>Intervalo de confianza (lugar de nacimiento)</span><span><a>Intervalos de confianza</a></span>",
+"<span>{#}</span><span>Confidence Interval (Women's Heights)</span><span><a>Confidence Intervals</a></span>":
+  "<span>{#}</span><span>Intervalo de confianza (estaturas de mujeres)</span><span><a>Intervalos de confianza</a></span>",
+"<span>Chapter {#}</span> Hypothesis Testing with One Sample <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> Prueba de hipótesis con una muestra <span>{#} secciones · {#} demos</span>",
+"<span>{#}</span><span>Null and Alternative Hypotheses</span><span><a>Hypothesis Tests</a></span>":
+  "<span>{#}</span><span>Hipótesis nula y alternativa</span><span><a>Pruebas de hipótesis</a></span>",
+"<span>{#}</span><span>Outcomes and the Type I and Type II Errors</span>":
+  "<span>{#}</span><span>Resultados y errores tipo I y tipo II</span>",
+"<a>Hypothesis Tests</a> · <a>Worksheet: Type I Errors, Type II Errors and Power</a>":
+  "<a>Pruebas de hipótesis</a> · <a>Hoja de trabajo: Errores tipo I, errores tipo II y potencia</a>",
+"<span>{#}</span><span>Probability Distribution Needed for Hypothesis Testing</span><span><a>Hypothesis Tests</a></span>":
+  "<span>{#}</span><span>Distribución de probabilidad necesaria para la prueba de hipótesis</span><span><a>Pruebas de hipótesis</a></span>",
+"<span>{#}</span><span>Rare Events, the Sample, Decision and Conclusion</span><span><a>Hypothesis Tests</a></span>":
+  "<span>{#}</span><span>Eventos raros, la muestra, la decisión y la conclusión</span><span><a>Pruebas de hipótesis</a></span>",
+"<span>{#}</span><span>Additional Information and Full Hypothesis Test Examples</span><span><a>Hypothesis Tests</a></span>":
+  "<span>{#}</span><span>Información adicional y ejemplos completos de pruebas de hipótesis</span><span><a>Pruebas de hipótesis</a></span>",
+"<span>{#}</span><span>Hypothesis Testing of a Single Mean and Single Proportion</span>":
+  "<span>{#}</span><span>Prueba de hipótesis para una media y una proporción</span>",
+"<a>Hypothesis Tests</a> · <a>Measurement Uncertainty</a> · <a>Worksheet: Type I Errors, Type II Errors and Power</a> · <a>Worksheet: Is g Really {#}? Statistics on a Pendulum</a>":
+  "<a>Pruebas de hipótesis</a> · <a>Incertidumbre de medición</a> · <a>Hoja de trabajo: Errores tipo I, errores tipo II y potencia</a> · <a>Hoja de trabajo: ¿Realmente g es {#}? Estadística con un péndulo</a>",
+"<span>Chapter {#}</span> Hypothesis Testing with Two Samples <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> Prueba de hipótesis con dos muestras <span>{#} secciones · {#} demos</span>",
+"<span>{#}</span><span>Two Population Means with Unknown Standard Deviations</span><span><a>Hypothesis Tests</a></span>":
+  "<span>{#}</span><span>Dos medias poblacionales con desviaciones estándar desconocidas</span><span><a>Pruebas de hipótesis</a></span>",
+"<span>{#}</span><span>Two Population Means with Known Standard Deviations</span><span><a>Hypothesis Tests</a></span>":
+  "<span>{#}</span><span>Dos medias poblacionales con desviaciones estándar conocidas</span><span><a>Pruebas de hipótesis</a></span>",
+"<span>{#}</span><span>Comparing Two Independent Population Proportions</span><span><a>Hypothesis Tests</a></span>":
+  "<span>{#}</span><span>Comparación de dos proporciones poblacionales independientes</span><span><a>Pruebas de hipótesis</a></span>",
+"<span>{#}</span><span>Matched or Paired Samples</span><span><a>Hypothesis Tests</a></span>":
+  "<span>{#}</span><span>Muestras pareadas</span><span><a>Pruebas de hipótesis</a></span>",
+"<span>{#}</span><span>Hypothesis Testing for Two Means and Two Proportions</span>":
+  "<span>{#}</span><span>Prueba de hipótesis para dos medias y dos proporciones</span>",
+"<a>Hypothesis Tests</a> · <a>Measurement Uncertainty</a> · <a>Worksheet: Is g Really {#}? Statistics on a Pendulum</a>":
+  "<a>Pruebas de hipótesis</a> · <a>Incertidumbre de medición</a> · <a>Hoja de trabajo: ¿Realmente g es {#}? Estadística con un péndulo</a>",
+"<span>Chapter {#}</span> The Chi-Square Distribution <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> La distribución chi cuadrada <span>{#} secciones · {#} demos</span>",
+"<span>{#}</span><span>Facts About the Chi-Square Distribution</span>":
+  "<span>{#}</span><span>Datos sobre la distribución chi cuadrada</span>",
+"<a>Distribution Explorer</a> · <a>Chi-Square Tests</a>":
+  "<a>Explorador de distribuciones</a> · <a>Pruebas de chi cuadrada</a>",
+"<span>{#}</span><span>Goodness-of-Fit Test</span>":
+  "<span>{#}</span><span>Prueba de bondad de ajuste</span>",
+"<a>Radioactive Decay</a> · <a>Chi-Square Tests</a> · <a>Galton Board</a> · <a>Quantum Coin Toss</a>":
+  "<a>Decaimiento radiactivo</a> · <a>Pruebas de chi cuadrada</a> · <a>Tablero de Galton</a> · <a>Lanzamiento de moneda cuántica</a>",
+"<span>{#}</span><span>Test of Independence</span><span><a>Chi-Square Tests</a></span>":
+  "<span>{#}</span><span>Prueba de independencia</span><span><a>Pruebas de chi cuadrada</a></span>",
+"<span>{#}</span><span>Test for Homogeneity</span><span><a>Chi-Square Tests</a></span>":
+  "<span>{#}</span><span>Prueba de homogeneidad</span><span><a>Pruebas de chi cuadrada</a></span>",
+"<span>{#}</span><span>Comparison of the Chi-Square Tests</span><span><a>Chi-Square Tests</a></span>":
+  "<span>{#}</span><span>Comparación de las pruebas de chi cuadrada</span><span><a>Pruebas de chi cuadrada</a></span>",
+"<span>{#}</span><span>Test of a Single Variance</span><span><a>Chi-Square Tests</a></span>":
+  "<span>{#}</span><span>Prueba para una sola varianza</span><span><a>Pruebas de chi cuadrada</a></span>",
+"<span>{#}</span><span>Lab {#}: Chi-Square Goodness-of-Fit</span>":
+  "<span>{#}</span><span>Laboratorio {#}: bondad de ajuste con chi cuadrada</span>",
+"<a>Chi-Square Tests</a> · <a>Worksheet: Chi-Square Tests: A Loaded Die, Decay Counts and a Table</a>":
+  "<a>Pruebas de chi cuadrada</a> · <a>Hoja de trabajo: Pruebas de chi cuadrada: un dado cargado, conteos de decaimiento y una tabla</a>",
+"<span>{#}</span><span>Lab {#}: Chi-Square Test of Independence</span>":
+  "<span>{#}</span><span>Laboratorio {#}: prueba de independencia con chi cuadrada</span>",
+"<span>Chapter {#}</span> Linear Regression and Correlation <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> Regresión lineal y correlación <span>{#} secciones · {#} demos</span>",
+"<span>{#}</span><span>Linear Equations</span><span><a>Linear Regression and Correlation</a></span>":
+  "<span>{#}</span><span>Ecuaciones lineales</span><span><a>Regresión lineal y correlación</a></span>",
+"<span>{#}</span><span>Scatter Plots</span><span><a>Linear Regression and Correlation</a></span>":
+  "<span>{#}</span><span>Diagramas de dispersión</span><span><a>Regresión lineal y correlación</a></span>",
+"<span>{#}</span><span>The Regression Equation</span>":
+  "<span>{#}</span><span>La ecuación de regresión</span>",
+"<a>Linear Regression and Correlation</a> · <a>Measurement Uncertainty</a> · <a>Worksheet: Fitting a Line and Judging the Fit</a> · <a>Worksheet: Random Scatter and Bias</a>":
+  "<a>Regresión lineal y correlación</a> · <a>Incertidumbre de medición</a> · <a>Hoja de trabajo: Ajustar una recta y juzgar el ajuste</a> · <a>Hoja de trabajo: Dispersión aleatoria y sesgo</a>",
+"<span>{#}</span><span>Testing the Significance of the Correlation Coefficient</span>":
+  "<span>{#}</span><span>Prueba de significancia del coeficiente de correlación</span>",
+"<a>Linear Regression and Correlation</a> · <a>Worksheet: Fitting a Line and Judging the Fit</a>":
+  "<a>Regresión lineal y correlación</a> · <a>Hoja de trabajo: Ajustar una recta y juzgar el ajuste</a>",
+"<span>{#}</span><span>Prediction</span>":
+  "<span>{#}</span><span>Predicción</span>",
+"<span>{#}</span><span>Outliers</span>":
+  "<span>{#}</span><span>Valores atípicos</span>",
+"<span>{#}</span><span>Regression (Distance from School)</span>":
+  "<span>{#}</span><span>Regresión (distancia a la escuela)</span>",
+"<span>{#}</span><span>Regression (Textbook Cost)</span>":
+  "<span>{#}</span><span>Regresión (costo de libros de texto)</span>",
+"<span>{#}</span><span>Regression (Fuel Efficiency)</span>":
+  "<span>{#}</span><span>Regresión (rendimiento de combustible)</span>",
+"<span>Chapter {#}</span> F Distribution and One-Way ANOVA <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> Distribución F y ANOVA de un factor <span>{#} secciones · {#} demos</span>",
+"<span>{#}</span><span>One-Way ANOVA</span>":
+  "<span>{#}</span><span>ANOVA de un factor</span>",
+"<a>One Way ANOVA</a> · <a>Worksheet: One Way ANOVA: Gaps, Spreads and False Alarms</a>":
+  "<a>ANOVA de un factor</a> · <a>Hoja de trabajo: ANOVA de un factor: brechas, dispersiones y falsas alarmas</a>",
+"<span>{#}</span><span>The F Distribution and the F-Ratio</span>":
+  "<span>{#}</span><span>La distribución F y la razón F</span>",
+"<a>One Way ANOVA</a> · <a>Distribution Explorer</a>":
+  "<a>ANOVA de un factor</a> · <a>Explorador de distribuciones</a>",
+"<span>{#}</span><span>Facts About the F Distribution</span>":
+  "<span>{#}</span><span>Datos sobre la distribución F</span>",
+"<span>{#}</span><span>Test of Two Variances</span><span><a>One Way ANOVA</a></span>":
+  "<span>{#}</span><span>Prueba de dos varianzas</span><span><a>ANOVA de un factor</a></span>",
+"<span>{#}</span><span>Lab: One-Way ANOVA</span>":
+  "<span>{#}</span><span>Laboratorio: ANOVA de un factor</span>",
 "Courses · Virtual Physics Demos":
   "Cursos · Demos virtuales de física",
 "<b>For a class</b>":
@@ -6040,8 +6412,6 @@ VDI18N.add('es', 'site', {
   "<a>ADN en 3D</a>",
 "Mechanics":
   "Mecánica",
-"Surface Tension and Capillarity (notes to come)":
-  "Tensión superficial y capilaridad (notas pendientes)",
 "<a>Families of Functions</a>":
   "<a>Familias de funciones</a>",
 "<a>Limits</a>":
@@ -6062,16 +6432,44 @@ VDI18N.add('es', 'site', {
   "<a>Campos vectoriales, trabajo y rotacional</a>",
 "<a>Related Rates and Optimization</a>":
   "<a>Razones de cambio relacionadas y optimización</a>",
-"Diffusion and Osmosis (notes to come)":
-  "Difusión y ósmosis (notas pendientes)",
+"Hypothesis Tests (notes to come)":
+  "Pruebas de hipótesis (notas por venir)",
+"One Way ANOVA (notes to come)":
+  "ANOVA de un factor (notas por venir)",
+"Linear Regression and Correlation (notes to come)":
+  "Regresión lineal y correlación (notas por venir)",
+"<a>Surface Tension and Capillarity</a>":
+  "<a>Tensión superficial y capilaridad</a>",
+"<a>Multiple Integrals</a>":
+  "<a>Integrales múltiples</a>",
+"<a>Sequences and Series</a>":
+  "<a>Sucesiones y series</a>",
+"<a>Solids of Revolution</a>":
+  "<a>Sólidos de revolución</a>",
+"<a>Surfaces and Gradients</a>":
+  "<a>Superficies y gradientes</a>",
+"<a>Vectors and Surfaces in Space</a>":
+  "<a>Vectores y superficies en el espacio</a>",
+"Data Explorer (notes to come)":
+  "Explorador de datos (notas por venir)",
+"Distribution Explorer (notes to come)":
+  "Explorador de distribuciones (notas por venir)",
+"Sampling Lab (notes to come)":
+  "Laboratorio de muestreo (notas por venir)",
+"Confidence Intervals (notes to come)":
+  "Intervalos de confianza (notas por venir)",
+"Chance Lab: Dice, Cards and Candies (notes to come)":
+  "Laboratorio de azar: dados, cartas y dulces (notas por venir)",
+"Chi-Square Tests (notes to come)":
+  "Pruebas de chi cuadrada (notas por venir)",
 "<a>Belousov–Zhabotinsky Reaction</a>":
   "<a>Reacción de Belousov–Zhabotinsky</a>",
-"Nerve Signals and the ECG (notes to come)":
-  "Señales nerviosas y el ECG (notas pendientes)",
+"<a>Diffusion and Osmosis</a>":
+  "<a>Difusión y ósmosis</a>",
+"<a>Nerve Signals and the ECG</a>":
+  "<a>Señales nerviosas y el ECG</a>",
 "Waves and sound":
   "Ondas y sonido",
-"Hearing and the Ear (notes to come)":
-  "La audición y el oído (notas pendientes)",
 "Optics":
   "Óptica",
 "Atoms, molecules and solids · Virtual Physics Demos":
@@ -6226,22 +6624,14 @@ VDI18N.add('es', 'site', {
   "Todas las demos de este tema, de cada curso y módulo, con todas sus hojas de trabajo. Abierta desde aquí, una demo recorre este tema con sus enlaces de anterior y siguiente. Los demás temas de Física médica y más están en la barra de arriba; la <a>página de inicio</a> los enlista todos.",
 "Chemistry and biology demos":
   "Demos de química y biología",
-"<a>Nerve Signals and the ECG</a>":
-  "<a>Señales nerviosas y el ECG</a>",
 "In <a>Medical Physics</a>":
   "En <a>Física médica</a>",
-"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a>":
-  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a>",
 "In <a>Acoustics</a> · <a>Medical Physics</a>":
   "En <a>Acústica</a> · <a>Física médica</a>",
 "Also under <a>Sound and acoustics</a>":
   "También en <a>Sonido y acústica</a>",
-"<a>Surface Tension and Capillarity</a>":
-  "<a>Tensión superficial y capilaridad</a>",
 "Also under <a>Fluids</a>":
   "También en <a>Fluidos</a>",
-"<a>Diffusion and Osmosis</a>":
-  "<a>Difusión y ósmosis</a>",
 "Also under <a>Fluids</a> · <a>Heat and thermodynamics</a>":
   "También en <a>Fluidos</a> · <a>Calor y termodinámica</a>",
 "Circuits · Virtual Physics Demos":
@@ -6512,8 +6902,6 @@ VDI18N.add('es', 'site', {
   "<b>Antes de las hojas de trabajo:</b> {#}. Ley del gas ideal; teoría cinética de los gases; temperatura y rapidez molecular · {#}. Teoría cinética de los gases; trayectoria libre media; caminata aleatoria; leer una pendiente · {#}. Temperatura y rapidez molecular; rapidez de escape; raíces cuadradas y cocientes",
 "<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet {#}: Gas in a Box<span>{#} min · algebra</span></a> <a>Worksheet {#}: Diffusion and Graham's Law<span>{#} min · algebra</span></a> <a>Worksheet {#}: Why Small, Hot Planets Lose Their Air (Astro {#})<span>{#} min · algebra</span></a> <a>Notes</a>":
   "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo {#}: Gas en una caja<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Difusión y ley de Graham<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Por qué los planetas pequeños y calientes pierden su aire (Astro {#})<span>{#} min · álgebra</span></a> <a>Notas</a>",
-"Also under <a>Fluids</a> · <a>Chemistry and biology</a>":
-  "También en <a>Fluidos</a> · <a>Química y biología</a>",
 "<b>Before the worksheets:</b> {#}. First law of thermodynamics; molar heat capacity; equipartition; fitting a line · {#}. Adiabatic process; simple harmonic motion; heat capacities; pressure and force":
   "<b>Antes de las hojas de trabajo:</b> {#}. Primera ley de la termodinámica; capacidad calorífica molar; equipartición; ajuste de una recta · {#}. Proceso adiabático; movimiento armónico simple; capacidades caloríficas; presión y fuerza",
 "<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet {#}: Heat Capacities of Gases<span>{#} min · algebra</span></a> <a>Worksheet {#}: Rüchardt's Ball<span>{#} min · algebra</span></a> <a>Notes</a>":
@@ -6540,6 +6928,8 @@ VDI18N.add('es', 'site', {
   "<b>Antes de la hoja de trabajo:</b> Probabilidad de eventos independientes; conteo de trayectorias; media y desviación estándar",
 "Also under <a>Atoms, molecules and solids</a>":
   "También en <a>Átomos, moléculas y sólidos</a>",
+"Also under <a>Fluids</a> · <a>Chemistry and biology</a>":
+  "También en <a>Fluidos</a> · <a>Química y biología</a>",
 "Induction and EM waves · Virtual Physics Demos":
   "Inducción y ondas EM · Demos virtuales de física",
 "Induction and EM waves":
@@ -6578,8 +6968,8 @@ VDI18N.add('es', 'site', {
   "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo {#}: Unidades y dimensiones<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Estimaciones e incertidumbre<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: ¿Qué tan grande es el sistema solar? (Astro {#})<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "Also under <a>Oscillations and waves</a>":
   "También en <a>Oscilaciones y ondas</a>",
-"<b>Before the worksheet:</b> Period of a simple pendulum; mean and standard deviation; fitting a line":
-  "<b>Antes de la hoja de trabajo:</b> Periodo de un péndulo simple; media y desviación estándar; ajuste de una recta",
+"<b>Before the worksheets:</b> {#}. Period of a simple pendulum; mean and standard deviation; fitting a line · {#}. Period of a simple pendulum; mean and standard deviation; the normal distribution; t intervals and t tests":
+  "<b>Antes de las hojas de trabajo:</b> {#}. Periodo de un péndulo simple; media y desviación estándar; ajuste de una recta · {#}. Periodo de un péndulo simple; media y desviación estándar; la distribución normal; intervalos t y pruebas t",
 "<b>Before the worksheets:</b> {#}. Newton's first law; force vectors and components; sine and cosine; equilibrium · {#}. Components of a vector; trigonometry; average acceleration; dot and cross products":
   "<b>Antes de las hojas de trabajo:</b> {#}. Primera ley de Newton; vectores de fuerza y componentes; seno y coseno; equilibrio · {#}. Componentes de un vector; trigonometría; aceleración media; productos punto y cruz",
 "<b>Before the worksheet:</b> Position, velocity and acceleration; slope and area of graphs; constant acceleration":
@@ -6622,12 +7012,14 @@ VDI18N.add('es', 'site', {
   "Matemáticas para física · Demos virtuales de física",
 "Math for physics":
   "Matemáticas para física",
-"Type any function and see its derivatives and integrals, its Taylor polynomials, the slope field of a differential equation, a vector field with its work and curl, or a point moving along a curve, and watch how a computer solves the equations of motion step by step.":
-  "Escribe cualquier función y mira sus derivadas e integrales, sus polinomios de Taylor, el campo de pendientes de una ecuación diferencial, un campo vectorial con su trabajo y su rotacional, o un punto que se mueve por una curva, y observa cómo una computadora resuelve las ecuaciones de movimiento paso a paso.",
-"<span>OpenStax Vol {#} · Ch. {#}–{#}, {#}–{#}, {#}, {#} · Vol {#} · Ch. {#}–{#} · Vol {#} · Ch. {#}, {#}</span>":
-  "<span>OpenStax Vol. {#} · Cap. {#}–{#}, {#}–{#}, {#}, {#} · Vol. {#} · Cap. {#}–{#} · Vol. {#} · Cap. {#}, {#}</span>",
+"Type any function and see its derivatives and integrals, its Taylor polynomials, the slope field of a differential equation, a vector field with its work and curl, or a point moving along a curve, and watch how a computer solves the equations of motion step by step. Then statistics for the lab: describe a data set, roll and draw for probability, sample a population and watch the central limit theorem, build confidence intervals, test hypotheses, and fit a line or compare groups.":
+  "Escribe cualquier función y mira sus derivadas e integrales, sus polinomios de Taylor, el campo de pendientes de una ecuación diferencial, un campo vectorial con su trabajo y su rotacional, o un punto que se mueve a lo largo de una curva, y observa cómo una computadora resuelve paso a paso las ecuaciones de movimiento. Luego, estadística para el laboratorio: describe un conjunto de datos, lanza y saca para estudiar probabilidad, toma muestras de una población y observa el teorema del límite central, construye intervalos de confianza, haz pruebas de hipótesis, y ajusta una recta o compara grupos.",
+"<span>OpenStax Vol {#} · Ch. {#}–{#}, {#}–{#}, {#}, {#} · Vol {#} · Ch. {#}, {#}–{#} · Vol {#} · Ch. {#}, {#}</span>":
+  "<span>OpenStax Vol. {#} · Cap. {#}–{#}, {#}–{#}, {#}, {#} · Vol. {#} · Cap. {#}, {#}–{#} · Vol. {#} · Cap. {#}, {#}</span>",
 "Math for physics demos":
   "Demos de matemáticas para física",
+"<a>Open demo</a> <a>Worksheet: Reading Derivatives from a Graph</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Lectura de derivadas en una gráfica</a> <a>Notas</a>",
 "<b>Before the worksheet:</b> Simple harmonic motion; conservation of energy; slopes on log scale graphs":
   "<b>Antes de la hoja de trabajo:</b> Movimiento armónico simple; conservación de la energía; pendientes en gráficas logarítmicas",
 "<a>Open demo</a> <a>Worksheet: How Good Is a Computed Motion?<span>{#} min · algebra</span></a> <a>Notes</a>":
@@ -6642,6 +7034,42 @@ VDI18N.add('es', 'site', {
   "<b>Antes de la hoja de trabajo:</b> Vectores y componentes; el trabajo como fuerza por desplazamiento; derivadas parciales; integrales a lo largo de un parámetro",
 "<a>Open demo</a> <a>Worksheet: Work Along Different Paths<span>{#} min · calculus</span></a> <a>Notes</a>":
   "<a>Abrir demo</a> <a>Hoja de trabajo: Trabajo por distintas trayectorias<span>{#} min · cálculo</span></a> <a>Notas</a>",
+"<a>Data Explorer</a>":
+  "<a>Explorador de datos</a>",
+"<a>Open demo</a> <a>Worksheet: Describing a Data Set: Center, Spread and One Bad Timing</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Cómo describir un conjunto de datos: centro, dispersión y una medición mala</a>",
+"<a>Chance Lab: Dice, Cards and Candies</a>":
+  "<a>Laboratorio de azar: dados, cartas y dulces</a>",
+"<a>Open demo</a> <a>Worksheet: Dice and Cards: Predict, Simulate, Compare</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Dados y cartas: predice, simula, compara</a>",
+"<a>Distribution Explorer</a>":
+  "<a>Explorador de distribuciones</a>",
+"<a>Open demo</a>":
+  "<a>Abrir demo</a>",
+"<a>Sampling Lab</a>":
+  "<a>Laboratorio de muestreo</a>",
+"<a>Open demo</a> <a>Worksheet {#}: How You Sample Matters</a> <a>Worksheet {#}: The Central Limit Theorem</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Importa cómo muestreas</a> <a>Hoja de trabajo {#}: El teorema del límite central</a>",
+"<a>Confidence Intervals</a>":
+  "<a>Intervalos de confianza</a>",
+"<a>Open demo</a> <a>Worksheet: What {#} % Confident Means</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Qué significa tener {#} % de confianza</a>",
+"<a>Hypothesis Tests</a>":
+  "<a>Pruebas de hipótesis</a>",
+"<a>Open demo</a> <a>Worksheet: Type I Errors, Type II Errors and Power</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Errores tipo I, errores tipo II y potencia</a>",
+"<a>Chi-Square Tests</a>":
+  "<a>Pruebas de chi cuadrada</a>",
+"<a>Open demo</a> <a>Worksheet: Chi-Square Tests: A Loaded Die, Decay Counts and a Table</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Pruebas de chi cuadrada: un dado cargado, conteos de decaimiento y una tabla</a>",
+"<a>Linear Regression and Correlation</a>":
+  "<a>Regresión lineal y correlación</a>",
+"<a>Open demo</a> <a>Worksheet: Fitting a Line and Judging the Fit</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Ajustar una recta y juzgar el ajuste</a>",
+"<a>One Way ANOVA</a>":
+  "<a>ANOVA de un factor</a>",
+"<a>Open demo</a> <a>Worksheet: One Way ANOVA: Gaps, Spreads and False Alarms</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: ANOVA de un factor: brechas, dispersiones y falsas alarmas</a>",
 "Radiation in medicine · Virtual Physics Demos":
   "Radiación en medicina · Demos virtuales de física",
 "Radiation in medicine":
@@ -6704,10 +7132,10 @@ VDI18N.add('es', 'site', {
   "<b>Antes de la hoja de trabajo:</b> Masa y energía, E = mc²; estructura nuclear; energía de enlace por nucleón; leer gráficas",
 "In <a>Modern Physics</a> · <a>Astro {#}</a> · <a>Medical Physics</a> · <a>Astronomy</a>":
   "En <a>Física moderna</a> · <a>Astro {#}</a> · <a>Física médica</a> · <a>Astronomía</a>",
-"<b>Before the worksheets:</b> {#}. Probability and random decay; exponential decay; half life; natural logs · {#}. Exponential decay and half life; decay constant; natural logarithms; reading a graph · {#}. Radioactive decay and half life; quantum tunneling; relativistic energy; logarithms and linear fits · {#}. Radioactive decay and half life; exponentials and logs; setting a derivative to zero":
-  "<b>Antes de las hojas de trabajo:</b> {#}. Probabilidad y decaimiento aleatorio; decaimiento exponencial; vida media; logaritmos naturales · {#}. Decaimiento exponencial y vida media; constante de decaimiento; logaritmos naturales; leer una gráfica · {#}. Decaimiento radiactivo y vida media; efecto túnel cuántico; energía relativista; logaritmos y ajuste lineal · {#}. Decaimiento radiactivo y vida media; exponenciales y logaritmos; igualar una derivada a cero",
-"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet {#}: Measuring a Half Life<span>{#} min · algebra</span></a> <a>Worksheet {#}: Parent and Daughter<span>{#} min · algebra</span></a> <a>Worksheet {#}: Alpha and Beta Decay<span>{#} min · algebra</span></a> <a>Worksheet {#}: A Technetium Generator (Medical Physics)<span>{#} min · calculus</span></a> <a>Worksheet {#}: Half Life and Radioactive Dating</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo {#}: Medición de una vida media<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Madre e hija<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Decaimiento alfa y beta<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Un generador de tecnecio (Física médica)<span>{#} min · cálculo</span></a> <a>Hoja de trabajo {#}: Vida media y datación radiactiva</a> <a>Notas</a>",
+"<b>Before the worksheets:</b> {#}. Probability and random decay; exponential decay; half life; natural logs · {#}. Exponential decay and half life; decay constant; natural logarithms; reading a graph · {#}. Radioactive decay and half life; quantum tunneling; relativistic energy; logarithms and linear fits · {#}. Radioactive decay and half life; exponentials and logs; setting a derivative to zero · {#}. Mean and standard deviation; the Poisson and exponential distributions; the chi square goodness of fit test; fitting a line":
+  "<b>Antes de las hojas de trabajo:</b> {#}. Probabilidad y decaimiento aleatorio; decaimiento exponencial; vida media; logaritmos naturales · {#}. Decaimiento exponencial y vida media; constante de decaimiento; logaritmos naturales; lectura de una gráfica · {#}. Decaimiento radiactivo y vida media; efecto túnel cuántico; energía relativista; logaritmos y ajustes lineales · {#}. Decaimiento radiactivo y vida media; exponenciales y logaritmos; igualar una derivada a cero · {#}. Media y desviación estándar; las distribuciones de Poisson y exponencial; la prueba de bondad de ajuste chi cuadrada; ajuste de una recta",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet {#}: Measuring a Half Life<span>{#} min · algebra</span></a> <a>Worksheet {#}: Parent and Daughter<span>{#} min · algebra</span></a> <a>Worksheet {#}: Alpha and Beta Decay<span>{#} min · algebra</span></a> <a>Worksheet {#}: A Technetium Generator (Medical Physics)<span>{#} min · calculus</span></a> <a>Worksheet {#}: Counting Statistics<span>{#} min · algebra</span></a> <a>Worksheet {#}: Half Life and Radioactive Dating</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo {#}: Medición de una vida media<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Núcleo padre y núcleo hijo<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Decaimiento alfa y beta<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Un generador de tecnecio (física médica)<span>{#} min · cálculo</span></a> <a>Hoja de trabajo {#}: Estadística de conteo<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Vida media y fechado radiactivo</a> <a>Notas</a>",
 "<b>Before the worksheets:</b> {#}. Conservation of charge and nucleon number; mass energy E = mc²; conservation of momentum · {#}. Exponential growth; neutron multiplication; sphere volume and surface area · {#}. Coulomb repulsion; quantum tunneling; Maxwell–Boltzmann energy distribution; logarithmic graphs · {#}. Inverse square law; exponential attenuation; natural logs; absorbed and equivalent dose · {#}. Exponential attenuation of photons; inverse square law; natural logs; integrating an exponential":
   "<b>Antes de las hojas de trabajo:</b> {#}. Conservación de la carga y del número de nucleones; energía de masa E = mc²; conservación del momento · {#}. Crecimiento exponencial; multiplicación de neutrones; volumen y área de una esfera · {#}. Repulsión de Coulomb; efecto túnel cuántico; distribución de energías de Maxwell–Boltzmann; gráficas logarítmicas · {#}. Ley del inverso del cuadrado; atenuación exponencial; logaritmos naturales; dosis absorbida y equivalente · {#}. Atenuación exponencial de fotones; ley del inverso del cuadrado; logaritmos naturales; integral de una exponencial",
 "<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet {#}: Nuclear Reactions<span>{#} min · algebra</span></a> <a>Worksheet {#}: Chain Reactions and Critical Size<span>{#} min · algebra</span></a> <a>Worksheet {#}: Fusion and the Gamow Peak<span>{#} min · algebra</span></a> <a>Worksheet {#}: Radiation Dose and Shielding<span>{#} min · algebra</span></a> <a>Worksheet {#}: Shielding a PET Uptake Room (Medical Physics)<span>{#} min · calculus</span></a> <a>Notes</a>":
@@ -7032,6 +7460,120 @@ VDI18N.add('es', 'site', {
   "{n} demos tienen una actividad así.",
 "No demo has that combination. A Start here needs no math; try Any.":
   "Ninguna demo tiene esa combinación. Un Empieza aquí no necesita matemáticas; prueba Cualquiera.",
+"<span>Gas in a Box →</span>":
+  "<span>Gas en una caja →</span>",
+"Measure g with a pendulum and judge what the data can tell you: time it by hand or with a photogate, one swing or many, repeat, read the length to the right place or the wrong one, and release from small or big angles. Random scatter, resolution, bias, propagation, fits and residuals, with every instrument error simulated and labeled.":
+  "Mide g con un péndulo y juzga qué pueden decirte los datos: cronométralo a mano o con una fotocompuerta, una oscilación o varias, repite, lee la longitud en el lugar correcto o en el equivocado, y suelta desde ángulos pequeños o grandes. Dispersión aleatoria, resolución, sesgo, propagación, ajustes y residuos, con cada error de los instrumentos simulado y señalado como tal.",
+"A grid of nuclei that each decay at random, and a count that halves every half life anyway. Carbon {#} dating, iodine {#} and decay chains where a daughter builds up and dies away.":
+  "Una cuadrícula de núcleos que decaen cada uno al azar, y una cuenta que de todos modos se reduce a la mitad en cada vida media. Datación con carbono {#}, yodo {#} y cadenas de decaimiento donde un núcleo hijo se acumula y luego desaparece.",
+"<a>Physics I</a><a>Kinematics</a><a>Oscillations and waves</a><a>Worksheet: Random Scatter and Bias</a><span><span>{#}:{#}</span> <span>{#}:{#}</span></span>":
+  "<a>Física I</a><a>Cinemática</a><a>Oscilaciones y ondas</a><a>Hoja de trabajo: Dispersión aleatoria y sesgo</a><span><span>{#}:{#}</span> <span>{#}:{#}</span></span>",
+"<a>Open demo</a> <a>Worksheet: Random Scatter and Bias<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Dispersión aleatoria y sesgo<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet {#}: Measuring a Half Life<span>{#} min · algebra</span></a> <a>Worksheet {#}: Parent and Daughter<span>{#} min · algebra</span></a> <a>Worksheet {#}: Alpha and Beta Decay<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo {#}: Medir una vida media<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Núcleo padre y núcleo hijo<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Decaimiento alfa y beta<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet {#}: A Technetium Generator (Medical Physics)<span>{#} min · calculus</span></a> <a>Worksheet {#}: Measuring a Half Life (warm up)<span>{#} min · algebra</span></a> <a>Worksheet {#}: Parent and Daughter (warm up)<span>{#} min · algebra</span></a> <a>Worksheet {#}: Alpha and Beta Decay (warm up)<span>{#} min · algebra</span></a> <a>Worksheet {#}: Half Life and Radioactive Dating (warm up)</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo {#}: Un generador de tecnecio (Física médica)<span>{#} min · cálculo</span></a> <a>Hoja de trabajo {#}: Medir una vida media (calentamiento)<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Núcleo padre y núcleo hijo (calentamiento)<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Decaimiento alfa y beta (calentamiento)<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Vida media y datación radiactiva (calentamiento)</a> <a>Notas</a>",
+"<span>Chapter {#}</span> Vectors <span>{#} sections · {#} demo</span>":
+  "<span>Capítulo {#}</span> Vectores <span>{#} secciones · {#} demo</span>",
+"<span>{#}:{#}</span><span>Coordinate Systems and Components of a Vector</span><span><a>Vectors and Relative Motion</a></span>":
+  "<span>{#}:{#}</span><span>Sistemas de coordenadas y componentes de un vector</span><span><a>Vectores y movimiento relativo</a></span>",
+"<span>{#}:{#}</span><span>Products of Vectors</span><span><a>Vectors and Relative Motion</a></span>":
+  "<span>{#}:{#}</span><span>Productos de vectores</span><span><a>Vectores y movimiento relativo</a></span>",
+"<span>{#}:{#}</span><span>Potential Energy Diagrams and Stability</span><span><a>Potential Energy Curves</a></span>":
+  "<span>{#}:{#}</span><span>Diagramas de energía potencial y estabilidad</span><span><a>Curvas de energía potencial</a></span>",
+"<a>Collisions and Momentum</a> · <a>Center of Mass</a>":
+  "<a>Colisiones y momento</a> · <a>Centro de masa</a>",
+"<a>Rotation and Torque</a> · <a>Rotational Dynamics</a>":
+  "<a>Rotación y torca</a> · <a>Dinámica de rotación</a>",
+"<span>{#}:{#}</span><span>Determining Field from Potential</span><span><a>Coulomb Sandbox</a></span>":
+  "<span>{#}:{#}</span><span>Determinación del campo a partir del potencial</span><span><a>Arenero de Coulomb</a></span>",
+"<a>Charges in Magnetic Fields</a> · <a>Magnetic Fields of Currents</a>":
+  "<a>Cargas en campos magnéticos</a> · <a>Campos magnéticos de corrientes</a>",
+"<span>{#}:{#}</span><span>Differentiation Rules</span><span><a>Functions and Their Derivatives</a></span>":
+  "<span>{#}:{#}</span><span>Reglas de derivación</span><span><a>Funciones y sus derivadas</a></span>",
+"<a>Motion Graphs</a> · <a>Functions and Their Derivatives</a> · <a>Worksheet: Motion Graphs</a>":
+  "<a>Gráficas de movimiento</a> · <a>Funciones y sus derivadas</a> · <a>Hoja de trabajo: Gráficas de movimiento</a>",
+"<span>{#}:{#}</span><span>Determining Volumes by Slicing<span>no activity yet</span></span><span></span>":
+  "<span>{#}:{#}</span><span>Cálculo de volúmenes por rebanadas<span>sin actividad todavía</span></span><span></span>",
+"<span>{#}:{#}</span><span>Volumes of Revolution: Cylindrical Shells<span>no activity yet</span></span><span></span>":
+  "<span>{#}:{#}</span><span>Volúmenes de revolución: capas cilíndricas<span>sin actividad todavía</span></span><span></span>",
+"<span>{#}:{#}</span><span>Arc Length of a Curve and Surface Area<span>no activity yet</span></span><span></span>":
+  "<span>{#}:{#}</span><span>Longitud de arco de una curva y área superficial<span>sin actividad todavía</span></span><span></span>",
+"<span>Chapter {#}</span> Sequences and Series <span>{#} sections · {#} demos</span>":
+  "<span>Capítulo {#}</span> Sucesiones y series <span>{#} secciones · {#} demos</span>",
+"<span>{#}:{#}</span><span>Sequences<span>no activity yet</span></span><span></span>":
+  "<span>{#}:{#}</span><span>Sucesiones<span>sin actividad todavía</span></span><span></span>",
+"<span>{#}:{#}</span><span>Infinite Series<span>no activity yet</span></span><span></span>":
+  "<span>{#}:{#}</span><span>Series infinitas<span>sin actividad todavía</span></span><span></span>",
+"<span>{#}:{#}</span><span>The Divergence and Integral Tests<span>no activity yet</span></span><span></span>":
+  "<span>{#}:{#}</span><span>Las pruebas de divergencia y de la integral<span>sin actividad todavía</span></span><span></span>",
+"<span>{#}:{#}</span><span>Comparison Tests<span>no activity yet</span></span><span></span>":
+  "<span>{#}:{#}</span><span>Pruebas de comparación<span>sin actividad todavía</span></span><span></span>",
+"<span>{#}:{#}</span><span>Alternating Series<span>no activity yet</span></span><span></span>":
+  "<span>{#}:{#}</span><span>Series alternantes<span>sin actividad todavía</span></span><span></span>",
+"<span>Chapter {#}</span> Vectors in Space <span>{#} sections · {#} demo</span>":
+  "<span>Capítulo {#}</span> Vectores en el espacio <span>{#} secciones · {#} demo</span>",
+"<span>{#}:{#}</span><span>Vectors in Three Dimensions</span><span><a>Vectors and Relative Motion</a></span>":
+  "<span>{#}:{#}</span><span>Vectores en tres dimensiones</span><span><a>Vectores y movimiento relativo</a></span>",
+"<span>{#}:{#}</span><span>Equations of Lines and Planes in Space<span>no activity yet</span></span><span></span>":
+  "<span>{#}:{#}</span><span>Ecuaciones de rectas y planos en el espacio<span>sin actividad todavía</span></span><span></span>",
+"<span>{#}:{#}</span><span>Quadric Surfaces<span>no activity yet</span></span><span></span>":
+  "<span>{#}:{#}</span><span>Superficies cuádricas<span>sin actividad todavía</span></span><span></span>",
+"<span>{#}:{#}</span><span>Cylindrical and Spherical Coordinates<span>no activity yet</span></span><span></span>":
+  "<span>{#}:{#}</span><span>Coordenadas cilíndricas y esféricas<span>sin actividad todavía</span></span><span></span>",
+"<span>Chapter {#}</span> Differentiation of Functions of Several Variables <span>{#} sections · {#} demo</span>":
+  "<span>Capítulo {#}</span> Derivación de funciones de varias variables <span>{#} secciones · {#} demo</span>",
+"<span>{#}:{#}</span><span>Functions of Several Variables</span><span><a>Coulomb Sandbox</a></span>":
+  "<span>{#}:{#}</span><span>Funciones de varias variables</span><span><a>Arenero de Coulomb</a></span>",
+"<span>{#}:{#}</span><span>Limits and Continuity<span>no activity yet</span></span><span></span>":
+  "<span>{#}:{#}</span><span>Límites y continuidad<span>sin actividad todavía</span></span><span></span>",
+"<span>{#}:{#}</span><span>Partial Derivatives<span>no activity yet</span></span><span></span>":
+  "<span>{#}:{#}</span><span>Derivadas parciales<span>sin actividad todavía</span></span><span></span>",
+"<span>{#}:{#}</span><span>Tangent Planes and Linear Approximations<span>no activity yet</span></span><span></span>":
+  "<span>{#}:{#}</span><span>Planos tangentes y aproximaciones lineales<span>sin actividad todavía</span></span><span></span>",
+"<span>{#}:{#}</span><span>Directional Derivatives and the Gradient</span><span><a>Coulomb Sandbox</a></span>":
+  "<span>{#}:{#}</span><span>Derivadas direccionales y el gradiente</span><span><a>Arenero de Coulomb</a></span>",
+"<span>{#}:{#}</span><span>Maxima/Minima Problems<span>no activity yet</span></span><span></span>":
+  "<span>{#}:{#}</span><span>Problemas de máximos y mínimos<span>sin actividad todavía</span></span><span></span>",
+"<span>{#}:{#}</span><span>Lagrange Multipliers<span>no activity yet</span></span><span></span>":
+  "<span>{#}:{#}</span><span>Multiplicadores de Lagrange<span>sin actividad todavía</span></span><span></span>",
+"<span>{#}:{#}</span><span>Double Integrals over Rectangular Regions<span>no activity yet</span></span><span></span>":
+  "<span>{#}:{#}</span><span>Integrales dobles sobre regiones rectangulares<span>sin actividad todavía</span></span><span></span>",
+"<span>{#}:{#}</span><span>Double Integrals over General Regions<span>no activity yet</span></span><span></span>":
+  "<span>{#}:{#}</span><span>Integrales dobles sobre regiones generales<span>sin actividad todavía</span></span><span></span>",
+"<span>{#}:{#}</span><span>Double Integrals in Polar Coordinates<span>no activity yet</span></span><span></span>":
+  "<span>{#}:{#}</span><span>Integrales dobles en coordenadas polares<span>sin actividad todavía</span></span><span></span>",
+"<span>{#}:{#}</span><span>Triple Integrals<span>no activity yet</span></span><span></span>":
+  "<span>{#}:{#}</span><span>Integrales triples<span>sin actividad todavía</span></span><span></span>",
+"<span>{#}:{#}</span><span>Triple Integrals in Cylindrical and Spherical Coordinates<span>no activity yet</span></span><span></span>":
+  "<span>{#}:{#}</span><span>Integrales triples en coordenadas cilíndricas y esféricas<span>sin actividad todavía</span></span><span></span>",
+"<a>Center of Mass</a> · <a>Rotation and Torque</a> · <a>Rotational Dynamics</a>":
+  "<a>Centro de masa</a> · <a>Rotación y torca</a> · <a>Dinámica de rotación</a>",
+"<span>{#}:{#}</span><span>Change of Variables in Multiple Integrals<span>no activity yet</span></span><span></span>":
+  "<span>{#}:{#}</span><span>Cambio de variables en integrales múltiples<span>sin actividad todavía</span></span><span></span>",
+"Surface Tension and Capillarity (notes to come)":
+  "Tensión superficial y capilaridad (notas pendientes)",
+"Diffusion and Osmosis (notes to come)":
+  "Difusión y ósmosis (notas pendientes)",
+"Nerve Signals and the ECG (notes to come)":
+  "Señales nerviosas y el ECG (notas pendientes)",
+"Hearing and the Ear (notes to come)":
+  "La audición y el oído (notas pendientes)",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a>",
+"<b>Before the worksheet:</b> Period of a simple pendulum; mean and standard deviation; fitting a line":
+  "<b>Antes de la hoja de trabajo:</b> Periodo de un péndulo simple; media y desviación estándar; ajuste de una recta",
+"Type any function and see its derivatives and integrals, its Taylor polynomials, the slope field of a differential equation, a vector field with its work and curl, or a point moving along a curve, and watch how a computer solves the equations of motion step by step.":
+  "Escribe cualquier función y mira sus derivadas e integrales, sus polinomios de Taylor, el campo de pendientes de una ecuación diferencial, un campo vectorial con su trabajo y su rotacional, o un punto que se mueve por una curva, y observa cómo una computadora resuelve las ecuaciones de movimiento paso a paso.",
+"<span>OpenStax Vol {#} · Ch. {#}–{#}, {#}–{#}, {#}, {#} · Vol {#} · Ch. {#}–{#} · Vol {#} · Ch. {#}, {#}</span>":
+  "<span>OpenStax Vol. {#} · Cap. {#}–{#}, {#}–{#}, {#}, {#} · Vol. {#} · Cap. {#}–{#} · Vol. {#} · Cap. {#}, {#}</span>",
+"<b>Before the worksheets:</b> {#}. Probability and random decay; exponential decay; half life; natural logs · {#}. Exponential decay and half life; decay constant; natural logarithms; reading a graph · {#}. Radioactive decay and half life; quantum tunneling; relativistic energy; logarithms and linear fits · {#}. Radioactive decay and half life; exponentials and logs; setting a derivative to zero":
+  "<b>Antes de las hojas de trabajo:</b> {#}. Probabilidad y decaimiento aleatorio; decaimiento exponencial; vida media; logaritmos naturales · {#}. Decaimiento exponencial y vida media; constante de decaimiento; logaritmos naturales; leer una gráfica · {#}. Decaimiento radiactivo y vida media; efecto túnel cuántico; energía relativista; logaritmos y ajuste lineal · {#}. Decaimiento radiactivo y vida media; exponenciales y logaritmos; igualar una derivada a cero",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet {#}: Measuring a Half Life<span>{#} min · algebra</span></a> <a>Worksheet {#}: Parent and Daughter<span>{#} min · algebra</span></a> <a>Worksheet {#}: Alpha and Beta Decay<span>{#} min · algebra</span></a> <a>Worksheet {#}: A Technetium Generator (Medical Physics)<span>{#} min · calculus</span></a> <a>Worksheet {#}: Half Life and Radioactive Dating</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo {#}: Medición de una vida media<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Madre e hija<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Decaimiento alfa y beta<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Un generador de tecnecio (Física médica)<span>{#} min · cálculo</span></a> <a>Hoja de trabajo {#}: Vida media y datación radiactiva</a> <a>Notas</a>",
 "<span>Rutherford Scattering →</span>":
   "<span>Dispersión de Rutherford →</span>",
 "OpenStax Astronomy 2e, chapter by chapter, with the demos and worksheets for each section.":
@@ -7826,8 +8368,6 @@ VDI18N.add('es', 'site', {
   "Cerrar",
 "<time>November {#}, {#}</time>":
   "<time>{#1} de noviembre de {#2}</time>",
-"<a>Open demo</a>":
-  "<a>Abrir demo</a>",
 "<time>October {#}, {#}</time>":
   "<time>{#} de octubre de {#}</time>"
 });
