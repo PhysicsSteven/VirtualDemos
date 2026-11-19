@@ -61,6 +61,7 @@ OVERRIDES = {
     "measurement-uncertainty": {"wait": 900, "crop": ".pane", "js": "const M = window.__mu; M.applyPreset('bottom'); for (const L of [0.4, 0.6, 0.8, 1.0, 1.2, 1.4, 1.6]) { M.S.L = L; M.repeat10(); } M.S.L = 1.0; M.S.y = [8 * Math.PI / 180, 0]; window.dispatchEvent(new Event('resize'));"},
     "derivatives": {"wait": 900, "crop": ".pane", "js": "window.__fg.S.px = -1.6; window.__fg.draw();"},
     "numerical-methods": {"wait": 900, "crop": "#scene", "anchor": "top", "js": "window.__nm.applyPreset('orbit'); window.__nm.plusPeriod(); window.__nm.plusPeriod(); window.__nm.plusPeriod();"},
+    "vector-fields": {"wait": 900, "crop": ".pane", "js": "window.__vf.applyPreset('wire'); window.__vf.S.t = 0.3; document.getElementById('showPaddle').checked = true; document.getElementById('showTracers').checked = false; window.__vf.draw();"},
     "rainbows": {"wait": 1500, "crop": ".stage", "js": "document.getElementById('setupCard').style.visibility = 'hidden'; window.__rb.applyPreset('evening'); window.__rb.S.marks = false; window.__rb.drawAll();"},
     "color-vision": {"wait": 900, "crop": ".stage", "js": "document.getElementById('setupCard').style.visibility = 'hidden'; window.__cv.applyPreset('yellow');"},
     "quantum-coin": {"wait": 900, "crop": ".stage", "js": "document.getElementById('setupCard').style.visibility = 'hidden'; window.__qc.applyPreset('s60'); window.__qc.measure(300);"},

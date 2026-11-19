@@ -2057,6 +2057,14 @@
    "needs_es": "Potencial eléctrico y capacitancia de una esfera; corriente como carga por tiempo; ruptura dieléctrica",
    "why_math": "no derivatives or integrals required"
   },
+  "vector-fields-work": {
+   "min": 70,
+   "math": "calculus",
+   "level": "intro",
+   "needs": "Vectors and components; work as force times displacement; partial derivatives; integrals along a parameter",
+   "needs_es": "Vectores y componentes; trabajo como fuerza por desplazamiento; derivadas parciales; integrales a lo largo de un parámetro",
+   "why_math": "student evaluates line integrals by hand, takes partial derivatives and finds a potential"
+  },
   "vectors": {
    "min": 85,
    "math": "algebra",

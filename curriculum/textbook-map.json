@@ -3248,7 +3248,8 @@
       "status": "usable",
       "demos": [
         "potential-curves",
-        "forces"
+        "forces",
+        "vector-fields"
       ],
       "unit": "energy",
       "note": "Forces and Friction, Work and energy since release: work by each force, ΣW = ΔK, friction work as thermal energy, power P = F·v. Potential Curves for energy diagrams."
@@ -3337,7 +3338,8 @@
       "demos": [
         "potential-curves",
         "forces",
-        "energy-track"
+        "energy-track",
+        "vector-fields"
       ],
       "unit": "energy",
       "note": "Forces and Friction, Work and energy since release: work by each force, ΣW = ΔK, friction work as thermal energy, power P = F·v. Potential Curves for energy diagrams."
@@ -4891,7 +4893,8 @@
       "status": "usable",
       "demos": [
         "currents-fields",
-        "displacement-current"
+        "displacement-current",
+        "vector-fields"
       ],
       "unit": "magnetic-sources"
     },
@@ -12193,6 +12196,38 @@
       "note": "New 2026-11-09 (Claude, at Steve's request): a math tool. Type a function and see f, its first, second and third derivatives (exact, symbolic) and its integral from a (numerical), with a tangent line at a point. No worksheet, notes or video for now (Steve).",
       "title": "Functions and Their Derivatives",
       "url": "demos/derivatives.html"
+    },
+    {
+      "demo": "vector-fields",
+      "course": [
+        "later"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "7.1",
+          "title": "Work"
+        },
+        {
+          "vol": 1,
+          "sec": "8.2",
+          "title": "Conservative and Non-Conservative Forces"
+        },
+        {
+          "vol": 2,
+          "sec": "12.5",
+          "title": "Ampère’s Law"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "New 2026-11-19 (Claude, from Steve's approved Calculus plan): a math tool for OpenStax Calculus Vol 3 ch 6 (6.1 to 6.5, 6.7 in the plane). Type F = (P, Q); exact partial derivatives, curl and divergence; line integrals along straight pieces, arcs and freehand paths; path independence, potential contours, paddle wheel, flux box and Green's theorem in both forms. Physics setups: uniform gravity, point mass, dipole E, long wire B (Ampère's law), rotating fluid, shear, spreading flow, source and sink, a swirl force. Worksheet vector-fields-work.",
+      "title": "Vector Fields, Work and Curl",
+      "url": "demos/vector-fields.html",
+      "handouts": [
+        "vector-fields-work"
+      ]
     },
     {
       "demo": "numerical-methods",

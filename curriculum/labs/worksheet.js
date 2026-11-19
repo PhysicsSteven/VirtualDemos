@@ -987,6 +987,13 @@
     'quantum-coin': { demo: 'Quantum Coin Toss', cols: ['row', 'setup', 'angle_deg', 'phi_deg', 'N', 'up', null, null],
       alt: [{ table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.view === 'sg'), cols: ['row', 'setup', 'N', 'up', 'down', 'blocked', null] }] },
   });
+  /* ==CALCULUS DEMOS (2026-11-19)== Vector Fields, Work and Curl: open paths fill Table 1 (Reading | Field | Path | Work W);
+     a series of closed loops fills Table 2 (Reading | Field | Loop | Circulation | Summed curl inside). */
+  ENABLED.push('vector-fields-work');
+  Object.assign(FROM_DEMO, {
+    'vector-fields-work': { demo: 'Vector Fields, Work and Curl', cols: ['row', 'field', 'path', 'W'],
+      alt: [{ table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.closed === 'yes'), cols: ['row', 'field', 'path', 'circulation', 'curl_sum'] }] },
+  });
   /* Worksheets with a live graph under each copy of the first data table. The student chooses which column goes on each axis; the
      graph shows the points, a least squares line (free intercept, equal weights), its residuals, and the slope and intercept with
      their standard errors. The student may choose a quadratic instead (y = a + bx + cx², all three coefficients free), for data

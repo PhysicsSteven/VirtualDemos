@@ -1,0 +1,940 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="lib/theme.js"></script>
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
+<script src="lib/vdmath.js"></script>
+<title>Vector Fields, Work and Curl</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css: the field colors, the field boxes and the picture */
+:root { --vf-arrow: #5a4630; --vf-path: #8f5000; --vf-path2: #a21caf; --vf-plus: #c2410c; --vf-minus: #0f766e; --vf-tracer: #7a5a2c; --vf-pot: #765a08; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --vf-arrow: #cbbca4; --vf-path: #e8a440; --vf-path2: #f0abfc; --vf-plus: #fb8c4c; --vf-minus: #5eead4; --vf-tracer: #f3dfb8; --vf-pot: #e2b350; } }
+:root[data-theme="dark"] { --vf-arrow: #cbbca4; --vf-path: #e8a440; --vf-path2: #f0abfc; --vf-plus: #fb8c4c; --vf-minus: #5eead4; --vf-tracer: #f3dfb8; --vf-pot: #e2b350; }
+.stage { position: relative; display: flex; flex-direction: column; min-height: min-content; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.stage-ctl .note { margin-left: auto; font-size: 0.8rem; color: var(--muted); }
+.fbar { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; padding: 10px 12px; border-bottom: 1px solid var(--line); background: var(--surface); font-family: var(--font-mono); }
+.fbar .lab { font-weight: 600; font-size: 1.05rem; color: var(--vf-path); white-space: nowrap; }
+.fbar .pq { display: flex; align-items: center; gap: 6px; flex: 1 1 220px; min-width: 0; }
+.fbar .pq label { font-weight: 600; color: var(--muted); white-space: nowrap; }
+.fbar input { flex: 1 1 auto; min-width: 0; width: 100%; font-family: var(--font-mono); font-size: 1.02rem; padding: 6px 9px; color: var(--ink); background: var(--canvas);
+  border: 2px solid var(--line2, var(--line)); border-radius: 8px; }
+.fbar input:focus { outline: none; border-color: var(--vf-path); }
+.fbar input:focus-visible { box-shadow: 0 0 0 1px var(--vf-path); }
+.fbar input.bad { border-color: var(--red); }
+.fbar .status { flex: 1 1 100%; font-family: var(--font-body, inherit); font-size: 0.84rem; color: var(--muted); min-height: 1.3em; }
+.fbar .status.bad { color: var(--red); }
+.pane { position: relative; flex: 1 1 auto; min-height: 500px; }
+.pane canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; outline: none; touch-action: none; cursor: grab; }
+.shelf { display: flex; flex-wrap: wrap; align-items: stretch; gap: 12px; padding: 10px; border-top: 1px solid var(--line); background: var(--surface); }
+.shelf-card { flex: 1 1 230px; display: grid; grid-template-columns: minmax(0, 1fr); align-content: start; gap: 7px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--canvas); }
+.shelf-card > .card-title { font-size: 0.78rem; font-weight: 700; color: var(--muted); }
+.shelf-card .row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; font-size: 0.86rem; }
+.shelf-card .row[hidden] { display: none; }
+.shelf-card input[type="number"] { width: 5.4em; font: inherit; font-size: 0.84rem; font-family: var(--font-mono); padding: 3px 6px; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; }
+.shelf-card select { font: inherit; font-size: 0.86rem; padding: 3px 6px; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; max-width: 100%; }
+.sw { display: inline-block; width: 22px; height: 0; border-top: 3px solid; vertical-align: middle; margin-right: 6px; }
+.sw.p1 { border-color: var(--vf-path); } .sw.p2 { border-color: var(--vf-path2); border-top-style: dashed; }
+dl.formulas { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 5px 10px; margin: 0; }
+dl.formulas dt { font-family: var(--font-mono); font-weight: 600; white-space: nowrap; }
+dl.formulas dd { margin: 0; font-family: var(--font-mono); font-size: 0.86rem; overflow-wrap: anywhere; }
+.verdict { margin: 8px 0 0; font-size: 0.88rem; }
+.verdict.yes { color: var(--ok, inherit); } .verdict.no { color: var(--vf-plus); }
+.rail ul.typing { margin: 6px 0 0; padding-left: 1.2em; font-size: 0.86rem; color: var(--muted); }
+.rail ul.typing code { font-family: var(--font-mono); color: var(--ink); }
+@media (min-width: 821px) { .bench > .stage { align-self: start; min-height: max(780px, 100%); } }
+@media (max-width: 820px) { .pane { min-height: 0; height: 420px; flex: none; } .shelf-card { flex: 1 1 100%; } }
+@media (max-width: 520px) { .stage-ctl .note { margin-left: 0; } .fbar .pq { flex-basis: 100%; } }
+</style>
+<link rel="stylesheet" id="vd-paper" href="lib/paper.css">
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Vector Fields, Work and Curl</h1>
+      <p>Type a field F(x, y) = (P, Q) and see its arrows and the flow it makes. Add up the work ∫F·dr along a path, test whether it depends on the route, find the potential of a conservative field, measure the curl with a paddle wheel and the divergence with a small box, and check Green's theorem around a loop. Derivatives are exact; integrals are computed numerically.</p>
+    </div>
+    <div class="bar-right">
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/vector-fields.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/vector-fields.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM14 2h1v1h-1zM17 2h1v1h-1zM19 2h2v1h-2zM22 2h2v1h-2zM25 2h1v1h-1zM30 2h1v1h-1zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM14 3h2v1h-2zM20 3h2v1h-2zM23 3h2v1h-2zM26 3h2v1h-2zM29 3h2v1h-2zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h2v1h-2zM13 4h1v1h-1zM17 4h1v1h-1zM21 4h3v1h-3zM28 4h3v1h-3zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h3v1h-3zM15 5h3v1h-3zM19 5h1v1h-1zM21 5h1v1h-1zM24 5h1v1h-1zM27 5h2v1h-2zM30 5h1v1h-1zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h4v1h-4zM15 6h1v1h-1zM21 6h2v1h-2zM25 6h1v1h-1zM28 6h1v1h-1zM30 6h1v1h-1zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h2v1h-2zM16 7h1v1h-1zM18 7h1v1h-1zM20 7h1v1h-1zM23 7h2v1h-2zM27 7h4v1h-4zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h1v1h-1zM15 9h1v1h-1zM17 9h1v1h-1zM21 9h4v1h-4zM26 9h1v1h-1zM2 10h1v1h-1zM4 10h5v1h-5zM11 10h1v1h-1zM14 10h1v1h-1zM20 10h1v1h-1zM22 10h1v1h-1zM24 10h2v1h-2zM27 10h3v1h-3zM32 10h5v1h-5zM2 11h1v1h-1zM4 11h3v1h-3zM9 11h3v1h-3zM13 11h1v1h-1zM16 11h3v1h-3zM25 11h1v1h-1zM31 11h1v1h-1zM33 11h1v1h-1zM36 11h2v1h-2zM2 12h2v1h-2zM6 12h1v1h-1zM8 12h1v1h-1zM10 12h1v1h-1zM13 12h3v1h-3zM19 12h2v1h-2zM22 12h2v1h-2zM26 12h1v1h-1zM28 12h2v1h-2zM32 12h3v1h-3zM36 12h3v1h-3zM3 13h3v1h-3zM10 13h1v1h-1zM14 13h1v1h-1zM16 13h1v1h-1zM18 13h1v1h-1zM20 13h1v1h-1zM23 13h1v1h-1zM26 13h1v1h-1zM32 13h3v1h-3zM38 13h1v1h-1zM2 14h2v1h-2zM5 14h2v1h-2zM8 14h2v1h-2zM12 14h1v1h-1zM14 14h3v1h-3zM19 14h1v1h-1zM22 14h1v1h-1zM24 14h15v1h-15zM2 15h1v1h-1zM4 15h4v1h-4zM11 15h3v1h-3zM18 15h2v1h-2zM22 15h1v1h-1zM24 15h2v1h-2zM27 15h1v1h-1zM30 15h1v1h-1zM33 15h1v1h-1zM3 16h2v1h-2zM8 16h1v1h-1zM11 16h1v1h-1zM13 16h1v1h-1zM15 16h1v1h-1zM17 16h3v1h-3zM22 16h3v1h-3zM29 16h7v1h-7zM38 16h1v1h-1zM4 17h2v1h-2zM12 17h1v1h-1zM14 17h1v1h-1zM17 17h7v1h-7zM25 17h1v1h-1zM28 17h1v1h-1zM33 17h2v1h-2zM37 17h1v1h-1zM3 18h1v1h-1zM8 18h2v1h-2zM11 18h1v1h-1zM17 18h2v1h-2zM21 18h1v1h-1zM23 18h1v1h-1zM26 18h7v1h-7zM34 18h1v1h-1zM36 18h1v1h-1zM38 18h1v1h-1zM2 19h1v1h-1zM5 19h2v1h-2zM13 19h1v1h-1zM16 19h2v1h-2zM20 19h1v1h-1zM22 19h2v1h-2zM25 19h1v1h-1zM30 19h1v1h-1zM37 19h1v1h-1zM2 20h1v1h-1zM5 20h1v1h-1zM8 20h1v1h-1zM12 20h1v1h-1zM15 20h1v1h-1zM17 20h2v1h-2zM21 20h1v1h-1zM23 20h2v1h-2zM26 20h1v1h-1zM28 20h3v1h-3zM33 20h3v1h-3zM37 20h2v1h-2zM2 21h3v1h-3zM6 21h2v1h-2zM10 21h1v1h-1zM13 21h2v1h-2zM16 21h2v1h-2zM20 21h6v1h-6zM28 21h1v1h-1zM30 21h1v1h-1zM32 21h1v1h-1zM38 21h1v1h-1zM2 22h2v1h-2zM7 22h3v1h-3zM14 22h1v1h-1zM17 22h1v1h-1zM19 22h1v1h-1zM21 22h1v1h-1zM24 22h5v1h-5zM31 22h2v1h-2zM34 22h3v1h-3zM2 23h3v1h-3zM6 23h2v1h-2zM10 23h1v1h-1zM15 23h1v1h-1zM18 23h1v1h-1zM21 23h1v1h-1zM25 23h1v1h-1zM28 23h1v1h-1zM30 23h2v1h-2zM35 23h1v1h-1zM37 23h1v1h-1zM4 24h2v1h-2zM7 24h2v1h-2zM10 24h3v1h-3zM14 24h1v1h-1zM17 24h1v1h-1zM20 24h1v1h-1zM22 24h1v1h-1zM24 24h1v1h-1zM26 24h1v1h-1zM28 24h8v1h-8zM37 24h2v1h-2zM6 25h2v1h-2zM11 25h1v1h-1zM13 25h2v1h-2zM16 25h3v1h-3zM21 25h2v1h-2zM25 25h1v1h-1zM28 25h2v1h-2zM31 25h4v1h-4zM37 25h1v1h-1zM4 26h2v1h-2zM8 26h4v1h-4zM14 26h4v1h-4zM20 26h9v1h-9zM31 26h4v1h-4zM36 26h2v1h-2zM2 27h2v1h-2zM5 27h1v1h-1zM10 27h1v1h-1zM12 27h1v1h-1zM16 27h3v1h-3zM23 27h1v1h-1zM25 27h2v1h-2zM30 27h1v1h-1zM33 27h1v1h-1zM2 28h1v1h-1zM4 28h5v1h-5zM12 28h1v1h-1zM14 28h1v1h-1zM16 28h1v1h-1zM22 28h1v1h-1zM27 28h3v1h-3zM33 28h2v1h-2zM37 28h2v1h-2zM2 29h1v1h-1zM4 29h4v1h-4zM10 29h2v1h-2zM13 29h2v1h-2zM18 29h1v1h-1zM23 29h1v1h-1zM25 29h2v1h-2zM29 29h6v1h-6zM37 29h2v1h-2zM2 30h1v1h-1zM5 30h1v1h-1zM8 30h3v1h-3zM12 30h3v1h-3zM16 30h1v1h-1zM19 30h1v1h-1zM26 30h13v1h-13zM10 31h3v1h-3zM14 31h1v1h-1zM17 31h7v1h-7zM25 31h3v1h-3zM29 31h2v1h-2zM34 31h2v1h-2zM2 32h7v1h-7zM12 32h1v1h-1zM14 32h1v1h-1zM17 32h1v1h-1zM19 32h1v1h-1zM22 32h2v1h-2zM26 32h1v1h-1zM28 32h1v1h-1zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM36 32h3v1h-3zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h1v1h-1zM13 33h2v1h-2zM17 33h4v1h-4zM23 33h3v1h-3zM30 33h1v1h-1zM34 33h2v1h-2zM37 33h2v1h-2zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h1v1h-1zM12 34h1v1h-1zM18 34h1v1h-1zM21 34h1v1h-1zM23 34h1v1h-1zM25 34h1v1h-1zM27 34h8v1h-8zM36 34h2v1h-2zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h1v1h-1zM13 35h1v1h-1zM15 35h3v1h-3zM20 35h1v1h-1zM22 35h1v1h-1zM24 35h2v1h-2zM30 35h3v1h-3zM34 35h1v1h-1zM36 35h1v1h-1zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM10 36h3v1h-3zM14 36h1v1h-1zM17 36h2v1h-2zM20 36h2v1h-2zM24 36h1v1h-1zM26 36h1v1h-1zM28 36h2v1h-2zM31 36h1v1h-1zM37 36h2v1h-2zM2 37h1v1h-1zM8 37h1v1h-1zM11 37h3v1h-3zM15 37h1v1h-1zM17 37h1v1h-1zM21 37h3v1h-3zM28 37h1v1h-1zM30 37h1v1h-1zM32 37h1v1h-1zM34 37h1v1h-1zM38 37h1v1h-1zM2 38h7v1h-7zM10 38h4v1h-4zM15 38h1v1h-1zM17 38h1v1h-1zM19 38h1v1h-1zM21 38h1v1h-1zM24 38h1v1h-1zM26 38h3v1h-3zM31 38h1v1h-1zM34 38h5v1h-5z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl" id="strip">
+        <button type="button" class="spin attn" id="play" data-vd-key="play">Play</button>
+        <button type="button" class="btn" id="reset" title="Put the bead back at the start of the path and start the tracers again">Reset</button>
+        <span class="note" id="note">Play sends a bead along the path, adding up the work, while tracers drift along F. Drag the dots to move the path; drag elsewhere to pan; scroll or pinch to zoom.</span>
+      </div>
+      <div class="fbar">
+        <span class="lab" translate="no">F(x, y) =</span>
+        <div class="pq"><label for="pIn" translate="no">P =</label><input type="text" id="pIn" translate="no" spellcheck="false" autocomplete="off" autocapitalize="off" autocorrect="off" aria-describedby="fStatus" value="0"></div>
+        <div class="pq"><label for="qIn" translate="no">Q =</label><input type="text" id="qIn" translate="no" spellcheck="false" autocomplete="off" autocapitalize="off" autocorrect="off" aria-describedby="fStatus" value="-9.81"></div>
+        <div class="status" id="fStatus" role="status" aria-live="polite"></div>
+      </div>
+      <div class="pane" id="pane">
+        <canvas id="can" tabindex="0" role="img" aria-label="The vector field drawn as arrows, with the path, its bead and the probes. Arrow keys pan, plus and minus zoom, Space plays or pauses."></canvas>
+      </div>
+      <div class="shelf" id="shelf">
+        <div class="shelf-card" role="group" aria-label="The path">
+          <span class="card-title">The path</span>
+          <div class="row"><label for="shape"><span class="sw p1"></span>Path</label><select id="shape">
+            <option value="line">Straight line</option>
+            <option value="xy">Along x, then y</option>
+            <option value="yx">Along y, then x</option>
+            <option value="half">Half circle</option>
+            <option value="circle">Circle (closed loop)</option>
+            <option value="square">Square (closed loop)</option>
+            <option value="free">Freehand (draw it)</option>
+          </select></div>
+          <div class="row" id="rowAB"><label for="ax">From A</label><input type="number" id="ax" step="any" aria-label="A, x"><input type="number" id="ay" step="any" aria-label="A, y"></div>
+          <div class="row" id="rowB"><label for="bx">to B</label><input type="number" id="bx" step="any" aria-label="B, x"><input type="number" id="by" step="any" aria-label="B, y"></div>
+          <div class="row" id="rowC" hidden><label for="cx">Center</label><input type="number" id="cx" step="any" aria-label="Center, x"><input type="number" id="cy" step="any" aria-label="Center, y"></div>
+          <div class="row" id="rowR" hidden><label for="rr">Radius (half side for the square)</label><input type="number" id="rr" step="any" min="0"></div>
+          <div class="row" id="rowFree" hidden><span class="hint">Drag on the picture to draw. End near the start to close the loop.</span></div>
+          <div class="row" id="row2"><label for="shape2"><span class="sw p2"></span>Compare with</label><select id="shape2">
+            <option value="none">No second path</option>
+            <option value="line">Straight line</option>
+            <option value="xy">Along x, then y</option>
+            <option value="yx">Along y, then x</option>
+            <option value="half">Half circle</option>
+          </select></div>
+          <label class="check"><input type="checkbox" id="rev"><span>Reverse the direction</span></label>
+        </div>
+        <div class="shelf-card" role="group" aria-label="Probes and Green's theorem">
+          <span class="card-title">Probes</span>
+          <label class="check"><input type="checkbox" id="showPaddle"><span>Paddle wheel: turns at half the curl</span></label>
+          <label class="check"><input type="checkbox" id="showBox"><span>Flux box: net outflow over its area</span></label>
+          <div class="row"><label for="boxSize">Box side</label><input type="range" id="boxSize" min="0" max="4" step="1" value="2"><output id="boxOut" for="boxSize" translate="no"></output></div>
+          <span class="card-title">Along a closed loop</span>
+          <div class="seg" id="formSeg" role="group" aria-label="Which form of Green's theorem">
+            <button type="button" data-form="circ" aria-pressed="true">Circulation and curl</button>
+            <button type="button" data-form="flux" aria-pressed="false">Flux and divergence</button>
+          </div>
+        </div>
+        <div class="shelf-card" role="group" aria-label="What to show">
+          <span class="card-title">Show</span>
+          <label class="check"><input type="checkbox" id="showArrows" checked><span>Arrows of F</span></label>
+          <label class="check"><input type="checkbox" id="showTracers" checked><span>Tracers drifting along F</span></label>
+          <label class="check"><input type="checkbox" id="showPot" checked><span>Potential contours (when F has a potential)</span></label>
+          <div class="row"><span>Shade</span><div class="seg" id="shadeSeg" role="group" aria-label="Shade the picture by">
+            <button type="button" data-shade="none" aria-pressed="true">Nothing</button>
+            <button type="button" data-shade="curl" aria-pressed="false">Curl</button>
+            <button type="button" data-shade="div" aria-pressed="false">Divergence</button>
+          </div></div>
+          <div class="row"><button type="button" class="btn" id="zin">Zoom in</button><button type="button" class="btn" id="zout">Zoom out</button><button type="button" class="btn" id="homeView">Reset view</button></div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/vector-fields-work.html" target="vector-fields-work-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="gravity" aria-pressed="true">Uniform gravity: work depends only on height</button>
+          <button type="button" data-p="swirl" aria-pressed="false">A swirl force: work depends on the path</button>
+          <button type="button" data-p="mass" aria-pressed="false">A point mass: inverse square</button>
+          <button type="button" data-p="dipole" aria-pressed="false">An electric dipole</button>
+          <button type="button" data-p="wire" aria-pressed="false">The field around a long wire</button>
+          <button type="button" data-p="rotate" aria-pressed="false">A rotating fluid</button>
+          <button type="button" data-p="shear" aria-pressed="false">A shear flow</button>
+          <button type="button" data-p="spread" aria-pressed="false">A spreading flow</button>
+          <button type="button" data-p="source" aria-pressed="false">A source and a sink</button>
+        </div>
+        <details class="more" open><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+      </section>
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+        <p class="verdict" id="verdict" aria-live="polite"></p>
+      </section>
+      <!-- vd-readings --><section class="vd-readings" data-ws="vector-fields-work" data-title="Vector Fields, Work and Curl" data-demo="vector-fields">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings ('+(typeof window.vdDataNote==='function'&&window.vdDataNote()?'catalog data':'simulated data')+')','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:(typeof window.vdDataNote==='function'&&window.vdDataNote())||'Simulated data from '+(/^The /.test(title)?'':'the ')+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
+      <section>
+        <h2>Formulas</h2>
+        <dl class="formulas" id="formulas" translate="no"></dl>
+      </section>
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the curl, the divergence, the potential and the verdict, to decide first</span></label>
+        <details class="more"><summary>What you can type</summary>
+          <ul class="typing">
+            <li>Use <code>x</code> and <code>y</code>. <code>+ − * / ^</code> and parentheses; <code>2x</code>, <code>xy</code> and <code>x(y+1)</code> multiply.</li>
+            <li><code>sin cos tan exp ln sqrt abs atan</code> and the rest, <code>pi</code>, <code>e</code>.</li>
+            <li><code>(x^2+y^2)^(3/2)</code> for r³; <code>-y/(x^2+y^2)</code> for the wire.</li>
+          </ul>
+        </details>
+        <details class="more"><summary>How it works</summary>
+          <p class="hint">Each box is read by the site's small parser (nothing you type is run as code). The partial derivatives come from the exact rules, so the curl ∂Q/∂x − ∂P/∂y and the divergence ∂P/∂x + ∂Q/∂y shown are exact formulas.</p>
+          <p class="hint">Line integrals ∫F·dr = ∫(P dx + Q dy) and fluxes ∮F·n ds are computed by adaptive Simpson's rule along each straight piece or arc, to about nine significant figures. The summed curl and divergence inside a circle or a square are double integrals by the same rule; inside a freehand loop they are summed over a grid of 200 by 200 small squares, good to about three figures.</p>
+          <p class="hint">F is called conservative here when its curl is zero at every sample point in view and the work around every small grid loop in view adds up to zero. The potential f has ∇f = F (for a force, the potential energy is U = −f; for an electric field, the potential is V = −f). Its value at a point is the work from the reference point along a straight line; the contours come from the same work summed along a grid.</p>
+          <p class="hint">The paddle wheel is fixed in place and turns at ω = ½ curl F, the rate a small piece of fluid with velocity F spins. Tracers move with velocity F, so they show its direction and size; for a force they are not the path a mass would take.</p>
+        </details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  /* Vector fields in the plane, runnable in Node with the shared math library loaded first (VDMATH, demos/lib/vdmath.js;
+     curriculum/validation/test_vector_fields.cjs). makeField reads P and Q and differentiates them exactly; a path is a list
+     of straight pieces and circular arcs, each with a parameter u from 0 to 1; line integrals along it, double integrals over
+     the region inside a loop, the outflow through a small box and the potential on a grid are computed numerically. */
+  const VM = typeof VDMATH !== 'undefined' ? VDMATH : null;
+  function fieldFrom(p, q) {
+    const D = VM.derivative, V = ['x', 'y'], C = (n) => VM.compile(n, V);
+    const px = D(p, 'x'), py = D(p, 'y'), qx = D(q, 'x'), qy = D(q, 'y');
+    const curl = VM.mkAdd([qx, VM.mkMul([VM.rat(-1, 1), py])]), div = VM.mkAdd([px, qy]);
+    return { P: C(p), Q: C(q), Px: C(px), Py: C(py), Qx: C(qx), Qy: C(qy), curl: C(curl), div: C(div),
+      tree: { p, q, px, py, qx, qy, curl, div }, curl0: VM.isNum(curl, 0), div0: VM.isNum(div, 0) };
+  }
+  function makeField(pSrc, qSrc) {
+    const o = { vars: ['x', 'y'] };
+    return fieldFrom(VM.parse(pSrc, o).node, VM.parse(qSrc, o).node);
+  }
+
+  /* pieces of a path: a straight piece from a to b, or an arc of radius r about c from angle t0 to t1 */
+  const seg = (a, b) => ({ k: 's', a, b });
+  const arc = (c, r, t0, t1) => ({ k: 'a', c, r, t0, t1 });
+  function at(pc, u) {
+    if (pc.k === 's') { const dx = pc.b[0] - pc.a[0], dy = pc.b[1] - pc.a[1]; return [pc.a[0] + dx * u, pc.a[1] + dy * u, dx, dy]; }
+    const d = pc.t1 - pc.t0, t = pc.t0 + d * u, c = Math.cos(t), s = Math.sin(t);
+    return [pc.c[0] + pc.r * c, pc.c[1] + pc.r * s, -pc.r * s * d, pc.r * c * d];
+  }
+  const plen = (pc) => (pc.k === 's' ? Math.hypot(pc.b[0] - pc.a[0], pc.b[1] - pc.a[1]) : pc.r * Math.abs(pc.t1 - pc.t0));
+  const flip = (pc) => (pc.k === 's' ? seg(pc.b, pc.a) : arc(pc.c, pc.r, pc.t1, pc.t0));
+  /* shape: line, xy, yx, half (a half circle on AB, counterclockwise about its middle), circle, square (counterclockwise from the
+     lower right corner; R is half the side), free (a polyline; closed when it ends where it began). rev runs it backward. */
+  function buildPath(shape, o) {
+    const A = o.A, B = o.B, C = o.C, R = o.R; let pcs = [], closed = false;
+    if (shape === 'line') pcs = [seg(A, B)];
+    else if (shape === 'xy') pcs = [seg(A, [B[0], A[1]]), seg([B[0], A[1]], B)];
+    else if (shape === 'yx') pcs = [seg(A, [A[0], B[1]]), seg([A[0], B[1]], B)];
+    else if (shape === 'half') { const m = [(A[0] + B[0]) / 2, (A[1] + B[1]) / 2], t0 = Math.atan2(A[1] - m[1], A[0] - m[0]); pcs = [arc(m, Math.hypot(A[0] - m[0], A[1] - m[1]), t0, t0 + Math.PI)]; }
+    else if (shape === 'circle') { pcs = [arc(C, R, 0, 2 * Math.PI)]; closed = true; }
+    else if (shape === 'square') { const k = [[1, -1], [1, 1], [-1, 1], [-1, -1], [1, -1]].map(([i, j]) => [C[0] + i * R, C[1] + j * R]); for (let i = 0; i < 4; i++) pcs.push(seg(k[i], k[i + 1])); closed = true; }
+    else if (shape === 'free') { const p = o.pts || []; for (let i = 0; i + 1 < p.length; i++) pcs.push(seg(p[i], p[i + 1])); closed = p.length > 3 && p[0][0] === p[p.length - 1][0] && p[0][1] === p[p.length - 1][1]; }
+    pcs = pcs.filter((pc) => plen(pc) > 0);
+    if (o.rev) pcs = pcs.reverse().map(flip);
+    const lens = pcs.map(plen), cum = [0]; lens.forEach((l) => cum.push(cum[cum.length - 1] + l));
+    let area2 = 0;   /* twice the signed area, for the direction of a loop: positive counterclockwise */
+    if (closed) for (const pc of pcs) { const g = (u) => { const [x, y, dx, dy] = at(pc, u); return x * dy - y * dx; }; area2 += VM.integral(g, 0, 1); }
+    return { shape, pcs, lens, cum, len: cum[cum.length - 1], closed, orient: closed ? (area2 >= 0 ? 1 : -1) : 0, area: Math.abs(area2) / 2, C, R, pts: o.pts };
+  }
+
+  /* ∫ F·dr along one piece up to parameter u1 (normal: ∫ F·n ds with n = (dy, −dx)/ds, to the right of the direction of travel) */
+  function pieceInt(F, pc, u1, normal) {
+    const g = normal ? (u) => { const [x, y, dx, dy] = at(pc, u); return F.P(x, y) * dy - F.Q(x, y) * dx; }
+      : (u) => { const [x, y, dx, dy] = at(pc, u); return F.P(x, y) * dx + F.Q(x, y) * dy; };
+    if (!(u1 > 0)) return 0;
+    const sc = Math.abs(g(0)) + Math.abs(g(0.5)) + Math.abs(g(1));
+    return VM.integral(g, 0, u1, isFinite(sc) ? sc : 0);
+  }
+  function pathInt(F, path, normal) { let s = 0; for (const pc of path.pcs) s += pieceInt(F, pc, 1, normal); return s; }
+  /* the running total from the start to arc length s along the path; pre holds the totals of the whole pieces */
+  function partials(F, path) { const pre = [0]; path.pcs.forEach((pc) => pre.push(pre[pre.length - 1] + pieceInt(F, pc, 1))); return pre; }
+  function workTo(F, path, pre, s) {
+    if (!path.pcs.length) return 0;
+    let i = 0; while (i < path.pcs.length - 1 && path.cum[i + 1] < s) i++;
+    const u = Math.min(1, Math.max(0, (s - path.cum[i]) / path.lens[i]));
+    return pre[i] + pieceInt(F, path.pcs[i], u);
+  }
+  function pointAt(path, s) {
+    if (!path.pcs.length) return null;
+    let i = 0; while (i < path.pcs.length - 1 && path.cum[i + 1] < s) i++;
+    return at(path.pcs[i], Math.min(1, Math.max(0, (s - path.cum[i]) / path.lens[i])));
+  }
+
+  /* inside a closed path: is (x, y) inside (even odd rule on a polyline through the path) */
+  function polyOf(path, n) { const out = []; path.pcs.forEach((pc, i) => { const m = pc.k === 's' ? 1 : n; for (let j = 0; j < m; j++) out.push(at(pc, j / m)); }); return out; }
+  function inside(poly, x, y) {
+    let c = false;
+    for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
+      const xi = poly[i][0], yi = poly[i][1], xj = poly[j][0], yj = poly[j][1];
+      if ((yi > y) !== (yj > y) && x < (xj - xi) * (y - yi) / (yj - yi) + xi) c = !c;
+    }
+    return c;
+  }
+  /* a point inside the loop where F is undefined or far larger than elsewhere (a wire, a point mass, a source) */
+  function singularInside(F, path) {
+    if (!path.closed) return null;
+    const poly = polyOf(path, 96); let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity;
+    for (const p of poly) { x0 = Math.min(x0, p[0]); x1 = Math.max(x1, p[0]); y0 = Math.min(y0, p[1]); y1 = Math.max(y1, p[1]); }
+    const n = 61, mag = (x, y) => Math.hypot(F.P(x, y), F.Q(x, y)); let worst = null, big = -1;
+    for (let i = 0; i <= n; i++) for (let j = 0; j <= n; j++) {
+      const x = x0 + (x1 - x0) * (i + 0.5) / (n + 1), y = y0 + (y1 - y0) * (j + 0.5) / (n + 1);
+      if (!inside(poly, x, y)) continue;
+      const m = mag(x, y);
+      if (!isFinite(m)) return [x, y];
+      if (m > big) { big = m; worst = [x, y]; }
+    }
+    if (!worst) return null;
+    /* zoom in on the largest |F| six times, a quarter the size each time: near a pole it keeps growing without bound */
+    let h = Math.max(x1 - x0, y1 - y0) / n, m0 = big;
+    for (let k = 0; k < 7; k++) {
+      let b = -1, at = worst;
+      for (let i = -4; i <= 4; i++) for (let j = -4; j <= 4; j++) {
+        const x = worst[0] + h * i / 4, y = worst[1] + h * j / 4, m = mag(x, y);
+        if (!isFinite(m)) return inside(poly, x, y) ? [x, y] : null;
+        if (m > b) { b = m; at = [x, y]; }
+      }
+      worst = at; big = b; h /= 4;
+    }
+    return big > 100 * m0 && inside(poly, worst[0], worst[1]) ? [Number(worst[0].toPrecision(3)), Number(worst[1].toPrecision(3))] : null;
+  }
+  /* the double integral of f over the region inside the loop: exact rules for a circle and a square, a 200 × 200 grid for a
+     freehand loop. skip: leave out points where f is undefined (a loop around a wire, which Green's theorem does not cover) */
+  function areaInt(f, path, skip) {
+    const g = skip ? (x, y) => { const v = f(x, y); return isFinite(v) ? v : 0; } : f;
+    if (path.shape === 'circle') {
+      const [cx, cy] = path.C, R = path.R;
+      return VM.integral((t) => { const c = Math.cos(t), s = Math.sin(t); return VM.integral((r) => g(cx + r * c, cy + r * s) * r, 0, R); }, 0, 2 * Math.PI);
+    }
+    if (path.shape === 'square') {
+      const [cx, cy] = path.C, R = path.R;
+      return VM.integral((x) => VM.integral((y) => g(x, y), cy - R, cy + R), cx - R, cx + R);
+    }
+    const poly = polyOf(path, 1); let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity;
+    for (const p of poly) { x0 = Math.min(x0, p[0]); x1 = Math.max(x1, p[0]); y0 = Math.min(y0, p[1]); y1 = Math.max(y1, p[1]); }
+    const n = 200, hx = (x1 - x0) / n, hy = (y1 - y0) / n; let s = 0;
+    for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) {
+      const x = x0 + (i + 0.5) * hx, y = y0 + (j + 0.5) * hy;
+      if (inside(poly, x, y)) { const v = g(x, y); s += v * hx * hy; }
+    }
+    return s;
+  }
+  /* Green's theorem: circulation ∮F·dr against the summed curl, outward flux ∮F·n ds against the summed divergence. For a
+     clockwise loop the circulation is −∬ curl dA. */
+  function greens(F, path) {
+    const sing = singularInside(F, path);
+    return { circ: pathInt(F, path), flux: path.orient * pathInt(F, path, true), curlSum: areaInt(F.curl, path, !!sing), divSum: areaInt(F.div, path, !!sing), orient: path.orient, sing };
+  }
+  /* the net outflow through a square box of side h centered at (x, y) */
+  function boxFlux(F, x, y, h) {
+    const a = h / 2, I = (g, lo, hi) => VM.integral(g, lo, hi);
+    return I((t) => F.P(x + a, t), y - a, y + a) - I((t) => F.P(x - a, t), y - a, y + a) + I((t) => F.Q(t, y + a), x - a, x + a) - I((t) => F.Q(t, y - a), x - a, x + a);
+  }
+  /* the potential f at p, with f = v0 at the reference point r0: the work along a straight line, else along x then y, else y then x */
+  function potentialAt(F, r0, v0, p) {
+    for (const sh of ['line', 'xy', 'yx']) { const w = pathInt(F, buildPath(sh, { A: r0, B: p })); if (isFinite(w)) return v0 + w; }
+    return NaN;
+  }
+  /* is the curl zero at every sample point of the box; else the point where it is largest */
+  function curlCheck(F, x0, x1, y0, y1, n) {
+    let worst = 0, wp = null, any = false;
+    for (let i = 0; i <= n; i++) for (let j = 0; j <= n; j++) {
+      const x = x0 + (x1 - x0) * (i + 0.37) / (n + 1), y = y0 + (y1 - y0) * (j + 0.61) / (n + 1);
+      const c = F.curl(x, y), s = Math.abs(F.Px(x, y)) + Math.abs(F.Py(x, y)) + Math.abs(F.Qx(x, y)) + Math.abs(F.Qy(x, y));
+      if (!isFinite(c) || !isFinite(s)) continue;
+      any = true;
+      if (Math.abs(c) > 1e-7 * s && Math.abs(c) > worst) { worst = Math.abs(c); wp = [x, y, c]; }
+    }
+    return { free: any && !wp, at: wp };
+  }
+  /* the potential on a grid of (nx + 1) × (ny + 1) nodes: the work along grid edges (6 point Gauss rule), spread out from the
+     node nearest the reference point over smooth edges first. ok is false when some smooth edge disagrees with the values it
+     joins: the work around a loop is not zero (a loop around a wire), so there is no single valued potential. */
+  const GX = [-0.9324695142031521, -0.6612093864662645, -0.2386191860831909, 0.2386191860831909, 0.6612093864662645, 0.9324695142031521];
+  const GW = [0.1713244923791704, 0.3607615730481386, 0.4679139345726910, 0.4679139345726910, 0.3607615730481386, 0.1713244923791704];
+  function potentialGrid(F, x0, x1, y0, y1, nx, ny, r0, v0) {
+    const N = (nx + 1) * (ny + 1), f = new Float64Array(N).fill(NaN), hx = (x1 - x0) / nx, hy = (y1 - y0) / ny;
+    const id = (i, j) => j * (nx + 1) + i;
+    const edge = (i, j, di, dj) => {   /* work from node (i, j) to (i + di, j + dj), and whether the field is smooth along it */
+      const xa = x0 + i * hx, ya = y0 + j * hy, dx = di * hx, dy = dj * hy; let s = 0, lo = Infinity, hi = 0;
+      for (let k = 0; k < 6; k++) { const u = 0.5 + 0.5 * GX[k], x = xa + dx * u, y = ya + dy * u, P = F.P(x, y), Q = F.Q(x, y); s += GW[k] * (P * dx + Q * dy); const m = Math.hypot(P, Q); lo = Math.min(lo, m); hi = Math.max(hi, m); }
+      s *= 0.5; return { w: s, smooth: isFinite(s) && hi <= 3 * lo + 1e-300 };
+    };
+    let i0 = Math.round((r0[0] - x0) / hx), j0 = Math.round((r0[1] - y0) / hy);
+    i0 = Math.max(0, Math.min(nx, i0)); j0 = Math.max(0, Math.min(ny, j0));
+    const start = potentialAt(F, r0, v0, [x0 + i0 * hx, y0 + j0 * hy]);
+    if (!isFinite(start)) return { f, ok: true, nx, ny, x0, x1, y0, y1, empty: true };
+    f[id(i0, j0)] = start;
+    const E = [[1, 0], [-1, 0], [0, 1], [0, -1]];
+    for (const pass of [true, false]) {   /* smooth edges first, then any finite edge for nodes still unreached */
+      const q = []; for (let k = 0; k < N; k++) if (isFinite(f[k])) q.push(k);
+      for (let h = 0; h < q.length; h++) {
+        const k = q[h], i = k % (nx + 1), j = (k - i) / (nx + 1);
+        for (const [di, dj] of E) {
+          const a = i + di, b = j + dj; if (a < 0 || b < 0 || a > nx || b > ny || isFinite(f[id(a, b)])) continue;
+          const e = edge(i, j, di, dj); if (!isFinite(e.w) || (pass && !e.smooth)) continue;
+          f[id(a, b)] = f[k] + e.w; q.push(id(a, b));
+        }
+      }
+    }
+    let lo = Infinity, hi = -Infinity; for (const v of f) if (isFinite(v)) { lo = Math.min(lo, v); hi = Math.max(hi, v); }
+    let ok = true; const tol = 1e-3 * (hi - lo) + 1e-12;
+    for (let j = 0; j <= ny && ok; j++) for (let i = 0; i <= nx && ok; i++) for (const [di, dj] of [[1, 0], [0, 1]]) {
+      const a = i + di, b = j + dj; if (a > nx || b > ny) continue;
+      const fa = f[id(i, j)], fb = f[id(a, b)]; if (!isFinite(fa) || !isFinite(fb)) continue;
+      const e = edge(i, j, di, dj); if (e.smooth && Math.abs(fb - fa - e.w) > tol) { ok = false; break; }
+    }
+    return { f, ok, nx, ny, x0, x1, y0, y1, lo, hi };
+  }
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  const VDI18N = window.VDI18N || { t: (s, o) => s.replace(/\{(\w+)\}/g, (m, k) => (o && k in o ? o[k] : m)) };
+  /* kind sets the words and units: force (N, work in J), flow (a velocity in m/s), B (a magnetic field in units of μ₀I/2π per m),
+     E (an electric field in units of kq per m²); ref is the point where the potential f is given the value refV */
+  const PRESETS = {
+    gravity: { name: 'Uniform gravity', P: '0', Q: '-9.81', kind: 'force', box: [-1, 5, -1.5, 3.5], shape: 'line', shape2: 'xy', A: [0, 0], B: [3, 2], C: [1, 1], R: 1, ref: [0, 0], refV: 0, pot: true,
+      hint: 'The weight of a 1.00 kg mass, F = (0, −9.81) N, with x and y in meters. Every path from A to B takes the same work, −9.81 N times the rise in height, −19.62 J here: gravity is conservative. Its potential is f = −9.81y, so the potential energy is U = −f = mgy, and the contours are lines of equal height.' },
+    swirl: { name: 'Swirl force', P: '-y', Q: 'x', kind: 'force', box: [-1.5, 4.5, -1.5, 3.5], shape: 'line', shape2: 'xy', A: [0, 0], B: [3, 2], C: [1, 1], R: 1, ref: [0, 0], refV: 0,
+      hint: 'A force F = (−y, x) N that pushes around the origin, like a stirring paddle. From A to B the straight line takes 0 J and the path along x, then y takes 6 J: the work depends on the route, so F is not conservative and has no potential. Its curl is 2 everywhere. Friction is the everyday force that is not conservative, but it depends on how you move, so it is not a field at all.' },
+    mass: { name: 'Point mass', P: '-x/(x^2+y^2)^(3/2)', Q: '-y/(x^2+y^2)^(3/2)', kind: 'grav', box: [-3, 3.5, -2.5, 2.5], shape: 'line', shape2: 'half', A: [3, 0], B: [1, 0], C: [0, 0], R: 1.5, ref: [1, 0], refV: 1, pot: true,
+      hint: 'Newton\'s inverse square pull toward a mass at the origin, F = −r̂/r², in units where GMm = 1 and lengths are in units of a radius R. The curl is zero, and the work from A to B is the same along the line and the half circle: 1/1 − 1/3 = 0.6667. The potential is f = 1/r, so U = −1/r. Around any loop the work is zero, even around the mass.' },
+    dipole: { name: 'Electric dipole', P: '(x+1)/((x+1)^2+y^2)^(3/2) - (x-1)/((x-1)^2+y^2)^(3/2)', Q: 'y/((x+1)^2+y^2)^(3/2) - y/((x-1)^2+y^2)^(3/2)', kind: 'E', box: [-3, 3, -2.2, 2.2], shape: 'half', shape2: 'xy', A: [-0.5, 0], B: [0.5, 0], C: [0, 1.4], R: 0.5, ref: [0, 0], refV: 0, pot: true,
+      hint: 'The electric field of a charge +q at (−1, 0) and −q at (1, 0), in units where kq = 1 and lengths are in units of half their spacing. E is conservative: the contours are the equipotentials, V = −f = 1/r₊ − 1/r₋, and E crosses each at a right angle. Its divergence is zero away from the charges.' },
+    wire: { name: 'Long wire', P: '-y/(x^2+y^2)', Q: 'x/(x^2+y^2)', kind: 'B', box: [-3, 4, -2.5, 2.5], shape: 'circle', shape2: 'none', A: [1.5, 0], B: [-1.5, 0], C: [0, 0], R: 1.5, ref: [1, 0], refV: 0, paddle: [1.6, 1.2],
+      hint: 'The magnetic field around a long straight wire along z carrying current I out of the screen, B = (μ₀I/2π)(−y, x)/r², in units of μ₀I/2π. The curl is zero everywhere except at the wire, so the paddle wheel does not turn. Yet around the circle the circulation is 2π, which is Ampère\'s law: ∮B·dr = μ₀I. Drag the loop off the wire and it drops to 0. Green\'s theorem fails here only because B is undefined at the wire.' },
+    rotate: { name: 'Rotating fluid', P: '-y', Q: 'x', kind: 'flow', box: [-3, 3, -2.5, 2.5], shape: 'circle', shape2: 'none', A: [1, 0], B: [-1, 0], C: [0.5, 0.3], R: 1.2, ref: [0, 0], refV: 0, paddle: [-1.4, 1], shade: 'curl',
+      hint: 'A fluid turning as a rigid body at ω = 1 rad/s, v = ω(−y, x). Its curl is 2ω everywhere, so a paddle wheel anywhere turns at ω, the rate the fluid itself turns. Around any loop the circulation is 2ω times the area inside, which is Green\'s theorem.' },
+    shear: { name: 'Shear flow', P: 'y', Q: '0', kind: 'flow', box: [-3, 3, -2.5, 2.5], shape: 'square', shape2: 'none', A: [1, 0], B: [-1, 0], C: [0, 0], R: 1, ref: [0, 0], refV: 0, paddle: [-1.6, 0.8], shade: 'curl',
+      hint: 'Water in a river moving faster near the top, v = (y, 0) in m/s. Every streamline is straight, yet the curl is −1: the top of a paddle wheel is pushed harder than the bottom, so it turns clockwise at ½ rad/s. Around the square the circulation is −1 times its area.' },
+    spread: { name: 'Spreading flow', P: 'x', Q: 'y', kind: 'flow', box: [-3, 3, -2.5, 2.5], shape: 'circle', shape2: 'none', A: [1, 0], B: [-1, 0], C: [0.4, 0.2], R: 1.2, ref: [0, 0], refV: 0, box2: [-1.5, 1], form: 'flux', shade: 'div', pot: true,
+      hint: 'Fluid spreading out from everywhere at once, v = (x, y) in m/s, as if it were being made everywhere at 2 m²/s per square meter: its divergence is 2. The flux out of any loop is 2 times its area (Green\'s theorem, flux form), and the flux box shows 2 wherever it sits. The curl is zero: it has a potential, f = (x² + y²)/2.' },
+    source: { name: 'Source and sink', P: '(x+1)/((x+1)^2+y^2) - (x-1)/((x-1)^2+y^2)', Q: 'y/((x+1)^2+y^2) - y/((x-1)^2+y^2)', kind: 'flow', box: [-3, 3, -2.2, 2.2], shape: 'circle', shape2: 'none', A: [1, 0], B: [-1, 0], C: [-1, 0], R: 0.6, ref: [0, 0], refV: 0, box2: [0, 1], form: 'flux', shade: 'div', pot: true,
+      hint: 'A source at (−1, 0) putting out 2π m²/s of fluid and a sink at (1, 0) taking it in, in a thin layer. Away from the two points the divergence is zero, so the box shows no net outflow; drag it over the source and the whole 2π comes out. The loop around the source has flux 2π although the divergence inside is zero: all of it comes from the one point where v is undefined.' },
+  };
+  const S = { preset: 'gravity', kind: 'force', F: null, srcP: null, srcQ: null, shape: 'line', shape2: 'xy', A: [0, 0], B: [3, 2], C: [1, 1], R: 1, rev: false, pts: [],
+    cx: 2, cy: 1, s: 0.01, run: false, t: 0, form: 'circ', shade: 'none', paddle: [1.5, -0.5], ang: 0, box: [2.5, 2.5], boxI: 2, ref: [0, 0], refV: 0, blind: false };
+  const BOX = [0.1, 0.2, 0.4, 0.8, 1.6];
+  const can = $('can'), ctx = can.getContext('2d');
+  let W = 0, H = 0, dpr = 1, T = null, need = true, bgKey = '', path = null, path2 = null, pre = null, pre2 = null, G = null, CC = null, POT = null;
+  const bg = document.createElement('canvas'), bctx = bg.getContext('2d');
+  /* numbers on screen: four significant figures, a tiny value next to the size of the others shown as 0 */
+  const f4 = (v, scale) => {
+    if (!isFinite(v)) return VDI18N.t('undefined');
+    if (Math.abs(v) < 1e-9 * (scale || 1) || Math.abs(v) < 1e-12) v = 0;
+    const a = Math.abs(v);
+    let s = a !== 0 && (a >= 1e5 || a < 1e-3) ? v.toExponential(3).replace(/e\+?(-?)(\d+)/, (m, sg, e) => '×10' + VM.sup((sg ? '-' : '') + e)) : String(Number(v.toPrecision(4)));
+    if (a >= 1000 && a < 1e5) s = s.replace(/^(-?\d)(\d{3})/, '$1,$2');
+    return s.replace(/-/g, '−');
+  };
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), mono: g('--font-mono') || 'monospace',
+      arrow: g('--vf-arrow'), path: g('--vf-path'), path2: g('--vf-path2'), plus: g('--vf-plus'), minus: g('--vf-minus'), tracer: g('--vf-tracer'), pot: g('--vf-pot') };
+    T.rgbPlus = rgb(T.plus); T.rgbMinus = rgb(T.minus); bgKey = '';
+  }
+  function rgb(c) { const t = document.createElement('canvas').getContext('2d'); t.fillStyle = c; t.fillRect(0, 0, 1, 1); return Array.from(t.getImageData(0, 0, 1, 1).data.slice(0, 3)); }
+  const proj = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.35 : 1);
+  const X = (x) => W / 2 + (x - S.cx) / S.s, Y = (y) => H / 2 - (y - S.cy) / S.s;
+  const Xi = (u) => S.cx + (u - W / 2) * S.s, Yi = (v) => S.cy - (v - H / 2) * S.s;
+  const units = () => ({ force: { F: 'N', W: 'J', L: 'm', w: 'Work W' }, grav: { F: 'GMm/R²', W: 'GMm/R', L: 'R', w: 'Work W' }, E: { F: 'kq/d²', W: 'kq/d', L: 'd', w: '∫ E·dr' }, B: { F: 'μ₀I/2π per m', W: 'μ₀I/2π', L: 'm', w: '∫ B·dr' }, flow: { F: 'm/s', W: 'm²/s', L: 'm', w: '∫ v·dr' }, none: { F: '', W: '', L: '', w: '∫ F·dr' } }[S.kind]);
+
+  /* the boxes: read them, differentiate, compile */
+  const MSG = {
+    name: (e) => VDI18N.t('“{n}” is not a name I know. Use x and y, and functions like sin, ln, sqrt.', { n: e.name2 }),
+    char: (e) => VDI18N.t('“{n}” is not something I can read here.', { n: e.name2 }),
+    unexpected: (e) => VDI18N.t('“{n}” is out of place.', { n: e.name2 }),
+    close: () => VDI18N.t('There is a ) without a matching (.'),
+    comma: () => VDI18N.t('Functions here take one input; there is no comma form.'),
+    arg: (e) => VDI18N.t('{n} needs something to act on, like {n}(x).', { n: e.name2 }),
+    end: () => VDI18N.t('Not finished yet.'),
+    empty: () => VDI18N.t('Type P and Q, functions of x and y, like −y and x.'),
+  };
+  function read() {
+    const sp = $('pIn').value, sq = $('qIn').value, st = $('fStatus');
+    if (sp === S.srcP && sq === S.srcQ && S.F) return;
+    S.srcP = sp; S.srcQ = sq;
+    const o = { vars: ['x', 'y'] }, rp = VM.parseLive(sp, o), rq = VM.parseLive(sq, o);
+    $('pIn').classList.toggle('bad', !rp.node); $('qIn').classList.toggle('bad', !rq.node);
+    if (rp.empty || rq.empty) { st.textContent = MSG.empty(); st.classList.remove('bad'); return; }
+    const bad = !rp.node ? rp : !rq.node ? rq : null;
+    if (bad) { st.textContent = (S.F ? VDI18N.t('Still showing the last field. ') : '') + (!rp.node ? 'P: ' : 'Q: ') + (MSG[bad.error.code] || MSG.end)(bad.error); st.classList.add('bad'); return; }
+    st.classList.remove('bad');
+    st.textContent = rp.partial || rq.partial ? VDI18N.t('Drawing what is finished so far, while you type.') : '';
+    S.F = fieldFrom(rp.node, rq.node); rebuild(); formulas();
+  }
+
+  /* the paths and everything computed from them */
+  function rebuild() {
+    if (!S.F) return;
+    const o = { A: S.A, B: S.B, C: S.C, R: S.R, pts: S.pts, rev: S.rev };
+    path = buildPath(S.shape, o); pre = partials(S.F, path);
+    const open = !path.closed && S.shape !== 'free';
+    path2 = open && S.shape2 !== 'none' && S.shape2 !== S.shape ? buildPath(S.shape2, o) : null; pre2 = path2 ? partials(S.F, path2) : null;
+    G = path.closed ? greens(S.F, path) : null;
+    S.t = Math.min(S.t, 1); bgKey = ''; need = true; readouts();
+  }
+  function scaleF() { /* a typical size of F in view, for the arrows and the tracer speed */
+    const m = [];
+    for (let i = 0; i < 12; i++) for (let j = 0; j < 9; j++) { const x = Xi(W * (i + 0.5) / 12), y = Yi(H * (j + 0.5) / 9), v = Math.hypot(S.F.P(x, y), S.F.Q(x, y)); if (isFinite(v)) m.push(v); }
+    m.sort((a, b) => a - b); return m.length ? { med: m[Math.floor(m.length / 2)], p80: m[Math.floor(m.length * 0.8)] } : { med: 0, p80: 0 };
+  }
+  function niceStep(raw) { const p = Math.pow(10, Math.floor(Math.log10(raw))), m = raw / p; return (m <= 1 ? 1 : m <= 2 ? 2 : m <= 2.5 ? 2.5 : m <= 5 ? 5 : 10) * p; }
+  const nice125 = (raw) => { const p = Math.pow(10, Math.floor(Math.log10(raw))), m = raw / p; return (m < 1.5 ? 1 : m < 3.5 ? 2 : m < 7.5 ? 5 : 10) * p; };
+
+  /* the background: grid, shading, potential contours and arrows, redrawn only when the view or the field changes */
+  function drawBg(p) {
+    bg.width = can.width; bg.height = can.height;
+    const c = bctx; c.setTransform(dpr, 0, 0, dpr, 0, 0); c.fillStyle = T.canvas; c.fillRect(0, 0, W, H);
+    const x0 = Xi(0), x1 = Xi(W), y0 = Yi(H), y1 = Yi(0), st = niceStep(90 * p * S.s);
+    c.lineWidth = 1; c.strokeStyle = T.line; c.beginPath();
+    for (let x = Math.ceil(x0 / st) * st; x <= x1; x += st) { const u = Math.round(X(x)) + 0.5; c.moveTo(u, 0); c.lineTo(u, H); }
+    for (let y = Math.ceil(y0 / st) * st; y <= y1; y += st) { const u = Math.round(Y(y)) + 0.5; c.moveTo(0, u); c.lineTo(W, u); }
+    c.stroke();
+    c.strokeStyle = T.muted; c.lineWidth = 1.3; c.beginPath();
+    if (Y(0) >= 0 && Y(0) <= H) { c.moveTo(0, Y(0)); c.lineTo(W, Y(0)); }
+    if (X(0) >= 0 && X(0) <= W) { c.moveTo(X(0), 0); c.lineTo(X(0), H); }
+    c.stroke();
+    if (!S.F) return;
+    /* conservative or not, over the view */
+    CC = curlCheck(S.F, x0, x1, y0, y1, 36);
+    POT = null;
+    if (CC.free) { const nx = Math.max(16, Math.min(90, Math.round(W / (9 * p)))), ny = Math.max(10, Math.round(nx * H / W)); POT = potentialGrid(S.F, x0, x1, y0, y1, nx, ny, S.ref, S.refV); }
+    verdict();
+    /* shading by curl or divergence */
+    if (S.shade !== 'none' && !S.blind) {
+      const g = S.shade === 'curl' ? S.F.curl : S.F.div, cell = 5, nx = Math.ceil(W / cell), ny = Math.ceil(H / cell), vals = new Float64Array(nx * ny), mags = [];
+      /* a value within rounding of zero (1e-7 of the size of the partial derivatives there) is zero, not a faint color */
+      for (let j = 0; j < ny; j++) for (let i = 0; i < nx; i++) { const x = Xi((i + 0.5) * cell), y = Yi((j + 0.5) * cell); let v = g(x, y); const sz = Math.abs(S.F.Px(x, y)) + Math.abs(S.F.Py(x, y)) + Math.abs(S.F.Qx(x, y)) + Math.abs(S.F.Qy(x, y)); if (Math.abs(v) <= 1e-7 * sz) v = 0; vals[j * nx + i] = v; if (isFinite(v) && v !== 0) mags.push(Math.abs(v)); }
+      mags.sort((a, b) => a - b);
+      const ref = mags.length ? Math.max(mags[Math.floor(mags.length * 0.9)], 1e-300) : 1, img = new ImageData(nx, ny);
+      for (let k = 0; k < nx * ny; k++) {
+        const v = vals[k]; if (!isFinite(v) || v === 0) continue;
+        const col = v > 0 ? T.rgbPlus : T.rgbMinus, a = Math.min(1, Math.abs(v) / ref);
+        img.data[4 * k] = col[0]; img.data[4 * k + 1] = col[1]; img.data[4 * k + 2] = col[2]; img.data[4 * k + 3] = Math.round(48 * Math.sqrt(a));
+      }
+      const tmp = document.createElement('canvas'); tmp.width = nx; tmp.height = ny; tmp.getContext('2d').putImageData(img, 0, 0);
+      c.imageSmoothingEnabled = true; c.drawImage(tmp, 0, 0, nx * cell, ny * cell);
+    }
+    /* potential contours */
+    if (POT && POT.ok && !POT.empty && $('showPot').checked && !S.blind) contours(c, POT, p);
+    /* arrows */
+    if ($('showArrows').checked) {
+      const sp = Math.max(26, 34 * p) * S.s, a0x = Math.ceil(x0 / sp) * sp, a0y = Math.ceil(y0 / sp) * sp, ref = scaleF().p80 || 1, cell = sp / S.s;
+      c.lineCap = 'round';
+      for (let x = a0x; x <= x1; x += sp) for (let y = a0y; y <= y1; y += sp) {
+        const P = S.F.P(x, y), Q = S.F.Q(x, y), m = Math.hypot(P, Q); if (!isFinite(m) || m === 0) continue;
+        const k = Math.min(1, m / ref), L = cell * (0.25 + 0.6 * k), ux = P / m, uy = Q / m, u = X(x) - ux * L / 2, v = Y(y) + uy * L / 2, ex = u + ux * L, ey = v - uy * L;
+        c.globalAlpha = 0.35 + 0.65 * k; c.strokeStyle = T.arrow; c.fillStyle = T.arrow; c.lineWidth = 1.4 * p;
+        c.beginPath(); c.moveTo(u, v); c.lineTo(ex, ey); c.stroke();
+        const hs = Math.min(6 * p, 0.4 * L); c.beginPath(); c.moveTo(ex, ey); c.lineTo(ex - ux * hs - uy * hs * 0.55, ey + uy * hs - ux * hs * 0.55); c.lineTo(ex - ux * hs + uy * hs * 0.55, ey + uy * hs + ux * hs * 0.55); c.closePath(); c.fill();
+      }
+      c.globalAlpha = 1;
+    }
+    /* tick labels */
+    c.fillStyle = T.muted; c.font = `${11 * p}px ${T.mono}`;
+    const ax = Math.min(Math.max(Y(0), 0), H - 16 * p), ay = Math.min(Math.max(X(0), 0), W - 40 * p), lab = (t, u, v) => { c.save(); c.strokeStyle = T.canvas; c.lineWidth = 4; c.lineJoin = 'round'; c.strokeText(t, u, v); c.restore(); c.fillText(t, u, v); };
+    c.textAlign = 'center'; c.textBaseline = 'top';
+    for (let x = Math.ceil(x0 / st) * st; x <= x1; x += st) if (Math.abs(x) > st / 2) lab(tick(x, st), X(x), ax + 4 * p);
+    c.textAlign = 'left'; c.textBaseline = 'middle';
+    for (let y = Math.ceil(y0 / st) * st; y <= y1; y += st) if (Math.abs(y) > st / 2 && Y(y) > 12 && Y(y) < H - 12) lab(tick(y, st), ay + 5 * p, Y(y));
+    const L = units().L; c.textAlign = 'right'; c.textBaseline = 'bottom'; lab(L ? `x (${L})` : 'x', W - 6 * p, ax - 3 * p);
+    c.textAlign = 'left'; c.textBaseline = 'top'; lab(L ? `y (${L})` : 'y', ay + 5 * p, 6 * p);
+  }
+  function tick(v, step) { return f4(Number(v.toFixed(Math.max(0, -Math.floor(Math.log10(step)) + 1)))); }
+  /* marching squares on the potential grid, at round values, with a few labels */
+  function contours(c, P, p) {
+    const span = P.hi - P.lo; if (!(span > 0)) return;
+    const lo = P.lo + 0.02 * span, hi = P.hi - 0.02 * span, step = nice125(span / 12), hx = (P.x1 - P.x0) / P.nx, hy = (P.y1 - P.y0) / P.ny, N = P.nx + 1;
+    c.strokeStyle = T.pot; c.lineWidth = 1.3 * p; c.globalAlpha = 0.8; c.setLineDash([]);
+    const labels = [];
+    for (let lev = Math.ceil(lo / step) * step; lev <= hi; lev += step) {
+      c.beginPath(); let best = null;
+      for (let j = 0; j < P.ny; j++) for (let i = 0; i < P.nx; i++) {
+        const v = [P.f[j * N + i], P.f[j * N + i + 1], P.f[(j + 1) * N + i + 1], P.f[(j + 1) * N + i]];
+        if (!v.every(isFinite)) continue;
+        const pts = [], corner = [[0, 0], [1, 0], [1, 1], [0, 1]];
+        for (let e = 0; e < 4; e++) { const a = v[e], b = v[(e + 1) % 4]; if ((a < lev) !== (b < lev)) { const t = (lev - a) / (b - a), ca = corner[e], cb = corner[(e + 1) % 4]; pts.push([P.x0 + (i + ca[0] + (cb[0] - ca[0]) * t) * hx, P.y0 + (j + ca[1] + (cb[1] - ca[1]) * t) * hy]); } }
+        /* a jump of more than half the range between neighbors is a pole, not a contour */
+        if (Math.max(...v) - Math.min(...v) > 0.5 * span) continue;
+        for (let k = 0; k + 1 < pts.length; k += 2) { c.moveTo(X(pts[k][0]), Y(pts[k][1])); c.lineTo(X(pts[k + 1][0]), Y(pts[k + 1][1])); const u = X(pts[k][0]), w = Y(pts[k][1]), d = Math.hypot(u - W * 0.86, w - H * 0.42); if (u > 30 && u < W - 30 && w > 20 && w < H - 20 && (!best || d < best[2])) best = [u, w, d]; }
+      }
+      c.stroke();
+      if (best) labels.push([best[0], best[1], lev]);
+    }
+    c.globalAlpha = 1; c.fillStyle = T.pot; c.font = `${10.5 * p}px ${T.mono}`; c.textAlign = 'center'; c.textBaseline = 'middle';
+    const sc = Math.max(Math.abs(P.lo), Math.abs(P.hi));
+    labels.forEach(([u, w, lev], k) => { if (k % 2) return; c.save(); c.strokeStyle = T.canvas; c.lineWidth = 4; c.strokeText(f4(lev, sc), u, w); c.restore(); c.fillText(f4(lev, sc), u, w); });
+  }
+
+  /* tracers: points moving with velocity k F, drawn with short tails; k sets a pace the eye can follow */
+  let TR = [], kTr = 1;
+  function seedTracers() {
+    const n = Math.round(Math.min(420, W * H / 1500)); TR = [];
+    for (let i = 0; i < n; i++) TR.push(newTracer(true));
+  }
+  function newTracer(any) { const x = Xi(Math.random() * W), y = Yi(Math.random() * H); return { x, y, tail: [[x, y]], age: any ? Math.random() * 4 : 0, life: 2.5 + Math.random() * 3 }; }
+  function tracerPace() {
+    const m = scaleF().med; if (!(m > 0)) { kTr = 1; return; }
+    kTr = nice125((W * S.s / 9) / m);
+  }
+  function stepTracers(dt) {
+    const F = S.F, cap = 30 * S.s;
+    for (let i = 0; i < TR.length; i++) {
+      const t = TR[i]; t.age += dt;
+      const P1 = F.P(t.x, t.y), Q1 = F.Q(t.x, t.y), hx = kTr * P1 * dt, hy = kTr * Q1 * dt;
+      const P2 = F.P(t.x + hx / 2, t.y + hy / 2), Q2 = F.Q(t.x + hx / 2, t.y + hy / 2);
+      let dx = kTr * P2 * dt, dy = kTr * Q2 * dt; const d = Math.hypot(dx, dy);
+      if (!isFinite(d) || t.age > t.life || d > cap) { TR[i] = newTracer(false); continue; }
+      t.x += dx; t.y += dy; t.tail.push([t.x, t.y]); if (t.tail.length > 7) t.tail.shift();
+      const u = X(t.x), v = Y(t.y); if (u < -20 || u > W + 20 || v < -20 || v > H + 20) TR[i] = newTracer(false);
+    }
+  }
+  function drawTracers(p) {
+    ctx.strokeStyle = T.tracer; ctx.lineWidth = 1.6 * p; ctx.lineCap = 'round';
+    for (const t of TR) {
+      const fade = Math.min(1, t.age / 0.5, (t.life - t.age) / 0.6); if (fade <= 0 || t.tail.length < 2) continue;
+      ctx.globalAlpha = 0.75 * fade; ctx.beginPath(); ctx.moveTo(X(t.tail[0][0]), Y(t.tail[0][1]));
+      for (let k = 1; k < t.tail.length; k++) ctx.lineTo(X(t.tail[k][0]), Y(t.tail[k][1]));
+      ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  /* the path drawn in pieces colored by the sign of F along it (F·T for work, F·n for flux): warm where it adds, teal where it takes away */
+  function drawPath(pa, color, p, dash, main) {
+    if (!pa || !pa.pcs.length) return;
+    const flux = main && pa.closed && S.form === 'flux' && !S.blind, n = Math.max(60, Math.min(600, Math.round(pa.len / S.s / 4)));
+    ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    ctx.setLineDash(dash); ctx.strokeStyle = color; ctx.lineWidth = (main ? 7 : 4.5) * p; ctx.globalAlpha = main ? 0.35 : 0.9;
+    ctx.beginPath(); for (let i = 0; i <= n; i++) { const q = pointAt(pa, pa.len * i / n); if (i) ctx.lineTo(X(q[0]), Y(q[1])); else ctx.moveTo(X(q[0]), Y(q[1])); } ctx.stroke(); ctx.globalAlpha = 1; ctx.setLineDash([]);
+    if (main && !S.blind) {
+      ctx.lineWidth = 3 * p;
+      for (let i = 0; i < n; i++) {
+        const a = pointAt(pa, pa.len * i / n), b = pointAt(pa, pa.len * (i + 1) / n), m = pointAt(pa, pa.len * (i + 0.5) / n), P = S.F.P(m[0], m[1]), Q = S.F.Q(m[0], m[1]);
+        const v = flux ? (P * m[3] - Q * m[2]) * pa.orient : P * m[2] + Q * m[3]; if (!isFinite(v)) continue;
+        ctx.strokeStyle = Math.abs(v) < 1e-12 * (Math.abs(P) + Math.abs(Q) + 1e-300) ? T.muted : v > 0 ? T.plus : T.minus;
+        ctx.beginPath(); ctx.moveTo(X(a[0]), Y(a[1])); ctx.lineTo(X(b[0]), Y(b[1])); ctx.stroke();
+      }
+      /* direction arrows along the path */
+      ctx.fillStyle = color;
+      for (const fr of [0.3, 0.7]) { const q = pointAt(pa, pa.len * fr), L = Math.hypot(q[2], q[3]) || 1, ux = q[2] / L, uy = -q[3] / L, u = X(q[0]), w = Y(q[1]), h = 9 * p; ctx.beginPath(); ctx.moveTo(u + ux * h, w + uy * h); ctx.lineTo(u - ux * h - uy * h * 0.7, w - uy * h + ux * h * 0.7); ctx.lineTo(u - ux * h + uy * h * 0.7, w - uy * h - ux * h * 0.7); ctx.closePath(); ctx.fill(); }
+      if (flux) {   /* outward normals with F·n */
+        ctx.lineWidth = 1.5 * p;
+        for (let i = 0; i < 16; i++) { const q = pointAt(pa, pa.len * (i + 0.5) / 16), L = Math.hypot(q[2], q[3]) || 1, nx = pa.orient * q[3] / L, ny = -pa.orient * q[2] / L, v = S.F.P(q[0], q[1]) * nx + S.F.Q(q[0], q[1]) * ny; if (!isFinite(v)) continue;
+          ctx.strokeStyle = v > 0 ? T.plus : T.minus; const u = X(q[0]), w = Y(q[1]); ctx.beginPath(); ctx.moveTo(u, w); ctx.lineTo(u + nx * 14 * p, w - ny * 14 * p); ctx.stroke(); }
+      }
+    }
+  }
+  function handle(x, y, color, label, p, r = 6) {
+    const u = X(x), w = Y(y); ctx.fillStyle = color; ctx.strokeStyle = T.canvas; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(u, w, r * p, 0, 7); ctx.fill(); ctx.stroke();
+    if (label) { ctx.font = `700 ${12 * p}px ${T.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'bottom'; ctx.save(); ctx.strokeStyle = T.canvas; ctx.lineWidth = 4; ctx.strokeText(label, u - 8 * p, w - 6 * p); ctx.restore(); ctx.fillStyle = color; ctx.fillText(label, u - 8 * p, w - 6 * p); }
+  }
+  function drawPaddle(p) {
+    const [x, y] = S.paddle, u = X(x), w = Y(y), r = 18 * p;
+    ctx.strokeStyle = T.ink; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.arc(u, w, r, 0, 7); ctx.globalAlpha = 0.25; ctx.stroke(); ctx.globalAlpha = 1;
+    for (let k = 0; k < 4; k++) { const a = S.ang + k * Math.PI / 2; ctx.beginPath(); ctx.moveTo(u, w); ctx.lineTo(u + r * Math.cos(a), w - r * Math.sin(a)); ctx.stroke(); ctx.fillStyle = T.ink; ctx.beginPath(); ctx.arc(u + r * Math.cos(a), w - r * Math.sin(a), 3.2 * p, 0, 7); ctx.fill(); }
+    ctx.fillStyle = T.ink; ctx.beginPath(); ctx.arc(u, w, 3 * p, 0, 7); ctx.fill();
+  }
+  function drawBox(p) {
+    const h = BOX[S.boxI], [x, y] = S.box, a = h / 2, u0 = X(x - a), u1 = X(x + a), w0 = Y(y + a), w1 = Y(y - a);
+    ctx.strokeStyle = T.ink; ctx.lineWidth = 1.5 * p; ctx.setLineDash([4 * p, 3 * p]); ctx.strokeRect(u0, w0, u1 - u0, w1 - w0); ctx.setLineDash([]);
+    /* F·n across each side, in or out */
+    ctx.lineWidth = 2 * p;
+    const sides = [[x + a, y, 1, 0], [x - a, y, -1, 0], [x, y + a, 0, 1], [x, y - a, 0, -1]];
+    for (const [sx, sy, nx, ny] of sides) for (const t of [-0.25, 0.25]) {
+      const px = sx + (ny ? t * h : 0), py = sy + (nx ? t * h : 0), v = S.F.P(px, py) * nx + S.F.Q(px, py) * ny; if (!isFinite(v)) continue;
+      const L = 10 * p * Math.sign(v); ctx.strokeStyle = v > 0 ? T.plus : T.minus; ctx.beginPath(); ctx.moveTo(X(px), Y(py)); ctx.lineTo(X(px) + nx * L, Y(py) - ny * L); ctx.stroke();
+    }
+    ctx.fillStyle = T.ink; ctx.beginPath(); ctx.arc(X(x), Y(y), 3 * p, 0, 7); ctx.fill();
+  }
+
+  function draw() {
+    if (!T || !W) return;
+    const p = proj();
+    const key = [W, H, dpr, S.cx, S.cy, S.s, S.srcP, S.srcQ, S.shade, S.blind, $('showArrows').checked, $('showPot').checked, p, S.ref.join()].join('|');
+    if (key !== bgKey && S.F) { bgKey = key; drawBg(p); tracerPace(); }
+    ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.drawImage(bg, 0, 0); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    if (!S.F) return;
+    if ($('showTracers').checked) drawTracers(p);
+    if (path2) drawPath(path2, T.path2, p, [10 * p, 7 * p], false);
+    drawPath(path, T.path, p, [], true);
+    if ($('showBox').checked) drawBox(p);
+    if ($('showPaddle').checked) drawPaddle(p);
+    /* handles */
+    if (S.shape === 'circle' || S.shape === 'square') { handle(S.C[0], S.C[1], T.path, '', p, 5); handle(S.C[0] + S.R, S.C[1], T.path, '', p, 5); }
+    else if (S.shape !== 'free') { handle(S.A[0], S.A[1], T.path, 'A', p); handle(S.B[0], S.B[1], T.path, 'B', p); }
+    if (S.draw && S.draw.length > 1) { ctx.strokeStyle = T.path; ctx.lineWidth = 3 * p; ctx.beginPath(); S.draw.forEach((q, i) => (i ? ctx.lineTo(X(q[0]), Y(q[1])) : ctx.moveTo(X(q[0]), Y(q[1])))); ctx.stroke(); }
+    /* the bead and its running total */
+    const beads = [[path, pre, T.path]]; if (path2) beads.push([path2, pre2, T.path2]);
+    beads.forEach(([pa, pr, col], k) => {
+      if (!pa.pcs.length) return;
+      const s = pa.len * S.t, q = pointAt(pa, s), w = workTo(S.F, pa, pr, s), u = X(q[0]), v = Y(q[1]);
+      ctx.fillStyle = col; ctx.strokeStyle = T.canvas; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.arc(u, v, 7.5 * p, 0, 7); ctx.fill(); ctx.stroke();
+      if (k === 0) {   /* F at the bead and its part along the path */
+        const P = S.F.P(q[0], q[1]), Q = S.F.Q(q[0], q[1]), m = Math.hypot(P, Q), ref = scaleF().p80 || 1;
+        if (isFinite(m) && m > 0) { const L = 46 * p * Math.min(1.6, m / ref), ux = P / m, uy = Q / m; ctx.strokeStyle = T.ink; ctx.fillStyle = T.ink; ctx.lineWidth = 2.2 * p; ctx.beginPath(); ctx.moveTo(u, v); ctx.lineTo(u + ux * L, v - uy * L); ctx.stroke(); const ex = u + ux * L, ey = v - uy * L, hs = 7 * p; ctx.beginPath(); ctx.moveTo(ex, ey); ctx.lineTo(ex - ux * hs - uy * hs * 0.5, ey + uy * hs - ux * hs * 0.5); ctx.lineTo(ex - ux * hs + uy * hs * 0.5, ey + uy * hs + ux * hs * 0.5); ctx.closePath(); ctx.fill(); }
+      }
+      const lab = `${k ? 'W₂' : 'W'} = ${f4(w)}${units().W ? ' ' + units().W : ''}`;
+      ctx.font = `700 ${12.5 * p}px ${T.mono}`; ctx.textBaseline = 'middle'; const lw = ctx.measureText(lab).width, right = u + 14 * p + lw < W - 4;
+      ctx.textAlign = right ? 'left' : 'right'; ctx.save(); ctx.strokeStyle = T.canvas; ctx.lineWidth = 5; ctx.lineJoin = 'round'; const ly = v + (k ? 18 : -18) * p; ctx.strokeText(lab, u + (right ? 14 : -14) * p, ly); ctx.restore(); ctx.fillStyle = col; ctx.fillText(lab, u + (right ? 14 : -14) * p, ly);
+    });
+    /* what the tracers show and how fast */
+    if ($('showTracers').checked) {
+      const txt = S.kind === 'flow' ? VDI18N.t('Tracers drift with the flow: 1 s here = {k} s', { k: f4(kTr) }) : VDI18N.t('Tracers drift along F, not along the path of a mass');
+      ctx.font = `${11 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillStyle = T.muted;
+      ctx.save(); ctx.strokeStyle = T.canvas; ctx.lineWidth = 4; ctx.strokeText(txt, 8 * p, H - 8 * p); ctx.restore(); ctx.fillText(txt, 8 * p, H - 8 * p);
+    }
+  }
+
+  /* the rail */
+  function verdict() {
+    const el = $('verdict');
+    if (S.blind) { el.className = 'verdict'; el.textContent = VDI18N.t('Hidden: decide from the work along two paths whether F is conservative.'); return; }
+    if (!CC) { el.textContent = ''; return; }
+    if (!CC.free) { el.className = 'verdict no'; el.textContent = CC.at ? VDI18N.t('Not conservative: curl F = {c} at ({x}, {y}), so the work depends on the path and there is no potential.', { c: f4(CC.at[2]), x: f4(CC.at[0]), y: f4(CC.at[1]) }) : ''; return; }
+    if (POT && !POT.ok) { el.className = 'verdict no'; el.textContent = VDI18N.t('Curl F = 0 wherever F is defined, but F is undefined at a point in view and a loop around that point has work ≠ 0: there is no single potential here.'); return; }
+    el.className = 'verdict yes'; el.textContent = VDI18N.t('Conservative in this view: curl F = 0 and the work around every loop is 0, so F = ∇f. The contours are lines of constant f.');
+  }
+  function formulas() {
+    if (!S.F) return;
+    const t = S.F.tree, x = (n) => VM.text(n), hide = S.blind, esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+    const row = (a, b) => `<dt>${a}</dt><dd>${b.length > 400 ? VDI18N.t('too long to show') : esc(b)}</dd>`;
+    $('formulas').innerHTML = row('P', x(t.p)) + row('Q', x(t.q)) + row('∂P/∂x', x(t.px)) + row('∂P/∂y', x(t.py)) + row('∂Q/∂x', x(t.qx)) + row('∂Q/∂y', x(t.qy))
+      + row('curl F', hide ? '?' : x(t.curl)) + row('div F', hide ? '?' : x(t.div));
+  }
+  function readouts() {
+    if (!S.F || !path) return;
+    const U = units(), u = (s) => (s ? ' ' + s : ''), dd = (a, b) => `<div><dt>${a}</dt><dd translate="no">${b}</dd></div>`, wide = (a, b, cls) => `<div class="wide"><dt>${a}</dt><dd class="${cls || ''}">${b}</dd></div>`;
+    const Wt = pre[pre.length - 1], hide = S.blind;
+    let h = '';
+    if (!path.closed) {
+      h += dd(`${U.w}, A → B`, f4(Wt) + u(U.W));
+      if (path2) { const W2 = pre2[pre2.length - 1]; h += dd(`${U.w}₂, A → B`, f4(W2) + u(U.W)) + dd('W − W₂', f4(Wt - W2, Math.abs(Wt) + Math.abs(W2)) + u(U.W)); }
+      if (POT && POT.ok && !hide && CC && CC.free) {
+        const fA = potentialAt(S.F, S.ref, S.refV, S.A), fB = potentialAt(S.F, S.ref, S.refV, S.B);
+        h += dd('f(A)', f4(fA)) + dd('f(B)', f4(fB)) + dd('f(B) − f(A)', f4(fB - fA, Math.abs(fA) + Math.abs(fB)));
+      }
+    } else if (G) {
+      const sc = Math.abs(G.circ) + Math.abs(G.curlSum) + Math.abs(G.flux) + Math.abs(G.divSum);
+      h += dd(`∮ ${U.w === 'Work W' ? 'F' : U.w.slice(2, 3)}·dr`, f4(G.circ, sc) + u(U.W));
+      h += dd(G.orient > 0 ? '∬ curl dA' : '−∬ curl dA', hide ? '?' : f4(G.orient * G.curlSum, sc) + u(U.W));
+      h += dd('∮ F·n ds', f4(G.flux, sc)) + dd('∬ div dA', hide ? '?' : f4(G.divSum, sc));
+      h += wide(VDI18N.t('Direction'), G.orient > 0 ? VDI18N.t('counterclockwise') : VDI18N.t('clockwise, so the circulation is −∬ curl dA'));
+      if (G.sing) h += wide(VDI18N.t('Green\'s theorem'), VDI18N.t('F is undefined at ({x}, {y}) inside the loop, so the theorem does not apply: the sums leave that point out.', { x: f4(Math.round(G.sing[0] * 1000) / 1000), y: f4(Math.round(G.sing[1] * 1000) / 1000) }), 'warn');
+      if (S.shape === 'free') h += wide(VDI18N.t('Note'), VDI18N.t('Inside a freehand loop the sums are over a grid of small squares, good to about three figures.'));
+    }
+    if ($('showPaddle').checked) {
+      const c = S.F.curl(S.paddle[0], S.paddle[1]);
+      h += dd(VDI18N.t('curl F at the paddle'), hide ? '?' : f4(c)) + dd(VDI18N.t('paddle turns at ω'), hide ? '?' : f4(c / 2) + (S.kind === 'flow' ? ' rad/s' : '') + (Math.abs(c) < 1e-12 ? '' : c > 0 ? ' ↺' : ' ↻'));
+    }
+    if ($('showBox').checked) {
+      const h0 = BOX[S.boxI], fl = boxFlux(S.F, S.box[0], S.box[1], h0), d = S.F.div(S.box[0], S.box[1]);
+      h += dd(VDI18N.t('net outflow of the box'), f4(fl, Math.abs(fl) + 1e-300)) + dd(VDI18N.t('outflow ÷ area'), f4(fl / (h0 * h0))) + dd(VDI18N.t('div F at its center'), hide ? '?' : f4(d));
+    }
+    $('out').innerHTML = h;
+  }
+
+  /* controls */
+  function syncInputs() {
+    const set = (id, v) => { const el = $(id); if (document.activeElement !== el) el.value = Number(v.toPrecision(6)); };
+    set('ax', S.A[0]); set('ay', S.A[1]); set('bx', S.B[0]); set('by', S.B[1]); set('cx', S.C[0]); set('cy', S.C[1]); set('rr', S.R);
+    $('shape').value = S.shape; $('shape2').value = S.shape2; $('rev').checked = S.rev;
+    const loop = S.shape === 'circle' || S.shape === 'square', free = S.shape === 'free';
+    $('rowAB').hidden = loop || free; $('rowB').hidden = loop || free; $('rowC').hidden = !loop; $('rowR').hidden = !loop; $('rowFree').hidden = !free; $('row2').hidden = loop || free;
+    $('boxSize').value = S.boxI; $('boxOut').textContent = `${f4(BOX[S.boxI])}${units().L ? ' ' + units().L : ''}`;
+    for (const b of document.querySelectorAll('#formSeg button')) b.setAttribute('aria-pressed', String(b.dataset.form === S.form));
+    for (const b of document.querySelectorAll('#shadeSeg button')) b.setAttribute('aria-pressed', String(b.dataset.shade === S.shade));
+  }
+  const pressPreset = (k) => { for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === k)); };
+  function fitBox(b) { if (!W || !H) return; S.cx = (b[0] + b[1]) / 2; S.cy = (b[2] + b[3]) / 2; S.s = Math.max((b[1] - b[0]) / W, (b[3] - b[2]) / H); }
+  function applyPreset(k) {
+    const c = PRESETS[k]; S.preset = k; S.kind = c.kind;
+    $('pIn').value = c.P; $('qIn').value = c.Q;
+    Object.assign(S, { shape: c.shape, shape2: c.shape2, A: c.A.slice(), B: c.B.slice(), C: c.C.slice(), R: c.R, rev: false, pts: [], ref: c.ref, refV: c.refV, t: 0, form: c.form || 'circ', shade: c.shade || 'none' });
+    S.paddle = (c.paddle || [c.box[0] + 0.78 * (c.box[1] - c.box[0]), c.box[2] + 0.2 * (c.box[3] - c.box[2])]).slice();
+    S.box = (c.box2 || [c.box[0] + 0.2 * (c.box[1] - c.box[0]), c.box[2] + 0.8 * (c.box[3] - c.box[2])]).slice();
+    $('showPaddle').checked = !!c.paddle; $('showBox').checked = !!c.box2;
+    $('presetHint').textContent = c.hint; pressPreset(k); setRun(false);
+    fitBox(c.box); S.srcP = null; read(); syncInputs(); seedTracers(); formulas(); need = true;
+  }
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  for (const id of ['pIn', 'qIn']) $(id).addEventListener('input', () => {
+    if (S.preset !== 'custom') { S.preset = 'custom'; S.kind = 'none'; pressPreset(''); $('presetHint').textContent = VDI18N.t('Your own field. Every setup above can be edited in the boxes, too. The potential is set to 0 at the origin.'); S.ref = [0, 0]; S.refV = 0; }
+    read(); need = true;
+  });
+  function setRun(on) { S.run = on; $('play').textContent = on ? VDI18N.t('Pause') : VDI18N.t('Play'); $('play').classList.toggle('attn', !on); }
+  $('play').addEventListener('click', () => { if (!S.run && S.t >= 1) S.t = 0; setRun(!S.run); });
+  $('reset').addEventListener('click', () => { setRun(false); S.t = 0; S.ang = 0; seedTracers(); need = true; });
+  $('shape').addEventListener('change', () => {
+    S.shape = $('shape').value; S.t = 0;
+    if (S.shape === 'free' && S.pts.length < 2) { const a = Math.min(W, H) * S.s / 4; S.pts = []; for (let i = 0; i <= 40; i++) { const t = 2 * Math.PI * i / 40; S.pts.push([S.cx + a * Math.cos(t) * (1 + 0.25 * Math.sin(2 * t)), S.cy + a * Math.sin(t)]); } S.pts[40] = S.pts[0].slice(); }
+    syncInputs(); rebuild();
+  });
+  $('shape2').addEventListener('change', () => { S.shape2 = $('shape2').value; rebuild(); });
+  $('rev').addEventListener('change', () => { S.rev = $('rev').checked; S.t = 0; rebuild(); });
+  const num = (id, fn) => $(id).addEventListener('input', () => { const v = parseFloat($(id).value); if (isFinite(v) && Math.abs(v) < 1e6) { fn(v); rebuild(); } });
+  num('ax', (v) => { S.A[0] = v; }); num('ay', (v) => { S.A[1] = v; }); num('bx', (v) => { S.B[0] = v; }); num('by', (v) => { S.B[1] = v; });
+  num('cx', (v) => { S.C[0] = v; }); num('cy', (v) => { S.C[1] = v; }); num('rr', (v) => { if (v > 0) S.R = v; });
+  $('boxSize').addEventListener('input', () => { S.boxI = +$('boxSize').value; syncInputs(); readouts(); need = true; });
+  for (const b of document.querySelectorAll('#formSeg button')) b.addEventListener('click', () => { S.form = b.dataset.form; S.shade = S.form === 'flux' ? 'div' : 'curl'; syncInputs(); bgKey = ''; need = true; });
+  for (const b of document.querySelectorAll('#shadeSeg button')) b.addEventListener('click', () => { S.shade = b.dataset.shade; syncInputs(); need = true; });
+  for (const id of ['showArrows', 'showTracers', 'showPot']) $(id).addEventListener('change', () => { need = true; });
+  for (const id of ['showPaddle', 'showBox']) $(id).addEventListener('change', () => { readouts(); need = true; });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; formulas(); readouts(); verdict(); need = true; });
+  function zoom(f) { S.s = Math.min(50, Math.max(1e-5, S.s * f)); need = true; afterView(); }
+  let viewTimer = 0;
+  function afterView() { clearTimeout(viewTimer); viewTimer = setTimeout(readouts, 120); }
+  $('zin').addEventListener('click', () => zoom(1 / 1.5));
+  $('zout').addEventListener('click', () => zoom(1.5));
+  $('homeView').addEventListener('click', () => { const c = PRESETS[S.preset]; fitBox(c ? c.box : [-4, 4, -3, 3]); seedTracers(); need = true; afterView(); });
+
+  /* the picture: drag a handle, the paddle or the box; draw a freehand path; drag elsewhere to pan; wheel or pinch to zoom */
+  const ptrs = new Map(); let drag = null;
+  const snap = (v) => { const st = nice125(W * S.s / 60); return Math.round(v / st) * st; };
+  function hit(x, y) {
+    const near = (px, py, r = 16) => Math.hypot(x - X(px), y - Y(py)) < r;
+    if ($('showPaddle').checked && near(S.paddle[0], S.paddle[1], 22)) return 'paddle';
+    if ($('showBox').checked && near(S.box[0], S.box[1], Math.max(16, BOX[S.boxI] / S.s / 2))) return 'box';
+    if (S.shape === 'circle' || S.shape === 'square') { if (near(S.C[0] + S.R, S.C[1])) return 'R'; if (near(S.C[0], S.C[1])) return 'C'; }
+    else if (S.shape !== 'free') { if (near(S.B[0], S.B[1])) return 'B'; if (near(S.A[0], S.A[1])) return 'A'; }
+    return null;
+  }
+  can.addEventListener('pointerdown', (e) => {
+    const r = can.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
+    ptrs.set(e.pointerId, { x, y }); can.setPointerCapture(e.pointerId);
+    if (ptrs.size === 2) { const [a, b] = [...ptrs.values()]; drag = { pinch: Math.hypot(a.x - b.x, a.y - b.y), s: S.s }; S.draw = null; return; }
+    const h = hit(x, y);
+    if (h) drag = { mode: h };
+    else if (S.shape === 'free') { drag = { mode: 'draw' }; S.draw = [[Xi(x), Yi(y)]]; setRun(false); }
+    else drag = { mode: 'pan', x, y, cx: S.cx, cy: S.cy };
+  });
+  can.addEventListener('pointermove', (e) => {
+    const r = can.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
+    if (!ptrs.has(e.pointerId) || !drag) { const h = hit(x, y); can.style.cursor = h ? 'move' : S.shape === 'free' ? 'crosshair' : 'grab'; return; }
+    ptrs.set(e.pointerId, { x, y });
+    if (drag.pinch) { const [a, b] = [...ptrs.values()], d = Math.hypot(a.x - b.x, a.y - b.y); if (d > 10) { S.s = Math.min(50, Math.max(1e-5, drag.s * drag.pinch / d)); need = true; afterView(); } return; }
+    const wx = Xi(x), wy = Yi(y);
+    if (drag.mode === 'pan') { S.cx = drag.cx - (x - drag.x) * S.s; S.cy = drag.cy + (y - drag.y) * S.s; need = true; afterView(); return; }
+    if (drag.mode === 'draw') { const l = S.draw[S.draw.length - 1]; if (Math.hypot(X(l[0]) - x, Y(l[1]) - y) > 5) S.draw.push([wx, wy]); need = true; return; }
+    const sx = snap(wx), sy = snap(wy);
+    if (drag.mode === 'A') S.A = [sx, sy]; else if (drag.mode === 'B') S.B = [sx, sy]; else if (drag.mode === 'C') S.C = [sx, sy];
+    else if (drag.mode === 'R') S.R = Math.max(snap(W * S.s / 60) || 1e-3, snap(Math.hypot(wx - S.C[0], wy - S.C[1])));
+    else if (drag.mode === 'paddle') { S.paddle = [sx, sy]; readouts(); need = true; return; }
+    else if (drag.mode === 'box') { S.box = [sx, sy]; readouts(); need = true; return; }
+    syncInputs(); rebuild();
+  });
+  const up = (e) => {
+    if (!ptrs.has(e.pointerId)) return;
+    ptrs.delete(e.pointerId);
+    if (drag && drag.mode === 'draw' && S.draw) {
+      const d = S.draw; S.draw = null;
+      if (d.length > 2) {
+        const close = d.length > 6 && Math.hypot(X(d[0][0]) - X(d[d.length - 1][0]), Y(d[0][1]) - Y(d[d.length - 1][1])) < 24;
+        if (close) d.push(d[0].slice());
+        S.pts = d; S.t = 0; rebuild();
+      }
+    }
+    if (!ptrs.size) drag = null; else if (drag && drag.pinch) drag = null;
+  };
+  can.addEventListener('pointerup', up); can.addEventListener('pointercancel', up);
+  /* the wheel zooms about the middle of the view, like the buttons and keys (Steve 2026-11-12) */
+  can.addEventListener('wheel', (e) => { e.preventDefault(); const d = e.deltaY * (e.deltaMode === 1 ? 33 : e.deltaMode === 2 ? 400 : 1); zoom(Math.exp(Math.max(-100, Math.min(100, d)) * 0.0018)); }, { passive: false });
+  can.addEventListener('keydown', (e) => {
+    const st = W * S.s / (e.shiftKey ? 4 : 20);
+    if (e.key === 'ArrowLeft') S.cx -= st; else if (e.key === 'ArrowRight') S.cx += st; else if (e.key === 'ArrowUp') S.cy += st; else if (e.key === 'ArrowDown') S.cy -= st;
+    else if (e.key === '+' || e.key === '=') zoom(1 / 1.5); else if (e.key === '-' || e.key === '_') zoom(1.5);
+    else if (e.key === ' ') $('play').click(); else return;
+    e.preventDefault(); need = true; afterView();
+  });
+
+  /* Play: the bead runs the path in 6 s, waits a moment at the end and starts again; the tracers and the paddle move with it */
+  let last = performance.now(), hold = 0;
+  function frame(now) {
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    if (S.run && S.F) {
+      if (S.t >= 1) { hold += dt; if (hold > 1.2) { hold = 0; S.t = 0; } } else S.t = Math.min(1, S.t + dt / 6);
+      if ($('showTracers').checked) stepTracers(dt);
+      if ($('showPaddle').checked) { const c = S.F.curl(S.paddle[0], S.paddle[1]); if (isFinite(c)) S.ang += (c / 2) * dt * (S.kind === 'flow' ? kTr : 1); }
+      need = true;
+    }
+    if (need) { need = false; draw(); }
+    requestAnimationFrame(frame);
+  }
+  function resize() {
+    dpr = window.devicePixelRatio || 1; const r = $('pane').getBoundingClientRect(), first = !W;
+    const keep = W ? { cx: S.cx, cy: S.cy, w: W * S.s } : null;
+    W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr);
+    if (first || !keep) { const c = PRESETS[S.preset]; if (c) fitBox(c.box); } else S.s = keep.w / W;
+    seedTracers(); bgKey = ''; need = true;
+  }
+  const retheme = () => { tokens(); need = true; };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'data-vd-look'] });
+  VD.projector({ onChange: resize });
+  if (window.VD && VD.panel) VD.panel({ play: '#play', reset: '#reset' });
+  VD.howTo({ src: 'media/how-this-works/vector-fields-work.mp4', poster: 'media/how-this-works/vector-fields-work.jpg' });
+  /* Copy link carries a typed field and a freehand path */
+  if (window.VD && VD.share && VD.share.picture) VD.share.picture('f', {
+    get: () => (S.preset === 'custom' || S.shape === 'free' ? VD.share.pack({ p: S.preset === 'custom' ? [$('pIn').value, $('qIn').value] : null, d: S.shape === 'free' ? S.pts.map((q) => [+q[0].toPrecision(4), +q[1].toPrecision(4)]) : null }) : ''),
+    set: (s) => { const o = s && VD.share.unpack(s); if (!o) return; if (o.p) { $('pIn').value = o.p[0]; $('qIn').value = o.p[1]; $('pIn').dispatchEvent(new Event('input')); } if (o.d) { S.pts = o.d; S.shape = 'free'; syncInputs(); rebuild(); } },
+  });
+  /* readings for the worksheet: one row for each path on show */
+  const SHAPES = { line: 'Straight line', xy: 'Along x, then y', yx: 'Along y, then x', half: 'Half circle', circle: 'Circle', square: 'Square', free: 'Freehand' };
+  const r4 = (v) => (isFinite(v) ? Number((Math.abs(v) < 1e-10 ? 0 : v).toPrecision(4)) : '');
+  window.vdReadingRow = () => {
+    if (!S.F || !path || !path.pcs.length) return VDI18N.t('Draw or choose a path first.');
+    const field = S.preset === 'custom' ? `(${$('pIn').value}, ${$('qIn').value})` : PRESETS[S.preset].name;
+    const row = (pa, shape, pr) => {
+      const o = { field, path: SHAPES[shape] + (S.rev ? ' (reversed)' : ''), closed: pa.closed ? 'yes' : 'no' };
+      if (pa.closed) { o.center_x = shape === 'free' ? '' : r4(S.C[0]); o.center_y = shape === 'free' ? '' : r4(S.C[1]); o.radius = shape === 'free' ? '' : r4(S.R); }
+      else { o.A_x = r4(S.A[0]); o.A_y = r4(S.A[1]); o.B_x = r4(S.B[0]); o.B_y = r4(S.B[1]); }
+      o.W = r4(pr[pr.length - 1]);
+      if (pa.closed && G) { o.circulation = r4(G.circ); o.curl_sum = r4(G.orient * G.curlSum); o.flux = r4(G.flux); o.div_sum = r4(G.divSum); }
+      return o;
+    };
+    const out = [row(path, S.shape, pre)]; if (path2) out.push(row(path2, S.shape2, pre2));
+    return out.length > 1 ? out : out[0];
+  };
+  window.vdShowCols = [['field', 'Field'], ['path', 'Path'], ['W', '∫ F·dr']];
+  if (window.VD && VD.describe) VD.describe(can, () => {
+    if (!S.F) return [];
+    const out = ['The field F = (P, Q) is the one typed in the two boxes, drawn as arrows over the plane.'];
+    if (path && path.pcs.length) {
+      out.push(`Path: ${SHAPES[S.shape]}${path.closed ? ', a closed loop' : ''}.`);
+      if (!path.closed) out.push(`A = (${f4(S.A[0])}, ${f4(S.A[1])}), B = (${f4(S.B[0])}, ${f4(S.B[1])}).`);
+      out.push({ t: `The line integral along it is ${f4(pre[pre.length - 1])}.`, live: !S.run });
+      if (path2) out.push(`The second path gives ${f4(pre2[pre2.length - 1])}.`);
+    }
+    if (!S.blind && CC) out.push(CC.free ? 'The curl is zero in view.' : 'The curl is not zero in view.');
+    out.push(S.run ? 'The bead is moving along the path.' : 'The bead is still.');
+    return out;
+  });
+  tokens(); new ResizeObserver(resize).observe($('pane')); resize(); applyPreset('gravity');
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  window.__vf = { S, applyPreset, rebuild, setRun, readouts, get path() { return path; }, get path2() { return path2; }, get G() { return G; }, get pre() { return pre; }, get POT() { return POT; }, get CC() { return CC; }, makeField, greens, boxFlux, potentialAt, draw: () => { need = true; } };
+  window.vdDemo = window.__vf;
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

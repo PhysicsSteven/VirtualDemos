@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="../demos/lib/theme.js"></script>
+<title>Vector Fields, Work and Curl: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+@media screen { :root[data-theme="dark"] {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; overflow-wrap: break-word; }   /* a long file name breaks instead of pushing a phone sideways */
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+<link rel="stylesheet" id="vd-paper" href="../demos/lib/paper.css">
+</head>
+<body class="notes">
+<header class="top" aria-label="Site"><a class="brand" href="../index.html"><svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><ellipse cx="16" cy="16" rx="13" ry="6" fill="none" stroke="currentColor" stroke-width="1.8" transform="rotate(-30 16 16)"/><ellipse cx="16" cy="16" rx="13" ry="6" fill="none" stroke="currentColor" stroke-width="1.8" transform="rotate(30 16 16)"/><circle cx="16" cy="16" r="2.6" fill="currentColor"/></svg>Virtual Physics Demos</a><nav class="tabs" aria-label="Library"><a class="tab" href="../index.html#topics">Demos</a><a class="tab" href="../openstax.html">OpenStax</a><a class="tab" href="index.html" aria-current="page">Notes</a></nav><span class="hfind"></span><span data-vd-theme></span><a class="courses" href="../courses.html"><b>For a class</b> Courses</a></header>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Vector Fields, Work and Curl</h1><ul class="meta"><li><a href="../demos/vector-fields.html">Open the demo</a></li><li>Calculus III (OpenStax Calculus Vol 3, 6.1 to 6.5, and 6.7 in the plane) and Physics I and II (Vol 1 7.1, 8.2; Vol 2 12.5)</li><li>15 to 40 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>A line integral ∫F·dr adds up the part of F along the path, piece by piece. For a force it is the work; the sign depends on the direction of travel.</li>
+<li>A force is conservative when the work between two points does not depend on the path. Then it is the gradient of a potential f, the work is f(B) − f(A), and the work around every loop is zero. Gravity is; a swirl is not, and friction is not even a field.</li>
+<li>The curl ∂Q/∂x − ∂P/∂y measures local turning: a paddle wheel turns at half of it. A field can have curl with straight streamlines (shear), and no curl while circling a point (the wire).</li>
+<li>Green's theorem: the circulation around a loop is the curl summed inside, and the outward flux is the divergence summed inside, but only when F is defined everywhere inside. The wire's 2π (Ampère's law) and the source's 2π come from the one point where the field is undefined.</li>
+</ul>
+<h2>Before class</h2>
+<p>Nothing to install. Projector mode thickens the arrows and the path. Blind (Lab fold) hides the curl, the divergence, the potential contours and the conservative verdict, so students decide from the work first. Every setup's field is typed in the two boxes, so students can edit it (change −y to −2y in the swirl and watch the circulation double).</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Gravity, two paths.</strong> Open on Uniform gravity. The straight line and the path along x, then y both give −19.62 J. Ask why the flat leg adds nothing (Q1). Press Play: the work grows only where the bead rises.</li>
+<li><strong>A swirl.</strong> Press A swirl force. Same A and B: 0 J and 6 J. Switch Compare with to Along y, then x: −6 J. Ask what that says about a potential energy for this force (Q2).</li>
+<li><strong>Closed loops and Green's theorem.</strong> Set the path to a circle. For the swirl the circulation is 2 times the area for any center (shade by curl: it is uniform). For gravity it is zero.</li>
+<li><strong>Find the potential.</strong> Back to gravity with Blind off: the contours are horizontal lines of f = −9.81y, and f(B) − f(A) matches W. Then the point mass: the line and the half circle both give 0.6667, and f = 1/r (Q3).</li>
+<li><strong>The wire.</strong> Press The field around a long wire. The paddle does not turn anywhere, yet the circle gives 2π. Drag the loop off the wire: 0. Ask students to reconcile this with Green's theorem (Q4).</li>
+<li><strong>Shear and divergence.</strong> A shear flow turns the paddle clockwise with straight streamlines (Q5). A spreading flow and the source and sink show the flux form: drag the box over the source.</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> In uniform gravity, F = (0, −9.81) N on 1.00 kg, why does the path along x, then y take the same work as the straight line from (0, 0) to (3, 2)? Which leg does all the work?</p></div>
+
+<div class="q"><p><strong>Q2.</strong> The swirl force F = (−y, x) N takes 0 J along the straight line from (0, 0) to (3, 2), 6 J along x then y, and −6 J along y then x. Can it have a potential energy? What is the work around the loop that goes out along x, then y and back along the straight line?</p></div>
+
+<div class="q"><p><strong>Q3.</strong> Show that f = 1/r is a potential of the point mass field F = −r̂/r², and predict the work from (3, 0) to (1, 0). Why is the work zero along any arc of a circle centered on the mass?</p></div>
+
+<div class="q"><p><strong>Q4.</strong> The wire's field has zero curl everywhere it is defined, but the circulation around a circle centered on the wire is 2π (in units of μ₀I/2π). Why does Green's theorem not force this to be zero? What is the circulation around a loop that does not enclose the wire, and why?</p></div>
+
+<div class="q"><p><strong>Q5.</strong> In the shear flow v = (y, 0) every streamline is a straight line, yet the paddle wheel turns. Which way, how fast, and why?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"Work is force times distance, whatever the path."</strong> Only the part of F along the path counts, and for a nonconservative force the route matters: the swirl gives 0, 6 and −6 J between the same points.</li>
+<li><strong>"If the arrows go in circles the curl is nonzero, and straight arrows mean no curl."</strong> The wire's arrows circle the origin with zero curl away from it; the shear flow's arrows are straight with curl −1.</li>
+<li><strong>"Curl zero means conservative."</strong> Only on a region without holes. Around the wire the curl is zero wherever B is defined, and the circulation is still 2π.</li>
+<li><strong>"Tracers show the path a particle would take."</strong> For a force field they move with velocity F, which is not how a mass moves (a mass accelerates along F). They show the direction and size of F.</li>
+</ul>
+<h2>How the demo works</h2>
+<ul>
+<li>The two boxes are read by the site's math parser (demos/lib/vdmath.js), never run as code. The four partial derivatives, the curl and the divergence are exact symbolic formulas.</li>
+<li>Paths are made of straight pieces and circular arcs. Each line integral and flux is computed by adaptive Simpson's rule along each piece, to about nine significant figures. The summed curl and divergence inside a circle or square are double integrals by the same rule; inside a freehand loop they are summed on a 200 × 200 grid, good to about three figures, as the page says.</li>
+<li>The verdict samples the curl on a grid over the view, then builds the potential on a grid by adding the work along grid edges and checks that every small loop closes. A loop around a point where F is undefined does not close for the wire, so the page says there is no single potential there; away from the wire the angle θ is a potential.</li>
+<li>The paddle wheel turns at ω = ½ curl F. The flux box gives its net outflow by integrating F·n along its four sides; divided by its area it approaches the divergence as the box shrinks. Tracers move with velocity F, sped up by the factor shown on the picture for flows.</li>
+<li>These are computed values, not measurements: the same settings always give the same digits.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>. © 2026 Steven Anderson. All rights reserved; see the <a href="../LICENSE.html">terms of use</a>.</footer>
+</main>
+</body>
+</html>

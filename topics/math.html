@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <script src="demos/lib/theme.js"></script>
 <title>Math for physics · Virtual Physics Demos</title>
-<meta name="description" content="Math for physics: Type any function and see its derivatives and its integral graphed with it, and watch how a computer solves the equations of motion step by step.">
+<meta name="description" content="Math for physics: Type any function and see its derivatives and its integral graphed with it, follow a vector field&#x27;s work, curl and divergence, and watch how a computer solves the equations of motion step by step.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
@@ -422,8 +422,8 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
   <div class="wrap">
     <p class="eyebrow"><b>Medical physics and beyond</b></p>
     <h1>Math for physics</h1>
-    <p class="lede">Type any function and see its derivatives and its integral graphed with it, and watch how a computer solves the equations of motion step by step.</p>
-    <ul class="facts"><li><span><strong>2</strong> demos</span></li><li><span><strong>1</strong> worksheet</span></li><li><span>OpenStax Vol 1 · Ch. 3, 13, 15</span></li></ul>
+    <p class="lede">Type any function and see its derivatives and its integral graphed with it, follow a vector field&#x27;s work, curl and divergence, and watch how a computer solves the equations of motion step by step.</p>
+    <ul class="facts"><li><span><strong>3</strong> demos</span></li><li><span><strong>2</strong> worksheets</span></li><li><span>OpenStax Vol 1 · Ch. 3, 7–8, 13, 15 · Vol 2 · Ch. 12</span></li></ul>
   </div>
 </header>
 <nav class="tools" aria-label="Sections">
@@ -452,6 +452,16 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
           <p>Run Euler, symplectic Euler, Verlet and RK4 side by side on a spring, a pendulum and an orbit, against the exact motion; watch the energy drift, and plot the error against the time step to find each method's order.</p>
           <p class="used">In <a href="physics-1.html">Physics I</a></p><p class="used">OpenStax <span class="sec">1:13.5</span> <span class="sec">1:15.1</span> <span class="sec">1:15.2</span> <span class="sec">1:15.4</span></p><p class="used needs"><b>Before the worksheet:</b> Simple harmonic motion; conservation of energy; slopes on log scale graphs</p>
           <p class="links"><a class="go" href="demos/numerical-methods.html?topic=math">Open demo</a> <a href="curriculum/labs/students/numerical-methods.html">Worksheet: How Good Is a Computed Motion?<span class="wsm">75 min · algebra</span></a> <a href="notes/numerical-methods.html">Notes</a></p>
+        </div>
+      </li>
+      <li class="item" data-act="sheet-calculus">
+        <a class="pic" href="demos/vector-fields.html?topic=math" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/vector-fields-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/vector-fields-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
+        <div class="body">
+          <p class="kind"><span class="role role-demo">Demo</span></p>
+          <h3><a href="demos/vector-fields.html?topic=math">Vector Fields, Work and Curl</a></h3>
+          <p>Type a 2D field and see its arrows and flowing tracers; add up the work along a path, test path independence, find the potential of a conservative field, measure curl with a paddle wheel and divergence with a small box, and check Green's theorem around a loop.</p>
+          <p class="used">OpenStax <span class="sec">1:7.1</span> <span class="sec">1:8.2</span> <span class="sec">2:12.5</span></p><p class="used needs"><b>Before the worksheet:</b> Vectors and components; work as force times displacement; partial derivatives; integrals along a parameter</p>
+          <p class="links"><a class="go" href="demos/vector-fields.html?topic=math">Open demo</a> <a href="curriculum/labs/students/vector-fields-work.html">Worksheet: Work Along Different Paths<span class="wsm">70 min · calculus</span></a> <a href="notes/vector-fields.html">Notes</a></p>
         </div>
       </li>
     </ul>
