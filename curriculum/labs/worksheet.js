@@ -1073,14 +1073,24 @@
   GRAPHS.push(...MED_CP);
   GRAPHS.push('slope-fields-cooling'); GRAPH_EVERY_TABLE.push('slope-fields-cooling');   /* dy/dt against y: a line for the cup, a parabola for the culture; Euler's error against h */
   /* ==CALCULUS START== Calculus for physics worksheets (OpenStax Calculus, 2026-11-19). */
-  const CALCULUS = ['integrals-error-order' /* Riemann Sums and Integrals demo, error against n and a table of force readings, 2026-11-19 */];
+  const CALCULUS = ['integrals-error-order' /* Riemann Sums and Integrals demo, error against n and a table of force readings, 2026-11-19 */,
+    'derivatives-reading-graphs' /* Functions and Their Derivatives demo: f′ and f″ from the graph of f, a dropped ball, a damped oscillation, 2026-11-19 */];
   ENABLED.push(...CALCULUS); GRAPHS.push(...CALCULUS);
   Object.assign(FROM_DEMO, {
     /* Table 1: Reading | Rule | n | Sum | Error, sum − integral | Size of the error; a series where every row is from a data table
        goes to Table 2: Reading | Rule | Intervals | Impulse J */
     'integrals-error-order': { demo: 'Riemann Sums and Integrals', cols: ['row', 'rule', 'n', 'sum', 'error', 'abs_error'],
       alt: [{ table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.setup === 'table'), cols: ['row', 'rule', 'n', 'sum'] }] },
+    /* Table 1: Reading | Setup | x | f(x) | f′(x) | f″(x) (the cubic and the corner); the dropped ball goes to Table 2: Reading | t |
+       height | velocity | acceleration; Secant to tangent rows to Table 3: Reading | h | average velocity | f′(1) | average − instantaneous;
+       the damped oscillation to Table 4: Reading | t | f | f′ | f″ | f″/f */
+    'derivatives-reading-graphs': { demo: 'Functions and Their Derivatives', cols: ['row', 'setup', 'x', 'f', 'd1', 'd2'],
+      alt: [{ table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.mode === 'graph' && r.setup === 'drop'), cols: ['row', 'x', 'f', 'd1', 'd2'] },
+      { table: 2, when: (rows) => rows.length > 0 && rows.every((r) => r.mode === 'secant'), cols: ['row', 'h', 'secant', 'tangent', 'diff'] },
+      { table: 3, when: (rows) => rows.length > 0 && rows.every((r) => r.mode === 'graph' && r.setup === 'damped'), cols: ['row', 'x', 'f', 'd1', 'd2', 'ratio'] }] },
   });
+  GRAPH_EVERY_TABLE.push('derivatives-reading-graphs');   /* Table 2: the ball's velocity against t (a line of slope −g) and its height (a parabola) */
+  CURVE_TABLES['derivatives-reading-graphs'] = [3];   /* the damped oscillation in Table 4: a curve, read rather than fitted */
   /* ==CALCULUS END== */
   GRAPHS.push(...ALGEBRA.filter((w) => w !== 'hs-series-parallel'));   /* the circuits sheet compares readings in a typed table, no graph */
   /* ==FORMULAS START== */
@@ -1516,7 +1526,7 @@
     'mp-radiobiology-fractionation': 'mp-radiobiology', 'energy-bands-periodic': 'energy-bands', 'hcl-spectrum-light': 'hcl-spectrum',
     'capacitors-spheres': 'capacitors', 'coulomb-sandbox-energy': 'coulomb-sandbox', 'faraday-mutual-induction': 'faraday',
     'lenses-instruments-scopes': 'lenses-instruments', 'magnetic-force-hall': 'magnetic-force', 'straight-wire-fields-ampere': 'straight-wire-fields',
-    'springs-driven': 'springs', 'springs-series-parallel': 'springs', 'integrals-error-order': 'integrals' };
+    'springs-driven': 'springs', 'springs-series-parallel': 'springs', 'integrals-error-order': 'integrals', 'derivatives-reading-graphs': 'derivatives' };
   /* worksheets with no How this works video (tools/rules.cjs NO_VIDEO): no probe, so the console shows no missing file */
   const NO_HOWTO = new Set(['intro-stellarium-sky']);
   /* QoL sweep (2026-11-08): the theme's site title ("VirtualDemos", a second h1 above the worksheet's own) becomes a plain link

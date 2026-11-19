@@ -335,6 +335,7 @@ HANDOUT_TOPIC = {
     'hs-simple-machines': 'Simple Machines: Mechanical Advantage and Efficiency', 'hs-series-parallel': 'Series and Parallel Circuits',
     'hs-energy-skate': 'Energy on a Track: Height, Speed and Friction', 'hs-projectiles': 'Projectiles: Sideways and Up',
     'hs-half-life': 'Half Life and Radioactive Dating', 'hs-heat-engines': 'Heat Engines and Refrigerators',
+    'derivatives-reading-graphs': 'Reading Derivatives from a Graph',
     'quantum-tunneling': 'Quantum Tunneling', 'energy-levels': 'Energy Levels in a Box and a Spring', 'uncertainty-principle': 'The Uncertainty Principle', 'hydrogen-atom': 'The Hydrogen Atom', 'laser-threshold': 'Laser Threshold, Efficiency and Cavity Modes', 'spin-resonance': 'Spin Resonance',
 }
 
