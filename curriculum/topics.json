@@ -470,7 +470,9 @@
       "series",
       "solids-of-revolution",
       "surfaces-and-gradients",
-      "space-3d"
+      "space-3d",
+      "data-explorer",
+      "distribution-explorer"
      ]
     }
    ]

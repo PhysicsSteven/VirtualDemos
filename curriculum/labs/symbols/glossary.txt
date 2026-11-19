@@ -3961,3 +3961,10 @@ c | @c
 q | Mass ratio M₂/M₁, equal to a₁/a₂
 L | Luminosity of a star | L☉
 M | Mass of a star | M☉
+
+== describing-data ==
+bar x | Sample mean, Σx/n | same unit as the data
+x | One data value | same unit as the data
+n | Number of data values
+s | Sample standard deviation | same unit as the data
+z | z score, (x − x̄)/s: standard deviations from the mean

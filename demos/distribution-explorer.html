@@ -1,0 +1,692 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="lib/theme.js"></script>
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
+<script src="lib/vdstats.js"></script>
+<title>Distribution Explorer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css: a probability curve on a chalkboard, the area under it, and the draws */
+:root { --curve: #8f5000; --area: #c2410c; --draw: #6d28d9; --cmp1: #0f766e; --cmp2: #be123c; --handle: #3b3127; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --curve: #f0b45a; --area: #fb923c; --draw: #c4b5fd; --cmp1: #5eead4; --cmp2: #fb7185; --handle: #efe6d6; } }
+:root[data-theme="dark"] { --curve: #f0b45a; --area: #fb923c; --draw: #c4b5fd; --cmp1: #5eead4; --cmp2: #fb7185; --handle: #efe6d6; }
+.stage { position: relative; display: flex; flex-direction: column; min-height: min-content; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.stage-ctl .nrow { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: 0.86rem; }
+.stage-ctl input[type="number"], .bar input[type="number"], .shelf-card input[type="number"] { width: 6.6em; font: inherit; font-size: 0.86rem; font-family: var(--font-mono); padding: 3px 6px; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; }
+.bar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; padding: 8px 12px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.seg.wrap { flex-wrap: wrap; }
+.params { display: flex; flex-wrap: wrap; gap: 8px 18px; align-items: center; flex: 1 1 100%; }
+.param { display: grid; grid-template-columns: max-content minmax(90px, 180px) max-content; align-items: center; gap: 6px; font-size: 0.86rem; }
+.param label { font-family: var(--font-mono); font-weight: 600; }
+.param input[type="range"] { width: 100%; }
+.notation { font-family: var(--font-mono); font-weight: 700; font-size: 1.02rem; color: var(--curve); }
+.pane { position: relative; flex: 1 1 auto; min-height: 380px; }
+.pane canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; outline: none; touch-action: none; }
+.prob { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; padding: 10px 12px; border-top: 1px solid var(--line); background: var(--surface); }
+.prob .big { font-family: var(--font-mono); font-size: 1.25rem; font-weight: 700; color: var(--area); }
+.prob code { font-family: var(--font-mono); font-size: 0.95rem; padding: 2px 8px; border-radius: 6px; background: var(--canvas); border: 1px solid var(--line); overflow-wrap: anywhere; }
+.prob .lbl { font-size: 0.78rem; font-weight: 700; color: var(--muted); }
+.shelf { display: flex; flex-wrap: wrap; align-items: stretch; gap: 12px; padding: 10px; border-top: 1px solid var(--line); background: var(--surface); }
+.shelf-card { flex: 1 1 250px; display: grid; grid-template-columns: minmax(0, 1fr); align-content: start; gap: 7px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--canvas); min-width: 0; }
+.shelf-card h3 { margin: 0; font-size: 0.78rem; font-weight: 700; color: var(--muted); }
+.shelf-card input[type="range"] { width: 100%; }
+.shelf-card code { font-family: var(--font-mono); font-size: 0.9rem; overflow-wrap: anywhere; }
+.formula { font-family: var(--font-mono); font-size: 0.86rem; line-height: 1.5; margin: 0; overflow-wrap: anywhere; }
+.sw { display: inline-block; width: 18px; height: 3px; vertical-align: middle; margin-right: 5px; border-radius: 2px; }
+.chips .chips-label { flex: 1 1 100%; font-size: 0.78rem; font-weight: 700; color: var(--muted); margin-top: 4px; }
+@media (min-width: 821px) { .bench > .stage { align-self: start; min-height: max(700px, 100%); } }
+@media (max-width: 820px) { .pane { min-height: 0; height: 380px; flex: none; } .shelf-card { flex: 1 1 100%; } .param { grid-template-columns: max-content minmax(0, 1fr) max-content; flex: 1 1 100%; } }
+</style>
+<link rel="stylesheet" id="vd-paper" href="lib/paper.css">
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Distribution Explorer</h1>
+      <p>Ten probability distributions with sliders: shade P(a &lt; X &lt; b) and read it, with the calculator command the book would use; find z scores and percentiles; then draw random values and watch the histogram fill against the curve. Compare t with the normal as df grows, and the binomial with its normal and Poisson approximations.</p>
+    </div>
+    <div class="bar-right">
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/distribution-explorer.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/distribution-explorer.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM12 2h1v1h-1zM16 2h2v1h-2zM19 2h3v1h-3zM24 2h2v1h-2zM29 2h1v1h-1zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM13 3h2v1h-2zM16 3h1v1h-1zM19 3h1v1h-1zM22 3h2v1h-2zM25 3h1v1h-1zM27 3h1v1h-1zM29 3h2v1h-2zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM11 4h1v1h-1zM14 4h1v1h-1zM16 4h1v1h-1zM18 4h2v1h-2zM22 4h1v1h-1zM24 4h3v1h-3zM28 4h3v1h-3zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM13 5h2v1h-2zM16 5h3v1h-3zM20 5h1v1h-1zM24 5h3v1h-3zM28 5h3v1h-3zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM11 6h3v1h-3zM17 6h1v1h-1zM19 6h1v1h-1zM23 6h1v1h-1zM25 6h1v1h-1zM27 6h1v1h-1zM29 6h2v1h-2zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h2v1h-2zM14 7h1v1h-1zM16 7h3v1h-3zM20 7h5v1h-5zM26 7h2v1h-2zM29 7h2v1h-2zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM12 9h4v1h-4zM17 9h1v1h-1zM19 9h1v1h-1zM21 9h5v1h-5zM28 9h1v1h-1zM30 9h1v1h-1zM2 10h1v1h-1zM5 10h1v1h-1zM7 10h2v1h-2zM10 10h2v1h-2zM14 10h1v1h-1zM18 10h3v1h-3zM23 10h1v1h-1zM27 10h2v1h-2zM30 10h2v1h-2zM33 10h1v1h-1zM3 11h1v1h-1zM6 11h2v1h-2zM9 11h1v1h-1zM12 11h3v1h-3zM16 11h4v1h-4zM22 11h1v1h-1zM26 11h3v1h-3zM30 11h3v1h-3zM36 11h1v1h-1zM38 11h1v1h-1zM4 12h2v1h-2zM7 12h2v1h-2zM10 12h1v1h-1zM12 12h2v1h-2zM17 12h1v1h-1zM19 12h4v1h-4zM26 12h2v1h-2zM30 12h1v1h-1zM32 12h1v1h-1zM35 12h4v1h-4zM4 13h2v1h-2zM7 13h1v1h-1zM14 13h1v1h-1zM16 13h1v1h-1zM18 13h1v1h-1zM21 13h1v1h-1zM23 13h1v1h-1zM27 13h3v1h-3zM3 14h2v1h-2zM8 14h3v1h-3zM15 14h5v1h-5zM23 14h1v1h-1zM25 14h3v1h-3zM29 14h1v1h-1zM31 14h3v1h-3zM37 14h2v1h-2zM2 15h1v1h-1zM6 15h1v1h-1zM11 15h2v1h-2zM14 15h2v1h-2zM20 15h1v1h-1zM22 15h1v1h-1zM26 15h1v1h-1zM31 15h3v1h-3zM36 15h3v1h-3zM2 16h1v1h-1zM6 16h5v1h-5zM15 16h1v1h-1zM22 16h2v1h-2zM25 16h1v1h-1zM28 16h1v1h-1zM32 16h3v1h-3zM36 16h3v1h-3zM2 17h2v1h-2zM5 17h1v1h-1zM10 17h2v1h-2zM14 17h1v1h-1zM17 17h2v1h-2zM22 17h3v1h-3zM26 17h2v1h-2zM31 17h1v1h-1zM34 17h1v1h-1zM38 17h1v1h-1zM2 18h1v1h-1zM6 18h1v1h-1zM8 18h3v1h-3zM15 18h2v1h-2zM18 18h1v1h-1zM23 18h2v1h-2zM31 18h3v1h-3zM35 18h2v1h-2zM38 18h1v1h-1zM2 19h1v1h-1zM6 19h1v1h-1zM9 19h1v1h-1zM11 19h4v1h-4zM17 19h1v1h-1zM23 19h6v1h-6zM30 19h1v1h-1zM32 19h3v1h-3zM37 19h2v1h-2zM2 20h4v1h-4zM7 20h2v1h-2zM11 20h5v1h-5zM22 20h1v1h-1zM30 20h1v1h-1zM33 20h1v1h-1zM36 20h3v1h-3zM4 21h1v1h-1zM7 21h1v1h-1zM11 21h3v1h-3zM17 21h3v1h-3zM23 21h1v1h-1zM25 21h2v1h-2zM28 21h1v1h-1zM30 21h2v1h-2zM36 21h2v1h-2zM2 22h1v1h-1zM4 22h2v1h-2zM7 22h2v1h-2zM10 22h2v1h-2zM13 22h2v1h-2zM18 22h1v1h-1zM21 22h1v1h-1zM23 22h1v1h-1zM25 22h4v1h-4zM30 22h1v1h-1zM32 22h1v1h-1zM34 22h1v1h-1zM37 22h1v1h-1zM3 23h1v1h-1zM11 23h1v1h-1zM15 23h2v1h-2zM18 23h3v1h-3zM23 23h1v1h-1zM26 23h1v1h-1zM28 23h1v1h-1zM30 23h1v1h-1zM32 23h2v1h-2zM35 23h1v1h-1zM38 23h1v1h-1zM3 24h2v1h-2zM6 24h1v1h-1zM8 24h1v1h-1zM11 24h2v1h-2zM20 24h2v1h-2zM23 24h1v1h-1zM26 24h3v1h-3zM30 24h1v1h-1zM37 24h2v1h-2zM2 25h3v1h-3zM7 25h1v1h-1zM10 25h1v1h-1zM14 25h5v1h-5zM20 25h1v1h-1zM23 25h1v1h-1zM25 25h3v1h-3zM29 25h1v1h-1zM31 25h1v1h-1zM37 25h2v1h-2zM2 26h2v1h-2zM7 26h3v1h-3zM12 26h2v1h-2zM16 26h1v1h-1zM18 26h1v1h-1zM20 26h4v1h-4zM25 26h3v1h-3zM29 26h1v1h-1zM31 26h3v1h-3zM35 26h1v1h-1zM37 26h1v1h-1zM3 27h1v1h-1zM9 27h4v1h-4zM14 27h1v1h-1zM17 27h1v1h-1zM19 27h6v1h-6zM26 27h1v1h-1zM32 27h2v1h-2zM36 27h3v1h-3zM2 28h1v1h-1zM5 28h2v1h-2zM8 28h1v1h-1zM10 28h1v1h-1zM12 28h1v1h-1zM16 28h4v1h-4zM23 28h3v1h-3zM27 28h2v1h-2zM30 28h2v1h-2zM33 28h4v1h-4zM38 28h1v1h-1zM3 29h1v1h-1zM5 29h1v1h-1zM7 29h1v1h-1zM9 29h1v1h-1zM11 29h1v1h-1zM13 29h1v1h-1zM15 29h1v1h-1zM18 29h3v1h-3zM22 29h2v1h-2zM25 29h3v1h-3zM29 29h2v1h-2zM34 29h1v1h-1zM2 30h2v1h-2zM8 30h3v1h-3zM12 30h1v1h-1zM17 30h1v1h-1zM19 30h1v1h-1zM22 30h2v1h-2zM25 30h2v1h-2zM30 30h5v1h-5zM36 30h2v1h-2zM10 31h2v1h-2zM16 31h4v1h-4zM23 31h1v1h-1zM25 31h1v1h-1zM28 31h3v1h-3zM34 31h2v1h-2zM38 31h1v1h-1zM2 32h7v1h-7zM11 32h3v1h-3zM16 32h1v1h-1zM18 32h2v1h-2zM26 32h2v1h-2zM29 32h2v1h-2zM32 32h1v1h-1zM34 32h2v1h-2zM37 32h2v1h-2zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h2v1h-2zM13 33h1v1h-1zM15 33h3v1h-3zM23 33h1v1h-1zM26 33h1v1h-1zM28 33h1v1h-1zM30 33h1v1h-1zM34 33h3v1h-3zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM11 34h5v1h-5zM17 34h1v1h-1zM19 34h1v1h-1zM21 34h1v1h-1zM23 34h1v1h-1zM26 34h3v1h-3zM30 34h6v1h-6zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h2v1h-2zM14 35h4v1h-4zM19 35h1v1h-1zM24 35h1v1h-1zM27 35h1v1h-1zM30 35h1v1h-1zM33 35h2v1h-2zM36 35h2v1h-2zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM11 36h1v1h-1zM14 36h2v1h-2zM18 36h1v1h-1zM20 36h5v1h-5zM26 36h2v1h-2zM31 36h1v1h-1zM33 36h3v1h-3zM37 36h2v1h-2zM2 37h1v1h-1zM8 37h1v1h-1zM11 37h1v1h-1zM13 37h3v1h-3zM17 37h1v1h-1zM20 37h1v1h-1zM22 37h2v1h-2zM25 37h3v1h-3zM30 37h1v1h-1zM33 37h1v1h-1zM2 38h7v1h-7zM10 38h1v1h-1zM13 38h1v1h-1zM15 38h2v1h-2zM18 38h2v1h-2zM22 38h2v1h-2zM25 38h3v1h-3zM29 38h3v1h-3zM37 38h2v1h-2z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl" id="strip">
+        <button type="button" class="spin attn" id="play" data-vd-key="play">Play</button>
+        <button type="button" class="btn" id="reset" title="Clear the draws and start the random numbers again from the seed">Reset</button>
+        <div class="seg" role="group" aria-label="Draws per second" id="speedSeg">
+          <button type="button" data-v="10" aria-pressed="true">10/s</button>
+          <button type="button" data-v="100" aria-pressed="false">100/s</button>
+          <button type="button" data-v="1000" aria-pressed="false">1,000/s</button>
+        </div>
+        <div class="nrow"><label for="seed">Seed</label><input type="number" id="seed" min="1" step="1" value="1"></div>
+      </div>
+      <div class="bar">
+        <div class="seg wrap" role="group" aria-label="Distribution" id="famSeg">
+          <button type="button" data-f="binomial" aria-pressed="false">Binomial</button>
+          <button type="button" data-f="geometric" aria-pressed="false">Geometric</button>
+          <button type="button" data-f="hypergeometric" aria-pressed="false">Hypergeometric</button>
+          <button type="button" data-f="poisson" aria-pressed="false">Poisson</button>
+          <button type="button" data-f="uniform" aria-pressed="false">Uniform</button>
+          <button type="button" data-f="exponential" aria-pressed="false">Exponential</button>
+          <button type="button" data-f="normal" aria-pressed="true">Normal</button>
+          <button type="button" data-f="t" aria-pressed="false">Student t</button>
+          <button type="button" data-f="chisq" aria-pressed="false">Chi square</button>
+          <button type="button" data-f="f" aria-pressed="false">F</button>
+        </div>
+        <div class="params" id="params"></div>
+      </div>
+      <div class="bar">
+        <span class="notation" id="notation" translate="no"></span>
+        <div class="seg" role="group" aria-label="Which area" id="tailSeg">
+          <button type="button" data-t="between" aria-pressed="true">Between a and b</button>
+          <button type="button" data-t="left" aria-pressed="false">Left of b</button>
+          <button type="button" data-t="right" aria-pressed="false">Right of a</button>
+        </div>
+        <div class="nrow"><label for="aIn">a =</label><input type="number" id="aIn" step="any" value="65"></div>
+        <div class="nrow"><label for="bIn">b =</label><input type="number" id="bIn" step="any" value="70"></div>
+      </div>
+      <div class="pane" id="pane">
+        <canvas id="can" tabindex="0" role="img" aria-label="The probability curve or bars of the chosen distribution, the shaded area for the chosen event, and a histogram of the random draws. Drag a or b along the axis; left and right arrows move b, Shift with them moves a."></canvas>
+      </div>
+      <div class="prob" id="prob" aria-live="polite"></div>
+      <div class="shelf" id="shelf">
+        <div class="shelf-card" role="group" aria-label="Percentile">
+          <h3>Percentile</h3>
+          <div class="slider-head"><label for="kIn">Area to the left</label><output id="kOut" for="kIn"></output></div>
+          <input type="range" id="kIn" min="0.01" max="0.99" step="0.01" value="0.90">
+          <p class="hint" id="kNote"></p>
+        </div>
+        <div class="shelf-card" role="group" aria-label="Compare">
+          <h3>Compare</h3>
+          <label class="check" id="cmp1Wrap"><input type="checkbox" id="cmp1"><span id="cmp1Lab"></span></label>
+          <label class="check" id="cmp2Wrap"><input type="checkbox" id="cmp2"><span id="cmp2Lab"></span></label>
+          <p class="hint" id="cmpNote"></p>
+        </div>
+        <div class="shelf-card" role="group" aria-label="The distribution">
+          <h3>The distribution</h3>
+          <p class="formula" id="formula" translate="no"></p>
+        </div>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+      </section>
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <span class="chips-label">From the book</span>
+          <button type="button" data-p="exam" aria-pressed="true">Exam scores N(63, 5): P(X &gt; 65) (6.2)</button>
+          <button type="button" data-p="workers" aria-pressed="false">Binomial B(20, 0.41): P(X ≤ 12) (4.3)</button>
+          <button type="button" data-p="virus" aria-pressed="false">Geometric G(0.173): P(X = 10) (4.4)</button>
+          <button type="button" data-p="committee" aria-pressed="false">Hypergeometric: more than 4 men (4.5)</button>
+          <button type="button" data-p="emails" aria-pressed="false">Poisson P(147): P(X ≤ 160) (4.6)</button>
+          <button type="button" data-p="smile" aria-pressed="false">Uniform U(0, 23): smiles (5.2)</button>
+          <button type="button" data-p="postal" aria-pressed="false">Exponential Exp(0.25): postal clerk (5.3)</button>
+          <button type="button" data-p="invT" aria-pressed="false">t with df = 14: invT(0.975, 14) (8.2)</button>
+          <button type="button" data-p="chi" aria-pressed="false">Chi square, df = 10 (11.1)</button>
+          <button type="button" data-p="anova" aria-pressed="false">F with 2 and 12 df: P(F &gt; 0.134) (13.3)</button>
+          <span class="chips-label">Compare</span>
+          <button type="button" data-p="tGrows" aria-pressed="false">t closes in on the normal as df grows</button>
+          <button type="button" data-p="binApprox" aria-pressed="false">Binomial against normal and Poisson</button>
+          <button type="button" data-p="rule" aria-pressed="false">The empirical rule: within 2σ</button>
+          <span class="chips-label">In the lab</span>
+          <button type="button" data-p="counts" aria-pressed="false">Decay counts in 10 s: Poisson</button>
+          <button type="button" data-p="waits" aria-pressed="false">Waiting time between decays: exponential</button>
+          <button type="button" data-p="pend" aria-pressed="false">Hand timed pendulum: normal</button>
+          <button type="button" data-p="round" aria-pressed="false">Rounding error of a meter: uniform</button>
+        </div>
+        <details class="more" open><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+      </section>
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the probability and the percentile, to predict them first</span></label>
+        <details class="more"><summary>How it works</summary>
+          <p class="hint">Every probability is computed from the distribution's cumulative distribution function in demos/lib/vdstats.js: exact sums for the discrete ones (the binomial and Poisson through the incomplete beta and gamma functions), and for the continuous ones the error function (normal), the incomplete beta function (t and F) and the incomplete gamma function (chi square), good to about ten significant figures. The book reads these from tables or a TI-83 or TI-84; the command shown is the one the book writes, with 1E99 for an open end.</p>
+          <p class="hint">For a discrete distribution, a and b are whole numbers and both ends count: "between" means a ≤ X ≤ b. For a continuous one, P(a &lt; X &lt; b) = P(a ≤ X ≤ b), since a single value has probability zero.</p>
+          <p class="hint">A percentile is the value with that area to its left: invNorm and invT on the calculator; for the other continuous distributions the demo finds it by bisection on the cumulative distribution function. For a discrete one it is the smallest x whose cumulative probability reaches the area.</p>
+          <p class="hint">The draws are simulated with seeded random numbers (the same seed gives the same draws): binomial and hypergeometric by counting successes trial by trial, Poisson by multiplying uniform numbers (or by inverting its cumulative distribution for a large mean), geometric and exponential by inverting their cumulative distributions, normal by the polar method, chi square as a sum of df squared standard normals, t as a standard normal over √(χ²/df), F as a ratio of two chi squares each divided by its df. The histogram is scaled to the curve: for continuous data its bars have area equal to the fraction of draws in them.</p>
+          <p class="hint">The normal approximation to a discrete distribution uses the continuity correction: P(a ≤ X ≤ b) is approximated by the normal area from a − 0.5 to b + 0.5.</p>
+        </details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  /* The probability distributions of OpenStax Introductory Statistics 2e (chapters 4 to 6, 8, 11 and 13) on demos/lib/vdstats.js,
+     with the calculator command the book writes for each probability and percentile, and seeded samplers. Runs in Node with
+     vdstats.js loaded first (curriculum/validation/test_distribution-explorer.cjs). */
+  const STD = typeof VDSTATS !== 'undefined' ? VDSTATS : globalThis.VDSTATS;
+  /* each family: its parameters (name, label, default, slider min, max, step, whole number?), whether discrete, and its vdstats
+     distribution */
+  const FAM = {
+    binomial: { discrete: true, params: [['n', 'n', 20, 1, 100, 1, true], ['p', 'p', 0.41, 0.01, 0.99, 0.01]], make: (q) => STD.dist.binomial(q.n, q.p) },
+    geometric: { discrete: true, params: [['p', 'p', 0.173, 0.02, 0.99, 0.001]], make: (q) => STD.dist.geometric(q.p) },
+    hypergeometric: { discrete: true, params: [['N', 'N', 33, 2, 100, 1, true], ['K', 'K', 15, 0, 100, 1, true], ['n', 'n', 7, 1, 100, 1, true]], make: (q) => STD.dist.hypergeometric(q.N, q.K, q.n) },
+    poisson: { discrete: true, params: [['mu', 'μ', 147, 0.1, 200, 0.1]], make: (q) => STD.dist.poisson(q.mu) },
+    uniform: { discrete: false, params: [['A', 'a', 0, -100, 100, 0.5], ['B', 'b', 23, -99, 200, 0.5]], make: (q) => STD.dist.uniform(q.A, q.B) },
+    exponential: { discrete: false, params: [['m', 'm', 0.25, 0.01, 5, 0.01]], make: (q) => STD.dist.exponential(q.m) },
+    normal: { discrete: false, params: [['mu', 'μ', 63, -100, 200, 0.1], ['sigma', 'σ', 5, 0.1, 50, 0.1]], make: (q) => STD.dist.normal(q.mu, q.sigma) },
+    t: { discrete: false, params: [['df', 'df', 14, 1, 100, 1, true]], make: (q) => STD.dist.t(q.df) },
+    chisq: { discrete: false, params: [['df', 'df', 10, 1, 100, 1, true]], make: (q) => STD.dist.chisq(q.df) },
+    f: { discrete: false, params: [['d1', 'df₁', 2, 1, 100, 1, true], ['d2', 'df₂', 12, 1, 100, 1, true]], make: (q) => STD.dist.f(q.d1, q.d2) },
+  };
+  /* keep the parameters legal: whole numbers where they must be, K and n no more than N, b above a */
+  function legal(fam, q) {
+    const o = Object.assign({}, q);
+    for (const [k, , def, lo, hi, , whole] of FAM[fam].params) { let v = Number(o[k]); if (!isFinite(v)) v = def; if (whole) v = Math.round(v); o[k] = v; void lo; void hi; }
+    if (fam === 'binomial') { o.n = Math.max(1, Math.min(1000, o.n)); o.p = Math.max(0.0001, Math.min(0.9999, o.p)); }
+    if (fam === 'geometric') o.p = Math.max(0.0001, Math.min(0.9999, o.p));
+    if (fam === 'hypergeometric') { o.N = Math.max(2, Math.min(1000, o.N)); o.K = Math.max(0, Math.min(o.N, o.K)); o.n = Math.max(1, Math.min(o.N, o.n)); }
+    if (fam === 'poisson') o.mu = Math.max(0.01, Math.min(1000, o.mu));
+    if (fam === 'uniform' && !(o.B > o.A)) o.B = o.A + 1;
+    if (fam === 'exponential') o.m = Math.max(0.0001, o.m);
+    if (fam === 'normal') o.sigma = Math.max(1e-6, o.sigma);
+    if (fam === 't' || fam === 'chisq') o.df = Math.max(1, Math.min(1000, o.df));
+    if (fam === 'f') { o.d1 = Math.max(1, Math.min(1000, o.d1)); o.d2 = Math.max(1, Math.min(1000, o.d2)); }
+    return o;
+  }
+  /* P(event): for a discrete X, between is a ≤ X ≤ b, left is X ≤ b, right is X ≥ a; for a continuous X the same with < */
+  function prob(D, discrete, tail, a, b) {
+    if (discrete) {
+      a = Math.ceil(a - 1e-9); b = Math.floor(b + 1e-9);
+      if (tail === 'left') return D.cdf(b);
+      if (tail === 'right') return 1 - D.cdf(a - 1);
+      return b < a ? 0 : Math.max(0, D.cdf(b) - D.cdf(a - 1));
+    }
+    if (tail === 'left') return D.cdf(b);
+    if (tail === 'right') return 1 - D.cdf(a);
+    return b < a ? 0 : Math.max(0, D.cdf(b) - D.cdf(a));
+  }
+  /* numbers as the book types them into a calculator: up to 4 significant figures past the point, no trailing zeros */
+  function cnum(v) {
+    if (!isFinite(v)) return v > 0 ? '1E99' : '−1E99';
+    if (v === 0) return '0';
+    const s = Math.abs(v) >= 1e6 || Math.abs(v) < 1e-4 ? v.toExponential(3).replace(/\.?0*e\+?/, 'E') : String(Number(v.toPrecision(Math.max(4, Math.ceil(Math.log10(Math.abs(v))) + 4))));
+    return s.replace('-', '−');
+  }
+  /* the calculator command the book writes for the probability, or the formula it uses where the calculator has none */
+  function tiText(fam, q, tail, a, b) {
+    const c = cnum, A = tail === 'left' ? -Infinity : a, B = tail === 'right' ? Infinity : b;
+    const di = (f, args, x) => `${f}(${args}, ${c(x)})`;
+    switch (fam) {
+      case 'binomial': case 'geometric': case 'poisson': {
+        const args = fam === 'binomial' ? `${q.n}, ${c(q.p)}` : fam === 'geometric' ? c(q.p) : c(q.mu);
+        const pre = fam === 'binomial' ? 'binom' : fam === 'geometric' ? 'geomet' : 'poisson';
+        const ai = Math.ceil(a - 1e-9), bi = Math.floor(b + 1e-9);
+        if (tail === 'left') return di(pre + 'cdf', args, bi);
+        if (tail === 'right') return '1 − ' + di(pre + 'cdf', args, ai - 1);
+        if (ai === bi) return di(pre + 'pdf', args, ai);
+        return di(pre + 'cdf', args, bi) + ' − ' + di(pre + 'cdf', args, ai - 1);
+      }
+      case 'hypergeometric': return 'Σ C(K, x)·C(N − K, n − x)/C(N, n)';
+      case 'uniform': {
+        const lo = Math.max(q.A, A), hi = Math.min(q.B, B);
+        const pn = (v) => (v < 0 ? `(${c(v)})` : c(v));
+        return `(${c(isFinite(hi) ? hi : q.B)} − ${pn(isFinite(lo) ? lo : q.A)})·1/(${c(q.B)} − ${pn(q.A)})`;
+      }
+      case 'exponential': {
+        if (tail === 'left') return `1 − e^(−${c(q.m)}·${c(b)})`;
+        if (tail === 'right') return `e^(−${c(q.m)}·${c(a)})`;
+        return `e^(−${c(q.m)}·${c(a)}) − e^(−${c(q.m)}·${c(b)})`;
+      }
+      case 'normal': return `normalcdf(${c(A)}, ${c(B)}, ${c(q.mu)}, ${c(q.sigma)})`;
+      case 't': return `tcdf(${c(A)}, ${c(B)}, ${q.df})`;
+      case 'chisq': return `χ²cdf(${c(Math.max(0, A))}, ${c(B)}, ${q.df})`;
+      case 'f': return `Fcdf(${c(Math.max(0, A))}, ${c(B)}, ${q.d1}, ${q.d2})`;
+    }
+    return '';
+  }
+  /* the k-th percentile (area k to the left) and how the book finds it */
+  function percentile(fam, q, D, k) {
+    const x = D.inv(k), c = cnum;
+    let how = '';
+    if (fam === 'normal') how = `invNorm(${c(k)}, ${c(q.mu)}, ${c(q.sigma)})`;
+    else if (fam === 't') how = `invT(${c(k)}, ${q.df})`;
+    else if (fam === 'uniform') how = `${c(q.A)} + ${c(k)}·(${c(q.B)} − ${q.A < 0 ? '(' + c(q.A) + ')' : c(q.A)})`;
+    else if (fam === 'exponential') how = `−ln(1 − ${c(k)})/${c(q.m)}`;
+    return { x, how };
+  }
+  /* the comparison curves each family offers */
+  function compares(fam, q, D) {
+    const out = [];
+    if (fam === 'binomial') { out.push({ label: 'Normal approximation, N(np, √(npq))', D: STD.dist.normal(D.mean, D.sd), cc: true }); out.push({ label: 'Poisson with μ = np', D: STD.dist.poisson(q.n * q.p), discrete: true }); }
+    else if (fam === 'hypergeometric') { if (q.K > 0 && q.K < q.N) out.push({ label: 'Binomial B(n, K/N): drawing with replacement', D: STD.dist.binomial(q.n, q.K / q.N), discrete: true }); out.push({ label: 'Normal with the same mean and SD', D: STD.dist.normal(D.mean, Math.max(1e-9, D.sd)), cc: true }); }
+    else if (fam === 'poisson') out.push({ label: 'Normal approximation, N(μ, √μ)', D: STD.dist.normal(q.mu, Math.sqrt(q.mu)), cc: true });
+    else if (fam === 't') out.push({ label: 'Standard normal N(0, 1)', D: STD.dist.normal(0, 1) });
+    else if (fam === 'chisq') out.push({ label: 'Normal with mean df and SD √(2df)', D: STD.dist.normal(q.df, Math.sqrt(2 * q.df)) });
+    else if (fam === 'normal') out.push({ label: 'Standard normal N(0, 1)', D: STD.dist.normal(0, 1) });
+    else if (isFinite(D.mean) && isFinite(D.sd) && D.sd > 0) out.push({ label: 'Normal with the same mean and SD', D: STD.dist.normal(D.mean, D.sd), cc: FAM[fam].discrete });
+    return out;
+  }
+  /* a comparison's probability of the same event (continuity correction for a normal standing in for a discrete X) */
+  function cmpProb(C, discrete, tail, a, b) {
+    if (C.discrete) return prob(C.D, true, tail, a, b);
+    if (discrete && C.cc) { const ai = Math.ceil(a - 1e-9) - 0.5, bi = Math.floor(b + 1e-9) + 0.5; return prob(C.D, false, tail, ai, bi); }
+    return prob(C.D, false, tail, a, b);
+  }
+  /* seeded samplers, one value per call */
+  function sampler(fam, q, r) {
+    const chi = (k) => { let s = 0; for (let i = 0; i < k; i++) { const z = r.normal(); s += z * z; } return s; };
+    switch (fam) {
+      case 'binomial': return () => r.binomial(q.n, q.p);
+      case 'geometric': return () => Math.max(1, Math.ceil(Math.log(1 - r()) / Math.log(1 - q.p) - 1e-12));
+      case 'hypergeometric': return () => { let K = q.K, N = q.N, x = 0; for (let i = 0; i < q.n; i++) { if (r() < K / N) { x++; K--; } N--; } return x; };
+      case 'poisson': return () => r.poisson(q.mu);
+      case 'uniform': return () => q.A + r() * (q.B - q.A);
+      case 'exponential': return () => r.exp(q.m);
+      case 'normal': return () => r.normal(q.mu, q.sigma);
+      case 't': return () => r.normal() / Math.sqrt(chi(q.df) / q.df);
+      case 'chisq': return () => chi(q.df);
+      case 'f': return () => (chi(q.d1) / q.d1) / (chi(q.d2) / q.d2);
+    }
+    return () => NaN;
+  }
+  /* the x range to draw: where the distribution (and what it is compared with) has nearly all its probability */
+  function viewRange(fam, q, D, extra) {
+    let lo, hi;
+    if (fam === 'uniform') { const w = q.B - q.A; lo = q.A - 0.15 * w; hi = q.B + 0.15 * w; }
+    else if (FAM[fam].discrete) { lo = Math.max(D.lo, D.inv(0.0005)); hi = Math.min(D.hi, D.inv(0.9995)); lo -= 1; hi += 1; if (hi - lo < 8) { const m = (lo + hi) / 2; lo = Math.max(D.lo - 1, m - 4); hi = lo + 8; } }
+    else if (fam === 'f') { lo = 0; hi = Math.max(3, Math.min(D.inv(0.99), 12)); }
+    else if (fam === 'chisq' || fam === 'exponential') { lo = 0; hi = D.inv(0.999); }
+    else if (fam === 't') { const h = Math.max(4, Math.min(D.inv(0.995), 8)); lo = -h; hi = h; }
+    else { lo = D.inv(0.0002); hi = D.inv(0.9998); }
+    for (const C of extra || []) { const a = C.D.inv(0.001), b = C.D.inv(0.999); if (isFinite(a) && a < lo && fam !== 't') lo = Math.max(lo - (hi - lo), a); if (isFinite(b) && b > hi && fam !== 't') hi = Math.min(hi + (hi - lo), b); }
+    return [lo, hi];
+  }
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  const VDI18N = window.VDI18N || { t: (s, o) => s.replace(/\{(\w+)\}/g, (m, k) => (o && k in o ? o[k] : m)) };
+  const tt = (s, o) => VDI18N.t(s, o);
+  /* the setups: the book's examples (section in the chip) and lab models */
+  const PRESETS = {
+    exam: { fam: 'normal', q: { mu: 63, sigma: 5 }, tail: 'right', a: 65, b: 70, hint: 'The book\'s example (6.2): final exam scores are normal with mean 63 and standard deviation 5, X ~ N(63, 5). The chance a student scored more than 65 is the area to the right of 65, normalcdf(65, 1E99, 63, 5) = 0.3446. Its z score is (65 − 63)/5 = 0.4. Press Play to draw students at random and watch the histogram take the shape of the curve.' },
+    workers: { fam: 'binomial', q: { n: 20, p: 0.41 }, tail: 'left', a: 0, b: 12, hint: 'The book\'s example (4.3): 41 % of adult workers have a high school diploma but no further education; pick 20 at random. X ~ B(20, 0.41) and P(X ≤ 12) = binomcdf(20, 0.41, 12) = 0.9738. Tick a comparison to see how close the normal and Poisson curves come.' },
+    virus: { fam: 'geometric', q: { p: 0.173 }, tail: 'between', a: 10, b: 10, hint: 'The book\'s example (4.4): 17.3 % of people carry a virus; X = the number tested until the first one with it, X ~ G(0.173). P(X = 10) = geometpdf(0.173, 10) = 0.0313. The mean is 1/p = 5.78 tests.' },
+    committee: { fam: 'hypergeometric', q: { N: 33, K: 15, n: 7 }, tail: 'right', a: 5, b: 7, hint: 'The book\'s example (4.5): a committee of 7 is chosen from 18 women and 15 men; X = the number of men. Drawing without replacement makes this hypergeometric: N = 33 people, K = 15 men, n = 7 chosen. "More than four men" is P(X ≥ 5). The calculator has no command for it, so the demo adds the probabilities of 5, 6 and 7. Tick the binomial comparison: drawing with replacement would be binomial.' },
+    emails: { fam: 'poisson', q: { mu: 147 }, tail: 'left', a: 0, b: 160, hint: 'The book\'s example (4.6): an email user gets 147 emails a day on average, X ~ P(147). P(X ≤ 160) = poissoncdf(147, 160) = 0.8666. With a mean this large the Poisson looks normal: tick the comparison.' },
+    smile: { fam: 'uniform', q: { A: 0, B: 23 }, tail: 'between', a: 2, b: 18, hint: 'The book\'s example (5.2): an eight week old baby\'s smile lasts anywhere from 0 to 23 s, all equally likely, X ~ U(0, 23). The density is the height 1/23, so the area between 2 and 18 is the width times the height, (18 − 2)/23 = 0.6957.' },
+    postal: { fam: 'exponential', q: { m: 0.25 }, tail: 'left', a: 0, b: 5, hint: 'The book\'s example (5.3): a postal clerk spends on average 4 minutes with a customer, so the decay parameter is m = 1/4 = 0.25 and X ~ Exp(0.25). P(X < 5) = 1 − e^(−0.25·5) = 0.7135. The mean and the standard deviation are both 4 min.' },
+    invT: { fam: 't', q: { df: 14 }, tail: 'between', a: -2.145, b: 2.145, k: 0.975, hint: 'The book\'s example (8.2): for a 95 % confidence interval with n = 15, df = 14 and the t score with area 0.975 to its left is invT(0.975, 14) = 2.145. The area between −2.145 and 2.145 is 0.95. Tick the standard normal: its 1.96 is smaller because the t curve has fatter tails.' },
+    chi: { fam: 'chisq', q: { df: 10 }, tail: 'right', a: 18.307, b: 30, k: 0.95, hint: 'The facts of the chi square distribution (11.1): it starts at 0 and is skewed right, with mean df = 10 and standard deviation √(2df) = 4.472. The value with area 0.05 to its right is 18.307, the critical value of a test at α = 0.05. Raise df and watch it become more symmetric.' },
+    anova: { fam: 'f', q: { d1: 2, d2: 12 }, tail: 'right', a: 0.134, b: 5, hint: 'The book\'s one way ANOVA example (13.3, the bean plants): F = 0.134 with 2 and 12 degrees of freedom. The p value is the area to the right, Fcdf(0.134, 1E99, 2, 12) = 0.8759, so there is no evidence the means differ.' },
+    tGrows: { fam: 't', q: { df: 1 }, tail: 'right', a: 2, b: 5, cmp1: true, hint: 'With df = 1 the t curve has very fat tails: P(t > 2) = 0.1476, against 0.0228 for the standard normal (dashed). Drag df up and watch the two areas close in; by df = 30 they differ in the third decimal place. That is why the book uses the normal for large samples.' },
+    binApprox: { fam: 'binomial', q: { n: 50, p: 0.1 }, tail: 'between', a: 3, b: 7, cmp1: true, cmp2: true, hint: 'B(50, 0.1) against the normal with the same mean and SD (with the continuity correction) and the Poisson with μ = np = 5. For small p the Poisson is the better match; move p toward 0.5 and the normal catches up. The rule of thumb: the normal works when np and nq are both at least 5.' },
+    rule: { fam: 'normal', q: { mu: 0, sigma: 1 }, tail: 'between', a: -2, b: 2, hint: 'The empirical rule (6.1): about 68 % of a normal distribution lies within one standard deviation of the mean, 95 % within two and 99.7 % within three. Here P(−2 < Z < 2) = 0.9545. Type 1 or 3 for a and b with the sign changed.' },
+    counts: { fam: 'poisson', q: { mu: 3.2 }, tail: 'right', a: 6, b: 12, hint: 'A lab model: counts in 10 s from a weak radioactive source averaging 3.2 counts (the Data Explorer\'s decay counts are drawn from it). Decays are independent and rare, so the count is Poisson. P(X ≥ 6) is the chance of a count of 6 or more, which a student might wrongly call a fluke.' },
+    waits: { fam: 'exponential', q: { m: 0.32 }, tail: 'right', a: 10, b: 20, hint: 'A lab model: with 0.32 decays a second on average, the waiting time between decays is exponential with m = 0.32 per second (mean 3.125 s). P(X > 10) = e^(−3.2) = 0.0408: the same as the chance of zero counts in 10 s in the Poisson setup. The exponential has no memory: having waited 5 s already changes nothing.' },
+    pend: { fam: 'normal', q: { mu: 2, sigma: 0.06 }, tail: 'between', a: 1.9, b: 2.1, ranges: { mu: [1.5, 2.5, 0.001], sigma: [0.005, 0.3, 0.001] }, hint: 'A lab model: hand timings of a pendulum whose true period is 2.000 s, each off by a normal reaction error with σ = 0.06 s (the model behind the Data Explorer\'s simulated timings). The chance a single timing lands within 0.1 s of the truth is 0.9044.' },
+    round: { fam: 'uniform', q: { A: -0.05, B: 0.05 }, tail: 'between', a: -0.02, b: 0.02, ranges: { A: [-0.5, 0, 0.005], B: [0, 0.5, 0.005] }, hint: 'A lab model: a meter showing one decimal place hides an error anywhere from −0.05 to 0.05 of the last unit, all equally likely. Its standard deviation is (b − a)/√12 = 0.0289, the standard uncertainty of a reading from its resolution.' },
+  };
+  const S = { preset: 'exam', fam: 'normal', q: {}, tail: 'right', a: 65, b: 70, k: 0.9, cmp1: false, cmp2: false, blind: false, run: false, speed: 10, seed: 1,
+    draws: [], rng: null, samp: null, clock: 0, D: null, C: [], view: [0, 1], drag: null, ranges: null };
+  const can = $('can'), ctx = can.getContext('2d');
+  let W = 0, H = 0, dpr = 1, T = null, need = true, needHtml = true;
+  const proj = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), mono: g('--font-mono') || 'monospace', curve: g('--curve'), area: g('--area'), draw: g('--draw'), c1: g('--cmp1'), c2: g('--cmp2'), handle: g('--handle') };
+  }
+  const NF = {};
+  function fmt(v, dec) {
+    if (!isFinite(v)) return v > 0 ? '∞' : v < 0 ? '−∞' : '—';
+    if (!NF[dec]) NF[dec] = new Intl.NumberFormat('en-US', { minimumFractionDigits: dec, maximumFractionDigits: dec });
+    return NF[dec].format(Math.abs(v) < Math.pow(10, -dec) / 2 ? 0 : v).replace('-', '−');
+  }
+  /* a probability as the book gives it: four decimal places, or two significant figures with a power of ten when smaller */
+  function fp(p) {
+    if (!isFinite(p)) return '—';
+    if (p > 0 && p < 0.0001) { const e = Math.floor(Math.log10(p)), m = p / Math.pow(10, e); return fmt(m, 1) + '×10' + String(e).replace('-', '⁻').replace(/\d/g, (d) => '⁰¹²³⁴⁵⁶⁷⁸⁹'[d]); }
+    if (p > 0.9999 && p < 1) return fmt(p, 6);
+    return fmt(p, 4);
+  }
+  /* an x value: whole numbers for a discrete X, else enough places for the view */
+  const xdec = () => (FAM[S.fam].discrete ? 0 : Math.max(0, Math.min(6, 2 - Math.floor(Math.log10(Math.max(1e-9, S.view[1] - S.view[0]))) + 1)));
+  const fxv = (v) => { const t = fmt(v, xdec()); return t.indexOf('.') < 0 ? t : t.replace(/\.?0+$/, ''); };
+
+  /* ---------- the model ---------- */
+  function rebuild(keepDraws) {
+    S.q = legal(S.fam, S.q); S.D = FAM[S.fam].make(S.q); S.C = compares(S.fam, S.q, S.D);
+    const use = [S.cmp1 && S.C[0], S.cmp2 && S.C[1]].filter(Boolean);
+    S.view = viewRange(S.fam, S.q, S.D, use);
+    if (!keepDraws) clearDraws();
+    else S.samp = sampler(S.fam, S.q, S.rng);
+    needHtml = true; need = true;
+  }
+  function clearDraws() { S.draws = []; S.rng = STD.rng(S.seed); S.samp = sampler(S.fam, S.q, S.rng); S.recent = []; }
+  function P() { return prob(S.D, FAM[S.fam].discrete, S.tail, S.a, S.b); }
+  function paramsUI() {
+    const box = $('params'); box.innerHTML = '';
+    for (const [k, lab, , lo, hi, step] of FAM[S.fam].params) {
+      const r = (S.ranges && S.ranges[k]) || [lo, hi, step];
+      const id = 'p_' + k;
+      const d = document.createElement('div'); d.className = 'param';
+      d.innerHTML = `<label for="${id}" translate="no">${lab}</label><input type="range" id="${id}" min="${r[0]}" max="${r[1]}" step="${r[2]}" aria-label="${lab}"><input type="number" id="${id}n" min="${r[0]}" step="${r[2]}" aria-label="${lab}">`;
+      box.appendChild(d);
+      const rg = d.querySelector('input[type="range"]'), nb = d.querySelector('input[type="number"]');
+      rg.value = String(S.q[k]); nb.value = String(S.q[k]);
+      rg.addEventListener('input', () => { S.q[k] = +rg.value; custom(); afterParam(); nb.value = String(S.q[k]); });
+      nb.addEventListener('input', () => { const v = +nb.value; if (nb.value.trim() === '' || !isFinite(v)) return; S.q[k] = v; custom(); afterParam(); rg.value = String(S.q[k]); });
+      nb.addEventListener('change', () => { nb.value = String(S.q[k]); });
+    }
+  }
+  function afterParam() {
+    const old = Object.assign({}, S.q); rebuild(false);
+    for (const [k] of FAM[S.fam].params) if (S.q[k] !== old[k]) { const rg = $('p_' + k), nb = $('p_' + k + 'n'); if (rg) rg.value = String(S.q[k]); if (nb && document.activeElement !== nb) nb.value = String(S.q[k]); }
+    if (S.fam === 'hypergeometric') { for (const k of ['K', 'n']) { const rg = $('p_' + k); if (rg) { rg.max = String(S.q.N); rg.value = String(S.q[k]); } } }
+  }
+  function syncAB() {
+    const d = FAM[S.fam].discrete;
+    if (d) { S.a = Math.round(S.a); S.b = Math.round(S.b); }
+    if (document.activeElement !== $('aIn')) $('aIn').value = String(Number(S.a.toPrecision(8)));
+    if (document.activeElement !== $('bIn')) $('bIn').value = String(Number(S.b.toPrecision(8)));
+    $('aIn').step = d ? '1' : 'any'; $('bIn').step = d ? '1' : 'any';
+    $('aIn').disabled = S.tail === 'left'; $('bIn').disabled = S.tail === 'right';
+    for (const b of document.querySelectorAll('#tailSeg button')) b.setAttribute('aria-pressed', String(b.dataset.t === S.tail));
+    const lab = d ? { between: 'Between a and b (a ≤ X ≤ b)', left: 'Left of b (X ≤ b)', right: 'Right of a (X ≥ a)' } : { between: 'Between a and b', left: 'Left of b', right: 'Right of a' };
+    for (const b of document.querySelectorAll('#tailSeg button')) b.textContent = tt(lab[b.dataset.t]);
+  }
+  function applyPreset(k) {
+    const c = PRESETS[k]; S.preset = k; S.fam = c.fam; S.q = Object.assign({}, c.q); S.tail = c.tail; S.a = c.a; S.b = c.b; S.ranges = c.ranges || null;
+    S.cmp1 = !!c.cmp1; S.cmp2 = !!c.cmp2; if (c.k) S.k = c.k;
+    setRun(false); rebuild(false); paramsUI(); syncFam(); syncAB();
+    $('cmp1').checked = S.cmp1; $('cmp2').checked = S.cmp2; $('kIn').value = String(S.k);
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === k));
+    $('presetHint').textContent = tt(c.hint);
+  }
+  function custom() { if (S.preset !== 'custom') { S.preset = 'custom'; for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', 'false'); $('presetHint').textContent = tt('Your own distribution and event. Every setup above can be changed, too.'); } }
+  function syncFam() { for (const b of document.querySelectorAll('#famSeg button')) b.setAttribute('aria-pressed', String(b.dataset.f === S.fam)); }
+  function setFamily(f) {
+    S.fam = f; S.q = {}; S.ranges = null; for (const [k, , def] of FAM[f].params) S.q[k] = def;
+    S.cmp1 = false; S.cmp2 = false; $('cmp1').checked = false; $('cmp2').checked = false;
+    rebuild(false);
+    /* a sensible event: the middle half */
+    const D = S.D; S.tail = 'between'; S.a = D.inv(0.25); S.b = D.inv(0.75);
+    if (!FAM[f].discrete) { const st = Math.pow(10, Math.floor(Math.log10(S.view[1] - S.view[0])) - 2); S.a = Math.round(S.a / st) * st; S.b = Math.round(S.b / st) * st; }
+    custom(); setRun(false); paramsUI(); syncFam(); syncAB(); needHtml = true; need = true;
+  }
+
+  /* ---------- drawing ---------- */
+  function layout() { const p = proj(); return { p, L: 50 * p, R: W - 16 * p, T: 30 * p, B: H - 34 * p }; }
+  const X = (x, Lo) => Lo.L + (x - S.view[0]) / (S.view[1] - S.view[0]) * (Lo.R - Lo.L);
+  const Xi = (px, Lo) => S.view[0] + (px - Lo.L) / (Lo.R - Lo.L) * (S.view[1] - S.view[0]);
+  function niceStep(span, n) { const raw = span / Math.max(2, n), p = Math.pow(10, Math.floor(Math.log10(raw))), m = raw / p; return (m <= 1 ? 1 : m <= 2 ? 2 : m <= 5 ? 5 : 10) * p; }
+  const labelOn = (c, t, x, y) => { c.save(); c.strokeStyle = T.canvas; c.lineWidth = 4; c.lineJoin = 'round'; c.strokeText(t, x, y); c.restore(); c.fillText(t, x, y); };
+  /* the histogram of the draws: one bar per whole number (discrete) or about 40 bars across the view, scaled to the curve */
+  function drawHist() {
+    const n = S.draws.length, d = FAM[S.fam].discrete; if (!n) return { bars: [] };
+    const bars = [];
+    if (d) { const m = new Map(); for (const v of S.draws) m.set(v, (m.get(v) || 0) + 1); for (const [x, c] of m) bars.push({ x0: x - 0.5, x1: x + 0.5, h: c / n }); }
+    else { const k = 40, w = (S.view[1] - S.view[0]) / k, c = new Array(k).fill(0); for (const v of S.draws) { const i = Math.floor((v - S.view[0]) / w); if (i >= 0 && i < k) c[i]++; } c.forEach((cc, i) => { if (cc) bars.push({ x0: S.view[0] + i * w, x1: S.view[0] + (i + 1) * w, h: cc / (n * w) }); }); }
+    return { bars };
+  }
+  function yTop() {
+    const D = S.D, d = FAM[S.fam].discrete; let m = 0;
+    const fns = [[D, d]].concat(S.C.map((C, i) => ((i === 0 ? S.cmp1 : S.cmp2) ? [C.D, !!C.discrete] : null)).filter(Boolean));
+    for (const [E, disc] of fns) {
+      if (disc) { for (let x = Math.ceil(S.view[0]); x <= S.view[1]; x++) m = Math.max(m, E.pmf(x)); }
+      else { const lo = S.view[0] + 0.012 * (S.view[1] - S.view[0]); for (let i = 0; i <= 300; i++) { const v = E.pdf(lo + (S.view[1] - lo) * i / 300); if (isFinite(v)) m = Math.max(m, v); } }
+    }
+    return (m || 1) * 1.15;
+  }
+  function draw() {
+    if (!T || !W || !S.D) return;
+    const Lo = layout(), p = Lo.p, D = S.D, disc = FAM[S.fam].discrete, top = yTop();
+    const Y = (y) => Lo.B - y / top * (Lo.B - Lo.T);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    /* grid and axes */
+    const sx = disc ? Math.max(1, Math.round(niceStep(S.view[1] - S.view[0], (Lo.R - Lo.L) / (70 * p)))) : niceStep(S.view[1] - S.view[0], (Lo.R - Lo.L) / (70 * p));
+    const sy = niceStep(top, (Lo.B - Lo.T) / (45 * p)), xd = Math.max(0, -Math.floor(Math.log10(sx) + 1e-9)), yd = Math.max(0, -Math.floor(Math.log10(sy) + 1e-9));
+    ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.beginPath();
+    for (let y = sy; y <= top; y += sy) { const u = Math.round(Y(y)) + 0.5; ctx.moveTo(Lo.L, u); ctx.lineTo(Lo.R, u); }
+    ctx.stroke();
+    ctx.strokeStyle = T.muted; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(Lo.L, Lo.B); ctx.lineTo(Lo.R, Lo.B); ctx.moveTo(Lo.L, Lo.T); ctx.lineTo(Lo.L, Lo.B); ctx.stroke();
+    ctx.fillStyle = T.muted; ctx.font = `${11 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    for (let x = Math.ceil(S.view[0] / sx) * sx; x <= S.view[1] + 1e-9; x += sx) { const u = X(x, Lo); ctx.beginPath(); ctx.moveTo(u, Lo.B); ctx.lineTo(u, Lo.B + 4 * p); ctx.stroke(); labelOn(ctx, fmt(x, xd), u, Lo.B + 6 * p); }
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    for (let y = 0; y <= top; y += sy) labelOn(ctx, fmt(y, yd), Lo.L - 5 * p, Y(y));
+    ctx.font = `600 ${11 * p}px ${T.mono}`; ctx.fillStyle = T.ink; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    labelOn(ctx, disc ? tt('P(X = x)') : tt('density f(x)'), Lo.L + 6 * p, 8 * p);
+    /* the draws, behind the curve */
+    const hst = drawHist();
+    ctx.fillStyle = T.draw; ctx.globalAlpha = 0.28;
+    for (const b of hst.bars) { const x0 = X(b.x0, Lo), x1 = X(b.x1, Lo); ctx.fillRect(x0 + (disc ? 1 : 0), Y(b.h), x1 - x0 - (disc ? 2 : 0), Lo.B - Y(b.h)); }
+    ctx.globalAlpha = 1; ctx.strokeStyle = T.draw; ctx.lineWidth = 1.2 * p;
+    for (const b of hst.bars) { const x0 = X(b.x0, Lo), x1 = X(b.x1, Lo); ctx.strokeRect(x0 + (disc ? 1 : 0), Y(b.h), x1 - x0 - (disc ? 2 : 0), Lo.B - Y(b.h)); }
+    /* the recent draws land on the axis */
+    const now = performance.now();
+    for (const d of S.recent || []) { const age = (now - d.t) / 700; if (age > 1) continue; ctx.globalAlpha = 1 - age; ctx.fillStyle = T.draw; ctx.beginPath(); ctx.arc(X(d.v, Lo), Lo.B - 5 * p, 3.5 * p, 0, 7); ctx.fill(); need = true; }
+    ctx.globalAlpha = 1;
+    /* the event's region */
+    const lo = S.tail === 'left' ? -Infinity : S.a, hi = S.tail === 'right' ? Infinity : S.b;
+    if (disc) {
+      const bw = Math.max(2, Math.min(28 * p, (X(1, Lo) - X(0, Lo)) * 0.7));
+      for (let x = Math.ceil(S.view[0]); x <= Math.floor(S.view[1]); x++) {
+        const y = D.pmf(x); if (!(y > 0)) continue; const inR = x >= Math.ceil(lo - 1e-9) && x <= Math.floor(hi + 1e-9), u = X(x, Lo);
+        ctx.fillStyle = inR ? T.area : T.curve; ctx.globalAlpha = inR ? 0.75 : 0.45; ctx.fillRect(u - bw / 2, Y(y), bw, Lo.B - Y(y)); ctx.globalAlpha = 1;
+        ctx.strokeStyle = inR ? T.area : T.curve; ctx.lineWidth = 1.5 * p; ctx.strokeRect(u - bw / 2, Y(y), bw, Lo.B - Y(y));
+      }
+    } else {
+      const xl = Math.max(S.view[0], lo), xh = Math.min(S.view[1], hi);
+      if (xh > xl) {
+        ctx.beginPath(); ctx.moveTo(X(xl, Lo), Lo.B);
+        const m = 240; for (let i = 0; i <= m; i++) { const x = xl + (xh - xl) * i / m; ctx.lineTo(X(x, Lo), Math.max(Lo.T - 10, Y(D.pdf(x)))); }
+        ctx.lineTo(X(xh, Lo), Lo.B); ctx.closePath(); ctx.fillStyle = T.area; ctx.globalAlpha = 0.4; ctx.fill(); ctx.globalAlpha = 1;
+      }
+      curve(D.pdf, T.curve, 3 * p, []);
+    }
+    /* comparisons */
+    S.C.forEach((C, i) => {
+      if (!(i === 0 ? S.cmp1 : S.cmp2)) return; const col = i === 0 ? T.c1 : T.c2;
+      if (C.discrete) { ctx.fillStyle = col; for (let x = Math.ceil(S.view[0]); x <= Math.floor(S.view[1]); x++) { const y = C.D.pmf(x); if (!(y > 1e-6)) continue; ctx.beginPath(); ctx.arc(X(x, Lo), Y(y), 4 * p, 0, 7); ctx.fill(); } }
+      else curve(C.D.pdf, col, 2.2 * p, [7 * p, 5 * p]);
+    });
+    function curve(f, col, w, dash) {
+      ctx.strokeStyle = col; ctx.lineWidth = w; ctx.setLineDash(dash); ctx.beginPath(); let pen = false;
+      const m = Math.max(200, Math.round(Lo.R - Lo.L));
+      for (let i = 0; i <= m; i++) { const x = S.view[0] + (S.view[1] - S.view[0]) * i / m, y = f(x); if (!isFinite(y)) { pen = false; continue; } const v = Math.max(Lo.T - 10, Y(y)); if (pen) ctx.lineTo(X(x, Lo), v); else ctx.moveTo(X(x, Lo), v); pen = true; }
+      ctx.stroke(); ctx.setLineDash([]);
+    }
+    /* the handles a and b */
+    if (S.tail !== 'left') handle(S.a, 'a', Lo);
+    if (S.tail !== 'right') handle(S.b, 'b', Lo);
+    /* the percentile mark */
+    if (!S.blind) { const xk = S.D.inv(S.k), u = X(xk, Lo); if (u >= Lo.L && u <= Lo.R) { ctx.fillStyle = T.draw; ctx.beginPath(); ctx.moveTo(u, Lo.B - 1); ctx.lineTo(u - 5 * p, Lo.B - 10 * p); ctx.lineTo(u + 5 * p, Lo.B - 10 * p); ctx.closePath(); ctx.fill(); } }
+    /* the probability on the picture, and the pace of the draws */
+    ctx.font = `700 ${14 * p}px ${T.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'top'; ctx.fillStyle = T.area;
+    labelOn(ctx, eventText() + ' = ' + (S.blind ? '?' : fp(P())), Lo.R, 8 * p);
+    ctx.font = `${11 * p}px ${T.mono}`; ctx.fillStyle = T.draw;
+    if (S.draws.length || S.run) labelOn(ctx, tt('{n} draws, {r} a second', { n: fmt(S.draws.length, 0), r: fmt(S.speed, 0) }), Lo.R, 28 * p);
+  }
+  function handle(x, name, Lo) {
+    const p = Lo.p, u = X(Math.max(S.view[0], Math.min(S.view[1], x)), Lo), off = x < S.view[0] || x > S.view[1];
+    ctx.strokeStyle = T.handle; ctx.lineWidth = 1.5 * p; ctx.setLineDash([5 * p, 4 * p]); ctx.beginPath(); ctx.moveTo(u, Lo.T); ctx.lineTo(u, Lo.B); ctx.stroke(); ctx.setLineDash([]);
+    const y = Lo.T + 22 * p;
+    ctx.fillStyle = (S.drag === name) ? T.area : T.handle; ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(u - 11 * p, y - 11 * p, 22 * p, 22 * p, 6 * p); else ctx.rect(u - 11 * p, y - 11 * p, 22 * p, 22 * p); ctx.fill();
+    ctx.fillStyle = T.canvas; ctx.font = `700 ${13 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(off ? (x < S.view[0] ? '◀' : '▶') : name, u, y + 0.5);
+  }
+  function eventText() {
+    const d = FAM[S.fam].discrete, a = fxv(S.a), b = fxv(S.b);
+    if (S.tail === 'left') return d ? `P(X ≤ ${b})` : `P(X < ${b})`;
+    if (S.tail === 'right') return d ? `P(X ≥ ${a})` : `P(X > ${a})`;
+    if (d && Math.round(S.a) === Math.round(S.b)) return `P(X = ${a})`;
+    return d ? `P(${a} ≤ X ≤ ${b})` : `P(${a} < X < ${b})`;
+  }
+
+  /* ---------- the readouts ---------- */
+  const esc = (s) => String(s).replace(/[&<>"]/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[ch]));
+  function notation() {
+    const q = S.q, c = cnum;
+    return { binomial: `X ~ B(${q.n}, ${c(q.p)})`, geometric: `X ~ G(${c(q.p)})`, hypergeometric: `X ~ H(N = ${q.N}, K = ${q.K}, n = ${q.n})`, poisson: `X ~ P(${c(q.mu)})`,
+      uniform: `X ~ U(${c(q.A)}, ${c(q.B)})`, exponential: `X ~ Exp(${c(q.m)})`, normal: `X ~ N(${c(q.mu)}, ${c(q.sigma)})`, t: `t, df = ${q.df}`, chisq: `χ², df = ${q.df}`, f: `F, df = ${q.d1} and ${q.d2}` }[S.fam];
+  }
+  function formula() {
+    const q = S.q;
+    return {
+      binomial: 'P(x) = C(n, x)·pˣ·qⁿ⁻ˣ, q = 1 − p\nμ = np, σ = √(npq)',
+      geometric: 'P(x) = (1 − p)ˣ⁻¹·p, x = 1, 2, 3, …\n(trials up to and including the first success)\nμ = 1/p, σ = √((1 − p)/p²)',
+      hypergeometric: 'P(x) = C(K, x)·C(N − K, n − x)/C(N, n)\n(n drawn without replacement from N, K of them successes)\nμ = nK/N',
+      poisson: 'P(x) = μˣ·e^(−μ)/x!\nμ = mean = variance, σ = √μ',
+      uniform: 'f(x) = 1/(b − a) for a ≤ x ≤ b\nμ = (a + b)/2, σ = (b − a)/√12',
+      exponential: 'f(x) = m·e^(−mx) for x ≥ 0\nP(X < x) = 1 − e^(−mx)\nμ = σ = 1/m',
+      normal: 'f(x) = e^(−(x − μ)²/(2σ²))/(σ√(2π))\nz = (x − μ)/σ',
+      t: 'f(t) ∝ (1 + t²/df)^(−(df + 1)/2)\nmean 0 (df > 1), σ = √(df/(df − 2)) (df > 2)',
+      chisq: 'the sum of df squared standard normals\nmean df, σ = √(2df); skewed right',
+      f: 'F = (χ²₁/df₁)/(χ²₂/df₂)\nmean df₂/(df₂ − 2) (df₂ > 2)',
+    }[S.fam].replace(/\n/g, '<br>') + (q ? '' : '');
+  }
+  function html() {
+    const D = S.D, d = FAM[S.fam].discrete, pr = P(), B = S.blind;
+    $('notation').textContent = notation();
+    const cmd = tiText(S.fam, S.q, S.tail, S.a, S.b);
+    const how = S.fam === 'hypergeometric' ? tt('No calculator command: add the probabilities') : S.fam === 'uniform' || S.fam === 'exponential' ? tt('The book\'s formula') : tt('TI-83/84');
+    $('prob').innerHTML = `<span class="lbl">${esc(eventText())} =</span><span class="big">${B ? '?' : fp(pr)}</span><span class="lbl">${esc(how)}</span><code translate="no">${esc(cmd)}${B ? '' : ' = ' + fp(pr)}</code>`;
+    const dd = (a, b, wide) => `<div${wide ? ' class="wide"' : ''}><dt>${esc(a)}</dt><dd>${b}</dd></div>`;
+    const sdTxt = isFinite(D.sd) ? fmt(D.sd, 4) : tt('none (df too small)');
+    let h = dd(tt('Distribution'), esc(notation()), true);
+    h += dd(tt('Mean μ'), isFinite(D.mean) ? fmt(D.mean, 4) : tt('none (df too small)')) + dd(tt('Standard deviation σ'), sdTxt);
+    h += dd(eventText(), B ? `<span class="ok">${esc(tt('hidden: predict it'))}</span>` : fp(pr), true);
+    if (S.fam === 'normal' && !B) {
+      const z = (x) => (x - S.q.mu) / S.q.sigma, za = S.tail === 'left' ? -Infinity : z(S.a), zb = S.tail === 'right' ? Infinity : z(S.b);
+      h += dd(tt('z scores, z = (x − μ)/σ'), `${S.tail !== 'left' ? 'a: ' + fmt(za, 4) : ''}${S.tail === 'between' ? ', ' : ''}${S.tail !== 'right' ? 'b: ' + fmt(zb, 4) : ''}`, true);
+      h += dd(tt('The same area on the standard normal'), `<code translate="no">normalcdf(${cnum(za)}, ${cnum(zb)}, 0, 1)</code>`, true);
+    }
+    const n = S.draws.length;
+    if (n) {
+      const lo = S.tail === 'left' ? -Infinity : S.a, hi = S.tail === 'right' ? Infinity : S.b;
+      let k = 0; for (const v of S.draws) { if (d ? v >= Math.ceil(lo - 1e-9) && v <= Math.floor(hi + 1e-9) : v > lo && v < hi) k++; }
+      const m = STD.mean(S.draws), s = n > 1 ? STD.sd(S.draws) : NaN;
+      h += dd(tt('Draws (simulated)'), fmt(n, 0)) + dd(tt('Fraction in the event'), fmt(k / n, 4));
+      h += dd(tt('Mean of the draws x̄'), fmt(m, 4)) + dd(tt('SD of the draws s'), isFinite(s) ? fmt(s, 4) : '—');
+    }
+    $('out').innerHTML = h;
+    /* percentile */
+    const pc = percentile(S.fam, S.q, D, S.k);
+    $('kOut').textContent = fmt(S.k, 2);
+    $('kNote').innerHTML = B ? esc(tt('Hidden: predict it.')) : esc(tt('The value with area {k} to its left: x = {x}', { k: fmt(S.k, 2), x: d ? fmt(pc.x, 0) : fmt(pc.x, 4) })) + (pc.how ? ` <code translate="no">${esc(pc.how)}</code>` : ' ' + esc(d ? tt('(the smallest x whose cumulative probability reaches it)') : tt('(no TI-83/84 command: found by bisection)')))
+      + (S.fam === 'normal' ? ' ' + esc(tt('z = {z}', { z: fmt((pc.x - S.q.mu) / S.q.sigma, 4) })) : '');
+    /* compare */
+    const lab = (i) => (S.C[i] ? tt(S.C[i].label) : '');
+    $('cmp1Wrap').hidden = !S.C[0]; $('cmp2Wrap').hidden = !S.C[1];
+    $('cmp1Lab').innerHTML = S.C[0] ? `<span class="sw" style="background:var(--cmp1)"></span>${esc(lab(0))}` : '';
+    $('cmp2Lab').innerHTML = S.C[1] ? `<span class="sw" style="background:var(--cmp2)"></span>${esc(lab(1))}` : '';
+    const notes = [];
+    S.C.forEach((C, i) => { if ((i === 0 ? S.cmp1 : S.cmp2) && !B) notes.push(tt('{l}: the same event has probability {p}', { l: lab(i), p: fp(cmpProb(C, d, S.tail, S.a, S.b)) }) + (d && C.cc ? ' ' + tt('(continuity correction)') : '')); });
+    $('cmpNote').textContent = S.C.length ? (notes.join('. ') || tt('Tick one to draw it over the curve.')) : '';
+    $('formula').innerHTML = esc(formula()).replace(/&lt;br&gt;/g, '<br>');
+    syncAB();
+  }
+
+  /* ---------- interaction ---------- */
+  function setRun(on) { S.run = on; $('play').textContent = on ? tt('Pause') : tt('Play'); $('play').classList.toggle('attn', !on); }
+  $('play').addEventListener('click', () => { setRun(!S.run); S.clock = 0; need = true; });
+  $('reset').addEventListener('click', () => { setRun(false); clearDraws(); needHtml = true; need = true; });
+  for (const b of document.querySelectorAll('#speedSeg button')) b.addEventListener('click', () => { S.speed = +b.dataset.v; for (const c of document.querySelectorAll('#speedSeg button')) c.setAttribute('aria-pressed', String(c === b)); need = true; });
+  $('seed').addEventListener('input', () => { const v = Math.round(+$('seed').value); if (v >= 1 && v < 1e9) { S.seed = v; clearDraws(); needHtml = true; need = true; } });
+  for (const b of document.querySelectorAll('#famSeg button')) b.addEventListener('click', () => setFamily(b.dataset.f));
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  for (const b of document.querySelectorAll('#tailSeg button')) b.addEventListener('click', () => {
+    S.tail = b.dataset.t; custom();
+    if (S.tail === 'between' && !(S.b > S.a)) S.b = S.a + (FAM[S.fam].discrete ? 1 : (S.view[1] - S.view[0]) / 10);
+    needHtml = true; need = true;
+  });
+  for (const [id, k] of [['aIn', 'a'], ['bIn', 'b']]) {
+    $(id).addEventListener('input', () => { const s = $(id).value.trim(), v = +s; if (s === '' || !isFinite(v) || Math.abs(v) > 1e9) return; S[k] = v; custom(); needHtml = true; need = true; });
+    $(id).addEventListener('change', () => syncAB());
+  }
+  $('kIn').addEventListener('input', () => { S.k = Math.max(0.01, Math.min(0.99, +$('kIn').value)); needHtml = true; need = true; });
+  $('cmp1').addEventListener('change', (e) => { S.cmp1 = e.target.checked; rebuild(true); });
+  $('cmp2').addEventListener('change', (e) => { S.cmp2 = e.target.checked; rebuild(true); });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; needHtml = true; need = true; });
+  /* drag a or b along the axis */
+  const snap = (v) => { if (FAM[S.fam].discrete) return Math.round(v); const st = Math.pow(10, Math.floor(Math.log10(S.view[1] - S.view[0])) - 2); return Math.round(v / st) * st; };
+  function grab(px) {
+    const Lo = layout(), p = Lo.p, hs = [];
+    if (S.tail !== 'left') hs.push(['a', X(S.a, Lo)]); if (S.tail !== 'right') hs.push(['b', X(S.b, Lo)]);
+    let best = null, bd = 18 * p; for (const [n, u] of hs) { const d = Math.abs(px - u); if (d < bd) { bd = d; best = n; } }
+    return best;
+  }
+  can.addEventListener('pointerdown', (e) => {
+    const r = can.getBoundingClientRect(), g = grab(e.clientX - r.left); if (!g) return;
+    S.drag = g; can.setPointerCapture(e.pointerId); e.preventDefault(); need = true;
+  });
+  can.addEventListener('pointermove', (e) => {
+    const r = can.getBoundingClientRect(), px = e.clientX - r.left, Lo = layout();
+    if (!S.drag) { can.style.cursor = grab(px) ? 'ew-resize' : 'default'; return; }
+    let v = snap(Xi(Math.max(Lo.L, Math.min(Lo.R, px)), Lo));
+    if (S.tail === 'between') { if (S.drag === 'a') v = Math.min(v, S.b); else v = Math.max(v, S.a); }
+    S[S.drag] = v; custom(); needHtml = true; need = true;
+  });
+  const up = () => { if (S.drag) { S.drag = null; need = true; } };
+  can.addEventListener('pointerup', up); can.addEventListener('pointercancel', up);
+  can.addEventListener('keydown', (e) => {
+    if (e.key === ' ') { $('play').click(); e.preventDefault(); return; }
+    if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+    const k = S.tail === 'right' ? 'a' : S.tail === 'left' ? 'b' : e.shiftKey ? 'a' : 'b';
+    const st = FAM[S.fam].discrete ? 1 : Math.pow(10, Math.floor(Math.log10(S.view[1] - S.view[0])) - 2);
+    S[k] = snap(S[k] + (e.key === 'ArrowRight' ? st : -st)); if (S.tail === 'between' && S.a > S.b) S[k === 'a' ? 'b' : 'a'] = S[k];
+    custom(); needHtml = true; need = true; e.preventDefault();
+  });
+
+  /* ---------- the loop ---------- */
+  let last = performance.now(), htmlClock = 0;
+  function frame(now) {
+    const dt = Math.min(0.1, (now - last) / 1000); last = now;
+    if (S.run) {
+      S.clock += dt * S.speed; let k = Math.floor(S.clock); S.clock -= k;
+      if (S.draws.length > 200000) { setRun(false); k = 0; }
+      const fresh = []; for (let i = 0; i < k; i++) { const v = S.samp(); S.draws.push(v); if (i >= k - 8) fresh.push({ v, t: now }); }
+      if (k) { S.recent = (S.recent || []).concat(fresh).slice(-24); need = true; htmlClock += dt; if (htmlClock > 0.12 || S.speed <= 10) { htmlClock = 0; needHtml = true; } }
+    }
+    if (need) { need = false; draw(); }
+    if (needHtml) { needHtml = false; html(); }
+    requestAnimationFrame(frame);
+  }
+  function resize() { dpr = window.devicePixelRatio || 1; const r = $('pane').getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr); need = true; }
+  const retheme = () => { tokens(); need = true; };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'data-vd-look'] });
+  VD.projector({ onChange: resize });
+  if (window.VD && VD.panel) VD.panel({ play: '#play', reset: '#reset' });
+  if (window.VD && VD.share && VD.share.picture) VD.share.picture('q', {
+    get: () => (S.preset === 'custom' ? VD.share.pack({ f: S.fam, q: S.q, t: S.tail, a: S.a, b: S.b }) : ''),
+    set: (s) => { const o = s && VD.share.unpack(s); if (!o || !FAM[o.f]) return; setFamily(o.f); S.q = Object.assign(S.q, o.q || {}); S.tail = o.t || 'between'; S.a = +o.a || 0; S.b = +o.b || 1; rebuild(false); paramsUI(); syncAB(); },
+  });
+  if (window.VD && VD.describe) VD.describe(can, () => {
+    if (!S.D) return [];
+    const out = [tt('The distribution is {d}.', { d: notation() })];
+    if (!S.blind) out.push(tt('{e} = {p}, from {c}.', { e: eventText(), p: fp(P()), c: tiText(S.fam, S.q, S.tail, S.a, S.b) }));
+    if (S.draws.length) out.push({ t: tt('{n} random draws so far.', { n: S.draws.length }), live: !S.run });
+    return out;
+  });
+  tokens(); new ResizeObserver(resize).observe($('pane')); resize();
+  applyPreset('exam');
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  window.__de = { S, FAM, PRESETS, applyPreset, setFamily, prob, tiText, percentile, compares, cmpProb, sampler, P, setRun, rebuild, draw: () => { need = true; needHtml = true; } };
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

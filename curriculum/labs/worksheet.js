@@ -1133,6 +1133,16 @@
   });
   /* ==STATS regression END== */
   GRAPHS.push(...ALGEBRA.filter((w) => w !== 'hs-series-parallel'));   /* the circuits sheet compares readings in a typed table, no graph */
+  /* ==STATS describe START== Statistics for physics worksheets (OpenStax Introductory Statistics 2e, 2026-11-19), group describe. */
+  const STATS_DESCRIBE = ['describing-data' /* Data Explorer: two data sets summarized, then one pendulum timing changed */];
+  ENABLED.push(...STATS_DESCRIBE); GRAPHS.push(...STATS_DESCRIBE); GRAPH_EVERY_TABLE.push(...STATS_DESCRIBE);
+  Object.assign(FROM_DEMO, {
+    /* Table 1: Reading | Data set | n | Smallest | Q1 | Median | Q3 | Largest | Mean x̄ | s | Outliers; a series of pendulum rows with
+       at least one edited value goes to Table 2: Reading | Largest timing | Mean x̄ | Median | s | IQR */
+    'describing-data': { demo: 'Data Explorer', cols: ['row', 'data_set', 'n', 'min', 'q1', 'median', 'q3', 'max', 'mean', 'sd', 'outliers'],
+      alt: [{ table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.setup === 'pendulum') && rows.some((r) => r.edited === 'yes'), cols: ['row', 'max', 'mean', 'median', 'sd', 'iqr'] }] },
+  });
+  /* ==STATS describe END== */
   /* ==FORMULAS START== */
   /* Spreadsheet formulas in the data tables, and the curve fits of the graphs. Plain functions with no page access, so
      curriculum/validation/test_worksheet_formulas.cjs runs them in Node. Formulas are read by a small parser of their own (no eval):
@@ -1553,7 +1563,7 @@
   /* How this works (Steve, 2026-10-31): every worksheet shows the short video of one sample reading that its demo's How this works
      button plays for it, folded under the link to the demo; it loads only when opened, and is left out of printouts. The video is
      demos/media/how-this-works/<slug>.mp4, made by tools/howto/, except where HOWTO_VIDEO names another. The demo keeps its button. */
-  const HOWTO_VIDEO = { 'apparent-weight': 'elevator', 'intro-celestial-sphere': 'celestial-sphere', 'intro-craters': 'craters',
+  const HOWTO_VIDEO = { 'describing-data': 'data-explorer' /* STATS describe */, 'apparent-weight': 'elevator', 'intro-celestial-sphere': 'celestial-sphere', 'intro-craters': 'craters',
     'intro-giant-planets': 'giant-planets', 'intro-inside-a-planet': 'inside-a-planet', 'intro-mars-ages': 'craters-mars',
     'intro-planet-temperatures': 'planet-temperatures', 'intro-resonances': 'resonances', 'intro-retrograde': 'retrograde-motion', 'intro-retrograde-venus': 'retrograde-motion', 'intro-seeing': 'intro-aberrations',
     'intro-solar-system-formation': 'solar-system-formation', 'measurement-and-units': 'units', 'mp-bragg-peak': 'bragg-peak',

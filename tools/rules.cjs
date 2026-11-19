@@ -118,6 +118,7 @@ const HYPHEN_ALLOW = new Set([      /* lower case; matched ignoring case */
   'blu-ray',                            /* product name */
   'astronomy-engine', 'stellarium-web', 'hyg-nearby',  /* names of software and data sets, credited as published */
   'non-inertial', 'high-temperature',   /* OpenStax College Physics 2e section titles (6.4, 34.6), quoted as published */
+  'stem-and-leaf',                      /* OpenStax Introductory Statistics section title "Stem-and-Leaf Graphs (Stemplots), Line Graphs, and Bar Graphs", quoted as published */
 ]);
 rule('hyphens', 'No hyphens in compound modifiers in student facing text ("time constant", "white dwarf", "nonrotating"). '
   + 'Exceptions: a one letter part (X-ray, f-number), capitalized names and titles, and the ALLOW list.', 'student facing text', () => {

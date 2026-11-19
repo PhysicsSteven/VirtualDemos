@@ -1563,6 +1563,42 @@
       "torque",
       "calculus"
      ]
+    },
+    {
+     "demo": "data-explorer",
+     "title": "Data Explorer",
+     "desc": "One data set shown every way the statistics book draws it, all at once: frequency table with relative and cumulative relative frequency, stemplot, dot plot, histogram with a draggable start and bin width, box plot and time series. Drag a point and watch the mean and median, quartiles and percentiles, IQR and the outlier fences, s and skew respond. Simulated lab readings (pendulum timings, lap times, decay counts) and data sets from OpenStax Introductory Statistics, or your own.",
+     "tags": [
+      "descriptive statistics",
+      "histogram",
+      "stemplot",
+      "box plot",
+      "frequency table",
+      "quartiles",
+      "percentiles",
+      "outliers",
+      "standard deviation",
+      "skewness",
+      "statistics"
+     ]
+    },
+    {
+     "demo": "distribution-explorer",
+     "title": "Distribution Explorer",
+     "desc": "Ten probability distributions from the statistics book with sliders: binomial, geometric, hypergeometric, Poisson, uniform, exponential, normal, t, chi square and F. Shade P(a < X < b) and read it with the calculator command the book would use, find z scores and percentiles, and draw random values to watch a histogram fill against the curve. Compare t with the normal as df grows, and the binomial with its normal and Poisson approximations.",
+     "tags": [
+      "probability distribution",
+      "binomial",
+      "Poisson",
+      "normal distribution",
+      "z score",
+      "percentile",
+      "Student t",
+      "chi square",
+      "F distribution",
+      "exponential distribution",
+      "statistics"
+     ]
     }
    ]
   },
