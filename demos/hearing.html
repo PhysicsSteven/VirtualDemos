@@ -1,0 +1,714 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="lib/theme.js"></script>
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
+<title>Hearing and the Ear</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css: the bone, fluid and membrane of the cochlea, the contour and audiogram
+   colors, the sound safety box, and the stage with its strip, Set up card and picture */
+:root { --bone: #efe4cf; --bone-edge: #b9a27a; --fluid: #f6eee4; --memb-hi: #e0a526; --memb-lo: #a8325e; --hair: #6b4e2e; --dead: #c0392b;
+  --contour: #8f5000; --thresh: #a8325e; --probe: #1d1812; --right: #c0392b; --left: #2b60b5; --tint: rgba(143, 80, 0, 0.06); --wave: #1d1812; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bone: #3a3022; --bone-edge: #7d6747; --fluid: #1c1712; --memb-hi: #ffc94d; --memb-lo: #e0619a; --hair: #d8c09a; --dead: #ff6b5b;
+  --contour: #e8a440; --thresh: #e0619a; --probe: #f0e5d1; --right: #ff7660; --left: #69a0ff; --tint: rgba(232, 164, 64, 0.07); --wave: #f0e5d1; } }
+:root[data-theme="dark"] { --bone: #3a3022; --bone-edge: #7d6747; --fluid: #1c1712; --memb-hi: #ffc94d; --memb-lo: #e0619a; --hair: #d8c09a; --dead: #ff6b5b;
+  --contour: #e8a440; --thresh: #e0619a; --probe: #f0e5d1; --right: #ff7660; --left: #69a0ff; --tint: rgba(232, 164, 64, 0.07); --wave: #f0e5d1; }
+.stage { position: relative; display: grid; grid-template-columns: 272px minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); grid-template-areas: "ctl ctl" "card main";
+  border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage-ctl { grid-area: ctl; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.pane { grid-area: main; position: relative; min-width: 0; min-height: 0; }
+.pane canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; outline: none; touch-action: none; }
+.pane canvas:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+.setup-card { grid-area: card; display: flex; flex-direction: column; gap: 7px; padding: 9px 10px; font-size: 0.86rem; border-right: 1px solid var(--line); background: var(--surface); min-width: 0; }
+.setup-card .card-title { text-transform: uppercase; letter-spacing: 0.07em; }
+.setup-card hr { border: 0; border-top: 1px solid var(--line); margin: 3px 0; width: 100%; }
+.setup-card .seg { flex-wrap: wrap; }
+.setup-card .seg button { font-size: 0.78rem; padding: 3px 7px; }
+.setup-card .btnrow .btn { font-size: 0.8rem; padding: 4px 8px; }
+.slider-head { display: flex; justify-content: space-between; gap: 8px; font-size: 0.82rem; line-height: 1.25; }
+.slider-head output { font-family: var(--font-mono); font-size: 0.82rem; color: var(--muted); }
+input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+.formula { font-family: var(--font-mono); font-size: 0.8rem; overflow-wrap: anywhere; margin: 0 0 6px; }
+.blindtag { position: absolute; right: 10px; bottom: 8px; z-index: 3; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--canvas); background: var(--ink); border-radius: 5px; padding: 3px 8px; }
+.safety { border: 1px solid var(--accent); border-radius: 8px; padding: 7px 8px; display: flex; flex-direction: column; gap: 5px; background: var(--tint); }
+.safety p { margin: 0; font-size: 0.78rem; color: var(--muted); }
+.safety .check { font-size: 0.82rem; align-items: flex-start; }
+.ask { display: flex; flex-direction: column; gap: 6px; border: 1px solid var(--line); border-radius: 8px; padding: 7px 8px; }
+.ask .big { font-size: 0.9rem; font-weight: 700; margin: 0; }
+.ask .btnrow .btn { font-size: 0.9rem; padding: 7px 12px; }
+.rail .hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
+.stage:not([data-v="cochlea"]) .vd-tg { display: none; }
+@media (min-width: 821px) { .bench > .stage { align-self: start; min-height: max(520px, 100%); } :root[data-projector="on"] .bench > .stage { min-height: max(460px, 100%); } }
+@media (max-width: 820px) {
+  html, body { height: auto; }
+  .app { height: auto; }
+  .stage { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto auto auto; grid-template-areas: "ctl" "main" "card"; }
+  .pane { height: 560px; }
+  .stage[data-v="loud"] .pane, .stage[data-v="aud"] .pane { height: 440px; }
+  .setup-card { border-right: 0; border-top: 1px solid var(--line); }
+  .chips button, .btn, .seg button, .proj, .spin { min-height: 36px; }
+  input[type="range"] { min-height: 28px; }
+}
+</style>
+<link rel="stylesheet" id="vd-paper" href="lib/paper.css">
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Hearing and the Ear</h1>
+      <p>The cochlea sorts sound by frequency: each tone makes a traveling wave on the basilar membrane that peaks at its own place. Loudness is not intensity: the equal loudness contours show how many decibels each frequency needs to sound as loud. Then take your own audiogram with headphones and compare it with the 4 kHz notch that noise leaves.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">Hz · dB · phon</div>
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/hearing.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/hearing.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM10 2h1v1h-1zM14 2h2v1h-2zM20 2h2v1h-2zM23 2h1v1h-1zM25 2h4v1h-4zM30 2h1v1h-1zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM10 3h1v1h-1zM12 3h1v1h-1zM16 3h1v1h-1zM18 3h1v1h-1zM20 3h1v1h-1zM22 3h1v1h-1zM24 3h1v1h-1zM28 3h1v1h-1zM30 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h3v1h-3zM14 4h3v1h-3zM18 4h1v1h-1zM22 4h3v1h-3zM26 4h3v1h-3zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM11 5h1v1h-1zM13 5h2v1h-2zM19 5h1v1h-1zM21 5h3v1h-3zM27 5h1v1h-1zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h2v1h-2zM14 6h3v1h-3zM19 6h1v1h-1zM21 6h1v1h-1zM27 6h1v1h-1zM30 6h1v1h-1zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM11 7h1v1h-1zM13 7h1v1h-1zM18 7h3v1h-3zM23 7h1v1h-1zM25 7h1v1h-1zM27 7h2v1h-2zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM11 9h1v1h-1zM13 9h1v1h-1zM16 9h3v1h-3zM23 9h1v1h-1zM26 9h4v1h-4zM2 10h1v1h-1zM5 10h6v1h-6zM12 10h3v1h-3zM16 10h1v1h-1zM18 10h1v1h-1zM20 10h4v1h-4zM25 10h2v1h-2zM28 10h4v1h-4zM34 10h1v1h-1zM36 10h3v1h-3zM2 11h2v1h-2zM5 11h1v1h-1zM7 11h1v1h-1zM13 11h2v1h-2zM16 11h1v1h-1zM22 11h3v1h-3zM28 11h2v1h-2zM33 11h3v1h-3zM37 11h1v1h-1zM5 12h1v1h-1zM7 12h3v1h-3zM11 12h2v1h-2zM16 12h1v1h-1zM20 12h1v1h-1zM23 12h1v1h-1zM26 12h1v1h-1zM29 12h1v1h-1zM31 12h3v1h-3zM36 12h1v1h-1zM38 12h1v1h-1zM4 13h2v1h-2zM7 13h1v1h-1zM9 13h2v1h-2zM17 13h1v1h-1zM19 13h2v1h-2zM24 13h1v1h-1zM29 13h1v1h-1zM31 13h8v1h-8zM3 14h1v1h-1zM6 14h1v1h-1zM8 14h1v1h-1zM12 14h3v1h-3zM16 14h1v1h-1zM18 14h1v1h-1zM21 14h1v1h-1zM26 14h1v1h-1zM32 14h1v1h-1zM35 14h1v1h-1zM38 14h1v1h-1zM2 15h4v1h-4zM9 15h3v1h-3zM14 15h2v1h-2zM17 15h3v1h-3zM21 15h1v1h-1zM24 15h2v1h-2zM28 15h3v1h-3zM34 15h2v1h-2zM2 16h3v1h-3zM7 16h2v1h-2zM10 16h2v1h-2zM14 16h2v1h-2zM17 16h1v1h-1zM19 16h1v1h-1zM21 16h4v1h-4zM27 16h1v1h-1zM29 16h1v1h-1zM34 16h3v1h-3zM38 16h1v1h-1zM2 17h1v1h-1zM5 17h2v1h-2zM9 17h5v1h-5zM15 17h1v1h-1zM19 17h3v1h-3zM25 17h1v1h-1zM28 17h3v1h-3zM32 17h2v1h-2zM35 17h3v1h-3zM3 18h1v1h-1zM5 18h1v1h-1zM8 18h1v1h-1zM10 18h1v1h-1zM12 18h1v1h-1zM14 18h2v1h-2zM17 18h3v1h-3zM21 18h3v1h-3zM25 18h1v1h-1zM27 18h1v1h-1zM29 18h1v1h-1zM32 18h1v1h-1zM36 18h3v1h-3zM2 19h1v1h-1zM7 19h1v1h-1zM15 19h1v1h-1zM18 19h3v1h-3zM22 19h1v1h-1zM25 19h2v1h-2zM28 19h2v1h-2zM31 19h1v1h-1zM35 19h2v1h-2zM2 20h1v1h-1zM5 20h1v1h-1zM8 20h1v1h-1zM10 20h1v1h-1zM12 20h1v1h-1zM14 20h4v1h-4zM19 20h1v1h-1zM22 20h2v1h-2zM25 20h1v1h-1zM27 20h1v1h-1zM29 20h1v1h-1zM31 20h1v1h-1zM35 20h2v1h-2zM38 20h1v1h-1zM4 21h1v1h-1zM6 21h2v1h-2zM11 21h2v1h-2zM15 21h1v1h-1zM20 21h1v1h-1zM24 21h1v1h-1zM26 21h2v1h-2zM32 21h4v1h-4zM38 21h1v1h-1zM2 22h2v1h-2zM5 22h1v1h-1zM7 22h2v1h-2zM13 22h1v1h-1zM15 22h1v1h-1zM17 22h3v1h-3zM26 22h1v1h-1zM28 22h1v1h-1zM30 22h6v1h-6zM2 23h6v1h-6zM9 23h1v1h-1zM12 23h3v1h-3zM16 23h2v1h-2zM21 23h5v1h-5zM29 23h1v1h-1zM31 23h1v1h-1zM34 23h1v1h-1zM36 23h2v1h-2zM4 24h1v1h-1zM6 24h3v1h-3zM11 24h3v1h-3zM17 24h1v1h-1zM19 24h2v1h-2zM24 24h3v1h-3zM29 24h2v1h-2zM32 24h2v1h-2zM35 24h1v1h-1zM38 24h1v1h-1zM3 25h1v1h-1zM5 25h3v1h-3zM9 25h1v1h-1zM14 25h1v1h-1zM19 25h1v1h-1zM21 25h4v1h-4zM30 25h1v1h-1zM32 25h5v1h-5zM3 26h1v1h-1zM5 26h1v1h-1zM8 26h1v1h-1zM11 26h2v1h-2zM15 26h6v1h-6zM23 26h1v1h-1zM26 26h1v1h-1zM30 26h1v1h-1zM32 26h1v1h-1zM2 27h2v1h-2zM5 27h1v1h-1zM9 27h1v1h-1zM11 27h1v1h-1zM18 27h1v1h-1zM21 27h2v1h-2zM27 27h4v1h-4zM34 27h2v1h-2zM2 28h3v1h-3zM6 28h1v1h-1zM8 28h1v1h-1zM10 28h1v1h-1zM12 28h2v1h-2zM15 28h2v1h-2zM18 28h1v1h-1zM21 28h2v1h-2zM24 28h3v1h-3zM28 28h3v1h-3zM34 28h1v1h-1zM36 28h3v1h-3zM2 29h1v1h-1zM5 29h1v1h-1zM7 29h1v1h-1zM10 29h1v1h-1zM12 29h1v1h-1zM16 29h2v1h-2zM22 29h1v1h-1zM24 29h2v1h-2zM28 29h6v1h-6zM35 29h3v1h-3zM2 30h1v1h-1zM4 30h1v1h-1zM6 30h1v1h-1zM8 30h1v1h-1zM11 30h2v1h-2zM14 30h3v1h-3zM22 30h1v1h-1zM26 30h2v1h-2zM29 30h8v1h-8zM10 31h2v1h-2zM13 31h1v1h-1zM16 31h1v1h-1zM20 31h3v1h-3zM24 31h1v1h-1zM26 31h2v1h-2zM30 31h1v1h-1zM34 31h1v1h-1zM36 31h2v1h-2zM2 32h7v1h-7zM10 32h4v1h-4zM15 32h1v1h-1zM17 32h2v1h-2zM21 32h1v1h-1zM23 32h5v1h-5zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM38 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h1v1h-1zM13 33h2v1h-2zM18 33h5v1h-5zM24 33h2v1h-2zM27 33h1v1h-1zM29 33h2v1h-2zM34 33h1v1h-1zM37 33h2v1h-2zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h1v1h-1zM12 34h4v1h-4zM23 34h4v1h-4zM28 34h7v1h-7zM37 34h1v1h-1zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h2v1h-2zM13 35h4v1h-4zM18 35h1v1h-1zM20 35h1v1h-1zM23 35h1v1h-1zM26 35h1v1h-1zM28 35h2v1h-2zM31 35h2v1h-2zM35 35h1v1h-1zM37 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM13 36h1v1h-1zM15 36h8v1h-8zM24 36h3v1h-3zM29 36h1v1h-1zM34 36h1v1h-1zM37 36h2v1h-2zM2 37h1v1h-1zM8 37h1v1h-1zM12 37h1v1h-1zM18 37h2v1h-2zM21 37h2v1h-2zM24 37h2v1h-2zM28 37h2v1h-2zM31 37h2v1h-2zM34 37h5v1h-5zM2 38h7v1h-7zM10 38h1v1h-1zM12 38h1v1h-1zM14 38h2v1h-2zM17 38h2v1h-2zM22 38h1v1h-1zM26 38h1v1h-1zM30 38h1v1h-1zM32 38h2v1h-2zM35 38h1v1h-1zM38 38h1v1h-1z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage" data-v="cochlea">
+      <div class="stage-ctl" id="strip">
+        <button type="button" class="btn attn" id="play">Play</button>
+        <button type="button" class="btn" id="reset">Reset</button>
+        <div class="seg" role="group" aria-label="View" id="viewSeg">
+          <button type="button" data-v="cochlea" aria-pressed="true">Cochlea</button>
+          <button type="button" data-v="loud" aria-pressed="false">Loudness</button>
+          <button type="button" data-v="aud" aria-pressed="false">Your audiogram</button>
+        </div>
+        <button type="button" class="btn" id="hush" hidden>Stop the sound</button>
+      </div>
+      <div class="setup-card" id="setupCard" role="group" aria-label="Set up the view">
+        <div class="safety" id="safety">
+          <span class="card-title">Sound</span>
+          <label class="check"><input type="checkbox" id="hp"><span>I am wearing headphones and set my volume to about half</span></label>
+          <p>Sound starts quiet and the demo never plays louder than 20 dB below full scale. Stop if anything is uncomfortable. Results are relative, not a clinical hearing test.</p>
+        </div>
+        <div id="cochBox">
+          <span class="card-title">Tone</span>
+          <div><div class="slider-head"><label for="sF">Frequency f</label><output id="oF" for="sF"></output></div><input type="range" id="sF" min="0" max="1000" step="1"></div>
+          <label class="check"><input type="checkbox" id="tone"><span>Play the tone (quiet)</span></label>
+          <label class="check"><input type="checkbox" id="dmg"><span>Hair cells damaged by noise</span></label>
+          <p class="note">Drag along the membrane or the coil to pick a place, or focus the picture and use the arrow keys.</p>
+        </div>
+        <div id="loudBox" hidden>
+          <span class="card-title">Tone on the chart</span>
+          <div><div class="slider-head"><label for="sLF">Frequency f</label><output id="oLF" for="sLF"></output></div><input type="range" id="sLF" min="0" max="1000" step="1"></div>
+          <div><div class="slider-head"><label for="sL">Sound level β</label><output id="oL" for="sL"></output></div><input type="range" id="sL" min="-10" max="110" step="1"></div>
+          <div class="btnrow"><button type="button" class="btn" id="playLoud">Play this tone</button><button type="button" class="btn" id="playPair">Play 1 kHz, then this tone</button></div>
+          <p class="note">Your headphones' loudness is unknown, so the tone plays at a fixed offset: 10 dB more on the chart is 10 dB more in your ears. Drag the dot on the chart, or use the arrow keys.</p>
+        </div>
+        <div id="audBox" hidden>
+          <span class="card-title">Test</span>
+          <div class="seg" role="group" aria-label="Ear" id="earSeg"><button type="button" data-ear="R" aria-pressed="true">Right ear</button><button type="button" data-ear="L" aria-pressed="false">Left ear</button></div>
+          <div class="btnrow"><button type="button" class="btn primary" id="startTest">Start the test</button><button type="button" class="btn" id="stopTest">Stop</button></div>
+          <div class="ask" id="ask" hidden>
+            <p class="big" id="askQ">Did you hear the beeps?</p>
+            <div class="btnrow"><button type="button" class="btn primary" id="yes">Heard them</button><button type="button" class="btn" id="no">Not heard</button><button type="button" class="btn" id="again">Play again</button></div>
+            <p class="note" id="askNote"></p>
+          </div>
+          <label class="check"><input type="checkbox" id="shape" checked><span>Subtract the normal threshold curve</span></label>
+          <p class="note">Each frequency: three short beeps. Down 10 dB after you hear them, up 5 dB after you miss them; the threshold is the quietest level heard twice on the way up.</p>
+        </div>
+      </div>
+      <div class="pane" id="pane">
+        <canvas id="can" tabindex="0" role="application" aria-label="The cochlea coiled, and below it uncoiled into a straight basilar membrane from the stiff base to the floppy apex, with a traveling wave that peaks at the place of the tone's frequency. Drag along the membrane, or use the arrow keys, to change the frequency."></canvas>
+        <span class="blindtag" id="blindTag" hidden>Blind</span>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="k1" data-view="cochlea" aria-pressed="true">1 kHz tone</button>
+          <button type="button" data-p="c4" data-view="cochlea" aria-pressed="false">Middle C (262 Hz)</button>
+          <button type="button" data-p="k4" data-view="cochlea" aria-pressed="false">4 kHz, where noise does damage</button>
+          <button type="button" data-p="top" data-view="cochlea" aria-pressed="false">Top of hearing (16 kHz)</button>
+          <button type="button" data-p="low" data-view="cochlea" aria-pressed="false">Lowest pitch (20 Hz)</button>
+          <button type="button" data-p="exA" data-view="loud" aria-pressed="false" hidden>OpenStax example (a): 100 Hz at 80 dB</button>
+          <button type="button" data-p="exB" data-view="loud" aria-pressed="false" hidden>OpenStax example (b): 4 kHz at 70 phons</button>
+          <button type="button" data-p="exC" data-view="loud" aria-pressed="false" hidden>OpenStax example (c): 200 Hz at 60 dB</button>
+          <button type="button" data-p="dip" data-view="loud" aria-pressed="false" hidden>Most sensitive: 3 to 4 kHz</button>
+          <button type="button" data-p="bass" data-view="loud" aria-pressed="false" hidden>Quiet bass, 50 Hz</button>
+          <button type="button" data-p="normal" data-view="aud" aria-pressed="false" hidden>Normal hearing</button>
+          <button type="button" data-p="noise" data-view="aud" aria-pressed="false" hidden>Noise damage: the 4 kHz notch</button>
+          <button type="button" data-p="age" data-view="aud" aria-pressed="false" hidden>Hearing loss with age</button>
+          <button type="button" data-p="own" data-view="aud" aria-pressed="false" hidden>Your own test</button>
+        </div>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+      </section>
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+      </section>
+      <!-- vd-readings --><section class="vd-readings" data-ws="hearing" data-title="Hearing and the Ear" data-demo="hearing">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings ('+(typeof window.vdDataNote==='function'&&window.vdDataNote()?'catalog data':'simulated data')+')','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:(typeof window.vdDataNote==='function'&&window.vdDataNote())||'Simulated data from '+(/^The /.test(title)?'':'the ')+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions</span></label>
+        <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
+        <details class="more"><summary>The model and its formulas</summary>
+          <p class="hint">Blind hides the place of the tone on the membrane, the loudness in phons and sones, and the label of each hearing level band. Predict first: where does 4 kHz land? Is a 100 Hz tone at 60 dB louder or quieter than 60 phons?</p>
+          <p class="formula">β = 10 log(I/I₀), I₀ = 10⁻¹² W/m² · f = 165.4 (10^(2.1 x) − 0.88) Hz</p>
+          <p class="hint">Cochlea: Greenwood's place map for the human cochlea (Greenwood 1990, J. Acoust. Soc. Am. 87, 2592), with x the fraction of the basilar membrane's length from the apex and the length taken as 35 mm. The traveling wave is drawn schematically: its amplitude grows slowly toward the tone's place and dies out within about 3 mm past it, and its phase lags more and more on the way, as Békésy observed; the shape is not computed from the mechanics. The wave is slowed so that one cycle takes 1 s on screen, at every frequency. Damaged hair cells are drawn where Greenwood's map puts 3 to 6 kHz.</p>
+          <p class="hint">Loudness: the equal loudness contours of ISO 226:2003 (pure tones, free field, frontal incidence, listeners 18 to 25 years old with normal hearing), from its Table 1 and equations (1) and (2), for 20 to 90 phons and its threshold of hearing T_f. Between the standard's 29 frequencies its three parameters are interpolated linearly in log f. The standard's two equations are not exact inverses: at 1 kHz they agree with phons equal to decibels within 0.04 dB. Sones: N = 2^((L_N − 40)/10), one sone at 40 phons. OpenStax reads its examples from older curves (Robinson and Dadson 1956), so at low frequencies its answers differ from ISO 226 by several phons.</p>
+          <p class="hint">Audiogram: hearing level in dB HL, 0 dB being the normal threshold at each frequency. The demo cannot calibrate your headphones, so your thresholds are on its own scale (0 dB = 100 dB below full scale) and plotted relative to your threshold at 1 kHz. With "Subtract the normal threshold curve" on, the shape of the ISO 226 threshold relative to 1 kHz is subtracted too, which assumes headphones with a flat response; real headphones are not flat, so read the shape, not the numbers. The search follows a simplified Hughson-Westlake method (down 10 dB, up 5 dB, two responses on the way up). The preset audiograms are illustrative, shaped like the three in OpenStax College Physics 2e, Figure 17.37: not measurements. Bands of hearing level: Clark 1981 (ASHA 23, 493): normal up to 15 dB HL, slight 16 to 25, mild 26 to 40, moderate 41 to 55, moderately severe 56 to 70, severe 71 to 90, profound above 90.</p>
+          <p class="hint">Sound: Web Audio sine tones with 20 ms rises and falls, sent to one ear in the test. The demo never sets a level above 20 dB below digital full scale.</p>
+        </details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  /* Hearing and the Ear. Runnable in Node (curriculum/validation/test_hearing.cjs). */
+  const HEAR_VERSION = 'hearing@2026-11-19';
+  const I_REF = 1e-12;   /* reference intensity of the decibel scale, W/m² (demos/lib/constants.js Iref) */
+  const V_SOUND = 343.2; /* speed of sound in air at 20 °C, m/s (demos/lib/constants.js sound20) */
+  /* ---- Equal loudness contours: ISO 226:2003, Table 1 and equations (1) and (2) ----
+     f: the standard's 29 frequencies (Hz); af: exponent for loudness perception; Lu: magnitude of the linear transfer function
+     normalized at 1 kHz (dB); Tf: threshold of hearing (dB SPL, free field, listeners 18 to 25 years old) */
+  const ISO_F = [20, 25, 31.5, 40, 50, 63, 80, 100, 125, 160, 200, 250, 315, 400, 500, 630, 800, 1000, 1250, 1600, 2000, 2500, 3150, 4000, 5000, 6300, 8000, 10000, 12500];
+  const ISO_AF = [0.532, 0.506, 0.480, 0.455, 0.432, 0.409, 0.387, 0.367, 0.349, 0.330, 0.315, 0.301, 0.288, 0.276, 0.267, 0.259, 0.253, 0.250, 0.246, 0.244, 0.243, 0.243, 0.243, 0.242, 0.242, 0.245, 0.254, 0.271, 0.301];
+  const ISO_LU = [-31.6, -27.2, -23.0, -19.1, -15.9, -13.0, -10.3, -8.1, -6.2, -4.5, -3.1, -2.0, -1.1, -0.4, 0.0, 0.3, 0.5, 0.0, -2.7, -4.1, -1.0, 1.7, 2.5, 1.2, -2.1, -7.1, -11.2, -10.7, -3.1];
+  const ISO_TF = [78.5, 68.7, 59.5, 51.1, 44.0, 37.5, 31.5, 26.5, 22.1, 17.9, 14.4, 11.4, 8.6, 6.2, 4.4, 3.0, 2.2, 2.4, 3.5, 1.7, -1.3, -4.2, -6.0, -5.4, -1.5, 6.0, 12.6, 13.9, 12.3];
+  /* the standard's parameters at frequency f: at its own frequencies exactly, between them interpolated linearly in log f */
+  function isoParams(f) {
+    const F = Math.min(ISO_F[ISO_F.length - 1], Math.max(ISO_F[0], f)); let i = 0; while (i < ISO_F.length - 2 && ISO_F[i + 1] < F) i++;
+    const u = (Math.log(F) - Math.log(ISO_F[i])) / (Math.log(ISO_F[i + 1]) - Math.log(ISO_F[i])), L = (a) => a[i] + (a[i + 1] - a[i]) * u;
+    return { af: L(ISO_AF), Lu: L(ISO_LU), Tf: L(ISO_TF) };
+  }
+  /* sound pressure level (dB) of a tone at f heard as loud as Ln phons: ISO 226:2003 equation (1) */
+  function phonToSPL(Ln, f) {
+    const { af, Lu, Tf } = isoParams(f), Af = 4.47e-3 * (Math.pow(10, 0.025 * Ln) - 1.15) + Math.pow(0.4 * Math.pow(10, (Tf + Lu) / 10 - 9), af);
+    return (10 / af) * Math.log10(Af) - Lu + 94;
+  }
+  /* loudness level (phons) of a tone at f and Lp dB SPL: ISO 226:2003 equation (2); null below the threshold of hearing */
+  function splToPhon(Lp, f) {
+    const { af, Lu, Tf } = isoParams(f), Bf = Math.pow(0.4 * Math.pow(10, (Lp + Lu) / 10 - 9), af) - Math.pow(0.4 * Math.pow(10, (Tf + Lu) / 10 - 9), af) + 0.005135;
+    return Bf > 0 ? 40 * Math.log10(Bf) + 94 : null;
+  }
+  const threshold = (f) => isoParams(f).Tf;
+  /* loudness in sones from loudness level: 1 sone at 40 phons, doubling every 10 phons (valid above about 40 phons) */
+  const sones = (P) => Math.pow(2, (P - 40) / 10);
+  const intensityOf = (L) => I_REF * Math.pow(10, L / 10);
+  /* ---- The cochlea: Greenwood's place map (Greenwood 1990, J. Acoust. Soc. Am. 87, 2592), human values ----
+     f = A (10^(a x) − k) with x the fraction of the basilar membrane's length measured from the apex */
+  const GW = { A: 165.4, a: 2.1, k: 0.88, len: 35 };   /* len: basilar membrane length, mm, as Greenwood used */
+  const greenwood = (x) => GW.A * (Math.pow(10, GW.a * x) - GW.k);
+  const placeOf = (f) => Math.log10(f / GW.A + GW.k) / GW.a;   /* fraction from the apex */
+  /* the traveling wave along the membrane (schematic): amplitude grows slowly toward the place x_c of the tone and dies out within
+     about 3 mm past it, with the phase lagging more and more on the way. dx: distance from the base, mm */
+  function travelingWave(dxBase, f) {
+    const xc = (1 - placeOf(f)) * GW.len, u = dxBase - xc;
+    const amp = u <= 0 ? Math.exp(u / 6) : Math.exp(-((u / 1.3) ** 2)), phase = 2 * Math.PI * 3 * Math.pow(Math.max(0, dxBase) / Math.max(1e-6, xc), 1.5);
+    return { amp, phase, xc };
+  }
+  /* ---- Audiograms (dB HL: hearing level, 0 = the normal threshold at each frequency) ---- */
+  const AUD_F = [250, 500, 1000, 2000, 3000, 4000, 6000, 8000];
+  /* illustrative audiograms shaped like OpenStax College Physics 2e Figure 17.37: not measurements */
+  const AUDIOGRAMS = {
+    normal: [5, 5, 0, 5, 5, 5, 10, 10],
+    noise: [5, 5, 5, 10, 30, 50, 35, 20],
+    age: [10, 15, 20, 30, 40, 50, 60, 65]
+  };
+  /* a simplified Hughson-Westlake search for one threshold: down 10 dB after a tone is heard, up 5 dB after it is missed; the
+     threshold is the lowest level heard on two ascending presentations. Returns the next level, or a result { done, level }. */
+  function staircase(st, heard) {
+    const s = { ...st, seen: { ...(st.seen || {}) } };
+    if (heard && s.rising) { s.seen[s.level] = (s.seen[s.level] || 0) + 1; if (s.seen[s.level] >= 2) return { ...s, done: true, result: s.level }; }
+    if (heard) { s.level -= 10; s.rising = false; } else { s.level += 5; s.rising = true; }
+    s.steps = (s.steps || 0) + 1;
+    if (s.level > s.max) return { ...s, level: s.max, done: true, result: null };
+    if (s.level < s.min) s.level = s.min;
+    return s;
+  }
+  /* threshold shift relative to 1 kHz that a normal ear has (dB): the ISO 226 threshold of hearing at f minus that at 1 kHz */
+  const normalShape = (f) => threshold(f) - threshold(1000);
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  /* ---------------- the page ---------------- */
+  const $ = (id) => document.getElementById(id);
+  const tr = (s, o) => (typeof VDI18N === 'object' && VDI18N.t ? VDI18N.t(s, o) : s.replace(/\{(\w+)\}/g, (_, k) => (o && k in o ? o[k] : '')));
+  /* strings shown only after a click (the test, Blind) are written as window.VDI18N.t('...') literals so the harvest finds them */
+  if (!window.VDI18N || !window.VDI18N.t) window.VDI18N = { t: (s, o) => s.replace(/\{(\w+)\}/g, (_, k) => (o && k in o ? o[k] : '')) };
+  const can = $('can'), ctx = can.getContext('2d');
+  let W = 0, H = 0, dpr = 1, T = null;
+  let reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  const fmt = (v, d = 2) => (v == null || !isFinite(v) ? '—' : v.toFixed(d).replace('-', '−'));
+  const comma = (v, d = 0) => (v == null || !isFinite(v) ? '—' : v.toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d }).replace('-', '−'));
+  const sig = (v, n = 3) => { if (!isFinite(v)) return '—'; const p = Math.max(0, n - 1 - Math.floor(Math.log10(Math.abs(v) || 1))); return comma(+v.toPrecision(n), Math.min(p, 4)); };
+  const hz = (f) => (f >= 1000 ? comma(+(f / 1000).toPrecision(3), 2).replace(/\.?0+$/, '') + ' kHz' : comma(+f.toPrecision(3), 1).replace(/\.?0+$/, '') + ' Hz');
+  const proj = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.25 : 1);
+  const sci = (v) => { const e = Math.floor(Math.log10(v)), m = v / Math.pow(10, e); return (Math.abs(m - 1) < 5e-3 ? '' : fmt(m, 2) + ' × ') + '10' + String(e).replace('-', '⁻').replace(/\d/g, (c) => '⁰¹²³⁴⁵⁶⁷⁸⁹'[c]); };
+
+  /* frequency sliders: logarithmic, 20 Hz to 20 kHz (cochlea) and 20 Hz to 12.5 kHz (the range of ISO 226) */
+  const F_LO = 20, F_HI = 20000, FL_HI = 12500;
+  const sToF = (v, hi) => { const f = F_LO * Math.pow(hi / F_LO, v / 1000); return f < 100 ? Math.round(f) : f < 1000 ? Math.round(f / 5) * 5 : Math.round(f / 50) * 50; };
+  const fToS = (f, hi) => Math.round(1000 * Math.log(f / F_LO) / Math.log(hi / F_LO));
+  const DMG = [3000, 6000];   /* hair cells drawn as damaged by noise: where Greenwood's map puts 3 to 6 kHz */
+  /* the demo's own level scale for sound: 0 dB is 100 dB below digital full scale; nothing ever plays above CAP */
+  const CAP = -20, TEST_MAX = 100 + CAP;
+  /* hearing level bands, Clark 1981 */
+  const BANDS = [[-10, 15, 'normal'], [15, 25, 'slight'], [25, 40, 'mild'], [40, 55, 'moderate'], [55, 70, 'moderately severe'], [70, 90, 'severe'], [90, 120, 'profound']];
+  const bandOf = (hl) => { for (const b of BANDS) if (hl <= b[1]) return b[2]; return 'profound'; };
+  const TEST_ORDER = [1000, 2000, 3000, 4000, 6000, 8000, 500, 250];
+
+  const PRESETS = {
+    k1: { view: 'cochlea', f: 1000, dmg: false,
+      hint: 'A 1 kHz tone. Press Play: the wave on the basilar membrane runs from the stiff, narrow base toward the floppy, wide apex, grows, peaks about 21 mm from the base and dies out just past its peak. The wave is slowed so one cycle takes 1 s.' },
+    c4: { view: 'cochlea', f: 262, dmg: false,
+      hint: 'Middle C, 262 Hz. Lower tones travel farther before they peak: this one peaks about 28 mm from the base. Each octave down moves the peak toward the apex: about 5 mm near the base, about 3.5 mm near the apex.' },
+    k4: { view: 'cochlea', f: 4000, dmg: true,
+      hint: 'A 4 kHz tone, about 12 mm from the base, where loud noise does its damage first. Hair cells drawn with an X are damaged: the membrane still moves there, but the signal to the nerve is lost, which is the 4 kHz notch of the audiogram.' },
+    top: { view: 'cochlea', f: 16000, dmg: false,
+      hint: 'A 16 kHz tone peaks within about 2 mm of the base. Hearing at the top of the range is the first to go with age, because the hair cells near the base wear out first.' },
+    low: { view: 'cochlea', f: 20, dmg: false,
+      hint: '20 Hz, the lowest pitch most people hear. Its wave travels the whole length of the membrane and peaks right at the apex.' },
+    exA: { view: 'loud', f: 100, L: 80,
+      hint: 'OpenStax example (a): a 100 Hz tone at 80 dB. Read its loudness level in phons from the contours. ISO 226 gives about 62 phons; OpenStax reads 75 phons from the older curves of Robinson and Dadson.' },
+    exB: { view: 'loud', f: 4000, L: 68,
+      hint: 'OpenStax example (b): what sound level at 4 kHz is as loud as 70 phons? Follow the 70 phon contour to 4 kHz: about 68 dB, a little less than at 1 kHz, because the ear is most sensitive near 3 to 4 kHz.' },
+    exC: { view: 'loud', f: 200, L: 60,
+      hint: 'OpenStax example (c): a 200 Hz tone at 60 dB. Find its loudness level in phons, then the level of an 8 kHz tone just as loud.' },
+    dip: { view: 'loud', f: 3500, L: 0,
+      hint: 'At 3 to 4 kHz the threshold of hearing dips below 0 dB: the ear canal resonates near there. A 0 dB tone at 3.5 kHz is audible; the same 0 dB at 100 Hz is far below threshold.' },
+    bass: { view: 'loud', f: 50, L: 60,
+      hint: 'A 50 Hz tone at 60 dB is only about 15 phons, not far above the threshold. Bass needs far more intensity to sound as loud as the midrange, which is why music turned down sounds thin. Compare it with 1 kHz at the same level.' },
+    normal: { view: 'aud', aud: 'normal',
+      hint: 'An illustrative audiogram of normal hearing: every point within 15 dB of 0 dB HL. O is the right ear, X the left. Lower on the chart means worse hearing.' },
+    noise: { view: 'aud', aud: 'noise',
+      hint: 'Illustrative noise induced hearing loss: a notch centered near 4 kHz, with better hearing again at 8 kHz. Years of loud noise wear out the hair cells about 12 mm from the base of the cochlea first.' },
+    age: { view: 'aud', aud: 'age',
+      hint: 'Illustrative hearing loss with age (presbycusis): the loss grows steadily toward high frequencies, with no recovery at 8 kHz.' },
+    own: { view: 'aud', aud: 'own',
+      hint: 'Your own audiogram. Put on headphones, set the volume to about half, tick the box above, and press Start the test. Your results are relative to your own threshold at 1 kHz, not calibrated in dB HL.' }
+  };
+  const S = { view: 'cochlea', preset: 'k1', f: 1000, dmg: false, tone: false, lf: 1000, L: 60, aud: 'normal', ear: 'R', shape: true, blind: false,
+    run: false, t: 0, own: { R: {}, L: {} }, test: null };
+
+  /* ---------------- sound: Web Audio, never above CAP dB of full scale ---------------- */
+  let AC = null, out = null, held = null;
+  const voices = new Set();
+  function audio() {
+    if (!AC) { const C = window.AudioContext || window.webkitAudioContext; if (!C) return null; AC = new C(); out = AC.createGain(); out.gain.value = 1; out.connect(AC.destination); }
+    if (AC.state === 'suspended') AC.resume(); return AC;
+  }
+  const gainOf = (dbfs) => Math.pow(10, Math.min(CAP, dbfs) / 20);
+  /* one tone burst with 20 ms rise and fall; pan −1 is the left ear, +1 the right */
+  function burst(f, dbfs, at, dur, pan) {
+    const a = audio(); if (!a) return; const o = a.createOscillator(), g = a.createGain(); o.frequency.value = f; g.gain.value = 0;
+    let node = g; if (pan && a.createStereoPanner) { const p = a.createStereoPanner(); p.pan.value = pan; g.connect(p); node = p; }
+    node.connect(out); o.connect(g); const t0 = a.currentTime + at, k = gainOf(dbfs);
+    g.gain.setValueAtTime(0, t0); g.gain.linearRampToValueAtTime(k, t0 + 0.02); g.gain.setValueAtTime(k, t0 + dur - 0.02); g.gain.linearRampToValueAtTime(0, t0 + dur);
+    o.start(t0); o.stop(t0 + dur + 0.02); const v = { o, g }; voices.add(v); o.onended = () => { voices.delete(v); hushShow(); }; hushShow();
+  }
+  /* the steady tone of the cochlea view: quiet and fixed, 40 dB below full scale */
+  const HOLD_DB = -40;
+  function holdTone(on) {
+    if (on) { const a = audio(); if (!a) return; if (!held) { const o = a.createOscillator(), g = a.createGain(); o.frequency.value = S.f; g.gain.value = 0; o.connect(g); g.connect(out); o.start(); held = { o, g }; }
+      held.o.frequency.setTargetAtTime(S.f, a.currentTime, 0.02); held.g.gain.setTargetAtTime(gainOf(HOLD_DB), a.currentTime, 0.02); }
+    else if (held) { const h = held; held = null; h.g.gain.setTargetAtTime(0, AC.currentTime, 0.02); h.o.stop(AC.currentTime + 0.15); }
+    hushShow();
+  }
+  function hush() { for (const v of voices) { try { v.g.gain.cancelScheduledValues(0); v.g.gain.value = 0; v.o.stop(); } catch (_) {} } voices.clear(); S.tone = false; $('tone').checked = false; holdTone(false); if (S.test) stopTest(); hushShow(); }
+  function hushShow() { $('hush').hidden = !(held || voices.size); }
+  const loudDb = (L) => L - 110;   /* the loudness chart plays a tone L dB SPL at L − 110 dB of full scale, capped */
+
+  /* ---------------- the hearing test ---------------- */
+  function startTest() {
+    if (!$('hp').checked) { $('ask').hidden = false; $('askQ').textContent = window.VDI18N.t('Headphones first'); $('askNote').textContent = window.VDI18N.t('Tick the box under Sound: headphones on, volume at about half.'); for (const id of ['yes', 'no', 'again']) $(id).hidden = true; return; }
+    if (!audio()) { $('ask').hidden = false; $('askQ').textContent = window.VDI18N.t('This browser cannot play sound.'); $('askNote').textContent = ''; return; }
+    if (S.preset !== 'own') applyPreset('own');
+    S.own[S.ear] = {}; S.test = { ear: S.ear, k: 0, st: newStair() }; for (const id of ['yes', 'no', 'again']) $(id).hidden = false;
+    $('ask').hidden = false; present(); draw(); readouts();
+  }
+  const newStair = () => ({ level: 40, min: 0, max: TEST_MAX, rising: false, seen: {}, steps: 0 });
+  function present() {
+    const t = S.test; if (!t) return; const f = TEST_ORDER[t.k], pan = t.ear === 'R' ? 1 : -1;
+    for (let i = 0; i < 3; i++) burst(f, t.st.level - 100, 0.15 + i * 0.5, 0.25, pan);
+    $('askQ').textContent = tr('Did you hear the beeps?');
+    $('askNote').textContent = window.VDI18N.t('{ear} ear · {f} · frequency {k} of {n}', { ear: t.ear === 'R' ? tr('Right') : tr('Left'), f: hz(f), k: t.k + 1, n: TEST_ORDER.length });
+    t.waitUntil = performance.now() + 1500;
+  }
+  function answer(heard) {
+    const t = S.test; if (!t) return; const st = staircase(t.st, heard);
+    if (st.done) {
+      S.own[t.ear][TEST_ORDER[t.k]] = st.result; t.k++;
+      if (t.k >= TEST_ORDER.length) { S.test = null; $('askQ').textContent = window.VDI18N.t('{ear} ear done.', { ear: t.ear === 'R' ? tr('Right') : tr('Left') }); $('askNote').textContent = t.ear === 'R' ? window.VDI18N.t('Pick Left ear and press Start the test again.') : window.VDI18N.t('Both ears are on the chart. Record a reading to keep them.'); for (const id of ['yes', 'no', 'again']) $(id).hidden = true; draw(); readouts(); return; }
+      t.st = newStair();
+    } else t.st = st;
+    draw(); readouts(); setTimeout(present, 500);
+  }
+  function stopTest() { S.test = null; $('ask').hidden = true; for (const v of voices) { try { v.o.stop(); } catch (_) {} } draw(); readouts(); }
+  /* your hearing level relative to your own threshold at 1 kHz (dB), with the normal threshold shape taken off when asked */
+  function ownHL(ear, f) {
+    const m = S.own[ear], r = m[1000]; if (r == null || !(f in m)) return undefined; if (m[f] === null) return null;
+    return m[f] - r - (S.shape ? normalShape(f) : 0);
+  }
+  function audValues(ear) {
+    if (S.aud === 'own') return AUD_F.map((f) => ownHL(ear, f));
+    return AUDIOGRAMS[S.aud].slice();
+  }
+
+  /* ---------------- colors ---------------- */
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = {}; for (const k of ['canvas', 'surface', 'ink', 'muted', 'line', 'accent', 'bone', 'bone-edge', 'fluid', 'memb-hi', 'memb-lo', 'hair', 'dead', 'contour', 'thresh', 'probe', 'right', 'left', 'tint', 'wave', 'font-mono', 'font-ui']) T[k] = g('--' + k);
+    T.hiRGB = rgb(T['memb-hi']); T.loRGB = rgb(T['memb-lo']);
+  }
+  function rgb(c) { const x = document.createElement('canvas').getContext('2d'); x.fillStyle = c; x.fillRect(0, 0, 1, 1); return [...x.getImageData(0, 0, 1, 1).data].slice(0, 3); }
+  /* along the membrane, color runs from the base (high pitch, gold) to the apex (low pitch, plum) */
+  function placeColor(u, a = 1) { const p = T.hiRGB, q = T.loRGB; return `rgba(${Math.round(p[0] + (q[0] - p[0]) * u)},${Math.round(p[1] + (q[1] - p[1]) * u)},${Math.round(p[2] + (q[2] - p[2]) * u)},${a})`; }
+  const font = (px, w = '') => `${w} ${Math.round(px * proj())}px ${T['font-ui']}`.trim();
+  const mono = (px) => `${Math.round(px * proj())}px ${T['font-mono']}`;
+
+  /* ---------------- drawing: the cochlea ---------------- */
+  const SPL = !(window.VD && VD.split) ? { f: () => 0.46, place() {}, set() {} } : VD.split(can, { key: 'coil', axis: () => (S.view === 'cochlea' && W && H ? 'y' : null), def: 0.46, min: 0.3, max: 0.65, snaps: [0.5], label: 'Divider between the coiled cochlea and the uncoiled membrane', onChange: () => draw() });
+  let geo = null;
+  const TURNS = 2.6;
+  /* the coil: s is the fraction of the length from the base (0) to the apex (1) */
+  function coilAt(s, g) { const th = -Math.PI * 0.9 + 2 * Math.PI * TURNS * s, r = g.R * (1 - 0.78 * Math.pow(s, 0.85)); return [g.cx + r * Math.cos(th), g.cy + r * Math.sin(th), r]; }
+  function drawCochlea() {
+    const p = proj(), split = Math.round(H * SPL.f()), x0 = 46 * p, x1 = W - 30 * p;
+    ctx.font = font(11); const lw = ctx.measureText(tr('base: oval window')).width, R = Math.min(split * 0.4, W * 0.22), cg = { cx: Math.min(W - R - 12 * p, Math.max(R + lw + 34 * p, W * 0.3)), cy: split / 2 + 4 * p, R };
+    let my = 0; const X = (mm) => x0 + mm / GW.len * (x1 - x0);
+    geo = { p, split, x0, x1, my, X, cg, mmOf: (px) => Math.max(0, Math.min(GW.len, (px - x0) / (x1 - x0) * GW.len)) };
+    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    const xc = (1 - placeOf(S.f)) * GW.len, dmgA = (1 - placeOf(DMG[1])) * GW.len, dmgB = (1 - placeOf(DMG[0])) * GW.len;
+    const ph = 2 * Math.PI * S.t;
+
+    /* the coil, drawn as a tube that narrows toward the apex, colored by place */
+    const N = 260;
+    for (let i = 0; i < N; i++) {
+      const s0 = i / N, s1 = (i + 1) / N, a = coilAt(s0, cg), b = coilAt(s1, cg);
+      ctx.strokeStyle = T['bone-edge']; ctx.lineWidth = (22 - 14 * s0) * p * (R / 120) + 3; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke();
+    }
+    for (let i = 0; i < N; i++) {
+      const s0 = i / N, s1 = (i + 1) / N, a = coilAt(s0, cg), b = coilAt(s1, cg), mm = s0 * GW.len;
+      ctx.strokeStyle = S.dmg && mm >= dmgA && mm <= dmgB ? T.dead : placeColor(s0, 0.85); ctx.lineWidth = (22 - 14 * s0) * p * (R / 120); ctx.lineCap = 'butt';
+      ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke();
+    }
+    /* frequency marks on the coil */
+    ctx.font = mono(10); ctx.textBaseline = 'middle';
+    for (const f of [16000, 4000, 1000, 250, 62.5]) {
+      const s = 1 - placeOf(f), [px, py, r] = coilAt(s, cg), ux = (px - cg.cx) / (r || 1), uy = (py - cg.cy) / (r || 1), w = (22 - 14 * s) * p * (R / 120) / 2 + 3;
+      ctx.strokeStyle = T.ink; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(px - ux * w, py - uy * w); ctx.lineTo(px + ux * w, py + uy * w); ctx.stroke();
+      if (s < 0.75 && (S.blind || Math.abs(s - xc / GW.len) > 0.04)) { const lx = px + ux * (w + 4), ly = py + uy * (w + 4), tw = ctx.measureText(hz(f)).width; ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.85; ctx.fillRect(ux > 0 ? lx - 2 : lx - tw - 2, ly - 7 * p, tw + 4, 14 * p); ctx.globalAlpha = 1; ctx.fillStyle = T.muted; ctx.textAlign = ux > 0 ? 'left' : 'right'; ctx.fillText(hz(f), lx, ly); }
+    }
+    /* the place of the tone on the coil */
+    if (!S.blind) { const s = xc / GW.len, [px, py] = coilAt(s, cg); ctx.fillStyle = T.probe; ctx.beginPath(); ctx.arc(px, py, 6 * p, 0, 7); ctx.fill(); ctx.strokeStyle = T.canvas; ctx.lineWidth = 2; ctx.stroke(); }
+    const b0 = coilAt(0, cg);
+    ctx.fillStyle = T.muted; ctx.font = font(11); ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    ctx.fillText(tr('base: oval window'), b0[0] - 18 * p, b0[1]);
+    const ap = coilAt(1, cg); ctx.textAlign = 'center'; ctx.fillStyle = T.canvas; const aw = ctx.measureText(tr('apex')).width; ctx.fillRect(ap[0] - aw / 2 - 2, ap[1] - 24 * p, aw + 4, 15 * p); ctx.fillStyle = T.muted; ctx.fillText(tr('apex'), ap[0], ap[1] - 16 * p);
+    /* title of the upper panel, to the right of the coil */
+    const tx = Math.min(W - 12 * p, cg.cx + R + 30 * p);
+    if (W - tx > 150 * p) {
+      ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillStyle = T.ink; ctx.font = font(13, '700');
+      ctx.fillText(tr('The cochlea, 2½ turns'), tx, 14 * p); ctx.font = font(11.5); ctx.fillStyle = T.muted;
+      const lines = [tr('Below: the same tube uncoiled.'), tr('Its basilar membrane is stiff and narrow'), tr('at the base, floppy and wide at the apex.')];
+      lines.forEach((s, i) => ctx.fillText(s, tx, 34 * p + i * 16 * p));
+    }
+    /* divider line */
+    ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(0, split + 0.5); ctx.lineTo(W, split + 0.5); ctx.stroke();
+
+    /* the uncoiled cochlea: a duct of fluid in bone, the membrane along its middle */
+    const top = split + 64 * p, hh = Math.max(14 * p, Math.min(60 * p, (H - 44 * p - top) / 2 - 10 * p)), bot = top + 2 * hh; my = geo.my = top + hh;
+    ctx.fillStyle = T.bone; ctx.fillRect(x0 - 10 * p, top - 10 * p, x1 - x0 + 20 * p, bot - top + 20 * p);
+    ctx.fillStyle = T.fluid; ctx.beginPath(); ctx.moveTo(x0, top); ctx.lineTo(x1, top + hh * 0.12); ctx.lineTo(x1, bot - hh * 0.12); ctx.lineTo(x0, bot); ctx.closePath(); ctx.fill();
+    ctx.strokeStyle = T['bone-edge']; ctx.lineWidth = 1.5; ctx.stroke();
+    /* the stapes at the oval window moves in and out with the tone */
+    const push = reduce ? 0 : Math.sin(ph) * 4 * p;
+    ctx.fillStyle = T['bone-edge']; ctx.fillRect(x0 - 28 * p + push, top + hh * 0.2, 14 * p, hh * 0.6); ctx.fillRect(x0 - 40 * p + push, my - 3 * p, 14 * p, 6 * p);
+    ctx.fillStyle = T.muted; ctx.font = font(10.5); ctx.textAlign = 'right'; ctx.textBaseline = 'top'; ctx.fillText(tr('stapes'), x0 - 8 * p, bot + 12 * p);
+    /* the membrane: its width grows from about 0.1 mm at the base to 0.5 mm at the apex (drawn wider) */
+    const wid = (mm) => (2.2 + 7 * mm / GW.len) * p;
+    ctx.beginPath(); for (let i = 0; i <= 140; i++) { const mm = i / 140 * GW.len; ctx.lineTo(X(mm), my - wid(mm)); } for (let i = 140; i >= 0; i--) { const mm = i / 140 * GW.len; ctx.lineTo(X(mm), my + wid(mm)); }
+    ctx.closePath(); const grad = ctx.createLinearGradient(x0, 0, x1, 0); grad.addColorStop(0, placeColor(0, 0.5)); grad.addColorStop(1, placeColor(1, 0.5)); ctx.fillStyle = grad; ctx.fill();
+    /* hair cells along the membrane */
+    for (let i = 0; i < 70; i++) {
+      const mm = (i + 0.5) / 70 * GW.len, x = X(mm), y = my + hh * 0.62, dead = S.dmg && mm >= dmgA && mm <= dmgB;
+      if (dead) { ctx.strokeStyle = T.dead; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(x - 3 * p, y - 3 * p); ctx.lineTo(x + 3 * p, y + 3 * p); ctx.moveTo(x + 3 * p, y - 3 * p); ctx.lineTo(x - 3 * p, y + 3 * p); ctx.stroke(); }
+      else { ctx.fillStyle = T.hair; ctx.beginPath(); ctx.arc(x, y, 2 * p, 0, 7); ctx.fill(); }
+    }
+    /* the traveling wave and its envelope */
+    if (!S.blind) {
+      const A = hh * 0.5;
+      ctx.setLineDash([4, 4]); ctx.strokeStyle = T.muted; ctx.lineWidth = 1;
+      for (const sgn of [1, -1]) { ctx.beginPath(); for (let i = 0; i <= 400; i++) { const mm = i / 400 * GW.len, w = travelingWave(mm, S.f); ctx.lineTo(X(mm), my - sgn * A * w.amp); } ctx.stroke(); }
+      ctx.setLineDash([]);
+      if (!reduce) { ctx.strokeStyle = T.wave; ctx.lineWidth = 2.2 * p; ctx.beginPath(); for (let i = 0; i <= 700; i++) { const mm = i / 700 * GW.len, w = travelingWave(mm, S.f); ctx.lineTo(X(mm), my - A * w.amp * Math.cos(ph - w.phase)); } ctx.stroke(); }
+      ctx.strokeStyle = T.probe; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(X(xc), top - 8 * p); ctx.lineTo(X(xc), bot + 4 * p); ctx.stroke();
+      ctx.fillStyle = T.probe; ctx.beginPath(); ctx.moveTo(X(xc), top - 8 * p); ctx.lineTo(X(xc) - 6 * p, top - 18 * p); ctx.lineTo(X(xc) + 6 * p, top - 18 * p); ctx.closePath(); ctx.fill();
+    } else { ctx.strokeStyle = T.wave; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(x0, my); ctx.lineTo(x1, my); ctx.stroke(); }
+    /* scales: frequency (Greenwood) above, distance from the base below */
+    ctx.font = mono(10); ctx.fillStyle = T.muted; ctx.strokeStyle = T.line; ctx.textAlign = 'center';
+    const fl = W < 520 ? [16000, 4000, 1000, 250, 20] : [20000, 10000, 5000, 2000, 1000, 500, 200, 100, 20];
+    ctx.textBaseline = 'bottom';
+    for (const f of fl) { const x = X(Math.max(0, (1 - placeOf(f)) * GW.len)); ctx.beginPath(); ctx.moveTo(x, top - 12 * p); ctx.lineTo(x, top - 22 * p); ctx.stroke(); ctx.fillText(f >= 1000 ? comma(f / 1000, f % 1000 ? 1 : 0) + 'k' : comma(f, f % 1 ? 1 : 0) + (f === 20 ? ' Hz' : ''), x, top - 24 * p); }
+    ctx.textBaseline = 'top'; ctx.textAlign = 'center';
+    const ry = bot + 14 * p;
+    for (let mm = 0; mm <= 35; mm += 5) { const x = X(mm); ctx.beginPath(); ctx.moveTo(x, ry); ctx.lineTo(x, ry + 5 * p); ctx.stroke(); ctx.fillText(String(mm), x, ry + 7 * p); }
+    ctx.beginPath(); ctx.moveTo(x0, ry); ctx.lineTo(x1, ry); ctx.stroke();
+    ctx.textAlign = 'right'; ctx.fillText(tr('mm from the base, Greenwood\'s map above'), x1, ry + 22 * p);
+    /* the time scale on screen */
+    ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillStyle = T.muted; ctx.font = font(11);
+    const note = reduce ? window.VDI18N.t('Reduce motion: the envelope only') : tr('Slowed: 1 cycle = 1 s on screen; the real tone makes {f} a second', { f: comma(S.f, 0) }), nw = ctx.measureText(note).width;
+    if (nw > W - 20 * p) ctx.font = font(Math.max(8.5, 11 * (W - 20 * p) / nw));
+    ctx.fillText(note, 10 * p, split + 8 * p);
+  }
+
+  /* ---------------- drawing: the loudness chart ---------------- */
+  function chartBox() { const p = proj(), l = 50 * p, r = W - (W < 520 ? 14 : 70) * p, t = 30 * p, b = H - 44 * p; return { p, l, r, t, b }; }
+  function drawLoud() {
+    const g = chartBox(), { p, l, r, t, b } = g, LF = Math.log(F_LO), LH = Math.log(FL_HI);
+    const X = (f) => l + (Math.log(f) - LF) / (LH - LF) * (r - l), Y = (L) => b - (L + 10) / 140 * (b - t);
+    geo = { ...g, X, Y, F: (px) => Math.exp(LF + (px - l) / (r - l) * (LH - LF)), Linv: (py) => (b - py) / (b - t) * 140 - 10 };
+    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.font = mono(10); ctx.fillStyle = T.muted;
+    for (const f of [20, 50, 100, 200, 500, 1000, 2000, 5000, 10000]) { const x = X(f); ctx.beginPath(); ctx.moveTo(x, t); ctx.lineTo(x, b); ctx.stroke(); ctx.textAlign = 'center'; ctx.textBaseline = 'top'; if (W >= 520 || [20, 100, 1000, 10000].includes(f)) ctx.fillText(f >= 1000 ? comma(f / 1000) + 'k' : String(f), x, b + 4 * p); }
+    for (let L = 0; L <= 130; L += 10) { const y = Y(L); ctx.beginPath(); ctx.moveTo(l, y); ctx.lineTo(r, y); ctx.stroke(); ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; if (W >= 520 || L % 20 === 0) ctx.fillText(String(L), l - 5 * p, y); }
+    ctx.save(); ctx.translate(13 * p, (t + b) / 2); ctx.rotate(-Math.PI / 2); ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(tr('sound level β (dB)'), 0, 0); ctx.restore();
+    ctx.textAlign = 'right'; ctx.textBaseline = 'top'; ctx.fillText(tr('frequency f (Hz)'), r, b + 20 * p);
+    ctx.save(); ctx.beginPath(); ctx.rect(l, t, r - l, b - t); ctx.clip();
+    /* contours: ISO 226:2003, 20 to 90 phons */
+    if (!S.blind) for (let P = 20; P <= 90; P += 10) {
+      ctx.strokeStyle = T.contour; ctx.lineWidth = P === 40 || P === 80 ? 2 : 1.3; ctx.beginPath();
+      for (let i = 0; i <= 240; i++) { const f = Math.exp(LF + i / 240 * (LH - LF)); ctx.lineTo(X(f), Y(phonToSPL(P, f))); } ctx.stroke();
+    }
+    ctx.strokeStyle = T.thresh; ctx.lineWidth = 2.2; ctx.setLineDash([6, 4]); ctx.beginPath();
+    for (let i = 0; i <= 240; i++) { const f = Math.exp(LF + i / 240 * (LH - LF)); ctx.lineTo(X(f), Y(threshold(f))); } ctx.stroke(); ctx.setLineDash([]);
+    ctx.restore();
+    ctx.font = font(10.5); ctx.textBaseline = 'middle';
+    if (!S.blind) for (let P = 20; P <= 90; P += 10) { ctx.fillStyle = T.contour; ctx.textAlign = 'left'; const y = Y(phonToSPL(P, FL_HI)); if (W >= 520) ctx.fillText(tr('{p} phons', { p: P }), r + 4 * p, y); else { ctx.textAlign = 'center'; ctx.fillText(String(P), X(1000), Y(P) - 7 * p); } }
+    ctx.fillStyle = T.thresh; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.textBaseline = 'bottom'; ctx.fillText(tr('threshold of hearing'), X(500), Y(6.6));
+    /* the tone */
+    const x = X(S.lf), y = Y(S.L);
+    ctx.strokeStyle = T.probe; ctx.lineWidth = 1; ctx.setLineDash([3, 3]); ctx.beginPath(); ctx.moveTo(l, y); ctx.lineTo(x, y); ctx.lineTo(x, b); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = T.probe; ctx.beginPath(); ctx.arc(x, y, 7 * p, 0, 7); ctx.fill(); ctx.strokeStyle = T.canvas; ctx.lineWidth = 2; ctx.stroke();
+    ctx.fillStyle = T.ink; ctx.font = font(13, '700'); ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText(tr('Equal loudness contours (ISO 226:2003)'), l, 8 * p);
+  }
+
+  /* ---------------- drawing: the audiogram ---------------- */
+  function drawAud() {
+    const p = proj(), l = 50 * p, r = W - (W < 520 ? 18 : 132) * p, t = 64 * p, b = H - 34 * p, n = AUD_F.length;
+    const X = (f) => l + 20 * p + (Math.log(f) - Math.log(250)) / (Math.log(8000) - Math.log(250)) * (r - l - 40 * p), Y = (hl) => t + (hl + 10) / 130 * (b - t);
+    geo = { p, X, Y };
+    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    /* bands of hearing level, Clark 1981 */
+    BANDS.forEach((B, i) => { if (i % 2) { ctx.fillStyle = T.tint; ctx.fillRect(l, Y(B[0]), r - l, Y(Math.min(120, B[1])) - Y(B[0])); }
+      if (!S.blind && W >= 520) { ctx.fillStyle = T.muted; ctx.font = font(10.5); const bw = ctx.measureText(tr(B[2])).width, room = W - r - 10 * p; if (bw > room) ctx.font = font(10.5 * room / bw); ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText(tr(B[2]), r + 6 * p, (Y(Math.max(-10, B[0])) + Y(Math.min(120, B[1]))) / 2); } });
+    ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.font = mono(10); ctx.fillStyle = T.muted;
+    for (let hl = -10; hl <= 120; hl += 10) { const y = Y(hl); ctx.beginPath(); ctx.moveTo(l, y); ctx.lineTo(r, y); ctx.stroke(); ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.fillText(String(hl).replace('-', '−'), l - 5 * p, y); }
+    ctx.beginPath(); ctx.moveTo(l, Y(0)); ctx.lineTo(r, Y(0)); ctx.strokeStyle = T.muted; ctx.stroke(); ctx.strokeStyle = T.line;
+    for (const f of AUD_F) { const x = X(f); ctx.beginPath(); ctx.moveTo(x, t); ctx.lineTo(x, b); ctx.stroke(); ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.fillText(f >= 1000 ? comma(f / 1000) + 'k' : String(f), x, t - 4 * p); }
+    ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillText(tr('frequency (Hz)'), l, t - 20 * p);
+    ctx.save(); ctx.translate(13 * p, (t + b) / 2); ctx.rotate(-Math.PI / 2); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(S.aud === 'own' ? tr('your level relative to 1 kHz (dB)') : tr('hearing level (dB HL)'), 0, 0); ctx.restore();
+    /* both ears: O red right, X blue left */
+    for (const ear of ['R', 'L']) {
+      const v = audValues(ear), col = ear === 'R' ? T.right : T.left, dx = (ear === 'R' ? -3 : 3) * p;
+      if (S.aud !== 'own' && ear === 'L') { /* illustrative audiograms are the same in both ears */ }
+      ctx.strokeStyle = col; ctx.lineWidth = 1.6; ctx.setLineDash(ear === 'L' ? [5, 4] : []); ctx.beginPath(); let on = false;
+      AUD_F.forEach((f, i) => { const h = v[i]; if (h == null) { on = false; return; } const x = X(f) + dx, y = Y(Math.max(-10, Math.min(120, h))); if (on) ctx.lineTo(x, y); else ctx.moveTo(x, y); on = true; }); ctx.stroke(); ctx.setLineDash([]);
+      AUD_F.forEach((f, i) => {
+        const h = v[i], x = X(f) + dx; ctx.strokeStyle = col; ctx.lineWidth = 2;
+        if (h === null) { const y = Y(110); ctx.beginPath(); ctx.moveTo(x, y - 8 * p); ctx.lineTo(x, y + 6 * p); ctx.lineTo(x - 4 * p, y + 1 * p); ctx.moveTo(x, y + 6 * p); ctx.lineTo(x + 4 * p, y + 1 * p); ctx.stroke(); return; }
+        if (h === undefined) return; const y = Y(Math.max(-10, Math.min(120, h))), q = 5 * p;
+        ctx.beginPath(); if (ear === 'R') ctx.arc(x, y, q, 0, 7); else { ctx.moveTo(x - q, y - q); ctx.lineTo(x + q, y + q); ctx.moveTo(x + q, y - q); ctx.lineTo(x - q, y + q); } ctx.stroke();
+      });
+    }
+    /* the frequency under test */
+    if (S.test) { const f = TEST_ORDER[S.test.k], x = X(f); ctx.strokeStyle = S.test.ear === 'R' ? T.right : T.left; ctx.lineWidth = 2; ctx.setLineDash([2, 3]); ctx.beginPath(); ctx.moveTo(x, t); ctx.lineTo(x, b); ctx.stroke(); ctx.setLineDash([]); }
+    ctx.fillStyle = T.ink; ctx.font = font(13, '700'); ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    const ttl = S.aud === 'own' ? window.VDI18N.t('Your audiogram (relative, not clinical)') : tr('Audiogram: {k}', { k: tr({ normal: 'normal hearing', noise: 'noise damage', age: 'loss with age' }[S.aud]) });
+    ctx.fillText(ttl, l, 8 * p);
+    ctx.font = font(11); ctx.fillStyle = T.muted; ctx.textAlign = 'right'; ctx.fillText(tr('O right ear · X left ear'), W - 10 * p, 10 * p);
+    if (S.aud !== 'own') { ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; const il = tr('Illustrative, shaped like OpenStax Figure 17.37: not a measurement'); ctx.fillText(ctx.measureText(il).width > W - l - 8 * p ? window.VDI18N.t('Illustrative: not a measurement') : il, l, H - 8 * p); }
+    else if (S.own.R[1000] == null && S.own.L[1000] == null && !S.test) { ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.font = font(13); ctx.fillText(window.VDI18N.t('No results yet: press Start the test.'), (l + r) / 2, (t + b) / 2); }
+  }
+
+  function draw() {
+    if (!T || !W) return;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    if (S.view === 'cochlea') drawCochlea(); else if (S.view === 'loud') drawLoud(); else drawAud();
+  }
+
+  /* ---------------- readouts ---------------- */
+  const dd = (a, b, cls) => `<div${cls ? ' class="' + cls + '"' : ''}><dt>${a}</dt><dd>${b}</dd></div>`;
+  function cochleaNow() { const x = placeOf(S.f); return { fromApex: x * GW.len, fromBase: (1 - x) * GW.len }; }
+  function loudNow() { const P = S.L < threshold(S.lf) ? null : splToPhon(S.L, S.lf); return { P, N: P === null ? null : sones(P), I: intensityOf(S.L), Tf: threshold(S.lf) }; }
+  function readouts() {
+    let h = '';
+    if (S.view === 'cochlea') {
+      const c = cochleaNow();
+      h += dd(tr('Frequency f'), comma(S.f, S.f < 100 ? 1 : 0) + ' Hz') + dd(tr('Period T = 1/f'), sig(1000 / S.f, 3) + ' ms') + dd(tr('Wavelength in air λ = v/f'), sig(V_SOUND / S.f, 3) + ' m');
+      h += S.blind ? dd(window.VDI18N.t('Place of the peak'), window.VDI18N.t('hidden: predict it'), 'note') : dd(tr('Place of the peak, from the base'), fmt(c.fromBase, 1) + ' mm') + dd(tr('Place of the peak, from the apex'), fmt(c.fromApex, 1) + ' mm');
+      if (S.dmg) h += dd(window.VDI18N.t('Hair cells at this place'), S.f >= DMG[0] && S.f <= DMG[1] ? window.VDI18N.t('damaged') : window.VDI18N.t('healthy'));
+      if (S.tone) h += dd(window.VDI18N.t('Tone playing at'), tr('{d} dB below full scale', { d: -HOLD_DB }));
+    } else if (S.view === 'loud') {
+      const q = loudNow();
+      h += dd(tr('Frequency f'), comma(S.lf, S.lf < 100 ? 1 : 0) + ' Hz') + dd(tr('Sound level β'), fmt(S.L, 0) + ' dB') + dd(tr('Intensity I'), sci(q.I) + ' W/m²');
+      h += dd(tr('Threshold of hearing at f'), fmt(q.Tf, 1) + ' dB');
+      if (S.blind) h += dd(window.VDI18N.t('Loudness level'), window.VDI18N.t('hidden: read it from the chart first'), 'note');
+      else if (q.P === null) h += dd(window.VDI18N.t('Loudness level'), window.VDI18N.t('below the threshold: not heard'));
+      else h += dd(window.VDI18N.t('Loudness level'), fmt(q.P, 1) + ' ' + tr('phons')) + dd(tr('Loudness'), sig(q.N, 3) + ' ' + tr('sones')) + dd(tr('1 kHz tone just as loud'), fmt(phonToSPL(q.P, 1000), 1) + ' dB');
+      const db = loudDb(S.L); h += dd(tr('Plays at'), db > CAP ? window.VDI18N.t('{d} dB below full scale (capped)', { d: -CAP }) : tr('{d} dB below full scale', { d: fmt(-db, 0) }));
+    } else {
+      const own = S.aud === 'own';
+      for (const ear of ['R', 'L']) {
+        const v = audValues(ear), name = ear === 'R' ? tr('Right') : tr('Left');
+        if (own && v.every((x) => x === undefined)) { h += dd(window.VDI18N.t('{ear} ear', { ear: name }), window.VDI18N.t('not tested yet'), 'note'); continue; }
+        if (!own && ear === 'L') { h += dd(tr('Left ear'), tr('the same as the right')); continue; }
+        AUD_F.forEach((f, i) => { if (v[i] !== undefined) h += dd(name + ' · ' + hz(f), v[i] === null ? window.VDI18N.t('not heard at the loudest level') : fmt(v[i], 0) + (own ? ' dB' : ' dB HL')); });
+        const pta = [500, 1000, 2000, 4000].map((f) => v[AUD_F.indexOf(f)]);
+        if (pta.every((x) => x != null)) { const a = (pta[0] + pta[1] + pta[2] + pta[3]) / 4; h += dd(tr('{ear}: average at 0.5, 1, 2, 4 kHz', { ear: name }), fmt(a, 1) + ' dB');
+          if (!own) h += S.blind ? dd(window.VDI18N.t('Band'), window.VDI18N.t('hidden: read it from the chart'), 'note') : dd(tr('Band (Clark 1981)'), tr(bandOf(a))); }
+      }
+    }
+    $('out').innerHTML = h;
+  }
+
+  /* ---------------- controls ---------------- */
+  function sync() {
+    $('sF').value = fToS(S.f, F_HI); $('oF').textContent = hz(S.f); $('dmg').checked = S.dmg; $('tone').checked = S.tone;
+    $('sLF').value = fToS(S.lf, FL_HI); $('oLF').textContent = hz(S.lf); $('sL').value = S.L; $('oL').textContent = fmt(S.L, 0) + ' dB';
+    for (const b of document.querySelectorAll('#earSeg button')) b.setAttribute('aria-pressed', String(b.dataset.ear === S.ear));
+    $('shape').checked = S.shape;
+    for (const b of document.querySelectorAll('#presets button')) { b.setAttribute('aria-pressed', String(b.dataset.p === S.preset)); b.hidden = b.dataset.view !== S.view; }
+    for (const b of document.querySelectorAll('#viewSeg button')) b.setAttribute('aria-pressed', String(b.dataset.v === S.view));
+    $('cochBox').hidden = S.view !== 'cochlea'; $('loudBox').hidden = S.view !== 'loud'; $('audBox').hidden = S.view !== 'aud';
+    $('stage').dataset.v = S.view; $('play').disabled = S.view !== 'cochlea';
+    const lab = { cochlea: 'The cochlea coiled, and below it uncoiled into a straight basilar membrane from the stiff base to the floppy apex, with a traveling wave that peaks at the place of the tone\'s frequency. Drag along the membrane, or use the arrow keys, to change the frequency.',
+      loud: 'A chart of sound level against frequency with the equal loudness contours from 20 to 90 phons and the threshold of hearing; a dot marks the tone. Drag the dot, or use the arrow keys: left and right change the frequency, up and down the level.',
+      aud: 'An audiogram: hearing level against frequency from 250 Hz to 8 kHz, with worse hearing lower down, O for the right ear and X for the left, over bands from normal to profound.' };
+    can.setAttribute('aria-label', lab[S.view]);
+  }
+  const card = VD.setupCard ? VD.setupCard($('setupCard')) : { away() {} };
+  function setRun(on) { S.run = on; const b = $('play'); b.textContent = on ? 'Pause' : 'Play'; b.classList.toggle('attn', !on); }
+  function applyPreset(k) {
+    const c = PRESETS[k]; S.preset = k; S.view = c.view; $('presetHint').textContent = c.hint; setRun(false);
+    if (c.view === 'cochlea') { S.f = c.f; S.dmg = c.dmg; S.t = 0; if (S.tone) holdTone(true); }
+    else if (c.view === 'loud') { S.lf = c.f; S.L = c.L; }
+    else { S.aud = c.aud; if (k !== 'own' && S.test) stopTest(); }
+    if (c.view !== 'cochlea' && S.tone) { S.tone = false; holdTone(false); }
+    sync(); resize(); readouts();
+  }
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  const FIRST = { cochlea: 'k1', loud: 'exA', aud: 'normal' };
+  for (const b of document.querySelectorAll('#viewSeg button')) b.addEventListener('click', () => { if (b.dataset.v === S.view) return; S.view = b.dataset.v; applyPreset(FIRST[S.view]); });
+  const setF = (f) => { S.f = Math.max(F_LO, Math.min(F_HI, f)); S.preset = null; if (S.tone) holdTone(true); sync(); draw(); readouts(); };
+  const setLoud = (f, L) => { S.lf = Math.max(F_LO, Math.min(FL_HI, f)); S.L = Math.max(-10, Math.min(110, Math.round(L))); S.preset = null; sync(); draw(); readouts(); };
+  $('sF').addEventListener('input', (e) => setF(sToF(+e.target.value, F_HI)));
+  $('dmg').addEventListener('change', (e) => { S.dmg = e.target.checked; S.preset = null; sync(); draw(); readouts(); });
+  $('tone').addEventListener('change', (e) => { S.tone = e.target.checked; holdTone(S.tone); readouts(); });
+  $('sLF').addEventListener('input', (e) => setLoud(sToF(+e.target.value, FL_HI), S.L));
+  $('sL').addEventListener('input', (e) => setLoud(S.lf, +e.target.value));
+  $('playLoud').addEventListener('click', () => burst(S.lf, loudDb(S.L), 0.05, 1.2));
+  $('playPair').addEventListener('click', () => { const P = loudNow().P; burst(1000, loudDb(P === null ? S.L : phonToSPL(P, 1000)), 0.05, 1); burst(S.lf, loudDb(S.L), 1.4, 1); });
+  for (const b of document.querySelectorAll('#earSeg button')) b.addEventListener('click', () => { if (S.test) stopTest(); S.ear = b.dataset.ear; sync(); });
+  $('startTest').addEventListener('click', startTest);
+  $('stopTest').addEventListener('click', stopTest);
+  $('yes').addEventListener('click', () => answer(true));
+  $('no').addEventListener('click', () => answer(false));
+  $('again').addEventListener('click', present);
+  $('shape').addEventListener('change', (e) => { S.shape = e.target.checked; draw(); readouts(); });
+  $('hush').addEventListener('click', hush);
+  $('play').addEventListener('click', () => { if (S.view !== 'cochlea') return; setRun(!S.run); if (S.run) card.away(false); draw(); });
+  $('reset').addEventListener('click', () => { S.t = 0; setRun(false); hush(); draw(); readouts(); });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; $('blindTag').hidden = !S.blind; draw(); readouts(); });
+  $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; draw(); });
+
+  /* the picture: drag along the membrane or the coil (cochlea), drag the dot (loudness); arrow keys do the same */
+  let drag = false;
+  function pick(e) {
+    const r = can.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
+    if (S.view === 'cochlea') {
+      if (y > geo.split) { setF(Math.round(greenwood(1 - geo.mmOf(x) / GW.len))); return true; }
+      let best = null, bd = 30 * geo.p; for (let i = 0; i <= 300; i++) { const s = i / 300, [px, py] = coilAt(s, geo.cg), d = Math.hypot(px - x, py - y); if (d < bd) { bd = d; best = s; } }
+      if (best !== null) { setF(Math.round(greenwood(1 - best))); return true; } return false;
+    }
+    if (S.view === 'loud') { if (x < geo.l - 10 || x > geo.r + 10 || y < geo.t - 10 || y > geo.b + 10) return false; setLoud(sToF(fToS(geo.F(x), FL_HI), FL_HI), geo.Linv(y)); return true; }
+    return false;
+  }
+  can.addEventListener('pointerdown', (e) => { if (!geo || !pick(e)) return; drag = true; can.setPointerCapture(e.pointerId); e.preventDefault(); });
+  can.addEventListener('pointermove', (e) => { if (drag) pick(e); else can.style.cursor = S.view === 'aud' ? 'default' : 'pointer'; });
+  const up = () => { drag = false; }; can.addEventListener('pointerup', up); can.addEventListener('pointercancel', up);
+  can.addEventListener('keydown', (e) => {
+    const big = e.shiftKey ? 5 : 1;
+    if (S.view === 'cochlea') { const d = e.key === 'ArrowRight' ? -1 : e.key === 'ArrowLeft' ? 1 : e.key === 'ArrowUp' ? 1 : e.key === 'ArrowDown' ? -1 : 0; if (!d) return; setF(sToF(fToS(S.f, F_HI) + d * 10 * big, F_HI)); e.preventDefault(); }
+    else if (S.view === 'loud') { const df = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0, dL = e.key === 'ArrowUp' ? 1 : e.key === 'ArrowDown' ? -1 : 0; if (!df && !dL) return; setLoud(sToF(fToS(S.lf, FL_HI) + df * 10 * big, FL_HI), S.L + dL * big); e.preventDefault(); }
+  });
+
+  /* readings */
+  window.vdVersion = HEAR_VERSION;
+  window.vdReadingRow = () => {
+    if (S.view === 'cochlea') { const c = cochleaNow(), row = { view: 'cochlea', f_Hz: S.f, lambda_m: +(V_SOUND / S.f).toPrecision(4) }; if (!S.blind) row.x_base_mm = +c.fromBase.toFixed(1); return row; }
+    if (S.view === 'loud') { const q = loudNow(), row = { view: 'loud', f_Hz: S.lf, L_dB: S.L }; if (!S.blind) { row.phons = q.P === null ? '' : +q.P.toFixed(1); row.sones = q.N === null ? '' : +q.N.toPrecision(3); } return row; }
+    const v = audValues(S.ear); if (v.every((x) => x == null)) return window.VDI18N.t('Test this ear first: press Start the test.');
+    const row = { view: 'aud', audiogram: S.aud, ear: S.ear === 'R' ? 'right' : 'left' }; AUD_F.forEach((f, i) => { row['dB_' + f] = v[i] == null ? '' : +v[i].toFixed(1); }); return row;
+  };
+  const COLS = { cochlea: [['f_Hz', 'f (Hz)'], ['x_base_mm', 'From base (mm)'], ['lambda_m', 'λ in air (m)']], loud: [['f_Hz', 'f (Hz)'], ['L_dB', 'β (dB)'], ['phons', 'Phons'], ['sones', 'Sones']], aud: [['audiogram', 'Audiogram'], ['ear', 'Ear'], ['dB_1000', '1 kHz'], ['dB_4000', '4 kHz'], ['dB_8000', '8 kHz']] };
+  window.vdShowCols = COLS.cochlea;
+  new MutationObserver(() => { window.vdShowCols = COLS[S.view]; }).observe($('stage'), { attributes: true, attributeFilter: ['data-v'] });
+
+  /* ---------------- loop ---------------- */
+  let last = performance.now();
+  function frame(now) {
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    if (S.run && S.view === 'cochlea') { S.t += dt; draw(); }
+    requestAnimationFrame(frame);
+  }
+  function resize() {
+    dpr = window.devicePixelRatio || 1; const r = $('pane').getBoundingClientRect(); W = r.width; H = r.height;
+    can.width = Math.round(W * dpr); can.height = Math.round(H * dpr); SPL.place(); draw();
+  }
+  const retheme = () => { tokens(); draw(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  VD.projector({ onChange: resize });
+  tokens(); applyPreset('k1'); new ResizeObserver(resize).observe($('pane')); resize();
+  if (window.VD && VD.panel) VD.panel({ play: '#play', reset: '#reset', end: ['#viewSeg', '#hush'],
+    step: { label: 'Step', title: 'Advance a quarter cycle and pause', run: () => { if (S.view !== 'cochlea') return; setRun(false); S.t += 0.25; draw(); } } });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  window.__hear = { S, PRESETS, applyPreset, draw, readouts, answer, startTest, stopTest, ownHL, audValues, cochleaNow, loudNow };
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

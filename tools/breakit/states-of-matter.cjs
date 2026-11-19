@@ -56,8 +56,57 @@ module.exports = {
         if (b.t > t0 + 1 && b.t < 400 && Math.abs(parseFloat(rd('Temperature T'))) > 0.051 && /melting/.test(rd('In the beaker'))) return 'melting but T = ' + rd('Temperature T');
       }
       return true; })()` },
+    { name: "phase diagram: the dot stays on the axes, its phase and transitions follow the reference equations; water boils at 373.12 K at 1 atm, dry ice sublimes at 194.69 K", fn: `(() => { ${pre}
+      if (S.view !== 'phase') return true;
+      const ph = M.ph, P = M.PHASE[ph.sub];
+      if (!(ph.T >= P.Tmin - 1e-9 && ph.T <= P.Tmax + 1e-9 && ph.P >= P.Pmin * (1 - 1e-9) && ph.P <= P.Pmax * (1 + 1e-9))) return 'dot off the diagram: ' + ph.T + ' K, ' + ph.P + ' Pa';
+      const T = parseFloat(rd('Temperature T')); if (Math.abs(T - ph.T) > 0.0051) return 'T shows ' + rd('Temperature T') + ', state ' + ph.T;
+      const tr = M.transitions(ph.sub, ph.P);
+      for (const k of ['melt', 'boil', 'subl']) if (tr[k] != null) { const fn = { melt: P.melt, boil: P.sat, subl: P.sub }[k]; if (Math.abs(fn(tr[k]) / ph.P - 1) > 1e-6) return k + ' at ' + tr[k] + ' K is off its boundary'; }
+      if (!ph.at && !/supercritical|solid|liquid|gas/.test(rd('Phase') || '')) return 'phase reads ' + rd('Phase');
+      if (!ph.at) { const want = { solid: 'solid', liquid: 'liquid', gas: 'gas (vapor)', super: 'supercritical fluid' }[M.phaseAt(ph.sub, ph.T, ph.P)]; if (rd('Phase') !== want) return 'phase reads ' + rd('Phase') + ' but the diagram gives ' + want; }
+      if (ph.sub === 'water' && Math.abs(M.transitions('water', 101325).boil - 373.124) > 0.002) return 'water boils at ' + M.transitions('water', 101325).boil + ' K at 1 atm';
+      if (Math.abs(M.transitions('co2', 101325).subl - 194.686) > 0.005) return 'dry ice sublimes at ' + M.transitions('co2', 101325).subl;
+      if (ph.at && Math.abs(ph.T - ph.at.T) > 1e-9) return 'holding at ' + ph.at.k + ' but T = ' + ph.T;
+      return true; })()` },
+    { name: "vapor: 0 <= p <= p_sat in the sealed jar (relative humidity at most 100 %), dew point below T, open pot boils at the outside pressure; 2.339 kPa saturated at 20 C", fn: `(() => { ${pre}
+      if (S.view !== 'vapor') return true;
+      const vp = M.vp, ps = M.psat(vp.T);
+      if (!(vp.T > 272 && vp.T < 404)) return 'jar temperature ' + vp.T;
+      if (Math.abs(M.psat(293.15) - 2339.19) > 0.05) return 'p_sat at 20 C = ' + M.psat(293.15);
+      if (vp.jar === 'sealed') {
+        if (!(vp.p >= 0 && vp.p <= ps * (1 + 1e-9))) return 'vapor pressure ' + vp.p + ' Pa with p_sat ' + ps;
+        const rh = parseFloat(rd('Relative humidity p/p_sat')); if (isFinite(rh) && Math.abs(rh - 100 * vp.p / ps) > 0.051) return 'RH shows ' + rh + ', state ' + 100 * vp.p / ps;
+        if (vp.p > 1 && M.dewPoint(vp.p) > vp.T + 1e-6) return 'dew point ' + M.dewPoint(vp.p) + ' above T ' + vp.T;
+        if (vp.boil) return 'the sealed jar boils';
+      } else {
+        const Tb = M.boilingPoint(vp.Pout); if (vp.T > Tb + 1e-9) return 'open pot at ' + vp.T + ' K, above its boiling point ' + Tb;
+        if (vp.boil && Math.abs(M.psat(vp.T) / vp.Pout - 1) > 1e-6) return 'boiling with vapor pressure ' + M.psat(vp.T) + ' and outside ' + vp.Pout;
+      }
+      return true; })()` },
   ],
   steps: [
+    { name: 'phase diagram: drag the dot to every corner and the boundaries, heat and cool through every change, both substances, every pressure preset', fn: `(async () => {
+      const M = window.__sm, pause = (ms) => new Promise((r) => setTimeout(r, ms)), can = document.getElementById('can');
+      M.applyPreset('phase'); await pause(200);
+      const r = can.getBoundingClientRect(), pt = (fx, fy, type) => can.dispatchEvent(new PointerEvent(type, { bubbles: true, pointerId: 1, clientX: r.left + fx * r.width, clientY: r.top + fy * r.height }));
+      for (const [fx, fy] of [[0, 0], [1, 1], [0.02, 0.98], [0.99, 0.02], [0.5, 0.5], [-0.2, 1.3], [1.3, -0.2]]) { pt(fx, fy, 'pointerdown'); pt(fx * 0.9 + 0.05, fy, 'pointermove'); pt(fx, fy, 'pointerup'); await pause(80); }
+      for (const sub of ['co2', 'water']) { document.querySelector('#phSub [data-sub=' + sub + ']').click(); await pause(100);
+        for (const h of ['8849', '0', 'cooker']) { document.querySelector('#phP [data-h="' + h + '"]').click(); document.querySelector('#speedSeg [data-s="4"]').click(); M.setRun(true); await pause(900);
+          document.querySelector('#phHeat [data-h="-1"]').click(); M.setRun(true); await pause(700); document.querySelector('#phHeat [data-h="1"]').click(); } }
+      can.focus(); for (const k of ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight']) for (let i = 0; i < 30; i++) can.dispatchEvent(new KeyboardEvent('keydown', { key: k, shiftKey: i % 2 === 0, bubbles: true }));
+      M.applyPreset('phase'); M.setRun(false);
+    })()` },
+    { name: 'vapor: sealed jar saturates, cools past the dew point, heats to 130 C; open pot at every outside pressure and boils; switch jars mid run', fn: `(async () => {
+      const M = window.__sm, pause = (ms) => new Promise((r) => setTimeout(r, ms)), set = (id, v) => { const e = document.getElementById(id); e.value = v; e.dispatchEvent(new Event('input', { bubbles: true })); };
+      M.applyPreset('vpress'); document.querySelector('#speedSeg [data-s="4"]').click(); M.setRun(true); await pause(1500);
+      set('sTset', 0); await pause(1500); set('sTset', 130); await pause(1500);
+      document.querySelector('#vapJar [data-j=open]').click(); M.setRun(true);
+      for (const h of ['8849', '1609', 'cooker', '0']) { document.querySelector('#vapP [data-h="' + h + '"]').click(); await pause(700); }
+      set('sPout', 20); await pause(400); set('sPout', 220); await pause(400); set('sTset', 0); await pause(600);
+      document.querySelector('#vapJar [data-j=sealed]').click(); M.setRun(true); await pause(400); document.getElementById('restart').click();
+      M.applyPreset('vpress');
+    })()` },
     { name: 'atoms: run the crystal hot, change pressure to 0 then 30 mid run, switch to vapor and back, other speeds', fn: `(async () => {
       const M = window.__sm, pause = (ms) => new Promise((r) => setTimeout(r, ms)), set = (id, v) => { const e = document.getElementById(id); e.value = v; e.dispatchEvent(new Event('input', { bubbles: true })); };
       M.applyPreset('crystal'); M.setRun(true); set('sPow', 8); await pause(800);

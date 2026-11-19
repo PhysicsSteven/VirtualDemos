@@ -56,6 +56,16 @@ VDI18N.add('es', 'demo/forces', {
   "Regresar",
 "Release at the top mark":
   "Soltar en la marca superior",
+"Machine":
+  "Máquina",
+"Lever":
+  "Palanca",
+"Pulleys":
+  "Poleas",
+"Ramp":
+  "Rampa",
+"Wheel and axle":
+  "Rueda y eje",
 "Divider between the ramp and the free body diagram":
   "Divisor entre la rampa y el diagrama de cuerpo libre",
 "Ramp, block and pulls":
@@ -92,6 +102,26 @@ VDI18N.add('es', 'demo/forces', {
   "Masa colgante m₂ ({#} = ninguna)",
 "Hanging mass m₂ ({#} = none): click, or press Enter, to type a value":
   "Masa colgante m₂ ({#} = ninguna): haz clic, o pulsa Enter, para escribir un valor",
+"Effort arm":
+  "Brazo de esfuerzo",
+"Effort arm: click, or press Enter, to type a value":
+  "Brazo de esfuerzo: haz clic, o presiona Enter, para escribir un valor",
+"Load arm":
+  "Brazo de carga",
+"Load arm: click, or press Enter, to type a value":
+  "Brazo de carga: haz clic, o presiona Enter, para escribir un valor",
+"Wheel radius R":
+  "Radio de la rueda R",
+"Wheel radius R: click, or press Enter, to type a value":
+  "Radio de la rueda R: haz clic, o presiona Enter, para escribir un valor",
+"Axle radius r":
+  "Radio del eje r",
+"Axle radius r: click, or press Enter, to type a value":
+  "Radio del eje r: haz clic, o presiona Enter, para escribir un valor",
+"Friction μ":
+  "Fricción μ",
+"Friction μ: click, or press Enter, to type a value":
+  "Fricción μ: haz clic, o presiona Enter, para escribir un valor",
 "<a>Worksheet {#}: Friction and Work</a>":
   "<a>Hoja de trabajo {#}: Fricción y trabajo</a>",
 "<a>Worksheet {#}: Atwood's Machine</a>":
@@ -110,6 +140,8 @@ VDI18N.add('es', 'demo/forces', {
   "Máquina de Atwood",
 "Block and tackle":
   "Polipasto",
+"Simple machines":
+  "Máquinas simples",
 "Friction up close":
   "La fricción de cerca",
 "A {#} kg block on a level floor, μs = {#}. Static friction can match a push only up to μs N = {#} N, so this {#} N push slides the block; kinetic friction μk N = {#} N is smaller, and it speeds up at {#} m/s². Turn F below {#} N and static friction matches the push exactly, so the block stays put.":
@@ -220,14 +252,6 @@ VDI18N.add('es', 'demo/forces', {
   "Fricción (estática)",
 "Slips when tan θ > μs, at θ =":
   "Se desliza cuando tan θ > μs, en θ =",
-"A {#} kg block on a ramp tilted {#}°.":
-  "Un bloque de {#} kg sobre una rampa inclinada {#}°.",
-"There is no applied force.":
-  "No hay fuerza aplicada.",
-"Static friction {#} N.":
-  "Fricción estática: {#} N.",
-"The block slips when the angle is above {#}°.":
-  "El bloque se desliza cuando el ángulo es mayor que {#}°.",
 "Pulling upward at an angle lifts some of the weight off the floor, so N is less than mg and so is the friction. Too steep an angle wastes the pull. Find the angle that gives the largest acceleration.":
   "Jalar hacia arriba en ángulo quita parte del peso del piso, así que N es menor que mg y también la fricción. Un ángulo demasiado inclinado desperdicia el jalón. Encuentra el ángulo que da la mayor aceleración.",
 "A hanging mass pulls the block across a table. Both move with the same acceleration a = (m₂g − μk m g)/(m + m₂), and the tension is less than m₂g while they accelerate.":
@@ -244,6 +268,12 @@ VDI18N.add('es', 'demo/forces', {
   "Dos masas cuelgan de una polea: m a la izquierda, m₂ a la derecha. Con una cuerda ligera y una polea sin fricción, a = (m₂ − m) g/(m + m₂) = {#} × {#}/{#} = {#} m/s² aquí, mucho menor que g, por lo cual Atwood la usó para medir g. La tensión, {#} m m₂ g/(m + m₂) = {#} N, queda entre los dos pesos. Cronometra un recorrido de {#} m y calcula g.",
 "Acceleration a (m rising +)":
   "Aceleración a (m subiendo +)",
+"Atwood's machine: a {#} kg mass on the left and a {#} kg mass on the right hang over one pulley.":
+  "Máquina de Atwood: una masa de {#} kg a la izquierda y una masa de {#} kg a la derecha cuelgan sobre una polea.",
+"Tension {#} N.":
+  "Tensión: {#} N.",
+"Acceleration {#} m/s², the left mass rising is positive.":
+  "Aceleración {#} m/s²; que la masa de la izquierda suba es positivo.",
 "n = {#} · rope pulled {#} m · load up {#} m":
   "n = {#} · cuerda jalada {#} m · carga sube {#} m",
 "FREE BODY DIAGRAM OF THE LOAD":
@@ -284,6 +314,54 @@ VDI18N.add('es', 'demo/forces', {
   "Trabajo total sobre la carga",
 "Gain in gravitational energy mg Δy":
   "Aumento de la energía gravitacional mg Δy",
+"Press Play to lift the load":
+  "Presiona Iniciar para levantar la carga",
+"Effort {#} N, moved {#} m":
+  "Esfuerzo {#} N, recorrió {#} m",
+"Load {#} N, raised {#} m":
+  "Carga {#} N, subió {#} m",
+"WORK IN AND WORK OUT":
+  "TRABAJO DE ENTRADA Y DE SALIDA",
+"IMA = R/r, wheel radius over axle radius":
+  "VMI = R/r, radio de la rueda entre radio del eje",
+"Work in, effort × d_in":
+  "Trabajo de entrada, esfuerzo × d_ent",
+"Work out, mg × d_out":
+  "Trabajo de salida, mg × d_sal",
+"Thermal energy from friction":
+  "Energía térmica por fricción",
+"IMA = d_in/d_out = {#}":
+  "VMI = d_ent/d_sal = {#}",
+"AMA = F_out/F_in = {#}":
+  "VMR = F_sal/F_ent = {#}",
+"Efficiency = AMA/IMA = {#} %":
+  "Eficiencia = VMR/VMI = {#} %",
+"Four simple machines raise a load slowly at a steady speed. Pick one above the picture: a lever, pulleys (a block and tackle), a ramp, or a wheel and axle. Press Play and the load rises; the readouts give the effort F_in and how far it moves, d_in, and the load's weight F_out = mg and how far it rises, d_out. The ideal mechanical advantage IMA = d_in/d_out comes from the shape alone; the actual one, AMA = F_out/F_in, is smaller when there is friction, and the efficiency is AMA/IMA = work out/work in. Friction μ is the sliding friction between block and ramp, and for the pulleys and the wheel the friction at each axle (a pin {#} cm in radius). The lever turns on a knife edge, so it has none. The lever, rope, pulleys and wheel are taken as weightless, and the load moves so slowly that its kinetic energy is negligible.":
+  "Cuatro máquinas simples levantan una carga despacio y a rapidez constante. Elige una arriba de la imagen: una palanca, poleas (un polipasto), una rampa o una rueda y eje. Presiona Iniciar y la carga sube; las lecturas dan el esfuerzo F_ent y cuánto se mueve, d_ent, y el peso de la carga F_sal = mg y cuánto sube, d_sal. La ventaja mecánica ideal VMI = d_ent/d_sal depende solo de la forma; la real, VMR = F_sal/F_ent, es menor cuando hay fricción, y la eficiencia es VMR/VMI = trabajo de salida/trabajo de entrada. Fricción μ es la fricción de deslizamiento entre el bloque y la rampa, y para las poleas y la rueda, la fricción en cada eje (un perno de {#} cm de radio). La palanca gira sobre un filo, así que no tiene fricción. La palanca, la cuerda, las poleas y la rueda se toman sin peso, y la carga se mueve tan despacio que su energía cinética es despreciable.",
+"Effort (N)":
+  "Esfuerzo (N)",
+"d_in (m)":
+  "d_ent (m)",
+"No readings yet. Press Play, let the load rise, then record.":
+  "Aún no hay lecturas. Presiona Iniciar, deja que la carga suba y luego registra.",
+"Load weight F<sub>out</sub> = mg":
+  "Peso de la carga F<sub>sal</sub> = mg",
+"Effort F<sub>in</sub>":
+  "Esfuerzo F<sub>ent</sub>",
+"Load raised d<sub>out</sub>":
+  "Altura que subió la carga d<sub>sal</sub>",
+"Effort moved d<sub>in</sub>":
+  "Recorrido del esfuerzo d<sub>ent</sub>",
+"Ideal mechanical advantage IMA = d<sub>in</sub>/d<sub>out</sub>":
+  "Ventaja mecánica ideal VMI = d<sub>ent</sub>/d<sub>sal</sub>",
+"Actual mechanical advantage AMA = F<sub>out</sub>/F<sub>in</sub>":
+  "Ventaja mecánica real VMR = F<sub>sal</sub>/F<sub>ent</sub>",
+"Efficiency = AMA/IMA":
+  "Eficiencia = VMR/VMI",
+"Work by the effort, F<sub>in</sub> d<sub>in</sub>":
+  "Trabajo del esfuerzo, F<sub>ent</sub> d<sub>ent</sub>",
+"Gain in gravitational energy, mg d<sub>out</sub>":
+  "Aumento de energía gravitacional, mg d<sub>sal</sub>",
 "THE SURFACES UP CLOSE (A SCHEMATIC)":
   "LAS SUPERFICIES DE CERCA (UN ESQUEMA)",
 "Stuck: static friction {#} N of at most {#} N":
@@ -300,6 +378,8 @@ VDI18N.add('es', 'demo/forces', {
   "El segundo panel muestra las dos superficies ampliadas al tamaño de los átomos (un esquema). Incluso las superficies pulidas son irregulares a esta escala, y solo se tocan las puntas de las irregularidades. Con un empuje de {#} N, por debajo de los {#} N que puede dar la fricción estática, las irregularidades se quedan trabadas y nada se desliza: sin trabajo, sin calor. Sube el empuje por encima de {#} N: el bloque se desliza, las irregularidades se enganchan y se arrancan al pasar unas por otras, y los átomos en el contacto vibran más fuerte: la fricción convierte trabajo en energía térmica a razón de μk N v.",
 "The second pane shows the surfaces magnified to the size of atoms.":
   "El segundo panel muestra las superficies ampliadas al tamaño de los átomos.",
+"Static friction {#} N.":
+  "Fricción estática: {#} N.",
 "Use Release at the top mark first, and let the timer finish.":
   "Usa primero Soltar en la marca superior, y deja que el cronómetro termine.",
 "Released.":
@@ -320,14 +400,14 @@ VDI18N.add('es', 'demo/forces', {
   "Los coeficientes de fricción están ocultos.",
 "The normal force, friction, tension and acceleration are hidden while Blind is on.":
   "La fuerza normal, la fricción, la tensión y la aceleración están ocultas mientras A ciegas está activado.",
-"Held still: press Release.":
-  "Sujeto quieto: pulsa Soltar.",
+"A {#} kg block on a ramp tilted {#}°.":
+  "Un bloque de {#} kg sobre una rampa inclinada {#}°.",
+"There is no applied force.":
+  "No hay fuerza aplicada.",
 "A {#} kg mass hangs from a string over a pulley.":
   "Una masa de {#} kg cuelga de una cuerda sobre una polea.",
 "Blind: arrows show directions only":
   "A ciegas: las flechas muestran solo direcciones",
-"Atwood's machine: a {#} kg mass on the left and a {#} kg mass on the right hang over one pulley.":
-  "Máquina de Atwood: una masa de {#} kg a la izquierda y una masa de {#} kg a la derecha cuelgan sobre una polea.",
 "T each":
   "T cada uno",
 "Tension, lift, acceleration and the pull that holds the load":
@@ -340,14 +420,34 @@ VDI18N.add('es', 'demo/forces', {
   "Jalón sobre la cuerda F = {#} N.",
 "The tension, lift and acceleration are hidden while Blind is on.":
   "La tensión, la fuerza de levantamiento y la aceleración están ocultas mientras A ciegas está activado.",
+"Blind: work out the work in and out":
+  "A ciegas: calcula el trabajo de entrada y de salida",
+"from your readings.":
+  "con tus lecturas.",
+"IMA, AMA and efficiency":
+  "VMI, VMR y eficiencia",
+"Work in, work out and thermal energy":
+  "Trabajo de entrada, de salida y energía térmica",
+"Simple machines: a wheel and axle raises a {#} kg load at a steady speed.":
+  "Máquinas simples: una rueda y eje levanta una carga de {#} kg a rapidez constante.",
+"Effort {#} N, moved {#} m.":
+  "Esfuerzo {#} N, recorrió {#} m.",
+"Load weight {#} N, raised {#} m.":
+  "Peso de la carga {#} N, subió {#} m.",
+"Stopped.":
+  "Detenida.",
+"The mechanical advantages and the efficiency are hidden while Blind is on.":
+  "Las ventajas mecánicas y la eficiencia están ocultas mientras A ciegas está activado.",
+"Mystery surface off: it was μs = {#}, μk = {#}.":
+  "Superficie misteriosa desactivada: era μs = {#}, μk = {#}.",
+"The block slips when the angle is above {#}°.":
+  "El bloque se desliza cuando el ángulo es mayor que {#}°.",
+"Held still: press Release.":
+  "Sujeto quieto: pulsa Soltar.",
 "Moving":
   "En movimiento",
 "Sliding: the bumps catch and tear past each other.":
   "Deslizándose: las irregularidades se enganchan y se arrancan al pasar unas por otras.",
-"Held still: the pushes beat the {#} N static friction can give":
-  "Sin moverse: los empujes superan los {#} N que la fricción estática puede dar",
-"Mystery surface off: it was μs = {#}, μk = {#}.":
-  "Superficie misteriosa desactivada: era μs = {#}, μk = {#}.",
 "Sliding: kinetic friction {#} N":
   "Deslizándose: fricción cinética {#} N",
 "Stopped at the end. Press Put back.":
@@ -358,12 +458,10 @@ VDI18N.add('es', 'demo/forces', {
   "Por el tope en el extremo de la rampa",
 "Stopped at the end of the ramp.":
   "Detenido en el extremo de la rampa.",
-"Tension {#} N.":
-  "Tensión: {#} N.",
 "m rising, m₂ falling":
   "m sube, m₂ baja",
-"Acceleration {#} m/s², the left mass rising is positive.":
-  "Aceleración {#} m/s²; que la masa de la izquierda suba es positivo.",
+"At the stop: the push of the stop is not drawn":
+  "En el tope: no se dibuja el empuje del tope",
 "Load rising":
   "La carga sube",
 "Tension in every strand {#} N.":
@@ -376,12 +474,46 @@ VDI18N.add('es', 'demo/forces', {
   "Aceleración de la carga {#} m/s²; hacia arriba es positivo.",
 "Mystery surface: μs and μk are hidden. Blind is on.":
   "Superficie misteriosa: μs y μk están ocultos. A ciegas está activado.",
-"At the stop: the push of the stop is not drawn":
-  "En el tope: no se dibuja el empuje del tope",
+"IMA = L_in/L_out, the ratio of the arms":
+  "VMI = L_ent/L_sal, la razón de los brazos",
+"IMA = n, the strands that hold the load":
+  "VMI = n, los tramos que sostienen la carga",
+"IMA = L/h = 1/sin θ":
+  "VMI = L/h = 1/sen θ",
+"Load rising at a steady speed":
+  "La carga sube a rapidez constante",
+"At the top. Press Play to lift it again.":
+  "Arriba. Presiona Iniciar para levantarla otra vez.",
+"Paused":
+  "En pausa",
+"Lifting.":
+  "Levantando.",
+"Simple machines: a lever raises a {#} kg load at a steady speed.":
+  "Máquinas simples: una palanca levanta una carga de {#} kg a rapidez constante.",
+"Simple machines: a block and tackle raises a {#} kg load at a steady speed.":
+  "Máquinas simples: un polipasto levanta una carga de {#} kg a rapidez constante.",
+"Simple machines: a ramp raises a {#} kg load at a steady speed.":
+  "Máquinas simples: una rampa levanta una carga de {#} kg a rapidez constante.",
+"How this works: Simple Machines":
+  "Cómo funciona: máquinas simples",
+"Row {#} captured.":
+  "Fila {#} registrada.",
+"Press Play and let the load rise all the way first.":
+  "Primero presiona Iniciar y deja que la carga suba hasta arriba.",
+"No simple machine readings to export: the captured rows are from another setup.":
+  "No hay lecturas de máquinas simples para exportar: las filas registradas son de otro montaje.",
+"No ramp readings to export: the captured rows are from the simple machines.":
+  "No hay lecturas de la rampa para exportar: las filas registradas son de las máquinas simples.",
+"IMA {#}, AMA {#}, efficiency {#} %.":
+  "VMI {#}, VMR {#}, eficiencia {#} %.",
 "Timer: {#} s for {#} m":
   "Cronómetro: {#} s para {#} m",
 "{#} s for {#} m":
   "{#} s para {#} m",
+"The timer's last run was {#} s for {#} m.":
+  "La última medición del cronómetro fue {#} s para {#} m.",
+"Held still: the pushes beat the {#} N static friction can give":
+  "Sin moverse: los empujes superan los {#} N que la fricción estática puede dar",
 "Time controls":
   "Controles de tiempo",
 "Skip to the picture":

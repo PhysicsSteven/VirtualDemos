@@ -16,6 +16,16 @@ window.VD_SHORTCUTS = {
     [", .", "Turn the 3D view", "on the picture"]
   ],
   "active-galaxies": [],
+  "nerve-signals": [
+    ["A B", "Pick recording electrode A or B (Axon)", "on the picture"],
+    ["← →", "Move the picked electrode along the axon", "on the picture"],
+    ["Shift + ← →", "Move it ten times farther", "on the picture"]
+  ],
+  "hearing": [
+    ["← →", "Change the frequency (Cochlea, Loudness)", "on the picture"],
+    ["↑ ↓", "Change the sound level (Loudness)", "on the picture"],
+    ["Shift + arrows", "Five times bigger steps", "on the picture"]
+  ],
   "between-the-stars": [],
   "neutron-stars": [
     ["← → ↑ ↓", "Turn the view of the star", "on the picture"]
@@ -27,6 +37,10 @@ window.VD_SHORTCUTS = {
     ["+ −", "Zoom in or out", "on the picture"],
     ["← → ↑ ↓", "Turn the view of Earth's orbit and the dust stream", "on the picture (Meteor showers)"]
   ],
+  "surface-tension": [
+    ["← →", "Pull the sliding wire out or push it in by 2 mm", "on the picture (Soap film)"]
+  ],
+  "osmosis": [],
   "equivalence-gravity": [],
   "galaxy-clusters": [],
   "galaxy-collisions": [
@@ -739,6 +753,7 @@ window.VD_SHORTCUTS = {
   "sound-waves": [
     ["Space", "Strike the materials in the Race view, or clap in the Time of flight view", "on the picture"],
     ["C", "Clap", "on the picture (Time of flight view)"],
+    ["P", "Send a pulse down the slinkies", "on the picture (Slinky view)"],
     ["← → ↑ ↓", "Pan the 3D Race view", "on the picture (3D Race view)"]
   ],
   "spacetime": [
@@ -826,7 +841,9 @@ window.VD_SHORTCUTS = {
     ["← → ↑ ↓", "Move the probe one zone along the star (Shift: ten zones)", "on the composition graph or the temperature and density graph"],
     ["Home End", "Move the probe to the center or the surface", "on the composition graph or the temperature and density graph"]
   ],
-  "states-of-matter": [],
+  "states-of-matter": [
+    ["← → ↑ ↓", "Move the dot on the phase diagram (Shift: larger steps)", "on the picture (Phase diagram view)"]
+  ],
   "stress-strain": [
     ["↑ ↓", "Add or take off load in the tension test, or raise or lower the force in the other tests (Shift: larger steps)", "on the picture"]
   ],

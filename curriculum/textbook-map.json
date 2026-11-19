@@ -5686,7 +5686,8 @@
       "demos": [
         "sound-intensity",
         "two-speaker",
-        "room-acoustics"
+        "room-acoustics",
+        "hearing"
       ],
       "note": "Sound Intensity and Decibels (2026-10-23): inverse square law and adding levels. Two Speaker Interference (2026-10-23, Claude): the sound level meter reads in dB, and one speaker alone falls 6 dB per doubling of distance. Room Acoustics: 1/r² in an anechoic chamber against a reverberant room.",
       "unit": "sound"
@@ -7730,7 +7731,8 @@
         "junction-transistor",
         "ac-reactance",
         "ac-power",
-        "meter-loading"
+        "meter-loading",
+        "hs-series-parallel"
       ],
       "title": "Circuits",
       "url": "demos/circuits.html"
@@ -8247,9 +8249,12 @@
       "role": "demo",
       "beyond_book": false,
       "status": "usable",
-      "note": "Millikan Oil Drop (oPhysics Millikan counterpart, plan #25, 2026-10-31, own demo by Steve's call): parallel plates 7.60 mm apart, drops timed falling and with the plates on through a telescope reticle (stopwatch or lines), Stokes drag with the Allen and Raabe (1982) slip correction, Sutherland viscosity, Brownian motion, the balancing method, an ionizing source; r and q worked out in the readings, a dot plot of |q|. No worksheet (log the part ideas).",
+      "note": "Millikan Oil Drop (oPhysics Millikan counterpart, plan #25, 2026-10-31, own demo by Steve's call): parallel plates 7.60 mm apart, drops timed falling and with the plates on through a telescope reticle (stopwatch or lines), Stokes drag with the Allen and Raabe (1982) slip correction, Sutherland viscosity, Brownian motion, the balancing method, an ionizing source; r and q worked out in the readings, a dot plot of |q|. Interactive worksheet millikan (2026-11-19, Steve's call): drops timed falling and rising at 500 V, one worked by hand, one held still; Export to worksheet sends times, speeds, r and the size of q (never q/e); n and e are the student's. Key from a seeded run in TeacherKeys.",
       "title": "Millikan Oil Drop",
-      "url": "demos/millikan.html"
+      "url": "demos/millikan.html",
+      "handouts": [
+        "millikan"
+      ]
     },
     {
       "demo": "early-universe",
@@ -8817,7 +8822,8 @@
       "note": "Student/private instructor package written 2026-10-22, with source-checked threshold/timer procedures. Core/reference checks passed. UI requests fixed by Claude 2026-10-22: paused readouts keep the real v (K no longer reads 0), editing a control or switching the Mystery surface clears the last timer reading, and the end stop splits the step at impact so work matches the displayed path. 2026-10-31: student worksheet atwood (Atwood's machine setup: g from a against (m₂ − m)/(m + m₂), 1/a against the total mass, tension).",
       "handouts": [
         "forces",
-        "atwood"
+        "atwood",
+        "hs-simple-machines"
       ],
       "title": "Forces and Friction",
       "url": "demos/forces.html"
@@ -9095,7 +9101,8 @@
       "title": "Heat Engine Cycles",
       "url": "demos/heat-engines.html",
       "handouts": [
-        "heat-engines"
+        "heat-engines",
+        "hs-heat-engines"
       ]
     },
     {
@@ -10142,7 +10149,9 @@
       "note": "Energy on a track (PhET Energy Skate Park counterpart, 2026-10-30): K, U and thermal energy, friction, moving the zero of U, the normal force on curves, leaving the track. No worksheet by decision (capability parity, Steve 2026-10-28).",
       "title": "Energy on a Track",
       "url": "demos/energy-track.html",
-      "handouts": []
+      "handouts": [
+        "hs-energy-skate"
+      ]
     },
     {
       "demo": "projectile-drag",
@@ -10181,7 +10190,8 @@
       "status": "usable",
       "note": "OpenStax student handout and matching private guide aligned on 2026-10-22; current controls and numerical reference checks passed. Browser/classroom acceptance remains open.",
       "handouts": [
-        "projectile-drag"
+        "projectile-drag",
+        "hs-projectiles"
       ],
       "title": "Projectile Range",
       "url": "demos/projectile-drag.html"
@@ -10269,7 +10279,8 @@
         "radioactive-decay",
         "decay-chains",
         "alpha-and-beta-decay",
-        "mp-technetium-generator"
+        "mp-technetium-generator",
+        "hs-half-life"
       ]
     },
     {
@@ -12839,6 +12850,65 @@
       "note": "New 2026-11-19 (Claude, Steve's approved Calculus plan): a math tool for OpenStax Calculus Vol 3 2.1 to 2.7. Vectors in three dimensions with the dot and cross products, lines and planes, the quadric surfaces and their traces, and cylindrical and spherical coordinates (physics convention, θ from +z). Mapped here only where it serves University Physics: components in 3D (Vol 1 2.2), the dot and cross products (Vol 1 2.4), torque r × F (Vol 1 10.6) and F = qv × B (Vol 2 11.2). The 2D vector addition demo is Vectors and Relative Motion. No worksheet yet.",
       "title": "Vectors and Surfaces in Space",
       "url": "demos/space-3d.html"
+    },
+    {
+      "demo": "nerve-signals",
+      "course": [
+        "medical-physics"
+      ],
+      "sections": [],
+      "role": "demo",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "New 2026-11-19 (Claude), from College Physics 2e 20.7 (Nerve Conduction and Electrocardiograms); no University Physics section covers it. Nernst and Goldman resting potential (Purves 2018 concentrations, Hodgkin and Katz 1949 permeabilities); the Hodgkin-Huxley membrane on a cable at 18.5 °C, bare and myelinated, with threshold, refractoriness, timing between two electrodes, v ∝ √d bare and v ∝ d myelinated, thinned and lost myelin; the heart as a turning dipole drawing leads I, II, III and aVR, aVL, aVF on Einthoven's triangle. No worksheet yet.",
+      "title": "Nerve Signals and the ECG",
+      "url": "demos/nerve-signals.html"
+    },
+    {
+      "demo": "hearing",
+      "course": [
+        "acoustics",
+        "medical-physics"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "17.3",
+          "title": "Sound Intensity"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "New 2026-11-19 (Claude), from College Physics 2e 17.6 (Hearing); University Physics 17.3 discusses human hearing, phons and the equal loudness curves. A relative audiogram with headphones (Web Audio, capped level), the ISO 226:2003 equal loudness contours, the Greenwood map of the cochlea, and preset audiograms for noise induced loss and presbycusis. No worksheet yet.",
+      "title": "Hearing and the Ear",
+      "url": "demos/hearing.html"
+    },
+    {
+      "demo": "surface-tension",
+      "course": [
+        "later"
+      ],
+      "sections": [],
+      "role": "demo",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "New 2026-11-19 (Claude). University Physics has no surface tension section; it follows College Physics 2e 11.8 and 11.9. Scenes: capillary tubes (h = 2γcosθ/(ρgr) in tubes r, 2r, 4r, Washburn rise with gravity, exact meniscus), drops and bubbles (2γ/r and 4γ/r; two bubbles on a pipe, the small one empties into the big one, Poiseuille flow in the pipe), resting on water (a needle or a water strider, weight against 2γL), soap film on a sliding wire (F = 2γl). γ and contact angles from Tables 11.3 and 11.4 in constants.js. No worksheet yet.",
+      "title": "Surface Tension and Capillarity",
+      "url": "demos/surface-tension.html"
+    },
+    {
+      "demo": "osmosis",
+      "course": [
+        "later"
+      ],
+      "sections": [],
+      "role": "demo",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "New 2026-11-19 (Claude). University Physics has no diffusion or osmosis section; it follows College Physics 2e 12.7. Scenes: diffusion (simulated molecules spreading as √(2Dt), and through a still layer against Crank's solution), osmosis in a U tube (van 't Hoff Π = iΔcRT, height Π/ρg, dilution, a piston for reverse osmosis), a red blood cell in saline (Boyle and van 't Hoff osmometer, bursting at the sphere of its area), and Starling forces along a capillary (OpenStax Anatomy and Physiology 2e 20.3 and Guyton values). D values from Table 12.2 in constants.js. No worksheet yet.",
+      "title": "Diffusion and Osmosis",
+      "url": "demos/osmosis.html"
     }
   ],
   "activities": [

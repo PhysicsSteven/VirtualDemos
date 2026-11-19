@@ -153,7 +153,7 @@ table.rows button:hover { color: var(--pos); }
   <main class="bench">
     <div class="stage" id="stage">
       <div class="pane" id="sPane">
-        <canvas id="sCan" tabindex="0" role="application" aria-label="Fluid apparatus. Drag the probe, the block, the spring scale, the water surface, the pipe throat or the hole in the tank. Keys: arrows move or change the selected part, space plays or pauses, R starts again."></canvas>
+        <canvas id="sCan" tabindex="0" role="application" aria-label="Fluid apparatus. Drag the probe, the block, the spring scale, the water surface, the pipe throat, the hole in the tank, the lift's small piston, the patient's hand or the IV bag. Keys: arrows move or change the selected part, space plays or pauses, R starts again."></canvas>
         <div class="stage-ctl" id="stageCtl">
           <div class="seg" role="group" aria-label="Perspective" id="viewSeg"><button type="button" data-dim="3d" aria-pressed="false">3D</button><button type="button" data-dim="flat" aria-pressed="true">Flat</button></div>
           <button type="button" class="btn" id="play">Pause</button>
@@ -181,6 +181,8 @@ table.rows button:hover { color: var(--pos); }
           <button type="button" data-s="torr" aria-pressed="false">Torricelli</button>
           <button type="button" data-s="plate" aria-pressed="false">Dam or window</button>
           <button type="button" data-s="pump" aria-pressed="false">Pumping</button>
+          <button type="button" data-s="lift" aria-pressed="false">Lift</button>
+          <button type="button" data-s="body" aria-pressed="false">Body</button>
         </div>
         <div class="chips" id="presets">
           <button type="button" data-p="depth" aria-pressed="false">Pressure grows with depth</button>
@@ -195,6 +197,8 @@ table.rows button:hover { color: var(--pos); }
           <button type="button" data-p="troughEnd" aria-pressed="false">End of a trough</button>
           <button type="button" data-p="pumpCyl" aria-pressed="false">Pump out a tank</button>
           <button type="button" data-p="pumpCone" aria-pressed="false">Pump out a cone</button>
+          <button type="button" data-p="lift" aria-pressed="false">Hydraulic lift</button>
+          <button type="button" data-p="bp" aria-pressed="false">Blood pressure</button>
         </div>
         <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
@@ -216,6 +220,16 @@ table.rows button:hover { color: var(--pos); }
           <button type="button" data-b="baro" aria-pressed="true">Barometer</button>
           <button type="button" data-b="mano" aria-pressed="false">Manometer</button>
           <button type="button" data-b="two" aria-pressed="false">Two liquids</button>
+        </div>
+        <div id="bodyBox" hidden>
+          <div class="seg full" role="group" aria-label="Patient" id="poseSeg">
+            <button type="button" data-o="stand" aria-pressed="true">Standing</button>
+            <button type="button" data-o="lie" aria-pressed="false">Lying flat</button>
+          </div>
+          <div class="seg full" role="group" aria-label="Cuff gauge" id="gaugeSeg">
+            <button type="button" data-u="hg" aria-pressed="true">Mercury gauge</button>
+            <button type="button" data-u="aneroid" aria-pressed="false">Dial gauge</button>
+          </div>
         </div>
         <div id="pourBox" hidden>
           <div class="seg full wrap" role="group" aria-label="Liquid poured into the left arm" id="pourSeg">
@@ -592,10 +606,45 @@ table.rows button:hover { color: var(--pos); }
     for (const k of Object.keys(DENS)) { const d = Math.abs(Math.log(rho / DENS[k][1])); if (d < bd) { bd = d; best = k; } }
     return best;
   }
+
+  // Hydraulic lift (Pascal's principle): two upright cylinders of areas A1 < A2 joined at the bottom, full of a liquid at rest.
+  // y10, y20: heights of the two piston faces before the push (above the pipe joining them). Pushing the small piston down x moves
+  // the volume A1 x into the big cylinder, so the big piston rises r x, r = A1/A2 (the liquid does not compress).
+  // The car's weight mg on the big piston (the pistons taken as massless) sets the gauge pressure under it, P2 = mg/A2. The small
+  // piston's face stands y1 − y2 higher, so the pressure under it is less by ρg(y1 − y2): P1 = P2 − ρg(y1 − y2), and the force that
+  // holds it, or pushes it slowly (no friction, no kinetic energy), is F1 = P1 A1. F1 changes linearly with x, so the work in is
+  // exact: Win = ∫F1 dx = A1[P2 − ρg(y10 − y20)]x + ρgA1(1 + r)x²/2. That is the car's gain mg·rx plus dU, the potential energy of
+  // the liquid moved from the top of the small column (centered at y10 − x/2) to the top of the big one (centered at y20 + rx/2).
+  function hydraulic(p) {
+    const r = p.A1 / p.A2, x = p.x, y1 = p.y10 - x, y2 = p.y20 + r * x;
+    const F2 = p.m * G, P2 = F2 / p.A2, P1 = P2 - p.rho * G * (y1 - y2), F1 = P1 * p.A1;
+    const Win = p.A1 * (P2 - p.rho * G * (p.y10 - p.y20)) * x + p.rho * G * p.A1 * (1 + r) * x * x / 2;
+    const Wcar = F2 * r * x, dU = p.rho * G * p.A1 * x * ((p.y20 + r * x / 2) - (p.y10 - x / 2));
+    return { r, y1, y2, P1, P2, F1, F2, rise: r * x, gain: F2 / F1, Win, Wcar, dU };
+  }
+  // Pressures in the body (OpenStax College Physics 2e, 11.6 and 11.9): blood taken as a static column of density 1050 kg/m³, so the
+  // pressure at a height h above the heart is P_heart − ρgh (the drop from flow in large arteries is left out). Pressures in mmHg
+  // (1 mmHg = 133.322387415 Pa, exact by its definition), heights in m.
+  const MMHG = 133.322387415, RHO_BLOOD = 1050, RHO_IV = 1000;
+  const bodyP = (Pheart, h) => Pheart - RHO_BLOOD * G * h / MMHG;
+  // a collapsible IV bag h above the needle pushes the fluid in with ρ_IV g h; it flows into the vein when that beats the venous pressure
+  const ivP = (h) => RHO_IV * G * h / MMHG;
+  const ivHeight = (Pv) => Pv * MMHG / (RHO_IV * G);
+  // The cuff (Korotkoff sounds): the arterial pressure under the cuff swings between dia and sys once a beat. The cuff is let down
+  // steadily from c0 at k mmHg/s, c(t) = c0 − kt, and the heart beats at t0 + nT. A beat is heard when the pulse can just push the
+  // artery open, dia < c < sys. The first beat heard gives the systolic reading and the last the diastolic one; each can be low by
+  // up to kT, the fall of the cuff between beats.
+  function cuffBeats(sys, dia, c0, k, T, t0, tEnd) {
+    const out = [];
+    for (let n = 0; ; n++) { const t = t0 + n * T; if (t > tEnd + 1e-12) break; const c = c0 - k * t; if (c < 0) break; out.push({ t, c, heard: c < sys && c > dia }); }
+    const h = out.filter((b) => b.heard);
+    return { beats: out, sys: h.length ? h[0].c : null, dia: h.length ? h[h.length - 1].c : null };
+  }
   // ==CORE END==
 
   if (typeof document === 'undefined') {
-    globalThis.FL = { G, PATM, LIQ, DENS, MYSTERY, mysterySet, densityFrom, nearestMaterial, twoLiquids, hydro, columnHeight, vesselR, vesselVolume, submerged, kEff, blockMass, dragB, buoyForces, floatEq, bobStep, bobRun, hangState, venturi, torricelli, fitLine, fitOrigin, shiftDec, buildCSV };
+    globalThis.FL = { G, PATM, LIQ, DENS, MYSTERY, mysterySet, densityFrom, nearestMaterial, twoLiquids, hydro, columnHeight, vesselR, vesselVolume, submerged, kEff, blockMass, dragB, buoyForces, floatEq, bobStep, bobRun, hangState, venturi, torricelli, fitLine, fitOrigin, shiftDec, buildCSV,
+      hydraulic, MMHG, RHO_BLOOD, RHO_IV, bodyP, ivP, ivHeight, cuffBeats };
     return;
   }
 
@@ -616,6 +665,14 @@ table.rows button:hover { color: var(--pos); }
   ];
   const PIPE = { L: 1.6, c0: 0.45, c1: 0.65, d0: 0.95, d1: 1.3, taps: [0.22, 0.8, 1.45] };  // Venturi: converging and diverging sections, standpipe positions
   const TT = { W: 0.34 };                                          // Torricelli tank inner width
+  /* Hydraulic lift: piston faces before the push, above the pipe joining the cylinders (m); the small piston's stroke; the big
+     cylinder's wall and the ram (the drawing; the physics uses only the piston faces) */
+  const LIFT = { y10: 1.5, y20: 0.3, stroke: 1.2, wall: 0.95, ram: 0.8, speed: 0.25 };
+  /* Pressures in the body. Heights above the heart (m): the brain 0.36 m above it and the feet 1.40 m below it in a person standing
+     (OpenStax College Physics 2e, 11.9: sitting up raises the brain 36.0 cm; heart to feet 1.4 m); lying flat, all three are taken
+     level. The arm is a drawing choice: the shoulder 10 cm above the heart standing (level lying), the cuff 17 cm down the upper arm.
+     The heart beats 72 times a minute; the cuff is let down at 4 mmHg/s (clinics use 2 to 3 mmHg/s). */
+  const BODY = { sh: 0.10, cuffL: 0.17, head: 0.36, feet: 1.40, T: 60 / 72, k: 4, t0: 0.3 };
   const MATS = { cork: ['Cork', 240], wood: ['Pine', 500], ice: ['Ice', 917], al: ['Aluminum', 2700], steel: ['Steel', 7850], lead: ['Lead', 11340] };
 
   // ---------- sliders per scene: [key, label, min, max, step, unit, decimals] ----------
@@ -630,7 +687,11 @@ table.rows button:hover { color: var(--pos); }
     torr: [['H', 'Water height H', 0.2, 1.5, 0.01, 'm', 2], ['hh', 'Hole depth h', 0, 1.5, 0.01, 'm', 2]],
     plate: [['a', 'Plate height a', 0.1, 20, 0.1, 'm', 1], ['b', 'Plate width b', 0.1, 40, 0.1, 'm', 1], ['d0', 'Depth of its top edge', 0, 20, 0.1, 'm', 1], ['n', 'Strips n', 1, 100, 1, '', 0]],
     pump: [['R', 'Radius R', 0.2, 5, 0.1, 'm', 1], ['H', 'Tank height H', 0.5, 10, 0.1, 'm', 1], ['Lt', 'Trough length ℓ', 0.5, 20, 0.1, 'm', 1],
-      ['yw', 'Water depth', 0.1, 10, 0.1, 'm', 1], ['yo', 'Spout height above the bottom', 0.5, 15, 0.1, 'm', 1], ['n', 'Slices n', 1, 100, 1, '', 0]]
+      ['yw', 'Water depth', 0.1, 10, 0.1, 'm', 1], ['yo', 'Spout height above the bottom', 0.5, 15, 0.1, 'm', 1], ['n', 'Slices n', 1, 100, 1, '', 0]],
+    lift: [['m', 'Car mass', 500, 3000, 10, 'kg', 0], ['d1', 'Small piston diameter d<sub>1</sub>', 2, 8, 0.1, 'cm', 1], ['d2', 'Large piston diameter d<sub>2</sub>', 12, 40, 0.5, 'cm', 1],
+      ['x', 'Small piston pushed down x', 0, 1.2, 0.01, 'm', 2]],
+    body: [['sys', 'Systolic pressure at the heart', 90, 180, 1, 'mmHg', 0], ['dia', 'Diastolic pressure at the heart', 50, 120, 1, 'mmHg', 0],
+      ['hc', 'Cuff height above the heart', -0.17, 0.27, 0.01, 'm', 2], ['hiv', 'IV bag height above the needle', 0, 1.2, 0.01, 'm', 2], ['pv', 'Venous pressure at the needle', 4, 25, 1, 'mmHg', 0]]
   };
   const DEF = {
     press: { D: 2, pd: 1.2, px: 0.62 },
@@ -640,9 +701,11 @@ table.rows button:hover { color: var(--pos); }
     venturi: { D1: 6, D2: 3, v1: 0.8, h1: 0.8 },
     torr: { H: 1, hh: 0.3 },
     plate: { shape: 'rect', a: 10, b: 20, d0: 0, n: 10, s: 0, sel: 7 },
-    pump: { shape: 'cyl', R: 1.5, H: 4, Lt: 5, yw: 4, yo: 5, n: 8, s: 0.5, sel: 5 }
+    pump: { shape: 'cyl', R: 1.5, H: 4, Lt: 5, yw: 4, yo: 5, n: 8, s: 0.5, sel: 5 },
+    lift: { m: 2000, d1: 6, d2: 24, x: 0 },
+    body: { sys: 120, dia: 80, hc: 0, hiv: 0.15, pv: 18, pose: 'stand', gauge: 'hg' }
   };
-  const TITLES = { press: 'Tank and probe', pascal: 'Vessels', baro: 'Instrument', buoy: 'Block', venturi: 'Pipe', torr: 'Tank', plate: 'Plate', pump: 'Tank' };
+  const TITLES = { press: 'Tank and probe', pascal: 'Vessels', baro: 'Instrument', buoy: 'Block', venturi: 'Pipe', torr: 'Tank', plate: 'Plate', pump: 'Tank', lift: 'Lift', body: 'Patient' };
   const PAR_HINT = {
     press: 'Drag the probe anywhere in the liquid, or drag the grip on the surface to change the depth. Moving the probe sideways changes nothing: only depth matters.',
     pascal: 'Drag the grip on the dashed line to fill all four vessels to the same height. Each vessel has the same base, 8 cm across.',
@@ -651,7 +714,9 @@ table.rows button:hover { color: var(--pos); }
     venturi: 'Drag the grip on the throat wall to narrow or widen it, the grip on the inlet wall for D₁, the round grip on the arrow for the inlet speed, and the first standpipe’s level for the inlet pressure.',
     torr: 'Drag the hole up and down the wall, and the grip on the surface to change the water height H.',
     plate: 'Drag the plate up or down to change its depth, the grip on its lower edge for its height and the grip on its side for its width. Tap a strip to read its depth, width and force.',
-    pump: 'Drag the grip on the water surface for the depth, the grip on the spout to raise or lower it, and the grip on the rim for the tank height. Tap a slice to read its area and how far it is lifted. Play pumps the tank empty slice by slice.'
+    pump: 'Drag the grip on the water surface for the depth, the grip on the spout to raise or lower it, and the grip on the rim for the tank height. Tap a slice to read its area and how far it is lifted. Play pumps the tank empty slice by slice.',
+    lift: 'Drag the handle on the small piston down to push it, or press Play to push it at 0.25 m/s. Push it back up to let the car down.',
+    body: 'Press Play to let the cuff down and listen for the pulse. Drag the hand to raise or lower the arm, and drag the IV bag up and down.'
   };
   const MODEL = {
     press: 'Model: a liquid at rest with constant density (incompressible), g = 9.81 m/s², and standard air pressure P₀ = 101.325 kPa on the surface. The drawing’s width is schematic; the depth scale is to size.',
@@ -659,6 +724,8 @@ table.rows button:hover { color: var(--pos); }
     baro: 'Model: incompressible liquid, g = 9.81 m/s². The space above a barometer column is taken as a vacuum (mercury vapor adds only 0.2 Pa; water vapor would add 2.3 kPa, which a real water barometer must allow for). The manometer arms have the same width. Two liquids: they do not mix, the tube has the same width all the way round, and the poured liquid stays in the left arm; at the interface’s level the pressure is the same in both arms, so ρ₁h₁ = ρ₂h₂. Surface tension and the curved meniscus are left out.',
     buoy: 'Model: a cube in a glass tank 50 cm wide and 30 cm from front to back (floor area 0.15 m²), so the level rises by V_sub/A. The liquid pushes up with ρ_f V_sub g. Motion is vertical only, with linear drag F = −b v on the wet block (b = 2ζ√(km), k = the buoyant force per meter of sinking, so ζ is the damping ratio of small bobs) and no added mass, so real blocks bob a little more slowly and real water drag grows faster than v. The floor stops the block dead. The spring scale is read with the block hanging still. Mystery blocks are solid cubes of pure metals, painted so their color gives nothing away, with densities near 20 °C from the CRC Handbook.',
     venturi: 'Model: ideal flow, meaning incompressible, inviscid and steady, with the speed uniform across each section. The pipe is horizontal; each open standpipe shows the gauge pressure at the axis. Pipe widths are drawn larger than to scale. A real pipe loses some pressure to friction, so the outlet standpipe would stand a little lower. If the absolute pressure at the throat would fall below the liquid’s vapor pressure (water 2.34 kPa, seawater about 2.3 kPa at 20 °C, mercury 0.16 Pa, oil taken as 0), the liquid boils there (cavitation) and the ideal model is invalid; the demo then says so instead of showing the numbers.',
+    lift: 'Model: OpenStax College Physics 2e, 11.5. The liquid does not compress and is at rest; the pistons are massless, frictionless and pushed slowly, so there is no kinetic energy. The car’s weight sets the pressure under the big piston, P₂ = mg/A₂; Pascal’s principle carries it everywhere, plus ρgh for each meter lower, so under the small piston P₁ = P₂ − ρg(y₁ − y₂). Gauge pressures are shown. Heights are to scale; the cylinder widths and the car’s length are not.',
+    body: 'Model: OpenStax College Physics 2e, 11.6 and 11.9. Blood is a static column of density 1050 kg/m³, so P = P_heart − ρgh at a height h above the heart; the pressure lost to flow in the large arteries is left out. Standing, the brain is taken 0.36 m above the heart and the feet 1.40 m below it; lying flat, all three are taken level. The cuff reads the pressure in the artery under it. The heart beats 72 times a minute and the cuff falls 4 mmHg/s, so the first tap can read up to 3.3 mmHg low and the last up to 3.3 mmHg high. The IV fluid has density 1000 kg/m³ and the bag is collapsible, so the fluid pushes into the vein with ρgh, h measured from the needle. 1 mmHg = 133.322 Pa.',
     torr: 'Model: ideal flow from a small hole in a wide tank, so the surface hardly moves and v = √(2gh). A supply keeps the level steady. Air drag on the jet is neglected and the hole has rounded edges, so the jet does not contract.',
     plate: 'Model: a flat vertical plate in a liquid at rest with constant density, g = 9.81 m/s². Air pushes on the surface and on the dry side of the plate alike, so only the gauge pressure ρgh counts. A horizontal strip at depth h, width w(h) and height Δh feels the force ρgh·w(h)·Δh; the strips add to F_n, and as n grows F_n → ∫ρgh·w(h) dh = ρgA·h_c. The center of pressure is the depth where the whole force could act with the same turning effect, h_cp = ∫h²w dh / ∫h w dh. Drawn to scale.',
     pump: 'Model: a liquid of constant density, g = 9.81 m/s², lifted with no losses: the work is the increase in its potential energy, as if each slice were raised slowly to the spout and left there. A slice at height y with area A(y) and thickness Δy weighs ρg·A(y)·Δy and rises y_o − y; the slices add to W_n, and as n grows W_n → ∫ρg·A(y)(y_o − y) dy, which equals the weight times the rise of the center of mass. How fast the pump works does not change the work. The trough is seen from its end, ℓ long into the page. Drawn to scale.'
@@ -689,9 +756,13 @@ table.rows button:hover { color: var(--pos); }
     pumpCyl: { scene: 'pump', liq: 'water', p: { shape: 'cyl', R: 1.5, H: 4, Lt: 5, yw: 4, yo: 5, n: 8, s: 0.5, sel: 5 },
       hint: 'A full cylindrical tank, 3 m across and 4 m deep, pumped out through a spout 1 m above its top. Every slice weighs the same, but the slices near the bottom must be lifted farther. Press Play to pump it slice by slice. W = ∫ρg·πR²(5 − y) dy = 832 kJ, the same as lifting all the water by the 3 m its center of mass rises.' },
     pumpCone: { scene: 'pump', liq: 'water', p: { shape: 'cone', R: 2, H: 4, Lt: 5, yw: 4, yo: 4, n: 8, s: 0.5, sel: 5 },
-      hint: 'A cone point down, 4 m across at its 4 m high rim, full of water and pumped out over the rim. Most of the water is near the top, where it hardly has to rise: the center of mass sits three quarters of the way up, so W = ρgV·(H/4).' }
+      hint: 'A cone point down, 4 m across at its 4 m high rim, full of water and pumped out over the rim. Most of the water is near the top, where it hardly has to rise: the center of mass sits three quarters of the way up, so W = ρgV·(H/4).' },
+    lift: { scene: 'lift', liq: 'oil', p: { m: 2000, d1: 6, d2: 24, x: 0 },
+      hint: 'The large piston has 16 times the area of the small one, so the oil pushes up on it with 16 times the force: about 1.2 kN on the small piston holds a 2000 kg car. Push the small piston down 1.2 m and the car rises only 7.5 cm, 16 times less, so the work in matches the work on the car. The small piston stands higher, so the pressure under it is less by ρgh.' },
+    bp: { scene: 'body', liq: 'water', rate: 1, p: { sys: 120, dia: 80, hc: 0, hiv: 0.15, pv: 18, pose: 'stand', gauge: 'hg' },
+      hint: 'With the cuff at heart level, the first tap comes at about 120 mmHg (systolic) and the last at about 80 mmHg (diastolic). Raise the arm and both readings fall by ρgh, 0.77 mmHg for every centimeter. Standing, the feet are 108 mmHg higher than the heart. The IV bag must stand at least 24.5 cm above the needle to beat a venous pressure of 18 mmHg.' }
   };
-  const SCENE_PRESET = { press: 'depth', buoy: 'float', venturi: 'venturi', torr: 'torr', plate: 'dam', pump: 'pumpCyl' };
+  const SCENE_PRESET = { press: 'depth', buoy: 'float', venturi: 'venturi', torr: 'torr', plate: 'dam', pump: 'pumpCyl', lift: 'lift', body: 'bp' };
   const FLAT_ONLY = { plate: true, pump: true };       /* drawn flat: the strips and slices are a side or face view, with no 3D model */
   // the preset hints with the worked answers left out, for Blind
   const BLIND_HINT = {
@@ -706,7 +777,9 @@ table.rows button:hover { color: var(--pos); }
     window: 'A round window 60 cm across, its top 1.5 m below the surface. Add up the strips, then raise n.',
     troughEnd: 'The triangular end of a full trough, point down. Add up the strips, then raise n.',
     pumpCyl: 'A full cylindrical tank pumped out through a spout 1 m above its top. Add up the work for each slice, then raise n.',
-    pumpCone: 'A full cone, point down, pumped out over its rim. Add up the work for each slice, then raise n.'
+    pumpCone: 'A full cone, point down, pumped out over its rim. Add up the work for each slice, then raise n.',
+    lift: 'Push the small piston down and compare how far it moves with how far the car rises, and the force on it with the car’s weight. Compare the two pressure gauges.',
+    bp: 'Let the cuff down and note the pressure at the first tap and at the last. Then raise the arm, or lie the patient down, and predict how the readings change before you measure again. How high must the IV bag go before the fluid flows in?'
   };
 
   // ---------- state ----------
@@ -745,6 +818,7 @@ table.rows button:hover { color: var(--pos); }
   }
   const kPa = (v, d) => `${fx(v / 1000, d === undefined ? 2 : d)} kPa`;
   const fN = (v) => `${sig(v, 3)} N`;
+  const grp = (t) => t.replace(/\d{5,}/g, (d) => d.replace(/\B(?=(\d{3})+(?!\d))/g, ','));   /* commas in a whole number of 5 or more digits: 19,620 */
   /* a difference of two forces shown to 3 figures: below the last digit those forces are shown to, it reads 0 at that precision
      (a floating block settles to W = F_B; the leftover is roundoff, not a force to show to nine places) */
   const fNet = (a, b) => { const m = Math.max(Math.abs(a), Math.abs(b)), d = m > 1e-12 ? clamp(2 - Math.floor(Math.log10(m) + 1e-12), 0, 9) : 3;
@@ -828,6 +902,20 @@ table.rows button:hover { color: var(--pos); }
     void tr;
   }
 
+  // ---------- hydraulic lift and body helpers ----------
+  const DYN = (sc) => sc === 'buoy' || sc === 'venturi' || sc === 'torr' || sc === 'pump' || sc === 'lift' || sc === 'body';
+  function lp() { const q = S.P.lift; return { m: q.m, A1: Math.PI * (q.d1 / 200) ** 2, A2: Math.PI * (q.d2 / 200) ** 2, y10: LIFT.y10, y20: LIFT.y20, x: q.x, rho: rhoF() }; }
+  const liftNow = () => hydraulic(lp());
+  /* the cuff: the pressures in the artery at its height; it starts 20 mmHg or more above the systolic there (rounded up to 10) and is
+     let down to 16 mmHg below the diastolic there */
+  const cuffSys = () => bodyP(S.P.body.sys, S.P.body.hc), cuffDia = () => bodyP(S.P.body.dia, S.P.body.hc);
+  let cuff = { c0: 150, t: 0 };
+  function cuffReset() { cuff = { c0: Math.ceil((cuffSys() + 20) / 10) * 10, t: 0 }; }
+  const cuffNow = () => Math.max(0, cuff.c0 - BODY.k * cuff.t);
+  const cuffEnd = () => Math.max(0, cuffDia() - 16);
+  const cuffRead = () => cuffBeats(cuffSys(), cuffDia(), cuff.c0, BODY.k, BODY.T, BODY.t0, cuff.t);
+  const hcRange = () => (S.P.body.pose === 'lie' ? [-BODY.cuffL, BODY.cuffL] : [BODY.sh - BODY.cuffL, BODY.sh + BODY.cuffL]);
+
   // ---------- canvases ----------
   let T = null, dpr = 1;
   const projScale = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.45 : 1);
@@ -888,6 +976,15 @@ table.rows button:hover { color: var(--pos); }
   }
   /* a label kept inside the width it has: the type shrinks to as little as 0.72 of its size (long labels in Spanish on a phone) */
   function fitSize(ctx, txt, size, weight, maxW) { const w = richWidth(ctx, txt, size, weight); return w <= maxW ? size : Math.max(0.72 * size, size * maxW / w); }
+  /* labelBox kept inside the picture: a label that would run off an edge slides back in (the Lift and Body scenes on phones) */
+  /* the bottom of the controls over the picture (Play, Reset, the clock: two rows on a phone), so a tall figure starts below them */
+  const ctlBottom = () => { const c = $('stageCtl'), pn = panes.s; if (!c || !pn) return 0; return c.getBoundingClientRect().bottom - pn.getBoundingClientRect().top; };
+  function labelIn(ctx, txt, x, y, align, col, size, weight, fam) {
+    const w = richWidth(ctx, txt, size, weight, fam), Wc = ctx.canvas.width / (dpr || 1);
+    let x0 = align === 'right' ? x - w : align === 'center' ? x - w / 2 : x;
+    x0 = Math.max(6, Math.min(Wc - 6 - w, x0));
+    return labelBox(ctx, txt, x0, y, 'left', col, size, weight, fam);
+  }
   function roundRect(ctx, x, y, w, h, r) {
     r = Math.max(0, Math.min(r, w / 2, h / 2));
     ctx.beginPath(); ctx.moveTo(x + r, y); ctx.lineTo(x + w - r, y); ctx.quadraticCurveTo(x + w, y, x + w, y + r); ctx.lineTo(x + w, y + h - r);
@@ -994,6 +1091,8 @@ table.rows button:hover { color: var(--pos); }
     if (S.scene === 'venturi' && key === 'D2') return S.P.venturi.D1;
     if (S.scene === 'torr' && key === 'hh') return S.P.torr.H;
     if (S.scene === 'pump' && key === 'yw') return S.P.pump.H;
+    if (S.scene === 'body' && key === 'hc') return +hcRange()[1].toFixed(2);
+    if (S.scene === 'body' && key === 'dia') return S.P.body.sys - 10;
     return d[3];
   }
   function snap(key, v) {
@@ -1010,6 +1109,11 @@ table.rows button:hover { color: var(--pos); }
     if (S.scene === 'torr') p.hh = Math.min(p.hh, p.H);
     if (S.scene === 'pump') { p.yw = Math.min(p.yw, p.H); p.yo = Math.max(p.yo, p.H); p.sel = Math.min(p.sel, p.n - 1); pumpL = null; }
     if (S.scene === 'plate') p.sel = Math.min(p.sel, p.n - 1);
+    if (S.scene === 'body') {
+      p.hc = clamp(p.hc, +hcRange()[0].toFixed(2), +hcRange()[1].toFixed(2)); p.dia = Math.min(p.dia, p.sys - 10);
+      if (key === 'sys' || key === 'dia' || key === 'hc') { cuffReset(); if (running) setRunning(false); }
+    }
+    if (S.scene === 'lift' && key !== 'x' && running) setRunning(false);
     if (S.scene === 'buoy') {
       if (key === 'rho') { p.mat = Object.keys(MATS).find((k) => MATS[k][1] === p.rho) || null; syncMat(); }
       clampBlock(p);
@@ -1551,6 +1655,204 @@ table.rows button:hover { color: var(--pos); }
     if (S.layers.cmp && !S.blind && W > 600) labelBox(ctx, 'dashed: holes at H/4, H/2 and 3H/4', W - 16 * ls, Y(0) - 10 * ls, 'right', T.muted, 11 * ls);
   }
 
+  // ---------- scene: hydraulic lift ----------
+  function drawLift(ctx, W, H) {
+    const ps = projScale(), ls = lsc(W, H), q = S.P.lift, h = liftNow(), bl = S.blind;
+    const top = Math.max(50 * ls, ctlBottom() + 10 * ls), bot = H - 34 * ls, sc = Math.max(30 * ls, (bot - top) / 3.25), Y = (y) => bot - y * sc;   /* a floor on the scale for a very short canvas */
+    /* widths: not to scale (a 6 cm piston would be a hairline); the drawn diameter grows with the real one */
+    const dpx = (d) => 10 * ls + d * Math.min(W * 0.55, 260 * ls) / 0.4;
+    const xs = W * 0.2, xb = W * 0.62, ws = dpx(q.d1 / 100), wb = dpx(q.d2 / 100), wall = 3 * ps;
+    hatchFloor(ctx, 12 * ps, W - 12 * ps, Y(0) + 7 * ps);
+    // the pipe joining the cylinders, and the liquid in it
+    const pipeH = 12 * ls, py = Y(0);
+    fillLiquid(ctx, () => { ctx.beginPath(); ctx.rect(xs - ws / 2, py - pipeH, xb + wb / 2 - (xs - ws / 2), pipeH); });
+    fillLiquid(ctx, () => { ctx.beginPath(); ctx.rect(xs - ws / 2, Y(h.y1), ws, py - Y(h.y1)); });
+    fillLiquid(ctx, () => { ctx.beginPath(); ctx.rect(xb - wb / 2, Y(h.y2), wb, py - Y(h.y2)); });
+    ctx.strokeStyle = T.wire; ctx.lineWidth = wall; ctx.lineJoin = 'round';
+    ctx.beginPath();
+    ctx.moveTo(xs - ws / 2, Y(LIFT.y10 + 0.12)); ctx.lineTo(xs - ws / 2, py); ctx.lineTo(xb + wb / 2, py); ctx.lineTo(xb + wb / 2, Y(LIFT.wall));
+    ctx.moveTo(xs + ws / 2, Y(LIFT.y10 + 0.12)); ctx.lineTo(xs + ws / 2, py - pipeH); ctx.lineTo(xb - wb / 2, py - pipeH); ctx.lineTo(xb - wb / 2, Y(LIFT.wall));
+    ctx.stroke();
+    // the small piston, its rod and handle
+    const pT = 0.05 * sc, yp = Y(h.y1), yh = Y(h.y1 + 0.55);
+    ctx.fillStyle = T.mat.metal; ctx.strokeStyle = T.wire; ctx.lineWidth = 1.4 * ps;
+    ctx.fillStyle = T.block; ctx.fillRect(xs - ws / 2 + wall / 2, yp - pT, ws - wall, pT); ctx.strokeRect(xs - ws / 2 + wall / 2, yp - pT, ws - wall, pT);
+    ctx.lineWidth = 4 * ps; ctx.beginPath(); ctx.moveTo(xs, yp - pT); ctx.lineTo(xs, yh); ctx.stroke();
+    ctx.lineWidth = 6 * ps; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(xs - 22 * ls, yh); ctx.lineTo(xs + 22 * ls, yh); ctx.stroke();
+    roundGrip(ctx, xs, yh, isHot('push'));
+    handles.push({ id: 'push', cursor: 'ns-resize', pt: [xs, yh], set: (x, y) => { const y1 = (bot - y) / sc - 0.55; setParam('x', LIFT.y10 - y1); } });
+    // the big piston (the ram), its platform and the car
+    const yr = Y(h.y2), yt = Y(h.y2 + LIFT.ram), rw = wb - wall;
+    const VG = window.VDGear;
+    if (VG) { const g = ctx.createLinearGradient(xb - rw / 2, 0, xb + rw / 2, 0); g.addColorStop(0, VG.mix(T.block, '#ffffff', 0.3)); g.addColorStop(1, VG.mix(T.block, '#000000', 0.25)); ctx.fillStyle = g; } else ctx.fillStyle = T.block;
+    ctx.fillRect(xb - rw / 2, yt, rw, yr - yt); ctx.strokeStyle = T.wire; ctx.lineWidth = 1.4 * ps; ctx.strokeRect(xb - rw / 2, yt, rw, yr - yt);
+    const carW = Math.min(W * 0.42, Math.max(wb * 2.2, 200 * ls)), carH = 1.35 * sc, cx0 = clamp(xb - carW / 2, xs + ws / 2 + 50 * ls, W - 12 * ls - carW);
+    ctx.fillStyle = T.wire; ctx.fillRect(cx0 - 6 * ls, yt - 6 * ps, carW + 12 * ls, 6 * ps);
+    drawCar(ctx, cx0, yt - 6 * ps, carW, carH);
+    // where the pistons started, and the dimension lines
+    ctx.setLineDash([4 * ps, 4 * ps]); ctx.strokeStyle = T.muted; ctx.lineWidth = 1 * ps; ctx.beginPath();
+    ctx.moveTo(xs - ws / 2 - 30 * ls, Y(LIFT.y10)); ctx.lineTo(xs + ws / 2 + 6 * ls, Y(LIFT.y10));
+    ctx.moveTo(xb + wb / 2 + 4 * ls, Y(LIFT.y20)); ctx.lineTo(xb + wb / 2 + 40 * ls, Y(LIFT.y20));
+    ctx.moveTo(xs + ws / 2, yp); ctx.lineTo(xb - wb / 2, yp);
+    ctx.moveTo(xb + wb / 2 + 4 * ls, yr); ctx.lineTo(xb + wb / 2 + 40 * ls, yr);
+    ctx.stroke(); ctx.setLineDash([]);
+    // forces: F1 down on the handle, the car's weight F2 = mg down on the platform (drawn the same length: compare the numbers)
+    arrow(ctx, xs, yh - 46 * ls, xs, yh - 9 * ps, T.pos, 2.6 * ps, 9);
+    arrow(ctx, xb, yt - carH * 0.5, xb, yt - carH * 0.5 + 46 * ls, T.pos, 2.6 * ps, 9);
+    // pressure arrows up on the two piston faces
+    for (const [x0, w0, yy] of [[xs, ws, yp], [xb, wb, yr]]) for (let k = -1; k <= 1; k++) arrow(ctx, x0 + k * w0 * 0.3, yy + 18 * ls, x0 + k * w0 * 0.3, yy + 2 * ps, T.neg, 1.6 * ps, 6);
+    // labels last
+    const fs = 11.5 * ls;
+    labelIn(ctx, `F_1 = ${sig(h.F1, 3)} N`, xs + 12 * ls, yh - 30 * ls, 'left', T.pos, fs, 700);
+    labelIn(ctx, `P_1 = ${fx(h.P1 / 1000, 1)} kPa`, xs + ws / 2 + 6 * ls, yp + 16 * ls, 'left', T.neg, fs, 700, T.mono);
+    labelIn(ctx, `P_2 = ${fx(h.P2 / 1000, 1)} kPa`, xb + wb / 2 + 8 * ls, yr + 14 * ls, 'left', T.neg, fs, 700, T.mono);
+    const narrow = W < 520 * ls;   /* a phone: the long labels give way to the picture; the clock and Results show them */
+    if (narrow) labelIn(ctx, `mg = ${grp(sig(h.F2, 3))} N`, xb, yt - carH - 10 * ls, 'center', T.pos, fs, 700);   /* above the car */
+    else labelIn(ctx, `mg = ${grp(sig(h.F2, 3))} N`, xb + 10 * ls, yt - carH * 0.5 + 30 * ls, 'left', T.pos, fs, 700);
+    if (!narrow) labelIn(ctx, `pushed x = ${fx(q.x, 2)} m`, xs - ws / 2 - 8 * ls, (Y(LIFT.y10) + yp) / 2 + 4 * ls, 'right', T.ink, fs, 700);
+    labelIn(ctx, `rose ${fx(h.rise * 100, 1)} cm`, xb + wb / 2 + 8 * ls, yr - 6 * ls, 'left', T.ink, fs, 700);
+    const dy = h.y1 - h.y2;
+    if (!bl && !narrow) labelIn(ctx, `y_1 − y_2 = ${fx(dy, 2)} m: ρg(y_1 − y_2) = ${fx(rhoF() * G * dy / 1000, 2)} kPa`, (xs + xb) / 2, Math.min(yp, yr) - 8 * ls, 'center', T.muted, 10.5 * ls);
+    labelIn(ctx, `${LIQ[S.liq].name.toLowerCase()}, ${fx(rhoF(), 0)} kg/m³`, (xs + ws / 2 + xb - wb / 2) / 2, py + 16 * ls, 'center', T.muted, 10.5 * ls);
+    if (!narrow) labelIn(ctx, `d_1 = ${fx(q.d1, 1)} cm`, xs + ws / 2 + 6 * ls, Y(LIFT.y10 + 0.12) + 4 * ls, 'left', T.muted, 10.5 * ls);   /* beside the cylinder's top, clear of the push arrow */
+    labelIn(ctx, `d_2 = ${fx(q.d2, 1)} cm`, xb + wb / 2 + 8 * ls, Y(LIFT.wall) + 4 * ls, 'left', T.muted, 10.5 * ls);
+  }
+  /* a side view of a car resting on (x0, yb), w wide and h tall: a picture only */
+  function drawCar(ctx, x0, yb, w, h) {
+    const ps = projScale(), r = Math.max(1, h * 0.2), body = T.acol;
+    ctx.save();
+    ctx.fillStyle = body; ctx.strokeStyle = T.wire; ctx.lineWidth = 1.4 * ps;
+    ctx.beginPath(); ctx.moveTo(x0 + w * 0.02, yb - r * 0.9); ctx.lineTo(x0 + w * 0.02, yb - h * 0.52); ctx.lineTo(x0 + w * 0.24, yb - h * 0.58);
+    ctx.lineTo(x0 + w * 0.36, yb - h); ctx.lineTo(x0 + w * 0.72, yb - h); ctx.lineTo(x0 + w * 0.86, yb - h * 0.58); ctx.lineTo(x0 + w * 0.98, yb - h * 0.5); ctx.lineTo(x0 + w * 0.98, yb - r * 0.9); ctx.closePath(); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.75;
+    ctx.beginPath(); ctx.moveTo(x0 + w * 0.39, yb - h * 0.93); ctx.lineTo(x0 + w * 0.53, yb - h * 0.93); ctx.lineTo(x0 + w * 0.53, yb - h * 0.62); ctx.lineTo(x0 + w * 0.3, yb - h * 0.62); ctx.closePath(); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(x0 + w * 0.56, yb - h * 0.93); ctx.lineTo(x0 + w * 0.7, yb - h * 0.93); ctx.lineTo(x0 + w * 0.8, yb - h * 0.62); ctx.lineTo(x0 + w * 0.56, yb - h * 0.62); ctx.closePath(); ctx.fill(); ctx.globalAlpha = 1;
+    for (const f of [0.22, 0.78]) { ctx.fillStyle = T.wire; ctx.beginPath(); ctx.arc(x0 + w * f, yb - r, r, 0, 2 * Math.PI); ctx.fill(); ctx.fillStyle = T.mat.metal; ctx.beginPath(); ctx.arc(x0 + w * f, yb - r, r * 0.45, 0, 2 * Math.PI); ctx.fill(); }
+    ctx.restore();
+  }
+
+  // ---------- scene: pressures in the body ----------
+  /* where things are in the picture, in meters: x across, y up from the floor; the heart is the zero of every height h */
+  function bodyGeo() {
+    const q = S.P.body, lie = q.pose === 'lie';
+    if (!lie) {
+      const heart = BODY.feet, sh = { x: 0.03, y: heart + BODY.sh };
+      const phi = Math.acos(clamp((BODY.sh - q.hc) / BODY.cuffL, -1, 1));        /* angle of the upper arm from straight down */
+      const u = { x: Math.sin(phi), y: -Math.cos(phi) };
+      return { lie, heart, sh, u, head: heart + BODY.head, feet: 0, needle: { x: -0.2, y: heart - 0.5 } };
+    }
+    const heart = 0.75, sh = { x: -0.32, y: heart };
+    const phi = Math.asin(clamp(q.hc / BODY.cuffL, -1, 1));                         /* angle of the upper arm above the bed, toward the feet */
+    const u = { x: Math.cos(phi), y: Math.sin(phi) };
+    return { lie, heart, sh, u, head: heart, feet: heart, needle: { x: 0.05, y: heart - 0.02 } };
+  }
+  function drawBody(ctx, W, H) {
+    const ps = projScale(), ls = lsc(W, H), q = S.P.body, g = bodyGeo(), bl = S.blind;
+    /* the picture spans x = −1.05 m (the IV pole) to 1.35 m (the gauge), centered */
+    const top = Math.max(44 * ls, ctlBottom() + 18 * ls), bot = H - 22 * ls, sc = Math.max(40 * ls, Math.min((bot - top) / 2.2, (W - 28 * ls) / 2.4));   /* a floor on the scale for a very short canvas */
+    const ox = (W - 2.4 * sc) / 2 + 1.05 * sc, X = (x) => ox + x * sc, Y = (y) => bot - y * sc;
+    hatchFloor(ctx, 12 * ps, W - 12 * ps, Y(0) + 1 * ps);
+    const skin = window.VDGear && VDGear.dark() ? '#a3866d' : '#d9b99b', cloth = T.xcol, lw = (m) => m * sc;
+    ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    // heart level, across the picture
+    ctx.setLineDash([6 * ps, 5 * ps]); ctx.strokeStyle = T.pos; ctx.globalAlpha = 0.6; ctx.lineWidth = 1 * ps;
+    ctx.beginPath(); ctx.moveTo(14 * ls, Y(g.heart)); ctx.lineTo(W - 14 * ls, Y(g.heart)); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1;
+    const limb = (a, b, w, col) => { ctx.strokeStyle = col; ctx.lineWidth = lw(w); ctx.beginPath(); ctx.moveTo(X(a.x), Y(a.y)); ctx.lineTo(X(b.x), Y(b.y)); ctx.stroke(); };
+    let headC, heartP;
+    if (!g.lie) {
+      const hip = { x: 0, y: 0.92 }, neck = { x: 0, y: g.sh.y + 0.05 };
+      limb({ x: -0.06, y: 0.05 }, { x: -0.06, y: hip.y }, 0.12, cloth); limb({ x: 0.07, y: 0.05 }, { x: 0.07, y: hip.y }, 0.12, cloth);
+      ctx.fillStyle = T.wire; for (const fx0 of [-0.06, 0.07]) { ctx.beginPath(); ctx.ellipse(X(fx0 + 0.05), Y(0.03), lw(0.09), lw(0.035), 0, 0, 2 * Math.PI); ctx.fill(); }
+      limb({ x: -0.05, y: g.sh.y }, g.needle, 0.075, skin);      /* the far arm, hanging, with the IV needle */
+      ctx.fillStyle = cloth; roundRect(ctx, X(-0.17), Y(neck.y), lw(0.34), lw(neck.y - hip.y + 0.05), lw(0.07)); ctx.fill();
+      headC = { x: 0.01, y: g.head + 0.04 }; heartP = { x: 0.02, y: g.heart };
+    } else {
+      // the bed, then the patient on it: head to the left
+      const by = g.heart - 0.13;
+      ctx.fillStyle = T.block; ctx.fillRect(X(-0.95), Y(by), lw(2.05), lw(0.1)); ctx.fillStyle = T.wire; ctx.fillRect(X(-0.92), Y(by - 0.1), lw(0.05), lw(by - 0.1)); ctx.fillRect(X(1.0), Y(by - 0.1), lw(0.05), lw(by - 0.1));
+      ctx.fillStyle = T.wire; ctx.fillRect(X(-0.95), Y(by - 0.08), lw(2.05), lw(0.03));
+      limb({ x: 0.15, y: g.heart - 0.02 }, { x: 0.95, y: g.heart - 0.02 }, 0.12, cloth);
+      ctx.fillStyle = cloth; roundRect(ctx, X(-0.5), Y(g.heart + 0.09), lw(0.68), lw(0.2), lw(0.07)); ctx.fill();
+      limb({ x: -0.3, y: g.heart + 0.03 }, g.needle, 0.075, skin);
+      headC = { x: -0.62, y: g.heart + 0.02 }; heartP = { x: -0.18, y: g.heart };
+    }
+    ctx.fillStyle = skin; ctx.beginPath(); ctx.arc(X(headC.x), Y(headC.y), lw(0.11), 0, 2 * Math.PI); ctx.fill();
+    // the near arm with the cuff on its upper arm; the hand is the grip
+    const el = { x: g.sh.x + 0.3 * g.u.x, y: g.sh.y + 0.3 * g.u.y }, hand = { x: g.sh.x + 0.58 * g.u.x, y: g.sh.y + 0.58 * g.u.y };
+    limb(g.sh, el, 0.085, skin); limb(el, hand, 0.07, skin);
+    const c = { x: g.sh.x + BODY.cuffL * g.u.x, y: g.sh.y + BODY.cuffL * g.u.y };
+    ctx.strokeStyle = T.neg; ctx.lineWidth = lw(0.13); ctx.lineCap = 'butt';
+    ctx.beginPath(); ctx.moveTo(X(c.x - 0.06 * g.u.x), Y(c.y - 0.06 * g.u.y)); ctx.lineTo(X(c.x + 0.06 * g.u.x), Y(c.y + 0.06 * g.u.y)); ctx.stroke(); ctx.lineCap = 'round';
+    roundGrip(ctx, X(hand.x), Y(hand.y), isHot('arm'));
+    handles.push({ id: 'arm', cursor: 'move', pt: [X(hand.x), Y(hand.y)], set: (x, y) => {
+      const dx = (x - X(g.sh.x)) / sc, dy = (Y(g.sh.y) - y) / sc;
+      if (!g.lie) { const phi = clamp(Math.atan2(dx, -dy), 0, Math.PI); setParam('hc', BODY.sh - BODY.cuffL * Math.cos(phi)); }
+      else { const phi = clamp(Math.atan2(dy, Math.max(dx, 0.001)), -Math.PI / 2, Math.PI / 2); setParam('hc', BODY.cuffL * Math.sin(phi)); }
+      cuffReset();
+    } });
+    // the heart
+    ctx.fillStyle = T.pos; const hx = X(heartP.x), hy = Y(heartP.y), hr = 6 * ls;
+    ctx.beginPath(); ctx.moveTo(hx, hy + hr); ctx.bezierCurveTo(hx - 2 * hr, hy - 0.2 * hr, hx - hr, hy - 1.5 * hr, hx, hy - 0.5 * hr); ctx.bezierCurveTo(hx + hr, hy - 1.5 * hr, hx + 2 * hr, hy - 0.2 * hr, hx, hy + hr); ctx.fill();
+    // the gauge, and its tube from the cuff
+    const cn = cuffNow(), gx = Math.min(W - 30 * ls, X(1.2)), gyTop = top + 40 * ls, gyBot = Y(0.45);
+    ctx.strokeStyle = T.wire; ctx.lineWidth = 2 * ps; ctx.beginPath(); ctx.moveTo(X(c.x), Y(c.y)); ctx.quadraticCurveTo((X(c.x) + gx) / 2, Math.max(Y(c.y), gyBot) + 30 * ls, gx, gyBot); ctx.stroke();
+    let gaugeLab;
+    if (q.gauge === 'hg') {
+      const tw = 10 * ls, mm = (gyBot - gyTop) / 300, yv = (v) => gyBot - v * mm;
+      ctx.fillStyle = T.canvas; ctx.fillRect(gx - tw / 2, gyTop, tw, gyBot - gyTop);
+      ctx.fillStyle = T.liq.hg; ctx.fillRect(gx - tw / 2, yv(cn), tw, gyBot - yv(cn));
+      ctx.strokeStyle = T.wire; ctx.lineWidth = 1.4 * ps; ctx.strokeRect(gx - tw / 2, gyTop, tw, gyBot - gyTop);
+      ctx.font = `${9.5 * ls}px ${T.mono}`; ctx.fillStyle = T.muted; ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.strokeStyle = T.muted; ctx.lineWidth = 1;
+      for (let v = 0; v <= 300; v += 10) { const yy = yv(v), big = v % 50 === 0; ctx.beginPath(); ctx.moveTo(gx - tw / 2 - (big ? 7 : 4) * ls, yy); ctx.lineTo(gx - tw / 2, yy); ctx.stroke(); if (big && (mm * 50 > 14 * ls)) ctx.fillText(String(v), gx - tw / 2 - 9 * ls, yy); }
+      gaugeLab = [gx, gyTop - 8 * ls];
+    } else {
+      const r = clamp((gyBot - gyTop) * 0.3, 30 * ls, 70 * ls), cy = gyTop + r + 6 * ls;
+      ctx.strokeStyle = T.wire; ctx.lineWidth = 2 * ps; ctx.beginPath(); ctx.moveTo(gx, gyBot); ctx.lineTo(gx, cy + r); ctx.stroke();
+      dial(ctx, gx, cy, r, cn, 300, 'mmHg', ls, T.pos);
+      gaugeLab = [gx, gyTop - 8 * ls];
+    }
+    labelIn(ctx, `cuff ${fx(cn, 0)} mmHg`, Math.min(gaugeLab[0], W - 70 * ls), gaugeLab[1], 'center', T.ink, 12 * ls, 700, T.mono);
+    // the pulse under the cuff: a tap each beat while the cuff is between the diastolic and systolic pressures there
+    const rd = cuffRead(), lastB = rd.beats[rd.beats.length - 1], tap = lastB && lastB.heard && cuff.t - lastB.t < 0.3;
+    const sState = cn >= cuffSys() ? 'artery shut: no sound' : cn > cuffDia() ? 'pulse spurts through: a tap each beat' : 'steady flow: no sound';
+    const lx = X(el.x) + 14 * ls, ly = Y(el.y) + 24 * ls;
+    if (tap) { ctx.strokeStyle = T.accent; ctx.lineWidth = 2 * ps; for (const rr of [8, 14, 20]) { ctx.beginPath(); ctx.arc(X(el.x), Y(el.y), rr * ls, -0.6, 0.6); ctx.stroke(); } }
+    const narrow = W < 520 * ls;   /* a phone: the long labels give way to the picture; Results shows every reading */
+    if (tap || !narrow) labelIn(ctx, tap ? 'tap' : sState, lx, ly, 'left', tap ? T.accent : T.muted, 11 * ls, tap ? 700 : 400);
+    const rx = W - 14 * ls;
+    let ry = bot - 52 * ls;
+    if (rd.sys != null && !narrow) labelIn(ctx, `first tap: ${fx(rd.sys, 0)} mmHg`, rx, ry, 'right', T.ink, 11.5 * ls, 700, T.mono);
+    if (rd.dia != null && cn < cuffDia() && !narrow) labelIn(ctx, `last tap: ${fx(rd.dia, 0)} mmHg`, rx, ry + 16 * ls, 'right', T.ink, 11.5 * ls, 700, T.mono);
+    // the IV: a collapsible bag hiv above the needle
+    const nd = g.needle, bagY = nd.y + q.hiv, bx = g.lie ? X(-0.85) : X(-0.95), byp = Y(bagY), flows = ivP(q.hiv) > q.pv;
+    ctx.strokeStyle = T.wire; ctx.lineWidth = 2.4 * ps; ctx.beginPath(); ctx.moveTo(bx, Y(0)); ctx.lineTo(bx, Math.min(byp, Y(nd.y + 1.25)) - 18 * ls); ctx.stroke();
+    ctx.strokeStyle = T.muted; ctx.lineWidth = 1.4 * ps; ctx.beginPath(); ctx.moveTo(bx, byp + 26 * ls); ctx.quadraticCurveTo(bx, Y(nd.y) + 10 * ls, X(nd.x), Y(nd.y)); ctx.stroke();
+    ctx.fillStyle = T.liq.water; ctx.globalAlpha = 0.45; roundRect(ctx, bx - 11 * ls, byp - 10 * ls, 22 * ls, 28 * ls, 6 * ls); ctx.fill(); ctx.globalAlpha = 1;
+    ctx.strokeStyle = T.wire; ctx.lineWidth = 1.2 * ps; roundRect(ctx, bx - 11 * ls, byp - 10 * ls, 22 * ls, 28 * ls, 6 * ls); ctx.stroke();
+    if (flows) { ctx.fillStyle = T.liq.water; const ph = (performance.now() / 400) % 1; ctx.beginPath(); ctx.arc(bx, byp + 20 * ls + ph * 6 * ls, 1.8 * ps, 0, 2 * Math.PI); ctx.fill(); }
+    else { ctx.strokeStyle = T.pos; ctx.lineWidth = 2.2 * ps; ctx.beginPath(); ctx.moveTo(X(nd.x), Y(nd.y)); ctx.lineTo(X(nd.x) - 12 * ls, Y(nd.y) + 2 * ls); ctx.stroke(); }
+    ctx.fillStyle = T.wire; ctx.beginPath(); ctx.arc(X(nd.x), Y(nd.y), 2.5 * ps, 0, 2 * Math.PI); ctx.fill();
+    grip(ctx, bx, byp - 18 * ls, isHot('bag'), true);
+    handles.push({ id: 'bag', cursor: 'ns-resize', pt: [bx, byp - 18 * ls], set: (x, y) => setParam('hiv', (bot - y - 18 * ls) / sc - nd.y) });
+    // labels
+    labelIn(ctx, 'heart level', 16 * ls, Y(g.heart) - 5 * ls, 'left', T.pos, 10.5 * ls);
+    const hcS = Math.abs(q.hc) < 0.005 ? 'cuff at heart level' : q.hc > 0 ? `cuff ${fx(q.hc * 100, 0)} cm above the heart` : `cuff ${fx(-q.hc * 100, 0)} cm below the heart`;
+    if (!narrow) labelIn(ctx, hcS, X(c.x) + 12 * ls, Y(c.y) - 12 * ls, 'left', T.neg, 11 * ls, 700);
+    if (!bl) {
+      const pp = (h) => `${fx(bodyP(q.sys, h), 0)}/${fx(bodyP(q.dia, h), 0)} mmHg`;
+      if (!g.lie) {
+        if (narrow) labelIn(ctx, `head ${pp(BODY.head)}`, X(headC.x) - lw(0.15), Y(headC.y) - 4 * ls, 'right', T.ink, 11 * ls, 700);
+        else labelIn(ctx, `head ${pp(BODY.head)}`, X(headC.x) + lw(0.15), Y(headC.y) - 4 * ls, 'left', T.ink, 11 * ls, 700);
+        labelIn(ctx, `feet ${pp(-BODY.feet)}`, X(0.2), Y(0.08), 'left', T.ink, 11 * ls, 700);
+      } else labelIn(ctx, `head, heart and feet level: ${pp(0)}`, X(0.1), Y(g.heart + 0.32), 'center', T.ink, 11 * ls, 700);
+    }
+    /* the IV's labels sit above its bag, clear of the patient */
+    const ivx = Math.max(14 * ls, bx - 30 * ls), ivy = byp - 34 * ls;
+    if (!narrow) labelIn(ctx, bl ? `IV bag ${fx(q.hiv * 100, 0)} cm above the needle` : `IV: ρgh = ${fx(ivP(q.hiv), 1)} mmHg ${flows ? '>' : '<'} vein ${fx(q.pv, 0)} mmHg`, ivx, ivy - 15 * ls, 'left', T.neg, 10.5 * ls, 700);
+    if (narrow) labelIn(ctx, flows ? 'flows in' : 'no flow', bx, byp + 42 * ls, 'center', flows ? T.vcolInk : T.pos, 10.5 * ls);   /* below the bag, clear of the heart level label */
+    else labelIn(ctx, flows ? 'fluid flows in' : 'no flow: blood backs into the line', ivx, ivy, 'left', flows ? T.vcolInk : T.pos, 10.5 * ls);
+  }
+
   // ---------- graphs ----------
   // ---------- scene: force on a dam or a window (strips) ----------
   const fBig = (v, u) => { const a = Math.abs(v); return a >= 1e6 ? `${sig(v / 1e6, 4)} M${u}` : a >= 1e3 ? `${sig(v / 1e3, 4)} k${u}` : `${sig(v, 4)} ${u}`; };
@@ -1875,6 +2177,33 @@ table.rows button:hover { color: var(--pos); }
       for (let i = 0; i <= 240; i++) { const y = tk.yw * i / 240; i ? ctx.lineTo(X(y), Y(f(y) / u[0])) : ctx.moveTo(X(y), Y(f(y) / u[0])); }
       ctx.stroke();
       if (pumpL !== null) { ctx.fillStyle = T.acol; ctx.globalAlpha = 0.25; ctx.beginPath(); ctx.moveTo(X(lv), Y(0)); for (let i = 0; i <= 120; i++) { const y = lv + (tk.yw - lv) * i / 120; ctx.lineTo(X(y), Y(f(y) / u[0])); } ctx.lineTo(X(tk.yw), Y(0)); ctx.closePath(); ctx.fill(); ctx.globalAlpha = 1; }
+    } else if (S.scene === 'lift') {
+      const q = S.P.lift, p = lp(), h = liftNow(), Fof = (x) => hydraulic({ ...p, x }).F1;
+      const tb = gTitle(ctx, 'Force on the small piston against how far it is pushed: the area under the line is the work in, the car’s gain mgΔh plus the energy to move the liquid', 12 * ls, 10 * ls, ls);
+      const Fm = Math.max(Fof(0), Fof(LIFT.stroke), h.F2 * h.r), ymax = nice(Fm * 1.15) * Math.ceil(Fm * 1.15 / nice(Fm * 1.15));
+      const { X, Y } = axes(ctx, L, R, Math.max(top + 6 * ls, tb + 26 * ls), bot, [0, LIFT.stroke], [0, ymax], 'pushed down x (m)', 'F₁ (N)', ls);
+      ctx.fillStyle = T.pos; ctx.globalAlpha = 0.18; ctx.beginPath(); ctx.moveTo(X(0), Y(0)); ctx.lineTo(X(0), Y(Fof(0))); ctx.lineTo(X(q.x), Y(Fof(q.x))); ctx.lineTo(X(q.x), Y(0)); ctx.closePath(); ctx.fill(); ctx.globalAlpha = 1;
+      ctx.setLineDash([5 * ps, 4 * ps]); ctx.strokeStyle = T.muted; ctx.lineWidth = 1.4 * ps; ctx.beginPath(); ctx.moveTo(X(0), Y(h.F2 * h.r)); ctx.lineTo(X(LIFT.stroke), Y(h.F2 * h.r)); ctx.stroke(); ctx.setLineDash([]);
+      ctx.strokeStyle = T.pos; ctx.lineWidth = 2.4 * ps; ctx.beginPath(); ctx.moveTo(X(0), Y(Fof(0))); ctx.lineTo(X(LIFT.stroke), Y(Fof(LIFT.stroke))); ctx.stroke();
+      ctx.fillStyle = T.pos; ctx.beginPath(); ctx.arc(X(q.x), Y(h.F1), 5 * ps, 0, 2 * Math.PI); ctx.fill();
+      labelBox(ctx, `dashed: mg A_1/A_2 = ${sig(h.F2 * h.r, 3)} N, pistons level`, R - 6 * ls, Y(h.F2 * h.r) + (Fof(LIFT.stroke) > h.F2 * h.r ? 16 : -8) * ls, 'right', T.muted, 10.5 * ls);
+      labelBox(ctx, `work in = ${sig(h.Win, 4)} J, mgΔh = ${sig(h.Wcar, 4)} J`, L + 8 * ls, Y(0) - 10 * ls, 'left', T.ink, 11 * ls, 700);
+    } else if (S.scene === 'body') {
+      const q = S.P.body, cn = cuffNow(), lie = q.pose === 'lie';
+      const tb = gTitle(ctx, 'Blood pressure against height above the heart: P = P_heart − ρgh drops 0.77 mmHg for each centimeter up', 12 * ls, 10 * ls, ls);
+      const xmax = Math.max(nice(bodyP(q.sys, -BODY.feet) * 1.1) * Math.ceil(bodyP(q.sys, -BODY.feet) * 1.1 / nice(bodyP(q.sys, -BODY.feet) * 1.1)), 50);
+      const { X, Y } = axes(ctx, L, R, Math.max(top + 6 * ls, tb + 26 * ls), bot, [0, xmax], [-1.5, 0.5], 'P (mmHg)', 'height above the heart (m)', ls);
+      for (const [P0, col] of [[q.sys, T.pos], [q.dia, T.neg]]) { ctx.strokeStyle = col; ctx.lineWidth = 2.2 * ps; ctx.beginPath(); ctx.moveTo(X(bodyP(P0, -1.5)), Y(-1.5)); ctx.lineTo(X(bodyP(P0, 0.5)), Y(0.5)); ctx.stroke(); }
+      ctx.strokeStyle = T.muted; ctx.lineWidth = 1 * ps; ctx.beginPath(); ctx.moveTo(L, Y(0)); ctx.lineTo(R, Y(0)); ctx.stroke();
+      ctx.setLineDash([4 * ps, 4 * ps]); ctx.strokeStyle = T.accent; ctx.lineWidth = 1.6 * ps; ctx.beginPath(); ctx.moveTo(X(Math.min(cn, xmax)), Y(-1.5)); ctx.lineTo(X(Math.min(cn, xmax)), Y(0.5)); ctx.stroke(); ctx.setLineDash([]);
+      const pts = [[q.hc, 'cuff']].concat(lie ? [] : [[BODY.head, 'head'], [-BODY.feet, 'feet']]);
+      for (const [h, nm] of pts) {
+        for (const P0 of [q.sys, q.dia]) { ctx.fillStyle = T.ink; ctx.beginPath(); ctx.arc(X(bodyP(P0, h)), Y(h), 4 * ps, 0, 2 * Math.PI); ctx.fill(); }
+        labelBox(ctx, nm, X(bodyP(q.sys, h)) + 8 * ls, Y(h) + 4 * ls, 'left', T.ink, 10.5 * ls, 700);
+      }
+      labelBox(ctx, 'systolic', X(bodyP(q.sys, -1.2)) + 8 * ls, Y(-1.2), 'left', T.pos, 10.5 * ls, 700);
+      labelBox(ctx, 'diastolic', X(bodyP(q.dia, -1.2)) - 8 * ls, Y(-1.2), 'right', T.neg, 10.5 * ls, 700);
+      labelBox(ctx, `cuff ${fx(cn, 0)} mmHg`, X(Math.min(cn, xmax)) - 6 * ls, Y(-1.38), 'right', T.accent, 10.5 * ls, 700);
     } else if (S.scene === 'torr') {
       const q = S.P.torr, tr = torricelli(q.H, q.hh);
       const tb = gTitle(ctx, `Range against hole depth: R = 2√(h(H − h)), largest (R = H = ${fx(q.H, 2)} m) for a hole halfway down`, 12 * ls, 10 * ls, ls);
@@ -1940,6 +2269,7 @@ table.rows button:hover { color: var(--pos); }
   function drawScene() {
     const [W, H] = dims.s; if (!W || !H) return;
     const ctx = ctxs.s; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    if (G3.S && G3.on) { const want = has3(); if (G3.S.el.hidden === want) { G3.S.el.hidden = !want; cans.s.style.touchAction = want ? 'pan-y' : 'none'; $('stage').classList.toggle('three', want); } }
     if (on3()) { handles = []; render3(ctx, W, H); return; }
     ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
     if (window.VDGear) window.VDGear.wall(ctx, 0, 0, W, H, { tile: 0 });
@@ -1952,15 +2282,19 @@ table.rows button:hover { color: var(--pos); }
     else if (S.scene === 'venturi') drawVenturi(ctx, W, H);
     else if (S.scene === 'plate') drawPlate(ctx, W, H);
     else if (S.scene === 'pump') drawPump(ctx, W, H);
+    else if (S.scene === 'lift') drawLift(ctx, W, H);
+    else if (S.scene === 'body') drawBody(ctx, W, H);
     else drawTorr(ctx, W, H);
   }
   function drawAll() { if (!T || !bs) return; drawScene(); drawGraph(); clock(); }
   function clock() {
     const dyn = S.scene === 'buoy' && !S.P.buoy.scale;
-    $('tclock').firstChild.textContent = dyn ? `t = ${fx(t, 2)} s` : S.scene === 'venturi' ? 'steady flow' : S.scene === 'torr' ? 'steady jet' : S.scene === 'pump' ? (pumpL === null ? 'full' : pumpL <= 0 ? 'empty' : 'pumping') : '';
+    $('tclock').firstChild.textContent = dyn ? `t = ${fx(t, 2)} s` : S.scene === 'venturi' ? 'steady flow' : S.scene === 'torr' ? 'steady jet'
+      : S.scene === 'pump' ? (pumpL === null ? 'full' : pumpL <= 0 ? 'empty' : 'pumping')
+      : S.scene === 'lift' ? `x = ${fx(S.P.lift.x, 2)} m` : S.scene === 'body' ? `t = ${fx(cuff.t, 1)} s` : '';
     $('rateTag').textContent = fmtRate(S.rate);
     /* no playback rate where nothing moves (Depth, Pascal, barometer, a block on the spring scale; student view calls, 2026-11-15) */
-    const moves = dyn || S.scene === 'venturi' || S.scene === 'torr' || S.scene === 'pump';
+    const moves = dyn || S.scene === 'venturi' || S.scene === 'torr' || S.scene === 'pump' || S.scene === 'lift' || S.scene === 'body';
     if ($('rateTag').hidden === moves) $('rateTag').hidden = !moves;
     if ($('rateSeg').hidden === moves) $('rateSeg').hidden = !moves;
   }
@@ -2011,7 +2345,7 @@ table.rows button:hover { color: var(--pos); }
         f = 'At the interface’s level: P_atm + ρ₁gh₁ = P_atm + ρ₂gh₂, so ρ₁ = ρ₂h₂/h₁';
       } else if (S.baro === 'baro') {
         const h = columnHeight(q.Pa * 1000, rho);
-        rows = [['Air pressure', `${fx(q.Pa, 1)} kPa`], ['Column height', h < 2 ? `${fx(h * 1000, 1)} mm` : `${fx(h, 2)} m`, 'c-p'], ['In mmHg', `${fx(q.Pa * 1000 / 133.322387, 1)} mmHg`], ['In atmospheres', `${fx(q.Pa * 1000 / PATM, 4)} atm`]];
+        rows = [['Air pressure', `${fx(q.Pa, 1)} kPa`], ['Column height', h < 2 ? `${fx(h * 1000, 1)} mm` : `${fx(h, 2)} m`, 'c-p'], ['In mmHg', `${fx(q.Pa * 1000 / MMHG, 1)} mmHg`], ['In atmospheres', `${fx(q.Pa * 1000 / PATM, 4)} atm`]];
         f = `h = P_atm/(ρg) = ${fx(q.Pa * 1000, 0)}/(${fx(rho, 0)}·${fx(G, 3)}) m`;
       } else {
         const dh = columnHeight(q.Pg * 1000, rho);
@@ -2061,6 +2395,27 @@ table.rows button:hover { color: var(--pos); }
         [`Slice ${clamp(q.sel, 0, q.n - 1) + 1}: height, area, lift`, `${fx(s2.y, 3)} m, ${sig(s2.A, 4)} m², ${fx(s2.lift, 3)} m`, '', true], ['Its work ρgAΔy·(y_o − y)', fBig(s2.dW, 'J')],
         ['Pumped so far', pumpL === null ? 'not started: press Play' : `${fBig(done, 'J')}, level ${fx(Math.max(0, pumpL), 2)} m`, 'c-d', true, true]];
       f = `W = ∫₀^y_w ρg·A(y)·(y_o − y) dy = ρgV·(y_o − y_cm), with y_w = ${fx(tk.yw, 2)} m and y_o = ${fx(tk.yo, 2)} m`;
+    } else if (S.scene === 'lift') {
+      const q = S.P.lift, h = liftNow(), dy = h.y1 - h.y2;
+      rows = [['Force on the small piston F₁', fN(h.F1), 'c-w'], ['Weight of the car F₂ = mg', grp(fN(h.F2)), 'c-w'],
+        ['Pressure under the small piston P₁', kPa(h.P1, 1), 'c-p'], ['Pressure under the large piston P₂', kPa(h.P2, 1), 'c-p'],
+        ['Small piston above the large y₁ − y₂', `${fx(dy, 2)} m`], ['ρg(y₁ − y₂) = P₂ − P₁', kPa(rhoF() * G * dy, 2), '', false, true],
+        ['Area ratio A₂/A₁', fx(1 / h.r, 2)], ['Force ratio F₂/F₁', fx(h.gain, 2), '', false, true],
+        ['Small piston pushed down x', `${fx(q.x, 2)} m`], ['Car raised Δh', `${fx(h.rise * 100, 2)} cm`],
+        ['Work in, area under F₁', `${sig(h.Win, 4)} J`, '', false, true], ['Work on the car mgΔh', `${sig(h.Wcar, 4)} J`, '', false, true],
+        ['Energy to raise the liquid', `${sig(h.dU, 3)} J`, '', false, true]];
+      f = 'P₁ = F₁/A₁, P₂ = F₂/A₂ = P₁ + ρg(y₁ − y₂); A₁x = A₂Δh; work in = mgΔh + the liquid’s potential energy';
+    } else if (S.scene === 'body') {
+      const q = S.P.body, rd = cuffRead(), cn = cuffNow(), dP = RHO_BLOOD * G * q.hc / MMHG, pp = (h) => `${fx(bodyP(q.sys, h), 0)}/${fx(bodyP(q.dia, h), 0)} mmHg`;
+      const lie = q.pose === 'lie';
+      rows = [['Cuff gauge', `${fx(cn, 0)} mmHg`, 'c-p'], ['Cuff height above the heart h', `${fx(q.hc * 100, 0)} cm`],
+        ['First tap (systolic)', rd.sys == null ? '—' : `${fx(rd.sys, 0)} mmHg`, 'c-w'], ['Last tap (diastolic)', rd.dia == null || cn > cuffDia() ? '—' : `${fx(rd.dia, 0)} mmHg`, 'c-w'],
+        ['At the heart', pp(0)], ['ρ_blood gh at the cuff', `${fx(dP, 1)} mmHg`, '', false, true], ['In the artery under the cuff', pp(q.hc), '', false, true],
+        [lie ? 'At the head, lying' : 'At the head, standing', pp(lie ? 0 : BODY.head), '', false, true], [lie ? 'At the feet, lying' : 'At the feet, standing', pp(lie ? 0 : -BODY.feet), '', false, true],
+        ['IV bag above the needle', `${fx(q.hiv * 100, 0)} cm`], ['IV fluid pressure at the needle ρgh', `${fx(ivP(q.hiv), 1)} mmHg`, 'c-p', false, true],
+        ['Venous pressure', `${fx(q.pv, 0)} mmHg`], ['Lowest bag height that flows', `${fx(ivHeight(q.pv) * 100, 1)} cm`, '', false, true],
+        ['Flow into the vein', ivP(q.hiv) > q.pv ? 'flows in' : 'no flow', '', false, true]];
+      f = 'P = P_heart − ρ_blood g h (h above the heart); IV flows when ρ_IV g h > P_vein; 1 mmHg = 133.322 Pa';
     } else {
       const q = S.P.torr, tr = torricelli(q.H, q.hh);
       rows = [['Hole depth h', `${fx(q.hh, 2)} m`], ['Hole height H − h', `${fx(q.H - q.hh, 2)} m`], ['Exit speed v', `${fx(tr.v, 2)} m/s`, 'c-d', false, true], ['Fall time', `${fx(tr.t, 3)} s`, '', false, true],
@@ -2140,7 +2495,9 @@ table.rows button:hover { color: var(--pos); }
     venturi: [['--acol', 'Speed'], ['--neg', 'Gauge pressure P'], ['--acol', '½ρv², the kinetic energy per volume']],
     torr: [['--acol', 'Exit velocity'], ['--pos', 'Range on the floor'], ['--muted', 'Jets from other holes']],
     plate: [['--neg', 'Strips, darker where the pressure ρgh is greater'], ['--accent', 'The strip you picked'], ['--pos', 'Center of pressure: where F acts'], ['--ink', 'Centroid of the plate']],
-    pump: [['--accent', 'The slice you picked and its lift to the spout'], ['--ink', 'Slices still to pump'], ['--pos', 'The integral'], ['--acol', 'Work done so far']]
+    pump: [['--accent', 'The slice you picked and its lift to the spout'], ['--ink', 'Slices still to pump'], ['--pos', 'The integral'], ['--acol', 'Work done so far']],
+    lift: [['--pos', 'Forces on the pistons'], ['--neg', 'Pressure of the liquid on each piston'], ['--muted', 'Where the pistons started']],
+    body: [['--pos', 'Heart level'], ['--neg', 'Cuff and IV'], ['--accent', 'A tap: the pulse spurts through the cuff']]
   };
   function setScene(sc) {
     S.scene = sc;
@@ -2148,7 +2505,9 @@ table.rows button:hover { color: var(--pos); }
     $('parTitle').textContent = TITLES[sc];
     $('parHint').textContent = PAR_HINT[sc];
     $('modelHint').textContent = MODEL[sc];
-    $('liqSec').hidden = sc === 'torr';
+    $('liqSec').hidden = sc === 'torr' || sc === 'body';
+    $('bodyBox').hidden = sc !== 'body';
+    $('viewSeg').hidden = !B3[sc];
     $('baroSeg').hidden = sc !== 'baro';
     $('matSeg').hidden = sc !== 'buoy';
     $('plateSeg').hidden = sc !== 'plate'; $('tankSeg').hidden = sc !== 'pump'; $('sampleWrap').hidden = !FLAT_ONLY[sc];
@@ -2156,11 +2515,12 @@ table.rows button:hover { color: var(--pos); }
     sync3();
     $('buoyToggles').hidden = sc !== 'buoy';
     $('pModeWrap').hidden = !(sc === 'press' || sc === 'venturi');
-    const dyn = sc === 'buoy' || sc === 'venturi' || sc === 'torr' || sc === 'pump';
+    const dyn = DYN(sc);
     for (const id of ['play', 'reset', 'tclock']) $(id).hidden = !dyn;
     $('stage').classList.toggle('cols', sc === 'buoy');
     $('timeSec').hidden = !dyn;
     $('reset').textContent = sc === 'buoy' ? 'Drop again' : sc === 'pump' ? 'Fill again' : 'Reset';
+    syncBody();
     $('lForces').hidden = sc !== 'buoy'; $('lGhost').hidden = sc !== 'buoy'; $('lCmp').hidden = sc !== 'torr';
     $('keyBox').innerHTML = KEYS[sc].map(([c, txt]) => `<span><i class="swatch" style="border-color: var(${c})${c === '--muted' ? '; border-top-style: dashed' : ''}"></i>${txt.replace(/_(\w+)/g, '<sub>$1</sub>')}</span>`).join('');
     S.sel = 0;
@@ -2168,6 +2528,14 @@ table.rows button:hover { color: var(--pos); }
     syncLiq(); syncSliders(); syncMat(); updateReadouts(); renderRows(); lastData = ''; renderData();
     $('tScale').checked = S.P.buoy.scale; $('tOver').checked = S.P.buoy.over;
   }
+  function syncBody() {
+    const q = S.P.body;
+    for (const b of document.querySelectorAll('#poseSeg button')) b.setAttribute('aria-pressed', String(b.dataset.o === q.pose));
+    for (const b of document.querySelectorAll('#gaugeSeg button')) b.setAttribute('aria-pressed', String(b.dataset.u === q.gauge));
+  }
+  $('poseSeg').addEventListener('click', (e) => { const b = e.target.closest('button'); if (!b) return; const q = S.P.body; q.pose = b.dataset.o; q.__touched = true; clearPreset();
+    q.hc = clamp(q.hc, +hcRange()[0].toFixed(2), +hcRange()[1].toFixed(2)); cuffReset(); setRunning(false); syncBody(); syncSliders(); updateReadouts(); drawAll(); });
+  $('gaugeSeg').addEventListener('click', (e) => { const b = e.target.closest('button'); if (!b) return; S.P.body.gauge = b.dataset.u; syncBody(); drawAll(); });
   function syncLiq() {
     for (const b of document.querySelectorAll('#liqSeg button')) b.setAttribute('aria-pressed', String(b.dataset.l === S.liq));
     $('liqNote').textContent = LIQ[S.liq].note;
@@ -2207,6 +2575,8 @@ table.rows button:hover { color: var(--pos); }
     if (c.scene === 'venturi') { seedParts(); setRate(0.25); }
     if (c.scene === 'torr') { drops = []; setRate(1); }
     if (c.scene === 'pump') { pumpL = null; setRate(1); }
+    if (c.scene === 'lift' || c.scene === 'body') setRate(1);
+    if (c.scene === 'body') cuffReset();
     setScene(c.scene);
     S.hintFrom = name; $('presetHint').textContent = S.blind ? BLIND_HINT[name] : c.hint;
     if (!reduce) setRunning(true);
@@ -2280,7 +2650,13 @@ table.rows button:hover { color: var(--pos); }
   const playBtn = $('play');
   let last = performance.now();
   function setRunning(r) { running = r; playBtn.textContent = r ? 'Pause' : 'Play'; playBtn.classList.toggle('primary', !r); last = performance.now(); }
-  playBtn.addEventListener('click', () => { if (!running && S.scene === 'pump' && pumpL !== null && pumpL <= 0) pumpL = null; setRunning(!running); });
+  playBtn.addEventListener('click', () => {
+    /* at the end of the stroke or of the cuff's fall, Play starts it again */
+    if (!running && S.scene === 'lift' && S.P.lift.x >= LIFT.stroke - 1e-9) { S.P.lift.x = 0; syncSliders(); }
+    if (!running && S.scene === 'body' && cuffNow() <= cuffEnd() + 1e-9) cuffReset();
+    if (!running && S.scene === 'pump' && pumpL !== null && pumpL <= 0) pumpL = null;
+    setRunning(!running);
+  });
   /* the shared control panel (demos/lib/vdpanel.js): the time controls in one group at the left of the strip */
   if (window.VD && VD.panel) VD.panel({ clock: '#tclock', speed: '#rateSeg', step: true });
   function restart() {
@@ -2288,6 +2664,8 @@ table.rows button:hover { color: var(--pos); }
     if (S.scene === 'venturi') seedParts();
     if (S.scene === 'torr') { drops = []; dropAcc = 0; }
     if (S.scene === 'pump') pumpL = null;
+    if (S.scene === 'lift') { S.P.lift.x = 0; syncSliders(); updateReadouts(); setRunning(false); drawAll(); return; }
+    if (S.scene === 'body') { cuffReset(); updateReadouts(); setRunning(false); drawAll(); return; }
     setRunning(true); drawAll();
   }
   $('reset').addEventListener('click', restart);
@@ -2381,6 +2759,8 @@ table.rows button:hover { color: var(--pos); }
       } else if (sc === 'venturi') step('v1', dir);
       else if (sc === 'plate') step('d0', -dir);
       else if (sc === 'pump') step('yw', dir);
+      else if (sc === 'lift') step('x', -dir, 5);
+      else if (sc === 'body') { step('hc', dir); cuffReset(); }
       else step('hh', -dir);
     } else if (k === 'ArrowLeft' || k === 'ArrowRight') {
       dir = k === 'ArrowRight' ? 1 : -1;
@@ -2389,6 +2769,8 @@ table.rows button:hover { color: var(--pos); }
       else if (sc === 'venturi') step('D2', dir);
       else if (sc === 'torr') step('H', dir);
       else if (FLAT_ONLY[sc]) step('n', dir);
+      else if (sc === 'lift') step('m', dir, 10);
+      else if (sc === 'body') step('hiv', dir);
       else if (sc === 'baro') step(S.baro === 'baro' ? 'Pa' : S.baro === 'two' ? 'Ho' : 'Pg', dir);
       else step('hp', dir);
     } else if (k === ' ') { setRunning(!running); }
@@ -2677,6 +3059,16 @@ table.rows button:hover { color: var(--pos); }
       return { cap: `Slices of water: height, area, lift and work; sum ${fBig(Sl.W, 'J')}, integral ${fBig(Wex, 'J')}`, head: ['slice', 'height y (m)', 'area A (m²)', 'lift (m)', 'ρgAΔy·lift (J)'],
         rows: Sl.slices.map((s2, i) => [String(i + 1), fx(s2.y, 3), sig(s2.A, 4), fx(s2.lift, 3), sig(s2.dW, 4)]) };
     }
+    if (S.scene === 'lift') {
+      const p = lp();
+      return { cap: 'Hydraulic lift: force on the small piston, the car’s rise and the work, at steps of the push', head: ['x (m)', 'F₁ (N)', 'Δh (cm)', 'work in (J)', 'mgΔh (J)'],
+        rows: [0, 0.2, 0.4, 0.6, 0.8, 1, 1.2].map((x) => { const h = hydraulic({ ...p, x }); return [fx(x, 2), sig(h.F1, 4), fx(h.rise * 100, 2), sig(h.Win, 4), sig(h.Wcar, 4)]; }) };
+    }
+    if (S.scene === 'body') {
+      const q = S.P.body;
+      return { cap: 'Blood pressure against height above the heart, P = P_heart − ρgh', head: ['height above the heart (m)', 'systolic (mmHg)', 'diastolic (mmHg)'],
+        rows: [0.36, 0.2, 0, -0.5, -1, -1.4].map((h) => [fx(h, 2), fx(bodyP(q.sys, h), 1), fx(bodyP(q.dia, h), 1)]) };
+    }
     const q = S.P.torr;
     return { cap: `Range against hole depth, H = ${fx(q.H, 2)} m, R = 2√(h(H − h))`, head: ['h (m)', 'R (m)'], rows: [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9].map((k) => [fx(k * q.H, 3), fx(torricelli(q.H, k * q.H).R, 3)]) };
   }
@@ -2700,7 +3092,7 @@ table.rows button:hover { color: var(--pos); }
   function graphLabel() {
     const fit = fitOnly() || S.gview === 'fit';
     $('gCan').setAttribute('aria-label', (fit ? 'Plot of your captured readings for this scene with a least squares line and a residual strip below it.'
-      : 'Graph for the current scene: pressure against depth, forces on the vessels, column heights, forces on the block, pressure along the pipe, jet range against hole depth, force per meter of depth on a plate, or work per meter of height to pump a tank.') + ' Show data table in the Lab section lists the plotted values.');
+      : 'Graph for the current scene: pressure against depth, forces on the vessels, column heights, forces on the block, pressure along the pipe, jet range against hole depth, force per meter of depth on a plate, work per meter of height to pump a tank, the lift\'s force against push, or blood pressure against height.') + ' Show data table in the Lab section lists the plotted values.');
   }
   function syncLab() {
     $('blindTag').hidden = !S.blind; $('blindHint').hidden = !S.blind;
@@ -2760,20 +3152,23 @@ table.rows button:hover { color: var(--pos); }
       const tk = tankP(); if (pumpL === null) pumpL = tk.yw;
       if (pumpL > 0) { pumpL = Math.max(0, pumpL - tk.yw / 8 * dts); if (pumpL === 0) { setRunning(false); $('live').textContent = 'The tank is empty.'; } }
     }
+    else if (S.scene === 'lift') { const q = S.P.lift; if (q.x < LIFT.stroke) q.x = Math.min(LIFT.stroke, q.x + LIFT.speed * dts); else if (running) setRunning(false); }
+    else if (S.scene === 'body') { const tEnd = (cuff.c0 - cuffEnd()) / BODY.k; if (cuff.t < tEnd) cuff.t = Math.min(tEnd, cuff.t + dts); else if (running) setRunning(false); }
   }
   /* the measuring tools: a stopwatch on the simulated clock of the moving scenes (block, pipe, tank) */
-  VD.tools({ el: $('sCan'), time: () => (S.scene === 'buoy' || S.scene === 'venturi' || S.scene === 'torr' ? simClock : null) });
+  VD.tools({ el: $('sCan'), time: () => (DYN(S.scene) ? simClock : null) });
   /* How this works: a short video of one sample reading from the worksheet (made by tools/howto/) */
   VD.howTo({ src: 'media/how-this-works/fluids.mp4', poster: 'media/how-this-works/fluids.jpg' });
   let frameMs = 0, lastR = 0;
   function loop(now) {
     const dtr = Math.min(0.05, Math.max(0, (now - last) / 1000)); last = now;
     const t0 = performance.now();
-    const dyn = S.scene === 'buoy' || S.scene === 'venturi' || S.scene === 'torr' || S.scene === 'pump';
+    const dyn = DYN(S.scene);
     if (running && dtr > 0 && dyn) { advance(dtr * S.rate); drawAll(); }
+    else if (S.scene === 'body' && ivP(S.P.body.hiv) > S.P.body.pv && !reduce) drawScene();   /* the IV drip */
     else if (held) drawAll();
     frameMs = 0.9 * frameMs + 0.1 * (performance.now() - t0);
-    if (now - lastR > 150) { updateReadouts(); renderData(); lastR = now; }
+    if (now - lastR > 150) { updateReadouts(); renderData(); if (S.scene === 'lift' && running) syncSliders(); lastR = now; }
     requestAnimationFrame(loop);
   }
   /* what the apparatus shows now, for a screen reader (VD.describe): the scene, the setup, the instrument readings the worksheets use
@@ -2834,6 +3229,19 @@ table.rows button:hover { color: var(--pos); }
       out.push(`The water is cut into ${q.n} slices; the work to lift them adds to ${fBig(Sl.W, 'J')}.`);
       if (!blind) out.push(`The integral gives ${fBig(Wex, 'J')}.`);
       if (pumpL !== null) out.push(run(`The water level is now ${fx(Math.max(0, pumpL), 2)} m.`));
+    } else if (S.scene === 'lift') {
+      const q = S.P.lift, h = liftNow();
+      out.push(`A hydraulic lift: a small piston ${fx(q.d1, 1)} cm across joined by liquid to a large piston ${fx(q.d2, 1)} cm across carrying a ${fx(q.m, 0)} kg car.`,
+        `The small piston has been pushed down ${fx(q.x, 2)} m and the car has risen ${fx(h.rise * 100, 2)} cm.`, `It takes ${fN(h.F1)} on the small piston to hold the car's weight of ${grp(fN(h.F2))}.`,
+        `The pressure is ${kPa(h.P1, 1)} under the small piston and ${kPa(h.P2, 1)} under the large one.`);
+      if (!blind) out.push(`The work in is ${sig(h.Win, 4)} J and the car has gained ${sig(h.Wcar, 4)} J.`);
+    } else if (S.scene === 'body') {
+      const q = S.P.body, rd = cuffRead();
+      out.push(q.pose === 'lie' ? 'A patient lying flat on a bed.' : 'A patient standing.', `A blood pressure cuff on the upper arm, ${fx(q.hc * 100, 0)} cm above the heart.`, `The cuff gauge reads ${fx(cuffNow(), 0)} mmHg.`);
+      if (rd.sys != null) out.push(`The first tap came at ${fx(rd.sys, 0)} mmHg.`);
+      if (rd.dia != null && cuffNow() < cuffDia()) out.push(`The last tap came at ${fx(rd.dia, 0)} mmHg.`);
+      out.push(`An IV bag hangs ${fx(q.hiv * 100, 0)} cm above the needle; the venous pressure is ${fx(q.pv, 0)} mmHg.`, ivP(q.hiv) > q.pv ? 'The IV fluid flows in.' : 'The IV fluid does not flow in.');
+      if (!blind) out.push(`The pressure at the heart is ${fx(q.sys, 0)} over ${fx(q.dia, 0)} mmHg.`);
     } else {
       const q = S.P.torr, tr = torricelli(q.H, q.hh);
       out.push(`A tank of liquid ${fx(q.H, 2)} m deep with a hole in its side.`, `The hole is ${fx(q.hh, 2)} m below the surface.`, `The jet lands ${fx(tr.R, 3)} m from the tank.`);
@@ -2857,10 +3265,11 @@ table.rows button:hover { color: var(--pos); }
   // manometer widths, and the Venturi pipe and standpipe widths (2 times). The labels are drawn over the picture on #sCan.
   const G3 = { S: null, on: false, o: { th: -Math.PI / 2 + 0.34, ph: 1.27, zoom: 1 }, sc: {}, env: null, lastSc: '' };
   let handles3 = [];
-  const on3 = () => G3.on && !!G3.S && !FLAT_ONLY[S.scene];
-  /* the Dam and Pumping scenes are drawn flat: hide the 3D layer and the 3D switch there, and bring them back elsewhere */
+  /* the Dam and Pumping scenes are drawn flat, and the Lift and Body scenes have no 3D picture: hide the 3D layer and the 3D switch there */
+  const has3 = () => !!B3[S.scene] && !FLAT_ONLY[S.scene];
+  const on3 = () => G3.on && !!G3.S && has3();
   function sync3() {
-    $('viewSeg').hidden = !!FLAT_ONLY[S.scene];
+    $('viewSeg').hidden = !has3();
     if (G3.S) G3.S.el.hidden = !on3();
     cans.s.style.touchAction = on3() ? 'pan-y' : 'none';
     $('stage').classList.toggle('three', on3());

@@ -1213,6 +1213,18 @@
      ]
     },
     {
+     "demo": "surface-tension",
+     "title": "Surface Tension and Capillarity",
+     "desc": "Watch water climb thin glass tubes and mercury sink, find the pressure inside drops and bubbles and let a small bubble empty into a big one, rest a steel needle and a water strider on water, and pull a soap film on a sliding wire.",
+     "tags": [
+      "surface tension",
+      "capillary action",
+      "contact angle",
+      "bubble pressure",
+      "meniscus"
+     ]
+    },
+    {
      "demo": "granular-flow",
      "title": "Granular Flow: Sorting and Landslides",
      "desc": "Sand of several kinds you choose (number, size, color, roughness, shape, material) in a rotating drum, a shaken box, a shear box, a landslide and a moving sand picture in liquid. Watch the sizes sort: small grains in the core of the drum, the Brazil nut rising, big stones on top of a slide.",
@@ -1591,6 +1603,19 @@
      ]
     },
     {
+     "demo": "osmosis",
+     "title": "Diffusion and Osmosis",
+     "desc": "Watch molecules spread as the square root of time and leak through a still layer, then let water cross a membrane: osmotic pressure lifts a column in a U tube, swells a red blood cell until it bursts, and moves fluid out of a capillary and back in.",
+     "tags": [
+      "diffusion",
+      "Fick's law",
+      "osmotic pressure",
+      "van 't Hoff",
+      "tonicity",
+      "Starling forces"
+     ]
+    },
+    {
      "demo": "heat-engines",
      "title": "Heat Engine Cycles",
      "desc": "Run an ideal gas around Carnot, Otto, Diesel, Stirling and Brayton cycles, or drag your own: the PV loop's area is the net work, a T–S diagram shows the heat, and no engine beats the Carnot limit. Reverse it for a refrigerator.",
@@ -1854,6 +1879,18 @@
      ]
     },
     {
+     "demo": "nerve-signals",
+     "title": "Nerve Signals and the ECG",
+     "desc": "An axon as a leaky cable: find the threshold, time an action potential between two electrodes, and see myelin make it jump from node to node, so its speed grows with the diameter instead of its square root. Then watch the heart's turning dipole draw ECG leads I, II and III.",
+     "tags": [
+      "action potential",
+      "Nernst potential",
+      "myelin",
+      "ECG",
+      "Einthoven's triangle"
+     ]
+    },
+    {
      "demo": "wire-force",
      "title": "Force on a Current",
      "desc": "Weigh the force on a current carrying wire with a magnet on a balance and find B, then see the forces on a loop make a torque, and add a commutator to build a DC motor.",
@@ -2052,6 +2089,18 @@
       "echo ranging",
       "acoustic impedance",
       "Doppler flow"
+     ]
+    },
+    {
+     "demo": "hearing",
+     "title": "Hearing and the Ear",
+     "desc": "Take your own audiogram with headphones, compare phons with decibels on the ISO 226 equal loudness contours, follow a tone to its place on the uncoiled cochlea, and see the 4 kHz notch that noise leaves behind.",
+     "tags": [
+      "audiogram",
+      "phon",
+      "equal loudness contours",
+      "cochlea",
+      "hearing loss"
      ]
     }
    ]

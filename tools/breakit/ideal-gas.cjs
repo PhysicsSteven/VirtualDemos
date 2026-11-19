@@ -33,6 +33,7 @@ module.exports = {
     { name: "mirror walls and a resting piston: the total kinetic energy is constant (elastic collisions)", fn: `(() => { ${common}
       if (!one || !mirror) { window.__bke = null; return true; }
       let E = 0; for (let i = 0; i < N; i++) E += 0.5 * G.m[i] * (G.vx[i] ** 2 + G.vy[i] ** 2);
+      if (G.big) E += 0.5 * G.big.m * (G.big.vx ** 2 + G.big.vy ** 2);   /* Brownian motion: the large disk's energy too */
       const sig = [N, G.wallX, G.wallTarget, document.getElementById('tIn').value, G.m[0], G.pistonMax, G.wallT.join()].join('|'), w = window.__bke;
       window.__bke = { sig, E, gen: G.gen };
       /* Reset (and a setup) draws a fresh gas at the set temperature and counts G.gen up: a new gas, not drift */
@@ -42,6 +43,7 @@ module.exports = {
     { name: "walls held at a temperature, piston at rest: the energy change of the gas equals the heat Q the walls gave", fn: `(() => { ${common}
       if (!one || mirror) { window.__bkq = null; return true; }
       let E = 0; for (let i = 0; i < N; i++) E += 0.5 * G.m[i] * (G.vx[i] ** 2 + G.vy[i] ** 2);
+      if (G.big) E += 0.5 * G.big.m * (G.big.vx ** 2 + G.big.vy ** 2);   /* Brownian motion: the large disk's energy too */
       const Q = G.heat[0] + G.heat[1] + G.heat[2] + G.heat[3];
       const sig = [N, G.wallX, G.wallTarget, document.getElementById('tIn').value, G.m[0], G.pistonMax, G.wallT.join()].join('|'), w = window.__bkq;
       window.__bkq = { sig, E, Q, gen: G.gen };
@@ -93,11 +95,46 @@ module.exports = {
       return bad.length ? bad.join('; ') : true; })()` },
     { name: "a setup opens at its stated temperature (before it has run)", fn: `(() => { ${common}
       const b = document.querySelector('#presets [aria-pressed=true]'); if (!one || !b || G.lt > 2000) return true;
-      const want = { relax: 300, hotcold: 400, compress: 300, dilute: 300, cold: 0.01, walls: 300, flow: 250, real: 300 }[b.dataset.p];
+      const want = { relax: 300, hotcold: 400, compress: 300, dilute: 300, cold: 0.01, walls: 300, flow: 250, real: 300, brown: 300 }[b.dataset.p];
       const tol = G.wallT.some((t) => t > 0) ? 0.03 : 1e-6;
       return near(I.stats.T, want, tol) || G.wallX !== 50 ? true : b.dataset.p + ' opens at T = ' + I.stats.T + ' K, stated ' + want + ' K'; })()` },
+    { name: "Brownian motion: the large disk stays in the box and overlaps no molecule; k = γD/T and N_A = R/k as shown; the real case D = kT/(6πηa) = 0.429 µm²/s", fn: `(() => { ${common}
+      const B = G.big; if (!I.brown) return B ? 'a large disk is left over outside Brownian motion' : true;
+      if (!B) return 'Brownian motion has no large disk';
+      if (![B.x, B.y, B.vx, B.vy, B.ux, B.uy].every(Number.isFinite)) return 'the large disk has a non finite state';
+      if (B.x < B.r - 1e-6 || B.x > G.wallX - B.r + 1e-6 || B.y < B.r - 1e-6 || B.y > 30 - B.r + 1e-6) return 'the large disk at (' + B.x + ', ' + B.y + ') is outside the box';
+      if (Math.abs(B.r - 2) > 1e-12 || Math.abs(B.m / 6.63352e-26 / 60 - 1) > 1e-4) return 'the large disk is not 4.0 nm across and 60 argon masses';
+      for (let i = 0; i < N; i++) if (Math.hypot(G.px[i] - B.x, G.py[i] - B.y) < B.r + G.r[i] - 0.05) return 'molecule ' + i + ' sits inside the large disk';
+      if (document.body.classList.contains('blind')) return true;
+      const bad = [], F = I.BR.fit;
+      if (rd('bDisk') !== '4.0 nm across, 2,397 u' && !rd('bDisk').startsWith('4.0 nm')) bad.push('disk shows ' + rd('bDisk'));
+      if (!rd('bReal').includes('0.429 µm²/s') || !rd('bReal').includes('6.02 × 10²³')) bad.push('the real case reads ' + rd('bReal'));
+      if (F && isFinite(F.D) && F.D > 0) {   /* the readouts are written the moment the fit is made, from it */
+        const k = F.gamma * F.D * 1e-6 / I.BR.T, kS = rd('bK').match(/^([\\d.]+) × 10⁻([⁰¹²³⁴⁵⁶⁷⁸⁹]+)/);
+        const sup = (t) => +[...t].map((ch) => '⁰¹²³⁴⁵⁶⁷⁸⁹'.indexOf(ch)).join('');
+        if (!kS) bad.push('k shows ' + rd('bK'));
+        else if (!near(+kS[1] * 10 ** -sup(kS[2]), k, 0.006)) bad.push('k shows ' + rd('bK') + ', γD/T = ' + k);
+        const na = rd('bNA').match(/^([\\d.]+) × 10([⁰¹²³⁴⁵⁶⁷⁸⁹]+)/);
+        if (!na) bad.push('N_A shows ' + rd('bNA'));
+        else if (!near(+na[1] * 10 ** sup(na[2]), 6.02214076e23 * ${KB} / k, 0.006)) bad.push('N_A shows ' + rd('bNA') + ', R/k = ' + 6.02214076e23 * ${KB} / k);
+        if (k < ${KB} * 0.2 || k > ${KB} * 3) bad.push('k = ' + k + ' is far from the Boltzmann constant');
+      }
+      return bad.length ? bad.join('; ') : true; })()` },
   ],
   steps: [
+    { name: 'Brownian motion: fast playback for a long run, then N, T, the gas and Reset mid run, Pause and Step, slow playback, then another setup and back', fn: `(async () => {
+      const pause = (ms) => new Promise((r) => setTimeout(r, ms)), $ = (id) => document.getElementById(id);
+      const set = (id, v) => { $(id).value = v; $(id).dispatchEvent(new Event('input', { bubbles: true })); };
+      document.querySelector('#presets [data-p=brown]').click(); await pause(300);
+      if ($('play').textContent === 'Play') $('play').click();
+      document.querySelector('#brownRate [data-r="2000"]').click(); await pause(9000);
+      set('nIn', 400); await pause(1500); set('nIn', 20); await pause(1000); set('tIn', 1000); await pause(1000); set('tIn', 0); await pause(800);
+      document.querySelector('#gasChips [data-gas=h2]').click(); await pause(1000); document.querySelector('#gasChips [data-gas=co2]').click(); await pause(800);
+      $('reset').click(); await pause(1500); $('play').click(); await pause(300); $('play').click(); await pause(1500);
+      document.querySelector('#brownRate [data-r="200"]').click(); await pause(1000);
+      document.querySelector('#presets2 [data-p=mix]').click(); await pause(500); document.querySelector('#presets [data-p=brown]').click(); await pause(500);
+      document.querySelector('#presets [data-p=relax]').click(); await pause(500);
+    })()` },
     { name: 'molecule sizes: Real molecule sizes, every gas at real size, crowd to 400 and squeeze, cold and hot, back to All 0.50 nm, then a setup', fn: `(async () => {
       const pause = (ms) => new Promise((r) => setTimeout(r, ms)), $ = (id) => document.getElementById(id);
       const set = (id, v) => { $(id).value = v; $(id).dispatchEvent(new Event('input', { bubbles: true })); };

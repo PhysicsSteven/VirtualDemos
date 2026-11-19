@@ -2,7 +2,7 @@
 // States of Matter: argon units, the molecular dynamics (energy and enthalpy bookkeeping, phases), the beaker heating curve.
 const assert = require('node:assert');
 const { core } = require('./demo_source.cjs');
-const c = core('states-of-matter', 'AR,TAU_PS,KJMOL,ATM,POW,mdMake,mdStep,mdKE,mdTemp,mdEnthalpy,mdBonds,mdPhases,SUBSTANCES,stages,beakerState,coveredState,beakerCSV,atomsCSV');
+const c = core('states-of-matter', 'AR,TAU_PS,KJMOL,ATM,POW,mdMake,mdStep,mdKE,mdTemp,mdEnthalpy,mdBonds,mdPhases,SUBSTANCES,stages,beakerState,coveredState,beakerCSV,atomsCSV,PHASE,phaseAt,solveT,transitions,VAP_TAU,VAP_RATE,psat,vaporDensity,dewPoint,boilingPoint,isaPressure,vaporStep,airPressure');
 let n = 0;
 const near = (a, b, tol, w) => assert(Math.abs(a - b) <= tol * Math.abs(b), `${w || ''}: expected ${b}, got ${a}`);
 function group(name, f) { f(); n++; console.log('PASS', name); }
@@ -52,5 +52,55 @@ group('CSV headers for the worksheets', () => {
   assert.equal(b[b.indexOf('row,t_s,T_C,m_g') + 1], '1,10,-15.2,200.0');
   const a = c.atomsCSV([{ t: '0.100', Q: '1.00', T: '60.0', U: '-5.50', s: '80', l: '20', v: '0' }], { N: 432, P: 17 }).trim().split('\n');
   assert.equal(a[a.indexOf('row,t_ns,Q_kJ_per_mol,T_K,U_kJ_per_mol,solid_pct,liquid_pct,vapor_pct') + 1], '1,0.100,1.00,60.0,-5.50,80,20,0');
+});
+group('phase diagram: the reference equations meet at the triple and critical points and give the measured fixed points', () => {
+  const W = c.PHASE.water, C = c.PHASE.co2;
+  /* water (IAPWS): every boundary passes through the triple point; the vapor pressure ends at the critical point */
+  near(W.sat(273.16), 611.657, 1e-6, 'sat at Tt'); near(W.sub(273.16), 611.657, 1e-12, 'sub at Tt'); near(W.melt(273.16), 611.657, 1e-12, 'melt at Tt'); near(W.sat(647.096), 22.064e6, 1e-12, 'sat at Tc');
+  /* boiling at 1 atm 373.124 K (ITS-90), 2.3392 kPa at 20 C, ice at -20 C 103.26 Pa, ice Ih meets ice III at 251.165 K and 208.566 MPa */
+  near(c.boilingPoint(101325), 373.124, 2e-6, 'normal boiling point'); near(W.sat(293.15), 2339.2, 1e-4, 'p_sat 20 C'); near(W.sub(253.15), 103.24, 1e-3, 'ice -20 C');
+  near(W.melt(251.165), 208.566e6, 1e-5, 'Ih-III'); near(c.transitions('water', 101325).melt, 273.1525, 2e-7, 'ice melts 0.0025 C at 1 atm');
+  /* the melting line leans left: more pressure, lower melting point (about -0.0074 K per atm) */
+  const d = c.transitions('water', 101325 * 101).melt - c.transitions('water', 101325).melt; assert(d < -0.7 && d > -0.8, 'melting point drop over 100 atm ' + d);
+  /* carbon dioxide (Span and Wagner 1996) */
+  near(C.sat(216.592), 0.51795e6, 1e-4, 'co2 sat at Tt'); near(C.sub(216.592), 0.51795e6, 1e-12); near(C.melt(216.592), 0.51795e6, 1e-12); near(C.sat(304.1282), 7.3773e6, 1e-12);
+  near(c.transitions('co2', 101325).subl, 194.686, 2e-5, 'dry ice sublimes at -78.46 C'); near(C.sat(273.15), 3.4851e6, 1e-4, 'co2 vapor pressure at 0 C');
+  assert.strictEqual(c.transitions('co2', 101325).boil, null); assert.strictEqual(c.transitions('co2', 101325).melt, null);
+  /* phases on each side of each boundary */
+  assert.strictEqual(c.phaseAt('water', 263.15, 101325), 'solid'); assert.strictEqual(c.phaseAt('water', 300, 101325), 'liquid'); assert.strictEqual(c.phaseAt('water', 400, 101325), 'gas');
+  assert.strictEqual(c.phaseAt('water', 263.15, 200e6), 'liquid', 'ice melts under pressure'); assert.strictEqual(c.phaseAt('water', 263.15, 100), 'gas');
+  assert.strictEqual(c.phaseAt('water', 680, 30e6), 'super'); assert.strictEqual(c.phaseAt('water', 680, 1e6), 'gas');
+  assert.strictEqual(c.phaseAt('co2', 180, 101325), 'solid'); assert.strictEqual(c.phaseAt('co2', 250, 101325), 'gas'); assert.strictEqual(c.phaseAt('co2', 250, 5e6), 'liquid');
+  assert.strictEqual(c.phaseAt('co2', 300, 7e8), 'solid'); assert.strictEqual(c.phaseAt('co2', 320, 2e7), 'super');
+  /* above the critical pressure nothing boils; below the triple point pressure the solid sublimes */
+  assert.strictEqual(c.transitions('water', 30e6).boil, null); assert(c.transitions('water', 100).subl < 273.16 && c.transitions('water', 100).melt === null);
+  /* every transition temperature sits on its boundary */
+  for (const [sub, P] of [['water', 1e3], ['water', 101325], ['water', 1e7], ['co2', 1e6], ['co2', 1e8], ['water', 10], ['co2', 1e4]]) {
+    const tr = c.transitions(sub, P), S = c.PHASE[sub];
+    if (tr.melt != null) near(S.melt(tr.melt), P, 1e-9, sub + ' melt'); if (tr.boil != null) near(S.sat(tr.boil), P, 1e-9, sub + ' boil'); if (tr.subl != null) near(S.sub(tr.subl), P, 1e-9, sub + ' subl');
+  }
+});
+group('vapor: the jar saturates at p_sat, humidity and dew point, boiling at the outside pressure (altitude, pressure cooker)', () => {
+  /* ideal gas vapor density: 17.29 g/m3 saturated at 20 C */
+  near(c.vaporDensity(c.psat(293.15), 293.15) * 1000, 17.29, 1e-3);
+  /* dew point inverts p_sat; over ice below the triple point */
+  near(c.dewPoint(c.psat(288.15)), 288.15, 1e-9); near(c.dewPoint(c.psat(263.15)), 263.15, 1e-9); assert(Number.isNaN(c.dewPoint(0)));
+  /* standard atmosphere: Denver (1609 m) 83.4 kPa, boils 94.6 C; Everest (8849 m) 31.4 kPa, boils 70.2 C; pressure cooker 2 atm, 120.6 C */
+  near(c.isaPressure(0), 101325, 1e-12); near(c.isaPressure(1609), 83431, 1e-4); near(c.isaPressure(8849), 31439, 1e-4);
+  near(c.boilingPoint(c.isaPressure(1609)) - 273.15, 94.62, 1e-3); near(c.boilingPoint(c.isaPressure(8849)) - 273.15, 70.18, 1e-3); near(c.boilingPoint(2 * 101325) - 273.15, 120.63, 1e-3);
+  /* sealed jar of dry air at 20 C: p climbs as 1 - exp(-t/tau) and never passes p_sat; the air pressure follows T */
+  const env = { sealed: true, Pout: 101325, Ts: 293.15, Ps: 101325 }, st = { T: 293.15, Tset: 293.15, p: 0, boil: false };
+  for (let i = 0; i < 100; i++) c.vaporStep(st, c.VAP_TAU / 100, env);
+  near(st.p, c.psat(293.15) * (1 - Math.exp(-1)), 1e-9, 'one time constant');
+  for (let i = 0; i < 4000; i++) c.vaporStep(st, 0.01, env); near(st.p, c.psat(293.15), 1e-6, 'saturated');
+  near(c.airPressure(env, 353.15), 101325 * 353.15 / 293.15, 1e-12);
+  /* cool it: T follows the thermostat at VAP_RATE, and the vapor follows p_sat down, the rest condensing as dew */
+  st.Tset = 278.15; let tmax = 0, dew = 0; for (let i = 0; i < 2000; i++) { c.vaporStep(st, 0.01, env); tmax = Math.max(tmax, st.p / c.psat(st.T)); if (st.cond) dew++; }
+  near(st.T, 278.15, 1e-12); assert(tmax <= 1 + 1e-12, 'relative humidity above 100 %: ' + tmax); assert(dew > 500, 'dew while cooling'); near(st.p, c.psat(278.15), 1e-12);
+  /* sealed: never boils even at 130 C; open: T stops at the boiling point and it boils */
+  st.Tset = 403.15; for (let i = 0; i < 10000; i++) c.vaporStep(st, 0.01, env); assert(!st.boil && st.T > 403.14 && c.airPressure(env, st.T) + st.p > c.psat(st.T));
+  const op = { T: 293.15, Tset: 383.15, p: 0, boil: false }, envO = { sealed: false, Pout: c.isaPressure(8849), Ts: 293.15, Ps: 101325 };
+  for (let i = 0; i < 6000; i++) c.vaporStep(op, 0.01, envO); assert(op.boil); near(op.T, c.boilingPoint(envO.Pout), 1e-12); near(op.p, envO.Pout, 1e-6, 'vapor pressure = outside pressure while boiling');
+  op.Tset = 333.15; c.vaporStep(op, 0.01, envO); assert(!op.boil, 'stops boiling when cooled');
 });
 console.log(`${n} states of matter test groups passed`);

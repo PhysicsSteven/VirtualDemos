@@ -3,7 +3,7 @@
 Moved from CLAUDE.md on 2026-11-01; checks moved to `docs/checks.md` on 2026-11-15.
 
 - `python3 tools/notes.py <demo> --keys <TeacherKeys clone>/demo-keys` then `python3 tools/notes.py` (notes from `notes/src/<demo>.md`).
-- `python3 tools/courses.py` (course pages, topic pages, openstax.html, openstax-astronomy.html (from `curriculum/astronomy-map.json`) and index from the map, catalog and topics; `--check` to verify). It also writes `search.js`, `404.html`
+- `python3 tools/courses.py` (course pages, topic pages, openstax.html, openstax-astronomy.html, openstax-college-physics.html and openstax-hs-physics.html (from `curriculum/astronomy-map.json`, `college-physics-map.json` and `hs-physics-map.json`; the `BOOKS` list) and index from the map, catalog and topics; `--check` to verify). It also writes `search.js`, `404.html`
   and `demos/lib/nav.js` (the breadcrumb and previous and next demo links on every demo, in course page order), so rerun it after any map or catalog change.
 - `python3 tools/canvas.py` (Canvas course import files, IMS Common Cartridge 1.3, one per course, in `_build/canvas/`, from the map and
   catalog like the course pages; rerun after a map, catalog or handout change; `tools/canvas_check.rb` runs Canvas's own import code on one).

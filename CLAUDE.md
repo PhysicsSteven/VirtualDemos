@@ -75,6 +75,8 @@ the decisions. This file holds the rules; detail lives in the files it points to
   Vol 1 ch 1 to 15, Physics II follows the PHYS 202 syllabus (`docs/syllabi.md`), Acoustics Vol 1 ch 16 to 17, Thermodynamics
   Vol 2 ch 1 to 4, Modern Physics Vol 3 ch 5 to 11, Astronomy holds every astronomy demo. OpenStax Astronomy 2e has its own
   map, `curriculum/astronomy-map.json` (`openstax-astronomy.html`): a new astronomy demo or worksheet goes into its sections.
+  College Physics 2e (also the AP edition) and high school Physics have maps the same way (`college-physics-map.json`,
+  `hs-physics-map.json`; `BOOKS` in `tools/courses.py`): put a new demo or worksheet into their sections too.
 - Astro 2203 (`astro-2203.html`) holds only its subset, in schedule order (`INCLUDED` in `tools/courses.py`); a new demo used only
   there needs a `MERGE_PLACE` entry. PHYS 202 (`phys-202.html`, unlisted) follows Steve's 14 lectures (`SAME_AS`).
 - A demo can sit in several courses (each in its `course`); `later` marks one in no course. Moving a demo is a map change only.

@@ -117,6 +117,7 @@ const HYPHEN_ALLOW = new Set([      /* lower case; matched ignoring case */
   'yo-yo', 'yo-yos',                    /* the toy's name */
   'blu-ray',                            /* product name */
   'astronomy-engine', 'stellarium-web', 'hyg-nearby',  /* names of software and data sets, credited as published */
+  'non-inertial', 'high-temperature',   /* OpenStax College Physics 2e section titles (6.4, 34.6), quoted as published */
 ]);
 rule('hyphens', 'No hyphens in compound modifiers in student facing text ("time constant", "white dwarf", "nonrotating"). '
   + 'Exceptions: a one letter part (X-ray, f-number), capitalized names and titles, and the ALLOW list.', 'student facing text', () => {
@@ -197,7 +198,16 @@ const CONST_SKIP = new Set(['g', 'g0', 'T0', 'Tsun', 'Ssun', 'MbolSun', 'MVsun',
   /* Gravity values (2026-11-17) near unrelated numbers: the LIGO arm 3994.5 m near round counts (4000 steps), Ω_* = 0.0027 with two figures
      near the sRGB 0.0031308, Mercury's elements near data table values (μ of water 0.2059, 87.73 K); test_gravitational-waves.cjs,
      test_equivalence-gravity.cjs and test_early-universe.cjs check the demos' copies equal them */
-  'Larm', 'OmStar', 'aMerc', 'eMerc', 'PMerc']);
+  'Larm', 'OmStar', 'aMerc', 'eMerc', 'PMerc',
+  /* Surface tensions, contact angles and diffusion constants from College Physics 2e Tables 11.3, 11.4 and 12.2 (2026-11-19) have one to
+     three figures (0.050, 90°, 6.7e-10), so they sit near countless unrelated numbers; test_surface-tension.cjs and test_osmosis.cjs check
+     the demos' copies equal them */
+  'gamWater0', 'gamWater20', 'gamWater100', 'gamSoap', 'gamEthanol', 'gamGlycerin', 'gamHg', 'gamOlive', 'gamTissue', 'gamBlood',
+  'gamPlasma', 'thHgGlass', 'thWaterParaffin', 'thWaterSilver', 'DH2air', 'DO2air', 'DO2water', 'DGlucose', 'DHemoglobin', 'DDNA',
+  /* Iref = 1e-12 W/m² is a defined reference with one figure, so every 1e-13 to 1e-11 value matched it; rhoBlood = 1050 kg/m³ is a
+     typical value with three figures, near Jupiter's mass ratio 1047.35 and a page number (1051). test_hearing.cjs and test_fluids.cjs
+     check the demos' copies (2026-11-19) */
+  'Iref', 'rhoBlood']);
 rule('constants', 'Physical constants in demo code match demos/lib/constants.js (CODATA 2022, IAU, cited values), exactly or rounded.',
   'demos/*.html and demos/lib/*.js code', () => {
   const VDC = require(path.join(ROOT, 'demos/lib/constants.js')), T = Object.entries(VDC.table).filter(([k]) => !CONST_SKIP.has(k));

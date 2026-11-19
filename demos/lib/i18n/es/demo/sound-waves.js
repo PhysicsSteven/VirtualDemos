@@ -12,14 +12,14 @@ VDI18N.add('es', 'demo/sound-waves', {
   "punteado: compresiones, donde Δp es máximo y s = {#}",
 "Sound Waves and the Speed of Sound":
   "Ondas sonoras y la rapidez del sonido",
-"<a><span>←</span> <span>Two Speaker Interference</span></a><a><span>Resonators</span> <span>→</span></a>":
-  "<a><span>←</span> <span>Interferencia de dos bocinas</span></a><a><span>Resonadores</span> <span>→</span></a>",
+"<a><span>←</span> <span>Two Speaker Interference</span></a><a><span>From Rhythm to Pitch</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Interferencia de dos bocinas</span></a><a><span>Del ritmo a la altura</span> <span>→</span></a>",
 "Watch the air in a tube as a sound wave passes: each bit of air swings back and forth, and the pressure peaks where the air is squeezed together, a quarter cycle away from the largest displacement. Then time a clap between two microphones to measure the speed of sound.":
   "Observa el aire en un tubo cuando pasa una onda sonora: cada porción de aire oscila hacia adelante y hacia atrás, y la presión es máxima donde el aire se comprime, a un cuarto de ciclo del desplazamiento máximo. Luego cronometra una palmada entre dos micrófonos para medir la rapidez del sonido.",
 "v = √(γRT/M) · Δp_max = ρvω s_max":
   "v = √(γRT/M) · Δp_max = ρvω s_max",
-"Sound wave view: a tube of air drawn as dots that swing left and right, with graphs of displacement and pressure along the tube below. Time of flight view: a clap at the left, two microphones on a bench, and the two microphone traces with the timer. In 3D: a glass tube of air on a lab bench with the loudspeaker, signal generator and a probe microphone, or the clapper, two microphones and the recorder on a bench. Race view: lanes of different materials, all struck at the start at the same instant, with a person for scale; the board lists each lane's speed and arrival time. Space pauses; in the time of flight view, C claps; in the race view, Space strikes.":
-  "Vista de onda sonora: un tubo de aire dibujado como puntos que oscilan a izquierda y derecha, con gráficas del desplazamiento y la presión a lo largo del tubo abajo. Vista de tiempo de vuelo: una palmada a la izquierda, dos micrófonos en una mesa, y las dos trazas de los micrófonos con el cronómetro. En 3D: un tubo de vidrio con aire en una mesa de laboratorio con la bocina, el generador de señales y un micrófono sonda, o el aplaudidor, dos micrófonos y la grabadora en una mesa. Vista de carrera: carriles de distintos materiales, todos golpeados al inicio en el mismo instante, con una persona como escala; el tablero lista la rapidez y el tiempo de llegada de cada carril. Espacio pausa; en la vista de tiempo de vuelo, C da una palmada; en la vista de carrera, Espacio golpea.",
+"Sound wave view: a tube of air drawn as dots that swing left and right, with graphs of displacement and pressure along the tube below. Time of flight view: a clap at the left, two microphones on a bench, and the two microphone traces with the timer. In 3D: a glass tube of air on a lab bench with the loudspeaker, signal generator and a probe microphone, or the clapper, two microphones and the recorder on a bench. Race view: lanes of different materials, all struck at the start at the same instant, with a person for scale; the board lists each lane's speed and arrival time. Slinky view: a slinky shaken sideways above one pushed along, with a marked coil on each. Space pauses; in the time of flight view, C claps; in the race view, Space strikes; in the slinky view, P sends a pulse.":
+  "Vista de onda sonora: un tubo de aire dibujado como puntos que oscilan a izquierda y derecha, con gráficas del desplazamiento y la presión a lo largo del tubo abajo. Vista de tiempo de vuelo: una palmada a la izquierda, dos micrófonos en una mesa, y las dos trazas de los micrófonos con el cronómetro. En 3D: un tubo de vidrio con aire en una mesa de laboratorio con la bocina, el generador de señales y un micrófono sonda, o el aplaudidor, dos micrófonos y la grabadora en una mesa. Vista de carrera: carriles de distintos materiales, todos golpeados al inicio en el mismo instante, con una persona como escala; el tablero lista la rapidez y el tiempo de llegada de cada carril. Vista de resorte: un resorte sacudido de lado sobre otro empujado a lo largo, con una espira marcada en cada uno. Espacio pausa; en la vista de tiempo de vuelo, C da una palmada; en la vista de carrera, Espacio golpea; en la vista de resorte, P envía un pulso.",
 "The gas is air (dry).":
   "El gas es aire (seco).",
 "Temperature {#} °C.":
@@ -42,12 +42,16 @@ VDI18N.add('es', 'demo/sound-waves', {
   "Tiempo de vuelo",
 "Race":
   "Carrera",
+"Slinky":
+  "Resorte",
 "At the start":
   "Al inicio",
 "Whole course":
   "Todo el recorrido",
 "Strike":
   "Golpear",
+"Send a pulse":
+  "Enviar un pulso",
 "3D or flat":
   "3D o plano",
 "Drag microphone A":
@@ -134,6 +138,18 @@ VDI18N.add('es', 'demo/sound-waves', {
   "Material misterioso",
 "New mystery material":
   "Nuevo material misterioso",
+"Wave on the slinkies":
+  "Onda en los resortes",
+"Pulse":
+  "Pulso",
+"Periodic wave":
+  "Onda periódica",
+"Hand frequency f":
+  "Frecuencia de la mano f",
+"Hand amplitude A":
+  "Amplitud de la mano A",
+"Wave speed v":
+  "Rapidez de la onda v",
 "Unknown gas":
   "Gas desconocido",
 "New unknown gas":
@@ -148,6 +164,8 @@ VDI18N.add('es', 'demo/sound-waves', {
   "Un día frío, −{#} °C",
 "Race through materials":
   "Carrera a través de materiales",
+"Transverse and longitudinal":
+  "Transversal y longitudinal",
 "A {#} Hz tone in air at {#} °C: v = {#} m/s, so λ = v/f = {#} m and almost three wavelengths fit in the {#} m tube. The displacement is largest where the dots are evenly spaced; the pressure is largest where they bunch up, a quarter wavelength further on.":
   "Un tono de {#} Hz en aire a {#} °C: v = {#} m/s, así que λ = v/f = {#} m y caben casi tres longitudes de onda en el tubo de {#} m. El desplazamiento es máximo donde los puntos están espaciados uniformemente; la presión es máxima donde se amontonan, un cuarto de longitud de onda más adelante.",
 "In the time of flight view the Set up card fades while the clap travels and comes back when it has been timed (point at it or tab into it to bring it back sooner). You can also drag the microphones along the bench.":
@@ -176,8 +194,8 @@ VDI18N.add('es', 'demo/sound-waves', {
   "Registrar guarda el gas, la temperatura, d y el Δt del cronómetro de la última palmada. Δt en función de d a una temperatura es una recta que pasa por el origen con pendiente {#}/v.",
 "<span>Blind: hide v, λ and the predictions</span>":
   "<span>A ciegas: ocultar v, λ y las predicciones</span>",
-"Model: an ideal gas at {#} Pa, so v = √(γRT/M) and ρ = PM/(RT); dry air has γ = {#} and M = {#} g/mol, helium and argon γ = {#}/{#} with M = {#} and {#} g/mol; an unknown gas has γ = {#}, {#} or {#}/{#} and M between {#} and {#} g/mol. Humidity and the small departures of real gases from the ideal gas are left out. The wave is a plane harmonic wave of small amplitude, s = s_max cos(kx − ωt) with Δp = ρvω s_max sin(kx − ωt), and no loss. The drawing slows the motion to one cycle every {#} s and exaggerates the displacement (the scale is on the picture). Time of flight: the clap and the microphones are on one line; a two channel recorder samples at {#} kHz (chosen), its clock starts at a random point of a sample at each clap, and each channel triggers on the first sample at or after the sound arrives, so Δt is a whole number of samples ({#} sample = {#} μs). The drawn pulse ({#} kHz, dying away in {#} ms, falling off as {#}/r) is chosen. Race: a tap on a steel plate starts a short pulse in every lane at the same instant; each lane is {#} m wide and the pulse runs its length L at the material's speed of sound, arriving at t = L/v, with no loss or spreading. Air, helium and argon follow the ideal gas model at the card's temperature; the other speeds are measured values at the stated conditions (they do not follow the temperature on the card): gases at {#} °C and liquids at {#} °C from OpenStax University Physics Vol {#}, Table {#}; blood and bone from OpenStax College Physics §{#}; cork, lead, gold, concrete, brick, copper, Pyrex, steel, granite and aluminum from The Engineering ToolBox (longitudinal waves in bulk); glycerin, beryllium and diamond from Evident (Olympus) Material Sound Velocities. Real samples vary by several percent with composition and temperature; some older tables give diamond {#} m/s. Solids carry the bulk speed because the pulse is short compared with the lane's width; in a thin rod a solid carries sound at √(Y/ρ), slower (Table {#}'s {#} m/s for aluminum is that thin rod speed). Solids also carry slower shear waves; only the fastest, longitudinal pulse is shown. The people are {#} m tall. Simulated data.":
-  "Modelo: un gas ideal a {#} Pa, así que v = √(γRT/M) y ρ = PM/(RT); el aire seco tiene γ = {#} y M = {#} g/mol, el helio y el argón γ = {#}/{#} con M = {#} y {#} g/mol; un gas desconocido tiene γ = {#}, {#} o {#}/{#} y M entre {#} y {#} g/mol. Se omiten la humedad y las pequeñas desviaciones de los gases reales respecto del gas ideal. La onda es una onda armónica plana de amplitud pequeña, s = s_max cos(kx − ωt) con Δp = ρvω s_max sin(kx − ωt), y sin pérdidas. El dibujo ralentiza el movimiento a un ciclo cada {#} s y exagera el desplazamiento (la escala está en la imagen). Tiempo de vuelo: la palmada y los micrófonos están en una línea; una grabadora de dos canales muestrea a {#} kHz (valor elegido), su reloj empieza en un punto aleatorio de una muestra en cada palmada, y cada canal se dispara en la primera muestra en el momento en que llega el sonido o después, así que Δt es un número entero de muestras ({#} muestra = {#} μs). El pulso dibujado ({#} kHz, que se extingue en {#} ms y decae como {#}/r) es elegido. Carrera: un golpe en una placa de acero inicia un pulso corto en cada carril en el mismo instante; cada carril mide {#} m de ancho y el pulso recorre su longitud L a la rapidez del sonido del material, llegando en t = L/v, sin pérdidas ni dispersión. El aire, el helio y el argón siguen el modelo de gas ideal a la temperatura de la tarjeta; las demás rapideces son valores medidos en las condiciones indicadas (no siguen la temperatura de la tarjeta): gases a {#} °C y líquidos a {#} °C de OpenStax University Physics Vol {#}, Tabla {#}; sangre y hueso de OpenStax College Physics §{#}; corcho, plomo, oro, concreto, ladrillo, cobre, Pyrex, acero, granito y aluminio de The Engineering ToolBox (ondas longitudinales en el material macizo); glicerina, berilio y diamante de Evident (Olympus) Material Sound Velocities. Las muestras reales varían varios por ciento con la composición y la temperatura; algunas tablas más antiguas dan {#} m/s para el diamante. Los sólidos llevan la rapidez del material macizo porque el pulso es corto comparado con el ancho del carril; en una varilla delgada un sólido transmite el sonido a √(Y/ρ), más lento (los {#} m/s de la Tabla {#} para el aluminio son esa rapidez de varilla delgada). Los sólidos también transmiten ondas de corte más lentas; solo se muestra el pulso longitudinal, el más rápido. Las personas miden {#} m de alto. Datos simulados.",
+"Model: an ideal gas at {#} Pa, so v = √(γRT/M) and ρ = PM/(RT); dry air has γ = {#} and M = {#} g/mol, helium and argon γ = {#}/{#} with M = {#} and {#} g/mol; an unknown gas has γ = {#}, {#} or {#}/{#} and M between {#} and {#} g/mol. Humidity and the small departures of real gases from the ideal gas are left out. The wave is a plane harmonic wave of small amplitude, s = s_max cos(kx − ωt) with Δp = ρvω s_max sin(kx − ωt), and no loss. The drawing slows the motion to one cycle every {#} s and exaggerates the displacement (the scale is on the picture). Time of flight: the clap and the microphones are on one line; a two channel recorder samples at {#} kHz (chosen), its clock starts at a random point of a sample at each clap, and each channel triggers on the first sample at or after the sound arrives, so Δt is a whole number of samples ({#} sample = {#} μs). The drawn pulse ({#} kHz, dying away in {#} ms, falling off as {#}/r) is chosen. Race: a tap on a steel plate starts a short pulse in every lane at the same instant; each lane is {#} m wide and the pulse runs its length L at the material's speed of sound, arriving at t = L/v, with no loss or spreading. Air, helium and argon follow the ideal gas model at the card's temperature; the other speeds are measured values at the stated conditions (they do not follow the temperature on the card): gases at {#} °C and liquids at {#} °C from OpenStax University Physics Vol {#}, Table {#}; blood and bone from OpenStax College Physics §{#}; cork, lead, gold, concrete, brick, copper, Pyrex, steel, granite and aluminum from The Engineering ToolBox (longitudinal waves in bulk); glycerin, beryllium and diamond from Evident (Olympus) Material Sound Velocities. Real samples vary by several percent with composition and temperature; some older tables give diamond {#} m/s. Solids carry the bulk speed because the pulse is short compared with the lane's width; in a thin rod a solid carries sound at √(Y/ρ), slower (Table {#}'s {#} m/s for aluminum is that thin rod speed). Solids also carry slower shear waves; only the fastest, longitudinal pulse is shown. The people are {#} m tall. Slinky: two slinkies {#} m long, drawn to scale and in real time; the hand moves the end coil by h(t), sideways on the top slinky and along the bottom one, and the coil whose rest place is x moves by h(t − x/v): the shape travels at v without changing. A pulse is one smooth shake, A sin²(πft) for one period {#}/f, so it is v/f long; a periodic wave is A sin({#}πft), with wavelength λ = v/f. Small amplitude, no loss, and the far ends are held by dampers that absorb the wave, so nothing reflects. A slinky stretched far past its relaxed length acts as a spring of zero relaxed length, for which the transverse and longitudinal wave speeds are equal, so one v serves both; the amplitude is held small enough that the coils of the pushed slinky never touch. Simulated data.":
+  "Modelo: un gas ideal a {#} Pa, así que v = √(γRT/M) y ρ = PM/(RT); el aire seco tiene γ = {#} y M = {#} g/mol, el helio y el argón γ = {#}/{#} con M = {#} y {#} g/mol; un gas desconocido tiene γ = {#}, {#} o {#}/{#} y M entre {#} y {#} g/mol. Se omiten la humedad y las pequeñas desviaciones de los gases reales respecto del gas ideal. La onda es una onda armónica plana de amplitud pequeña, s = s_max cos(kx − ωt) con Δp = ρvω s_max sin(kx − ωt), y sin pérdidas. El dibujo ralentiza el movimiento a un ciclo cada {#} s y exagera el desplazamiento (la escala está en la imagen). Tiempo de vuelo: la palmada y los micrófonos están en una línea; una grabadora de dos canales muestrea a {#} kHz (valor elegido), su reloj empieza en un punto aleatorio de una muestra en cada palmada, y cada canal se dispara en la primera muestra en el momento en que llega el sonido o después, así que Δt es un número entero de muestras ({#} muestra = {#} μs). El pulso dibujado ({#} kHz, que se extingue en {#} ms y decae como {#}/r) es elegido. Carrera: un golpe en una placa de acero inicia un pulso corto en cada carril en el mismo instante; cada carril mide {#} m de ancho y el pulso recorre su longitud L a la rapidez del sonido del material, llegando en t = L/v, sin pérdidas ni dispersión. El aire, el helio y el argón siguen el modelo de gas ideal a la temperatura de la tarjeta; las demás rapideces son valores medidos en las condiciones indicadas (no siguen la temperatura de la tarjeta): gases a {#} °C y líquidos a {#} °C de OpenStax University Physics Vol {#}, Tabla {#}; sangre y hueso de OpenStax College Physics §{#}; corcho, plomo, oro, concreto, ladrillo, cobre, Pyrex, acero, granito y aluminio de The Engineering ToolBox (ondas longitudinales en el material macizo); glicerina, berilio y diamante de Evident (Olympus) Material Sound Velocities. Las muestras reales varían varios por ciento con la composición y la temperatura; algunas tablas más antiguas dan {#} m/s para el diamante. Los sólidos llevan la rapidez del material macizo porque el pulso es corto comparado con el ancho del carril; en una varilla delgada un sólido transmite el sonido a √(Y/ρ), más lento (los {#} m/s de la Tabla {#} para el aluminio son esa rapidez de varilla delgada). Los sólidos también transmiten ondas de corte más lentas; solo se muestra el pulso longitudinal, el más rápido. Las personas miden {#} m de alto. Resorte: dos resortes de {#} m de largo, dibujados a escala y en tiempo real; la mano mueve la espira del extremo una cantidad h(t), de lado en el resorte de arriba y a lo largo en el de abajo, y la espira cuyo lugar de reposo es x se mueve h(t − x/v): la forma viaja a v sin cambiar. Un pulso es una sacudida suave, A sin²(πft) durante un periodo {#}/f, así que mide v/f de largo; una onda periódica es A sin({#}πft), con longitud de onda λ = v/f. Amplitud pequeña, sin pérdidas, y los extremos lejanos están sujetos por amortiguadores que absorben la onda, así que nada se refleja. Un resorte estirado mucho más allá de su longitud relajada se comporta como un resorte de longitud relajada cero, para el que las rapideces de las ondas transversal y longitudinal son iguales, así que una sola v sirve para ambas; la amplitud se mantiene lo bastante pequeña para que las espiras del resorte empujado nunca se toquen. Datos simulados.",
 "SIGNAL GENERATOR":
   "GENERADOR DE SEÑALES",
 "sine wave":
@@ -308,38 +326,58 @@ VDI18N.add('es', 'demo/sound-waves', {
   "Golpea para iniciar la carrera.",
 "Race clock {#} ms.":
   "Reloj de la carrera {#} ms.",
-"finish, {#} km":
-  "meta, {#} km",
-"listener":
-  "oyente",
-"Racing…":
-  "Corriendo…",
-"{#} m/s <span>Evident</span><br><span>arrived at {#} ms</span>":
-  "{#} m/s <span>Evident</span><br><span>llegó a los {#} ms</span>",
-"gas":
-  "gas",
-"liquid":
-  "líquido",
-"solid":
-  "sólido",
-"a {#} m person is {#} px tall at this scale (shown enlarged)":
-  "una persona de {#} m mide {#} px de alto a esta escala (mostrada ampliada)",
-"The pulse in lane {#} arrived at {#} ms.":
-  "El pulso del carril {#} llegó a los {#} ms.",
-"The race is running.":
-  "La carrera está en marcha.",
-"{#} m/s <span>Engineering ToolBox</span><br><span>arrived at {#} ms</span>":
-  "{#} m/s <span>Engineering ToolBox</span><br><span>llegó a los {#} ms</span>",
-"{#} m of the {#} m":
-  "{#} m de los {#} m",
-"{#} m/s <span>{#} °C, textbook Table {#}</span><br><span>L/v = {#} s</span>":
-  "{#} m/s <span>{#} °C, Tabla {#} del libro</span><br><span>L/v = {#} s</span>",
-"{#} m/s <span>Engineering ToolBox</span><br><span>L/v = {#} s</span>":
-  "{#} m/s <span>Engineering ToolBox</span><br><span>L/v = {#} s</span>",
-"press Strike · shown {#}× slower":
-  "pulsa Golpear · se muestra {#}× más lento",
-"{#} ms <span>(shown {#}× slower)</span>":
-  "{#} ms <span>(se muestra {#}× más lento)</span>",
+"Shaken sideways: a transverse wave":
+  "Sacudido de lado: una onda transversal",
+"coil moves across":
+  "la espira se mueve de lado",
+"wave moves":
+  "la onda avanza",
+"wave moves, v = {#} m/s":
+  "la onda avanza, v = {#} m/s",
+"Pushed along: a longitudinal wave":
+  "Empujado a lo largo: una onda longitudinal",
+"coil moves along":
+  "la espira se mueve a lo largo",
+"displacement u along the slinky now (up: across, top slinky; up: forward, bottom slinky)":
+  "desplazamiento u a lo largo del resorte ahora (arriba: de lado, resorte de arriba; arriba: hacia adelante, resorte de abajo)",
+"real time, drawn to scale":
+  "tiempo real, dibujado a escala",
+"real time, drawn to scale · t = {#} s":
+  "tiempo real, dibujado a escala · t = {#} s",
+"Wave":
+  "Onda",
+"pulse (one shake)":
+  "pulso (una sacudida)",
+"Period T = {#}/f":
+  "Periodo T = {#}/f",
+"Pulse length v/f":
+  "Longitud del pulso v/f",
+"Amplitude A":
+  "Amplitud A",
+"The wave has gone":
+  "La onda ha recorrido",
+"Marked coil, {#} m from the hand":
+  "Espira marcada, a {#} m de la mano",
+"{#} cm from its rest place":
+  "{#} cm de su lugar de reposo",
+"Coil motion and wave motion":
+  "Movimiento de la espira y movimiento de la onda",
+"<span>Top: each coil moves across, at right angles to the way the wave goes (transverse). Bottom: each coil moves back and forth along the way the wave goes (longitudinal). Either way the coil returns to its rest place: the wave carries energy along, not the coils.</span>":
+  "<span>Arriba: cada espira se mueve de lado, en ángulo recto con la dirección en que va la onda (transversal). Abajo: cada espira va y viene a lo largo de la dirección en que va la onda (longitudinal). En ambos casos la espira regresa a su lugar de reposo: la onda transporta energía, no las espiras.</span>",
+"Two long slinkies, each held at the left end by a hand. The top hand shakes its end sideways; the bottom hand pushes its end forward and back along the slinky.":
+  "Dos resortes largos, cada uno sostenido por una mano en el extremo izquierdo. La mano de arriba sacude su extremo de lado; la mano de abajo empuja su extremo hacia adelante y hacia atrás a lo largo del resorte.",
+"Each hand sends a pulse {#} m long.":
+  "Cada mano envía un pulso de {#} m de largo.",
+"The waves travel at {#} m/s. A marked coil on the top slinky moves across the slinky; the one on the bottom slinky moves along it. Both return to their rest places.":
+  "Las ondas viajan a {#} m/s. Una espira marcada en el resorte de arriba se mueve de lado; la del resorte de abajo se mueve a lo largo de él. Ambas regresan a sus lugares de reposo.",
+"<span>Stopwatch<small>No clock in this view</small></span>":
+  "<span>Cronómetro<small>No hay reloj en esta vista</small></span>",
+"Amplitude held to {#} cm, so the coils of the pushed slinky never touch.":
+  "Amplitud limitada a {#} cm, para que las espiras del resorte empujado nunca se toquen.",
+"periodic wave":
+  "onda periódica",
+"Each hand sends a periodic wave of {#} Hz, wavelength {#} m.":
+  "Cada mano envía una onda periódica de {#} Hz, con longitud de onda de {#} m.",
 "The same {#} Hz in helium: v = {#} m/s, so the wavelength is {#} m, nearly three times longer. Helium is so light that the same swing of the gas gives only about {#}% of the pressure (Δp_max goes as ρv).":
   "Los mismos {#} Hz en helio: v = {#} m/s, así que la longitud de onda es {#} m, casi tres veces mayor. El helio es tan ligero que la misma oscilación del gas da solo alrededor del {#}% de la presión (Δp_max va como ρv).",
 "clap":
@@ -354,8 +392,24 @@ VDI18N.add('es', 'demo/sound-waves', {
   "desconocido",
 "<span>hidden: unknown gas</span>":
   "<span>oculto: gas desconocido</span>",
+"The gas is unknown.":
+  "El gas es desconocido.",
+"The speed of sound is hidden.":
+  "La rapidez del sonido está oculta.",
+"The predicted time is hidden.":
+  "El tiempo predicho está oculto.",
+"gas":
+  "gas",
+"liquid":
+  "líquido",
+"solid":
+  "sólido",
+"a {#} m person is {#} px tall at this scale (shown enlarged)":
+  "una persona de {#} m mide {#} px de alto a esta escala (mostrada ampliada)",
 "Six lanes {#} km long, all tapped at the same instant, in real time. The pulse in diamond arrives after {#} s and the one in steel after {#} s, when the sound in air has gone only {#} m; air takes {#} s. Change the lanes, the course or the playback speed, then strike again. A mystery material hides its name and speed: time it and look it up.":
   "Seis carriles de {#} km de largo, todos golpeados en el mismo instante, en tiempo real. El pulso en el diamante llega después de {#} s y el del acero después de {#} s, cuando el sonido en el aire ha recorrido solo {#} m; el aire tarda {#} s. Cambia los carriles, el recorrido o la velocidad de reproducción, y golpea otra vez. Un material misterioso oculta su nombre y su rapidez: cronométralo y búscalo.",
+"Two long slinkies, each held by a hand. The top hand shakes its end sideways once; the bottom hand pushes its end forward and back once, the same motion along the slinky. Each pulse is {#} m long and runs along at v = {#} m/s, taking {#} s to cross the slinky, but the marked red coil only moves a little and comes back to where it was: on the top slinky it moves across the direction the wave goes (transverse), on the bottom one along it (longitudinal). Send more pulses, or switch to Periodic wave and find the wavelength λ = v/f. Sound in air is a longitudinal wave.":
+  "Dos resortes largos, cada uno sostenido por una mano. La mano de arriba sacude su extremo de lado una vez; la mano de abajo empuja su extremo hacia adelante y hacia atrás una vez, el mismo movimiento pero a lo largo del resorte. Cada pulso mide {#} m de largo y avanza a v = {#} m/s, y tarda {#} s en cruzar el resorte, pero la espira roja marcada solo se mueve un poco y regresa a donde estaba: en el resorte de arriba se mueve de lado respecto a la dirección en que va la onda (transversal), en el de abajo a lo largo de ella (longitudinal). Envía más pulsos, o cambia a Onda periódica y encuentra la longitud de onda λ = v/f. El sonido en el aire es una onda longitudinal.",
 "{#} Argon":
   "{#} Argón",
 "Lane {#}: Argon":
@@ -366,6 +420,8 @@ VDI18N.add('es', 'demo/sound-waves', {
   "{#} Dióxido de carbono",
 "Lane {#}: Carbon dioxide":
   "Carril {#}: Dióxido de carbono",
+"{#} m/s <span>{#} °C, textbook Table {#}</span><br><span>L/v = {#} s</span>":
+  "{#} m/s <span>{#} °C, Tabla {#} del libro</span><br><span>L/v = {#} s</span>",
 "Lane {#}, Carbon dioxide: {#} m/s.":
   "Carril {#}, Dióxido de carbono: {#} m/s.",
 "{#} Oxygen":
@@ -418,6 +474,8 @@ VDI18N.add('es', 'demo/sound-waves', {
   "{#} Corcho",
 "Lane {#}: Cork":
   "Carril {#}: Corcho",
+"{#} m/s <span>Engineering ToolBox</span><br><span>L/v = {#} s</span>":
+  "{#} m/s <span>Engineering ToolBox</span><br><span>L/v = {#} s</span>",
 "Lane {#}, Cork: {#} m/s.":
   "Carril {#}, Corcho: {#} m/s.",
 "{#} Lead (rolled)":
@@ -484,38 +542,90 @@ VDI18N.add('es', 'demo/sound-waves', {
   "<span>oculto: misterio</span><br><span>golpea para cronometrarlo</span>",
 "Lane {#}, Mystery material: the speed is hidden.":
   "Carril {#}, material misterioso: la rapidez está oculta.",
-"The last mystery material was {name}, v = {v} m/s. A new one is in its lane.":
-  "El último material misterioso era {name}, v = {v} m/s. Hay uno nuevo en su carril.",
-"The last mystery material was granite, v = {#} m/s. A new one is in its lane.":
-  "El último material misterioso fue granito, v = {#} m/s. Hay uno nuevo en su carril.",
+"Racing…":
+  "Corriendo…",
+"{#} m/s <span>Evident</span><br><span>arrived at {#} ms</span>":
+  "{#} m/s <span>Evident</span><br><span>llegó a los {#} ms</span>",
+"{#} m/s <span>Engineering ToolBox</span><br><span>arrived at {#} ms</span>":
+  "{#} m/s <span>Engineering ToolBox</span><br><span>llegó a los {#} ms</span>",
+"The pulse in lane {#} arrived at {#} ms.":
+  "El pulso del carril {#} llegó a los {#} ms.",
+"The race is running.":
+  "La carrera está en marcha.",
+"A new mystery material is in its lane.":
+  "Hay un material misterioso nuevo en su carril.",
 "A new unknown gas fills the room.":
   "Un nuevo gas desconocido llena el cuarto.",
 "a {#} m person is {#} px tall":
   "una persona de {#} m mide {#} px de alto",
 "at this scale (shown enlarged)":
   "a esta escala (mostrada ampliada)",
-"The gas is unknown.":
-  "El gas es desconocido.",
-"The speed of sound is hidden.":
-  "La rapidez del sonido está oculta.",
 "The wavelength is hidden.":
   "La longitud de onda está oculta.",
 "The pressure amplitude and the sound level are hidden.":
   "La amplitud de presión y el nivel de sonido están ocultos.",
-"The predicted time is hidden.":
-  "El tiempo predicho está oculto.",
-"<span>hidden: mystery</span><br><span>on its way</span>":
-  "<span>oculto: misterio</span><br><span>en camino</span>",
-"{#} m/s <span>{#} °C, textbook Table {#}</span><br><span>arrived at {#} ms</span>":
-  "{#} m/s <span>{#} °C, tabla {#} del libro de texto</span><br><span>llegó a los {#} ms</span>",
-"A race of sound pulses along {#} lanes of different materials, each {#} m long, all struck at the same instant.":
-  "Una carrera de pulsos de sonido por {#} carriles de distintos materiales, cada uno de {#} m de largo, todos golpeados en el mismo instante.",
+"displacement u now":
+  "desplazamiento u ahora",
 "The unknown gas had v = {#} m/s at {#} °C (γ = {#}, M = {#} g/mol).":
   "El gas desconocido tenía v = {#} m/s a {#} °C (γ = {#}, M = {#} g/mol).",
 "The gas is helium.":
   "El gas es helio.",
 "Temperature -{#} °C.":
   "Temperatura −{#} °C.",
+"finish, {#} km":
+  "meta, {#} km",
+"listener":
+  "oyente",
+"{#} m/s <span>{#} °C, textbook Table {#}</span><br><span>arrived at {#} ms</span>":
+  "{#} m/s <span>{#} °C, tabla {#} del libro de texto</span><br><span>llegó a los {#} ms</span>",
+"{#} s <span>(real time)</span>":
+  "{#} s <span>(tiempo real)</span>",
+"{#} m/s <span>ideal gas model</span><br><span>arrived at {#} ms</span>":
+  "{#} m/s <span>modelo de gas ideal</span><br><span>llegó a los {#} ms</span>",
+"Race clock {#} s.":
+  "Reloj de la carrera {#} s.",
+"all arrived · real time":
+  "todos llegaron · tiempo real",
+"Strike again":
+  "Golpear de nuevo",
+"{#} m/s <span>ideal gas model</span><br><span>arrived at {#} s</span>":
+  "{#} m/s <span>modelo de gas ideal</span><br><span>llegó a los {#} s</span>",
+"The pulse in lane {#} arrived at {#} s.":
+  "El pulso del carril {#} llegó a los {#} s.",
+"The race is over.":
+  "La carrera terminó.",
+"press Strike · shown {#}× slower":
+  "pulsa Golpear · se muestra {#}× más lento",
+"shown {#}× slower":
+  "se muestra {#}× más lento",
+"{#} ms <span>(shown {#}× slower)</span>":
+  "{#} ms <span>(se muestra {#}× más lento)</span>",
+"<span>hidden: mystery</span><br><span>on its way</span>":
+  "<span>oculto: misterio</span><br><span>en camino</span>",
+"{#} m of the {#} m":
+  "{#} m de los {#} m",
+"A race of sound pulses along {#} lanes of different materials, each {#} m long, all struck at the same instant.":
+  "Una carrera de pulsos de sonido por {#} carriles de distintos materiales, cada uno de {#} m de largo, todos golpeados en el mismo instante.",
+"<span>hidden: mystery</span><br><span>arrived at {#} ms</span>":
+  "<span>oculto: misterio</span><br><span>llegó a los {#} ms</span>",
+"all arrived · shown {#}× slower":
+  "todos llegaron · se muestra {#}× más lento",
+"{#} cm up (top) · forward (bottom)":
+  "{#} cm hacia arriba (arriba) · hacia adelante (abajo)",
+"{#} m (the whole slinky)":
+  "{#} m (todo el resorte)",
+"{#} cm down (top) · back (bottom)":
+  "{#} cm hacia abajo (arriba) · hacia atrás (abajo)",
+"<a><span>←</span> <span>Two Speaker Interference</span></a><a><span>Resonators</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Interferencia de dos bocinas</span></a><a><span>Resonadores</span> <span>→</span></a>",
+"Sound wave view: a tube of air drawn as dots that swing left and right, with graphs of displacement and pressure along the tube below. Time of flight view: a clap at the left, two microphones on a bench, and the two microphone traces with the timer. In 3D: a glass tube of air on a lab bench with the loudspeaker, signal generator and a probe microphone, or the clapper, two microphones and the recorder on a bench. Race view: lanes of different materials, all struck at the start at the same instant, with a person for scale; the board lists each lane's speed and arrival time. Space pauses; in the time of flight view, C claps; in the race view, Space strikes.":
+  "Vista de onda sonora: un tubo de aire dibujado como puntos que oscilan a izquierda y derecha, con gráficas del desplazamiento y la presión a lo largo del tubo abajo. Vista de tiempo de vuelo: una palmada a la izquierda, dos micrófonos en una mesa, y las dos trazas de los micrófonos con el cronómetro. En 3D: un tubo de vidrio con aire en una mesa de laboratorio con la bocina, el generador de señales y un micrófono sonda, o el aplaudidor, dos micrófonos y la grabadora en una mesa. Vista de carrera: carriles de distintos materiales, todos golpeados al inicio en el mismo instante, con una persona como escala; el tablero lista la rapidez y el tiempo de llegada de cada carril. Espacio pausa; en la vista de tiempo de vuelo, C da una palmada; en la vista de carrera, Espacio golpea.",
+"Model: an ideal gas at {#} Pa, so v = √(γRT/M) and ρ = PM/(RT); dry air has γ = {#} and M = {#} g/mol, helium and argon γ = {#}/{#} with M = {#} and {#} g/mol; an unknown gas has γ = {#}, {#} or {#}/{#} and M between {#} and {#} g/mol. Humidity and the small departures of real gases from the ideal gas are left out. The wave is a plane harmonic wave of small amplitude, s = s_max cos(kx − ωt) with Δp = ρvω s_max sin(kx − ωt), and no loss. The drawing slows the motion to one cycle every {#} s and exaggerates the displacement (the scale is on the picture). Time of flight: the clap and the microphones are on one line; a two channel recorder samples at {#} kHz (chosen), its clock starts at a random point of a sample at each clap, and each channel triggers on the first sample at or after the sound arrives, so Δt is a whole number of samples ({#} sample = {#} μs). The drawn pulse ({#} kHz, dying away in {#} ms, falling off as {#}/r) is chosen. Race: a tap on a steel plate starts a short pulse in every lane at the same instant; each lane is {#} m wide and the pulse runs its length L at the material's speed of sound, arriving at t = L/v, with no loss or spreading. Air, helium and argon follow the ideal gas model at the card's temperature; the other speeds are measured values at the stated conditions (they do not follow the temperature on the card): gases at {#} °C and liquids at {#} °C from OpenStax University Physics Vol {#}, Table {#}; blood and bone from OpenStax College Physics §{#}; cork, lead, gold, concrete, brick, copper, Pyrex, steel, granite and aluminum from The Engineering ToolBox (longitudinal waves in bulk); glycerin, beryllium and diamond from Evident (Olympus) Material Sound Velocities. Real samples vary by several percent with composition and temperature; some older tables give diamond {#} m/s. Solids carry the bulk speed because the pulse is short compared with the lane's width; in a thin rod a solid carries sound at √(Y/ρ), slower (Table {#}'s {#} m/s for aluminum is that thin rod speed). Solids also carry slower shear waves; only the fastest, longitudinal pulse is shown. The people are {#} m tall. Simulated data.":
+  "Modelo: un gas ideal a {#} Pa, así que v = √(γRT/M) y ρ = PM/(RT); el aire seco tiene γ = {#} y M = {#} g/mol, el helio y el argón γ = {#}/{#} con M = {#} y {#} g/mol; un gas desconocido tiene γ = {#}, {#} o {#}/{#} y M entre {#} y {#} g/mol. Se omiten la humedad y las pequeñas desviaciones de los gases reales respecto del gas ideal. La onda es una onda armónica plana de amplitud pequeña, s = s_max cos(kx − ωt) con Δp = ρvω s_max sin(kx − ωt), y sin pérdidas. El dibujo ralentiza el movimiento a un ciclo cada {#} s y exagera el desplazamiento (la escala está en la imagen). Tiempo de vuelo: la palmada y los micrófonos están en una línea; una grabadora de dos canales muestrea a {#} kHz (valor elegido), su reloj empieza en un punto aleatorio de una muestra en cada palmada, y cada canal se dispara en la primera muestra en el momento en que llega el sonido o después, así que Δt es un número entero de muestras ({#} muestra = {#} μs). El pulso dibujado ({#} kHz, que se extingue en {#} ms y decae como {#}/r) es elegido. Carrera: un golpe en una placa de acero inicia un pulso corto en cada carril en el mismo instante; cada carril mide {#} m de ancho y el pulso recorre su longitud L a la rapidez del sonido del material, llegando en t = L/v, sin pérdidas ni dispersión. El aire, el helio y el argón siguen el modelo de gas ideal a la temperatura de la tarjeta; las demás rapideces son valores medidos en las condiciones indicadas (no siguen la temperatura de la tarjeta): gases a {#} °C y líquidos a {#} °C de OpenStax University Physics Vol {#}, Tabla {#}; sangre y hueso de OpenStax College Physics §{#}; corcho, plomo, oro, concreto, ladrillo, cobre, Pyrex, acero, granito y aluminio de The Engineering ToolBox (ondas longitudinales en el material macizo); glicerina, berilio y diamante de Evident (Olympus) Material Sound Velocities. Las muestras reales varían varios por ciento con la composición y la temperatura; algunas tablas más antiguas dan {#} m/s para el diamante. Los sólidos llevan la rapidez del material macizo porque el pulso es corto comparado con el ancho del carril; en una varilla delgada un sólido transmite el sonido a √(Y/ρ), más lento (los {#} m/s de la Tabla {#} para el aluminio son esa rapidez de varilla delgada). Los sólidos también transmiten ondas de corte más lentas; solo se muestra el pulso longitudinal, el más rápido. Las personas miden {#} m de alto. Datos simulados.",
+"The last mystery material was {name}, v = {v} m/s. A new one is in its lane.":
+  "El último material misterioso era {name}, v = {v} m/s. Hay uno nuevo en su carril.",
+"The last mystery material was granite, v = {#} m/s. A new one is in its lane.":
+  "El último material misterioso fue granito, v = {#} m/s. Hay uno nuevo en su carril.",
 "The last mystery material was brick, v = {#} m/s. A new one is in its lane.":
   "El último material misterioso fue ladrillo, v = {#} m/s. Hay uno nuevo en su carril.",
 "Describe the picture":
@@ -538,8 +648,6 @@ VDI18N.add('es', 'demo/sound-waves', {
   "Saltar a los controles",
 "The last mystery material was aluminum (rolled), v = {#} m/s. A new one is in its lane.":
   "El último material misterioso era aluminio (laminado), v = {#} m/s. Hay uno nuevo en su carril.",
-"<span>hidden: mystery</span><br><span>arrived at {#} ms</span>":
-  "<span>oculto: misterio</span><br><span>llegó a los {#} ms</span>",
 "<span>hidden: mystery</span><br><span>arrived at {#} s</span>":
   "<span>oculto: misterio</span><br><span>llegó a los {#} s</span>",
 "Record reading":
@@ -547,7 +655,5 @@ VDI18N.add('es', 'demo/sound-waves', {
 "Close":
   "Cerrar",
 "Clap":
-  "Palmada",
-"A new mystery material is in its lane.":
-  "Hay un material misterioso nuevo en su carril."
+  "Palmada"
 });

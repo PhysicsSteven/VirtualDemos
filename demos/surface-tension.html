@@ -1,0 +1,854 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="lib/theme.js"></script>
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
+<title>Surface Tension and Capillarity</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css: the bench picture under window light, the strip, the set up card */
+:root { --bench: #efe6d6; --bench2: #e2d4bd; --wall: #f7f1e6; --glass: rgba(120, 150, 165, 0.55); --glasshi: rgba(255, 255, 255, 0.85);
+  --pull: #c2410c; --weight: #9f1239; --scale: #6b5b45; --film: #8b5cf6; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bench: #2a241d; --bench2: #1f1a14; --wall: #17140f; --glass: rgba(170, 200, 215, 0.45); --glasshi: rgba(255, 255, 255, 0.55); --pull: #fb923c; --weight: #fb7185; --scale: #c8b89c; --film: #c4b5fd; } }
+:root[data-theme="dark"] { --bench: #2a241d; --bench2: #1f1a14; --wall: #17140f; --glass: rgba(170, 200, 215, 0.45); --glasshi: rgba(255, 255, 255, 0.55); --pull: #fb923c; --weight: #fb7185; --scale: #c8b89c; --film: #c4b5fd; }
+.stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.stage-ctl select { font: inherit; font-size: 0.84rem; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 6px; }
+.stage-ctl .clock { margin-left: auto; font-size: 0.8rem; color: var(--muted); }
+.scene { position: relative; flex: 1 1 auto; min-height: 560px; background: var(--wall); }
+.scene canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; outline: none; touch-action: none; }
+.scene canvas:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+.setup-card { position: absolute; z-index: 3; right: 14px; top: 14px; width: 262px; display: flex; flex-direction: column; gap: 8px; padding: 8px 10px;
+  background: color-mix(in srgb, var(--surface) 92%, transparent); border: 1px solid var(--line); border-radius: 8px; max-height: calc(100% - 70px); overflow: auto; }
+.setup-card select { font: inherit; font-size: 0.86rem; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 6px; width: 100%; }
+.setup-card .pick { display: flex; flex-direction: column; gap: 4px; }
+.setup-card .btn { align-self: flex-start; }
+.readout .hl dd { color: var(--pull); }
+@media (min-width: 821px) { .bench > .stage { align-self: start; min-height: max(680px, 100%); } }
+@media (max-width: 820px) { .scene { min-height: 0; height: 600px; flex: none; } .setup-card { position: static; width: auto; margin: 8px; max-height: none; } }
+@media (max-width: 420px) { .scene { height: 560px; } }
+</style>
+<link rel="stylesheet" id="vd-look" href="lib/look.css">
+<script id="vd-gear" src="lib/gear.js"></script>
+<link rel="stylesheet" id="vd-paper" href="lib/paper.css">
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Surface Tension and Capillarity</h1>
+      <p>A liquid's surface pulls like a stretched sheet. Watch it lift water up thin glass tubes and push mercury down, squeeze the air inside drops and bubbles until a small bubble empties into a big one, hold up a steel needle and a water strider, and drag a sliding wire with a force that does not grow as the soap film stretches.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">SI units · h = 2γ cos θ/(ρgr) · ΔP = 2γ/r · F = 2γL</div>
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/surface-tension.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/surface-tension.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM10 2h1v1h-1zM15 2h1v1h-1zM18 2h4v1h-4zM25 2h1v1h-1zM27 2h3v1h-3zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM17 3h1v1h-1zM20 3h1v1h-1zM22 3h1v1h-1zM24 3h1v1h-1zM26 3h1v1h-1zM28 3h1v1h-1zM30 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM15 4h3v1h-3zM19 4h6v1h-6zM26 4h1v1h-1zM28 4h2v1h-2zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h2v1h-2zM14 5h1v1h-1zM16 5h2v1h-2zM20 5h2v1h-2zM26 5h4v1h-4zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h2v1h-2zM13 6h1v1h-1zM17 6h2v1h-2zM23 6h1v1h-1zM25 6h1v1h-1zM29 6h2v1h-2zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h2v1h-2zM15 7h3v1h-3zM20 7h3v1h-3zM27 7h1v1h-1zM30 7h1v1h-1zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h2v1h-2zM14 9h2v1h-2zM19 9h7v1h-7zM28 9h1v1h-1zM30 9h1v1h-1zM2 10h1v1h-1zM6 10h1v1h-1zM8 10h4v1h-4zM17 10h1v1h-1zM20 10h2v1h-2zM23 10h4v1h-4zM31 10h5v1h-5zM38 10h1v1h-1zM4 11h3v1h-3zM10 11h3v1h-3zM15 11h2v1h-2zM18 11h1v1h-1zM21 11h7v1h-7zM29 11h3v1h-3zM34 11h4v1h-4zM3 12h3v1h-3zM7 12h5v1h-5zM18 12h1v1h-1zM22 12h4v1h-4zM28 12h2v1h-2zM31 12h1v1h-1zM33 12h2v1h-2zM2 13h4v1h-4zM9 13h1v1h-1zM19 13h1v1h-1zM23 13h2v1h-2zM26 13h1v1h-1zM30 13h2v1h-2zM33 13h2v1h-2zM36 13h2v1h-2zM2 14h2v1h-2zM5 14h8v1h-8zM15 14h3v1h-3zM19 14h1v1h-1zM21 14h1v1h-1zM23 14h4v1h-4zM30 14h3v1h-3zM36 14h3v1h-3zM3 15h1v1h-1zM6 15h2v1h-2zM14 15h1v1h-1zM17 15h3v1h-3zM21 15h1v1h-1zM24 15h2v1h-2zM27 15h4v1h-4zM34 15h2v1h-2zM2 16h3v1h-3zM7 16h4v1h-4zM12 16h2v1h-2zM15 16h1v1h-1zM17 16h1v1h-1zM20 16h1v1h-1zM22 16h2v1h-2zM25 16h2v1h-2zM28 16h2v1h-2zM31 16h1v1h-1zM33 16h5v1h-5zM3 17h1v1h-1zM5 17h2v1h-2zM9 17h1v1h-1zM11 17h4v1h-4zM16 17h2v1h-2zM21 17h4v1h-4zM26 17h1v1h-1zM30 17h1v1h-1zM32 17h3v1h-3zM36 17h1v1h-1zM38 17h1v1h-1zM3 18h1v1h-1zM8 18h1v1h-1zM10 18h1v1h-1zM12 18h1v1h-1zM14 18h1v1h-1zM16 18h1v1h-1zM18 18h1v1h-1zM22 18h3v1h-3zM26 18h1v1h-1zM31 18h3v1h-3zM35 18h2v1h-2zM38 18h1v1h-1zM2 19h4v1h-4zM7 19h1v1h-1zM10 19h7v1h-7zM20 19h2v1h-2zM25 19h1v1h-1zM27 19h5v1h-5zM33 19h3v1h-3zM37 19h1v1h-1zM2 20h2v1h-2zM5 20h4v1h-4zM11 20h1v1h-1zM16 20h2v1h-2zM19 20h3v1h-3zM23 20h1v1h-1zM25 20h2v1h-2zM28 20h2v1h-2zM31 20h6v1h-6zM4 21h2v1h-2zM7 21h1v1h-1zM13 21h2v1h-2zM17 21h3v1h-3zM21 21h3v1h-3zM26 21h1v1h-1zM28 21h4v1h-4zM36 21h2v1h-2zM4 22h5v1h-5zM10 22h1v1h-1zM16 22h1v1h-1zM19 22h1v1h-1zM22 22h5v1h-5zM31 22h3v1h-3zM36 22h1v1h-1zM12 23h2v1h-2zM17 23h2v1h-2zM22 23h2v1h-2zM25 23h1v1h-1zM27 23h1v1h-1zM29 23h3v1h-3zM33 23h2v1h-2zM37 23h1v1h-1zM2 24h2v1h-2zM5 24h1v1h-1zM7 24h2v1h-2zM10 24h2v1h-2zM13 24h7v1h-7zM22 24h2v1h-2zM25 24h1v1h-1zM28 24h2v1h-2zM33 24h4v1h-4zM6 25h2v1h-2zM10 25h1v1h-1zM13 25h1v1h-1zM16 25h2v1h-2zM19 25h5v1h-5zM26 25h1v1h-1zM28 25h3v1h-3zM33 25h2v1h-2zM36 25h1v1h-1zM38 25h1v1h-1zM4 26h1v1h-1zM7 26h4v1h-4zM13 26h1v1h-1zM15 26h2v1h-2zM20 26h1v1h-1zM23 26h4v1h-4zM29 26h1v1h-1zM31 26h2v1h-2zM35 26h3v1h-3zM2 27h1v1h-1zM5 27h1v1h-1zM10 27h1v1h-1zM13 27h1v1h-1zM16 27h1v1h-1zM18 27h1v1h-1zM21 27h2v1h-2zM25 27h1v1h-1zM27 27h5v1h-5zM34 27h2v1h-2zM4 28h1v1h-1zM6 28h1v1h-1zM8 28h2v1h-2zM11 28h2v1h-2zM16 28h1v1h-1zM18 28h3v1h-3zM22 28h1v1h-1zM24 28h11v1h-11zM36 28h1v1h-1zM6 29h1v1h-1zM10 29h2v1h-2zM13 29h3v1h-3zM19 29h2v1h-2zM23 29h3v1h-3zM33 29h2v1h-2zM36 29h1v1h-1zM38 29h1v1h-1zM2 30h3v1h-3zM6 30h3v1h-3zM10 30h4v1h-4zM16 30h2v1h-2zM19 30h1v1h-1zM21 30h3v1h-3zM25 30h2v1h-2zM30 30h5v1h-5zM36 30h3v1h-3zM10 31h1v1h-1zM14 31h1v1h-1zM16 31h1v1h-1zM18 31h3v1h-3zM23 31h1v1h-1zM25 31h2v1h-2zM28 31h1v1h-1zM30 31h1v1h-1zM34 31h1v1h-1zM2 32h7v1h-7zM10 32h3v1h-3zM15 32h1v1h-1zM17 32h2v1h-2zM20 32h1v1h-1zM22 32h2v1h-2zM25 32h1v1h-1zM27 32h2v1h-2zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM14 33h2v1h-2zM17 33h1v1h-1zM23 33h2v1h-2zM26 33h1v1h-1zM30 33h1v1h-1zM34 33h3v1h-3zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h3v1h-3zM16 34h3v1h-3zM22 34h1v1h-1zM25 34h2v1h-2zM30 34h8v1h-8zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM11 35h1v1h-1zM14 35h1v1h-1zM20 35h2v1h-2zM23 35h1v1h-1zM25 35h1v1h-1zM27 35h1v1h-1zM29 35h5v1h-5zM35 35h2v1h-2zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM12 36h1v1h-1zM15 36h1v1h-1zM17 36h1v1h-1zM19 36h1v1h-1zM21 36h1v1h-1zM25 36h2v1h-2zM28 36h3v1h-3zM32 36h1v1h-1zM36 36h1v1h-1zM2 37h1v1h-1zM8 37h1v1h-1zM12 37h13v1h-13zM28 37h2v1h-2zM31 37h1v1h-1zM34 37h1v1h-1zM36 37h2v1h-2zM2 38h7v1h-7zM10 38h4v1h-4zM15 38h1v1h-1zM19 38h1v1h-1zM22 38h3v1h-3zM26 38h1v1h-1zM29 38h1v1h-1zM33 38h1v1h-1zM36 38h3v1h-3z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl" id="strip">
+        <button type="button" class="spin attn" id="play">Play</button>
+        <button type="button" class="btn" id="restart" title="Put this experiment back to its start">Reset</button>
+        <label class="lbl" for="selSpeed">Time</label>
+        <select id="selSpeed"><option value="0.01">1/100 speed</option><option value="0.1">1/10 speed</option><option value="0.25" selected>1/4 speed</option><option value="1">Real time</option><option value="10">10 times faster</option><option value="100">100 times faster</option></select>
+        <div class="seg" role="group" aria-label="Which experiment" id="sceneSeg">
+          <button type="button" data-scene="tubes" aria-pressed="true">Capillary tubes</button>
+          <button type="button" data-scene="drops" aria-pressed="false">Drops and bubbles</button>
+          <button type="button" data-scene="surf" aria-pressed="false">Resting on water</button>
+          <button type="button" data-scene="film" aria-pressed="false">Soap film</button>
+        </div>
+        <span class="clock mono" id="clock" aria-live="off"></span>
+      </div>
+      <div class="scene" id="scene">
+        <canvas id="can" tabindex="0" role="img" aria-label="Three glass tubes standing in a dish of liquid. Space plays or pauses."></canvas>
+      </div>
+      <div class="setup-card" id="setupCard" role="group" aria-label="Set up the experiment">
+        <span class="card-title" id="cardTitle">The tubes</span>
+        <div id="boxTubes">
+          <div class="pick"><label for="selLiqT">Liquid</label><select id="selLiqT">
+            <option value="water20" selected>Water at 20 °C</option><option value="water0">Water at 0 °C</option><option value="water100">Water at 100 °C</option>
+            <option value="soap">Soapy water</option><option value="ethanol">Ethyl alcohol</option><option value="glycerin">Glycerin</option><option value="olive">Olive oil</option>
+            <option value="mercury">Mercury</option><option value="blood">Whole blood at 37 °C</option><option value="sap">Sap (as water, 1050 kg/m³)</option></select></div>
+          <div class="pick"><label for="selMat">Tube wall</label><select id="selMat"><option value="glass" selected>Glass</option><option value="paraffin">Glass coated with paraffin wax</option><option value="silver">Silver</option></select></div>
+          <div><div class="slider-head"><label for="sR">Narrowest tube radius r</label><output id="oR" class="mono" for="sR"></output></div><input type="range" id="sR" min="-2" max="0.3" step="0.005"></div>
+          <label class="check"><input type="checkbox" id="chkTheta"><span>Set the contact angle myself</span></label>
+          <div id="rowTheta"><div class="slider-head"><label for="sTheta">Contact angle θ</label><output id="oTheta" class="mono" for="sTheta"></output></div><input type="range" id="sTheta" min="0" max="180" step="1"></div>
+          <p class="note" id="noteTheta"></p>
+        </div>
+        <div id="boxDrops" hidden>
+          <div class="pick"><label for="selLiqB">Liquid</label><select id="selLiqB">
+            <option value="soap" selected>Soapy water</option><option value="water20">Water at 20 °C</option><option value="ethanol">Ethyl alcohol</option>
+            <option value="glycerin">Glycerin</option><option value="mercury">Mercury</option><option value="tissue">Tissue fluid (typical)</option><option value="plasma">Blood plasma at 37 °C</option></select></div>
+          <div class="seg" role="group" aria-label="One surface or two" id="kindSeg"><button type="button" data-kind="drop" aria-pressed="false">Drop: one surface</button><button type="button" data-kind="bubble" aria-pressed="true">Bubble: two surfaces</button></div>
+          <div><div class="slider-head"><label for="sRd">Radius of the drop or bubble</label><output id="oRd" class="mono" for="sRd"></output></div><input type="range" id="sRd" min="-6" max="-2" step="0.01"></div>
+          <div><div class="slider-head"><label for="sB1">Left bubble radius</label><output id="oB1" class="mono" for="sB1"></output></div><input type="range" id="sB1" min="0.5" max="5" step="0.05"></div>
+          <div><div class="slider-head"><label for="sB2">Right bubble radius</label><output id="oB2" class="mono" for="sB2"></output></div><input type="range" id="sB2" min="0.5" max="5" step="0.05"></div>
+          <p class="note">Play opens the valve between the two bubbles.</p>
+        </div>
+        <div id="boxSurf" hidden>
+          <div class="seg" role="group" aria-label="What rests on the surface" id="objSeg"><button type="button" data-obj="needle" aria-pressed="true">Needle</button><button type="button" data-obj="strider" aria-pressed="false">Water strider</button></div>
+          <div class="pick"><label for="selLiqS">Liquid</label><select id="selLiqS">
+            <option value="water20" selected>Water at 20 °C</option><option value="water100">Water at 100 °C</option><option value="soap">Soapy water</option><option value="ethanol">Ethyl alcohol</option><option value="glycerin">Glycerin</option><option value="olive">Olive oil</option></select></div>
+          <div id="rowNeedle">
+            <div class="pick"><label for="selMetal">Needle metal</label><select id="selMetal"><option value="steel" selected>Steel, 7,800 kg/m³</option><option value="aluminum">Aluminum, 2,700 kg/m³</option><option value="gold">Gold, 19,320 kg/m³</option></select></div>
+            <div><div class="slider-head"><label for="sD">Needle diameter</label><output id="oD" class="mono" for="sD"></output></div><input type="range" id="sD" min="0.2" max="3" step="0.05"></div>
+            <div><div class="slider-head"><label for="sL">Needle length L</label><output id="oL" class="mono" for="sL"></output></div><input type="range" id="sL" min="1" max="8" step="0.1"></div>
+          </div>
+          <div id="rowStrider" hidden>
+            <div><div class="slider-head"><label for="sM">Mass of the insect</label><output id="oM" class="mono" for="sM"></output></div><input type="range" id="sM" min="1" max="100" step="1"></div>
+            <div><div class="slider-head"><label for="sLeg">Leg length touching the water (all legs)</label><output id="oLeg" class="mono" for="sLeg"></output></div><input type="range" id="sLeg" min="1" max="60" step="0.5"></div>
+          </div>
+          <button type="button" class="btn" id="btnSoap">Add a drop of soap</button>
+        </div>
+        <div id="boxFilm" hidden>
+          <div class="pick"><label for="selLiqF">Film</label><select id="selLiqF"><option value="soap" selected>Soapy water</option><option value="ethanol">Ethyl alcohol</option><option value="glycerin">Glycerin</option><option value="water20">Water at 20 °C</option></select></div>
+          <div><div class="slider-head"><label for="sWl">Wire length l</label><output id="oWl" class="mono" for="sWl"></output></div><input type="range" id="sWl" min="1" max="10" step="0.1"></div>
+          <div><div class="slider-head"><label for="sX">Film length x (pull the wire)</label><output id="oX" class="mono" for="sX"></output></div><input type="range" id="sX" min="0.5" max="10" step="0.1"></div>
+          <div><div class="slider-head"><label for="sWd">Copper wire diameter</label><output id="oWd" class="mono" for="sWd"></output></div><input type="range" id="sWd" min="0.2" max="1.5" step="0.05"></div>
+          <p class="note">Drag the sliding wire in the picture. Play lets it go.</p>
+        </div>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="water3" data-m="tubes" aria-pressed="true">Water climbs thin tubes</button>
+          <button type="button" data-p="mercury" data-m="tubes" aria-pressed="false">Mercury sinks in glass</button>
+          <button type="button" data-p="paraffin" data-m="tubes" aria-pressed="false">Water in a waxed tube</button>
+          <button type="button" data-p="silver" data-m="tubes" aria-pressed="false">Water in silver: flat</button>
+          <button type="button" data-p="hot" data-m="tubes" aria-pressed="false">Hot water climbs less</button>
+          <button type="button" data-p="glycerin" data-m="tubes" aria-pressed="false">Glycerin: slow climb</button>
+          <button type="button" data-p="sap" data-m="tubes" aria-pressed="false">Sap in a tree's xylem</button>
+          <button type="button" data-p="bubbles" data-m="drops" aria-pressed="false" hidden>Two bubbles: which one wins?</button>
+          <button type="button" data-p="nearly" data-m="drops" aria-pressed="false" hidden>Two nearly equal bubbles</button>
+          <button type="button" data-p="book" data-m="drops" aria-pressed="false" hidden>A soap bubble of radius 0.200 mm</button>
+          <button type="button" data-p="fog" data-m="drops" aria-pressed="false" hidden>A fog droplet</button>
+          <button type="button" data-p="alveolus" data-m="drops" aria-pressed="false" hidden>An alveolus in the lung</button>
+          <button type="button" data-p="needle" data-m="surf" aria-pressed="false" hidden>A steel needle rests on water</button>
+          <button type="button" data-p="thick" data-m="surf" aria-pressed="false" hidden>A thicker needle sinks</button>
+          <button type="button" data-p="soapy" data-m="surf" aria-pressed="false" hidden>Then add soap</button>
+          <button type="button" data-p="strider" data-m="surf" aria-pressed="false" hidden>A water strider</button>
+          <button type="button" data-p="film" data-m="film" aria-pressed="false" hidden>Soap film on a sliding wire</button>
+          <button type="button" data-p="alcohol" data-m="film" aria-pressed="false" hidden>Ethyl alcohol film, 3.50 cm wire</button>
+          <button type="button" data-p="which" data-m="film" aria-pressed="false" hidden>Which liquid? 3.16 mN on 2.50 cm</button>
+        </div>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+      </section>
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+      </section>
+      <!-- vd-readings --><section class="vd-readings" data-ws="surface-tension" data-title="Surface Tension and Capillarity" data-demo="surface-tension">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings ('+(typeof window.vdDataNote==='function'&&window.vdDataNote()?'catalog data':'simulated data')+')','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:(typeof window.vdDataNote==='function'&&window.vdDataNote())||'Simulated data from '+(/^The /.test(title)?'':'the ')+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
+        <label class="check"><input type="checkbox" id="labStill"><span>Reduce motion</span></label>
+        <details class="more"><summary>The model and its formulas</summary>
+          <p class="formula">capillary height h = 2γ cos θ/(ρ g r)</p>
+          <p class="formula">rise in time (Washburn with gravity): dh/dt = (r²/8ηh)(ρ g h_eq − ρ g h)</p>
+          <p class="formula">drop: P_in − P_out = 2γ/r;  bubble (two surfaces): 4γ/r</p>
+          <p class="formula">resting on the surface: w = 2γL sin φ, so at most 2γL</p>
+          <p class="formula">sliding wire: F = 2γl, whatever the film's length</p>
+          <p class="hint" id="about"></p></details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+<script src="lib/constants.js"></script>
+<script>
+(() => {
+  // ==CORE START==
+  /* SI units. g = 9.81 m/s² (VDC.g). Surface tensions and contact angles equal demos/lib/constants.js (OpenStax College Physics 2e
+     Tables 11.3 and 11.4). Densities from Table 11.1 (water 1000 kg/m³ at every temperature, as the book uses; copper 8800, steel
+     7800, aluminum 2700, gold 19,320 kg/m³), viscosities from Table 12.1; mercury's viscosity, 1.55 mPa s at 20 °C, from Kaye and
+     Laby, Tables of Physical and Chemical Constants (NPL). Air 1.81 × 10⁻⁵ Pa s at 20 °C (Table 12.1). */
+  const G = 9.81, MMHG = 133.322387415, ETA_AIR = 1.81e-5;
+  const LIQ = {
+    water20: { gam: 0.0728, rho: 1000, eta: 1.002e-3, th: { glass: 0, paraffin: 107, silver: 90 } },
+    water0: { gam: 0.0756, rho: 1000, eta: 1.792e-3, th: { glass: 0, paraffin: 107, silver: 90 } },
+    water100: { gam: 0.0589, rho: 1000, eta: 0.282e-3, th: { glass: 0, paraffin: 107, silver: 90 } },
+    soap: { gam: 0.0370, rho: 1000, eta: 1.002e-3, th: { glass: 0 } },
+    ethanol: { gam: 0.0223, rho: 790, eta: 1.20e-3, th: { glass: 0 } },
+    glycerin: { gam: 0.0631, rho: 1260, eta: 1.5, th: { glass: 0 } },
+    olive: { gam: 0.032, rho: 920, eta: 0.138, th: { glass: 0 } },
+    mercury: { gam: 0.465, rho: 13600, eta: 1.55e-3, th: { glass: 140 } },
+    blood: { gam: 0.058, rho: 1050, eta: 2.084e-3, th: {} },
+    sap: { gam: 0.0728, rho: 1050, eta: 1.002e-3, th: { glass: 0 } },
+    tissue: { gam: 0.050, rho: 1000, eta: 1.002e-3, th: {} },
+    plasma: { gam: 0.073, rho: 1050, eta: 1.257e-3, th: {} },
+  };
+  const METAL = { steel: 7800, aluminum: 2700, gold: 19320, copper: 8800 };
+  const D2R = Math.PI / 180;
+  /* capillary rise (negative: the liquid is pushed down) and the capillary length, below which a tube counts as narrow */
+  const capRise = (gam, thDeg, rho, r) => 2 * gam * Math.cos(thDeg * D2R) / (rho * G * r);
+  const capLength = (gam, rho) => Math.sqrt(gam / (rho * G));
+  /* the rise in time, viscous flow (Poiseuille) against the capillary push minus the column's weight; inertia left out:
+     dh/dt = A (h_eq − h)/h with A = r² ρ g/(8η), so A t = −h − h_eq ln(1 − h/h_eq), the same with |h| for a fall */
+  const washA = (r, eta, rho) => r * r * rho * G / (8 * eta);
+  function washT(h, heq, A) { const H = Math.abs(heq), x = Math.min(Math.abs(h), H * (1 - 1e-15)); return H ? (-x - H * Math.log(1 - x / H)) / A : 0; }
+  function washH(t, heq, A) {
+    const H = Math.abs(heq); if (!H || t <= 0) return 0;
+    let lo = 0, hi = 1; for (let k = 0; k < 80; k++) { const m = (lo + hi) / 2; if (washT(m * H, H, A) < t) lo = m; else hi = m; }
+    return Math.sign(heq) * H * (lo + hi) / 2;
+  }
+  /* pressure inside: one surface (a drop) 2γ/r, two surfaces (a soap bubble) 4γ/r */
+  const dropP = (gam, r) => 2 * gam / r;
+  const bubbleP = (gam, r) => 4 * gam / r;
+  /* a bubble as a spherical cap blown on a pipe end of radius a: height h above the end, radius R = (a² + h²)/2h, volume πh(3a² + h²)/6.
+     As it is blown up, R falls to a (a half sphere) and then grows again. */
+  const capR = (a, h) => (a * a + h * h) / (2 * h);
+  const capV = (a, h) => Math.PI * h * (3 * a * a + h * h) / 6;
+  function capH(a, V) { let lo = 0, hi = 1; while (capV(a, hi) < V) hi *= 2; for (let k = 0; k < 90; k++) { const m = (lo + hi) / 2; if (capV(a, m) < V) lo = m; else hi = m; } return (lo + hi) / 2; }
+  const capHofR = (a, R) => R + Math.sqrt(Math.max(0, R * R - a * a));   /* the bigger cap (more than half a sphere) of radius R */
+  /* two bubbles joined by a pipe of radius a and length len: air flows by Poiseuille's law from the higher pressure to the lower
+     (air is taken as incompressible: the pressures differ from the atmosphere's by a ten thousandth) */
+  const pipeK = (a, len) => Math.PI * a ** 4 / (8 * ETA_AIR * len);
+  function bubblesStep(st, gam, a, k, dt) {
+    let left = dt;
+    while (left > 0) {
+      const h1 = capH(a, st.V1), h2 = capH(a, st.V2), P1 = bubbleP(gam, capR(a, h1)), P2 = bubbleP(gam, capR(a, h2));
+      const Q = k * (P1 - P2), lim = 0.02 * Math.min(st.V1, st.V2) / Math.max(1e-30, Math.abs(Q)), h = Math.min(left, Math.max(1e-6, lim));
+      st.V1 -= Q * h; st.V2 += Q * h; left -= h;
+    }
+    return st;
+  }
+  /* a needle (or a leg) held by the surface: its weight w against two lines of length L pulling along the surface at angle φ below level */
+  const needleW = (rhoM, d, L) => rhoM * Math.PI * d * d / 4 * L * G;
+  const holdMax = (gam, L) => 2 * gam * L;
+  const tilt = (w, gam, L) => (w <= holdMax(gam, L) ? Math.asin(w / holdMax(gam, L)) : NaN);
+  const dMax = (gam, rhoM) => Math.sqrt(8 * gam / (Math.PI * rhoM * G));
+  /* the dent's shape: the exact two dimensional meniscus (Young and Laplace with gravity) with tilt φ at the needle; depth z = 2 lc sin(φ/2),
+     and with x measured outward from the contact, x = X(ψ) − X(φ) where X(φ) = lc [ln tan(φ/4) + 2 cos(φ/2)] */
+  const menZ = (lc, phi) => 2 * lc * Math.sin(phi / 2);
+  const menX = (lc, phi) => lc * (Math.log(Math.tan(phi / 4)) + 2 * Math.cos(phi / 2));
+  /* the sliding wire: F = 2γl, the surface energy of the film 2γlx, and with the wire let go the film pulls it back with a = F/m */
+  const filmF = (gam, l) => 2 * gam * l;
+  const wireMass = (d, l) => METAL.copper * Math.PI * d * d / 4 * l;
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  const PIPE_A = 2e-3, PIPE_LEN = 0.10, PIPE_K = pipeK(PIPE_A, PIPE_LEN);
+  const NAMES = { water20: 'Water at 20 °C', water0: 'Water at 0 °C', water100: 'Water at 100 °C', soap: 'Soapy water', ethanol: 'Ethyl alcohol', glycerin: 'Glycerin', olive: 'Olive oil',
+    mercury: 'Mercury', blood: 'Whole blood at 37 °C', sap: 'Sap', tissue: 'Tissue fluid', plasma: 'Blood plasma' };
+  const COL = { water20: '#4f9fd6', water0: '#5aa8dd', water100: '#6aaedb', soap: '#8fb8d8', ethanol: '#a9cfe0', glycerin: '#d9c58c', olive: '#a8a53a', mercury: '#aeb6bf', blood: '#9b1c1c', sap: '#c9a85a', tissue: '#d9b8a8', plasma: '#e0c060' };
+  const MATNAME = { glass: 'glass', paraffin: 'waxed glass', silver: 'silver' };
+  const f = (v, d = 2) => (!isFinite(v) ? '—' : v.toFixed(d).replace('-', '−'));
+  const sup = (n) => String(n).replace(/[-0-9]/g, (c) => ({ '-': '⁻', 0: '⁰', 1: '¹', 2: '²', 3: '³', 4: '⁴', 5: '⁵', 6: '⁶', 7: '⁷', 8: '⁸', 9: '⁹' }[c]));
+  const sig = (v, n = 3) => { if (!isFinite(v)) return '—'; const a = Math.abs(v); if (a !== 0 && (a >= 1e5 || a < 1e-3)) { const e = Math.floor(Math.log10(a)); return `${(v / 10 ** e).toFixed(n - 1).replace('-', '−')} × 10${sup(e)}`; } return Math.abs(v) >= 1000 ? Math.round(+v.toPrecision(n)).toLocaleString('en-US').replace('-', '−') : v.toPrecision(n).replace('-', '−'); };
+  const lower1 = (t) => t.charAt(0).toLowerCase() + t.slice(1);
+  /* sentences built around a liquid's name: translated whole from a VDI18N.t literal (the harvest reads those), the name on its own */
+  const rawT = (fn) => (window.VDI18N ? VDI18N.raw(fn) : fn());
+  const fillT = (t, v) => t.replace(/\{(\w+)\}/g, (m, k) => v[k]);
+  const liqName = (k) => (window.VDI18N ? VDI18N.t(NAMES[k]) : NAMES[k]);   /* "Water at 20 °C" in a sentence: lower the first letter only */
+  const len = (m) => { const a = Math.abs(m); return a === 0 ? '0 m' : a >= 1 ? `${sig(m, 3)} m` : a >= 0.01 ? `${sig(m * 100, 3)} cm` : a >= 1e-3 ? `${sig(m * 1000, 3)} mm` : `${sig(m * 1e6, 3)} μm`; };
+  const pres = (p) => (Math.abs(p) >= 1e4 ? `${sig(p / 1000, 3)} kPa` : `${sig(p, 3)} Pa`);
+  const force = (F) => (Math.abs(F) >= 1 ? `${sig(F, 3)} N` : `${sig(F * 1000, 3)} mN`);
+
+  /* ---------- setups ---------- */
+  const PRE = {
+    water3: { scene: 'tubes', liq: 'water20', mat: 'glass', r: 0.25e-3, speed: 0.25, hint: 'Three glass tubes of radius r, 2r and 4r stand in water. Before you press Play, predict: how high does water climb in each? h = 2γ cos θ/(ρgr) = 2(0.0728 N/m)(cos 0°)/((1000 kg/m³)(9.81 m/s²)(0.25 mm)) = 59.4 mm in the narrowest. Half the radius, twice the height.' },
+    mercury: { scene: 'tubes', liq: 'mercury', mat: 'glass', r: 0.25e-3, speed: 0.25, hint: 'Mercury meets glass at a contact angle of 140°: cos θ is negative, so the surface pulls the column down. Mercury holds together more strongly than it sticks to glass, and its meniscus bulges up instead of curving down.' },
+    paraffin: { scene: 'tubes', liq: 'water20', mat: 'paraffin', r: 0.25e-3, speed: 0.25, hint: 'Wax a glass tube and water no longer wets it: the contact angle is 107°, cos θ = −0.29, and water is pushed down instead of pulled up. This is why water beads on a waxed car.' },
+    silver: { scene: 'tubes', liq: 'water20', mat: 'silver', r: 0.25e-3, speed: 0.25, hint: 'Water meets silver at 90°: the surface pulls straight sideways, cos 90° = 0, and the water neither climbs nor falls. Its surface in the tube is flat.' },
+    hot: { scene: 'tubes', liq: 'water100', mat: 'glass', r: 0.25e-3, speed: 1, hint: 'At 100 °C water\'s surface tension is 0.0589 N/m instead of 0.0728 N/m, so it climbs 0.0589/0.0728 = 81% as high (the model keeps the density at 1000 kg/m³). It also flows faster: its viscosity is a quarter of cold water\'s.' },
+    glycerin: { scene: 'tubes', liq: 'glycerin', mat: 'glass', r: 0.25e-3, speed: 100, hint: 'Glycerin is 1500 times as viscous as water. It climbs 4.08 cm in the narrowest tube, about two thirds of water\'s 5.94 cm, but takes minutes instead of a second. The time runs 100 times faster here: watch the clock.' },
+    sap: { scene: 'tubes', liq: 'sap', mat: 'glass', r: 0.025e-3, speed: 10, hint: 'The book\'s xylem tube, radius 2.50 × 10⁻⁵ m, with sap of density 1050 kg/m³ and water\'s surface tension: h = 0.565 m, less than a meter. To lift sap 100 m up a redwood, a tube would need a radius of 1.41 × 10⁻⁷ m. Capillary action alone cannot do it.' },
+    bubbles: { scene: 'drops', liq: 'soap', kind: 'bubble', rd: 2e-4, r1: 0.015, r2: 0.04, speed: 0.1, hint: 'The book\'s two soap bubbles, 1.50 cm and 4.00 cm in radius, on the ends of a pipe with a closed valve. Predict before you press Play: when the valve opens, does air flow from the big bubble into the small one, or the other way? The pressure inside is 4γ/R: the small bubble has the higher pressure.' },
+    nearly: { scene: 'drops', liq: 'soap', kind: 'bubble', rd: 2e-4, r1: 0.02, r2: 0.0205, speed: 1, hint: 'Two bubbles 2.00 cm and 2.05 cm in radius. Their pressures differ by only 0.18 Pa, but equal bubbles are an unstable balance: any difference grows until one has emptied into the other.' },
+    book: { scene: 'drops', liq: 'soap', kind: 'bubble', rd: 2e-4, r1: 0.015, r2: 0.04, speed: 0.25, hint: 'The book\'s example: a soap bubble of radius 2.00 × 10⁻⁴ m. P = 4γ/r = 4(0.0370 N/m)/(2.00 × 10⁻⁴ m) = 740 Pa = 5.55 mm Hg above the air outside.' },
+    fog: { scene: 'drops', liq: 'water20', kind: 'drop', rd: 1e-6, r1: 0.015, r2: 0.04, speed: 0.25, hint: 'A fog droplet of radius 1 μm has one surface, so the extra pressure inside is 2γ/r = 2(0.0728 N/m)/(1 × 10⁻⁶ m) = 146 kPa, more than the whole atmosphere (101 kPa). The smaller the drop, the harder its surface squeezes it.' },
+    alveolus: { scene: 'drops', liq: 'tissue', kind: 'drop', rd: 5e-5, r1: 0.015, r2: 0.04, speed: 0.25, hint: 'An alveolus of the lung, about 0.1 mm across, lined with tissue fluid. One wet surface lines the sac, so the inward squeeze is 2γ/r = 2(0.050 N/m)/(5 × 10⁻⁵ m) = 2,000 Pa = 15 mm Hg. (The book\'s exercise treats an alveolus as a bubble, 4γ/r.) Lung surfactant lowers γ as the sac shrinks, so small alveoli do not collapse into big ones the way the small bubble does.' },
+    needle: { scene: 'surf', obj: 'needle', liq: 'water20', metal: 'steel', d: 1e-3, L: 0.04, speed: 1, hint: 'A steel needle 1.0 mm thick and 4.0 cm long, set down gently on water. It is 7.8 times denser than water, so it cannot float like a boat. Predict: will the surface hold it? Its weight is 2.40 mN and the surface can push up with at most 2γL = 5.82 mN.' },
+    thick: { scene: 'surf', obj: 'needle', liq: 'water20', metal: 'steel', d: 2e-3, L: 0.04, speed: 1, hint: 'Twice as thick: four times the weight (9.62 mN), but the surface still pulls along the same two 4.0 cm lines, 5.82 mN at most. Length does not matter: both grow with L. Only needles thinner than 1.56 mm can rest on water.' },
+    soapy: { scene: 'surf', obj: 'needle', liq: 'water20', metal: 'steel', d: 1e-3, L: 0.04, speed: 1, soap: true, hint: 'The 1.0 mm needle resting on water. Press Play, wait for it to settle, then press Add a drop of soap: γ falls from 0.0728 to 0.0370 N/m, the surface can now hold at most 2.96 mN, and the 2.40 mN needle ... predict it, then try it.' },
+    strider: { scene: 'surf', obj: 'strider', liq: 'water20', m: 10e-6, leg: 0.02, speed: 1, hint: 'A water strider of 10 mg standing on legs that touch the water along 20 mm in all. Its weight is 0.098 mN; the surface can give 2γℓ = 2.91 mN. Its waxy, hairy legs do not wet, so they dent the surface instead of breaking through. Gao and Jiang (Nature 432, 36, 2004) measured one leg holding about 15 times the insect\'s weight.' },
+    film: { scene: 'film', liq: 'soap', l: 0.05, x: 0.06, wd: 0.5e-3, speed: 0.01, hint: 'A soap film fills a wire frame closed by a sliding wire 5.0 cm long. The film has two surfaces, so it pulls the wire with F = 2γl = 3.70 mN. Drag the wire out: the force stays the same however long the film. Then press Play to let the wire go (1/100 speed).' },
+    alcohol: { scene: 'film', liq: 'ethanol', l: 0.035, x: 0.05, wd: 0.5e-3, speed: 0.01, hint: 'The book\'s exercise: a 3.50 cm slide wire with an ethyl alcohol film. F = 2γl = 2(0.0223 N/m)(0.0350 m) = 1.56 × 10⁻³ N.' },
+    which: { scene: 'film', liq: 'glycerin', l: 0.025, x: 0.05, wd: 0.5e-3, speed: 0.01, hint: 'The book\'s exercise: the force is 3.16 × 10⁻³ N on a 2.50 cm wire. γ = F/2l = 0.0632 N/m. Turn on Blind to hide the liquid\'s name, find γ from the force, and match it to Table 11.3.' },
+  };
+  const FIRST = { tubes: 'water3', drops: 'bubbles', surf: 'needle', film: 'film' };
+  const S = { scene: 'tubes', preset: 'water3', run: false, t: 0, speed: 0.25, blind: false, still: false, played: false,
+    T: { liq: 'water20', mat: 'glass', r: 0.25e-3, own: false, th: 0 },
+    B: { liq: 'soap', kind: 'bubble', rd: 2e-4, r1: 0.015, r2: 0.04, V1: 0, V2: 0, open: false },
+    N: { obj: 'needle', liq: 'water20', metal: 'steel', d: 1e-3, L: 0.04, m: 10e-6, leg: 0.02 },
+    F: { liq: 'soap', l: 0.05, x: 0.06, x0: 0.06, wd: 0.5e-3, v: 0, done: false } };
+  const can = $('can'), ctx = can.getContext('2d');
+  let W = 0, H = 0, dpr = 1, K = null;
+  const proj = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.25 : 1);
+  const narrow = () => window.innerWidth <= 820;
+  function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    K = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), accent: g('--accent'), surface: g('--surface'), bench: g('--bench'), bench2: g('--bench2'), wall: g('--wall'),
+      glass: g('--glass'), glasshi: g('--glasshi'), pull: g('--pull'), weight: g('--weight'), scale: g('--scale'), film: g('--film'), mono: g('--font-mono') || 'JetBrains Mono, monospace', sans: g('--font-sans') || 'Atkinson Hyperlegible, sans-serif',
+      dark: document.documentElement.getAttribute('data-theme') === 'dark' || (document.documentElement.getAttribute('data-theme') !== 'light' && matchMedia('(prefers-color-scheme: dark)').matches) }; }
+  /* the tube scene's contact angle: from Table 11.4, or the student's own */
+  function thetaT() { const L = LIQ[S.T.liq]; if (S.T.own) return S.T.th; const v = L.th[S.T.mat]; return v == null ? (S.T.mat === 'glass' ? 0 : 0) : v; }
+  const thetaKnown = () => LIQ[S.T.liq].th[S.T.mat] != null;
+  const radii = () => [S.T.r, 2 * S.T.r, 4 * S.T.r];
+  function tubeState() {
+    const L = LIQ[S.T.liq], th = thetaT();
+    return radii().map((r) => { const heq = capRise(L.gam, th, L.rho, r), A = washA(r, L.eta, L.rho); return { r, heq, A, h: washH(S.t, heq, A), t90: washT(0.9 * heq, heq, A) }; });
+  }
+  /* bubbles: volumes from the set radii (each a cap of more than half a sphere on its pipe end) */
+  function resetBubbles() { S.B.V1 = capV(PIPE_A, capHofR(PIPE_A, S.B.r1)); S.B.V2 = capV(PIPE_A, capHofR(PIPE_A, S.B.r2)); S.B.open = false; }
+  function bubbleNow() { const h1 = capH(PIPE_A, S.B.V1), h2 = capH(PIPE_A, S.B.V2), R1 = capR(PIPE_A, h1), R2 = capR(PIPE_A, h2), g = LIQ[S.B.liq].gam; return { h1, h2, R1, R2, P1: bubbleP(g, R1), P2: bubbleP(g, R2) }; }
+  /* the needle or strider: its weight, the most the surface can hold, the tilt of the surface where it touches */
+  function surfNow() {
+    const L = LIQ[S.N.liq];
+    const w = S.N.obj === 'needle' ? needleW(METAL[S.N.metal], S.N.d, S.N.L) : S.N.m * G, Lc = S.N.obj === 'needle' ? S.N.L : S.N.leg;
+    return { w, Lc, max: holdMax(L.gam, Lc), phi: tilt(w, L.gam, Lc), lc: capLength(L.gam, L.rho), holds: w <= holdMax(L.gam, Lc), dmax: dMax(L.gam, METAL[S.N.metal]) };
+  }
+  const SET_DOWN = 1.5;   /* seconds the hand takes to lower it (drawn, not computed) */
+
+  /* ---------- drawing helpers ---------- */
+  function label(s, x, y, o = {}) {
+    const p = proj(); ctx.font = `${o.w || 600} ${(o.size || 12) * p}px ${o.mono ? K.mono : K.sans}`; ctx.textAlign = o.a || 'left'; ctx.textBaseline = o.b || 'middle';
+    /* fit: shrink the type (to 60% at most) so the text fits that width, for titles on phones and in longer languages */
+    if (o.fit) { const wd = ctx.measureText(s).width; if (wd > o.fit) ctx.font = `${o.w || 600} ${(o.size || 12) * p * Math.max(0.6, o.fit / wd)}px ${o.mono ? K.mono : K.sans}`; }
+    if (o.halo !== false) { ctx.lineWidth = 3.5; ctx.strokeStyle = o.haloCol || K.canvas; ctx.lineJoin = 'round'; ctx.strokeText(s, x, y); }
+    ctx.fillStyle = o.col || K.ink; ctx.fillText(s, x, y);
+  }
+  /* a muted subtitle: one line if it fits in mw, else wrapped into lines (phones); translated whole, then drawn as pieces */
+  const trT = (t) => (window.VDI18N ? VDI18N.t(t) : t);
+  function sub(s, x, y, mw, o = {}) {
+    const p = proj(), size = o.size || 10.5, t = trT(s);
+    return rawT(() => {
+      ctx.font = `${o.w || 400} ${size * p}px ${o.mono ? K.mono : K.sans}`;
+      const lines = []; let cur = '';
+      for (const wd of t.split(' ')) { const tryL = cur ? cur + ' ' + wd : wd; if (cur && ctx.measureText(tryL).width > mw) { lines.push(cur); cur = wd; } else cur = tryL; }
+      if (cur) lines.push(cur);
+      lines.forEach((L, i) => label(L, x, y + i * (size + 3) * p, { size, col: o.col || K.muted, w: o.w || 400, mono: o.mono }));
+      return y + (lines.length - 1) * (size + 3) * p;   /* the last line's y */
+    });
+  }
+  function arrow(x0, y0, x1, y1, col, wd = 2.5) {
+    const p = proj(), a = Math.atan2(y1 - y0, x1 - x0), hl = Math.min(11 * p, 0.45 * Math.hypot(x1 - x0, y1 - y0));
+    ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = wd * p; ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1 - Math.cos(a) * hl * 0.6, y1 - Math.sin(a) * hl * 0.6); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x1 - hl * Math.cos(a - 0.4), y1 - hl * Math.sin(a - 0.4)); ctx.lineTo(x1 - hl * Math.cos(a + 0.4), y1 - hl * Math.sin(a + 0.4)); ctx.closePath(); ctx.fill();
+  }
+  function backdrop(x, y, w, h, benchY) {
+    const g = ctx.createLinearGradient(0, y, 0, benchY); g.addColorStop(0, K.wall); g.addColorStop(1, K.dark ? '#211c16' : '#efe5d4');
+    ctx.fillStyle = g; ctx.fillRect(x, y, w, benchY - y);
+    /* soft window light from the upper left */
+    const lg = ctx.createRadialGradient(x + w * 0.2, y, 10, x + w * 0.2, y, Math.max(w, h) * 0.9); lg.addColorStop(0, K.dark ? 'rgba(255,230,190,0.07)' : 'rgba(255,250,235,0.6)'); lg.addColorStop(1, 'rgba(255,255,255,0)');
+    ctx.fillStyle = lg; ctx.fillRect(x, y, w, benchY - y);
+    const b = ctx.createLinearGradient(0, benchY, 0, y + h); b.addColorStop(0, K.bench); b.addColorStop(1, K.bench2); ctx.fillStyle = b; ctx.fillRect(x, benchY, w, y + h - benchY);
+    ctx.strokeStyle = K.dark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.08)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(x, benchY + 0.5); ctx.lineTo(x + w, benchY + 0.5); ctx.stroke();
+  }
+  function liquidFill(key, x0, y0, x1, y1) { const c = COL[key]; const g = ctx.createLinearGradient(x0, 0, x1, 0); g.addColorStop(0, shade(c, -0.18)); g.addColorStop(0.35, shade(c, 0.12)); g.addColorStop(1, shade(c, -0.25)); return g; }
+  function shade(hex, k) { const n = parseInt(hex.slice(1), 16), r = n >> 16, gg = (n >> 8) & 255, b = n & 255, m = (c) => Math.round(k >= 0 ? c + (255 - c) * k : c * (1 + k)); return `rgb(${m(r)},${m(gg)},${m(b)})`; }
+  function nice(v) { const e = Math.floor(Math.log10(v)), m = v / 10 ** e; return (m < 1.5 ? 1 : m < 3.5 ? 2 : m < 7.5 ? 5 : 10) * 10 ** e; }
+  function cardW() { return narrow() ? 0 : ($('setupCard').offsetWidth + 24); }
+
+  /* ---------- the tubes ---------- */
+  function drawTubes(x, y, w, h) {
+    const p = proj(), L = LIQ[S.T.liq], th = thetaT(), ts = tubeState();
+    const top = y + (narrow() ? 106 : 92) * p, bottom = y + h - 40 * p;
+    const up = Math.max(0, ...ts.map((t) => t.heq)) * 1.15, down = Math.max(0, ...ts.map((t) => -t.heq)) * 1.15;
+    const span = Math.max(up + down, 0.006), dishH = 64 * p;
+    const sy = (bottom - top - dishH - 24 * p) / span, ys = top + up * sy + (span - up - down) * sy * (up > 0 ? 0 : 0.5);
+    const benchY = Math.max(ys + down * sy + dishH * 0.55 + 22 * p, ys + dishH);
+    backdrop(x, y, w, h, benchY);
+    const dx0 = x + 64 * p, dx1 = x + w - 16 * p, tubeBot = benchY - 10 * p;
+    /* the dish */
+    ctx.fillStyle = liquidFill(S.T.liq, dx0, 0, dx1, 0); ctx.globalAlpha = 0.85; ctx.fillRect(dx0, ys, dx1 - dx0, benchY - 6 * p - ys); ctx.globalAlpha = 1;
+    ctx.strokeStyle = K.glass; ctx.lineWidth = 3 * p; ctx.beginPath(); ctx.moveTo(dx0, ys - 18 * p); ctx.lineTo(dx0, benchY - 6 * p); ctx.lineTo(dx1, benchY - 6 * p); ctx.lineTo(dx1, ys - 18 * p); ctx.stroke();
+    ctx.strokeStyle = K.dark ? 'rgba(255,255,255,0.35)' : 'rgba(255,255,255,0.7)'; ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.moveTo(dx0, ys); ctx.lineTo(dx1, ys); ctx.stroke();
+    /* the ruler, zero at the dish's surface */
+    const rx = x + 20 * p, step = nice(span / 8), unitMM = span < 0.4;
+    ctx.fillStyle = K.dark ? '#3a3226' : '#f3e7c9'; ctx.fillRect(rx - 2 * p, top - 8 * p, 34 * p, ys + down * sy - top + 16 * p);
+    ctx.strokeStyle = K.scale; ctx.lineWidth = 1; ctx.font = `${10 * p}px ${K.mono}`; ctx.fillStyle = K.scale; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    for (let z = -Math.floor(down / step) * step; z <= up + 1e-12; z += step / 2) {
+      const yy = ys - z * sy, major = Math.abs(Math.round(z / step) * step - z) < step * 1e-6;
+      ctx.beginPath(); ctx.moveTo(rx - 2 * p, yy); ctx.lineTo(rx + (major ? 10 : 5) * p, yy); ctx.stroke();
+      if (major) ctx.fillText(unitMM ? f(z * 1000, step * 1000 < 1 ? 1 : 0) : f(z, 2), rx + 12 * p, yy);
+    }
+    label(unitMM ? 'mm' : 'm', rx + 14 * p, top - 18 * p, { size: 10.5, col: K.muted, w: 400 });
+    /* three tubes, widths drawn wider than life so the meniscus shows */
+    const n = ts.length, wMax = Math.min(46 * p, (dx1 - dx0) / (n * 2.2)), xs = ts.map((_, i) => dx0 + (dx1 - dx0) * (i + 0.5) / n - (narrow() ? 0 : 0));
+    ts.forEach((t, i) => {
+      const tw = Math.max(5 * p, wMax * t.r / ts[n - 1].r), cx = xs[i], xl = cx - tw / 2, xr = cx + tw / 2, yTop = ys - t.h * sy, tTop = top - 20 * p;
+      /* liquid inside, with its meniscus: a circle meeting the wall at the contact angle */
+      const a = tw / 2, c = Math.cos(th * D2R), R = Math.abs(c) > 0.02 ? a / Math.abs(c) : 1e9, sag = Math.min(a * 0.8, R - Math.sqrt(Math.max(0, R * R - a * a))) * Math.sign(c);
+      ctx.fillStyle = K.wall; ctx.fillRect(xl, tTop, tw, Math.max(0, Math.min(tubeBot, yTop + Math.abs(sag)) - tTop));
+      ctx.fillStyle = liquidFill(S.T.liq, xl, 0, xr, 0); ctx.beginPath(); ctx.moveTo(xl, tubeBot); ctx.lineTo(xl, yTop - sag); ctx.quadraticCurveTo(cx, yTop + sag, xr, yTop - sag); ctx.lineTo(xr, tubeBot); ctx.closePath(); ctx.fill();
+      /* the glass */
+      ctx.strokeStyle = K.glass; ctx.lineWidth = 2.4 * p; ctx.beginPath(); ctx.moveTo(xl - 1.5 * p, tTop); ctx.lineTo(xl - 1.5 * p, tubeBot); ctx.moveTo(xr + 1.5 * p, tTop); ctx.lineTo(xr + 1.5 * p, tubeBot); ctx.stroke();
+      ctx.strokeStyle = K.glasshi; ctx.lineWidth = 1 * p; ctx.beginPath(); ctx.moveTo(xl + 1.2 * p, tTop + 4 * p); ctx.lineTo(xl + 1.2 * p, tubeBot - 4 * p); ctx.stroke();
+      if (S.T.mat === 'silver') { ctx.strokeStyle = '#c0c6cc'; ctx.lineWidth = 3 * p; ctx.beginPath(); ctx.moveTo(xl - 1.5 * p, tTop); ctx.lineTo(xl - 1.5 * p, tubeBot); ctx.moveTo(xr + 1.5 * p, tTop); ctx.lineTo(xr + 1.5 * p, tubeBot); ctx.stroke(); }
+      if (S.T.mat === 'paraffin') { ctx.strokeStyle = 'rgba(245,235,200,0.9)'; ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.moveTo(xl, tTop); ctx.lineTo(xl, tubeBot); ctx.moveTo(xr, tTop); ctx.lineTo(xr, tubeBot); ctx.stroke(); }
+      /* the predicted level (hidden in Blind) and the height now */
+      if (!S.blind) { ctx.setLineDash([5 * p, 4 * p]); ctx.strokeStyle = K.muted; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(cx - tw / 2 - 16 * p, ys - t.heq * sy); ctx.lineTo(cx + tw / 2 + 16 * p, ys - t.heq * sy); ctx.stroke(); ctx.setLineDash([]); }
+      const tag = i === 0 ? 'r' : i === 1 ? '2r' : '4r';
+      label(`${tag} = ${len(t.r)}`, cx, tTop - 10 * p, { a: 'center', size: 11 });
+      if (Math.abs(t.h) * sy > 12 * p) { const ax = xr + 9 * p; ctx.strokeStyle = K.pull; ctx.lineWidth = 1.4 * p; ctx.beginPath(); ctx.moveTo(ax, ys); ctx.lineTo(ax, yTop); ctx.moveTo(ax - 4 * p, ys); ctx.lineTo(ax + 4 * p, ys); ctx.moveTo(ax - 4 * p, yTop); ctx.lineTo(ax + 4 * p, yTop); ctx.stroke(); }
+      const rightSide = i < n - 1 || xr + 110 * p < x + w; if (w > 520 * p) label(`h = ${len(t.h)}`, rightSide ? xr + 14 * p : xl - 8 * p, (ys + yTop) / 2 + (Math.abs(t.h) * sy > 12 * p ? 0 : -14 * p), { size: 11.5, col: K.pull, mono: true, a: rightSide ? 'left' : 'right' });
+    });
+    { const v = { liq: liqName(S.T.liq), th: f(th, 0) }, I = window.VDI18N;
+      const t = S.T.mat === 'paraffin' ? (I ? VDI18N.t('{liq} in waxed glass tubes · θ = {th}°', v) : fillT('{liq} in waxed glass tubes · θ = {th}°', v))
+        : S.T.mat === 'silver' ? (I ? VDI18N.t('{liq} in silver tubes · θ = {th}°', v) : fillT('{liq} in silver tubes · θ = {th}°', v))
+          : (I ? VDI18N.t('{liq} in glass tubes · θ = {th}°', v) : fillT('{liq} in glass tubes · θ = {th}°', v));
+      rawT(() => label(t, x + 64 * p, y + 18 * p, { size: 13, w: 700, fit: w - 78 * p })); }
+    sub(`t = ${f(S.t, S.t < 10 ? 2 : 1)} s · tube widths drawn wider than life; heights to scale`, x + 64 * p, y + 38 * p, w - 78 * p);
+  }
+  function drawTubeGraph(x, y, w, h) {
+    const p = proj(), ts = tubeState(), L = LIQ[S.T.liq], th = thetaT();
+    ctx.fillStyle = K.canvas; ctx.fillRect(x, y, w, h);
+    const m = { l: 56 * p, r: 16 * p, t: 44 * p, b: 40 * p }, gx = x + m.l, gy = y + m.t, gw = w - m.l - m.r, gh = h - m.t - m.b;
+    if (gw < 60 || gh < 60) return;
+    const xmax = 1.15 / (ts[0].r * 1000), hs = ts.map((t) => t.heq * 1000), hi = Math.max(0, ...hs) * 1.15 || 1, lo = Math.min(0, ...hs) * 1.15;
+    const X = (v) => gx + gw * v / xmax, Y = (v) => gy + gh * (hi - v) / (hi - lo || 1);
+    ctx.strokeStyle = K.line; ctx.lineWidth = 1; ctx.strokeRect(gx, gy, gw, gh);
+    ctx.font = `${10 * p}px ${K.mono}`; ctx.fillStyle = K.muted; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    const sx = nice(xmax / 4); for (let v = 0; v <= xmax + 1e-9; v += sx) { ctx.fillText(f(v, sx < 1 ? 1 : 0), X(v), gy + gh + 5 * p); }
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; const sh = nice((hi - lo) / 5);
+    for (let v = Math.ceil(lo / sh) * sh; v <= hi + 1e-9; v += sh) { ctx.fillText(f(v, sh < 1 ? 1 : 0), gx - 5 * p, Y(v)); ctx.strokeStyle = K.line; ctx.globalAlpha = 0.4; ctx.beginPath(); ctx.moveTo(gx, Y(v)); ctx.lineTo(gx + gw, Y(v)); ctx.stroke(); ctx.globalAlpha = 1; }
+    label('h (mm)', gx - 4 * p, gy - 12 * p, { a: 'right', size: 10.5, col: K.muted, w: 400 }); label('1/r (1/mm)', gx + gw, gy + gh + 26 * p, { a: 'right', size: 10.5, col: K.muted, w: 400 });
+    label('Height h against 1/r', x + 12 * p, y + 18 * p, { size: 12.5, w: 700 });
+    const slope = 2 * L.gam * Math.cos(th * D2R) / (L.rho * G) * 1e6;   /* mm² */
+    if (!S.blind) { ctx.strokeStyle = K.muted; ctx.setLineDash([5 * p, 4 * p]); ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.moveTo(X(0), Y(0)); ctx.lineTo(X(xmax), Y(slope * xmax)); ctx.stroke(); ctx.setLineDash([]);
+      label(`slope 2γ cos θ/(ρg) = ${sig(Math.abs(slope) < 1e-9 ? 0 : slope, 3)} mm²`, gx + 8 * p, gy + 14 * p, { size: 10.5, col: K.muted, w: 400, mono: true }); }
+    ts.forEach((t) => { ctx.fillStyle = K.pull; ctx.beginPath(); ctx.arc(X(1 / (t.r * 1000)), Y(t.h * 1000), 5 * p, 0, 7); ctx.fill(); });
+  }
+
+  /* ---------- drops and bubbles ---------- */
+  function drawSingle(x, y, w, h) {
+    const p = proj(), Lq = LIQ[S.B.liq], bub = S.B.kind === 'bubble', P = bub ? bubbleP(Lq.gam, S.B.rd) : dropP(Lq.gam, S.B.rd);
+    backdrop(x, y, w, h, y + h);
+    const cx = x + w / 2, cy = y + h * 0.48, R = Math.max(10, Math.min(w * 0.3, h * 0.24));
+    label(bub ? `A soap bubble: two surfaces` : `A drop: one surface`, x + 14 * p, y + 18 * p, { size: 13, w: 700, fit: w - 28 * p });
+    sub(`radius ${len(S.B.rd)}, drawn magnified`, x + 14 * p, y + 37 * p, w - 28 * p);
+    const c = COL[S.B.liq];
+    if (bub) {
+      const g = ctx.createRadialGradient(cx - R * 0.35, cy - R * 0.4, R * 0.1, cx, cy, R); g.addColorStop(0, 'rgba(255,255,255,0.10)'); g.addColorStop(0.85, 'rgba(180,200,255,0.10)'); g.addColorStop(0.95, 'rgba(230,170,255,0.35)'); g.addColorStop(1, 'rgba(120,220,200,0.55)');
+      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(cx, cy, R, 0, 7); ctx.fill();
+      ctx.strokeStyle = shade(c, -0.2); ctx.lineWidth = 1.4 * p; ctx.beginPath(); ctx.arc(cx, cy, R, 0, 7); ctx.stroke(); ctx.beginPath(); ctx.arc(cx, cy, R - 6 * p, 0, 7); ctx.stroke();
+      label('outer surface', cx + R * 0.72, cy - R * 0.86, { size: 10.5, col: K.muted, w: 400 }); label('inner surface', cx, cy - R + 18 * p, { a: 'center', size: 10.5, col: K.muted, w: 400 });
+    } else {
+      const g = ctx.createRadialGradient(cx - R * 0.35, cy - R * 0.4, R * 0.05, cx, cy, R); g.addColorStop(0, shade(c, 0.55)); g.addColorStop(0.6, c); g.addColorStop(1, shade(c, -0.35));
+      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(cx, cy, R, 0, 7); ctx.fill();
+    }
+    ctx.fillStyle = 'rgba(255,255,255,0.7)'; ctx.beginPath(); ctx.ellipse(cx - R * 0.38, cy - R * 0.45, R * 0.16, R * 0.08, -0.6, 0, 7); ctx.fill();
+    for (let k = 0; k < 8; k++) { const a = k * Math.PI / 4 + Math.PI / 8; arrow(cx + Math.cos(a) * (R + 26 * p), cy + Math.sin(a) * (R + 26 * p), cx + Math.cos(a) * (R + 4 * p), cy + Math.sin(a) * (R + 4 * p), K.pull, 2); }
+    label(bub ? 'P_in − P_out = 4γ/r' : 'P_in − P_out = 2γ/r', cx, cy + R + 46 * p, { a: 'center', size: 12, mono: true });
+    label(S.blind ? '= ?' : `= ${pres(P)} = ${sig(P / MMHG, 3)} mm Hg`, cx, cy + R + 66 * p, { a: 'center', size: 13, w: 700, col: K.pull, mono: true });
+  }
+  function drawPair(x, y, w, h) {
+    const p = proj(), b = bubbleNow(), benchY = y + h - 26 * p;
+    backdrop(x, y, w, h, benchY);
+    label('Two bubbles joined by a pipe', x + 14 * p, y + 18 * p, { size: 13, w: 700, fit: w - 28 * p });
+    sub(`${NAMES[S.B.liq]} · drawn to scale · t = ${f(S.t, 2)} s`, x + 14 * p, y + 37 * p, w - 28 * p);
+    const gap = 0.03, Rm = Math.max(b.R1, b.R2, S.B.r1, S.B.r2), sc = Math.max(1, Math.min((w - 40 * p) / (2 * Rm * 2 + gap + 0.02), (benchY - y - 150 * p) / (2.1 * Rm)));
+    const pipeY = benchY - 34 * p, stub = 46 * p, x1 = x + w / 2 - (Rm + gap / 2) * sc, x2 = x + w / 2 + (Rm + gap / 2) * sc, topY = pipeY - stub, aw = Math.max(3 * p, PIPE_A * sc);
+    /* pipe and stubs */
+    ctx.strokeStyle = K.glass; ctx.lineWidth = 2 * aw + 4 * p; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(x1, topY); ctx.lineTo(x1, pipeY); ctx.lineTo(x2, pipeY); ctx.lineTo(x2, topY); ctx.stroke(); ctx.lineCap = 'butt';
+    ctx.strokeStyle = K.dark ? '#1b1712' : '#fbf7ef'; ctx.lineWidth = 2 * aw; ctx.beginPath(); ctx.moveTo(x1, topY); ctx.lineTo(x1, pipeY); ctx.lineTo(x2, pipeY); ctx.lineTo(x2, topY); ctx.stroke();
+    /* the valve */
+    const vx = (x1 + x2) / 2; ctx.fillStyle = K.scale; ctx.beginPath(); ctx.arc(vx, pipeY, 9 * p, 0, 7); ctx.fill();
+    ctx.strokeStyle = K.canvas; ctx.lineWidth = 3 * p; ctx.beginPath(); if (S.B.open) { ctx.moveTo(vx - 7 * p, pipeY); ctx.lineTo(vx + 7 * p, pipeY); } else { ctx.moveTo(vx, pipeY - 7 * p); ctx.lineTo(vx, pipeY + 7 * p); } ctx.stroke();
+    label(S.B.open ? 'valve open' : 'valve closed', vx, pipeY + 22 * p, { a: 'center', size: 10.5, col: K.muted, w: 400 });
+    if (S.B.open && Math.abs(b.P1 - b.P2) > 1e-3) { const dir = b.P1 > b.P2 ? 1 : -1; arrow(vx - dir * 40 * p, pipeY - 16 * p, vx + dir * 40 * p, pipeY - 16 * p, K.accent, 2); label('air', vx, pipeY - 30 * p, { a: 'center', size: 10.5, col: K.accent }); }
+    const draw1 = (cx, hh, R, P, tag) => {
+      const cy = topY - hh + R;
+      ctx.save(); ctx.beginPath(); ctx.rect(x, y, w, topY - y); ctx.clip();
+      const g = ctx.createRadialGradient(cx - R * sc * 0.35, cy - R * sc * 0.4 + 0, R * sc * 0.1, cx, topY - (hh - R) * sc, R * sc);
+      g.addColorStop(0, 'rgba(255,255,255,0.10)'); g.addColorStop(0.9, 'rgba(180,200,255,0.12)'); g.addColorStop(0.97, 'rgba(230,170,255,0.4)'); g.addColorStop(1, 'rgba(120,220,200,0.6)');
+      const ccy = topY - (hh - R) * sc;
+      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(cx, ccy, R * sc, 0, 7); ctx.fill(); ctx.strokeStyle = 'rgba(140,120,200,0.8)'; ctx.lineWidth = 1.2 * p; ctx.stroke();
+      ctx.fillStyle = 'rgba(255,255,255,0.65)'; ctx.beginPath(); ctx.ellipse(cx - R * sc * 0.38, ccy - R * sc * 0.42, R * sc * 0.15, R * sc * 0.07, -0.6, 0, 7); ctx.fill();
+      ctx.restore();
+      const ty = Math.max(y + 60 * p, topY - hh * sc - 30 * p);
+      label(`R = ${len(R)}`, cx, ty, { a: 'center', size: 11.5, mono: true });
+      label(S.blind && !S.B.open ? '4γ/R = ?' : `4γ/R = ${sig(P, 3)} Pa`, cx, ty + 17 * p, { a: 'center', size: 11.5, mono: true, col: K.pull });
+      label(tag, cx, pipeY + 14 * p, { a: 'center', size: 10.5, col: K.muted, w: 400 });
+    };
+    draw1(x1, b.h1, b.R1, b.P1, 'left'); draw1(x2, b.h2, b.R2, b.P2, 'right');
+  }
+
+  /* ---------- resting on the surface ---------- */
+  function surfProgress() { return Math.min(1, S.t / SET_DOWN); }
+  function drawSurf(x, y, w, h) {
+    const p = proj(), s = surfNow(), Lq = LIQ[S.N.liq], c = COL[S.N.liq], needle = S.N.obj === 'needle';
+    const ys = y + h * 0.52;
+    backdrop(x, y, w, h, y + h);
+    /* the view: to scale for the needle (8 capillary lengths across), dents magnified 10 times under the insect */
+    const span = needle ? Math.max(8 * s.lc, 6 * S.N.d) : 0.03, sc = (w - cardW() * 0.2) / span, cx = x + (w - cardW() * 0.55) / 2 + (narrow() ? 0 : 0);
+    const pr = surfProgress(), touch = 0.55;
+    let phi = 0, sink = 0;
+    if (pr > touch) { const q = Math.min(1, (pr - touch) / (1 - touch)); if (s.holds) phi = s.phi * q; else { phi = Math.min(Math.PI / 2 * 0.8, (s.max / s.w) * Math.PI / 2 * q); } }
+    if (!s.holds && S.t > SET_DOWN) { sink = Math.min(1, (S.t - SET_DOWN) / 1.2); phi = phi * (1 - sink); }
+    const mag = needle ? 1 : 10, lc = s.lc;
+    /* the liquid and its dented surface */
+    const dent = (x0, ph, dir) => { const pts = []; const X0 = menX(lc, Math.max(ph, 1e-4)); for (let k = 0; k <= 60; k++) { const f2 = Math.max(1e-4, ph * (1 - k / 60)); const sx = X0 - menX(lc, f2); pts.push([x0 + dir * sx * sc, ys + menZ(lc, f2) * sc * mag]); } return pts; };
+    ctx.save();
+    const lg = ctx.createLinearGradient(0, ys, 0, y + h); lg.addColorStop(0, shade(c, 0.1)); lg.addColorStop(1, shade(c, -0.35)); ctx.fillStyle = lg;
+    let rn = needle ? S.N.d / 2 : 0, contacts = [];
+    if (needle) {
+      const zc = menZ(lc, phi), cxN = cx, cyN = ys + (zc - rn * Math.cos(phi)) * sc + sink * (h * 0.4);
+      const xL = cxN - rn * Math.sin(phi) * sc, xR = cxN + rn * Math.sin(phi) * sc, yC = ys + zc * sc;
+      const left = dent(xL, phi, -1).reverse(), right = dent(xR, phi, 1);
+      ctx.beginPath(); ctx.moveTo(x, y + h); ctx.lineTo(x, ys); left.forEach(([a, b]) => ctx.lineTo(Math.max(x, a), b));
+      if (phi > 1e-3 && sink < 0.3) ctx.arc(cxN, cyN, rn * sc, Math.PI - (Math.PI / 2 - phi) - Math.PI / 2 + Math.PI / 2 + 0, Math.PI / 2 + Math.PI / 2 - phi + Math.PI, true);
+      right.forEach(([a, b]) => ctx.lineTo(Math.min(x + w, a), b)); ctx.lineTo(x + w, ys); ctx.lineTo(x + w, y + h); ctx.closePath(); ctx.fill();
+      ctx.strokeStyle = K.dark ? 'rgba(255,255,255,0.55)' : 'rgba(255,255,255,0.9)'; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.moveTo(x, ys); left.forEach(([a, b]) => ctx.lineTo(Math.max(x, a), b)); ctx.stroke(); ctx.beginPath(); right.forEach(([a, b], i) => (i ? ctx.lineTo(a, b) : ctx.moveTo(a, b))); ctx.lineTo(x + w, ys); ctx.stroke();
+      /* the needle, end on */
+      const ny = pr < touch ? ys - (rn * sc) - (1 - pr / touch) * h * 0.3 : cyN;
+      const ng = ctx.createRadialGradient(cxN - rn * sc * 0.4, ny - rn * sc * 0.4, 1, cxN, ny, rn * sc); const mc = S.N.metal === 'gold' ? '#d4a52a' : S.N.metal === 'aluminum' ? '#c9ced4' : '#8a9097';
+      ng.addColorStop(0, shade(mc, 0.6)); ng.addColorStop(1, shade(mc, -0.4)); ctx.fillStyle = ng; ctx.beginPath(); ctx.arc(cxN, ny, rn * sc, 0, 7); ctx.fill();
+      contacts = [[xL, yC, -1], [xR, yC, 1]];
+      /* forces: the surface pulls along itself at each contact, γL each; the weight down */
+      if (pr >= touch && sink < 0.05) {
+        const Fs = Math.max(30 * p, Math.min(110 * p, 90 * p * Lq.gam * S.N.L / Math.max(s.w, 1e-9)));
+        const scF = Fs / (Lq.gam * S.N.L);
+        for (const [px, py, d] of contacts) { arrow(px, py, px + d * Math.cos(phi) * Fs, py - Math.sin(phi) * Fs, K.pull, 2.4); label('γL', px + d * (Math.cos(phi) * Fs + 6 * p), py - Math.sin(phi) * Fs - 6 * p, { a: d < 0 ? 'right' : 'left', size: 12, col: K.pull, w: 700 }); }
+        const wl = Math.min(150 * p, s.w * scF); arrow(cxN, ny, cxN, ny + Math.max(20 * p, wl), K.weight, 2.4); label('w', cxN + 8 * p, ny + Math.max(20 * p, wl) - 6 * p, { size: 12, col: K.weight, w: 700 });
+        if (phi > 0.02) { ctx.strokeStyle = K.muted; ctx.lineWidth = 1; ctx.setLineDash([3 * p, 3 * p]); ctx.beginPath(); ctx.moveTo(xR, yC); ctx.lineTo(xR + 60 * p, yC); ctx.stroke(); ctx.setLineDash([]); label(`φ = ${f(phi / D2R, 1)}°`, xR + 62 * p, yC + 10 * p, { size: 11, col: K.muted, mono: true }); }
+      }
+      label(`${S.N.metal === 'aluminum' ? 'An' : 'A'} ${S.N.metal} needle on ${lower1(NAMES[S.N.liq])}, seen end on, drawn to scale`, x + 14 * p, y + 18 * p, { size: 13, w: 700, fit: w - 28 * p });
+    } else {
+      /* the strider, side view, with each foot's dent (dents drawn 10 times deeper than life) */
+      const phiL = phi, feet = [-0.011, -0.004, 0.004, 0.011], bodyY = ys - 16 * p - (pr < touch ? (1 - pr / touch) * h * 0.25 : 0) + sink * h * 0.3;
+      ctx.beginPath(); ctx.moveTo(x, y + h); ctx.lineTo(x, ys);
+      const surfPts = []; for (let k = 0; k <= 200; k++) { const X = x + w * k / 200, xm = (X - cx) / sc; let z = 0; for (const fx of feet) { const d = Math.abs(xm - fx); if (phiL > 1e-4) { const X0 = menX(lc, phiL); let lo = 1e-6, hi = phiL; for (let it = 0; it < 30; it++) { const m2 = (lo + hi) / 2; if (X0 - menX(lc, m2) > d) lo = m2; else hi = m2; } z = Math.max(z, menZ(lc, (lo + hi) / 2)); } } surfPts.push([X, ys + z * sc * mag]); }
+      surfPts.forEach(([a, b]) => ctx.lineTo(a, b)); ctx.lineTo(x + w, y + h); ctx.closePath(); ctx.fill();
+      ctx.strokeStyle = K.dark ? 'rgba(255,255,255,0.55)' : 'rgba(255,255,255,0.9)'; ctx.lineWidth = 1.5 * p; ctx.beginPath(); surfPts.forEach(([a, b], i) => (i ? ctx.lineTo(a, b) : ctx.moveTo(a, b))); ctx.stroke();
+      ctx.strokeStyle = K.dark ? '#d8c9a8' : '#3b2f22'; ctx.lineWidth = 2 * p; ctx.lineCap = 'round';
+      const footY = (fx) => { const X = cx + fx * sc; const k = Math.round((X - x) / w * 200); return (surfPts[Math.max(0, Math.min(200, k))] || [0, ys])[1]; };
+      for (const fx of feet) { const X = cx + fx * sc, kx = cx + fx * sc * 0.55, ky = bodyY - 22 * p; ctx.beginPath(); ctx.moveTo(cx + fx * sc * 0.15, bodyY); ctx.lineTo(kx, ky); ctx.lineTo(X, footY(fx) - (pr < touch ? (1 - pr / touch) * h * 0.25 : 0)); ctx.stroke(); }
+      ctx.lineCap = 'butt';
+      const bg = ctx.createLinearGradient(0, bodyY - 8 * p, 0, bodyY + 8 * p); bg.addColorStop(0, K.dark ? '#6b5a44' : '#5a4632'); bg.addColorStop(1, K.dark ? '#3b2f22' : '#2a2018');
+      ctx.fillStyle = bg; ctx.beginPath(); ctx.ellipse(cx, bodyY, 0.008 * sc, 6 * p, 0, 0, 7); ctx.fill(); ctx.beginPath(); ctx.ellipse(cx - 0.0085 * sc, bodyY - 1 * p, 3.6 * p, 3.6 * p, 0, 0, 7); ctx.fill();
+      if (pr >= touch && sink < 0.05) { const wl = 46 * p; arrow(cx, bodyY, cx, bodyY + wl, K.weight, 2.4); label('w', cx + 8 * p, bodyY + wl - 4 * p, { size: 12, col: K.weight, w: 700 }); }
+      label(`A water strider on ${lower1(NAMES[S.N.liq])}, side view`, x + 14 * p, y + 18 * p, { size: 13, w: 700, fit: w - 28 * p });
+    }
+    ctx.restore();
+    sub(needle ? `view ${len(span)} wide · t = ${f(S.t, 2)} s` : `dents drawn 10 times deeper than life · t = ${f(S.t, 2)} s`, x + 14 * p, y + 37 * p, w - 28 * p);
+    let msg = '';
+    if (pr < touch) msg = 'being set down gently';
+    else if (!S.blind || S.t > SET_DOWN) msg = s.holds ? (pr >= 1 ? (window.VDI18N ? VDI18N.t('the surface holds it') : 'the surface holds it') : '') : (S.t > SET_DOWN ? (window.VDI18N ? VDI18N.t('it breaks through and sinks') : 'it breaks through and sinks') : '');
+    if (msg) label(msg, x + 14 * p, y + h - 22 * p, { size: 13, w: 700, col: s.holds ? K.accent : K.weight });
+  }
+
+  /* ---------- soap film on a sliding wire ---------- */
+  let FRAME = null;
+  function drawFilm(x, y, w, h) {
+    const p = proj(), Lq = LIQ[S.F.liq], F = filmF(Lq.gam, S.F.l);
+    backdrop(x, y, w, h, y + h);
+    const maxX = 0.105, sc = Math.min((w - 80 * p) / (maxX + 0.02), (h - 130 * p) / Math.max(S.F.l + 0.02, 0.06)), x0 = x + 40 * p, cy = y + h * 0.52;
+    const yT = cy - S.F.l / 2 * sc, yB = cy + S.F.l / 2 * sc, xw = x0 + S.F.x * sc, xEnd = x0 + maxX * sc;
+    FRAME = { x0, sc, yT, yB, xw };
+    /* the film, with thin film colors */
+    if (S.F.x > 1e-4) { const g = ctx.createLinearGradient(x0, yT, xw, yB); const cols = ['rgba(255,120,200,0.22)', 'rgba(120,220,255,0.22)', 'rgba(255,230,120,0.22)', 'rgba(160,120,255,0.22)', 'rgba(120,255,180,0.2)']; cols.forEach((c2, i) => g.addColorStop(i / (cols.length - 1), c2)); ctx.fillStyle = g; ctx.fillRect(x0, yT, xw - x0, yB - yT); }
+    /* the frame: a U of copper wire, closed on the left */
+    ctx.strokeStyle = '#b87333'; ctx.lineWidth = 4 * p; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(xEnd, yT - 2 * p); ctx.lineTo(x0, yT - 2 * p); ctx.lineTo(x0, yB + 2 * p); ctx.lineTo(xEnd, yB + 2 * p); ctx.stroke();
+    ctx.strokeStyle = 'rgba(255,220,180,0.6)'; ctx.lineWidth = 1 * p; ctx.beginPath(); ctx.moveTo(xEnd, yT - 3 * p); ctx.lineTo(x0, yT - 3 * p); ctx.stroke();
+    /* the sliding wire, with a grip */
+    ctx.strokeStyle = '#c47a3a'; ctx.lineWidth = Math.max(3, S.F.wd * sc * 1.5) * p; ctx.beginPath(); ctx.moveTo(xw, yT - 14 * p); ctx.lineTo(xw, yB + 14 * p); ctx.stroke(); ctx.lineCap = 'butt';
+    ctx.fillStyle = K.scale; ctx.beginPath(); ctx.arc(xw, yB + 22 * p, 8 * p, 0, 7); ctx.fill(); ctx.fillStyle = K.canvas; ctx.beginPath(); ctx.arc(xw, yB + 22 * p, 3 * p, 0, 7); ctx.fill();
+    /* the film's pull on the wire, γl from each surface */
+    if (S.F.x > 1e-4) { arrow(xw - 6 * p, cy - 14 * p, xw - 6 * p - 60 * p, cy - 14 * p, K.pull, 2.4); arrow(xw - 6 * p, cy + 14 * p, xw - 6 * p - 60 * p, cy + 14 * p, K.pull, 2.4);
+      ctx.font = `600 ${11 * p}px ${K.sans}`; const tw = Math.max(ctx.measureText('γl, top surface').width, ctx.measureText('γl, bottom surface').width);
+      if (xw - 72 * p - tw >= x + 4 * p) { label('γl, top surface', xw - 72 * p, cy - 14 * p, { a: 'right', size: 11, col: K.pull }); label('γl, bottom surface', xw - 72 * p, cy + 14 * p, { a: 'right', size: 11, col: K.pull }); }
+      else { label('γl, top surface', x0 + 6 * p, cy - 32 * p, { size: 11, col: K.pull }); label('γl, bottom surface', x0 + 6 * p, cy + 32 * p, { size: 11, col: K.pull }); } }   /* no room on the left (phones): above and below the arrows */
+    /* a scale bar */
+    const bx = x0, by = yB + 48 * p; ctx.strokeStyle = K.scale; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.moveTo(bx, by); ctx.lineTo(bx + 0.01 * sc, by); ctx.moveTo(bx, by - 4 * p); ctx.lineTo(bx, by + 4 * p); ctx.moveTo(bx + 0.01 * sc, by - 4 * p); ctx.lineTo(bx + 0.01 * sc, by + 4 * p); ctx.stroke();
+    label('1 cm', bx + 0.005 * sc, by + 12 * p, { a: 'center', size: 10.5, col: K.muted, w: 400 });
+    label(`${S.blind ? 'A liquid' : (/^[AEIOU]/.test(NAMES[S.F.liq]) ? 'An ' : 'A ') + lower1(NAMES[S.F.liq])} film on a sliding wire, seen from above, to scale`, x + 14 * p, y + 18 * p, { size: 13, w: 700, fit: w - 28 * p });
+    sub(`x = ${len(S.F.x)} · t = ${f(S.t * 1000, 1)} ms`, x + 14 * p, y + 37 * p, w - 28 * p, { mono: true });
+    label(`F = 2γl = ${force(F)}`, xw + 16 * p, cy, { size: 13, w: 700, col: K.pull, mono: true });
+  }
+  function drawFilmGraph(x, y, w, h) {
+    const p = proj(), Lq = LIQ[S.F.liq], F = filmF(Lq.gam, S.F.l) * 1000;
+    ctx.fillStyle = K.canvas; ctx.fillRect(x, y, w, h);
+    const m = { l: 56 * p, r: 16 * p, t: 44 * p, b: 40 * p }, gx = x + m.l, gy = y + m.t, gw = w - m.l - m.r, gh = h - m.t - m.b;
+    if (gw < 60 || gh < 60) return;
+    const xmax = 10, Fmax = Math.max(F * 2.2, 1e-3), X = (v) => gx + gw * v / xmax, Y = (v) => gy + gh * (1 - v / Fmax);
+    ctx.strokeStyle = K.line; ctx.lineWidth = 1; ctx.strokeRect(gx, gy, gw, gh);
+    ctx.font = `${10 * p}px ${K.mono}`; ctx.fillStyle = K.muted; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; for (let v = 0; v <= xmax; v += 2) ctx.fillText(String(v), X(v), gy + gh + 5 * p);
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; const st = nice(Fmax / 5); for (let v = 0; v <= Fmax + 1e-9; v += st) ctx.fillText(f(v, st < 1 ? 1 : 0), gx - 5 * p, Y(v));
+    label('F (mN)', gx - 4 * p, gy - 12 * p, { a: 'right', size: 10.5, col: K.muted, w: 400 }); label('film length x (cm)', gx + gw, gy + gh + 26 * p, { a: 'right', size: 10.5, col: K.muted, w: 400 });
+    label('Force on the wire against x', x + 12 * p, y + 18 * p, { size: 12.5, w: 700 });
+    if (!S.blind) {
+      ctx.strokeStyle = K.muted; ctx.setLineDash([5 * p, 4 * p]); ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.moveTo(X(0), Y(0)); ctx.lineTo(X(Math.min(xmax, S.F.x * 100 * Fmax / F)), Y(Math.min(Fmax, F * xmax / (S.F.x * 100)))); ctx.stroke(); ctx.setLineDash([]);
+      label('a spring pulling as hard at this x', X(S.F.x * 100 * 0.5), Y(F * 0.5) - 14 * p, { a: 'center', size: 10, col: K.muted, w: 400 });
+      ctx.strokeStyle = K.pull; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(X(0.05), Y(F)); ctx.lineTo(X(xmax), Y(F)); ctx.stroke();
+      label('film: 2γl at every x', X(xmax) - 4 * p, Y(F) - 12 * p, { a: 'right', size: 10.5, col: K.pull });
+    }
+    ctx.fillStyle = K.pull; ctx.beginPath(); ctx.arc(X(S.F.x * 100), Y(F), 5 * p, 0, 7); ctx.fill();
+  }
+
+  /* ---------- layout ---------- */
+  const SPL = (VD.split || ((el, o) => ({ f: () => o.def(o.axis()), place() {}, set() {} })))(can, { key: 'graph', axis: () => splitAxis(), def: (a) => (a === 'x' ? 0.62 : 0.66), min: 0.35, max: 0.8, snaps: [0.5, 2 / 3, 0.75],
+    label: 'Divider between the picture and the graph', onChange: () => draw() });
+  function splitAxis() { if (!W || !H || S.scene === 'surf') return null; return W > 760 ? 'x' : 'y'; }
+  function pieces() {
+    const a = splitAxis(); if (!a) return [[0, 0, W, H]];
+    const fr = SPL.f(); return a === 'x' ? [[0, 0, W * fr, H], [W * fr, 0, W * (1 - fr), H]] : [[0, 0, W, H * fr], [0, H * fr, W, H * (1 - fr)]];
+  }
+  function draw() {
+    if (!K || !W) return;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = K.canvas; ctx.fillRect(0, 0, W, H);
+    const P = pieces(), a = splitAxis();
+    /* on a wide picture the set up card floats over the right piece's top: the graph and the second picture start below it */
+    const cardH = !narrow() && a === 'x' ? Math.min(H * 0.68, $('setupCard').offsetHeight + 20) : 0;
+    if (S.scene === 'tubes') { drawTubes(...P[0]); const g = P[1]; drawTubeGraph(g[0], g[1] + cardH, g[2], g[3] - cardH); }
+    else if (S.scene === 'drops') { const g = P[1]; if (a === 'x') { drawPair(P[0][0], P[0][1], P[0][2], P[0][3]); drawSingle(g[0], g[1] + cardH, g[2], g[3] - cardH); } else { drawPair(...P[0]); drawSingle(...g); } }
+    else if (S.scene === 'surf') drawSurf(0, 0, W, H);
+    else { drawFilm(...P[0]); const g = P[1]; drawFilmGraph(g[0], g[1] + cardH, g[2], g[3] - cardH); }
+    if (a) { ctx.strokeStyle = K.line; ctx.lineWidth = 1; ctx.beginPath(); if (a === 'x') { ctx.moveTo(P[1][0] + 0.5, 0); ctx.lineTo(P[1][0] + 0.5, H); } else { ctx.moveTo(0, P[1][1] + 0.5); ctx.lineTo(W, P[1][1] + 0.5); } ctx.stroke(); }
+    SPL.place();
+  }
+
+  /* ---------- readouts ---------- */
+  const hid = '<span class="ok">hidden</span>';
+  function readouts() {
+    const dd = (a, b, cls) => `<div${cls ? ` class="${cls}"` : ''}><dt>${a}</dt><dd>${b}</dd></div>`;
+    let h = '';
+    if (S.scene === 'tubes') {
+      const L = LIQ[S.T.liq], th = thetaT(), ts = tubeState();
+      h += dd('Surface tension γ', `${L.gam} N/m`) + dd('Contact angle θ', `${f(th, 0)}°${S.T.own ? ' (yours)' : ''}`) + dd('Density ρ', `${sig(L.rho, 4)} kg/m³`) + dd('Viscosity η', `${sig(L.eta * 1000, 4)} mPa s`);
+      ts.forEach((t, i) => { const tag = ['r', '2r', '4r'][i]; h += dd(`Height now, tube ${tag} (${len(t.r)})`, len(t.h), i === 0 ? 'hl' : '') + dd(`Predicted h, tube ${tag}`, S.blind ? hid : len(t.heq)); });
+      h += dd('Time to 90% of the way, tube r', S.blind ? hid : `${sig(ts[0].t90, 3)} s`) + dd('Capillary length √(γ/ρg)', len(capLength(L.gam, L.rho)));
+    } else if (S.scene === 'drops') {
+      const L = LIQ[S.B.liq], b = bubbleNow(), bub = S.B.kind === 'bubble', P = bub ? bubbleP(L.gam, S.B.rd) : dropP(L.gam, S.B.rd);
+      h += dd('Surface tension γ', `${L.gam} N/m`) + dd(bub ? 'Bubble radius r' : 'Drop radius r', len(S.B.rd));
+      h += dd(bub ? 'Pressure inside 4γ/r' : 'Pressure inside 2γ/r', S.blind ? hid : `${pres(P)} = ${sig(P / MMHG, 3)} mm Hg`, 'hl wide');
+      h += dd('Left bubble R', len(b.R1)) + dd('Right bubble R', len(b.R2));
+      h += dd('Left 4γ/R', S.blind && !S.B.open ? hid : `${sig(b.P1, 3)} Pa`) + dd('Right 4γ/R', S.blind && !S.B.open ? hid : `${sig(b.P2, 3)} Pa`);
+      h += dd('Air flows', !S.B.open ? 'valve closed' : Math.abs(b.P1 - b.P2) < 1e-3 ? 'no longer' : b.P1 > b.P2 ? 'left to right' : 'right to left', 'wide');
+      const Rb = Math.cbrt(S.B.r1 ** 3 + S.B.r2 ** 3);
+      h += dd('One bubble from both, (r₁³ + r₂³)^(1/3)', S.blind ? hid : len(Rb), 'wide');
+    } else if (S.scene === 'surf') {
+      const s = surfNow(), L = LIQ[S.N.liq], needle = S.N.obj === 'needle';
+      h += dd('Surface tension γ', `${L.gam} N/m`) + dd(needle ? 'Weight w = ρ(πd²/4)Lg' : 'Weight w = mg', force(s.w));
+      h += dd(needle ? 'Most the surface holds, 2γL' : 'Most the surface holds, 2γℓ', S.blind ? hid : force(s.max), 'hl') + dd('Tilt of the surface φ = asin(w/2γL)', S.blind ? hid : s.holds ? `${f(s.phi / D2R, 1)}°` : 'over 90°: none');
+      h += dd('Rests or sinks', S.blind && S.t <= SET_DOWN ? hid : s.holds ? 'rests' : 'sinks', 'wide');
+      if (needle) h += dd(`Thickest ${S.N.metal} needle it holds, √(8γ/πρg)`, S.blind ? hid : len(s.dmax), 'wide');
+      else h += dd('Weight held as a share of the most', S.blind ? hid : `${f(100 * s.w / s.max, 1)}%`, 'wide');
+    } else {
+      const L = LIQ[S.F.liq], F = filmF(L.gam, S.F.l), m = wireMass(S.F.wd, S.F.l);
+      h += dd('Film', S.blind ? hid : NAMES[S.F.liq]) + dd('Surface tension γ', S.blind ? hid : `${L.gam} N/m`);
+      h += dd('Force on the wire F = 2γl', force(F), 'hl') + dd('Film length x', len(S.F.x));
+      h += dd('Film area (both surfaces) 2lx', `${sig(2 * S.F.l * S.F.x * 1e4, 3)} cm²`) + dd('Surface energy 2γlx', `${sig(F * S.F.x * 1e3, 3)} mJ`);
+      h += dd('Mass of the sliding wire', `${sig(m * 1e6, 3)} mg`) + dd('Let go: a = F/m', `${sig(F / m, 3)} m/s²`);
+      h += dd('Wire speed now', `${sig(S.F.v, 3)} m/s`);
+    }
+    $('out').innerHTML = h; window.vdShowCols = SHOWCOLS[S.scene];
+  }
+  function clock() {
+    $('clock').textContent = S.scene === 'film' ? `t = ${f(S.t * 1000, 1)} ms` : `t = ${f(S.t, S.t < 100 ? 2 : 0)} s`;
+  }
+
+  /* ---------- controls ---------- */
+  const card = VD.setupCard($('setupCard'));
+  const placeCard = () => { $('setupCard').style.top = narrow() ? '' : `${$('strip').offsetHeight + 12}px`; };
+  if (window.ResizeObserver) new ResizeObserver(placeCard).observe($('strip'));
+  function sync() {
+    $('selLiqT').value = S.T.liq; $('selMat').value = S.T.mat; $('sR').value = Math.log10(S.T.r * 1000); $('oR').textContent = len(S.T.r);
+    $('chkTheta').checked = S.T.own; $('rowTheta').hidden = !S.T.own; $('sTheta').value = S.T.th; $('oTheta').textContent = `${f(S.T.th, 0)}°`;
+    $('noteTheta').textContent = S.T.own ? 'Your own angle, in place of the table\'s.' : thetaKnown() ? (() => { const v = { liq: lower1(liqName(S.T.liq)), th: thetaT() }, I = window.VDI18N;
+      return S.T.mat === 'paraffin' ? (I ? VDI18N.t('θ = {th}° for {liq} on waxed glass (Table 11.4).', v) : fillT('θ = {th}° for {liq} on waxed glass (Table 11.4).', v))
+        : S.T.mat === 'silver' ? (I ? VDI18N.t('θ = {th}° for {liq} on silver (Table 11.4).', v) : fillT('θ = {th}° for {liq} on silver (Table 11.4).', v))
+          : (I ? VDI18N.t('θ = {th}° for {liq} on glass (Table 11.4).', v) : fillT('θ = {th}° for {liq} on glass (Table 11.4).', v)); })() : 'This pair is not in Table 11.4: the model takes θ = 0° (it wets the wall). Set your own angle to change it.';
+    for (const o of $('selMat').options) o.disabled = !(S.T.own || LIQ[S.T.liq].th[o.value] != null || o.value === 'glass');
+    $('selLiqB').value = S.B.liq; $('sRd').value = Math.log10(S.B.rd); $('oRd').textContent = len(S.B.rd); $('sB1').value = S.B.r1 * 100; $('oB1').textContent = len(S.B.r1); $('sB2').value = S.B.r2 * 100; $('oB2').textContent = len(S.B.r2);
+    for (const b of document.querySelectorAll('#kindSeg button')) b.setAttribute('aria-pressed', String(b.dataset.kind === S.B.kind));
+    $('selLiqS').value = S.N.liq; $('selMetal').value = S.N.metal; $('sD').value = S.N.d * 1000; $('oD').textContent = len(S.N.d); $('sL').value = S.N.L * 100; $('oL').textContent = len(S.N.L);
+    $('sM').value = S.N.m * 1e6; $('oM').textContent = `${sig(S.N.m * 1e6, 3)} mg`; $('sLeg').value = S.N.leg * 1000; $('oLeg').textContent = len(S.N.leg);
+    for (const b of document.querySelectorAll('#objSeg button')) b.setAttribute('aria-pressed', String(b.dataset.obj === S.N.obj));
+    $('rowNeedle').hidden = S.N.obj !== 'needle'; $('rowStrider').hidden = S.N.obj === 'needle'; $('btnSoap').disabled = S.N.liq === 'soap';
+    $('selLiqF').value = S.F.liq; $('sWl').value = S.F.l * 100; $('oWl').textContent = len(S.F.l); $('sX').value = S.F.x * 100; $('oX').textContent = len(S.F.x); $('sWd').value = S.F.wd * 1000; $('oWd').textContent = len(S.F.wd);
+    for (const b of document.querySelectorAll('#presets button')) { b.setAttribute('aria-pressed', String(b.dataset.p === S.preset)); b.hidden = b.dataset.m !== S.scene; }
+    for (const b of document.querySelectorAll('#sceneSeg button')) b.setAttribute('aria-pressed', String(b.dataset.scene === S.scene));
+    $('boxTubes').hidden = S.scene !== 'tubes'; $('boxDrops').hidden = S.scene !== 'drops'; $('boxSurf').hidden = S.scene !== 'surf'; $('boxFilm').hidden = S.scene !== 'film';
+    $('cardTitle').textContent = { tubes: 'The tubes', drops: 'The drop and the bubbles', surf: 'On the surface', film: 'The film' }[S.scene];
+    can.setAttribute('aria-label', { tubes: 'Three glass tubes of different radii standing in a dish of liquid, with a graph of height against one over radius. Space plays or pauses.',
+      drops: 'A drop or soap bubble with the pressure inside, and two soap bubbles joined by a pipe with a valve. Space plays or pauses.',
+      surf: 'A needle or a water strider resting on a liquid surface, seen from the side. Space plays or pauses.',
+      film: 'A soap film in a wire frame pulling on a sliding wire, with a graph of the force against the film length. Drag the wire; Space plays or pauses.' }[S.scene]);
+    $('about').textContent = ABOUT[S.scene];
+  }
+  function setRun(on) { S.run = on; card.away(on); $('play').textContent = on ? 'Pause' : 'Play'; $('play').classList.toggle('attn', !on); if (S.scene === 'drops') S.B.open = on || S.B.open; if (!on) { readouts(); clock(); } }
+  function setSpeed(v) { S.speed = v; $('selSpeed').value = String(v); }
+  function restart() { S.t = 0; S.played = false; if (S.scene === 'drops') resetBubbles(); if (S.scene === 'film') { S.F.x = S.F.x0; S.F.v = 0; S.F.done = false; } }
+  function hint(s) { $('presetHint').textContent = s || ''; }
+  function applyPreset(k) {
+    const c = PRE[k]; S.preset = k; S.scene = c.scene;
+    if (c.scene === 'tubes') Object.assign(S.T, { liq: c.liq, mat: c.mat, r: c.r, own: false, th: LIQ[c.liq].th[c.mat] || 0 });
+    if (c.scene === 'drops') Object.assign(S.B, { liq: c.liq, kind: c.kind, rd: c.rd, r1: c.r1, r2: c.r2 });
+    if (c.scene === 'surf') Object.assign(S.N, { obj: c.obj, liq: c.liq }, c.obj === 'needle' ? { metal: c.metal, d: c.d, L: c.L } : { m: c.m, leg: c.leg });
+    if (c.scene === 'film') Object.assign(S.F, { liq: c.liq, l: c.l, x0: c.x, x: c.x, wd: c.wd });
+    setSpeed(c.speed); restart(); hint(c.hint); setRun(false); sync(); redraw();
+  }
+  const lastPreset = {};
+  function setScene(m) { if (m === S.scene) return; lastPreset[S.scene] = S.preset; applyPreset(lastPreset[m] && lastPreset[m] !== 'custom' ? lastPreset[m] : FIRST[m]); }
+  for (const b of document.querySelectorAll('#sceneSeg button')) b.addEventListener('click', () => setScene(b.dataset.scene));
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  const changed = (msg) => { S.preset = 'custom'; restart(); if (msg) hint(msg); setRun(false); sync(); redraw(); };
+  $('selLiqT').addEventListener('change', (e) => { S.T.liq = e.target.value; if (!S.T.own && LIQ[S.T.liq].th[S.T.mat] == null && S.T.mat !== 'glass') S.T.mat = 'glass'; changed(`${NAMES[S.T.liq]} in ${MATNAME[S.T.mat]} tubes.`); });
+  $('selMat').addEventListener('change', (e) => { S.T.mat = e.target.value; changed(`${NAMES[S.T.liq]} in ${MATNAME[S.T.mat]} tubes.`); });
+  $('sR').addEventListener('input', (e) => { S.T.r = +(10 ** +e.target.value / 1000).toPrecision(3); changed(); });
+  $('chkTheta').addEventListener('change', (e) => { S.T.own = e.target.checked; if (S.T.own) S.T.th = LIQ[S.T.liq].th[S.T.mat] || 0; changed(); });
+  $('sTheta').addEventListener('input', (e) => { S.T.th = +e.target.value; changed(); });
+  $('selLiqB').addEventListener('change', (e) => { S.B.liq = e.target.value; changed(); });
+  for (const b of document.querySelectorAll('#kindSeg button')) b.addEventListener('click', () => { S.B.kind = b.dataset.kind; changed(); });
+  $('sRd').addEventListener('input', (e) => { S.B.rd = +(10 ** +e.target.value).toPrecision(3); S.preset = 'custom'; sync(); redraw(); });
+  $('sB1').addEventListener('input', (e) => { S.B.r1 = +e.target.value / 100; changed(); });
+  $('sB2').addEventListener('input', (e) => { S.B.r2 = +e.target.value / 100; changed(); });
+  for (const b of document.querySelectorAll('#objSeg button')) b.addEventListener('click', () => { S.N.obj = b.dataset.obj; changed(); });
+  $('selLiqS').addEventListener('change', (e) => { S.N.liq = e.target.value; changed(); });
+  $('selMetal').addEventListener('change', (e) => { S.N.metal = e.target.value; changed(); });
+  $('sD').addEventListener('input', (e) => { S.N.d = +e.target.value / 1000; changed(); });
+  $('sL').addEventListener('input', (e) => { S.N.L = +e.target.value / 100; changed(); });
+  $('sM').addEventListener('input', (e) => { S.N.m = +e.target.value * 1e-6; changed(); });
+  $('sLeg').addEventListener('input', (e) => { S.N.leg = +e.target.value / 1000; changed(); });
+  /* soap lowers γ at once, whatever is resting there: if it can no longer be held, it sinks from now */
+  $('btnSoap').addEventListener('click', () => { S.N.liq = 'soap'; S.preset = 'custom'; if (S.t > SET_DOWN && !surfNow().holds) S.t = SET_DOWN; hint('A drop of soap spreads over the surface: γ falls to 0.0370 N/m.'); sync(); readouts(); draw(); if (!S.run && S.t >= SET_DOWN) setRun(true); });
+  $('selLiqF').addEventListener('change', (e) => { S.F.liq = e.target.value; changed(); });
+  $('sWl').addEventListener('input', (e) => { S.F.l = +e.target.value / 100; changed(); });
+  $('sX').addEventListener('input', (e) => { S.F.x0 = +e.target.value / 100; changed(); });
+  $('sWd').addEventListener('input', (e) => { S.F.wd = +e.target.value / 1000; changed(); });
+  $('selSpeed').addEventListener('change', (e) => { S.speed = +e.target.value; clock(); });
+  $('play').addEventListener('click', () => { if (!S.run && isDone()) restart(); setRun(!S.run); if (S.run) S.played = true; if (S.run && S.still) { finish(); setRun(false); } redraw(); });
+  $('restart').addEventListener('click', () => { restart(); setRun(false); redraw(); });
+  /* drag the sliding wire (Soap film) */
+  let drag = null;
+  const pt = (e) => { const r = can.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
+  can.addEventListener('pointerdown', (e) => { if (S.scene !== 'film' || !FRAME) return; const [px, py] = pt(e); if (Math.abs(px - FRAME.xw) < 22 && py > FRAME.yT - 30 && py < FRAME.yB + 36) { drag = true; setRun(false); can.setPointerCapture(e.pointerId); e.preventDefault(); } });
+  can.addEventListener('pointermove', (e) => {
+    const [px, py] = pt(e);
+    if (!drag) { can.style.cursor = S.scene === 'film' && FRAME && Math.abs(px - FRAME.xw) < 22 && py > FRAME.yT - 30 && py < FRAME.yB + 36 ? 'grab' : ''; return; }
+    const x = Math.max(0.005, Math.min(0.1, (px - FRAME.x0) / FRAME.sc)); S.F.x0 = S.F.x = +x.toFixed(3); S.F.v = 0; S.F.done = false; S.t = 0; S.preset = 'custom'; sync(); draw(); readouts();
+  });
+  const endDrag = () => { drag = null; }; can.addEventListener('pointerup', endDrag); can.addEventListener('pointercancel', endDrag);
+  can.addEventListener('keydown', (e) => {
+    if (e.key === ' ') { $('play').click(); e.preventDefault(); }
+    else if (S.scene === 'film' && (e.key === 'ArrowLeft' || e.key === 'ArrowRight')) { S.F.x0 = Math.max(0.005, Math.min(0.1, S.F.x0 + (e.key === 'ArrowRight' ? 0.002 : -0.002))); changed(); e.preventDefault(); }
+  });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; redraw(); });
+  $('labStill').addEventListener('change', (e) => { S.still = e.target.checked; redraw(); });
+  if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) { S.still = true; $('labStill').checked = true; }
+  if (window.VD && VD.panel) VD.panel({ reset: '#restart', speed: '#selSpeed', clock: '#clock', step: { label: 'Step', title: 'Forward a little', run: () => { advance(stepSize()); redraw(); } } });
+  if (window.VD && VD.fitStage) VD.fitStage();
+
+  const ABOUT = {
+    tubes: 'Model. The height is h = 2γ cos θ/(ρgr): the surface pulls along the wall with γ per meter of the tube\'s rim, 2πrγ cos θ upward, and holds up a column of weight ρ g πr²h. Surface tensions are from OpenStax College Physics 2e Table 11.3, contact angles from Table 11.4, densities from Table 11.1 and viscosities from Table 12.1 (water is 1000 kg/m³ at every temperature, as the book takes it). The rise in time is viscous (Poiseuille) flow pushed by the capillary pressure minus the column\'s weight (Washburn\'s equation with gravity); the liquid\'s inertia is left out, so wide tubes, where real water overshoots and bobs, rise more smoothly here than in life. The formula holds for tubes much narrower than the capillary length; the meniscus\'s own volume and the dish\'s small drop in level are left out. Tube widths are drawn wider than life; heights are to scale.',
+    drops: 'Model. A curved surface pulls inward, so the pressure inside is higher than outside: 2γ/r for a drop with one surface, 4γ/r for a soap bubble, whose film has two. Two bubbles sit on the ends of a pipe 4 mm across and 10 cm long; with the valve open, air flows through it by Poiseuille\'s law (air\'s viscosity 1.81 × 10⁻⁵ Pa s, Table 12.1), from the higher pressure to the lower. Each bubble is a spherical cap on its pipe end, so the small one shrinks to a dome flatter than a half sphere, whose radius matches the big bubble\'s, and stops there. Air is taken as incompressible (the pressures differ from the atmosphere by about a ten thousandth), and the film\'s weight, its draining and evaporation are left out.',
+    surf: 'Model. The book\'s model: the surface touches the object along two lines of length L and pulls along itself, tilted φ below level, so it holds up w = 2γL sin φ, at most 2γL. The extra buoyancy of the water pushed aside by the dent is left out (Keller 1998, Physics of Fluids 10, 3009), and the needle or leg is taken as not wetted. The dent\'s shape is the exact meniscus of a long object, with the capillary length √(γ/ρg) (2.7 mm for water). How the object is set down and how fast it sinks are drawn, not computed. Densities from Table 11.1.',
+    film: 'Model. A soap film has two surfaces, each pulling the sliding wire with γ per meter of its length, so F = 2γl, the same however far the film is stretched (a spring would pull harder the more it stretches). The work to stretch it, Fx = 2γlx, is stored as surface energy. Let go, the wire (copper, 8800 kg/m³, Table 11.1) is pulled back with a = F/m; friction, air drag and the film\'s own mass are left out. Pure water films burst at once in real life; soap keeps a film alive.',
+  };
+
+  /* ---------- the run ---------- */
+  function stepSize() { return S.scene === 'film' ? 0.002 : S.scene === 'drops' ? 0.05 : S.scene === 'surf' ? 0.1 : Math.max(0.01, tubeState()[0].t90 / 20); }
+  function isDone() {
+    if (S.scene === 'tubes') return S.t > 1.5 * washT(0.999 * tubeState()[0].heq, tubeState()[0].heq, tubeState()[0].A);
+    if (S.scene === 'film') return S.F.done;
+    if (S.scene === 'surf') return S.t > SET_DOWN + 1.3;
+    const b = bubbleNow(); return S.B.open && Math.abs(b.P1 - b.P2) < 1e-3;
+  }
+  function advance(dt) {
+    S.t += dt;
+    if (S.scene === 'drops') { S.B.open = true; bubblesStep(S.B, LIQ[S.B.liq].gam, PIPE_A, PIPE_K, dt); }
+    if (S.scene === 'film' && !S.F.done) { const a = filmF(LIQ[S.F.liq].gam, S.F.l) / wireMass(S.F.wd, S.F.l); S.F.v += a * dt; S.F.x -= S.F.v * dt; if (S.F.x <= 0) { S.F.x = 0; S.F.done = true; } }
+  }
+  /* Reduce motion: Play shows the end at once */
+  function finish() {
+    if (S.scene === 'tubes') S.t = 1.5 * washT(0.999 * tubeState()[0].heq, tubeState()[0].heq, tubeState()[0].A) + 1e-9 || 1;
+    else if (S.scene === 'surf') S.t = SET_DOWN + 1.3;
+    else if (S.scene === 'drops') { let n = 0; while (n++ < 4000 && !isDone()) advance(0.05); }
+    else { let n = 0; while (n++ < 100000 && !S.F.done) advance(1e-5); }
+  }
+  let last = performance.now(), lastOut = 0;
+  function frame(now) {
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    if (S.run) {
+      let left = dt * S.speed; const h = S.scene === 'film' ? 2e-5 : S.scene === 'drops' ? 0.01 : left; let n = 0;
+      while (left > 1e-12 && n++ < 4000) { const s = Math.min(h, left); advance(s); left -= s; }
+      draw(); if (now - lastOut > 250) { lastOut = now; readouts(); clock(); }
+      if (isDone()) { setRun(false); redraw(); }
+    }
+    requestAnimationFrame(frame);
+  }
+  const redraw = () => { draw(); readouts(); clock(); };
+  function resize() { placeCard(); dpr = window.devicePixelRatio || 1; const r = $('scene').getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr); redraw(); }
+  const retheme = () => { tokens(); redraw(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  VD.projector({ onChange: resize });
+  window.vdVersion = 'surface-tension@2026-11-19';
+
+  /* ---------- readings ---------- */
+  window.vdReadingRow = () => {
+    if (S.scene === 'tubes') { const L = LIQ[S.T.liq], th = thetaT(); return tubeState().map((t, i) => ({ part: 'tubes', liquid: NAMES[S.T.liq], wall: MATNAME[S.T.mat], gamma_N_m: L.gam, theta_deg: th, rho_kg_m3: L.rho, tube: ['r', '2r', '4r'][i], r_mm: +(t.r * 1000).toPrecision(4), t_s: +S.t.toPrecision(4), h_mm: +(t.h * 1000).toFixed(2), h_pred_mm: S.blind ? '' : +(t.heq * 1000).toFixed(2), inv_r_per_mm: +(1 / (t.r * 1000)).toPrecision(4) })); }
+    if (S.scene === 'drops') { const L = LIQ[S.B.liq], b = bubbleNow(), bub = S.B.kind === 'bubble'; return { part: 'drops', liquid: NAMES[S.B.liq], gamma_N_m: L.gam, kind: bub ? 'bubble' : 'drop', r_mm: +(S.B.rd * 1000).toPrecision(4), P_Pa: S.blind ? '' : +(bub ? bubbleP(L.gam, S.B.rd) : dropP(L.gam, S.B.rd)).toPrecision(4), t_s: +S.t.toPrecision(4), R1_cm: +(b.R1 * 100).toPrecision(4), R2_cm: +(b.R2 * 100).toPrecision(4), P1_Pa: +b.P1.toPrecision(4), P2_Pa: +b.P2.toPrecision(4) }; }
+    if (S.scene === 'surf') { const s = surfNow(), L = LIQ[S.N.liq], needle = S.N.obj === 'needle'; return { part: 'surface', object: needle ? `${S.N.metal} needle` : 'water strider', liquid: NAMES[S.N.liq], gamma_N_m: L.gam, d_mm: needle ? S.N.d * 1000 : '', L_cm: needle ? +(S.N.L * 100).toFixed(1) : +(S.N.leg * 100).toFixed(2), m_mg: needle ? '' : +(S.N.m * 1e6).toFixed(1), w_mN: +(s.w * 1000).toPrecision(4), max_mN: S.blind ? '' : +(s.max * 1000).toPrecision(4), result: S.blind && S.t <= SET_DOWN ? '' : s.holds ? 'rests' : 'sinks' }; }
+    const L = LIQ[S.F.liq]; return { part: 'film', film: S.blind ? '' : NAMES[S.F.liq], l_cm: +(S.F.l * 100).toFixed(2), x_cm: +(S.F.x * 100).toFixed(2), F_mN: +(filmF(L.gam, S.F.l) * 1000).toPrecision(4), energy_mJ: +(filmF(L.gam, S.F.l) * S.F.x * 1000).toPrecision(4) };
+  };
+  const SHOWCOLS = { tubes: [['tube', 'tube'], ['r_mm', 'r (mm)'], ['h_mm', 'h (mm)']], drops: [['kind', 'kind'], ['r_mm', 'r (mm)'], ['P_Pa', 'P (Pa)']], surf: [['object', 'object'], ['w_mN', 'w (mN)'], ['result', 'result']], film: [['l_cm', 'l (cm)'], ['x_cm', 'x (cm)'], ['F_mN', 'F (mN)']] };
+  /* no worksheet for this demo yet: Export to worksheet saves the readings as a CSV file */
+  window.addEventListener('load', () => {
+    const sec = document.querySelector('.vd-readings'), ex = sec && sec.querySelector('.vd-export'); if (!ex) return;
+    ex.addEventListener('click', (e) => {
+      e.stopImmediatePropagation();
+      const rows = window.vdRows ? window.vdRows() : [], st = sec.querySelector('.status'), T = (s, v) => (typeof VDI18N === 'object' && VDI18N.t ? VDI18N.t(s, v) : s.replace(/\{(\w+)\}/g, (a, n) => (v && v[n] != null ? v[n] : a)));
+      if (!rows.length) { st.textContent = T('No readings to export.'); return; }
+      const cols = []; rows.forEach((r) => Object.keys(r).forEach((k) => { if (!cols.includes(k)) cols.push(k); }));
+      const cell = (v) => { const s = v == null ? '' : String(v); return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s; };
+      const txt = ['# Surface Tension and Capillarity virtual apparatus: recorded readings (simulated data)', `# demo version,${window.vdVersion}`, ['row'].concat(cols).join(','), ...rows.map((r, i) => [i + 1].concat(cols.map((k) => r[k])).map(cell).join(','))].join('\n') + '\n';
+      try { const u = URL.createObjectURL(new Blob([txt], { type: 'text/csv' })), a = document.createElement('a'); a.href = u; a.download = 'surface-tension-readings.csv'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 1000); } catch (_) {}
+      st.textContent = T('There is no worksheet for this demo yet, so the readings were saved as a CSV file ({n} rows).', { n: rows.length });
+    }, true);
+  });
+  window.__st = { S, LIQ, PRE, applyPreset, setScene, setRun, advance, finish, tubeState, bubbleNow, surfNow, redraw, isDone, restart, capRise, bubbleP, dropP, filmF };
+  tokens(); applyPreset('water3');
+  new ResizeObserver(resize).observe($('scene')); resize();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  VD.tools({ el: can, strip: '#strip', stage: '#scene', time: () => S.t });
+  if (window.VD && VD.describe) VD.describe(can, () => {
+    if (S.scene === 'tubes') { const ts = tubeState(); const mm = (v) => sig(v * 1000, 3), I = window.VDI18N, fill = fillT;
+      const v = { liq: liqName(S.T.liq), a: mm(ts[0].r), b: mm(ts[1].r), c: mm(ts[2].r) };   /* the harvest reads each sentence from its VDI18N.t literal */
+      const line = S.T.mat === 'paraffin' ? (I ? VDI18N.t('{liq} in three waxed glass tubes of radius {a} mm, {b} mm and {c} mm.', v) : fill('{liq} in three waxed glass tubes of radius {a} mm, {b} mm and {c} mm.', v))
+        : S.T.mat === 'silver' ? (I ? VDI18N.t('{liq} in three silver tubes of radius {a} mm, {b} mm and {c} mm.', v) : fill('{liq} in three silver tubes of radius {a} mm, {b} mm and {c} mm.', v))
+          : (I ? VDI18N.t('{liq} in three glass tubes of radius {a} mm, {b} mm and {c} mm.', v) : fill('{liq} in three glass tubes of radius {a} mm, {b} mm and {c} mm.', v));
+      return [line, { t: `Heights now ${ts.map((t) => f(t.h * 1000, 1)).join(' mm, ')} mm.`, live: false }]; }
+    if (S.scene === 'drops') { const b = bubbleNow(); return [`Two soap bubbles of radius ${f(b.R1 * 100, 2)} cm and ${f(b.R2 * 100, 2)} cm joined by a pipe.`, S.B.open ? (window.VDI18N ? VDI18N.t('The valve is open.') : 'The valve is open.') : (window.VDI18N ? VDI18N.t('The valve is closed.') : 'The valve is closed.')]; }
+    if (S.scene === 'surf') { const s = surfNow(), out = [S.N.obj === 'needle' ? `A needle on ${lower1(NAMES[S.N.liq])}.` : `A water strider on ${lower1(NAMES[S.N.liq])}.`]; if (S.t > SET_DOWN) out.push(s.holds ? (window.VDI18N ? VDI18N.t('The surface holds it.') : 'The surface holds it.') : (window.VDI18N ? VDI18N.t('It sinks.') : 'It sinks.')); return out; }
+    return [`A film ${f(S.F.x * 100, 2)} cm long on a wire ${f(S.F.l * 100, 2)} cm long, pulling with ${f(filmF(LIQ[S.F.liq].gam, S.F.l) * 1000, 2)} mN.`];
+  });
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

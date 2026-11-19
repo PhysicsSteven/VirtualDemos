@@ -104,6 +104,8 @@ VDI18N.add('es', 'demo/ideal-gas', {
   "Pared caliente, pared fría",
 "Real molecule sizes":
   "Tamaños reales de las moléculas",
+"Brownian motion":
+  "Movimiento browniano",
 "Two gases and a divider":
   "Dos gases y un divisor",
 "Two gases mix":
@@ -146,6 +148,24 @@ VDI18N.add('es', 'demo/ideal-gas', {
   "Rapidez cuadrática media",
 "rms speed of a real (3D) gas at this T, √(3kT/m)":
   "Rapidez cuadrática media de un gas real (3D) a esta T, √(3kT/m)",
+"Time since the run started":
+  "Tiempo desde que empezó la corrida",
+"Large disk":
+  "Disco grande",
+"Drag coefficient γ from the kicks":
+  "Coeficiente de arrastre γ a partir de los golpes",
+"m/γ, the time to forget its starting speed":
+  "m/γ, el tiempo en que olvida su velocidad inicial",
+"Fitted from · to":
+  "Ajuste desde · hasta",
+"D from the fit, slope of ⟨x²⟩ = 2Dt":
+  "D del ajuste, pendiente de ⟨x²⟩ = 2Dt",
+"Boltzmann's constant, k = γD/T":
+  "Constante de Boltzmann, k = γD/T",
+"Difference from the true k":
+  "Diferencia con la k verdadera",
+"Avogadro's number, N<sub>A</sub> = R/k":
+  "Número de Avogadro, N<sub>A</sub> = R/k",
 "Molecule size":
   "Tamaño de las moléculas",
 "Diameter d":
@@ -176,6 +196,14 @@ VDI18N.add('es', 'demo/ideal-gas', {
   "Dos gases",
 "Set each gas on its card beside the box, and the hole width above it. Changing a gas starts again with the divider closed: gas A fills the left half and gas B the right half, each at its own temperature. Then choose Hole or Removed above the box; that moment is t = {#}. Masses are in atomic mass units u (helium {#}, neon {#}, argon {#}, krypton {#}, xenon {#}). The molecules are hard disks of the diameter you choose. A molecule goes through the hole only if it fits, so the opening its center can use is the hole width minus the diameter.":
   "Ajusta cada gas en su tarjeta junto a la caja, y el ancho del orificio arriba de ella. Cambiar un gas empieza de nuevo con el divisor cerrado: el gas A llena la mitad izquierda y el gas B la derecha, cada uno a su propia temperatura. Luego elige Orificio o Quitado arriba de la caja; ese momento es t = {#}. Las masas están en unidades de masa atómica u (helio {#}, neón {#}, argón {#}, kriptón {#}, xenón {#}). Las moléculas son discos duros del diámetro que elijas. Una molécula pasa por el orificio solo si cabe, así que la abertura que puede usar su centro es el ancho del orificio menos el diámetro.",
+"Brownian playback speed":
+  "Velocidad de reproducción del movimiento browniano",
+"The large disk is {#} nm across and {#} times as heavy as an argon atom; the molecules are the gas you choose, as hard disks {#} nm across. Every collision with it is elastic, so energy and momentum are kept exactly. Its path is drawn in the box. The graph plots its mean square displacement along one axis, ⟨x²⟩, against the time t, averaged over every starting moment of the run, and fits a straight line with a free intercept over the shaded times: from 3m/γ, once the disk has forgotten how fast it started, to a tenth of the run, where the average still uses many starts. The slope is 2D. The drag coefficient γ is measured from the kicks themselves: on average a kick pushes against the disk's velocity, and γ is that push per unit velocity per unit time. Einstein's relation D = kT/γ then gives k. Each run is random: in seven simulated runs of {#} ns, k came out with a spread of about {#}% (one standard deviation) around the true value. The longer the run, and the more runs you average, the closer it comes. Changing N or T starts the record again.":
+  "El disco grande mide {#} nm de diámetro y es {#} veces más pesado que un átomo de argón; las moléculas son del gas que elijas, como discos duros de {#} nm de diámetro. Cada choque con él es elástico, así que la energía y el momento se conservan exactamente. Su trayectoria se dibuja en la caja. La gráfica muestra su desplazamiento cuadrático medio a lo largo de un eje, ⟨x²⟩, en función del tiempo t, promediado sobre cada instante inicial de la corrida, y ajusta una recta con ordenada al origen libre en los tiempos sombreados: desde 3m/γ, cuando el disco ya olvidó qué tan rápido empezó, hasta una décima de la corrida, donde el promedio todavía usa muchos inicios. La pendiente es 2D. El coeficiente de arrastre γ se mide a partir de los mismos golpes: en promedio un golpe empuja en contra de la velocidad del disco, y γ es ese empuje por unidad de velocidad por unidad de tiempo. La relación de Einstein D = kT/γ da entonces k. Cada corrida es aleatoria: en siete corridas simuladas de {#} ns, k salió con una dispersión de alrededor de {#}% (una desviación estándar) en torno al valor verdadero. Entre más larga la corrida, y entre más corridas promedies, más se acerca. Cambiar N o T reinicia el registro.",
+"The real case. Perrin ({#}) watched grains of gum resin about a micrometer across in water under a microscope. For a sphere of radius a in a liquid of viscosity η, Stokes's law gives γ = {#}πηa, so D = kT/({#}πηa), and ⟨x²⟩ = 2Dt along one axis. For a grain {#} µm across in water at {#} °C (η = {#} × {#}⁻³ Pa·s, CRC Handbook):":
+  "El caso real. Perrin ({#}) observó al microscopio granos de goma resina de alrededor de un micrómetro de diámetro en agua. Para una esfera de radio a en un líquido de viscosidad η, la ley de Stokes da γ = {#}πηa, así que D = kT/({#}πηa), y ⟨x²⟩ = 2Dt a lo largo de un eje. Para un grano de {#} µm de diámetro en agua a {#} °C (η = {#} × {#}⁻³ Pa·s, CRC Handbook):",
+"Scaling: the simulated disk is {#} times smaller than Perrin's grains, in a two dimensional gas instead of a liquid, so it wanders nanometers in nanoseconds where they wandered micrometers in tens of seconds. The same law ⟨x²⟩ = 2Dt holds along each axis. The data on this page are simulated.":
+  "Escala: el disco simulado es {#} veces más pequeño que los granos de Perrin, y está en un gas bidimensional en lugar de un líquido, así que recorre nanómetros en nanosegundos donde ellos recorrían micrómetros en decenas de segundos. La misma ley ⟨x²⟩ = 2Dt se cumple a lo largo de cada eje. Los datos de esta página son simulados.",
 "Which gas":
   "Qué gas",
 "Hydrogen H₂":
@@ -290,8 +318,36 @@ VDI18N.add('es', 'demo/ideal-gas', {
   "dióxido de carbono, m = {#}×{#}⁻²⁶ kg",
 "Carbon dioxide with its real collision diameter, σ = {#} nm, from its viscosity. Under Measurements, Molecule size reads how often each molecule collides, how far it goes between collisions, and how far P sits above NkT/A, each beside its formula. Choose helium ({#} nm) on the Gas card and the disks shrink: longer free paths and P closer to ideal, though each helium atom still collides more often, because at the same T it moves {#} times faster. The last readings are for the real gas at this T and {#} atm, which is far thinner than the box.":
   "Dióxido de carbono con su diámetro de colisión real, σ = {#} nm, obtenido de su viscosidad. En Mediciones, Tamaño de las moléculas da qué tan seguido choca cada molécula, cuánto avanza entre choques y cuánto queda P arriba de NkT/A, cada una junto a su fórmula. Elige helio ({#} nm) en la tarjeta Gas y los discos se encogen: caminos libres más largos y P más cerca del ideal, aunque cada átomo de helio choca más seguido, porque a la misma T se mueve {#} veces más rápido. Las últimas lecturas son del gas real a esta T y {#} atm, que es mucho menos denso que la caja.",
+"A large disk among the gas molecules is kicked about by them at random. Track its path and how far it spreads with time, and find Boltzmann's constant from it, as Perrin did with grains in water.":
+  "Un disco grande entre las moléculas del gas recibe sus golpes al azar. Sigue su trayectoria y cuánto se aleja con el tiempo, y a partir de eso encuentra la constante de Boltzmann, como hizo Perrin con granos en agua.",
+"Graph of the mean square displacement of the large disk against time, with a fitted straight line.":
+  "Gráfica del desplazamiento cuadrático medio del disco grande en función del tiempo, con una recta ajustada.",
+"D = kT/({#}πηa) = {#} µm²/s, so in {#} s ⟨x²⟩ = 2Dt = {#} µm² (about {#} µm each way). Going back the other way, as Perrin did: a measured ⟨x²⟩ of {#} µm² in {#} s gives N_A = RTt/({#}πηa⟨x²⟩) = {#} × {#}²³ per mole.":
+  "D = kT/({#}πηa) = {#} µm²/s, así que en {#} s ⟨x²⟩ = 2Dt = {#} µm² (alrededor de {#} µm hacia cada lado). En sentido inverso, como hizo Perrin: un ⟨x²⟩ medido de {#} µm² en {#} s da N_A = RTt/({#}πηa⟨x²⟩) = {#} × {#}²³ por mol.",
+"A large disk, {#} nm across and {#} times as heavy as an argon atom, sits among {#} argon molecules at {#} K. Press Play: the molecules kick it at random and it wanders in a jagged path, drawn in the box. The graph shows its mean square displacement ⟨x²⟩ growing in proportion to time, ⟨x²⟩ = 2Dt, and Measurements turns the slope into Boltzmann's constant and Avogadro's number. Choose {#} ps per second to build a long run quickly. The data are simulated.":
+  "Un disco grande, de {#} nm de diámetro y {#} veces más pesado que un átomo de argón, está entre {#} moléculas de argón a {#} K. Presiona Iniciar: las moléculas lo golpean al azar y avanza en una trayectoria quebrada, dibujada en la caja. La gráfica muestra su desplazamiento cuadrático medio ⟨x²⟩ creciendo en proporción al tiempo, ⟨x²⟩ = 2Dt, y Mediciones convierte la pendiente en la constante de Boltzmann y el número de Avogadro. Elige {#} ps por segundo para juntar rápido una corrida larga. Los datos son simulados.",
+"⟨x²⟩ of the large disk against time (simulated)":
+  "⟨x²⟩ del disco grande en función del tiempo (simulado)",
+"time t (ps)":
+  "tiempo t (ps)",
+"A two dimensional box of gas {#} nm wide and {#} nm high, with {#} molecules and one large disk {#} nm across, {#} times as heavy as an argon atom, near ({#}, {#}) nm.":
+  "Una caja bidimensional de gas de {#} nm de ancho y {#} nm de alto, con {#} moléculas y un disco grande de {#} nm de diámetro, {#} veces más pesado que un átomo de argón, cerca de ({#}, {#}) nm.",
+"The molecules kick the large disk at random, and a line shows the path it took over the last nanosecond.":
+  "Las moléculas golpean al disco grande al azar, y una línea muestra la trayectoria que siguió durante el último nanosegundo.",
+"Temperature {#} K. Time since the run started —.":
+  "Temperatura {#} K. Tiempo desde que empezó la corrida —.",
+"Space plays or pauses.":
+  "Espacio inicia o pausa.",
+"Graph of the mean square displacement of the large disk along one axis, in nm², against time, with a straight line fitted to it over the shaded times. The data are simulated.":
+  "Gráfica del desplazamiento cuadrático medio del disco grande a lo largo de un eje, en nm², en función del tiempo, con una recta ajustada en los tiempos sombreados. Los datos son simulados.",
+"The line is fitted once the run is long enough.":
+  "La recta se ajusta cuando la corrida es lo bastante larga.",
+"{#} nm across, {#} u":
+  "{#} nm de diámetro, {#} u",
 "Two gases share the box, kept apart by a divider. Open it and watch them mix, spread out, and leak through a small hole.":
   "Dos gases comparten la caja, separados por un divisor. Ábrelo y observa cómo se mezclan, se dispersan y se escapan por un orificio pequeño.",
+"Graph of the two gases: counts on the far side, mean square displacement, or speeds, against time since the divider opened.":
+  "Gráfica de los dos gases: conteos en el lado opuesto, desplazamiento cuadrático medio o rapideces, en función del tiempo desde que se abrió el divisor.",
 "Click a molecule to mark it, use two fingers to turn. Gas A is blue and gas B red; the model gas is two dimensional, its molecules drawn to scale.":
   "Haz clic en una molécula para marcarla, usa dos dedos para girar. El gas A es azul y el gas B rojo; el gas modelo es bidimensional, con sus moléculas dibujadas a escala.",
 "two gases, masses in u":
@@ -302,8 +358,6 @@ VDI18N.add('es', 'demo/ideal-gas', {
   "B izquierda",
 "MSD A (nm²)":
   "DCM A (nm²)",
-"Graph of the two gases: counts on the far side, mean square displacement, or speeds, against time since the divider opened.":
-  "Gráfica de los dos gases: conteos en el lado opuesto, desplazamiento cuadrático medio o rapideces, en función del tiempo desde que se abrió el divisor.",
 "Two batches of the same gas (argon, {#} u), colored so you can tell them apart. Remove the divider and watch them mix: the counts on the far side climb toward half of each gas, and the mean square displacement grows in proportion to time once each molecule has had a few collisions.":
   "Dos tandas del mismo gas (argón, {#} u), coloreadas para que puedas distinguirlas. Quita el divisor y observa cómo se mezclan: los conteos en el lado opuesto suben hacia la mitad de cada gas, y el desplazamiento cuadrático medio crece en proporción al tiempo una vez que cada molécula ha tenido unos cuantos choques.",
 "hole opens here, {#} nm":
@@ -318,10 +372,18 @@ VDI18N.add('es', 'demo/ideal-gas', {
   "B a la izquierda",
 "half of each gas":
   "la mitad de cada gas",
-"closed":
-  "cerrado",
-"divider closed":
-  "divisor cerrado",
+"Helium mass ({#} u) on the left and argon mass ({#} u) on the right, the same size and temperature. Remove the divider: the light molecules move faster and spread faster.":
+  "Masa del helio ({#} u) a la izquierda y masa del argón ({#} u) a la derecha, mismo tamaño y misma temperatura. Quita el divisor: las moléculas ligeras se mueven más rápido y se dispersan más rápido.",
+"mean square displacement (nm²)":
+  "desplazamiento cuadrático medio (nm²)",
+"gas A":
+  "gas A",
+"gas B":
+  "gas B",
+"{#} molecules of helium mass ({#} u) on the left, nothing on the right, and a hole {#} nm wide, smaller than the distance a molecule travels between collisions (about {#} nm here). Open the hole and count how fast the gas leaks through. Then make gas A argon ({#} u) and repeat: Graham's law says the rate goes as {#}/√m.":
+  "{#} moléculas con la masa del helio ({#} u) a la izquierda, nada a la derecha, y un orificio de {#} nm de ancho, más pequeño que la distancia que recorre una molécula entre choques (cerca de {#} nm aquí). Abre el orificio y cuenta qué tan rápido se escapa el gas. Luego haz que el gas A sea argón ({#} u) y repite: la ley de Graham dice que la tasa va como {#}/√m.",
+"Hot argon ({#} K) on the left and cold argon ({#} K) on the right. Remove the divider: the gases mix, and collisions bring both sides to one temperature.":
+  "Argón caliente ({#} K) a la izquierda y argón frío ({#} K) a la derecha. Quita el divisor: los gases se mezclan, y los choques llevan a ambos lados a una sola temperatura.",
 "A box {#} nm wide and {#} nm high with a divider in the middle, and two gases.":
   "Una caja de {#} nm de ancho y {#} nm de alto con un divisor en medio, y dos gases.",
 "Gas A, on the left, has {#} molecules of mass {#} u, diameter {#} nm, at {#} K.":
@@ -340,18 +402,10 @@ VDI18N.add('es', 'demo/ideal-gas', {
   "Las líneas de rayas marcan la mitad de cada gas.",
 "The divider has not been opened yet.":
   "Todavía no se ha abierto el divisor.",
-"Helium mass ({#} u) on the left and argon mass ({#} u) on the right, the same size and temperature. Remove the divider: the light molecules move faster and spread faster.":
-  "Masa del helio ({#} u) a la izquierda y masa del argón ({#} u) a la derecha, mismo tamaño y misma temperatura. Quita el divisor: las moléculas ligeras se mueven más rápido y se dispersan más rápido.",
-"mean square displacement (nm²)":
-  "desplazamiento cuadrático medio (nm²)",
-"gas A":
-  "gas A",
-"gas B":
-  "gas B",
-"{#} molecules of helium mass ({#} u) on the left, nothing on the right, and a hole {#} nm wide, smaller than the distance a molecule travels between collisions (about {#} nm here). Open the hole and count how fast the gas leaks through. Then make gas A argon ({#} u) and repeat: Graham's law says the rate goes as {#}/√m.":
-  "{#} moléculas con la masa del helio ({#} u) a la izquierda, nada a la derecha, y un orificio de {#} nm de ancho, más pequeño que la distancia que recorre una molécula entre choques (cerca de {#} nm aquí). Abre el orificio y cuenta qué tan rápido se escapa el gas. Luego haz que el gas A sea argón ({#} u) y repite: la ley de Graham dice que la tasa va como {#}/√m.",
-"Hot argon ({#} K) on the left and cold argon ({#} K) on the right. Remove the divider: the gases mix, and collisions bring both sides to one temperature.":
-  "Argón caliente ({#} K) a la izquierda y argón frío ({#} K) a la derecha. Quita el divisor: los gases se mezclan, y los choques llevan a ambos lados a una sola temperatura.",
+"closed":
+  "cerrado",
+"divider closed":
+  "divisor cerrado",
 "Q from the piston":
   "Q del pistón",
 "Q from the top":
@@ -364,6 +418,10 @@ VDI18N.add('es', 'demo/ideal-gas', {
   "orificio, {#} nm",
 "time since the divider opened (ps)":
   "tiempo desde que se abrió el divisor (ps)",
+"hole {#} nm":
+  "orificio {#} nm",
+"t = {#} ps since opening":
+  "t = {#} ps desde la apertura",
 "The divider has a hole {#} nm wide.":
   "El divisor tiene un orificio de {#} nm de ancho.",
 "Time since the divider opened {#} ps.":
@@ -376,8 +434,6 @@ VDI18N.add('es', 'demo/ideal-gas', {
   "Ahora hay {#} moléculas del gas A a la derecha y {#} del gas B a la izquierda.",
 "removed":
   "quitado",
-"t = {#} ps since opening":
-  "t = {#} ps desde la apertura",
 "The divider is removed.":
   "El divisor está quitado.",
 "Graph of the mean square displacement of each gas, in nm², against the time since the divider opened, in ps.":
@@ -408,10 +464,24 @@ VDI18N.add('es', 'demo/ideal-gas', {
   "El gas es dióxido de carbono.",
 "The molecules are hard disks {#} nm across, the size for this gas.":
   "Las moléculas son discos duros de {#} nm de diámetro, el tamaño para este gas.",
-"Pressure measured {#} nN/m, ideal {#} nN/m.":
-  "Presión medida {#} nN/m, ideal {#} nN/m.",
+"⟨x²⟩ of the large disk (simulated)":
+  "⟨x²⟩ del disco grande (simulado)",
+"Temperature {#} K. Time since the run started {#} ps.":
+  "Temperatura {#} K. Tiempo desde que empezó la corrida {#} ps.",
 "t = {#} ns playback {#}× faster than Fixed rate":
   "t = {#} ns reproducción {#}× más rápida que Ritmo fijo",
+"Pressure measured {#} nN/m, ideal {#} nN/m.":
+  "Presión medida {#} nN/m, ideal {#} nN/m.",
+"the line is fitted once the run is {#} ns long":
+  "la recta se ajusta cuando la corrida dura {#} ns",
+"Temperature {#} K. Time since the run started {#} ns.":
+  "Temperatura {#} K. Tiempo desde que empezó la corrida {#} ns.",
+"time t (ns)":
+  "tiempo t (ns)",
+"slope 2D = {#} nm²/ps":
+  "pendiente 2D = {#} nm²/ps",
+"The slope 2D is {#} nm² per ps.":
+  "La pendiente 2D es {#} nm² por ps.",
 "+{#} off scale →":
   "+{#} fuera de escala →",
 "Describe the picture":
@@ -434,8 +504,6 @@ VDI18N.add('es', 'demo/ideal-gas', {
   "Saltar a los controles",
 "Paused.":
   "En pausa.",
-"hole {#} nm":
-  "orificio {#} nm",
 "Close":
   "Cerrar",
 "−{#} zJ":

@@ -2266,6 +2266,14 @@ VDI18N.add('es', 'common', {
   "Desplazar la vista Carrera 3D",
 "on the picture (3D Race view)":
   "en la imagen (vista Carrera 3D)",
+"Send a pulse down the slinkies":
+  "Enviar un pulso por los resortes",
+"on the picture (Slinky view)":
+  "en la imagen (vista Resorte)",
+"Move the dot on the phase diagram (Shift: larger steps)":
+  "Mover el punto en el diagrama de fases (Shift: pasos más grandes)",
+"on the picture (Phase diagram view)":
+  "en la imagen (vista Diagrama de fases)",
 "Move the selected event (Shift: larger steps), or pan the diagram if none is selected":
   "Mover el evento seleccionado (Shift: pasos más grandes), o desplazar el diagrama si no hay ninguno seleccionado",
 "on the diagram":

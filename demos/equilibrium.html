@@ -95,6 +95,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" data-p="sign" aria-pressed="false">Sign on a strut and cable</button>
           <button type="button" data-p="ladder" aria-pressed="false">Ladder against a wall</button>
           <button type="button" data-p="sandbox" aria-pressed="false">Sandbox</button>
+          <button type="button" data-p="body" aria-pressed="false">Body levers</button>
         </div>
         <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
@@ -125,6 +126,10 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 
       <section>
         <h2>Settings</h2>
+        <div class="seg full" role="group" aria-label="Body lever" id="partSeg" hidden style="margin-bottom:10px">
+          <button type="button" data-q="arm" aria-pressed="true">Forearm</button>
+          <button type="button" data-q="back" aria-pressed="false">Bent back</button>
+        </div>
         <div id="ctl"></div>
       </section>
 
@@ -206,6 +211,26 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const a = s[0], b = s[s.length - 1], F2 = W * (xc - a) / (b - a), F1 = W - F2, tips = F1 < -tol ? 'right' : F2 < -tol ? 'left' : null, q = tips === 'right' ? b : a;
     return { W, xc, falls: false, tips, F: [F1, F2], about: tips ? q : null, tau: tips ? -W * (xc - q) : 0 };
   }
+  // Body levers (OpenStax College Physics 2e, 9.6). Forearm: the elbow at the origin, the upper arm straight up to the shoulder Lu above it,
+  // the forearm at elbow angle el (deg) from the upper arm, so along u = (sin el, cos el). The biceps runs from its insertion r1 along the
+  // forearm to its origin at the shoulder; the forearm's weight ma g acts r2 along it and the load mb g in the hand r3 along it.
+  // Torques about the elbow: F_B r1 sin(el) Lu/|O − I| = (ma r2 + mb r3) g sin(el), so F_B = (ma r2 + mb r3) g |O − I|/(r1 Lu); the elbow
+  // joint pushes F_E = −(F_B + weights). (The book takes the biceps as vertical, which gives (ma r2 + mb r3) g/r1.) 30° ≤ el ≤ 150°.
+  function forearm(ma, mb, r1, r2, r3, Lu, el) {
+    const a = el * Math.PI / 180, u = [Math.sin(a), Math.cos(a)], I = [r1 * u[0], r1 * u[1]], d = [-I[0], Lu - I[1]], L = Math.hypot(d[0], d[1]), e = [d[0] / L, d[1] / L];
+    const W = (ma + mb) * G, tauW = (ma * r2 + mb * r3) * G * u[0], arm = I[0] * e[1] - I[1] * e[0], FB = tauW / arm;
+    const FE = [-FB * e[0], W - FB * e[1]];
+    return { FB, FE, FEmag: Math.hypot(FE[0], FE[1]), W, tauW, arm, e, I, u, ratio: FB / W, tilt: Math.atan2(-e[0], e[1]) * 180 / Math.PI };
+  }
+  // Bent back lifting a box: the hip (lumbar) pivot at the origin, the trunk leaning lean (deg) from vertical, along t = (sin lean, cos lean).
+  // The upper body's weight acts Lc along the trunk and the box hangs from the hands below the shoulders, Ls along it; the back muscles pull
+  // along the trunk toward the hips on a line d behind the pivot. Στ = 0 about the pivot: F_B d = (mub Lc + mbox Ls) g sin(lean). The vertebrae
+  // push F_V = −(F_B + weights), with F_B = −F_B t.
+  function bentBack(mub, mbox, Lc, Ls, d, lean) {
+    const a = lean * Math.PI / 180, t = [Math.sin(a), Math.cos(a)], W = (mub + mbox) * G, tauW = (mub * Lc + mbox * Ls) * G * t[0], FB = tauW / d;
+    const FV = [FB * t[0], W + FB * t[1]];
+    return { FB, FV, FVmag: Math.hypot(FV[0], FV[1]), FVang: Math.atan2(FV[1], FV[0]) * 180 / Math.PI, W, tauW, t, ratio: FB / W, rub: Lc * t[0], rbox: Ls * t[0] };
+  }
   // ==CORE END==
   if (typeof document === 'undefined') return;
 
@@ -215,6 +240,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     plank: { hint: 'A 4 m, 20 kg plank on supports at 0.5 m and 2.5 m, with a 60 kg painter. Walk the painter out past the right support: the left support\'s push drops, and when it would have to pull down, the plank tips.', s: { L: 4, mb: 20, a: 0.5, b: 2.5, m1: 60, x1: 1.5 } },
     sign: { hint: 'A sign hangs from a 2 m strut hinged to the wall, held up by a cable. A shallow cable (small h) needs a huge tension, because only its vertical part T sin θ holds the strut up. The hinge pushes on the strut too.', s: { L: 2, ms: 5, m1: 25, x1: 1.8, h: 1 } },
     sandbox: { hint: 'Build your own: a beam of any length and mass, up to two supports that can only push up, and as many masses as you like. Two posts hold it level while you build; let go to see whether it balances. A beam on one support balances only when its center of mass is right over the support; on two supports it stays when the center of mass lies between them.', s: { L: 4, mb: 10 } },
+    body: { hint: 'Muscles pull close to the joint, so they pull far harder than the load. A 4.00 kg load in the hand, 0.380 m from the elbow, held by a biceps attached 4.0 cm from the elbow, takes a pull of 474 N, 7.4 times the weight of the forearm and load; the elbow joint pushes down with 407 N. Change the elbow angle, or switch to Bent back: lifting a 30 kg box with the back bent 61° takes 4200 N from the back muscles, 8 cm behind the pivot, 5 times the weight held up, and the vertebrae push back with 4660 N.',
+      s: { part: 'arm', ma: 2.5, mb: 4, r1: 4, el: 90, mub: 55, mbox: 30, lean: 61 } },
     ladder: { hint: 'A 5 m ladder on a floor with friction, against a smooth wall. As the person climbs, the wall pushes harder and the floor friction must match it. Below the angle shown in the readouts, it slips before they reach the top.', s: { L: 5, mb: 15, m1: 70, f: 0.5, th: 60, mu: 0.4 } }
   };
   const S = { preset: 'seesaw', v: { ...PRESETS.seesaw.s }, blind: false, sel: 1 };
@@ -237,11 +264,24 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     plank: [['L', 'Plank length', 2, 6, 0.1, 'm'], ['mb', 'Plank mass', 0, 60, 1, 'kg'], ['a', 'Left support at', 0, 3, 0.05, 'm'], ['b', 'Right support at', 1, 6, 0.05, 'm'], ['m1', 'Painter mass', 0, 120, 1, 'kg'], ['x1', 'Painter position', 0, 6, 0.05, 'm']],
     sign: [['L', 'Strut length', 1, 3, 0.1, 'm'], ['ms', 'Strut mass', 0, 20, 0.5, 'kg'], ['m1', 'Sign mass', 1, 60, 1, 'kg'], ['x1', 'Sign position from the wall', 0.1, 3, 0.05, 'm'], ['h', 'Cable anchor height above the strut', 0.2, 3, 0.05, 'm']],
     sandbox: [['L', 'Beam length', 2, 6, 0.1, 'm'], ['mb', 'Beam mass', 0, 40, 1, 'kg']],
+    arm: [['mb', 'Load in the hand', 0, 20, 0.5, 'kg'], ['el', 'Elbow angle', 30, 150, 1, '°'], ['r1', 'Biceps attached from the elbow', 2, 8, 0.5, 'cm'], ['ma', 'Forearm mass', 1, 4, 0.1, 'kg']],
+    back: [['mbox', 'Box mass', 0, 50, 1, 'kg'], ['lean', 'Trunk lean from vertical', 0, 90, 1, '°'], ['mub', 'Upper body mass', 30, 80, 1, 'kg']],
     ladder: [['L', 'Ladder length', 2, 8, 0.1, 'm'], ['mb', 'Ladder mass', 5, 40, 1, 'kg'], ['m1', 'Person mass', 0, 120, 1, 'kg'], ['f', 'How far up (fraction)', 0, 1, 0.01, ''], ['th', 'Angle to the floor', 30, 85, 0.5, '°'], ['mu', 'Floor friction μs', 0, 1, 0.01, '']]
   };
+  /* Body levers: distances from OpenStax College Physics 2e, 9.6. Forearm: the forearm's center of mass 0.160 m and the hand 0.380 m from
+     the elbow; the shoulder (the biceps' origin) 0.33 m above the elbow, the upper arm being about 0.186 of a 1.75 m height (Winter,
+     Biomechanics and Motor Control of Human Movement, 4th ed., Table 4.1). Back: at the book's lean, the back muscle at 29.0° to the
+     horizontal, so the trunk 61° from vertical, the upper body's weight acts 0.350 m and the box 0.500 m in front of the pivot, and the
+     back muscles 0.0800 m behind it; those set the distances along the trunk, Lc and Ls. */
+  const ARM = { r2: 0.16, r3: 0.38, Lu: 0.33 }, BACK = { Lc: 0.35 / Math.sin(61 * Math.PI / 180), Ls: 0.5 / Math.sin(61 * Math.PI / 180), d: 0.08 };
+  const armNow = () => forearm(S.v.ma, S.v.mb, S.v.r1 / 100, ARM.r2, ARM.r3, ARM.Lu, S.v.el);
+  const backNow = () => bentBack(S.v.mub, S.v.mbox, BACK.Lc, BACK.Ls, BACK.d, S.v.lean);
+  const ctlKey = () => (S.preset === 'body' ? (S.v.part === 'back' ? 'back' : 'arm') : S.preset);
   function buildCtl() {
-    $('ctl').innerHTML = CTL[S.preset].map(([k, lab, lo, hi, st]) => `<div style="margin-bottom:8px"><div class="slider-head"><label for="c_${k}">${lab}</label><output id="o_${k}" for="c_${k}"></output></div><input type="range" id="c_${k}" min="${lo}" max="${hi}" step="${st}"></div>`).join('');
-    for (const [k] of CTL[S.preset]) $('c_' + k).addEventListener('input', (e) => { S.v[k] = +e.target.value; clampV(); sync(); draw(); readouts(); });
+    $('partSeg').hidden = S.preset !== 'body';
+    for (const b of document.querySelectorAll('#partSeg button')) b.setAttribute('aria-pressed', String(b.dataset.q === S.v.part));
+    $('ctl').innerHTML = CTL[ctlKey()].map(([k, lab, lo, hi, st]) => `<div style="margin-bottom:8px"><div class="slider-head"><label for="c_${k}">${lab}</label><output id="o_${k}" for="c_${k}"></output></div><input type="range" id="c_${k}" min="${lo}" max="${hi}" step="${st}"></div>`).join('');
+    for (const [k] of CTL[ctlKey()]) $('c_' + k).addEventListener('input', (e) => { S.v[k] = +e.target.value; clampV(); sync(); draw(); readouts(); });
   }
   function clampV() {
     const v = S.v;
@@ -249,9 +289,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (S.preset === 'sign') v.x1 = Math.min(v.x1, v.L);
     if (S.preset === 'sandbox') for (const q of [...SBE.sup, ...SBE.loads]) q.x = Math.min(q.x, v.L);
   }
-  function sync() { for (const [k, , , , st, u] of CTL[S.preset]) { $('c_' + k).value = S.v[k]; $('o_' + k).textContent = `${f(S.v[k], st < 0.1 ? 2 : st < 1 ? 1 : 0)}${u ? ' ' + u : ''}`; } }
-  function applyPreset(k) { const was = S.preset; S.preset = k; S.v = { ...PRESETS[k].s }; S.sel = 1; sbeMode(k === 'sandbox', was); $('presetHint').textContent = PRESETS[k].hint; for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === k)); buildCtl(); sync(); draw(); readouts(); }
+  function sync() { for (const [k, , , , st, u] of CTL[ctlKey()]) { $('c_' + k).value = S.v[k]; $('o_' + k).textContent = `${f(S.v[k], st < 0.1 ? 2 : st < 1 ? 1 : 0)}${u ? ' ' + u : ''}`; } }
+  function applyPreset(k) { const was = S.preset; S.preset = k; S.v = { ...PRESETS[k].s }; S.sel = 1; flatMode(k === 'sandbox' || k === 'body', was === 'sandbox' || was === 'body'); sbeMode(k === 'sandbox', was); $('presetHint').textContent = PRESETS[k].hint; for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === k)); buildCtl(); sync(); draw(); readouts(); }
   for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  $('partSeg').addEventListener('click', (e) => { const b = e.target.closest('button'); if (!b || S.preset !== 'body') return; S.v.part = b.dataset.q; buildCtl(); sync(); draw(); readouts(); });
 
   // ---------- drawing ----------
   function arrow(x0, y0, dx, dy, col, lw, lab) {
@@ -271,6 +312,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const hit = () => { const q = scr(); return flatBoxes.some((b) => q[0] < b[2] && q[2] > b[0] && q[1] < b[3] && q[3] > b[1]); };
       for (let n = 0; n < 8 && hit(); n++) ty += 17 * p; flatBoxes.push(scr());
     }
+    if (S.preset === 'body') xb = Math.max(2 * p, Math.min(W - w - 2 * p, xb));   /* Body levers draws unturned: keep each label on the canvas */
     ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.85; ctx.fillRect(xb, ty - 8 * p, w, 16 * p); ctx.globalAlpha = 1; ctx.fillStyle = col; ctx.textAlign = 'left'; ctx.fillText(lab, xb + 3 * p, ty);
   }
   function forceScale(list) { const big = Math.max(...list.map((q) => Math.abs(q)), 1e-9); return Math.min(W, H) * 0.22 / big; }
@@ -332,6 +374,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function draw() {
     if (!T || !W) return;
     if (S.preset === 'sandbox') { sbeDraw(); return; }
+    if (S.preset === 'body') { drawBodyLevers(); return; }
     if (G3.on && g3) { draw3(); return; }
     flatBoxes = [];
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
@@ -427,6 +470,72 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     arrow(wallX, topY, -L(r.Nw), 0, T.sup, 3.5 * p, lbl('N_wall', r.Nw));
     const mid = P(0.5); arrow(mid[0] - 10 * p, mid[1], 0, L(v.mb * G), T.w, 2.5 * p, lbl('ladder', v.mb * G));
     if (v.m1 > 0) arrow(pp[0] + 12 * p, pp[1], 0, L(v.m1 * G), T.w, 3 * p, lbl('person', v.m1 * G));
+  }
+
+  // ---------- Body levers (flat picture only): the forearm or the bent back, every force to one scale; the figure is drawn from the
+  // same distances the physics uses (forearm, upper arm and trunk to scale; the hand, head and legs are pictures) ----------
+  function drawBodyLevers() {
+    flatBoxes = [];
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const p = ps(), v = S.v, bl = S.blind, VG = window.VDGear, skin = VG && VG.dark() ? '#a3866d' : '#d9b99b', muscle = '#c0504a';
+    const fy = H - 40 * p; ctx.fillStyle = T.siding; ctx.fillRect(0, 0, W, fy);
+    ctx.strokeStyle = T.sidingLine; ctx.lineWidth = 1; ctx.beginPath(); for (let yy = fy - 16 * p; yy > 0; yy -= 16 * p) { ctx.moveTo(0, Math.round(yy) + 0.5); ctx.lineTo(W, Math.round(yy) + 0.5); } ctx.stroke();
+    ctx.fillStyle = T.floor; ctx.fillRect(0, fy, W, H - fy);
+    const seg = (a, b, w, col) => { ctx.strokeStyle = col; ctx.lineWidth = w; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke(); ctx.lineCap = 'butt'; };
+    if (v.part !== 'back') {
+      const r = armNow(), sc = Math.min((fy - 60 * p) / 1.02, (W - 160 * p) / 0.75), ex = Math.max(W * 0.3, 0.3 * sc + 20 * p), ey = 52 * p + (ARM.Lu + 0.29) * sc;
+      const P = (q) => [ex + q[0] * sc, ey - q[1] * sc];
+      geo = { kind: 'arm', P, ex, ey, sc };
+      verdict(bl ? 'How hard must the biceps pull?' : `The biceps pulls ${f(r.FB, 0)} N, ${f(r.ratio, 2)} times the ${f(r.W, 1)} N it holds up.`);
+      const sh = P([0, ARM.Lu]), el = P([0, 0]), hand = P([ARM.r3 * r.u[0], ARM.r3 * r.u[1]]), ins = P(r.I), tip = P([(ARM.r3 + 0.06) * r.u[0], (ARM.r3 + 0.06) * r.u[1]]);
+      // the body behind the arm: the trunk and head, then the upper arm (humerus), the forearm and the hand
+      ctx.fillStyle = T.load; ctx.globalAlpha = 0.35; ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(sh[0] - 0.2 * sc, sh[1] - 0.04 * sc, 0.26 * sc, fy - sh[1] + 0.04 * sc, 0.06 * sc); else ctx.rect(sh[0] - 0.2 * sc, sh[1] - 0.04 * sc, 0.26 * sc, fy - sh[1]); ctx.fill();
+      ctx.beginPath(); ctx.arc(sh[0] - 0.07 * sc, sh[1] - 0.17 * sc, 0.1 * sc, 0, 7); ctx.fill(); ctx.globalAlpha = 1;
+      seg(sh, el, 0.055 * sc, skin); seg(el, tip, 0.045 * sc, skin);
+      seg(P([0.004, ARM.Lu - 0.03]), ins, 0.022 * sc, muscle);                      /* the biceps along its line */
+      ctx.fillStyle = T.metalDark; ctx.beginPath(); ctx.arc(el[0], el[1], 5 * p, 0, 7); ctx.fill();
+      // the load in the hand
+      if (v.mb > 0) { const s = (10 + Math.sqrt(v.mb) * 6) * p; ctx.fillStyle = T.load; ctx.fillRect(hand[0] - s / 2, hand[1] - s * 0.15, s, s * 0.7); ctx.fillStyle = T.ink; ctx.font = `700 ${10 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.fillText(`${f(v.mb, 1)} kg`, hand[0], hand[1] - 0.03 * sc - 3 * p); }
+      // the biceps' lever arm: from the elbow square to its line
+      const foot = [r.I[0] - (r.I[0] * r.e[0] + r.I[1] * r.e[1]) * r.e[0], r.I[1] - (r.I[0] * r.e[0] + r.I[1] * r.e[1]) * r.e[1]];
+      ctx.setLineDash([4 * p, 3 * p]); ctx.strokeStyle = T.ink; ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.moveTo(el[0], el[1]); ctx.lineTo(P(foot)[0], P(foot)[1]); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(el[0], el[1]); ctx.lineTo(el[0], fy - 4 * p); ctx.stroke(); ctx.setLineDash([]);
+      const k = forceScale([r.FB, r.FEmag, r.W]), L = (F) => (bl ? 50 * p : F * k);
+      arrow(ins[0], ins[1], L(r.FB) * r.e[0], -L(r.FB) * r.e[1], T.tn, 3.5 * p, lbl('biceps', r.FB));
+      arrow(el[0], el[1], bl ? r.FE[0] / r.FEmag * 50 * p : r.FE[0] * k, bl ? -r.FE[1] / r.FEmag * 50 * p : -r.FE[1] * k, T.sup, 3.5 * p, lbl('elbow joint', r.FEmag));
+      const cg = P([ARM.r2 * r.u[0], ARM.r2 * r.u[1]]);
+      arrow(cg[0], cg[1], 0, L(v.ma * G), T.w, 2.5 * p, lbl('forearm', v.ma * G));
+      if (v.mb > 0) arrow(hand[0] + 14 * p, hand[1], 0, L(v.mb * G), T.w, 3 * p, lbl('load', v.mb * G));
+      ctx.fillStyle = T.ink; ctx.font = `${10.5 * p}px ${T.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+      if (!bl) ctx.fillText(`r⊥ = ${f(r.arm * 100, 2)} cm`, el[0] - 8 * p, el[1] + 14 * p);
+      ctx.textAlign = 'center'; ctx.fillText(`${f(v.el, 0)}°`, el[0] + 18 * p * Math.sin(v.el * Math.PI / 360), el[1] - 18 * p * Math.cos(v.el * Math.PI / 360));
+      // the hand is the grip: drag it round the elbow to change the angle
+      ctx.strokeStyle = T.accent; ctx.lineWidth = 2 * p; ctx.fillStyle = T.canvas; ctx.beginPath(); ctx.arc(tip[0], tip[1], 7 * p, 0, 7); ctx.fill(); ctx.stroke();
+      return;
+    }
+    const r = backNow(), sc = Math.min((H - 120 * p) / 1.55, (W - 80 * p) / 1.1), hx = W * 0.32, hy = fy - 0.9 * sc;
+    const P = (q) => [hx + q[0] * sc, hy - q[1] * sc], t = r.t, nb = [-t[1], t[0]], at = (s, o) => P([s * t[0] + o * nb[0], s * t[1] + o * nb[1]]);
+    geo = { kind: 'back', P, hx, hy, sc };
+    verdict(bl ? 'How hard must the back muscles pull?' : `The back muscles pull ${f(r.FB, 0)} N, ${f(r.ratio, 2)} times the ${f(r.W, 0)} N held up.`);
+    const hip = P([0, 0]), sh = at(BACK.Ls, 0), head = at(BACK.Ls + 0.14, 0), box = [sh[0], Math.min(fy - 0.12 * sc, sh[1] + 0.55 * sc)];
+    seg(hip, [hip[0] - 0.04 * sc, fy], 0.12 * sc, T.load);
+    seg(hip, sh, 0.22 * sc, T.load);
+    ctx.fillStyle = skin; ctx.beginPath(); ctx.arc(head[0], head[1], 0.1 * sc, 0, 7); ctx.fill();
+    seg(sh, [box[0], box[1] - 0.1 * sc], 0.06 * sc, skin);
+    seg(at(0.06, -BACK.d), at(BACK.Ls - 0.08, -BACK.d), 0.03 * sc, muscle);              /* the back muscles, d behind the pivot */
+    if (v.mbox > 0) { const s = 0.24 * sc; ctx.fillStyle = T.beam; ctx.fillRect(box[0] - s / 2, box[1] - 0.1 * sc, s, s * 0.8); ctx.strokeStyle = T.woodDark; ctx.lineWidth = 1.5 * p; ctx.strokeRect(box[0] - s / 2, box[1] - 0.1 * sc, s, s * 0.8);
+      ctx.fillStyle = T.ink; ctx.font = `700 ${10 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(`${f(v.mbox, 0)} kg`, box[0], box[1] + 0.02 * sc); }
+    ctx.fillStyle = T.metalDark; ctx.beginPath(); ctx.arc(hip[0], hip[1], 5 * p, 0, 7); ctx.fill();
+    const vt = Math.max(hip[1] - 0.97 * sc, (W < 480 ? 92 : 70) * p);   /* the vertical's top, kept below the verdict line */
+    ctx.setLineDash([4 * p, 3 * p]); ctx.strokeStyle = T.ink; ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.moveTo(hip[0], hip[1]); ctx.lineTo(hip[0], vt + 2 * p); ctx.stroke(); ctx.setLineDash([]);
+    ctx.strokeStyle = T.accent; ctx.lineWidth = 2 * p; ctx.fillStyle = T.canvas; ctx.beginPath(); ctx.arc(head[0], head[1], 7 * p, 0, 7); ctx.fill(); ctx.stroke();   /* the head is the grip: drag it to lean */
+    const k = forceScale([r.FB, r.FVmag, r.W]), L = (F) => (bl ? 50 * p : F * k), mp = at(0.3, -BACK.d);
+    arrow(mp[0], mp[1], -L(r.FB) * t[0], L(r.FB) * t[1], T.tn, 3.5 * p, lbl('back muscles', r.FB));
+    arrow(hip[0], hip[1], bl ? r.FV[0] / r.FVmag * 50 * p : r.FV[0] * k, bl ? -r.FV[1] / r.FVmag * 50 * p : -r.FV[1] * k, T.sup, 3.5 * p, lbl('vertebrae', r.FVmag));
+    const cg = at(BACK.Lc, 0); arrow(cg[0], cg[1], 0, L(v.mub * G), T.w, 2.5 * p, lbl('upper body', v.mub * G));
+    if (v.mbox > 0) arrow(box[0] + 0.16 * sc, box[1], 0, L(v.mbox * G), T.w, 3 * p, lbl('box', v.mbox * G));
+    ctx.fillStyle = T.ink; ctx.font = `${10.5 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+    ctx.fillText(`${f(v.lean, 0)}° from vertical`, hip[0], vt);
   }
 
   // ---------- 3D view (pictures only): the same setup as a lit outdoor scene in meters, built on VD3K. Every length, position, angle
@@ -694,6 +803,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     let h = '';
     if (bl) h = '<div class="wide"><dt>Forces, torques and the verdict</dt><dd class="ok">hidden in Blind: work them out</dd></div>';
     else if (S.preset === 'sandbox') h = sbeReadouts(dd, N, Nm);
+    else if (S.preset === 'body' && v.part === 'back') { const r = backNow();
+      h = dd('Back muscle force F_B', N(r.FB)) + dd('F_B over the weight held', `${f(r.ratio, 2)}`) + dd('Vertebrae push F_V', N(r.FVmag)) + dd('F_V above the horizontal', `${f(r.FVang, 1)}°`)
+        + dd('Upper body weight', N(v.mub * G)) + dd('Box weight', N(v.mbox * G)) + dd('Lever arms: upper body, box', `${f(r.rub, 3)} m, ${f(r.rbox, 3)} m`, true)
+        + dd('Torque of the weights about the pivot', Nm(r.tauW)) + dd('Lever arm of the back muscles', `${f(BACK.d, 3)} m`); }
+    else if (S.preset === 'body') { const r = armNow();
+      h = dd('Biceps force F_B', N(r.FB)) + dd('F_B over the weight held', `${f(r.ratio, 2)}`) + dd('Elbow joint force F_E', N(r.FEmag)) + dd('F_E, downward part', N(-r.FE[1]))
+        + dd('Forearm and load weight', N(r.W)) + dd('Torque of the weights about the elbow', Nm(r.tauW)) + dd('Lever arm of the biceps', `${f(r.arm * 100, 2)} cm`)
+        + dd('Biceps from vertical', `${f(r.tilt, 1)}°`) + dd('Biceps taken vertical, as in the book', N((v.ma * ARM.r2 + v.mb * ARM.r3) * G / (v.r1 / 100)), true); }
     else if (S.preset === 'seesaw') { const r = seesaw(v.mb, [{ m: v.m1, x: v.x1 }, { m: v.m2, x: v.x2 }]);
       h = dd('Torque of m₁ about the pivot', Nm(-v.m1 * G * v.x1)) + dd('Torque of m₂', Nm(-v.m2 * G * v.x2)) + dd('Net torque (counterclockwise +)', Nm(r.tau)) + dd('Pivot force', N(r.P)) + dd('Balance point for m₂', `${f(v.m1 * -v.x1 / v.m2, 2)} m`, true); }
     else if (S.preset === 'plank') { const r = plank(v.L, v.mb, v.a, v.b, [{ m: v.m1, x: v.x1 }]);
@@ -714,6 +831,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (S.blind) return 'Blind hides the forces. Turn Blind off to record a reading.';
     if (S.preset === 'sandbox') return 'The Sandbox is for exploring: pick one of the other setups to record readings for the worksheet.';
     const v = S.v;
+    if (S.preset === 'body' && v.part === 'back') { const r = backNow();
+      return { setup: 'bent back', upper_body_kg: v.mub, box_kg: v.mbox, lean_deg: v.lean, FB_N: r1(r.FB), FV_N: r1(r.FVmag), FV_angle_deg: r1(r.FVang) }; }
+    if (S.preset === 'body') { const r = armNow();
+      return { setup: 'forearm', forearm_kg: v.ma, load_kg: v.mb, elbow_deg: v.el, biceps_cm: v.r1, FB_N: r1(r.FB), FE_N: r1(r.FEmag) }; }
     if (S.preset === 'plank') { const r = plank(v.L, v.mb, v.a, v.b, [{ m: v.m1, x: v.x1 }]);
       return { setup: 'plank', L_m: r2(v.L), plank_kg: v.mb, a_m: r2(v.a), b_m: r2(v.b), m_kg: v.m1, x_m: r2(v.x1), F1_N: r1(r.F1), F2_N: r1(r.F2), W_N: r1(r.W), tips: r.tips ? `tips about the ${r.tips} support` : '' }; }
     if (S.preset === 'sign') { const r = sign(v.L, v.ms, v.m1, v.x1, v.h);
@@ -724,7 +845,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     return { setup: 'ladder', L_m: r2(v.L), ladder_kg: v.mb, m_kg: v.m1, f_up: r2(v.f), theta_deg: v.th, mu_s: r2(v.mu), N_N: r1(r.N), Nwall_N: r1(r.Nw), friction_needed_N: r1(r.fs), friction_max_N: r1(r.fmax), slips: r.slips ? 'slips' : 'holds' };
   };
   const SHOW = { plank: [['x_m', 'x (m)'], ['F1_N', 'F₁ (N)'], ['F2_N', 'F₂ (N)']], sign: [['h_m', 'h (m)'], ['theta_deg', 'θ (°)'], ['T_N', 'T (N)']],
-    seesaw: [['x2_m', 'x₂ (m)'], ['net_torque_N_m', 'Στ (N·m)'], ['P_N', 'P (N)']], sandbox: [], ladder: [['f_up', 'f'], ['theta_deg', 'θ (°)'], ['Nwall_N', 'N_wall (N)']] };
+    seesaw: [['x2_m', 'x₂ (m)'], ['net_torque_N_m', 'Στ (N·m)'], ['P_N', 'P (N)']], sandbox: [], body: [['FB_N', 'F_B (N)'], ['FE_N', 'F_E (N)'], ['FV_N', 'F_V (N)']], ladder: [['f_up', 'f'], ['theta_deg', 'θ (°)'], ['Nwall_N', 'N_wall (N)']] };
   Object.defineProperty(window, 'vdShowCols', { configurable: true, get: () => [['setup', 'Setup']].concat(SHOW[S.preset]) });
 
   // ---------- Sandbox: build a beam from a tray of parts (flat picture only). The physics is beamSandbox() in CORE; the picture tips the
@@ -748,16 +869,20 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const sbeSay = (m) => { $('sbeMsg').textContent = m; };
   function rr(x, y, w, h, r) { ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(x, y, w, h, r); else ctx.rect(x, y, w, h); }
   function sbeMode(on, was) {
-    $('sbeBox').hidden = !on; $('viewSeg').closest('.viewbar').style.display = on ? 'none' : '';
+    $('sbeBox').hidden = !on;
     if (on && was !== 'sandbox') {
-      SBE.dimWas = G3.on ? '3d' : null; if (SBE.dimWas) document.querySelector('#viewSeg [data-dim="flat"]').click();
       SBE.aria = can.getAttribute('aria-label'); can.setAttribute('aria-label', 'A beam on supports, built from the tray of parts beside it, with every force drawn as an arrow to scale. Drag parts onto the beam and back to the tray. [ and ] pick a part, the arrow keys move it, Delete removes it, and Space lets go or holds the beam.');
       sbeLoad(SBE.rig, true);
     }
     if (!on && was === 'sandbox') {
       SBE.drag = null; if (SBE.raf) cancelAnimationFrame(SBE.raf); SBE.raf = 0; if (SBE.aria) can.setAttribute('aria-label', SBE.aria);
-      if (SBE.dimWas) { SBE.dimWas = null; document.querySelector('#viewSeg [data-dim="3d"]').click(); }
     }
+  }
+  /* the Sandbox and Body levers are flat pictures only: entering one turns 3D off and hides the switch; leaving them turns it back on */
+  function flatMode(on, wasOn) {
+    $('viewSeg').closest('.viewbar').style.display = on ? 'none' : '';
+    if (on && !wasOn) { SBE.dimWas = G3.on ? '3d' : null; if (SBE.dimWas) document.querySelector('#viewSeg [data-dim="flat"]').click(); }
+    if (!on && wasOn && SBE.dimWas) { SBE.dimWas = null; document.querySelector('#viewSeg [data-dim="3d"]').click(); }
   }
   function sbeLoad(k, quiet) {
     const r = SBE_RIGS[k]; SBE.rig = k; S.v = { L: r.L, mb: r.mb };
@@ -974,8 +1099,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     return h;
   }
   $('sbeGo').addEventListener('click', sbeGo);
-  for (const b of document.querySelectorAll('#sbeRigs button')) b.addEventListener('click', () => { sbeLoad(b.dataset.r); sbeSay('Two posts hold the beam level. Let go to see if it balances.'); });
+  for (const b of document.querySelectorAll('#sbeRigs button')) b.addEventListener('click', () => { if (S.preset !== 'sandbox') return; sbeLoad(b.dataset.r); sbeSay('Two posts hold the beam level. Let go to see if it balances.'); });
   for (const b of document.querySelectorAll('#sbeAdd button')) b.addEventListener('click', () => {
+    if (S.preset !== 'sandbox') return;   /* the tray acts only in Sandbox */
     const a = b.dataset.add, L = S.v.L;
     if (a === 'del') { const it = sbeFind(SBE.sel); if (!it) { sbeSay('Pick a part first: tap it, or press [ or ] on the picture.'); return; } sbeRemove(it.id); sbeSay('Removed the selected part.'); }
     else { const part = a === 'sup' ? { kind: 'sup' } : { kind: 'load', m: +a }, x = a === 'sup' ? (SBE.sup.length ? sbeSnap(SBE.sup[0].x + (SBE.sup[0].x < L / 2 ? L / 2 : -L / 2)) : sbeSnap(L / 2)) : sbeSnap(L / 2), q = sbeAddPart(part, x);
@@ -995,6 +1121,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     else v.f = Math.max(0, Math.min(1, Math.round(raw * 100) / 100));
     sync(); draw(); readouts();
   }
+  /* Body levers: drag the hand round the elbow, or the head round the hip */
+  function setBody(x, y) {
+    const g = geo; if (!g) return;
+    if (g.kind === 'arm') S.v.el = Math.max(30, Math.min(150, Math.round(Math.atan2(x - g.ex, g.ey - y) * 180 / Math.PI)));
+    else if (g.kind === 'back') S.v.lean = Math.max(0, Math.min(90, Math.round(Math.atan2(x - g.hx, g.hy - y) * 180 / Math.PI)));
+    sync(); draw(); readouts();
+  }
   function setPos(which, px) {
     const g = geo; if (!g) return;
     setVal(which, g.kind === 'seesaw' ? (px - g.cx) / (g.sc * Math.cos(g.tilt)) /* along the tipped beam (student view calls, 2026-11-15) */ : g.kind === 'plank' || g.kind === 'sign' ? (px - g.X(0)) / g.sc : (px - g.footX) / (g.wallX - g.footX));
@@ -1005,6 +1138,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       drag = null; const h = pick3(e); if (!h) { if (e.pointerType !== 'touch') can.focus({ preventScroll: true }); return; }
       can.focus({ preventScroll: true }); drag = h.which; off3 = h.off; if (S.preset === 'seesaw') S.sel = drag; can.setPointerCapture(e.pointerId); const r = ray3(e); if (r != null) setVal(drag, r + off3); return;
     }
+    if (S.preset === 'body') { can.focus(); drag = 1; can.setPointerCapture(e.pointerId); const q = local(e); setBody(q[0], q[1]); return; }
     const [x] = local(e); can.focus(); if (!geo) return;
     if (geo.kind === 'seesaw') { const x1 = geo.cx + S.v.x1 * geo.sc, x2 = geo.cx + S.v.x2 * geo.sc; drag = Math.abs(x - x1) < Math.abs(x - x2) ? 1 : 2; S.sel = drag; } else drag = 1;
     can.setPointerCapture(e.pointerId); setPos(drag, x);
@@ -1012,6 +1146,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   can.addEventListener('pointermove', (e) => {
     if (S.preset === 'sandbox') { sbeMove(e); return; }
     if (G3.on && g3) { if (drag) { const r = ray3(e); if (r != null) setVal(drag, r + off3); } else if (e.pointerType === 'mouse' && !e.buttons) can.style.cursor = pick3(e) ? 'pointer' : 'grab'; return; }
+    if (drag && S.preset === 'body') { const q = local(e); setBody(q[0], q[1]); return; }
     if (drag) setPos(drag, local(e)[0]);
   });
   const end = (e) => { drag = null; if (S.preset === 'sandbox') sbeUp(e); }; can.addEventListener('pointerup', end); can.addEventListener('pointercancel', end);
@@ -1022,6 +1157,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (k !== 'ArrowLeft' && k !== 'ArrowRight') return;
     e.preventDefault(); const d = (k === 'ArrowLeft' ? -1 : 1) * (e.shiftKey ? 0.25 : 0.05);
     if (S.preset === 'seesaw') { if (S.sel === 1) v.x1 = Math.max(-2.5, Math.min(0, +(v.x1 + d).toFixed(2))); else v.x2 = Math.max(0, Math.min(2.5, +(v.x2 + d).toFixed(2))); }
+    else if (S.preset === 'body') { const st = Math.round(d * 20); if (v.part === 'back') v.lean = Math.max(0, Math.min(90, v.lean + st)); else v.el = Math.max(30, Math.min(150, v.el + st)); }
     else if (S.preset === 'ladder') v.f = Math.max(0, Math.min(1, +(v.f + d / 2).toFixed(2)));
     else v.x1 = Math.max(S.preset === 'sign' ? 0.1 : 0, Math.min(v.L, +(v.x1 + d).toFixed(2)));
     sync(); draw(); readouts();
@@ -1079,6 +1215,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       out.push(`A ladder ${f(v.L, 1)} m long, mass ${f(v.mb, 0)} kg, leans against a smooth wall at ${f(v.th, 1)}° to the floor.`, `A person of ${f(v.m1, 0)} kg stands ${f(v.f, 2)} of the way up.`, `Floor friction coefficient ${f(v.mu, 2)}.`);
       if (bl) out.push('The forces and verdict are hidden.');
       else out.push(`The floor pushes up with ${N(r.N)}.`, `The wall pushes with ${N(r.Nw)}.`, `Friction needed ${N(r.fs)}, most the floor can give ${N(r.fmax)}.`, `It slips below ${f(r.thMin, 1)}° with the person here.`, r.slips ? 'The ladder slips.' : 'The ladder holds: static friction is enough.'); }
+    else if (S.preset === 'body' && v.part === 'back') { const r = backNow();
+      out.push(`A person bent ${f(v.lean, 0)}° from upright lifts a ${f(v.mbox, 0)} kg box; the upper body is ${f(v.mub, 0)} kg.`, 'The back muscles pull along the spine 8 cm behind the pivot at the hips.');
+      if (bl) out.push('The forces are hidden.');
+      else out.push(`The back muscles pull with ${N(r.FB)}, ${f(r.ratio, 2)} times the weight held up.`, `The vertebrae push with ${N(r.FVmag)} at ${f(r.FVang, 1)}° above the horizontal.`); }
+    else if (S.preset === 'body') { const r = armNow();
+      out.push(`A forearm of ${f(v.ma, 1)} kg at an elbow angle of ${f(v.el, 0)}° holds ${f(v.mb, 1)} kg in the hand, 0.38 m from the elbow.`, `The biceps is attached ${f(v.r1, 1)} cm from the elbow and runs up to the shoulder.`);
+      if (bl) out.push('The forces are hidden.');
+      else out.push(`The biceps pulls with ${N(r.FB)}, ${f(r.ratio, 2)} times the weight held up.`, `The elbow joint pushes with ${N(r.FEmag)}.`); }
     else { const r = sbeModel(), xs = SBE.sup.map((q) => q.x).sort((a, b) => a - b);
       out.push(`A beam ${f(v.L, 1)} m long, mass ${f(v.mb, 0)} kg, built on a tray of parts.`, SBE.sup.length ? `${SBE.sup.length} supports, at ${xs.map((x) => f(x, 2)).join(' and ')} m.` : 'No supports.',
         SBE.loads.length ? `${SBE.loads.length} masses on the beam.` : 'No masses on the beam.', SBE.held ? 'Two posts hold the beam level.' : 'The beam has been let go.');

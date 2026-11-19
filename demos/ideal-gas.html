@@ -115,7 +115,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 .gasbox + .gasbox { border-top: 1px dashed var(--line); }
 .gasbox h3 { margin: 0; font-size: 0.86rem; font-weight: 700; }
 /* the Molecule size readings: the long ones take the full width of the rail */
-#readSize .span2 { grid-column: 1 / -1; }
+#readSize .span2, #readBrown .span2 { grid-column: 1 / -1; }
 .slider-scale { display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--muted); margin-top: 3px; }
 /* phone touch targets: the house minimums (buttons 36 px, sliders 28 px) */
 @media (max-width: 820px) {
@@ -191,6 +191,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" data-p="walls" aria-pressed="false">Cold walls</button>
           <button type="button" data-p="flow" aria-pressed="false">Hot wall, cold wall</button>
           <button type="button" data-p="real" aria-pressed="false">Real molecule sizes</button>
+          <button type="button" data-p="brown" aria-pressed="false">Brownian motion</button>
         </div>
         <p class="chips-head">Two gases and a divider</p>
         <div class="chips" id="presets2">
@@ -225,6 +226,17 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <div><dt>rms speed</dt><dd id="rRms">—</dd></div>
           <div class="wide"><dt>rms speed of a real (3D) gas at this T, √(3kT/m)</dt><dd id="rRms3">—</dd></div>
         </dl>
+        <dl class="readout" id="readBrown" hidden>
+          <div class="big"><dt>Time since the run started</dt><dd id="bT">—</dd></div>
+          <div class="span2"><dt>Large disk</dt><dd id="bDisk">—</dd></div>
+          <div class="span2"><dt>Drag coefficient γ from the kicks</dt><dd id="bG" translate="no">—</dd></div>
+          <div><dt>m/γ, the time to forget its starting speed</dt><dd id="bTau">—</dd></div>
+          <div><dt>Fitted from · to</dt><dd id="bWin">—</dd></div>
+          <div class="span2"><dt>D from the fit, slope of ⟨x²⟩ = 2Dt</dt><dd id="bD" translate="no">—</dd></div>
+          <div class="span2"><dt>Boltzmann's constant, k = γD/T</dt><dd id="bK" translate="no">—</dd></div>
+          <div><dt>Difference from the true k</dt><dd id="bKoff">—</dd></div>
+          <div><dt>Avogadro's number, N<sub>A</sub> = R/k</dt><dd id="bNA" translate="no">—</dd></div>
+        </dl>
         <p class="chips-head" id="sizeHead">Molecule size</p>
         <dl class="readout" id="readSize">
           <div><dt>Diameter d</dt><dd id="rD">—</dd></div>
@@ -246,6 +258,23 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         <h2>Two gases</h2>
         <details class="more"><summary>More about this</summary>
           <p class="hint">Set each gas on its card beside the box, and the hole width above it. Changing a gas starts again with the divider closed: gas A fills the left half and gas B the right half, each at its own temperature. Then choose Hole or Removed above the box; that moment is t = 0. Masses are in atomic mass units u (helium 4, neon 20, argon 40, krypton 84, xenon 131). The molecules are hard disks of the diameter you choose. A molecule goes through the hole only if it fits, so the opening its center can use is the hole width minus the diameter.</p>
+        </details>
+      </section>
+
+      <section id="secBrown" hidden>
+        <h2>Brownian motion</h2>
+        <div>
+          <div class="slider-head"><span>Playback</span></div>
+          <div class="seg full" role="group" aria-label="Brownian playback speed" id="brownRate">
+            <button type="button" data-r="200" aria-pressed="true">200 ps per second</button>
+            <button type="button" data-r="2000" aria-pressed="false">2,000 ps per second</button>
+          </div>
+        </div>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">The large disk is 4.0 nm across and 60 times as heavy as an argon atom; the molecules are the gas you choose, as hard disks 0.50 nm across. Every collision with it is elastic, so energy and momentum are kept exactly. Its path is drawn in the box. The graph plots its mean square displacement along one axis, ⟨x²⟩, against the time t, averaged over every starting moment of the run, and fits a straight line with a free intercept over the shaded times: from 3m/γ, once the disk has forgotten how fast it started, to a tenth of the run, where the average still uses many starts. The slope is 2D. The drag coefficient γ is measured from the kicks themselves: on average a kick pushes against the disk's velocity, and γ is that push per unit velocity per unit time. Einstein's relation D = kT/γ then gives k. Each run is random: in seven simulated runs of 40 ns, k came out with a spread of about 25% (one standard deviation) around the true value. The longer the run, and the more runs you average, the closer it comes. Changing N or T starts the record again.</p>
+          <p class="hint">The real case. Perrin (1909) watched grains of gum resin about a micrometer across in water under a microscope. For a sphere of radius a in a liquid of viscosity η, Stokes's law gives γ = 6πηa, so D = kT/(6πηa), and ⟨x²⟩ = 2Dt along one axis. For a grain 1.0 µm across in water at 20 °C (η = 1.002 × 10⁻³ Pa·s, CRC Handbook):</p>
+          <p class="hint" id="bReal"></p>
+          <p class="hint">Scaling: the simulated disk is 250 times smaller than Perrin's grains, in a two dimensional gas instead of a liquid, so it wanders nanometers in nanoseconds where they wandered micrometers in tens of seconds. The same law ⟨x²⟩ = 2Dt holds along each axis. The data on this page are simulated.</p>
         </details>
       </section>
 
@@ -501,7 +530,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     let path = 0;
     for (let i = 0; i < N; i++) { px[i] += vx[i] * k; py[i] += vy[i] * k; path += Math.sqrt(vx[i] * vx[i] + vy[i] * vy[i]); }
     G.path += path * k; G.tc += dt;
+    const B = G.big;
+    if (B) { B.ox = B.x; B.oy = B.y; B.vx0 = B.vx; B.vy0 = B.vy; B.x += B.vx * k; B.y += B.vy * k; }
     collidePairs(G, N);
+    if (B) bigCollide(G, N, dt);
     let imp = 0;
     for (let i = 0; i < N; i++) {
       const ri = r[i], mi = m[i], xr = wallX - ri, yt = LY - ri;
@@ -524,6 +556,60 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     G.imp += imp;                         /* kg m/s */
     G.lt += 2 * (wallX + LY) * dt;        /* nm ps of wall length times time */
   }
+  /* Brownian motion (College Physics 2e §12.7 and §13.4; J. Perrin, Ann. Chim. Phys. 18, 5, 1909). One large hard disk G.big of
+     radius r and mass m among the gas molecules, too large for the cell list, so every molecule is tested against it each step. A
+     molecule that overlaps it and is approaching bounces off it exactly as two molecules do (impulse 2μ Δv along the line of
+     centers, then pushed apart in inverse proportion to mass); the walls are mirrors for it too, and its unfolded position ux, uy
+     is kept as for the molecules (track). Each kick J it gets is added up against its velocity at the start of the step, jv = Σ J·V,
+     with v2t = Σ V² dt: the gas's drag on a disk moving at V averages −γV, so γ = −jv / v2t is the drag coefficient measured from
+     the kicks themselves (they change no motion). Einstein (1905): a particle with drag coefficient γ in a gas or liquid at T
+     spreads out as ⟨x²⟩ = 2Dt along each axis, once t is long compared with m/γ, with D = kT/γ; for a sphere of radius a in a
+     liquid of viscosity η, γ = 6πηa (Stokes), so D = kT/(6πηa), which is how Perrin found Avogadro's number. */
+  function makeBig(x, y, r, m) { return { x, y, vx: 0, vy: 0, r, m, ox: x, oy: y, vx0: 0, vy0: 0, ux: x, uy: y, sx: 1, sy: 1, jv: 0, v2t: 0, kicks: 0 }; }
+  function bigCollide(G, N, dt) {
+    const B = G.big, px = G.px, py = G.py, vx = G.vx, vy = G.vy, Mb = B.m;
+    let jx = 0, jy = 0;
+    for (let i = 0; i < N; i++) {
+      const dx = px[i] - B.x, dy = py[i] - B.y, d2 = dx * dx + dy * dy, s = G.r[i] + B.r;
+      if (d2 >= s * s || d2 === 0) continue;
+      const d = Math.sqrt(d2), nx = dx / d, ny = dy / d, mi = G.m[i], wb = mi / (mi + Mb), wi = Mb / (mi + Mb);
+      const dvn = (vx[i] - B.vx) * nx + (vy[i] - B.vy) * ny;
+      if (dvn < 0) {
+        B.vx += 2 * wb * dvn * nx; B.vy += 2 * wb * dvn * ny; vx[i] -= 2 * wi * dvn * nx; vy[i] -= 2 * wi * dvn * ny;
+        jx += 2 * Mb * wb * dvn * nx; jy += 2 * Mb * wb * dvn * ny; B.kicks++;
+      }
+      const push = s - d;
+      B.x -= nx * push * wb; B.y -= ny * push * wb; px[i] += nx * push * wi; py[i] += ny * push * wi;
+    }
+    B.jv += jx * B.vx0 + jy * B.vy0; B.v2t += (B.vx0 * B.vx0 + B.vy0 * B.vy0) * dt;
+    let fx = 0, fy = 0;
+    if (B.x < B.r) { B.x = B.r; if (B.vx < 0) { B.vx = -B.vx; fx = 1; } } else if (B.x > G.wallX - B.r) { B.x = G.wallX - B.r; if (B.vx > 0) { B.vx = -B.vx; fx = 1; } }
+    if (B.y < B.r) { B.y = B.r; if (B.vy < 0) { B.vy = -B.vy; fy = 1; } } else if (B.y > LY - B.r) { B.y = LY - B.r; if (B.vy > 0) { B.vy = -B.vy; fy = 1; } }
+    if (fx) G.imp += 2 * Mb * Math.abs(B.vx); if (fy) G.imp += 2 * Mb * Math.abs(B.vy);   /* its bounces push on the walls too */
+    B.ux += B.sx * (B.x - B.ox); B.uy += B.sy * (B.y - B.oy);
+    if (fx) B.sx = -B.sx; if (fy) B.sy = -B.sy;
+  }
+  /* the drag coefficient measured from the kicks (kg/s; v2t is in (m/s)² ps) */
+  const bigGamma = (B) => (B.v2t > 0 ? -B.jv / (B.v2t * 1e-12) : NaN);
+  /* mean square displacement along one axis, ⟨x²⟩ = (⟨Δx²⟩ + ⟨Δy²⟩)/2, for a lag of k samples, averaged over every start in the
+     record of unfolded positions xs, ys (nm), from sample i0 on */
+  function msdLag(xs, ys, n, k, i0) {
+    let s = 0, c = 0;
+    for (let i = i0 || 0; i + k < n; i++) { const dx = xs[i + k] - xs[i], dy = ys[i + k] - ys[i]; s += dx * dx + dy * dy; c++; }
+    return c ? s / (2 * c) : NaN;
+  }
+  /* least squares line y = a + b x, free intercept */
+  function fitLine(xs, ys) {
+    const n = xs.length; if (n < 2) return null;
+    let mx = 0, my = 0; for (let i = 0; i < n; i++) { mx += xs[i]; my += ys[i]; } mx /= n; my /= n;
+    let sxx = 0, sxy = 0; for (let i = 0; i < n; i++) { sxx += (xs[i] - mx) ** 2; sxy += (xs[i] - mx) * (ys[i] - my); }
+    if (!(sxx > 0)) return null; const b = sxy / sxx; return { a: my - b * mx, b };
+  }
+  /* the real case: a sphere of radius a (m) in a liquid of viscosity eta (Pa s) at T: D = kT/(6πηa) (m²/s); and Perrin's step back,
+     Avogadro's number from a measured ⟨x²⟩ (m²) after time t: N_A = RTt/(3πηa⟨x²⟩), with R the gas constant from gas law
+     measurements */
+  const stokesD = (T, eta, a) => KB * T / (6 * Math.PI * eta * a);
+  const perrinNA = (T, eta, a, x2, t, R) => R * T * t / (3 * Math.PI * eta * a * x2);
   /* kinetic temperature of the molecules that pass the test: ⟨½mv²⟩ = kT in two dimensions */
   function tempOf(G, N, test) {
     let e = 0, n = 0;
@@ -705,6 +791,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       for (let i = 0; i < N; i++) { const p = freeSpot(0, GS.wallX, i); px[i] = p[0]; py[i] = p[1]; }
       setVel(0, N, Tset, mode);
     }
+    if (brown) { placeBig(); newBrownRun(); }
     computeStats(); histFresh = true; updateHist(0); syncT(true); dirty = true;
   }
   function setN(n) {
@@ -713,7 +800,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const T = stats.T || Tset;
       for (let i = N; i < n; i++) { const p = freeSpot(0, GS.wallX, i); px[i] = p[0]; py[i] = p[1]; }
       setVel(N, n, T, 'thermal');
-      N = n; scaleGroup(0, N, T);
+      const n0 = N; N = n; scaleGroup(0, N, T);
+      if (brown) clearBig(n0);
     } else {
       N = n;
       if (tracer >= N) { tracer = 0; trail = []; }
@@ -795,7 +883,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const drawR = (s, ps) => rNow() * s * drawMag(s, ps);
 
   function drawBox() {
-    const ctx = bctx, T = tok, s = G.s, ps = projScale();
+    const ctx = bctx, T = tok, s = G.s, ps = projScale(), trailOn = showTrail && !brown;   /* Brownian motion draws the large disk's path instead */
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, G.W, G.H);
     const x0 = toX(0), x1 = toX(LX), yTop = toY(LY), yBot = toY(0), wp = toX(GS.wallX);
@@ -833,7 +921,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
 
     // tracer trail
-    if (showTrail && trail.length > 1) {
+    if (trailOn && trail.length > 1) {
       ctx.save(); ctx.strokeStyle = two ? T.equi : T.accent; ctx.lineWidth = 1.5 * ps; ctx.lineJoin = 'round'; ctx.lineCap = 'round';
       const chunks = 10, n = trail.length, per = Math.ceil(n / chunks);
       for (let c = 0; c < chunks; c++) {
@@ -853,7 +941,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       for (const k of [0, 1]) {
         const p = new Path2D(), rk = Math.max(TWO[k ? 'B' : 'A'].d / 2 * s, 2.2 * ps);
         for (let i = 0; i < N; i++) {
-          if (GS.kind[i] !== k || (i === tracer && showTrail)) continue;
+          if (GS.kind[i] !== k || (i === tracer && trailOn)) continue;
           const X = toX(px[i]), Y = toY(py[i]); p.moveTo(X + rk, Y); p.arc(X, Y, rk, 0, 2 * Math.PI);
         }
         ctx.fillStyle = k ? T.pos : T.neg; ctx.fill(p);
@@ -861,7 +949,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     } else if (colorBySpeed) {
       const paths = palette.map(() => new Path2D());
       for (let i = 0; i < N; i++) {
-        if (i === tracer && showTrail) continue;
+        if (i === tracer && trailOn) continue;
         const X = toX(px[i]), Y = toY(py[i]), p = paths[colorIndex(Math.hypot(vx[i], vy[i]))];
         p.moveTo(X + pr, Y); p.arc(X, Y, pr, 0, 2 * Math.PI);
       }
@@ -869,12 +957,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     } else {
       const p = new Path2D();
       for (let i = 0; i < N; i++) {
-        if (i === tracer && showTrail) continue;
+        if (i === tracer && trailOn) continue;
         const X = toX(px[i]), Y = toY(py[i]); p.moveTo(X + pr, Y); p.arc(X, Y, pr, 0, 2 * Math.PI);
       }
       ctx.fillStyle = T.muted; ctx.fill(p);
     }
-    if (showTrail && tracer < N) {
+    if (brown) drawBig(ctx, ps);
+    if (trailOn && tracer < N) {
       const X = toX(px[tracer]), Y = toY(py[tracer]), tr = Math.max(pr * 1.5, 4.5) * ps;
       ctx.beginPath(); ctx.arc(X, Y, tr + 2 * ps, 0, 2 * Math.PI); ctx.fillStyle = T.canvas; ctx.fill();
       ctx.beginPath(); ctx.arc(X, Y, tr, 0, 2 * Math.PI); ctx.fillStyle = T.accent; ctx.fill();
@@ -942,6 +1031,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   function drawHist() {
     if (two) { drawGraph2(); return; }
+    if (brown) { drawBrown(); return; }
     const ctx = hctx, T = tok, W = HG.W, H = HG.H, ps = projScale();
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
@@ -1341,6 +1431,141 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     setPlay('fixed'); syncTwoUI(); setPresetUI(name); resetTwo();
   }
 
+  // ---------- Brownian motion ----------
+  /* One large disk among the molecules (CORE: makeBig, bigCollide). Its unfolded position is sampled every BR.every ps of the gas's
+     time, exactly on the ps, from the moment the run starts; the mean square displacement ⟨x²⟩ (per axis) is worked out from that
+     record for a set of lag times, averaging over every start, and a straight line with a free intercept is fitted where the
+     motion has forgotten its starting velocity (lags from 3m/γ up to a tenth of the run), so its slope is 2D. The drag coefficient
+     γ comes from the kicks (CORE: bigGamma). The estimate of Boltzmann's constant is k = γD/T, and N_A = R/k with R the gas constant
+     measured from gases. */
+  let brown = false;
+  const BR = { R: 2, mu: 60, every: 2, keep: 500, cap: 120000, xs: null, ys: null, n: 0, t: 0, path: [], fit: null, lastFit: -1, rate: 200, N: 0, T: 0, lags: [], msd: [] };
+  BR.xs = new Float64Array(BR.cap); BR.ys = new Float64Array(BR.cap);
+  const BROWN_ETA = 1.002e-3, BROWN_A = 0.5e-6, BROWN_TW = 293.15, RGAS = NA * KB;   /* Pa s, water at 20 °C (CRC Handbook); m, a grain 1.0 µm across; K */
+  /* the large disk starts at the middle of the box with a thermal velocity at the gas's temperature, so the gas keeps its T */
+  function placeBig() {
+    const B = GS.big = makeBig(GS.wallX / 2, LY / 2, BR.R, BR.mu * M_AR), sg = Math.sqrt(KB * Tset / B.m);
+    B.vx = sg * gauss(); B.vy = sg * gauss();
+    clearBig(0);
+  }
+  /* molecules from i0 on that overlap the large disk move to a free spot */
+  function clearBig(i0) {
+    const B = GS.big; if (!B) return;
+    for (let i = i0; i < N; i++) {
+      for (let t = 0; t < 400 && Math.hypot(px[i] - B.x, py[i] - B.y) < B.r + GS.r[i] + 0.1; t++) {
+        const x = GS.r[i] + rnd() * (GS.wallX - 2 * GS.r[i]), y = GS.r[i] + rnd() * (LY - 2 * GS.r[i]); let ok = Math.hypot(x - B.x, y - B.y) >= B.r + GS.r[i] + 0.1;
+        for (let j = 0; j < N && ok; j++) if (j !== i && (px[j] - x) ** 2 + (py[j] - y) ** 2 < 4 * GS.r[i] * GS.r[i] * 1.3) ok = false;
+        if (ok) { px[i] = x; py[i] = y; }
+      }
+    }
+  }
+  function newBrownRun() {
+    const B = GS.big; if (!B) return;
+    BR.n = 0; BR.t = 0; BR.path = [[B.x, B.y]]; BR.fit = null; BR.lastFit = -1; BR.lags = []; BR.msd = []; BR.N = N; BR.T = Tset;
+    B.ux = B.x; B.uy = B.y; B.sx = 1; B.sy = 1; B.jv = 0; B.v2t = 0; B.kicks = 0;
+    BR.xs[0] = B.ux; BR.ys[0] = B.uy; BR.n = 1;
+  }
+  /* advance by dt ps, in steps short enough that the fastest molecule moves at most 0.4 of its radius, breaking at each sample time */
+  function runBrown(dt) {
+    if (BR.N !== N || BR.T !== Tset) newBrownRun();   /* the gas changed: the record starts again */
+    let left = dt; const B = GS.big;
+    while (left > 1e-12) {
+      const next = (Math.floor(BR.t / BR.every + 1e-9) + 1) * BR.every, chunk = Math.min(left, next - BR.t);
+      let vm = 0; for (let i = 0; i < N; i++) { const v2 = vx[i] * vx[i] + vy[i] * vy[i]; if (v2 > vm) vm = v2; }
+      const nsub = Math.max(1, Math.ceil(chunk * (Math.sqrt(vm) + 5) * 1e-3 / (0.4 * rNow())));
+      for (let k = 0; k < nsub; k++) step(GS, N, chunk / nsub);
+      left -= chunk; simT += chunk;
+      if (next - (BR.t + chunk) < 1e-9) {
+        BR.t = next; if (BR.n < BR.cap) { BR.xs[BR.n] = B.ux; BR.ys[BR.n] = B.uy; BR.n++; }
+        BR.path.push([B.x, B.y]); if (BR.path.length > BR.keep) BR.path.splice(0, BR.path.length - BR.keep);
+      } else BR.t += chunk;
+    }
+  }
+  /* ⟨x²⟩ at lags spaced about 12 % apart, and the fit over the lags where the motion has forgotten its start */
+  function brownFit() {
+    const B = GS.big, g = bigGamma(B), tau = isFinite(g) && g > 0 ? B.m / g * 1e12 : 200, n = BR.n, tRun = (n - 1) * BR.every;
+    BR.lags = []; BR.msd = [];
+    for (let k = 1; k <= Math.floor((n - 1) / 8); k = Math.max(k + 1, Math.round(k * 1.12))) { BR.lags.push(k * BR.every); BR.msd.push(msdLag(BR.xs, BR.ys, n, k)); }
+    const lo = 3 * tau, hi = tRun / 10, xs = [], ys = [];
+    BR.lags.forEach((l, i) => { if (l >= lo && l <= hi) { xs.push(l); ys.push(BR.msd[i]); } });
+    const F = xs.length >= 4 ? fitLine(xs, ys) : null;
+    BR.fit = F ? { a: F.a, b: F.b, lo, hi, D: F.b / 2, gamma: g, tau } : { lo, hi, gamma: g, tau, D: NaN };
+  }
+  const brownK = () => (BR.fit && BR.fit.D > 0 ? BR.fit.gamma * BR.fit.D * 1e-6 / BR.T : NaN);   /* D in nm²/ps = 1e-6 m²/s */
+  const sci = (v, d) => { if (!isFinite(v)) return '—'; const e = Math.floor(Math.log10(Math.abs(v))), m = v / 10 ** e; return `${m.toFixed(d)} × 10${String(e).replace('-', '⁻').replace(/\d/g, (c) => '⁰¹²³⁴⁵⁶⁷⁸⁹'[c])}`; };
+  function updateBrown() {
+    const B = GS.big; if (!B) return;
+    if (BR.n !== BR.lastFit && BR.n > 20) { brownFit(); BR.lastFit = BR.n; }
+    const F = BR.fit, tRun = (BR.n - 1) * BR.every, k = brownK();
+    $('bT').textContent = tRun < 1000 ? `${Math.round(tRun)} ps` : `${(tRun / 1000).toFixed(2)} ns`;
+    $('bDisk').textContent = `${(2 * B.r).toFixed(1)} nm across, ${(B.m / U_KG).toLocaleString('en-US', { maximumFractionDigits: 0 })} u`;
+    const ns = (t) => (t < 1000 ? `${Math.round(t)} ps` : `${(t / 1000).toFixed(1)} ns`);
+    $('bG').textContent = F && isFinite(F.gamma) ? `${sci(F.gamma, 2)} kg/s` : '—';
+    $('bTau').textContent = F && isFinite(F.tau) ? `${Math.round(F.tau)} ps` : '—';
+    $('bWin').textContent = F ? `${ns(F.lo)} · ${ns(Math.max(F.lo, F.hi))}` : '—';
+    $('bD').textContent = F && isFinite(F.D) ? `${F.D.toFixed(3)} nm²/ps = ${sci(F.D * 1e-6, 2)} m²/s` : '—';
+    $('bK').textContent = isFinite(k) ? `${sci(k, 2)} J/K` : '—';
+    $('bKoff').textContent = isFinite(k) ? `${k > KB ? '+' : '−'}${Math.abs(100 * (k / KB - 1)).toFixed(0)}%` : '—';
+    $('bNA').textContent = isFinite(k) ? `${sci(RGAS / k, 2)} mol⁻¹` : '—';
+  }
+  /* the real case, worked from the cited values: a grain 1.0 µm across in water at 20 °C */
+  function brownReal() {
+    const D = stokesD(BROWN_TW, BROWN_ETA, BROWN_A), x2 = Math.round(2 * D * 30 * 1e14) / 1e14;   /* ⟨x²⟩ in m², as shown (0.01 µm²) */
+    $('bReal').textContent = `D = kT/(6πηa) = ${(D * 1e12).toFixed(3)} µm²/s, so in 30 s ⟨x²⟩ = 2Dt = ${(x2 * 1e12).toFixed(2)} µm² (about ${(Math.sqrt(x2) * 1e6).toFixed(1)} µm each way). Going back the other way, as Perrin did: a measured ⟨x²⟩ of ${(x2 * 1e12).toFixed(2)} µm² in 30 s gives N_A = RTt/(3πηa⟨x²⟩) = ${sci(perrinNA(BROWN_TW, BROWN_ETA, BROWN_A, x2, 30, RGAS), 2)} per mole.`;
+  }
+  /* the graph pane: ⟨x²⟩ against the lag time, with the fitted line */
+  function drawBrown() {
+    const ctx = hctx, T = tok, W = HG.W, H = HG.H, ps = projScale();
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    const L = 58 * ps, Rr = 16 * ps, Tp = 30 * ps, Bm = 40 * ps, pw = Math.max(10, W - L - Rr), ph = Math.max(10, H - Tp - Bm), F = BR.fit;
+    ctx.font = `${11 * ps}px ` + T.mono; ctx.fillStyle = T.ink; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    ctx.fillText(W < 560 * ps ? '⟨x²⟩ of the large disk (simulated)' : '⟨x²⟩ of the large disk against time (simulated)', W < 560 * ps ? 8 * ps : L, 14 * ps);
+    const tRun = (BR.n - 1) * BR.every, xMax = niceMax(Math.max(200, F && F.hi > 0 ? 1.25 * F.hi : tRun / 10));
+    const yMax = niceMax(Math.max(1, ...BR.msd.filter((v, i) => BR.lags[i] <= xMax && isFinite(v)))), yM = yMax / 10 ** Math.floor(Math.log10(yMax) + 1e-9), nY = yM === 2 ? 4 : 5;
+    const X = (v) => L + v / xMax * pw, Y = (v) => Tp + ph - v / yMax * ph;
+    ctx.strokeStyle = T.grid; ctx.lineWidth = 1; ctx.fillStyle = T.muted; ctx.font = `${10 * ps}px ` + T.mono;
+    for (let i = 0; i <= nY; i++) { const v = yMax * i / nY, y = Y(v); ctx.beginPath(); ctx.moveTo(L, y); ctx.lineTo(L + pw, y); ctx.stroke(); ctx.textAlign = 'right'; ctx.fillText(+v.toPrecision(3) + '', L - 5 * ps, y); }
+    for (let i = 0; i <= 5; i++) { const v = xMax * i / 5, x = X(v); ctx.beginPath(); ctx.moveTo(x, Tp); ctx.lineTo(x, Tp + ph); ctx.stroke(); ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(xMax >= 2000 ? +(v / 1000).toPrecision(3) + '' : Math.round(v) + '', x, Tp + ph + 4 * ps); ctx.textBaseline = 'middle'; }
+    ctx.fillStyle = T.ink; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.font = `${10.5 * ps}px ` + T.mono;
+    ctx.fillText(xMax >= 2000 ? 'time t (ns)' : 'time t (ps)', L + pw / 2, H - 4 * ps);
+    ctx.save(); ctx.translate(13 * ps, Tp + ph / 2); ctx.rotate(-Math.PI / 2); ctx.textBaseline = 'middle'; ctx.fillText('⟨x²⟩ (nm²)', 0, 0); ctx.restore();
+    if (F && F.hi > F.lo) { ctx.save(); ctx.globalAlpha = 0.08; ctx.fillStyle = T.accent; ctx.fillRect(X(Math.min(F.lo, xMax)), Tp, X(Math.min(F.hi, xMax)) - X(Math.min(F.lo, xMax)), ph); ctx.restore(); }
+    ctx.fillStyle = T.neg; BR.lags.forEach((l, i) => { if (l > xMax || !isFinite(BR.msd[i])) return; ctx.beginPath(); ctx.arc(X(l), Y(BR.msd[i]), 2.6 * ps, 0, 7); ctx.fill(); });
+    if (F && isFinite(F.D)) { ctx.save(); ctx.beginPath(); ctx.rect(L, Tp, pw, ph); ctx.clip(); ctx.strokeStyle = T.accent; ctx.lineWidth = 2 * ps; ctx.beginPath(); ctx.moveTo(X(0), Y(F.a)); ctx.lineTo(X(xMax), Y(F.a + F.b * xMax)); ctx.stroke(); ctx.restore();
+      ctx.fillStyle = T.accent; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.font = `600 ${10.5 * ps}px ` + T.mono; ctx.fillText(`slope 2D = ${F.b.toFixed(3)} nm²/ps`, L + 6 * ps, Tp + 4 * ps); }
+    else if (BR.n > 1) { ctx.fillStyle = T.muted; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.font = `${10 * ps}px ` + T.mono;
+      { const m = F ? `the line is fitted once the run is ${Math.round(Math.max(10 * F.lo, 6000) / 1000)} ns long` : 'the line is fitted once the run is long enough', w = ctx.measureText(m).width; if (w > pw - 12 * ps) ctx.font = `${10 * ps * (pw - 12 * ps) / w}px ` + T.mono; }   /* shrunk to fit a phone (and a longer language) */
+      ctx.fillText(F ? `the line is fitted once the run is ${Math.round(Math.max(10 * F.lo, 6000) / 1000)} ns long` : 'the line is fitted once the run is long enough', L + 6 * ps, Tp + 4 * ps); }
+  }
+  /* the large disk and the path it has taken */
+  function drawBig(ctx, ps) {
+    const B = GS.big; if (!B) return;
+    /* the path over the last nanosecond, older parts fainter */
+    const P = BR.path, n = P.length;
+    if (n > 1) { ctx.save(); ctx.strokeStyle = tok.accent; ctx.lineWidth = 1.6 * ps; ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+      for (let c = 0; c < 10; c++) { const a = Math.floor(c * (n - 1) / 10), b = Math.floor((c + 1) * (n - 1) / 10); if (b <= a) continue;
+        ctx.globalAlpha = 0.1 + 0.8 * (c + 1) / 10; ctx.beginPath(); ctx.moveTo(toX(P[a][0]), toY(P[a][1]));
+        for (let k = a + 1; k <= b; k++) ctx.lineTo(toX(P[k][0]), toY(P[k][1])); ctx.stroke(); }
+      ctx.restore(); }
+    const X = toX(B.x), Y = toY(B.y), r = B.r * G.s, g = ctx.createRadialGradient(X - r * 0.35, Y - r * 0.35, r * 0.1, X, Y, r);
+    g.addColorStop(0, '#f1d27a'); g.addColorStop(1, '#b8862d'); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(X, Y, r, 0, 2 * Math.PI); ctx.fill();
+    ctx.strokeStyle = tok.ink; ctx.lineWidth = 1.2 * ps; ctx.stroke();
+  }
+  const LEDE_B = 'A large disk among the gas molecules is kicked about by them at random. Track its path and how far it spreads with time, and find Boltzmann\'s constant from it, as Perrin did with grains in water.';
+  function setBrown(on) {
+    brown = on;
+    for (const id of ['secBrown', 'readBrown']) $(id).hidden = !on;
+    for (const id of ['secPiston', 'secWalls', 'sizeHead', 'readSize', 'moreSize']) $(id).hidden = on;
+    $('dimSeg').hidden = on; if (on && on3d) view3.set('flat');
+    $('playSeg').hidden = on;   /* Brownian motion has its own playback rates (the panel hides the group with it) */
+    if (!on) GS.big = null;
+    $('lede').textContent = on ? LEDE_B : LEDE[0];
+    $('hist').setAttribute('aria-label', on ? 'Graph of the mean square displacement of the large disk against time, with a fitted straight line.' : 'Histogram of molecular speeds with the two dimensional Maxwell-Boltzmann curve overlaid.');
+    for (const b of document.querySelectorAll('#brownRate button')) b.setAttribute('aria-pressed', String(+b.dataset.r === BR.rate));
+    brownReal(); dirty = true;
+  }
+  for (const b of document.querySelectorAll('#brownRate button')) b.addEventListener('click', () => { BR.rate = +b.dataset.r; for (const c of document.querySelectorAll('#brownRate button')) c.setAttribute('aria-pressed', String(c === b)); updateRate(); });
+
   /* the graph pane in the two gas setups */
   function niceMax(v) { const e = Math.pow(10, Math.floor(Math.log10(v))), m = v / e; return (m <= 1 ? 1 : m <= 2 ? 2 : m <= 2.5 ? 2.5 : m <= 5 ? 5 : 10) * e; }
   function drawGraph2() {
@@ -1447,6 +1672,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   function updateReadouts() {
     if (two) { updateTwo(); return; }
+    if (brown) updateBrown();
     const pm = pMeasured(), pi = pIdeal(), [a, b] = fmtPair(pm, pi);
     out.rN.textContent = N;
     out.rT.textContent = fmtK(stats.T);
@@ -1526,7 +1752,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       Tsmooth += (Math.max(stats.T, 1e-5) - Tsmooth) * Math.min(1, dtS * 1.5);
       psPerS = playMode === 'follow' ? BASE_PS * Math.min(300, Math.max(1, Math.sqrt(300 / Tsmooth))) : BASE_PS;
       const simDt = dtS * psPerS;
-      if (two) { runTwo(simDt); computeStats(); if (tracer < N) { trail.push([px[tracer], py[tracer]]); if (trail.length > 360) trail.shift(); } dirty = true; }
+      if (brown) { psPerS = BR.rate; runBrown(dtS * BR.rate); computeStats(); dirty = true; }
+      else if (two) { runTwo(simDt); computeStats(); if (tracer < N) { trail.push([px[tracer], py[tracer]]); if (trail.length > 360) trail.shift(); } dirty = true; }
       else {
         const vlim = stats.vmax + (Math.abs(GS.wallTarget - GS.wallX) > 1e-9 ? GS.pistonMax : 0) + 5;
         const nsub = Math.min(300, Math.max(1, Math.ceil(simDt * vlim * 1e-3 / (0.4 * rNow()))));
@@ -1582,6 +1809,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   };
   PRESETS.real = { N: 300, T: 300, W: 50, mode: 'thermal', gas: 'co2', size: 'real',
     hint: 'Carbon dioxide with its real collision diameter, σ = 0.394 nm, from its viscosity. Under Measurements, Molecule size reads how often each molecule collides, how far it goes between collisions, and how far P sits above NkT/A, each beside its formula. Choose helium (0.255 nm) on the Gas card and the disks shrink: longer free paths and P closer to ideal, though each helium atom still collides more often, because at the same T it moves 3.3 times faster. The last readings are for the real gas at this T and 1 atm, which is far thinner than the box.' };
+  PRESETS.brown = { N: 150, T: 300, W: 50, mode: 'thermal', brown: true,
+    hint: 'A large disk, 4.0 nm across and 60 times as heavy as an argon atom, sits among 150 argon molecules at 300 K. Press Play: the molecules kick it at random and it wanders in a jagged path, drawn in the box. The graph shows its mean square displacement ⟨x²⟩ growing in proportion to time, ⟨x²⟩ = 2Dt, and Measurements turns the slope into Boltzmann\'s constant and Avogadro\'s number. Choose 2,000 ps per second to build a long run quickly. The data are simulated.' };
   function setPresetUI(name) {
     preset = name;
     for (const b of document.querySelectorAll('[data-p]')) b.setAttribute('aria-pressed', String(b.dataset.p === name));
@@ -1609,6 +1838,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   for (const b of document.querySelectorAll('#sizeSeg button')) b.addEventListener('click', () => setSize(b.dataset.s, true));
   function applyPreset(name) {
+    if (brown && name !== 'brown') setBrown(false);
     if (TWO_PRESETS[name]) { applyTwo(name); return; }
     if (two) setTwo(false);
     const p = PRESETS[name];
@@ -1616,6 +1846,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     N = p.N; Tset = p.T; GS.wallTarget = p.W; mode = p.mode; pistonTouched = false;
     nIn.value = N; nOut.textContent = N; tIn.value = sliderFromT(Tset); syncW();
     setWalls([0, 1, 2, 3], 0, 1); if (p.wallT) p.wallT.forEach((t, w) => setWalls([w], t, 1)); pickWall('all');
+    if (!!p.brown !== brown) setBrown(!!p.brown);
     setPresetUI(name); setModeUI(); resetGas();
     setPlay(p.play || 'fixed');   /* after resetGas, so Slow motion follows T starts at the new T rather than easing over from the old gas */
   }
@@ -1625,7 +1856,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   });
 
   function updateRate() {
-    const r = fmtRate(psPerS);
+    const r = fmtRate(brown ? BR.rate : psPerS);
     $('rate').textContent = r; $('rateOut').textContent = r + ' per second';
   }
   function setPlay(m) {
@@ -1667,6 +1898,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   for (const ev of ['pointerup', 'pointercancel', 'change', 'blur']) tIn.addEventListener(ev, () => { tDragging = false; });
   tIn.addEventListener('input', () => {
     Tset = VD.nice(tFromSlider(+tIn.value)); tOut.textContent = fmtK(Tset);
+    if (brown && GS.big && stats.T > 0) { const f = Math.sqrt(Tset / stats.T); GS.big.vx *= f; GS.big.vy *= f; }   /* the large disk is rescaled with the gas */
     scaleGroup(0, N, Tset); computeStats(); histFresh = true; updateHist(0); dirty = true; setPresetUI(null); szClear();
     Tsmooth = Math.max(stats.T, 1e-5);   /* a slider move is not physics: the playback follows it at once */
   });
@@ -1682,7 +1914,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   box.addEventListener('pointerdown', (e) => {
     box.focus({ preventScroll: true });
     const [mx, my] = local(e);
-    if (nearWall(mx, my)) {
+    if (!brown && nearWall(mx, my)) {
       drag = { off: mx - toX(GS.wallX) };
       pistonTouched = true; box.setPointerCapture(e.pointerId); box.style.cursor = 'grabbing'; dirty = true;
       return;
@@ -1708,7 +1940,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   box.addEventListener('pointercancel', endDrag);
   box.addEventListener('keydown', (e) => {
     const stepW = e.shiftKey ? 0.2 : 1;
-    if ((e.key === 'ArrowLeft' || e.key === 'ArrowRight') && !two) {
+    if ((e.key === 'ArrowLeft' || e.key === 'ArrowRight') && !two && !brown) {
       GS.wallTarget = Math.round(clampW(GS.wallTarget + (e.key === 'ArrowLeft' ? -stepW : stepW)) * 10) / 10;
       pistonTouched = true; syncW(); dirty = true;
     } else if (e.key === ' ' || e.key === 'k') {
@@ -1737,6 +1969,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
           run.open && s.n[1] ? { t: `Mean square displacement of gas B ${fmtMsd(s.msd[1])}.`, live: false } : null
         ];
       }
+      if (brown && GS.big) return [
+        `A two dimensional box of gas ${Math.round(GS.wallX)} nm wide and ${LY} nm high, with ${N} molecules and one large disk ${(2 * GS.big.r).toFixed(1)} nm across, ${BR.mu} times as heavy as an argon atom, near (${GS.big.x.toFixed(1)}, ${GS.big.y.toFixed(1)}) nm.`,
+        GAS_IS[gasKey],
+        'The molecules kick the large disk at random, and a line shows the path it took over the last nanosecond.',
+        running ? 'Running.' : 'Paused.',
+        { t: `Temperature ${fmtK(stats.T)}. Time since the run started ${$('bT').textContent}.`, live: false },
+        'Space plays or pauses.'
+      ];
       const pm = pMeasured(), pi = pIdeal(), [a, b] = fmtPair(pm, pi), held = [0, 1, 2, 3].filter((w) => GS.wallT[w] > 0), Q = (GS.heat[0] + GS.heat[1] + GS.heat[2] + GS.heat[3]) / 1e-21;
       return [
         `A two dimensional box of gas ${Math.round(GS.wallX)} nm wide and ${LY} nm high, with ${N} molecules.`,
@@ -1754,6 +1994,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       ];
     });
     VD.describe($('hist'), () => {
+      if (brown) return [
+        'Graph of the mean square displacement of the large disk along one axis, in nm², against time, with a straight line fitted to it over the shaded times. The data are simulated.',
+        { t: BR.fit && isFinite(BR.fit.D) ? `The slope 2D is ${BR.fit.b.toFixed(3)} nm² per ps.` : 'The line is fitted once the run is long enough.', live: false }
+      ];
       if (!two) return [
         'Histogram of molecular speeds, in m/s, with the number of molecules per bin, and the two dimensional Maxwell Boltzmann curve over it.',
         { t: `The speed axis runs to ${vAxis} m/s.`, live: false },
@@ -1828,6 +2072,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   window.vdWorksheet = () => (two ? 'diffusion' : 'ideal-gas');
   window.vdReadingRow = () => {
     if (two) return readTwo();
+    if (brown) return 'Brownian motion has no reading table: its record is the graph of ⟨x²⟩, and its results are under Measurements.';
     if (mixedRows(false)) return MIXED;
     const pm = pMeasured();
     if (!(simT > 0) || !isFinite(pm)) return 'Let the gas run for a moment so the walls have been hit and a pressure measured.';
@@ -1840,7 +2085,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     return row;
   };
   window.__ig = { setRunning, applyPreset, setGas, setSize, sz, get sizeMode() { return sizeMode; }, setDiv, get two() { return two; }, run, TWO, GS,
-    fast: (ps) => { if (two) { runTwo(ps); computeStats(); dirty = true; } },
+    get brown() { return brown; }, BR, runBrown, brownFit, brownK, updateBrown,
+    fast: (ps) => { if (two) { runTwo(ps); computeStats(); dirty = true; } else if (brown) { runBrown(ps); computeStats(); updateBrown(); dirty = true; } },
     seed: (n) => { let a = n >>> 0; rnd = () => { a = (a + 0x6D2B79F5) >>> 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }, get N() { return N; }, stats, pMeasured, pIdeal, setWall: (w) => { GS.wallTarget = clampW(w); pistonTouched = true; syncW(); dirty = true; } };
 
   // ---------- boot ----------

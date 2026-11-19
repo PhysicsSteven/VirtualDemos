@@ -76,6 +76,38 @@ module.exports = {
       if (!near(o.W, rho * G * o.M.V * (tk.yo - o.M.ycm), 1e-12)) return 'W = ' + o.W + ', ρgV(y_o − y_cm) = ' + rho * G * o.M.V * (tk.yo - o.M.ycm);
       let sum = 0; for (const s2 of o.Sl.slices) sum += s2.dW; if (!near(sum, o.Sl.W, 1e-12)) return 'slices add to ' + sum;
       const L = F.pumpL; if (L !== null && (L < -1e-12 || L > tk.yw + 1e-12)) return 'level ' + L + ' outside 0 to ' + tk.yw;
+      return true; })()` },
+    { name: "hydraulic lift: P₂ = mg/A₂, P₁ = P₂ − ρg(y₁ − y₂), F₁ = P₁A₁, Δh = xA₁/A₂, work in = mgΔh + the liquid's energy", fn: `(() => { ${pre}
+      if (S.scene !== 'lift' || F.running) return true; const q = S.P.lift;   /* while it runs the readouts refresh every 150 ms, behind the state */
+      if (!(q.x >= 0 && q.x <= 1.2 + 1e-9)) return 'push ' + q.x + ' outside the stroke';
+      const A1 = Math.PI * (q.d1 / 200) ** 2, A2 = Math.PI * (q.d2 / 200) ** 2, r = A1 / A2, y1 = 1.5 - q.x, y2 = 0.3 + r * q.x;
+      const P2 = q.m * G / A2, P1 = P2 - rho * G * (y1 - y2), F1 = P1 * A1;
+      if (Math.abs(nm('Pressure under the large piston') - P2 / 1000) > 0.051) return 'P₂ shows ' + rd('Pressure under the large piston') + ', mg/A₂ = ' + P2 / 1000 + ' kPa';
+      if (Math.abs(nm('Pressure under the small piston') - P1 / 1000) > 0.051) return 'P₁ shows ' + rd('Pressure under the small piston') + ', should be ' + P1 / 1000 + ' kPa';
+      if (!near(nm('Force on the small piston'), F1, 6e-3)) return 'F₁ shows ' + rd('Force on the small piston') + ', P₁A₁ = ' + F1;
+      if (Math.abs(nm('Car raised') - r * q.x * 100) > 0.0051) return 'rise shows ' + rd('Car raised') + ', xA₁/A₂ = ' + r * q.x * 100 + ' cm';
+      if (!S.blind) { const Win = A1 * (P2 - rho * G * 1.2) * q.x + rho * G * A1 * (1 + r) * q.x * q.x / 2, dU = rho * G * A1 * q.x * ((0.3 + r * q.x / 2) - (1.5 - q.x / 2));
+        if (Math.abs(Win - q.m * G * r * q.x - dU) > 1e-6 * Math.max(1, Win)) return 'work does not balance';
+        if (!near(nm('Work in'), Win, 6e-4) && Math.abs(nm('Work in') - Win) > 1e-3) return 'work in shows ' + rd('Work in') + ', should be ' + Win; }
+      return true; })()` },
+    { name: "body: P = P_heart − ρgh at the cuff, head and feet; IV ρgh against the vein; taps only between diastolic and systolic", fn: `(() => { ${pre}
+      if (S.scene !== 'body') return true; const q = S.P.body, MM = 133.322387415, dP = (h) => 1050 * G * h / MM;
+      const st = q.pose === 'lie' ? [-0.17, 0.17] : [-0.07, 0.27];
+      if (q.hc < st[0] - 1e-9 || q.hc > st[1] + 1e-9) return 'cuff height ' + q.hc + ' outside the arm’s reach';
+      if (q.dia > q.sys - 10 + 1e-9) return 'diastolic ' + q.dia + ' not below systolic ' + q.sys;
+      const cn = nm('Cuff gauge'); if (!(cn >= 0 && cn <= 300)) return 'cuff gauge ' + rd('Cuff gauge');
+      const sysH = nm('First tap'), sc = q.sys - dP(q.hc);
+      if (isFinite(sysH) && !(sysH <= sc + 0.5 && sysH >= sc - 4 * 60 / 72 - 0.5)) return 'first tap ' + sysH + ' for a systolic of ' + sc + ' at the cuff';
+      const diaH = nm('Last tap'), dc = q.dia - dP(q.hc);
+      if (isFinite(diaH) && !(diaH >= dc - 0.5 && diaH <= dc + 4 * 60 / 72 + 0.5)) return 'last tap ' + diaH + ' for a diastolic of ' + dc + ' at the cuff';
+      if (S.blind) return true;
+      const pp = (s) => s.split('/').map(parseFloat), cuffR = pp(rd('In the artery under the cuff'));
+      if (Math.abs(cuffR[0] - sc) > 0.51 || Math.abs(cuffR[1] - dc) > 0.51) return 'artery under the cuff shows ' + rd('In the artery under the cuff');
+      const hh = q.pose === 'lie' ? 0 : 0.36, hf = q.pose === 'lie' ? 0 : -1.4, head = pp(rd('At the head')), feet = pp(rd('At the feet'));
+      if (Math.abs(head[0] - (q.sys - dP(hh))) > 0.51 || Math.abs(feet[0] - (q.sys - dP(hf))) > 0.51) return 'head or feet: ' + rd('At the head') + ', ' + rd('At the feet');
+      if (Math.abs(nm('IV fluid pressure') - 1000 * G * q.hiv / MM) > 0.051) return 'IV shows ' + rd('IV fluid pressure');
+      if (Math.abs(nm('Lowest bag height') - q.pv * MM / (1000 * G) * 100) > 0.051) return 'lowest bag height ' + rd('Lowest bag height');
+      if ((rd('Flow into the vein') === 'flows in') !== (1000 * G * q.hiv / MM > q.pv)) return 'IV flow verdict ' + rd('Flow into the vein');
       return true; })()` }
   ],
   steps: [
@@ -90,6 +122,13 @@ module.exports = {
       for (const b of document.querySelectorAll('#plateSeg button, #sampleSeg button')) { b.click(); await pause(30); }
       F.applyPreset('pumpCyl'); F.setRunning(true); F.go(9); F.setRunning(true); F.go(1);
       for (const b of document.querySelectorAll('#tankSeg button')) { b.click(); F.go(3); }
-      F.setParam('H', 0.5); F.setParam('yw', 10); F.setParam('yo', 0.5); F.setParam('n', 100); F.setParam('R', 5); F.go(2); F.applyPreset('pumpCone'); F.setParam('n', 1); F.go(0.5); })()` }
+      F.setParam('H', 0.5); F.setParam('yw', 10); F.setParam('yo', 0.5); F.setParam('n', 100); F.setParam('R', 5); F.go(2); F.applyPreset('pumpCone'); F.setParam('n', 1); F.go(0.5); })()` },
+    { name: "lift: push the whole stroke, the smallest and largest pistons, mercury, heaviest car; body: deflate, raise the arm, lie down, the IV to its ends", fn: `(() => { const F = window.__fl; F.applyPreset('lift'); F.go(6);
+      F.setParam('d1', 8); F.setParam('d2', 12); F.go(1); F.S.liq = 'hg'; F.setParam('m', 3000); F.setParam('x', 1.2); F.go(0.2); F.setParam('d1', 2); F.setParam('d2', 40); F.setParam('x', 0); F.go(0.2); F.S.liq = 'oil';
+      F.applyPreset('bp'); F.go(25); F.setParam('hc', 0.27); F.setParam('sys', 180); F.setParam('dia', 179); F.go(40); F.setParam('hc', -0.5);
+      document.querySelector('#poseSeg [data-o=lie]').click(); F.go(30); F.setParam('hiv', 0); F.setParam('pv', 25); F.go(0.2); F.setParam('hiv', 1.2); F.go(0.2);
+      document.querySelector('#poseSeg [data-o=stand]').click(); document.querySelector('#gaugeSeg [data-u=aneroid]').click(); F.go(5); })()` },
+    { name: "lift: stopped part way down, heavy car on the narrowest small piston, so the known values check the readouts", fn: `(() => { const F = window.__fl; F.applyPreset('lift'); F.setRunning(false);
+      F.setParam('m', 3000); F.setParam('d1', 2); F.setParam('x', 0.73); F.go(0); })()` }
   ]
 };

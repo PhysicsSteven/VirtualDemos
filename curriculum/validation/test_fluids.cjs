@@ -294,4 +294,51 @@ test('pumping a tank empty: W = ∫ρg A(y)(lift) dy = ρgV × (lift of the cent
   const W = F.pumpWorkTo(tk, rho, 4); assert(F.pumpSlices(tk, rho, 10, 0).W < W && F.pumpSlices(tk, rho, 10, 1).W > W);
 });
 
+const H = core('fluids', 'G,hydraulic,MMHG,RHO_BLOOD,RHO_IV,bodyP,ivP,ivHeight,cuffBeats');
+const VDC = require('../../demos/lib/constants.js');
+
+test('hydraulic lift: Pascal, rho g h between the pistons, volume and work balance (College Physics 2e 11.5)', () => {
+  // the book's problem: a 2000 kg car on a 24.0 cm piston, a 2.00 cm piston, both at one height: F1 = mg (d1/d2)^2
+  const A = (d) => Math.PI * d * d / 4;
+  const lvl = H.hydraulic({ m: 2000, A1: A(0.02), A2: A(0.24), y10: 0.5, y20: 0.5, x: 0, rho: 920 });
+  close(lvl.F1, 2000 * g / 144, 1e-12); close(lvl.P1, lvl.P2, 1e-12); close(lvl.gain, 144, 1e-12);
+  for (const [m, d1, d2, x, rho] of [[2000, 0.06, 0.24, 0, 920], [2000, 0.06, 0.24, 0.7, 920], [800, 0.03, 0.4, 1.2, 1000], [3000, 0.08, 0.12, 1.2, 13595.1]]) {
+    const p = { m, A1: A(d1), A2: A(d2), y10: 1.5, y20: 0.3, x, rho }, h = H.hydraulic(p), r = A(d1) / A(d2);
+    close(h.rise, x * r, 1e-12, 1e-15, 'volume: A1 x = A2 dh');
+    close(h.P2, m * g / A(d2), 1e-12); close(h.P1 + rho * g * (h.y1 - h.y2), h.P2, 1e-12, 1e-9, 'P2 = P1 + rho g (y1 - y2)');
+    close(h.F1, h.P1 * A(d1), 1e-12);
+    close(h.Win, h.Wcar + h.dU, 1e-12, 1e-9, 'work in = work on the car + the liquid moved up');
+    // the work in is the area under F1(x): a fine midpoint sum
+    let W = 0; const N = 2000; for (let i = 0; i < N; i++) W += H.hydraulic({ ...p, x: (i + 0.5) * x / N }).F1 * x / N;
+    close(h.Win, W, 1e-9, 1e-9, 'area under F1');
+    // with no liquid weight (rho = 0) work in = mg dh exactly and the force ratio is the area ratio
+    const z = H.hydraulic({ ...p, rho: 0 }); close(z.Win, z.Wcar, 1e-12, 1e-12); close(z.gain, 1 / r, 1e-12);
+  }
+});
+
+test('pressures in the body: rho g h in mmHg, the feet and the IV bag (College Physics 2e 11.6, 11.9)', () => {
+  assert.equal(H.MMHG, VDC.mmHg); assert.equal(H.RHO_BLOOD, VDC.rhoBlood); assert.equal(H.G, VDC.g);
+  close(H.MMHG, 13595.1 * 9.80665 / 1000, 1e-6, 0, 'mmHg from its definition');
+  // the book: feet 1.4 m below the heart, 1050 kg/m3: 108 mm Hg (with g = 9.80 and 133 Pa per mmHg)
+  close(H.bodyP(120, -1.4) - 120, 1.4 * 1050 * g / H.MMHG, 1e-12); assert.equal(Math.round(H.bodyP(120, -1.4) - 120), 108);
+  // the book's leg exercise: cuff 0.500 m below the heart reads 120 + 38.7 mm Hg
+  close(H.bodyP(120, -0.5) - 120, 38.7, 2e-3);
+  // the IV example: 18 mm Hg in the vein needs a bag 0.24 m up (fluid 1.00 g/mL)
+  close(H.ivHeight(18), 18 * H.MMHG / (1000 * g), 1e-12); assert.equal(H.ivHeight(18).toFixed(2), '0.24');
+  close(H.ivP(H.ivHeight(18)), 18, 1e-12);
+});
+
+test('cuff: taps only between diastolic and systolic, systolic read low and diastolic high, each by less than one beat of deflation', () => {
+  const T = 60 / 72, k = 4;
+  for (const [sys, dia, t0] of [[120, 80, 0.3], [140, 90, 0], [100, 60, 0.71]]) {
+    const c0 = Math.ceil((sys + 20) / 10) * 10, r = H.cuffBeats(sys, dia, c0, k, T, t0, 100);
+    for (const b of r.beats) assert.equal(b.heard, b.c < sys && b.c > dia);
+    assert(r.sys <= sys && r.sys > sys - k * T - 1e-9, `systolic ${r.sys} for ${sys}`);
+    assert(r.dia > dia && r.dia <= dia + k * T + 1e-9, `diastolic ${r.dia} for ${dia}`);
+    for (let i = 1; i < r.beats.length; i++) close(r.beats[i - 1].c - r.beats[i].c, k * T, 1e-12, 1e-12);
+  }
+  assert.equal(H.cuffBeats(120, 80, 150, 4, 60 / 72, 0.3, 0.2).beats.length, 0, 'no beat before the first');
+});
+
+
 console.log(`${n} fluids test groups passed`);

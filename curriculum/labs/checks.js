@@ -26,6 +26,16 @@
 
   /* Faraday Waves (Chladni Plates, Liquid layer, 2026-11-19): k = 2π/λ with λ in mm, ω = 2π × the surface frequency; the slope
      of ω²/k against k² is σ/ρ (water, 998.2 kg/m³), given in mN/m, and the intercept is g */
+  /* Millikan's Oil Drops (2026-11-19): q/n from the drop's own q and n; e is the average of the q/n column, and the slope of q
+     against n */
+  C['millikan'] = {
+    items: {
+      'analysis-3': { expect: (D) => { const v = nums(D.rows(1), 11); return v.length ? v.reduce((a, b) => a + b, 0) / v.length : NaN; } },
+      'analysis-4': { tol: 2, expect: (D) => ({ any: [D.slope(1)] }) },
+    },
+    cells: [{ table: 1, col: 11, from: (r) => r.n(9) / r.n(10) }],
+  };
+
   C['faraday-waves'] = {
     items: {
       'analysis-2': { tol: 2, expect: (D) => ({ any: [D.intercept(1), D.slope(1) * 998.2 * 1000] }) },

@@ -1,0 +1,555 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="demos/lib/theme.js"></script>
+<title>OpenStax Physics (high school) · Virtual Physics Demos</title>
+<meta name="description" content="OpenStax Physics (high school): The free OpenStax high school textbook, section by section, with the demos and worksheets for each.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #e9edf2;
+  --surface: #f8fafc;
+  --canvas: #fcfdfe;
+  --ink: #17202b;
+  --muted: #5a6575;
+  --line: #d3d9e2;
+  --grid: #dde3ea;
+  --pos: #c23f2c;
+  --neg: #2b60b5;
+  --equi: #a7740b;
+  --accent: #2b60b5;
+  --shadow: 0 1px 2px rgb(23 32 43 / 0.06), 0 8px 24px -12px rgb(23 32 43 / 0.25);
+  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+    --line: #283241; --grid: #18212c; --pos: #ff7660; --neg: #69a0ff; --equi: #e2b350; --accent: #69a0ff;
+    --shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 10px 28px -12px rgb(0 0 0 / 0.7);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+  --line: #283241; --grid: #18212c; --pos: #ff7660; --neg: #69a0ff; --equi: #e2b350; --accent: #69a0ff;
+  --shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 10px 28px -12px rgb(0 0 0 / 0.7);
+  color-scheme: dark;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-padding-top: 130px; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 16px; line-height: 1.5; }
+[hidden] { display: none !important; }
+a { color: inherit; }
+.wrap { max-width: 1240px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* The opening page (lab look, 2026-11-08; tokens, fonts and the header band in demos/lib/paper.css) */
+.hero .wrap { position: relative; padding-top: 40px; padding-bottom: 26px; }
+.lhero .wrap { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 40px; align-items: center; }
+.phead .wrap { padding-top: 34px; padding-bottom: 18px; }
+.eyebrow { margin: 0 0 10px; }
+h1 { margin: 0; font-size: clamp(2.1rem, 5vw, 3.1rem); line-height: 1.05; text-wrap: balance; }
+.lede { margin: 12px 0 0; max-width: 58ch; font-size: 1.2rem; text-wrap: pretty; }
+.facts { display: flex; flex-wrap: wrap; gap: 6px 22px; margin: 18px 0 0; padding: 0; list-style: none; font-size: 0.95rem; }
+.facts li { display: flex; align-items: center; gap: 8px; }
+.facts li::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
+.facts a { color: var(--link); text-decoration: underline; text-underline-offset: 3px; }
+.facts strong { color: var(--ink); font-size: 0.9rem; }
+/* the card pasted beside the opening: how to teach with the site, with one demo's photograph */
+.teach { position: relative; padding: 18px 20px 20px; }
+.teach h3 { margin: 0 0 8px; font-size: 1.25rem; }
+.teach ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; font-size: 0.95rem; }
+.teach li { padding-left: 22px; text-indent: -22px; }
+.teach li::before { content: "—"; color: var(--accent); margin-right: 8px; }
+.teach a { color: var(--link); text-decoration: none; border-bottom: 1px solid var(--line2); }
+.art-thumb { display: block; margin: 0 0 14px; text-decoration: none; color: inherit; }
+.art-thumb img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; border: 1px solid var(--line2); border-radius: 3px; box-shadow: inset 0 0 0 3px var(--paper3); }
+.art-thumb span { display: block; padding: 6px 2px 0; text-align: center; font: 1.1rem var(--hand); color: var(--accent); }
+.art-thumb:hover span, .art-thumb:focus-visible span { text-decoration: underline; }
+/* the course strip at the foot of the library: the second layer */
+.course-strip { position: relative; margin: 54px 0 0; padding: 24px 26px; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 24px; align-items: center; rotate: -0.3deg; }
+.course-strip .hand.tilt { position: absolute; right: 26px; top: -14px; font-size: 1.3rem; }
+.course-strip h2 { margin: 0 0 6px; font-size: 1.7rem; }
+.course-strip p { margin: 0; color: var(--ink2); max-width: 70ch; }
+.course-strip .cta { display: grid; gap: 8px; }
+.adds { margin: 14px 0 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+.adds li { display: grid; grid-template-columns: 30px 1fr; gap: 10px; font-size: 1rem; }
+.adds li b { font: 1.3rem var(--hand); color: var(--accent); font-weight: 500; }
+.adds li span { color: var(--ink2); }
+.adds li span strong { color: var(--ink); font-weight: 600; }
+
+/* Toolbar: filter and subject links, stays on screen while scrolling */
+.tools { position: sticky; top: 58px; z-index: 5; }
+.tools .wrap { display: flex; align-items: center; gap: 10px 18px; padding-top: 10px; padding-bottom: 10px; }
+.filter { position: relative; flex: 0 1 300px; min-width: 0; }
+.filter svg { position: absolute; left: 11px; top: 50%; translate: 0 -50%; width: 16px; height: 16px; color: var(--muted); pointer-events: none; }
+.filter input {
+  width: 100%; font: inherit; font-size: 0.95rem; color: var(--ink);
+  background: var(--surface); border: 1px solid var(--line); border-radius: 8px;
+  padding: 8px 34px 8px 34px;
+}
+.filter input::placeholder { color: var(--muted); }
+.filter input::-webkit-search-cancel-button { display: none; }
+.filter kbd {
+  position: absolute; right: 8px; top: 50%; translate: 0 -50%;
+  font-family: var(--font-mono); font-size: 0.72rem; color: var(--muted);
+  border: 1px solid var(--line); border-radius: 4px; padding: 0 5px; line-height: 1.5; pointer-events: none;
+}
+.filter input:not(:placeholder-shown) + kbd { display: none; }
+.clear {
+  position: absolute; right: 5px; top: 50%; translate: 0 -50%;
+  font: inherit; font-size: 0.8rem; font-weight: 700; color: var(--muted);
+  background: none; border: 0; border-radius: 5px; padding: 3px 7px; cursor: pointer;
+}
+.clear:hover { color: var(--ink); }
+.jump { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; min-width: 0; flex: 1 1 auto; }
+.jump a {
+  display: inline-flex; align-items: baseline; gap: 6px; white-space: nowrap;
+  font-size: 0.88rem; font-weight: 700; text-decoration: none; color: var(--ink);
+  padding: 5px 10px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface);
+}
+.jump a:hover { border-color: var(--accent); color: var(--accent); }
+.n { font-family: var(--font-mono); font-size: 0.75em; font-weight: 400; color: var(--muted); font-variant-numeric: tabular-nums; }
+.status { margin: 20px 0 -12px; font-family: var(--font-mono); font-size: 0.85rem; color: var(--muted); }
+.status:empty { display: none; }
+
+/* Subjects and cards */
+.fam { padding-top: 34px; }
+.fam h2 { display: flex; align-items: baseline; gap: 12px; margin: 0 0 8px; font-size: 1.7rem; }
+.fam h2 .n { font-size: 0.8rem; }
+.fam h2::after { content: ""; flex: 1; align-self: center; height: 1px; background: var(--line2); opacity: 0.6; }
+.fam .tlinks { margin: 0 0 16px; }
+/* each subject folds shut (tools/courses.py); the heading is the switch, with a turning mark before it */
+.famd > summary { list-style: none; cursor: pointer; border-radius: 8px; }
+.famd > summary::-webkit-details-marker { display: none; }
+.famd > summary h2 { margin: 0; padding: 6px 0; }
+.famd > summary h2::before { content: ""; flex: none; align-self: center; width: 0.42em; height: 0.42em; margin: 0 0.1em 0 0.08em;
+  border-right: 2px solid var(--accent); border-bottom: 2px solid var(--accent); transform: rotate(-45deg); transition: transform 0.15s; }
+.famd[open] > summary h2::before { transform: rotate(45deg); }
+.famd > summary:hover h2 { color: var(--accent); }
+.famd > summary:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+.famd[open] > summary { margin-bottom: 8px; }
+section.fam:has(> .famd) { padding-top: 6px; padding-bottom: 6px; margin-top: 12px; scroll-margin-top: 64px; }
+section.fam:has(> .famd[open]) { padding-bottom: 20px; }
+.allch { margin: 0; }
+.allch button { min-height: 36px; padding: 6px 14px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); color: var(--accent);
+  font: inherit; font-size: 0.9rem; font-weight: 700; cursor: pointer; }
+.allch button:hover { border-color: var(--accent); }
+.allch button:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { .famd > summary h2::before { transition: none; } }
+.card .ws { margin-top: auto; padding-top: 6px; font-size: 1.05rem; color: var(--ink2); }
+main { padding-top: 12px; padding-bottom: 48px; }
+.subject { padding-top: 36px; }
+.subject h2 {
+  display: flex; align-items: baseline; gap: 10px; margin: 0 0 16px;
+  font-size: 1.35rem; letter-spacing: -0.01em;
+}
+.subject h2::after { content: ""; flex: 1; align-self: center; height: 1px; background: var(--line); }
+.subject h2 .n { font-size: 0.8rem; }
+/* Click a subject heading to fold its cards away; the sections below move up. Remembered per browser. */
+.fold { all: unset; display: inline-flex; align-items: baseline; gap: 10px; cursor: pointer; border-radius: 6px; }
+.fold:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+.fold::before { content: ""; width: 0.5em; height: 0.5em; border-right: 2px solid var(--muted); border-bottom: 2px solid var(--muted);
+  transform: translateY(-0.15em) rotate(45deg); transition: transform 0.15s ease; align-self: center; }
+.fold:hover::before { border-color: var(--ink); }
+.subject.collapsed .fold::before { transform: rotate(-45deg); }
+.subject.collapsed .grid { display: none; }
+.subject.collapsed h2 { margin-bottom: 0; color: var(--muted); }
+.subject.collapsed { padding-top: 22px; }
+.searching .subject.collapsed .grid { display: grid; }
+.searching .subject.collapsed h2 { margin-bottom: 16px; color: inherit; }
+@media (prefers-reduced-motion: reduce) { .fold::before { transition: none; } }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 272px), 1fr)); gap: 18px; margin: 0; padding: 0; list-style: none; }
+.grid > li { display: flex; min-width: 0; }
+.card {
+  display: flex; flex-direction: column; width: 100%;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 12px; overflow: hidden;
+  text-decoration: none; color: inherit;
+  transition: border-color 0.15s, box-shadow 0.2s, translate 0.2s;
+}
+.thumb { display: block; aspect-ratio: 16 / 10; background: var(--canvas); overflow: hidden; }
+.thumb img { display: block; width: 100%; height: 100%; object-fit: cover; transition: scale 0.35s ease; }
+.body { display: flex; flex-direction: column; gap: 6px; padding: 14px 16px 16px; flex: 1; }
+.card h3 { margin: 0; font-size: 1.3rem; line-height: 1.15; }
+.card p { margin: 0; color: var(--muted); font-size: 0.92rem; text-wrap: pretty; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.tags { display: flex; flex-wrap: wrap; gap: 5px; margin: auto 0 0; padding: 8px 0 0; list-style: none; }
+.tags li {
+  font-family: var(--font-mono); font-size: 0.7rem; line-height: 1.4; color: var(--muted);
+  background: var(--canvas); border: 1px solid var(--line); border-radius: 5px; padding: 2px 6px;
+}
+.card:hover { border-color: var(--accent); box-shadow: var(--shadow); translate: 0 -2px; }
+.card:hover .thumb img { scale: 1.03; }
+.card:hover h3 { color: var(--accent); }
+.card:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; border-color: var(--accent); }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.filter input:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; border-color: var(--accent); }
+.empty { margin: 48px 0 0; padding: 28px; text-align: center; color: var(--muted); border: 1px dashed var(--line); border-radius: 12px; }
+.empty button { font: inherit; font-weight: 700; color: var(--accent); background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline; }
+
+footer { border-top: 1px solid var(--line); margin-top: 24px; }
+footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; padding-top: 22px; padding-bottom: max(28px, env(safe-area-inset-bottom, 0px)); color: var(--muted); font-size: 0.9rem; }
+footer p { margin: 0; }
+footer a { color: var(--accent); text-underline-offset: 3px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .card, .thumb img { transition: none; }
+  .card:hover { translate: none; }
+  .card:hover .thumb img { scale: none; }
+}
+@media (max-width: 700px) {
+  html { scroll-padding-top: 160px; }
+  .hero .wrap { padding-top: 26px; padding-bottom: 20px; }
+  .lhero .wrap { grid-template-columns: 1fr; gap: 22px; }
+  .teach { rotate: 0; }
+  .course-strip { grid-template-columns: 1fr; }
+  .lede { font-size: 1.05rem; }
+  .tools .wrap { flex-wrap: wrap; }
+  .filter { flex: 1 1 100%; }
+  .filter kbd { display: none; }
+  .jump { flex-basis: 100%; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin: 0 -16px; padding: 0 16px; }
+    .subject { padding-top: 28px; }
+}
+.newbtn { display: inline-flex; align-items: center; gap: 6px; min-height: 32px; padding: 4px 12px; font: inherit; font-size: 0.82rem; font-weight: 700;
+  color: var(--accent); background: var(--surface); border: 1px solid var(--line); border-radius: 999px; cursor: pointer; }
+.newbtn svg { width: 14px; height: 14px; fill: currentColor; flex: none; }
+.newbtn:hover { border-color: var(--accent); }
+.newbtn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+@media (max-width: 640px) { .hero-tools { margin: -16px 0 16px; } .newbtn { min-height: 36px; } }
+@media print { .hero-tools { display: none; } }
+
+/* course pages */
+.dl-course { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; margin: 16px 0 0; font-size: 0.92rem; color: var(--muted); }
+.vd-dl-course { display: inline-flex; align-items: center; gap: 8px; font: inherit; font-weight: 700; font-size: 0.95rem; padding: 8px 14px; color: var(--accent); background: color-mix(in srgb, var(--accent) 8%, transparent); border: 1.5px solid var(--accent); border-radius: 9px; cursor: pointer; }
+.vd-dl-course:hover { background: color-mix(in srgb, var(--accent) 16%, transparent); }
+.vd-dl-course:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.vd-dl-course svg { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+@media print { .dl-course { display: none; } }
+.eyebrow a { color: var(--accent); font-weight: 600; text-underline-offset: 3px; }
+.jump a.opt { border-style: dashed; }
+.how { margin: 22px 0 0; max-width: 75ch; color: var(--muted); font-size: 0.92rem; }
+.unit { padding-top: 34px; }
+.unit h2 { display: flex; align-items: baseline; gap: 10px; margin: 0; font-size: 1.4rem; letter-spacing: -0.01em; }
+.unit h2::after { content: ""; flex: 1; align-self: center; height: 1px; background: var(--line); }
+.meta { display: flex; flex-wrap: wrap; gap: 4px 18px; margin: 4px 0 14px; font-family: var(--font-mono); font-size: 0.78rem; color: var(--muted); }
+.meta:empty { display: none; }
+.meta a { color: var(--accent); font-weight: 600; text-underline-offset: 3px; }
+.item:not(:has(> .pic)) { align-self: start; }
+.jump a.here { border-color: var(--accent); color: var(--accent); }
+.unote { margin: 4px 0 14px; max-width: 75ch; color: var(--muted); }
+.unit.optional { margin-top: 30px; padding: 24px 18px 18px; border: 1px dashed var(--line); border-radius: 14px; }
+.optnote { margin: 0 0 4px; font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.04em; text-transform: uppercase; color: var(--equi); }
+.list { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 520px), 1fr)); gap: 14px; margin: 0; padding: 0; list-style: none; }
+.item { display: grid; grid-template-columns: 1fr; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+.item .pic { display: block; border-bottom: 1px solid var(--line); }
+.item .thumb { border-bottom: 0; }
+.item .body { padding: 12px 14px 14px; gap: 5px; }
+.item h3 { margin: 0; font-size: 1.08rem; line-height: 1.25; }
+.item h3 a { text-decoration: none; }
+.item h3 a:hover { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
+.item p { margin: 0; color: var(--muted); font-size: 0.9rem; text-wrap: pretty; }
+.kind { display: flex; flex-wrap: wrap; gap: 6px; }
+.role, .flag { font-family: var(--font-mono); font-size: 0.68rem; font-weight: 600; letter-spacing: 0.03em; text-transform: uppercase; border-radius: 5px; padding: 1px 6px; }
+.role-lab { background: var(--accent); color: var(--canvas); }
+.role-demo { border: 1px solid var(--line); color: var(--muted); }
+.flag { border: 1px dashed var(--equi); color: var(--equi); text-transform: none; letter-spacing: 0; }
+.secs { display: flex; flex-direction: column; gap: 2px; margin: 4px 0 0; padding: 0; list-style: none; font-size: 0.82rem; }
+.sec { font-family: var(--font-mono); font-size: 0.74rem; color: var(--accent); margin-right: 4px; }
+.links { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: auto !important; padding-top: 8px; font-size: 0.88rem; }
+.links a { color: var(--accent); font-weight: 700; text-underline-offset: 3px; min-height: 28px; display: inline-flex; align-items: center; }
+.links a.go { color: var(--canvas); background: var(--accent); border-radius: 7px; padding: 4px 12px; text-decoration: none; min-height: 36px; }
+.links a .req { margin-right: 6px; padding: 1px 7px; border: 1px solid currentColor; border-radius: 999px; font-size: 0.72rem; letter-spacing: 0.04em; text-transform: uppercase; }
+.also { grid-column: 1 / -1; color: var(--muted); font-size: 0.92rem; padding: 4px 2px; }
+.also a { font-weight: 700; }
+.also .where, .also .where a { font-weight: 400; }
+.item.coming { border-style: dashed; background: transparent; }
+.item.coming h3 { color: var(--muted); }
+.none { color: var(--muted); padding: 18px; border: 1px dashed var(--line); border-radius: 12px; }
+.gaps { margin-top: 12px; font-size: 0.9rem; }
+.gaps summary { cursor: pointer; color: var(--muted); font-weight: 700; min-height: 32px; display: flex; align-items: center; gap: 8px; }
+.gaps ul { margin: 6px 0 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 380px), 1fr)); gap: 3px 22px; }
+.gaps li { display: flex; align-items: baseline; gap: 4px; }
+.st { margin-left: auto; padding-left: 10px; white-space: nowrap; font-family: var(--font-mono); font-size: 0.7rem; color: var(--muted); }
+.st-needs-feature { color: var(--equi); }
+.topics { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+.topic { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; }
+.topic h3 { margin: 0 0 2px; font-size: 1.02rem; }
+.topic .unote { margin: 0 0 6px; font-size: 0.9rem; }
+.topic ul { margin: 0; padding-left: 18px; display: grid; gap: 3px; font-size: 0.92rem; }
+.topic a { color: var(--accent); font-weight: 700; text-underline-offset: 3px; }
+.topic a.ws { margin-left: 8px; font-weight: 400; }
+.topic .where, .topic .where a { color: var(--muted); font-weight: 400; font-size: 0.85rem; }
+.more { margin: 40px 0 0; color: var(--muted); }
+.more a { color: var(--accent); font-weight: 700; }
+@media (max-width: 700px) {
+  html { scroll-padding-top: 64px; }
+  .jump { flex-basis: 100%; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin: 0 -16px; padding: 0 16px; }
+  .gaps li { flex-wrap: wrap; }
+  .st { margin-left: 0; }
+}
+
+
+/* topic and textbook pages (tools/courses.py) */
+.jump a[aria-current] { background: var(--accent); border-color: var(--accent); color: var(--canvas); }
+.item .used { font-size: 0.84rem; }
+.item .used a { color: var(--accent); font-weight: 700; text-underline-offset: 3px; }
+.item .used .sec { margin-right: 0; }
+.allch { margin: 16px 0 0; }
+.allch button { min-height: 36px; padding: 6px 14px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); color: var(--accent);
+  font: inherit; font-size: 0.9rem; font-weight: 700; cursor: pointer; }
+.allch button:hover { border-color: var(--accent); }
+.allch button:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.ch { margin-top: 10px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; }
+.ch summary { cursor: pointer; padding: 10px 14px; font-weight: 700; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; min-height: 44px; }
+.ch .chn { font-family: var(--font-mono); font-size: 0.78rem; font-weight: 600; color: var(--accent); }
+.ch .n { margin-left: auto; font-family: var(--font-mono); font-size: 0.74rem; font-weight: 400; color: var(--muted); }
+.srows { margin: 0; padding: 0 14px 12px; list-style: none; display: grid; gap: 0; }
+.srows li { display: grid; grid-template-columns: 4.2em minmax(0, 16em) minmax(0, 1fr); gap: 2px 14px; padding: 7px 0; border-top: 1px solid var(--line); font-size: 0.9rem; align-items: baseline; }
+.srows li:target { background: var(--canvas); }
+.srows .stitle { display: flex; flex-wrap: wrap; gap: 2px 8px; align-items: baseline; }
+.srows .st { margin-left: 0; padding-left: 0; }
+.srows .sdemos a { color: var(--accent); font-weight: 700; text-underline-offset: 3px; }
+.srows .sdemos a.ws { font-weight: 400; }
+@media (max-width: 700px) {
+  .srows li { grid-template-columns: 3.6em minmax(0, 1fr); }
+  .srows .sdemos { grid-column: 2; }
+  .ch .n { margin-left: 0; flex-basis: 100%; }
+}
+
+
+/* course tiles (tools/courses.py) */
+.courses { padding-top: 30px; }
+.courses h2 { margin: 0 0 14px; font-size: 1.35rem; letter-spacing: -0.01em; }
+.ctiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr)); gap: 18px; margin: 0; padding: 0; list-style: none; }
+.ctile { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: auto auto; height: 100%; text-decoration: none; color: inherit;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; transition: border-color 0.15s, box-shadow 0.2s, translate 0.2s; }
+.ctile .mosaic { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-bottom: 1px solid var(--line); background: var(--canvas); }
+.ctile .mosaic { height: 92px; overflow: hidden; }
+.ctile .mosaic .thumb { border-bottom: 0; height: 92px; aspect-ratio: auto; }
+.ctile .mosaic .thumb img { height: 92px; }
+.ctile .cbody { grid-column: 1 / -1; padding: 14px 18px 18px; }
+.ctile h3 { margin: 0; font-size: 1.45rem; }
+.ctile .sub { margin: 2px 0 6px; font-family: var(--font-mono); font-size: 0.8rem; color: var(--accent); }
+.ctile p { margin: 0; color: var(--muted); font-size: 0.93rem; }
+.ctile:hover { border-color: var(--accent); box-shadow: var(--shadow); translate: 0 -2px; }
+.ctile:hover h3 { color: var(--accent); }
+.ctile:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+.allnote { margin: -6px 0 14px; color: var(--muted); font-size: 0.92rem; }
+.fams { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 270px), 1fr)); gap: 18px; margin: 0; padding: 0; list-style: none; }
+.fam { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; scroll-margin-top: 20px; }
+.fam .mosaic { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); height: 72px; overflow: hidden; border-bottom: 1px solid var(--line); background: var(--canvas); }
+.fam .mosaic .thumb { border-bottom: 0; height: 72px; aspect-ratio: auto; }
+.fam .mosaic .thumb img { height: 72px; }
+.fam .fbody { padding: 12px 16px 16px; }
+.fam h3 { margin: 0; font-size: 1.25rem; }
+.fam .sub { margin: 2px 0 10px; font-family: var(--font-mono); font-size: 0.78rem; color: var(--accent); }
+.tlinks { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.tlinks a { display: inline-flex; align-items: center; gap: 6px; min-height: 34px; padding: 4px 11px; border: 1px solid var(--line); border-radius: 999px;
+  background: var(--canvas); color: var(--ink); font-size: 0.88rem; font-weight: 700; text-decoration: none; }
+.tlinks a .n { font-family: var(--font-mono); font-size: 0.7rem; font-weight: 400; color: var(--muted); }
+.tlinks a:hover { border-color: var(--accent); color: var(--accent); }
+.tlinks a:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { .ctile { transition: none; } .ctile:hover { translate: none; } }
+
+
+/* site search (tools/courses.py) */
+.find { padding-top: 30px; }
+.find h2 { margin: 0 0 10px; font-size: 1.35rem; letter-spacing: -0.01em; }
+.find .filter { max-width: 620px; }
+.find .filter input { padding-top: 11px; padding-bottom: 11px; font-size: 1rem; }
+.find .filter + .allnote { margin: 14px 0 22px; line-height: 1.5; }
+.hits { position: absolute; top: calc(100% + 6px); left: 0; z-index: 20; width: min(620px, calc(100vw - 32px)); max-height: min(70vh, 560px); overflow: auto;
+  overscroll-behavior: contain; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; box-shadow: var(--shadow); padding: 4px 6px 6px; }
+.find .hits { width: 100%; }
+.hits .hn { margin: 4px 8px 2px; font-family: var(--font-mono); font-size: 0.74rem; color: var(--muted); }
+.hits ul { margin: 0; padding: 0; list-style: none; }
+.hit { padding: 8px 8px 9px; border-radius: 7px; }
+.hit + .hit { border-top: 1px solid var(--line); }
+.hit:hover, .hit.on { background: var(--canvas); }
+.hit .ht { font-weight: 700; color: var(--ink); text-decoration: none; }
+.hit .ht:hover, .hit.on .ht { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
+.hit .hk { margin-left: 6px; font-family: var(--font-mono); font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.03em; color: var(--muted); }
+.hit p { margin: 2px 0 0; font-size: 0.85rem; color: var(--muted); }
+.hit .hd { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.hit .hm { display: flex; flex-wrap: wrap; gap: 2px 12px; font-size: 0.8rem; }
+.hit .hm a { color: var(--accent); font-weight: 700; text-underline-offset: 3px; }
+.hit .hm a.tp { color: var(--ink); font-weight: 400; }
+.hit .hm .sec { margin: 0; }
+@media (hover: none) { .filter kbd { display: none; } .filter input { font-size: 16px; } }
+@media (max-width: 700px) {
+  .tools .wrap { flex-wrap: wrap; }
+  .tools .filter { flex: 1 1 100%; }
+  html:has(.tools .filter) { scroll-padding-top: 108px; }
+}
+
+
+/* activity filter and labels (tools/activities.py) */
+.actfilter { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 6px; margin: 14px 0 4px; }
+.actfilter .afl { font-family: var(--font-mono); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); margin: 0 2px 0 6px; }
+.actfilter .afl:first-child { margin-left: 0; }
+.actfilter button { min-height: 34px; padding: 4px 11px; font: inherit; font-size: 0.86rem; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 999px; cursor: pointer; }
+.actfilter button:hover { border-color: var(--accent); }
+.actfilter button[aria-pressed="true"] { color: var(--canvas); background: var(--accent); border-color: var(--accent); font-weight: 700; }
+.actfilter button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.actfilter .afn { flex: 1 1 100%; margin: 2px 0 0; font-size: 0.85rem; color: var(--muted); min-height: 1.2em; }
+[data-act].af-hide { display: none !important; }
+.find .actfilter + .allnote { margin: 10px 0 22px; }
+.fam.af-hide { display: none; }
+.sh-tag { display: inline-block; margin-right: 6px; padding: 1px 7px; font-size: 0.74rem; font-weight: 700; border-radius: 999px; color: var(--accent); border: 1px solid color-mix(in srgb, var(--accent) 55%, transparent); }
+.links .wsm { display: inline-block; text-decoration: none; font-size: 0.78rem; color: var(--muted); font-weight: 400; margin-left: 5px; }
+.used.needs { font-size: 0.85rem; }
+.used.needs b { font-weight: 700; }
+@media (max-width: 520px) { .actfilter .afl { flex: 1 1 100%; margin-left: 0; } }
+
+</style>
+<link rel="stylesheet" href="demos/lib/paper.css">
+</head>
+<body class="site">
+<!-- Generated by tools/courses.py from curriculum/hs-physics-map.json. Edit the map or the script, not this file. -->
+<header class="top" aria-label="Site">
+  <a class="brand" href="index.html"><svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><ellipse cx="16" cy="16" rx="13" ry="6" fill="none" stroke="currentColor" stroke-width="1.8" transform="rotate(-30 16 16)"/><ellipse cx="16" cy="16" rx="13" ry="6" fill="none" stroke="currentColor" stroke-width="1.8" transform="rotate(30 16 16)"/><circle cx="16" cy="16" r="2.6" fill="currentColor"/></svg>Virtual Physics Demos</a>
+  <nav class="tabs" aria-label="Library"><a class="tab" href="index.html#topics">Demos</a><a class="tab" href="openstax.html" aria-current="page">OpenStax</a><a class="tab" href="notes/index.html">Notes</a></nav>
+  <div class="filter hfind" role="search"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M11 11l3.5 3.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><input type="search" id="q" placeholder="Search all demos" aria-label="Search all demos by name, topic or textbook section" autocomplete="off" spellcheck="false" role="combobox" aria-autocomplete="list" aria-controls="hits" aria-expanded="false"><kbd>/</kbd><button type="button" class="clear" hidden aria-label="Clear search">✕</button><div class="hits" id="hits" hidden><p class="hn" aria-live="polite"></p><ul></ul></div></div>
+  <span data-vd-theme></span>
+  <a class="courses" href="courses.html"><b>For a class</b> Courses</a>
+</header>
+<header class="hero phead">
+  <div class="wrap">
+    <p class="eyebrow"><b>By textbook section</b></p>
+    <h1>OpenStax Physics (high school)</h1>
+    <p class="lede">The free OpenStax high school textbook, section by section, with the demos and worksheets for each.</p>
+    <ul class="facts"><li><span><strong>23</strong> chapters</span></li><li><span><strong>76</strong> sections</span></li><li><span><strong>72</strong> with an activity</span></li><li><span><strong>77</strong> demos</span></li></ul>
+  </div>
+</header>
+<nav class="tools" aria-label="Sections">
+  <div class="wrap"><ul class="jump"><li><a href="#hs-motion">Motion, forces and energy</a></li><li><a href="#hs-heat-waves">Heat, waves, sound and light</a></li><li><a href="#hs-em">Electricity and magnetism</a></li><li><a href="#hs-modern">Quanta, atoms and particles</a></li><li><a href="openstax.html">University Physics</a></li><li><a href="openstax-astronomy.html">Astronomy 2e</a></li><li><a href="openstax-college-physics.html">College Physics 2e</a></li><li><a href="openstax-calculus.html">Calculus</a></li></ul></div>
+</nav>
+<main class="wrap">
+  <p class="how">Every section of OpenStax Physics with the demos that serve it, chapter by chapter, then the worksheets that fit the section best. Open a chapter to see its sections. Section numbers match the book. Worksheets written for this book use algebra only.</p>
+  <p class="allch"><button type="button" id="allCh" aria-pressed="false">Open every chapter</button></p>
+<script>/* tools/courses.py: open or close every chapter */ (function () { var b = document.getElementById('allCh'); if (!b) return; var ds = function () { return [].slice.call(document.querySelectorAll('details.ch')); }; function sync() { var all = ds().every(function (d) { return d.open; }); b.textContent = all ? 'Close every chapter' : 'Open every chapter'; b.setAttribute('aria-pressed', all ? 'true' : 'false'); } b.addEventListener('click', function () { var open = !ds().every(function (d) { return d.open; }); ds().forEach(function (d) { d.open = open; }); sync(); }); ds().forEach(function (d) { d.addEventListener('toggle', sync); }); })();</script>
+  <section class="unit" id="hs-motion" aria-labelledby="hs-motion-h">
+    <h2 id="hs-motion-h">Motion, forces and energy</h2>
+    <p class="meta"><span>Ch. 1–10</span><span>31 sections</span><span>29 with an activity</span><span><a href="https://openstax.org/details/books/physics">Free textbook: OpenStax Physics</a></span></p>
+    <details class="ch" id="hs-ch1">
+      <summary><span class="chn">Chapter 1</span> What is Physics? <span class="n">3 sections · 1 demo</span></summary>
+      <ol class="srows"><li id="shs-1-1"><span class="sec">1.1</span><span class="stitle">Physics: Definitions and Applications<span class="st st-missing">no activity yet</span></span><span class="sdemos"></span></li><li id="shs-1-2"><span class="sec">1.2</span><span class="stitle">The Scientific Methods<span class="st st-missing">no activity yet</span></span><span class="sdemos"></span></li><li id="shs-1-3"><span class="sec">1.3</span><span class="stitle">The Language of Physics: Physical Quantities and Units</span><span class="sdemos"><a href="demos/units.html">Units, Scales and Estimates</a> · <a class="ws" href="curriculum/labs/students/measurement-and-units.html">Worksheet: Units and Dimensions</a> · <a class="ws" href="curriculum/labs/students/intro-scale.html">Worksheet: How Big Is the Solar System? (Astro 2203)</a></span></li></ol>
+    </details>
+    <details class="ch" id="hs-ch2">
+      <summary><span class="chn">Chapter 2</span> Motion in One Dimension <span class="n">4 sections · 3 demos</span></summary>
+      <ol class="srows"><li id="shs-2-1"><span class="sec">2.1</span><span class="stitle">Relative Motion, Distance, and Displacement</span><span class="sdemos"><a href="demos/motion-graphs.html">Motion Graphs</a> · <a href="demos/cart-launch.html">Ball Launched from a Moving Cart</a> · <a href="demos/vectors.html">Vectors and Relative Motion</a> · <a class="ws" href="curriculum/labs/students/motion-graphs.html">Worksheet: Motion Graphs</a> · <a class="ws" href="curriculum/labs/students/relative-motion.html">Worksheet: Relative Motion</a></span></li><li id="shs-2-2"><span class="sec">2.2</span><span class="stitle">Speed and Velocity</span><span class="sdemos"><a href="demos/motion-graphs.html">Motion Graphs</a> · <a class="ws" href="curriculum/labs/students/motion-graphs.html">Worksheet: Motion Graphs</a></span></li><li id="shs-2-3"><span class="sec">2.3</span><span class="stitle">Position vs. Time Graphs</span><span class="sdemos"><a href="demos/motion-graphs.html">Motion Graphs</a> · <a class="ws" href="curriculum/labs/students/motion-graphs.html">Worksheet: Motion Graphs</a></span></li><li id="shs-2-4"><span class="sec">2.4</span><span class="stitle">Velocity vs. Time Graphs</span><span class="sdemos"><a href="demos/motion-graphs.html">Motion Graphs</a> · <a class="ws" href="curriculum/labs/students/motion-graphs.html">Worksheet: Motion Graphs</a></span></li></ol>
+    </details>
+    <details class="ch" id="hs-ch3">
+      <summary><span class="chn">Chapter 3</span> Acceleration <span class="n">2 sections · 2 demos</span></summary>
+      <ol class="srows"><li id="shs-3-1"><span class="sec">3.1</span><span class="stitle">Acceleration</span><span class="sdemos"><a href="demos/motion-graphs.html">Motion Graphs</a> · <a class="ws" href="curriculum/labs/students/motion-graphs.html">Worksheet: Motion Graphs</a></span></li><li id="shs-3-2"><span class="sec">3.2</span><span class="stitle">Representing Acceleration with Equations and Graphs</span><span class="sdemos"><a href="demos/motion-graphs.html">Motion Graphs</a> · <a href="demos/projectile-drag.html">Projectile Range</a> · <a class="ws" href="curriculum/labs/students/motion-graphs.html">Worksheet: Motion Graphs</a></span></li></ol>
+    </details>
+    <details class="ch" id="hs-ch4">
+      <summary><span class="chn">Chapter 4</span> Forces and Newton’s Laws of Motion <span class="n">4 sections · 6 demos</span></summary>
+      <ol class="srows"><li id="shs-4-1"><span class="sec">4.1</span><span class="stitle">Force</span><span class="sdemos"><a href="demos/forces.html">Forces and Friction</a> · <a href="demos/vectors.html">Vectors and Relative Motion</a> · <a class="ws" href="curriculum/labs/students/force-table.html">Worksheet: Force Table</a></span></li><li id="shs-4-2"><span class="sec">4.2</span><span class="stitle">Newton&#x27;s First Law of Motion: Inertia</span><span class="sdemos"><a href="demos/forces.html">Forces and Friction</a> · <a href="demos/cart-launch.html">Ball Launched from a Moving Cart</a> · <a href="demos/elevator.html">Elevator: Apparent Weight</a> · <a class="ws" href="curriculum/labs/students/relative-motion.html">Worksheet: Relative Motion</a></span></li><li id="shs-4-3"><span class="sec">4.3</span><span class="stitle">Newton&#x27;s Second Law of Motion</span><span class="sdemos"><a href="demos/forces.html">Forces and Friction</a> · <a href="demos/elevator.html">Elevator: Apparent Weight</a> · <a class="ws" href="curriculum/labs/students/atwood.html">Worksheet: Atwood&#x27;s Machine</a> · <a class="ws" href="curriculum/labs/students/apparent-weight.html">Worksheet: Apparent Weight</a> · <a class="ws" href="curriculum/labs/students/forces.html">Worksheet: Friction and Work</a></span></li><li id="shs-4-4"><span class="sec">4.4</span><span class="stitle">Newton&#x27;s Third Law of Motion</span><span class="sdemos"><a href="demos/forces.html">Forces and Friction</a> · <a href="demos/force-lab.html">Inverse Square Force Lab</a> · <a href="demos/collisions.html">Collisions and Momentum</a></span></li></ol>
+    </details>
+    <details class="ch" id="hs-ch5">
+      <summary><span class="chn">Chapter 5</span> Motion in Two Dimensions <span class="n">5 sections · 6 demos</span></summary>
+      <ol class="srows"><li id="shs-5-1"><span class="sec">5.1</span><span class="stitle">Vector Addition and Subtraction: Graphical Methods</span><span class="sdemos"><a href="demos/vectors.html">Vectors and Relative Motion</a> · <a class="ws" href="curriculum/labs/students/force-table.html">Worksheet: Force Table</a></span></li><li id="shs-5-2"><span class="sec">5.2</span><span class="stitle">Vector Addition and Subtraction: Analytical Methods</span><span class="sdemos"><a href="demos/vectors.html">Vectors and Relative Motion</a> · <a class="ws" href="curriculum/labs/students/force-table.html">Worksheet: Force Table</a> · <a class="ws" href="curriculum/labs/students/vectors.html">Worksheet: Components, Sums and Products</a></span></li><li id="shs-5-3"><span class="sec">5.3</span><span class="stitle">Projectile Motion</span><span class="sdemos"><a href="demos/projectile-drag.html">Projectile Range</a> · <a href="demos/cart-launch.html">Ball Launched from a Moving Cart</a> · <a class="ws" href="curriculum/labs/students/hs-projectiles.html">Worksheet: Projectiles: Sideways and Up</a> · <a class="ws" href="curriculum/labs/students/projectile-drag.html">Worksheet: Projectiles and Air Resistance</a> · <a class="ws" href="curriculum/labs/students/relative-motion.html">Worksheet: Relative Motion</a></span></li><li id="shs-5-4"><span class="sec">5.4</span><span class="stitle">Inclined Planes</span><span class="sdemos"><a href="demos/forces.html">Forces and Friction</a> · <a class="ws" href="curriculum/labs/students/forces.html">Worksheet: Friction and Work</a></span></li><li id="shs-5-5"><span class="sec">5.5</span><span class="stitle">Simple Harmonic Motion</span><span class="sdemos"><a href="demos/springs.html">Springs and Oscillations</a> · <a href="demos/pendulum.html">Pendulums</a> · <a class="ws" href="curriculum/labs/students/springs.html">Worksheet: Spring Constant</a> · <a class="ws" href="curriculum/labs/students/pendulum.html">Worksheet: Measuring g</a></span></li></ol>
+    </details>
+    <details class="ch" id="hs-ch6">
+      <summary><span class="chn">Chapter 6</span> Circular and Rotational Motion <span class="n">3 sections · 3 demos</span></summary>
+      <ol class="srows"><li id="shs-6-1"><span class="sec">6.1</span><span class="stitle">Angle of Rotation and Angular Velocity</span><span class="sdemos"><a href="demos/rotation.html">Rotation and Torque</a> · <a href="demos/circular-motion.html">Circular Motion</a> · <a class="ws" href="curriculum/labs/students/rotation.html">Worksheet: Torque and Angular Momentum</a></span></li><li id="shs-6-2"><span class="sec">6.2</span><span class="stitle">Uniform Circular Motion</span><span class="sdemos"><a href="demos/circular-motion.html">Circular Motion</a> · <a class="ws" href="curriculum/labs/students/circular-motion.html">Worksheet: Speed Limits on Curves and Loops</a></span></li><li id="shs-6-3"><span class="sec">6.3</span><span class="stitle">Rotational Motion</span><span class="sdemos"><a href="demos/rotation.html">Rotation and Torque</a> · <a href="demos/rotational-dynamics.html">Rotational Dynamics</a> · <a class="ws" href="curriculum/labs/students/rotation.html">Worksheet: Torque and Angular Momentum</a> · <a class="ws" href="curriculum/labs/students/rotational-dynamics.html">Worksheet: Rotational Inertia</a></span></li></ol>
+    </details>
+    <details class="ch" id="hs-ch7">
+      <summary><span class="chn">Chapter 7</span> Newton&#x27;s Law of Gravitation <span class="n">2 sections · 5 demos</span></summary>
+      <ol class="srows"><li id="shs-7-1"><span class="sec">7.1</span><span class="stitle">Kepler&#x27;s Laws of Planetary Motion</span><span class="sdemos"><a href="demos/kepler-orbits.html">Kepler&#x27;s Laws</a> · <a class="ws" href="curriculum/labs/students/intro-kepler.html">Worksheet: Kepler&#x27;s Laws from Earth to Pluto (Astro 2203)</a> · <a class="ws" href="curriculum/labs/students/kepler-orbits.html">Worksheet: Kepler&#x27;s Third Law</a></span></li><li id="shs-7-2"><span class="sec">7.2</span><span class="stitle">Newton&#x27;s Law of Universal Gravitation and Einstein&#x27;s Theory of General Relativity</span><span class="sdemos"><a href="demos/force-lab.html">Inverse Square Force Lab</a> · <a href="demos/cavendish.html">The Cavendish Experiment</a> · <a href="demos/gravity-near-earth.html">Gravity Near Earth</a> · <a href="demos/equivalence-gravity.html">Equivalence and Tests of Gravity</a> · <a class="ws" href="curriculum/labs/students/intro-gravity.html">Worksheet: Gravity from the Ground to Orbit (Astro 2203)</a> · <a class="ws" href="curriculum/labs/students/cavendish.html">Worksheet: Measuring G</a> · <a class="ws" href="curriculum/labs/students/equivalence-principle.html">Worksheet: Gravity or Acceleration?</a></span></li></ol>
+    </details>
+    <details class="ch" id="hs-ch8">
+      <summary><span class="chn">Chapter 8</span> Momentum <span class="n">3 sections · 2 demos</span></summary>
+      <ol class="srows"><li id="shs-8-1"><span class="sec">8.1</span><span class="stitle">Linear Momentum, Force, and Impulse</span><span class="sdemos"><a href="demos/impulse.html">Impulse and Momentum</a> · <a href="demos/collisions.html">Collisions and Momentum</a> · <a class="ws" href="curriculum/labs/students/impulse.html">Worksheet: Impulse and Momentum</a></span></li><li id="shs-8-2"><span class="sec">8.2</span><span class="stitle">Conservation of Momentum</span><span class="sdemos"><a href="demos/collisions.html">Collisions and Momentum</a> · <a class="ws" href="curriculum/labs/students/collisions.html">Worksheet: Momentum and Collisions</a></span></li><li id="shs-8-3"><span class="sec">8.3</span><span class="stitle">Elastic and Inelastic Collisions</span><span class="sdemos"><a href="demos/collisions.html">Collisions and Momentum</a> · <a class="ws" href="curriculum/labs/students/collisions.html">Worksheet: Momentum and Collisions</a></span></li></ol>
+    </details>
+    <details class="ch" id="hs-ch9">
+      <summary><span class="chn">Chapter 9</span> Work, Energy, and Simple Machines <span class="n">3 sections · 5 demos</span></summary>
+      <ol class="srows"><li id="shs-9-1"><span class="sec">9.1</span><span class="stitle">Work, Power, and the Work–Energy Theorem</span><span class="sdemos"><a href="demos/forces.html">Forces and Friction</a> · <a href="demos/energy-track.html">Energy on a Track</a> · <a href="demos/energy-sources.html">Sources of Energy</a> · <a class="ws" href="curriculum/labs/students/hs-energy-skate.html">Worksheet: Energy on a Track: Height, Speed and Friction</a> · <a class="ws" href="curriculum/labs/students/forces.html">Worksheet: Friction and Work</a></span></li><li id="shs-9-2"><span class="sec">9.2</span><span class="stitle">Mechanical Energy and Conservation of Energy</span><span class="sdemos"><a href="demos/energy-track.html">Energy on a Track</a> · <a href="demos/pendulum.html">Pendulums</a> · <a class="ws" href="curriculum/labs/students/hs-energy-skate.html">Worksheet: Energy on a Track: Height, Speed and Friction</a></span></li><li id="shs-9-3"><span class="sec">9.3</span><span class="stitle">Simple Machines</span><span class="sdemos"><a href="demos/forces.html">Forces and Friction</a> · <a href="demos/equilibrium.html">Static Equilibrium</a> · <a class="ws" href="curriculum/labs/students/hs-simple-machines.html">Worksheet: Simple Machines: Mechanical Advantage and Efficiency</a></span></li></ol>
+    </details>
+    <details class="ch" id="hs-ch10">
+      <summary><span class="chn">Chapter 10</span> Special Relativity <span class="n">2 sections · 4 demos</span></summary>
+      <ol class="srows"><li id="shs-10-1"><span class="sec">10.1</span><span class="stitle">Postulates of Special Relativity</span><span class="sdemos"><a href="demos/spacetime.html">Spacetime Diagrams</a> · <a href="demos/relativistic-motion.html">Velocity, Momentum and Energy Near c</a> · <a class="ws" href="curriculum/labs/students/spacetime.html">Worksheet: Spacetime Diagrams and the Lorentz Transformation</a></span></li><li id="shs-10-2"><span class="sec">10.2</span><span class="stitle">Consequences of Special Relativity</span><span class="sdemos"><a href="demos/spacetime.html">Spacetime Diagrams</a> · <a href="demos/relativistic-motion.html">Velocity, Momentum and Energy Near c</a> · <a href="demos/gps-clocks.html">GPS Clocks and Relativity</a> · <a href="demos/binding-energy.html">Nuclear Binding Energy</a> · <a class="ws" href="curriculum/labs/students/gps-clocks.html">Worksheet: GPS Clocks and Relativity</a> · <a class="ws" href="curriculum/labs/students/spacetime.html">Worksheet: Spacetime Diagrams and the Lorentz Transformation</a></span></li></ol>
+    </details>
+  </section>
+  <section class="unit" id="hs-heat-waves" aria-labelledby="hs-heat-waves-h">
+    <h2 id="hs-heat-waves-h">Heat, waves, sound and light</h2>
+    <p class="meta"><span>Ch. 11–17</span><span>21 sections</span><span>21 with an activity</span><span><a href="https://openstax.org/details/books/physics">Free textbook: OpenStax Physics</a></span></p>
+    <details class="ch" id="hs-ch11">
+      <summary><span class="chn">Chapter 11</span> Thermal Energy, Heat, and Work <span class="n">3 sections · 4 demos</span></summary>
+      <ol class="srows"><li id="shs-11-1"><span class="sec">11.1</span><span class="stitle">Temperature and Thermal Energy</span><span class="sdemos"><a href="demos/temperature.html">Temperature and Heat</a> · <a href="demos/ideal-gas.html">Gas in a Box</a> · <a class="ws" href="curriculum/labs/students/thermal-equilibrium.html">Worksheet: Thermal Equilibrium</a> · <a class="ws" href="curriculum/labs/students/gas-thermometer.html">Worksheet: Gas Thermometer and Absolute Zero</a> · <a class="ws" href="curriculum/labs/students/thermal-expansion.html">Worksheet: Thermal Expansion</a></span></li><li id="shs-11-2"><span class="sec">11.2</span><span class="stitle">Heat, Specific Heat, and Heat Transfer</span><span class="sdemos"><a href="demos/temperature.html">Temperature and Heat</a> · <a href="demos/states-of-matter.html">States of Matter</a> · <a href="demos/blackbody.html">Blackbody Radiation</a> · <a class="ws" href="curriculum/labs/students/thermal-equilibrium.html">Worksheet: Thermal Equilibrium</a> · <a class="ws" href="curriculum/labs/students/heat-conduction.html">Worksheet: Heat Conduction Through Layers</a> · <a class="ws" href="curriculum/labs/students/convection.html">Worksheet: Cooling by Convection and Radiation</a></span></li><li id="shs-11-3"><span class="sec">11.3</span><span class="stitle">Phase Change and Latent Heat</span><span class="sdemos"><a href="demos/states-of-matter.html">States of Matter</a> · <a class="ws" href="curriculum/labs/students/heating-curve.html">Worksheet: Heating Curve and Latent Heat</a> · <a class="ws" href="curriculum/labs/students/bonds-and-latent-heat.html">Worksheet: Bonds, Temperature and Latent Heat</a></span></li></ol>
+    </details>
+    <details class="ch" id="hs-ch12">
+      <summary><span class="chn">Chapter 12</span> Thermodynamics <span class="n">4 sections · 5 demos</span></summary>
+      <ol class="srows"><li id="shs-12-1"><span class="sec">12.1</span><span class="stitle">Zeroth Law of Thermodynamics: Thermal Equilibrium</span><span class="sdemos"><a href="demos/temperature.html">Temperature and Heat</a> · <a class="ws" href="curriculum/labs/students/thermal-equilibrium.html">Worksheet: Thermal Equilibrium</a></span></li><li id="shs-12-2"><span class="sec">12.2</span><span class="stitle">First law of Thermodynamics: Thermal Energy and Work</span><span class="sdemos"><a href="demos/heat-engines.html">Heat Engine Cycles</a> · <a href="demos/gas-heat-capacity.html">Heat Capacities of Gases</a> · <a class="ws" href="curriculum/labs/students/hs-heat-engines.html">Worksheet: Heat Engines and Refrigerators</a> · <a class="ws" href="curriculum/labs/students/heat-capacities-of-gases.html">Worksheet: Heat Capacities of Gases</a></span></li><li id="shs-12-3"><span class="sec">12.3</span><span class="stitle">Second Law of Thermodynamics: Entropy</span><span class="sdemos"><a href="demos/entropy.html">Entropy and the Second Law</a> · <a href="demos/galton-board.html">Galton Board</a> · <a class="ws" href="curriculum/labs/students/second-law.html">Worksheet: Testing the Second Law</a> · <a class="ws" href="curriculum/labs/students/free-expansion.html">Worksheet: Free Expansion</a></span></li><li id="shs-12-4"><span class="sec">12.4</span><span class="stitle">Applications of Thermodynamics: Heat Engines, Heat Pumps, and Refrigerators</span><span class="sdemos"><a href="demos/heat-engines.html">Heat Engine Cycles</a> · <a href="demos/entropy.html">Entropy and the Second Law</a> · <a class="ws" href="curriculum/labs/students/hs-heat-engines.html">Worksheet: Heat Engines and Refrigerators</a> · <a class="ws" href="curriculum/labs/students/heat-engines.html">Worksheet: Heat Engine Cycles</a> · <a class="ws" href="curriculum/labs/students/second-law.html">Worksheet: Testing the Second Law</a></span></li></ol>
+    </details>
+    <details class="ch" id="hs-ch13">
+      <summary><span class="chn">Chapter 13</span> Waves and Their Properties <span class="n">3 sections · 6 demos</span></summary>
+      <ol class="srows"><li id="shs-13-1"><span class="sec">13.1</span><span class="stitle">Types of Waves</span><span class="sdemos"><a href="demos/sound-waves.html">Sound Waves and the Speed of Sound</a> · <a href="demos/standing-waves.html">Standing Waves</a> · <a href="demos/ripple-tank.html">Ripple Tank</a></span></li><li id="shs-13-2"><span class="sec">13.2</span><span class="stitle">Wave Properties: Speed, Amplitude, Frequency, and Period</span><span class="sdemos"><a href="demos/standing-waves.html">Standing Waves</a> · <a href="demos/string-density.html">Linear Density of a String</a> · <a href="demos/wave-power.html">Energy and Power of a Wave</a> · <a href="demos/ripple-tank.html">Ripple Tank</a> · <a class="ws" href="curriculum/labs/students/string-density.html">Worksheet: Linear Density of a String</a> · <a class="ws" href="curriculum/labs/students/wave-power.html">Worksheet: Power Carried by a Wave</a> · <a class="ws" href="curriculum/labs/students/ripple-tank.html">Worksheet: Ripple Tank: Wavelength, Refraction and Interference</a></span></li><li id="shs-13-3"><span class="sec">13.3</span><span class="stitle">Wave Interaction: Superposition and Interference</span><span class="sdemos"><a href="demos/standing-waves.html">Standing Waves</a> · <a href="demos/ripple-tank.html">Ripple Tank</a> · <a href="demos/two-speaker.html">Two Speaker Interference</a> · <a class="ws" href="curriculum/labs/students/standing-waves.html">Worksheet: Standing Waves on a String</a> · <a class="ws" href="curriculum/labs/students/two-speaker.html">Worksheet: Two Speaker Interference</a></span></li></ol>
+    </details>
+    <details class="ch" id="hs-ch14">
+      <summary><span class="chn">Chapter 14</span> Sound <span class="n">4 sections · 8 demos</span></summary>
+      <ol class="srows"><li id="shs-14-1"><span class="sec">14.1</span><span class="stitle">Speed of Sound, Frequency, and Wavelength</span><span class="sdemos"><a href="demos/sound-waves.html">Sound Waves and the Speed of Sound</a> · <a href="demos/resonators.html">Resonators</a> · <a class="ws" href="curriculum/labs/students/sound-waves.html">Worksheet: Speed of Sound by Time of Flight</a> · <a class="ws" href="curriculum/labs/students/resonators.html">Worksheet: Speed of Sound</a></span></li><li id="shs-14-2"><span class="sec">14.2</span><span class="stitle">Sound Intensity and Sound Level</span><span class="sdemos"><a href="demos/sound-intensity.html">Sound Intensity and Decibels</a> · <a href="demos/hearing.html">Hearing and the Ear</a> · <a class="ws" href="curriculum/labs/students/sound-intensity.html">Worksheet: Sound Intensity and Decibels</a></span></li><li id="shs-14-3"><span class="sec">14.3</span><span class="stitle">Doppler Effect and Sonic Booms</span><span class="sdemos"><a href="demos/doppler.html">Doppler Effect and Shock Waves</a> · <a class="ws" href="curriculum/labs/students/doppler.html">Worksheet: Doppler Effect and Shock Waves</a></span></li><li id="shs-14-4"><span class="sec">14.4</span><span class="stitle">Sound Interference and Resonance</span><span class="sdemos"><a href="demos/two-speaker.html">Two Speaker Interference</a> · <a href="demos/resonators.html">Resonators</a> · <a href="demos/standing-waves.html">Standing Waves</a> · <a href="demos/string-density.html">Linear Density of a String</a> · <a class="ws" href="curriculum/labs/students/two-speaker.html">Worksheet: Two Speaker Interference</a> · <a class="ws" href="curriculum/labs/students/resonators.html">Worksheet: Speed of Sound</a> · <a class="ws" href="curriculum/labs/students/standing-waves.html">Worksheet: Standing Waves on a String</a></span></li></ol>
+    </details>
+    <details class="ch" id="hs-ch15">
+      <summary><span class="chn">Chapter 15</span> Light <span class="n">2 sections · 4 demos</span></summary>
+      <ol class="srows"><li id="shs-15-1"><span class="sec">15.1</span><span class="stitle">The Electromagnetic Spectrum</span><span class="sdemos"><a href="demos/em-waves.html">Electromagnetic Waves</a> · <a href="demos/blackbody.html">Blackbody Radiation</a> · <a class="ws" href="curriculum/labs/students/intro-em-spectrum.html">Worksheet: The Electromagnetic Spectrum (Astro 2203)</a></span></li><li id="shs-15-2"><span class="sec">15.2</span><span class="stitle">The Behavior of Electromagnetic Radiation</span><span class="sdemos"><a href="demos/polarization.html">Polarization</a> · <a href="demos/optics-bench.html">Optics Bench</a> · <a href="demos/em-waves.html">Electromagnetic Waves</a> · <a class="ws" href="curriculum/labs/students/polarization.html">Worksheet: Polarization</a></span></li></ol>
+    </details>
+    <details class="ch" id="hs-ch16">
+      <summary><span class="chn">Chapter 16</span> Mirrors and Lenses <span class="n">3 sections · 3 demos</span></summary>
+      <ol class="srows"><li id="shs-16-1"><span class="sec">16.1</span><span class="stitle">Reflection</span><span class="sdemos"><a href="demos/optics-bench.html">Optics Bench</a> · <a class="ws" href="curriculum/labs/students/intro-mirrors.html">Worksheet: Lenses, Mirrors and Color (Astro 2203)</a> · <a class="ws" href="curriculum/labs/students/mirrors-refraction.html">Worksheet: Mirrors and Refracting Surfaces</a></span></li><li id="shs-16-2"><span class="sec">16.2</span><span class="stitle">Refraction</span><span class="sdemos"><a href="demos/optics-bench.html">Optics Bench</a> · <a href="demos/huygens.html">Huygens&#x27;s Principle</a> · <a class="ws" href="curriculum/labs/students/mirrors-refraction.html">Worksheet: Mirrors and Refracting Surfaces</a> · <a class="ws" href="curriculum/labs/students/dispersion.html">Worksheet: Dispersion</a></span></li><li id="shs-16-3"><span class="sec">16.3</span><span class="stitle">Lenses</span><span class="sdemos"><a href="demos/optics-bench.html">Optics Bench</a> · <a href="demos/the-eye.html">The Eye</a> · <a class="ws" href="curriculum/labs/students/lenses-instruments.html">Worksheet: Thin Lenses and the Depth of an Image</a> · <a class="ws" href="curriculum/labs/students/camera.html">Worksheet: The Camera</a> · <a class="ws" href="curriculum/labs/students/the-eye.html">Worksheet: The Eye</a></span></li></ol>
+    </details>
+    <details class="ch" id="hs-ch17">
+      <summary><span class="chn">Chapter 17</span> Diffraction and Interference <span class="n">2 sections · 6 demos</span></summary>
+      <ol class="srows"><li id="shs-17-1"><span class="sec">17.1</span><span class="stitle">Understanding Diffraction and Interference</span><span class="sdemos"><a href="demos/double-slit.html">Double Slit, One Particle at a Time</a> · <a href="demos/diffraction-grating.html">Diffraction Grating</a> · <a href="demos/ripple-tank.html">Ripple Tank</a> · <a class="ws" href="curriculum/labs/students/double-slit.html">Worksheet: Young&#x27;s Double Slit</a> · <a class="ws" href="curriculum/labs/students/single-slit.html">Worksheet: Single Slit Diffraction</a> · <a class="ws" href="curriculum/labs/students/diffraction-grating.html">Worksheet: Diffraction Grating</a></span></li><li id="shs-17-2"><span class="sec">17.2</span><span class="stitle">Applications of Diffraction, Interference, and Coherence</span><span class="sdemos"><a href="demos/diffraction-grating.html">Diffraction Grating</a> · <a href="demos/thin-films.html">Thin Film Interference</a> · <a href="demos/holography.html">Holography</a> · <a href="demos/resolution.html">Circular Apertures and Resolution</a> · <a class="ws" href="curriculum/labs/students/thin-films.html">Worksheet: Thin Film Interference</a> · <a class="ws" href="curriculum/labs/students/diffraction-grating.html">Worksheet: Diffraction Grating</a> · <a class="ws" href="curriculum/labs/students/intro-resolution.html">Worksheet: Seeing Fine Detail (Astro 2203)</a></span></li></ol>
+    </details>
+  </section>
+  <section class="unit" id="hs-em" aria-labelledby="hs-em-h">
+    <h2 id="hs-em-h">Electricity and magnetism</h2>
+    <p class="meta"><span>Ch. 18–20</span><span>12 sections</span><span>12 with an activity</span><span><a href="https://openstax.org/details/books/physics">Free textbook: OpenStax Physics</a></span></p>
+    <details class="ch" id="hs-ch18">
+      <summary><span class="chn">Chapter 18</span> Static Electricity <span class="n">5 sections · 4 demos</span></summary>
+      <ol class="srows"><li id="shs-18-1"><span class="sec">18.1</span><span class="stitle">Electrical Charges, Conservation of Charge, and Transfer of Charge</span><span class="sdemos"><a href="demos/induction.html">Charging by Induction</a> · <a class="ws" href="curriculum/labs/students/induction.html">Worksheet: Charging by Induction</a></span></li><li id="shs-18-2"><span class="sec">18.2</span><span class="stitle">Coulomb&#x27;s law</span><span class="sdemos"><a href="demos/force-lab.html">Inverse Square Force Lab</a> · <a href="demos/coulomb-sandbox.html">Coulomb Sandbox</a> · <a class="ws" href="curriculum/labs/students/coulomb-sandbox.html">Worksheet: Electric Field and Potential</a></span></li><li id="shs-18-3"><span class="sec">18.3</span><span class="stitle">Electric Field</span><span class="sdemos"><a href="demos/coulomb-sandbox.html">Coulomb Sandbox</a> · <a class="ws" href="curriculum/labs/students/coulomb-sandbox.html">Worksheet: Electric Field and Potential</a></span></li><li id="shs-18-4"><span class="sec">18.4</span><span class="stitle">Electric Potential</span><span class="sdemos"><a href="demos/coulomb-sandbox.html">Coulomb Sandbox</a> · <a href="demos/capacitors.html">Capacitors and Dielectrics</a> · <a class="ws" href="curriculum/labs/students/capacitors.html">Worksheet: Capacitance and Dielectrics</a></span></li><li id="shs-18-5"><span class="sec">18.5</span><span class="stitle">Capacitors and Dielectrics</span><span class="sdemos"><a href="demos/capacitors.html">Capacitors and Dielectrics</a> · <a class="ws" href="curriculum/labs/students/capacitors.html">Worksheet: Capacitance and Dielectrics</a></span></li></ol>
+    </details>
+    <details class="ch" id="hs-ch19">
+      <summary><span class="chn">Chapter 19</span> Electrical Circuits <span class="n">4 sections · 3 demos</span></summary>
+      <ol class="srows"><li id="shs-19-1"><span class="sec">19.1</span><span class="stitle">Ohm&#x27;s law</span><span class="sdemos"><a href="demos/circuits.html">Circuits</a> · <a href="demos/resistivity.html">Resistivity of a Wire</a> · <a class="ws" href="curriculum/labs/students/resistivity.html">Worksheet: Resistivity</a></span></li><li id="shs-19-2"><span class="sec">19.2</span><span class="stitle">Series Circuits</span><span class="sdemos"><a href="demos/circuits.html">Circuits</a> · <a class="ws" href="curriculum/labs/students/hs-series-parallel.html">Worksheet: Series and Parallel Circuits</a> · <a class="ws" href="curriculum/labs/students/dc-circuits.html">Worksheet: Kirchhoff&#x27;s Rules</a></span></li><li id="shs-19-3"><span class="sec">19.3</span><span class="stitle">Parallel Circuits</span><span class="sdemos"><a href="demos/circuits.html">Circuits</a> · <a href="demos/household-wiring.html">Household Wiring and Electrical Safety</a> · <a class="ws" href="curriculum/labs/students/hs-series-parallel.html">Worksheet: Series and Parallel Circuits</a> · <a class="ws" href="curriculum/labs/students/dc-circuits.html">Worksheet: Kirchhoff&#x27;s Rules</a> · <a class="ws" href="curriculum/labs/students/household-wiring.html">Worksheet: Household Wiring and Electrical Safety</a></span></li><li id="shs-19-4"><span class="sec">19.4</span><span class="stitle">Electric Power</span><span class="sdemos"><a href="demos/circuits.html">Circuits</a> · <a href="demos/household-wiring.html">Household Wiring and Electrical Safety</a> · <a class="ws" href="curriculum/labs/students/household-wiring.html">Worksheet: Household Wiring and Electrical Safety</a></span></li></ol>
+    </details>
+    <details class="ch" id="hs-ch20">
+      <summary><span class="chn">Chapter 20</span> Magnetism <span class="n">3 sections · 6 demos</span></summary>
+      <ol class="srows"><li id="shs-20-1"><span class="sec">20.1</span><span class="stitle">Magnetic Fields, Field Lines, and Force</span><span class="sdemos"><a href="demos/currents-fields.html">Magnetic Fields of Currents</a> · <a href="demos/magnetic-force.html">Charges in Magnetic Fields</a> · <a href="demos/wire-force.html">Force on a Current</a> · <a class="ws" href="curriculum/labs/students/magnets-oersted.html">Worksheet: Magnets and Oersted&#x27;s Compass</a> · <a class="ws" href="curriculum/labs/students/magnetic-force.html">Worksheet: Orbits and the Magnetic Bottle</a> · <a class="ws" href="curriculum/labs/students/wire-force.html">Worksheet: Magnetic Force on a Wire</a></span></li><li id="shs-20-2"><span class="sec">20.2</span><span class="stitle">Motors, Generators, and Transformers</span><span class="sdemos"><a href="demos/wire-force.html">Force on a Current</a> · <a href="demos/faraday.html">Faraday&#x27;s and Lenz&#x27;s Laws</a> · <a href="demos/transformers.html">Transformers</a> · <a class="ws" href="curriculum/labs/students/transformers.html">Worksheet: Transformers and Power Lines</a> · <a class="ws" href="curriculum/labs/students/wire-force.html">Worksheet: Magnetic Force on a Wire</a></span></li><li id="shs-20-3"><span class="sec">20.3</span><span class="stitle">Electromagnetic Induction</span><span class="sdemos"><a href="demos/faraday.html">Faraday&#x27;s and Lenz&#x27;s Laws</a> · <a href="demos/induction-at-work.html">Induction at Work</a> · <a class="ws" href="curriculum/labs/students/faraday-mutual-induction.html">Worksheet: Mutual Induction and Motional emf</a> · <a class="ws" href="curriculum/labs/students/faraday.html">Worksheet: Faraday&#x27;s Law</a></span></li></ol>
+    </details>
+  </section>
+  <section class="unit" id="hs-modern" aria-labelledby="hs-modern-h">
+    <h2 id="hs-modern-h">Quanta, atoms and particles</h2>
+    <p class="meta"><span>Ch. 21–23</span><span>12 sections</span><span>10 with an activity</span><span><a href="https://openstax.org/details/books/physics">Free textbook: OpenStax Physics</a></span></p>
+    <details class="ch" id="hs-ch21">
+      <summary><span class="chn">Chapter 21</span> The Quantum Nature of Light <span class="n">3 sections · 5 demos</span></summary>
+      <ol class="srows"><li id="shs-21-1"><span class="sec">21.1</span><span class="stitle">Planck and Quantum Nature of Light</span><span class="sdemos"><a href="demos/blackbody.html">Blackbody Radiation</a> · <a class="ws" href="curriculum/labs/students/intro-blackbody.html">Worksheet: Star Colors and Temperatures (Astro 2203)</a> · <a class="ws" href="curriculum/labs/students/blackbody.html">Worksheet: Blackbody Radiation</a></span></li><li id="shs-21-2"><span class="sec">21.2</span><span class="stitle">Einstein and the Photoelectric Effect</span><span class="sdemos"><a href="demos/photoelectric.html">Photoelectric Effect</a> · <a class="ws" href="curriculum/labs/students/photoelectric.html">Worksheet: Photoelectric Effect and Planck&#x27;s Constant</a></span></li><li id="shs-21-3"><span class="sec">21.3</span><span class="stitle">The Dual Nature of Light</span><span class="sdemos"><a href="demos/double-slit.html">Double Slit, One Particle at a Time</a> · <a href="demos/electron-diffraction.html">Electron Diffraction</a> · <a href="demos/compton.html">Compton Scattering</a> · <a class="ws" href="curriculum/labs/students/electron-diffraction.html">Worksheet: Electron Diffraction and de Broglie Waves</a></span></li></ol>
+    </details>
+    <details class="ch" id="hs-ch22">
+      <summary><span class="chn">Chapter 22</span> The Atom <span class="n">5 sections · 8 demos</span></summary>
+      <ol class="srows"><li id="shs-22-1"><span class="sec">22.1</span><span class="stitle">The Structure of the Atom</span><span class="sdemos"><a href="demos/rutherford.html">Rutherford Scattering</a> · <a href="demos/spectra.html">Spectra Explorer</a> · <a class="ws" href="curriculum/labs/students/rutherford.html">Worksheet: Rutherford Scattering</a> · <a class="ws" href="curriculum/labs/students/spectra.html">Worksheet: The Hydrogen Spectrum and the Rydberg Constant</a> · <a class="ws" href="curriculum/labs/students/intro-spectra.html">Worksheet: Fingerprints of the Elements (Astro 2203)</a></span></li><li id="shs-22-2"><span class="sec">22.2</span><span class="stitle">Nuclear Forces and Radioactivity</span><span class="sdemos"><a href="demos/radioactive-decay.html">Radioactive Decay</a> · <a href="demos/binding-energy.html">Nuclear Binding Energy</a></span></li><li id="shs-22-3"><span class="sec">22.3</span><span class="stitle">Half Life and Radiometric Dating</span><span class="sdemos"><a href="demos/radioactive-decay.html">Radioactive Decay</a> · <a class="ws" href="curriculum/labs/students/hs-half-life.html">Worksheet: Half Life and Radioactive Dating</a> · <a class="ws" href="curriculum/labs/students/decay-chains.html">Worksheet: Parent and Daughter</a> · <a class="ws" href="curriculum/labs/students/radioactive-decay.html">Worksheet: Measuring a Half Life</a></span></li><li id="shs-22-4"><span class="sec">22.4</span><span class="stitle">Nuclear Fission and Fusion</span><span class="sdemos"><a href="demos/binding-energy.html">Nuclear Binding Energy</a> · <a href="demos/nuclear-reactions.html">Nuclear Reactions, Fission and Fusion</a> · <a class="ws" href="curriculum/labs/students/critical-mass.html">Worksheet: Chain Reactions and Critical Size</a></span></li><li id="shs-22-5"><span class="sec">22.5</span><span class="stitle">Medical Applications of Radioactivity: Diagnostic Imaging and Radiation</span><span class="sdemos"><a href="demos/nuclear-reactions.html">Nuclear Reactions, Fission and Fusion</a> · <a href="demos/photon-interactions.html">Photon Interactions in Matter</a> · <a href="demos/ct-reconstruction.html">CT Image Reconstruction</a> · <a href="demos/radiobiology.html">Radiobiology: Cell Survival and Fractionation</a></span></li></ol>
+    </details>
+    <details class="ch" id="hs-ch23">
+      <summary><span class="chn">Chapter 23</span> Particle Physics <span class="n">4 sections · 1 demo</span></summary>
+      <ol class="srows"><li id="shs-23-1"><span class="sec">23.1</span><span class="stitle">The Four Fundamental Forces</span><span class="sdemos"><a href="demos/particles.html">Particles, Quarks and Conservation Laws</a></span></li><li id="shs-23-2"><span class="sec">23.2</span><span class="stitle">Quarks</span><span class="sdemos"><a href="demos/particles.html">Particles, Quarks and Conservation Laws</a></span></li><li id="shs-23-3"><span class="sec">23.3</span><span class="stitle">The Unification of Forces<span class="st st-missing">no activity yet</span></span><span class="sdemos"></span></li><li id="shs-23-4"><span class="sec">23.4</span><span class="stitle">Reference Tables<span class="st st-missing">no activity yet</span></span><span class="sdemos"></span></li></ol>
+    </details>
+  </section>
+  <p class="more"><a href="index.html">Back to the home page</a></p>
+</main>
+<footer>
+  <div class="wrap">
+    <p>© 2026 Steven Anderson. All rights reserved. Free to use for teaching and learning; see the <a href="LICENSE.html">terms of use</a>.</p>
+    <p><a href="index.html#topics">All demos</a> · <a href="openstax.html">OpenStax by section</a> · <a href="courses.html">Courses</a> · <a href="notes/index.html">Teaching notes</a> · <a href="https://github.com/PhysicsSteven/VirtualDemos">Source on GitHub</a></p>
+  </div>
+</footer>
+<script src="search.js" defer></script>
+<script>/* open the chapter a link points into (#v1-ch3, #s1-3-2) */ (function () { function go() { var e = location.hash.length > 1 && document.getElementById(decodeURIComponent(location.hash.slice(1))); if (!e) return; var d = e.closest('details'); if (d) { d.open = true; e.scrollIntoView(); } } addEventListener('hashchange', go); if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else go(); })();</script>
+<script>/* tools/courses.py: mark the unit on screen in the section bar */ (function () { var bar = document.querySelector('.jump'); if (!bar) return; var cu = bar.querySelector('a[aria-current]'); if (cu && bar.scrollWidth > bar.clientWidth) bar.scrollLeft = cu.offsetLeft - bar.clientWidth / 2 + cu.offsetWidth / 2; if (!window.IntersectionObserver) return; var links = [].slice.call(bar.querySelectorAll('a[href^="#"]')), on = {}, cur = null; var secs = links.map(function (a) { return document.getElementById(a.getAttribute('href').slice(1)); }); if (!links.length) return; function mark() { var best = null; secs.forEach(function (s, i) { if (s && on[s.id]) best = best === null ? i : best; }); if (best === null || best === cur) return; if (cur !== null) links[cur].classList.remove('here'); cur = best; var a = links[cur]; a.classList.add('here'); if (bar.scrollWidth > bar.clientWidth) bar.scrollTo({ left: a.offsetLeft - bar.clientWidth / 2 + a.offsetWidth / 2, behavior: 'auto' }); } var io = new IntersectionObserver(function (es) { es.forEach(function (e) { on[e.target.id] = e.isIntersecting; }); mark(); }, { rootMargin: '-35% 0px -60% 0px' }); secs.forEach(function (s) { if (s) io.observe(s); }); })();</script>
+</body>
+</html>

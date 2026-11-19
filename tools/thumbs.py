@@ -43,10 +43,14 @@ PROXY = os.environ.get("HTTPS_PROXY") or os.environ.get("https_proxy")
 #   keep_controls  True to leave buttons inside the stage visible
 #   hide     CSS selector of more things to hide (a card over the picture); a .setup-card is always hidden
 OVERRIDES = {
+    "nerve-signals": {"wait": 900, "crop": "#pane", "anchor": "top", "js": "window.__ns.applyPreset('race'); window.__ns.advance(0.6); window.__ns.draw();"},
+    "hearing": {"wait": 900, "crop": "#pane", "anchor": "top", "js": "window.__hear.applyPreset('k1'); window.__hear.S.t = 0.3; window.__hear.draw();"},
     "milky-way": {"wait": 900, "crop": ".stage", "js": "window.__mw.applyPreset('center'); for (let i = 0; i < 200; i++) window.__mw.advance(0.1); window.__mw.redraw();"},
     "galaxy-collisions": {"wait": 900, "crop": ".stage", "js": "window.__gc.applyPreset('tails'); for (let i = 0; i < 300; i++) window.__gc.advance(0.1); window.__gc.redraw();"},
     "active-galaxies": {"wait": 900, "crop": ".stage", "js": "window.__ag.applyPreset('oneSun');"},
     "galaxy-clusters": {"wait": 900, "crop": ".stage", "js": "window.__gcl.applyPreset('ring');"},
+    "surface-tension": {"wait": 900, "crop": "#scene", "js": "document.getElementById('setupCard').style.visibility = 'hidden'; window.__st.applyPreset('water3'); window.__st.S.t = 0.8; window.__st.redraw();"},
+    "osmosis": {"wait": 900, "crop": "#scene", "js": "document.getElementById('setupCard').style.visibility = 'hidden'; window.__os.applyPreset('sugar'); for (let i = 0; i < 40; i++) window.__os.advance(0.1); window.__os.redraw();"},
     "comets": {"wait": 900, "crop": ".stage", "js": "document.getElementById('setupCard').style.visibility = 'hidden'; window.__cm.applyPreset('halley'); for (let i = 0; i < 40; i++) window.__cm.stepTails(1); window.__cm.redraw();"},
     "life-in-the-universe": {"wait": 900, "crop": ".stage", "js": "document.getElementById('setupCard').style.visibility = 'hidden'; window.__life.setMode('drake'); window.__life.applyPreset('ex1m'); window.__life.setRun(true);"},
     "force-lab": {"wait": 800, "crop": ".stage", "js": "document.getElementById('setupCard').style.visibility = 'hidden'; window.__fl.applyPreset('c1');"},

@@ -68,6 +68,7 @@ VDI18N.add('en', 'demo/millikan', [
 "Plates on t (s)",
 "No drops recorded yet.",
 "<span>Blind: hide r, q and the lines at whole numbers of e (work them out first)</span>",
+"<span>Hide q/e and the lines at whole numbers of e (find e yourself)</span>",
 "<span>Work out r and q with plain Stokes drag (no slip correction)</span>",
 "<span>Show the followed drop's true charge (to check your work)</span>",
 "<span>Show the plain Stokes radius beside each row</span>",

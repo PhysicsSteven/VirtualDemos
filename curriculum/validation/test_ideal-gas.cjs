@@ -2,7 +2,7 @@
 // Gas in a Box: the hard disk gas and the two gas setups (masses, sizes, divider, hole, unfolded mean square displacement).
 const assert = require('node:assert');
 const { core } = require('./demo_source.cjs');
-const c = core('ideal-gas', 'KB,M,U_KG,LX,LY,R,NMAX,DIV_X,HOLE_Y,makeGas,pair,step,wallEmit,wallHit,track,tempOf,mixStats,meanSpeed2D,effusionRate,meanFreePath2D,SIGMA,VDW,TBOIL,NA,ATM,meanFreePath3D,meanSpeed3D,bHardSphere,zVdw,hardDiskZ,hardDiskChi,boxCrowding');
+const c = core('ideal-gas', 'KB,M,U_KG,LX,LY,R,NMAX,DIV_X,HOLE_Y,makeGas,pair,step,wallEmit,wallHit,track,tempOf,mixStats,meanSpeed2D,effusionRate,meanFreePath2D,SIGMA,VDW,TBOIL,NA,ATM,meanFreePath3D,meanSpeed3D,bHardSphere,zVdw,hardDiskZ,hardDiskChi,boxCrowding,makeBig,bigCollide,bigGamma,msdLag,fitLine,stokesD,perrinNA,M');
 let n = 0;
 const near = (a, b, tol, w) => assert(Math.abs(a - b) <= tol * Math.max(1e-300, Math.abs(b)), `${w || ''}: expected ${b}, got ${a}`);
 function group(name, f) { f(); n++; console.log('PASS', name); }
@@ -203,6 +203,53 @@ group('the box: P / (NkT/A) within 1.5% of the hard disk formula, mean free path
     assert(r.mfp > r.b.mfp && r.mfp < 1.05 * r.b.mfp, `mean free path ${r.mfp} against ${r.b.mfp}`);
     near(r.z * r.mfp, r.v, 1e-12, 'collision rate × mean free path = mean speed');
   }
+});
+
+/* Brownian motion: one large disk among the molecules */
+function brownGas(N, T, mult, Rb) {
+  const G = c.makeGas(); G.big = c.makeBig(25, 15, Rb, mult * c.M);
+  for (let i = 0; i < N; i++) {
+    let x, y; do { x = 0.3 + rnd() * 49.4; y = 0.3 + rnd() * 29.4; } while (Math.hypot(x - 25, y - 15) < Rb + 0.4);
+    G.px[i] = x; G.py[i] = y; const s = Math.sqrt(c.KB * T / c.M); G.vx[i] = s * gauss(); G.vy[i] = s * gauss();
+  }
+  return G;
+}
+const keB = (G, N) => ke(G, N) + 0.5 * G.big.m * (G.big.vx ** 2 + G.big.vy ** 2);
+group('Brownian motion: a kick on the large disk keeps momentum and kinetic energy exactly', () => {
+  const G = c.makeGas(); G.big = c.makeBig(20, 15, 2, 60 * c.M); G.big.vx = 30; G.big.vy = -10;
+  G.px[0] = 22.2; G.py[0] = 15.3; G.vx[0] = -400; G.vy[0] = 120;
+  const p0 = [c.M * G.vx[0] + G.big.m * G.big.vx, c.M * G.vy[0] + G.big.m * G.big.vy], e0 = keB(G, 1);
+  G.big.vx0 = G.big.vx; G.big.vy0 = G.big.vy; G.big.ox = G.big.x; G.big.oy = G.big.y;
+  c.bigCollide(G, 1, 0.01);
+  near(c.M * G.vx[0] + G.big.m * G.big.vx, p0[0], 1e-12, 'px'); near(c.M * G.vy[0] + G.big.m * G.big.vy, p0[1], 1e-12, 'py');
+  near(keB(G, 1), e0, 1e-12, 'KE'); assert.strictEqual(G.big.kicks, 1);
+  near(Math.hypot(G.px[0] - G.big.x, G.py[0] - G.big.y), 2 + c.R, 1e-12, 'moved apart to contact');
+});
+group('Brownian motion: energy is conserved over 500 ps with the large disk, and its unfolded path follows its folded one', () => {
+  const G = brownGas(150, 300, 60, 2), e0 = keB(G, 150);
+  for (let k = 0; k < 10000; k++) c.step(G, 150, 0.05);
+  near(keB(G, 150), e0, 1e-9, 'KE'); assert(G.big.kicks > 50, 'the disk is kicked');
+  const B = G.big; const fx = (u) => { const L = 50 - 2 * B.r, w = ((u - B.r) % (2 * L) + 2 * L) % (2 * L); return B.r + (w <= L ? w : 2 * L - w); };
+  near(fx(B.ux), B.x, 1e-6, 'unfolded x folds back to x');
+});
+group('Brownian motion: msdLag averages over every start; fitLine has a free intercept', () => {
+  const xs = [0, 1, 3, 6], ys = [0, 0, 0, 0];
+  near(c.msdLag(xs, ys, 4, 1), (1 + 4 + 9) / 3 / 2, 1e-15, 'lag 1'); near(c.msdLag(xs, ys, 4, 3), 36 / 2, 1e-15, 'lag 3');
+  const F = c.fitLine([1, 2, 3, 4], [5, 7, 9, 11]); near(F.b, 2, 1e-14, 'slope'); near(F.a, 3, 1e-14, 'intercept');
+});
+group('Brownian motion: the drag γ from the kicks and the Einstein relation D = kT/γ hold in the simulation (one 20 ns run, within 50%; seven 40 ns runs averaged 0.98, spread 0.23)', () => {
+  const G = brownGas(150, 300, 60, 2), xs = [], ys = [];
+  for (let k = 0; k < 400000; k++) { c.step(G, 150, 0.05); if (k % 40 === 0) { xs.push(G.big.ux); ys.push(G.big.uy); } }
+  const g = c.bigGamma(G.big), tau = 60 * c.M / g * 1e12, n = xs.length, lx = [], ly = [];
+  assert(tau > 100 && tau < 400, 'the drag from the kicks gives m/γ of a few hundred ps: ' + tau);
+  for (let k = 1; k <= Math.floor((n - 1) / 8); k = Math.max(k + 1, Math.round(k * 1.12))) { const l = 2 * k; if (l >= 3 * tau && l <= (n - 1) * 2 / 10) { lx.push(l); ly.push(c.msdLag(xs, ys, n, k)); } }
+  let e = 0; for (let i = 0; i < 150; i++) e += 0.5 * c.M * (G.vx[i] ** 2 + G.vy[i] ** 2); const T = e / (150 * c.KB);
+  const D = c.fitLine(lx, ly).b / 2, Dk = c.KB * T / g * 1e6;   /* nm²/ps */
+  near(D, Dk, 0.5, 'D fit against kT/γ');
+});
+group('Brownian motion, the real case: Stokes D = kT/(6πηa) and Perrin N_A = RTt/(3πηa⟨x²⟩) undo each other', () => {
+  const D = c.stokesD(293.15, 1.002e-3, 0.5e-6); near(D, 4.2858e-13, 1e-4, 'D for a 1.0 µm grain in water at 20 °C');
+  const R = c.NA * c.KB; near(c.perrinNA(293.15, 1.002e-3, 0.5e-6, 2 * D * 30, 30, R), c.NA, 1e-12, 'N_A');
 });
 
 console.log(`${n} groups passed`);

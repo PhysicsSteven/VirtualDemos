@@ -2647,6 +2647,134 @@
      "see_es": "Cada bombeo sube A a unos 11 kV, y la carga se va en cerca de medio segundo (τ = 500 ms) antes del siguiente bombeo, así que A nunca se acumula hacia una chispa. Una película delgada de agua sobre el poste de vidrio conduce; por eso los toques de estática son cosa del aire seco de invierno."
     }
    ]
+  },
+  "surface-tension": {
+   "q": "Water climbs up a thin glass tube. In a tube half as wide, does it climb twice as high, four times as high, or the same?",
+   "q_es": "El agua sube por un tubo delgado de vidrio. En un tubo de la mitad de ancho, ¿sube el doble, cuatro veces más o lo mismo?",
+   "setup": "",
+   "do": "Three glass tubes of radius r, 2r and 4r stand in water. Press <b>Play</b>, wait for the water to stop climbing, then read <b>Height now</b> for each tube.",
+   "do_es": "Tres tubos de vidrio de radio r, 2r y 4r están parados en agua. Presiona <b>Iniciar</b>, espera a que el agua deje de subir y luego lee <b>Altura ahora</b> en cada tubo.",
+   "see": "The water climbs 5.94 cm in the 250 μm tube, 2.97 cm in the 500 μm tube and 1.48 cm in the 1.00 mm tube: half the radius, twice the height, h = 2γ cos θ/(ρgr). The surface pulls up along the rim, which grows as r, while the column's weight grows as r².",
+   "see_es": "El agua sube 5.94 cm en el tubo de 250 μm, 2.97 cm en el de 500 μm y 1.48 cm en el de 1.00 mm: la mitad del radio, el doble de altura, h = 2γ cos θ/(ρgr). La superficie jala hacia arriba a lo largo del borde, que crece como r, mientras que el peso de la columna crece como r².",
+   "explore": [
+    {
+     "setup": "set=selSpeed~0.25!selLiqT~mercury!selMat~glass!sR~-0.6!chkTheta~0!labBlind~0!g%3Apresets~mercury",
+     "do": "<b>Mercury sinks in glass</b>. Predict first: does mercury climb too? Press <b>Play</b> and read <b>Height now, tube r</b>.",
+     "do_es": "<b>El mercurio baja en el vidrio</b>. Predice primero: ¿el mercurio también sube? Presiona <b>Iniciar</b> y lee <b>Altura ahora, tubo r</b>.",
+     "see": "It ends 2.14 cm below the level in the dish. Mercury meets glass at 140°, so cos θ is negative and the surface pulls the column down instead of up.",
+     "see_es": "Termina 2.14 cm por debajo del nivel del plato. El mercurio toca el vidrio a 140°, así que cos θ es negativo y la superficie jala la columna hacia abajo en vez de hacia arriba."
+    },
+    {
+     "setup": "set=selSpeed~0.1!selLiqB~soap!sRd~-3.7!sB1~1.5!sB2~4!labBlind~0!g%3AsceneSeg~drops!g%3Apresets~bubbles",
+     "do": "<b>Two bubbles: which one wins?</b> A 1.50 cm and a 4.00 cm soap bubble sit on the ends of a pipe. Predict which way the air will flow, then press <b>Play</b> and read <b>Left bubble R</b> and <b>Right bubble R</b>.",
+     "do_es": "<b>Dos burbujas: ¿cuál gana?</b> Una burbuja de jabón de 1.50 cm y otra de 4.00 cm están en los extremos de un tubo. Predice hacia dónde fluirá el aire, luego presiona <b>Iniciar</b> y lee <b>R de la burbuja izquierda</b> y <b>R de la burbuja derecha</b>.",
+     "see": "The small bubble empties into the big one: the pressure 4γ/R is 9.87 Pa inside the small one and only 3.70 Pa inside the big one. It stops when the small one has shrunk to a flat dome with the same radius as the big one, 4.07 cm.",
+     "see_es": "La burbuja chica se vacía en la grande: la presión 4γ/R es 9.87 Pa dentro de la chica y solo 3.70 Pa dentro de la grande. Se detiene cuando la chica se ha encogido a un domo plano con el mismo radio que la grande, 4.07 cm."
+    },
+    {
+     "setup": "set=selSpeed~1!selLiqS~water20!selMetal~steel!sD~1!sL~4!labBlind~0!g%3AsceneSeg~surf!g%3Apresets~needle",
+     "do": "<b>A steel needle rests on water</b>, then <b>A thicker needle sinks</b>. Press <b>Play</b> for each and compare <b>Weight w</b> with <b>Most the surface holds, 2γL</b>.",
+     "do_es": "<b>Una aguja de acero descansa sobre el agua</b>, luego <b>Una aguja más gruesa se hunde</b>. Presiona <b>Iniciar</b> en cada una y compara <b>Peso w</b> con <b>Lo más que sostiene la superficie, 2γL</b>.",
+     "see": "The 1.0 mm needle weighs 2.40 mN and the surface can hold 5.82 mN, so it rests. The 2.0 mm needle weighs four times as much, 9.62 mN, against the same 5.82 mN, so it sinks. Steel is 7.8 times as dense as water: the stretched surface holds the needle up, not floating like a boat.",
+     "see_es": "La aguja de 1.0 mm pesa 2.40 mN y la superficie puede sostener 5.82 mN, así que descansa. La aguja de 2.0 mm pesa cuatro veces más, 9.62 mN, contra los mismos 5.82 mN, así que se hunde. El acero es 7.8 veces más denso que el agua: la superficie estirada sostiene la aguja, no flota como un barco."
+    }
+   ]
+  },
+  "osmosis": {
+   "q": "Glucose molecules spread out from a thin line in still water. When they have spread twice as far, has twice as much time passed?",
+   "q_es": "Las moléculas de glucosa se dispersan desde una línea delgada en agua quieta. Cuando se han dispersado el doble de lejos, ¿ha pasado el doble de tiempo?",
+   "setup": "",
+   "do": "Press <b>Play</b> and watch the spread, then press it again to pause. Compare <b>Spread now, simulated x_rms</b> with <b>√(2Dt)</b>, then read <b>Time to spread 1 mm</b> and <b>Time to spread 1 cm</b>.",
+   "do_es": "Presiona <b>Iniciar</b> y mira la dispersión, luego presiónalo otra vez para pausar. Compara <b>Dispersión ahora, x_rms simulada</b> con <b>√(2Dt)</b>, luego lee <b>Tiempo para dispersarse 1 mm</b> y <b>Tiempo para dispersarse 1 cm</b>.",
+   "see": "The simulated spread follows √(2Dt) to within a few percent: twice as far takes four times as long. Ten times as far takes a hundred times as long, 12.4 minutes for 1 mm but 20.7 hours for 1 cm. That is why we stir sugar into tea.",
+   "see_es": "La dispersión simulada sigue a √(2Dt) con unos pocos por ciento de diferencia: el doble de lejos toma cuatro veces más tiempo. Diez veces más lejos toma cien veces más tiempo, 12.4 minutos para 1 mm pero 20.7 horas para 1 cm. Por eso revolvemos el azúcar en el té.",
+   "explore": [
+    {
+     "setup": "set=selSpeed~1!selSolute~sucrose!sCR~1!sCL~0!sTemp~20!sPist~0!labBlind~0!g%3AsceneSeg~utube!g%3Apresets~sugar",
+     "do": "<b>Sugar water against pure water</b>. Predict which side rises, then press <b>Play</b> and wait until it stops. Compare <b>Height difference now Δh</b> with <b>Column it could hold, Π/ρg</b>.",
+     "do_es": "<b>Agua con azúcar contra agua pura</b>. Predice qué lado sube, luego presiona <b>Iniciar</b> y espera a que se detenga. Compara <b>Diferencia de altura ahora Δh</b> con <b>Columna que podría sostener, Π/ρg</b>.",
+     "see": "Water crosses into the sugar side, which ends 18.9 cm higher. The osmotic pressure of only 1.00 mmol/L sugar, Π = MRT = 2.44 kPa, could hold 24.8 cm of water, but the sugar is diluted as water comes in, so it stops lower.",
+     "see_es": "El agua cruza al lado del azúcar, que termina 18.9 cm más alto. La presión osmótica de solo 1.00 mmol/L de azúcar, Π = MRT = 2.44 kPa, podría sostener 24.8 cm de agua, pero el azúcar se diluye al entrar el agua, así que se detiene más abajo."
+    },
+    {
+     "setup": "set=selSpeed~1!sSalt~0!labBlind~0!g%3AsceneSeg~cell!g%3Apresets~hypo",
+     "do": "<b>A red cell in pure water</b>, then <b>Isotonic saline</b> and <b>Hypertonic saline</b>. Press <b>Play</b> for each and read <b>Volume it heads for</b> and <b>Fate</b>.",
+     "do_es": "<b>Un glóbulo rojo en agua pura</b>, luego <b>Solución salina isotónica</b> y <b>Solución salina hipertónica</b>. Presiona <b>Iniciar</b> en cada una y lee <b>Volumen al que tiende</b> y <b>Destino</b>.",
+     "see": "In pure water the cell swells past the largest volume its membrane allows, 147 μm³ (a sphere of its 135 μm² area), and bursts. In 0.9% saline it keeps its 94 μm³; in 3% saline it shrinks toward 54.5 μm³ and wrinkles. It bursts in any saline weaker than 0.46%.",
+     "see_es": "En agua pura la célula se hincha más allá del volumen máximo que permite su membrana, 147 μm³ (una esfera de su área de 135 μm²), y revienta. En solución salina al 0.9% conserva sus 94 μm³; al 3% se encoge hacia 54.5 μm³ y se arruga. Revienta en cualquier solución salina más débil que 0.46%."
+    },
+    {
+     "setup": "set=selSpeed~1!sPa~35!sPv~18!sPip~25!sPif~0!sPiif~0!labBlind~0!g%3AsceneSeg~cap!g%3Apresets~ap",
+     "do": "<b>A capillary (OpenStax values)</b>. Read <b>Net filtration, arterial end</b>, <b>Net filtration, venous end</b> and <b>No net flow at</b>, then try <b>Too little plasma protein: edema</b>.",
+     "do_es": "<b>Un capilar (valores de OpenStax)</b>. Lee <b>Filtración neta, extremo arterial</b>, <b>Filtración neta, extremo venoso</b> y <b>Sin flujo neto en</b>, luego prueba <b>Muy poca proteína en el plasma: edema</b>.",
+     "see": "Fluid is pushed out with 10.0 mm Hg at the arterial end and drawn back with 7.0 mm Hg at the venous end, with no net flow 59% of the way along. With the plasma protein pull down to 12 mm Hg, net filtration stays outward along the whole capillary (23.0 to 6.0 mm Hg), so fluid builds up in the tissues.",
+     "see_es": "El líquido sale empujado con 10.0 mm Hg en el extremo arterial y regresa con 7.0 mm Hg en el extremo venoso, sin flujo neto al 59% del camino. Con el jalón de las proteínas del plasma bajado a 12 mm Hg, la filtración neta va hacia fuera a lo largo de todo el capilar (de 23.0 a 6.0 mm Hg), así que el líquido se acumula en los tejidos."
+    }
+   ]
+  },
+  "nerve-signals": {
+   "q": "How fast does a nerve impulse travel, and how much does myelin help?",
+   "q_es": "¿Qué tan rápido viaja un impulso nervioso y cuánto ayuda la mielina?",
+   "setup": "",
+   "do": "Two axons 10 µm across, one myelinated and one bare, get the same kick at the left end. Press <b>Play</b> and let the run finish. Read <b>Speed Δx/Δt</b> for each fiber.",
+   "do_es": "Dos axones de 10 µm de diámetro, uno mielinizado y otro desnudo, reciben el mismo impulso en el extremo izquierdo. Presiona <b>Iniciar</b> y deja que termine la corrida. Lee la <b>Rapidez Δx/Δt</b> de cada fibra.",
+   "see": "The myelinated impulse jumps from node to node at about 36.6 m/s; the bare one crawls at about 2.71 m/s, 13 times slower. Along an internode the myelin cuts the membrane's capacitance and leak, so the charge spreads quickly to the next node instead of charging the whole membrane on the way.",
+   "see_es": "El impulso mielinizado salta de nodo en nodo a unos 36.6 m/s; el desnudo avanza a unos 2.71 m/s, 13 veces más lento. A lo largo de un internodo la mielina reduce la capacitancia y la fuga de la membrana, así que la carga llega rápido al siguiente nodo en lugar de cargar toda la membrana en el camino.",
+   "explore": [
+    {
+     "setup": "set=speed~2!sD~434!race~0!sV~16!sA~0.1!sB~0.3!labBlind~0!g%3AmyelinSeg~0!g%3Apresets~above",
+     "do": "<b>Just above threshold</b>: a bare axon kicked with 16 mV. Press <b>Play</b>. Then set <b>Kick ΔV at the left end</b> to 10 mV, press <b>Reset</b> and <b>Play</b> again.",
+     "do_es": "<b>Apenas arriba del umbral</b>: un axón desnudo con un impulso de 16 mV. Presiona <b>Iniciar</b>. Luego pon <b>Impulso ΔV en el extremo izquierdo</b> en 10 mV, presiona <b>Reiniciar</b> e <b>Iniciar</b> otra vez.",
+     "see": "At 16 mV the bump grows into a full action potential that runs the whole axon; at 10 mV it spreads a little and dies out, as charge on a leaky cable does. <b>Threshold kick, bare</b> reads about 14.4 mV. Any kick above it gives the same impulse: all or none.",
+     "see_es": "Con 16 mV la protuberancia crece hasta un potencial de acción completo que recorre todo el axón; con 10 mV se extiende un poco y se apaga, como la carga en un cable con fugas. <b>Impulso umbral, desnudo</b> marca unos 14.4 mV. Cualquier impulso mayor da el mismo pulso: todo o nada."
+    },
+    {
+     "setup": "set=speed~2!sD~993!race~0!sV~50!sA~0.3!sB~0.7!labBlind~0!g%3AmyelinSeg~0!g%3Apresets~squid",
+     "do": "<b>Squid giant axon</b>, 476 µm across and bare. Press <b>Play</b> and read <b>Speed Δx/Δt</b>.",
+     "do_es": "<b>Axón gigante de calamar</b>, de 476 µm de diámetro y desnudo. Presiona <b>Iniciar</b> y lee la <b>Rapidez Δx/Δt</b>.",
+     "see": "About 18.6 m/s, close to the 18.8 m/s Hodgkin and Huxley computed (they measured 21.2 m/s). The axon is 48 times wider than the bare 10 µm one and about √48 = 6.9 times faster: a bare axon's speed grows as √d, so a squid needs a huge axon to be fast without myelin.",
+     "see_es": "Unos 18.6 m/s, cerca de los 18.8 m/s que calcularon Hodgkin y Huxley (midieron 21.2 m/s). El axón es 48 veces más ancho que el desnudo de 10 µm y unas √48 = 6.9 veces más rápido: la rapidez de un axón desnudo crece como √d, así que un calamar necesita un axón enorme para ser rápido sin mielina."
+    },
+    {
+     "setup": "set=speed~1!sR~72!sX~60!aug~0!loop~1!labBlind~0!g%3AviewSeg~ecg!g%3Apresets~normal",
+     "do": "<b>Heart and ECG</b>, a normal heart. Press <b>Play</b>, watch the dipole turn, and read <b>I + III − II</b> at several moments.",
+     "do_es": "<b>Corazón y ECG</b>, un corazón normal. Presiona <b>Iniciar</b>, observa cómo gira el dipolo y lee <b>I + III − II</b> en varios momentos.",
+     "see": "It stays at 0.000 mV: Einthoven's law, because each lead is the dipole's component along one side of the triangle and the three sides add to zero. Lead II shows the tallest R wave because the mean QRS axis, +60°, points along it.",
+     "see_es": "Se queda en 0.000 mV: es la ley de Einthoven, porque cada derivación es la componente del dipolo a lo largo de un lado del triángulo y los tres lados suman cero. La derivación II muestra la onda R más alta porque el eje medio del QRS, +60°, apunta a lo largo de ella."
+    }
+   ]
+  },
+  "hearing": {
+   "q": "Where along the cochlea does each pitch land?",
+   "q_es": "¿En qué parte de la cóclea cae cada tono?",
+   "setup": "",
+   "do": "A 1 kHz tone. Press <b>Play</b> and watch the wave run along the uncoiled membrane. Read <b>Place of the peak, from the base</b>. Then pick <b>Middle C (262 Hz)</b> and <b>4 kHz, where noise does damage</b>.",
+   "do_es": "Un tono de 1 kHz. Presiona <b>Iniciar</b> y observa cómo la onda recorre la membrana desenrollada. Lee <b>Lugar del máximo, desde la base</b>. Luego elige <b>Do central (262 Hz)</b> y <b>4 kHz, donde el ruido hace daño</b>.",
+   "see": "1 kHz peaks 21.0 mm from the base, 262 Hz at 28.5 mm and 4 kHz at 11.7 mm. High pitches peak near the stiff, narrow base and low pitches near the floppy, wide apex: the cochlea sorts sound by frequency, about 5 mm for each octave near the base (Greenwood's map).",
+   "see_es": "1 kHz tiene su máximo a 21.0 mm de la base, 262 Hz a 28.5 mm y 4 kHz a 11.7 mm. Los tonos agudos tienen su máximo cerca de la base rígida y angosta, y los graves cerca del ápice flexible y ancho: la cóclea separa el sonido por frecuencia, unos 5 mm por octava cerca de la base (mapa de Greenwood).",
+   "explore": [
+    {
+     "setup": "set=hp~0!sLF~250!sL~80!labBlind~0!g%3AviewSeg~loud!g%3Apresets~exA",
+     "do": "<b>Loudness</b>, <b>OpenStax example (a): 100 Hz at 80 dB</b>. Follow the contours to read the loudness level, then check <b>Loudness level</b>.",
+     "do_es": "<b>Sonoridad</b>, <b>Ejemplo (a) de OpenStax: 100 Hz a 80 dB</b>. Sigue las curvas para leer el nivel de sonoridad y luego revisa <b>Nivel de sonoridad</b>.",
+     "see": "62.0 phons: an 80 dB tone at 100 Hz sounds as loud as a 62 dB tone at 1 kHz, and is 4.59 sones. OpenStax reads 75 phons from the older Robinson and Dadson curves; ISO 226:2003 puts the low frequency contours higher.",
+     "see_es": "62.0 fones: un tono de 80 dB a 100 Hz suena tan fuerte como uno de 62 dB a 1 kHz, y tiene 4.59 sones. OpenStax lee 75 fones en las curvas más antiguas de Robinson y Dadson; ISO 226:2003 pone más arriba las curvas de baja frecuencia."
+    },
+    {
+     "setup": "set=hp~0!sLF~142!sL~60!labBlind~0!g%3AviewSeg~loud!g%3Apresets~bass",
+     "do": "<b>Quiet bass, 50 Hz</b> at 60 dB. Read <b>Threshold of hearing at f</b> and <b>Loudness level</b>. With the sound on, press <b>Play 1 kHz, then this tone</b>.",
+     "do_es": "<b>Graves débiles, 50 Hz</b> a 60 dB. Lee <b>Umbral de audición en f</b> y <b>Nivel de sonoridad</b>. Con el sonido encendido, presiona <b>Reproducir 1 kHz y luego este tono</b>.",
+     "see": "The threshold at 50 Hz is 44.0 dB, so 60 dB is only 16 dB above it, about 15 phons, below the lowest contour drawn. The ear needs far more intensity at low frequencies, which is why quiet music loses its bass.",
+     "see_es": "El umbral a 50 Hz es 44.0 dB, así que 60 dB está solo 16 dB por encima, unos 15 fones, debajo de la curva más baja dibujada. El oído necesita mucha más intensidad a bajas frecuencias; por eso la música a bajo volumen pierde los graves."
+    },
+    {
+     "setup": "set=hp~0!shape~1!labBlind~0!g%3AviewSeg~aud!g%3Apresets~noise",
+     "do": "<b>Your audiogram</b>, <b>Noise damage: the 4 kHz notch</b>. Read the hearing level at each frequency and the average at 0.5, 1, 2 and 4 kHz.",
+     "do_es": "<b>Tu audiograma</b>, <b>Daño por ruido: la muesca de 4 kHz</b>. Lee el nivel de audición en cada frecuencia y el promedio a 0.5, 1, 2 y 4 kHz.",
+     "see": "The loss dips to 50 dB HL at 4 kHz and recovers to 20 dB HL at 8 kHz: the notch that years of loud noise leave, where the hair cells about 12 mm from the base wear out first. The average is 17.5 dB, only a slight loss, so the notch can go unnoticed for years.",
+     "see_es": "La pérdida baja a 50 dB HL a 4 kHz y se recupera a 20 dB HL a 8 kHz: la muesca que dejan años de ruido fuerte, donde se desgastan primero las células ciliadas a unos 12 mm de la base. El promedio es 17.5 dB, solo una pérdida leve, así que la muesca puede pasar inadvertida durante años."
+    }
+   ]
   }
  }
 }

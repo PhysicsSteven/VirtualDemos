@@ -24,8 +24,8 @@ VDI18N.add('es', 'demo/fluids', {
   "Un líquido en reposo empuja más fuerte cuanto más profundo vas, y ese empuje extra sobre el fondo de un objeto sumergido es la fuerza de flotación. Un líquido en movimiento cambia presión por rapidez: donde un tubo se angosta el flujo se acelera y la presión baja.",
 "SI units · P = P₀ + ρgh · F_B = ρ_f V_sub g · P + ½ρv² + ρgy = const":
   "Unidades SI · P = P₀ + ρgh · F_B = ρ_f V_sub g · P + ½ρv² + ρgy = const",
-"Fluid apparatus. Drag the probe, the block, the spring scale, the water surface, the pipe throat or the hole in the tank. Keys: arrows move or change the selected part, space plays or pauses, R starts again.":
-  "Aparato de fluidos. Arrastra la sonda, el bloque, el dinamómetro, la superficie del agua, la garganta del tubo o el orificio del tanque. Teclas: las flechas mueven o cambian la parte elegida, espacio inicia o pausa, R empieza de nuevo.",
+"Fluid apparatus. Drag the probe, the block, the spring scale, the water surface, the pipe throat, the hole in the tank, the lift's small piston, the patient's hand or the IV bag. Keys: arrows move or change the selected part, space plays or pauses, R starts again.":
+  "Aparato de fluidos. Arrastra la sonda, el bloque, el dinamómetro, la superficie del agua, la garganta del tubo, el orificio del tanque, el pistón pequeño del elevador, la mano del paciente o la bolsa de suero. Teclas: las flechas mueven o cambian la parte elegida, espacio inicia o pausa, R empieza de nuevo.",
 "Drop again":
   "Soltar de nuevo",
 "<span>Playback rate</span>":
@@ -34,8 +34,8 @@ VDI18N.add('es', 'demo/fluids', {
   "cámara lenta ×{#}",
 "Cavitation: pressure would fall below vapor pressure; model invalid":
   "Cavitación: la presión bajaría por debajo de la presión de vapor; el modelo no es válido",
-"Graph for the current scene: pressure against depth, forces on the vessels, column heights, forces on the block, pressure along the pipe, jet range against hole depth, force per meter of depth on a plate, or work per meter of height to pump a tank. Show data table in the Lab section lists the plotted values.":
-  "Gráfica de la escena actual: presión en función de la profundidad, fuerzas sobre los recipientes, alturas de columna, fuerzas sobre el bloque, presión a lo largo del tubo, alcance del chorro en función de la profundidad del orificio, fuerza por metro de profundidad sobre una placa o trabajo por metro de altura para vaciar un tanque. Mostrar la tabla de datos, en la sección Laboratorio, lista los valores graficados.",
+"Graph for the current scene: pressure against depth, forces on the vessels, column heights, forces on the block, pressure along the pipe, jet range against hole depth, force per meter of depth on a plate, work per meter of height to pump a tank, the lift's force against push, or blood pressure against height. Show data table in the Lab section lists the plotted values.":
+  "Gráfica de la escena actual: presión contra profundidad, fuerzas sobre los recipientes, alturas de las columnas, fuerzas sobre el bloque, presión a lo largo del tubo, alcance del chorro contra la profundidad del orificio, fuerza por metro de profundidad sobre una placa, trabajo por metro de altura para vaciar un tanque, la fuerza del elevador contra el empuje, o presión arterial contra altura. Mostrar tabla de datos, en la sección Laboratorio, lista los valores graficados.",
 "Divider between the tank and the graphs":
   "Divisor entre el tanque y las gráficas",
 "Depth":
@@ -54,6 +54,10 @@ VDI18N.add('es', 'demo/fluids', {
   "Presa o ventana",
 "Pumping":
   "Bombeo",
+"Lift":
+  "Elevador",
+"Body":
+  "Cuerpo",
 "Pressure grows with depth":
   "La presión crece con la profundidad",
 "Floating and sinking":
@@ -78,6 +82,10 @@ VDI18N.add('es', 'demo/fluids', {
   "Vaciar un tanque",
 "Pump out a cone":
   "Vaciar un cono",
+"Hydraulic lift":
+  "Elevador hidráulico",
+"Blood pressure":
+  "Presión arterial",
 "A floating block settles with a fraction ρ_obj/ρ_fluid of its height under the surface, here half. Try Steel or Ice, or slide the density through {#} kg/m³: the block sinks once it is denser than the water.":
   "Un bloque que flota se acomoda con una fracción ρ_obj/ρ_fluid de su altura bajo la superficie, aquí la mitad. Prueba Acero o Hielo, o desliza la densidad hasta pasar {#} kg/m³: el bloque se hunde en cuanto es más denso que el agua.",
 "Liquid":
@@ -92,6 +100,18 @@ VDI18N.add('es', 'demo/fluids', {
   "Manómetro",
 "Two liquids":
   "Dos líquidos",
+"Patient":
+  "Paciente",
+"Standing":
+  "De pie",
+"Lying flat":
+  "Acostado",
+"Cuff gauge":
+  "Manómetro del brazalete",
+"Mercury gauge":
+  "Manómetro de mercurio",
+"Dial gauge":
+  "Manómetro de carátula",
 "Liquid poured into the left arm":
   "Líquido vertido en el brazo izquierdo",
 "Pour oil":
@@ -202,6 +222,24 @@ VDI18N.add('es', 'demo/fluids', {
   "Altura de la salida sobre el fondo",
 "Slices n":
   "Rebanadas n",
+"Car mass":
+  "Masa del auto",
+"Small piston diameter d<sub>{#}</sub>":
+  "Diámetro del pistón pequeño d<sub>{#}</sub>",
+"Large piston diameter d<sub>{#}</sub>":
+  "Diámetro del pistón grande d<sub>{#}</sub>",
+"Small piston pushed down x":
+  "Pistón pequeño empujado hacia abajo x",
+"Systolic pressure at the heart":
+  "Presión sistólica en el corazón",
+"Diastolic pressure at the heart":
+  "Presión diastólica en el corazón",
+"Cuff height above the heart":
+  "Altura del brazalete sobre el corazón",
+"IV bag height above the needle":
+  "Altura de la bolsa de suero sobre la aguja",
+"Venous pressure at the needle":
+  "Presión venosa en la aguja",
 "Take each strip at its":
   "Toma cada franja en su",
 "Where each strip is sampled":
@@ -632,16 +670,146 @@ VDI18N.add('es', 'demo/fluids', {
   "bombeado hasta ahora: {#} J, nivel {#} m",
 "pumping":
   "bombeando",
-"A cylindrical tank {#} m tall holds water {#} m deep; it is pumped out through a spout {#} m above the bottom.":
-  "Un tanque cilíndrico de {#} m de altura tiene agua de {#} m de profundidad; se vacía por una salida {#} m arriba del fondo.",
-"The water is cut into {#} slices; the work to lift them adds to {#} kJ.":
-  "El agua se corta en {#} rebanadas; el trabajo para subirlas suma {#} kJ.",
-"The integral gives {#} kJ.":
-  "La integral da {#} kJ.",
-"The water level is now {#} m.":
-  "El nivel del agua está ahora en {#} m.",
 "pumped so far: {#} kJ, level {#} m":
   "bombeado hasta ahora: {#} kJ, nivel {#} m",
+"pushed x = {#} m":
+  "empujado x = {#} m",
+"rose {#} cm":
+  "subió {#} cm",
+"= {#} m: ρg(y":
+  "= {#} m: ρg(y",
+"oil, {#} kg/m³":
+  "aceite, {#} kg/m³",
+"Force on the small piston against how far it is pushed: the area under the line is the work in, the car’s gain mgΔh plus the energy to move the liquid":
+  "Fuerza sobre el pistón pequeño en función de cuánto se empuja: el área bajo la línea es el trabajo de entrada, lo que gana el auto, mgΔh, más la energía para mover el líquido",
+"pushed down x (m)":
+  "empujado hacia abajo x (m)",
+"dashed: mg A":
+  "punteada: mg A",
+"= {#} N, pistons level":
+  "= {#} N, pistones al mismo nivel",
+"work in = {#} J, mgΔh = {#} J":
+  "trabajo de entrada = {#} J, mgΔh = {#} J",
+"Drag the handle on the small piston down to push it, or press Play to push it at {#} m/s. Push it back up to let the car down.":
+  "Arrastra hacia abajo la manija del pistón pequeño para empujarlo, o presiona Iniciar para empujarlo a {#} m/s. Súbelo de nuevo para bajar el auto.",
+"Model: OpenStax College Physics 2e, {#}. The liquid does not compress and is at rest; the pistons are massless, frictionless and pushed slowly, so there is no kinetic energy. The car’s weight sets the pressure under the big piston, P₂ = mg/A₂; Pascal’s principle carries it everywhere, plus ρgh for each meter lower, so under the small piston P₁ = P₂ − ρg(y₁ − y₂). Gauge pressures are shown. Heights are to scale; the cylinder widths and the car’s length are not.":
+  "Modelo: OpenStax College Physics 2e, {#}. El líquido no se comprime y está en reposo; los pistones no tienen masa ni fricción y se empujan despacio, así que no hay energía cinética. El peso del auto fija la presión bajo el pistón grande, P₂ = mg/A₂; el principio de Pascal la lleva a todas partes, más ρgh por cada metro más abajo, así que bajo el pistón pequeño P₁ = P₂ − ρg(y₁ − y₂). Se muestran presiones manométricas. Las alturas están a escala; el ancho de los cilindros y el largo del auto no.",
+"<span><i></i>Forces on the pistons</span><span><i></i>Pressure of the liquid on each piston</span><span><i></i>Where the pistons started</span>":
+  "<span><i></i>Fuerzas sobre los pistones</span><span><i></i>Presión del líquido sobre cada pistón</span><span><i></i>Donde empezaron los pistones</span>",
+"vegetable oil, {#} kg/m³":
+  "aceite vegetal, {#} kg/m³",
+"The large piston has {#} times the area of the small one, so the oil pushes up on it with {#} times the force: about {#} kN on the small piston holds a {#} kg car. Push the small piston down {#} m and the car rises only {#} cm, {#} times less, so the work in matches the work on the car. The small piston stands higher, so the pressure under it is less by ρgh.":
+  "El pistón grande tiene {#} veces el área del pequeño, así que el aceite lo empuja hacia arriba con {#} veces la fuerza: cerca de {#} kN sobre el pistón pequeño sostienen un auto de {#} kg. Empuja el pistón pequeño {#} m hacia abajo y el auto sube solo {#} cm, {#} veces menos, así que el trabajo de entrada iguala el trabajo sobre el auto. El pistón pequeño está más arriba, así que la presión bajo él es menor por ρgh.",
+"Force on the small piston F₁":
+  "Fuerza sobre el pistón pequeño F₁",
+"Weight of the car F₂ = mg":
+  "Peso del auto F₂ = mg",
+"Pressure under the small piston P₁":
+  "Presión bajo el pistón pequeño P₁",
+"Pressure under the large piston P₂":
+  "Presión bajo el pistón grande P₂",
+"Small piston above the large y₁ − y₂":
+  "Altura del pistón pequeño sobre el grande y₁ − y₂",
+"ρg(y₁ − y₂) = P₂ − P₁":
+  "ρg(y₁ − y₂) = P₂ − P₁",
+"Area ratio A₂/A₁":
+  "Razón de áreas A₂/A₁",
+"Force ratio F₂/F₁":
+  "Razón de fuerzas F₂/F₁",
+"Car raised Δh":
+  "Altura que subió el auto Δh",
+"Work in, area under F₁":
+  "Trabajo de entrada, área bajo F₁",
+"Work on the car mgΔh":
+  "Trabajo sobre el auto mgΔh",
+"Energy to raise the liquid":
+  "Energía para subir el líquido",
+"P₁ = F₁/A₁, P₂ = F₂/A₂ = P₁ + ρg(y₁ − y₂); A₁x = A₂Δh; work in = mgΔh + the liquid’s potential energy":
+  "P₁ = F₁/A₁, P₂ = F₂/A₂ = P₁ + ρg(y₁ − y₂); A₁x = A₂Δh; trabajo de entrada = mgΔh + la energía potencial del líquido",
+"cuff {#} mmHg":
+  "brazalete {#} mmHg",
+"artery shut: no sound":
+  "arteria cerrada: no se oye nada",
+"heart level":
+  "nivel del corazón",
+"cuff at heart level":
+  "brazalete al nivel del corazón",
+"head {#}/{#} mmHg":
+  "cabeza {#}/{#} mmHg",
+"feet {#}/{#} mmHg":
+  "pies {#}/{#} mmHg",
+"IV: ρgh = {#} mmHg < vein {#} mmHg":
+  "suero: ρgh = {#} mmHg < vena {#} mmHg",
+"no flow: blood backs into the line":
+  "no fluye: la sangre regresa por el tubo",
+"Blood pressure against height above the heart: P = P_heart − ρgh drops {#} mmHg for each centimeter up":
+  "Presión arterial en función de la altura sobre el corazón: P = P_corazón − ρgh baja {#} mmHg por cada centímetro hacia arriba",
+"P (mmHg)":
+  "P (mmHg)",
+"height above the heart (m)":
+  "altura sobre el corazón (m)",
+"cuff":
+  "brazalete",
+"head":
+  "cabeza",
+"feet":
+  "pies",
+"systolic":
+  "sistólica",
+"diastolic":
+  "diastólica",
+"Press Play to let the cuff down and listen for the pulse. Drag the hand to raise or lower the arm, and drag the IV bag up and down.":
+  "Presiona Iniciar para desinflar el brazalete y escuchar el pulso. Arrastra la mano para subir o bajar el brazo, y arrastra la bolsa de suero hacia arriba y hacia abajo.",
+"Model: OpenStax College Physics 2e, {#} and {#}. Blood is a static column of density {#} kg/m³, so P = P_heart − ρgh at a height h above the heart; the pressure lost to flow in the large arteries is left out. Standing, the brain is taken {#} m above the heart and the feet {#} m below it; lying flat, all three are taken level. The cuff reads the pressure in the artery under it. The heart beats {#} times a minute and the cuff falls {#} mmHg/s, so the first tap can read up to {#} mmHg low and the last up to {#} mmHg high. The IV fluid has density {#} kg/m³ and the bag is collapsible, so the fluid pushes into the vein with ρgh, h measured from the needle. {#} mmHg = {#} Pa.":
+  "Modelo: OpenStax College Physics 2e, {#} y {#}. La sangre es una columna en reposo de densidad {#} kg/m³, así que P = P_corazón − ρgh a una altura h sobre el corazón; se deja fuera la presión que se pierde por el flujo en las arterias grandes. De pie, el cerebro se toma {#} m arriba del corazón y los pies {#} m abajo; acostado, los tres se toman al mismo nivel. El brazalete mide la presión en la arteria que está debajo de él. El corazón late {#} veces por minuto y el brazalete baja {#} mmHg/s, así que el primer golpe puede marcar hasta {#} mmHg de menos y el último hasta {#} mmHg de más. El suero tiene densidad {#} kg/m³ y la bolsa es plegable, así que el líquido empuja hacia la vena con ρgh, con h medida desde la aguja. {#} mmHg = {#} Pa.",
+"<span><i></i>Heart level</span><span><i></i>Cuff and IV</span><span><i></i>A tap: the pulse spurts through the cuff</span>":
+  "<span><i></i>Nivel del corazón</span><span><i></i>Brazalete y suero</span><span><i></i>Un golpe: el pulso pasa a chorros bajo el brazalete</span>",
+"With the cuff at heart level, the first tap comes at about {#} mmHg (systolic) and the last at about {#} mmHg (diastolic). Raise the arm and both readings fall by ρgh, {#} mmHg for every centimeter. Standing, the feet are {#} mmHg higher than the heart. The IV bag must stand at least {#} cm above the needle to beat a venous pressure of {#} mmHg.":
+  "Con el brazalete al nivel del corazón, el primer golpe llega cerca de {#} mmHg (sistólica) y el último cerca de {#} mmHg (diastólica). Sube el brazo y las dos lecturas bajan ρgh, {#} mmHg por cada centímetro. De pie, los pies están {#} mmHg más arriba que el corazón. La bolsa de suero debe estar al menos {#} cm arriba de la aguja para vencer una presión venosa de {#} mmHg.",
+"Cuff height above the heart h":
+  "Altura del brazalete sobre el corazón h",
+"First tap (systolic)":
+  "Primer golpe (sistólica)",
+"Last tap (diastolic)":
+  "Último golpe (diastólica)",
+"At the heart":
+  "En el corazón",
+"{#}/{#} mmHg":
+  "{#}/{#} mmHg",
+"ρ<sub>blood</sub> gh at the cuff":
+  "ρ<sub>sangre</sub> gh en el brazalete",
+"In the artery under the cuff":
+  "En la arteria bajo el brazalete",
+"At the head, standing":
+  "En la cabeza, de pie",
+"At the feet, standing":
+  "En los pies, de pie",
+"IV bag above the needle":
+  "Bolsa de suero sobre la aguja",
+"IV fluid pressure at the needle ρgh":
+  "Presión del suero en la aguja ρgh",
+"Venous pressure":
+  "Presión venosa",
+"Lowest bag height that flows":
+  "Altura mínima de la bolsa para que fluya",
+"Flow into the vein":
+  "Flujo hacia la vena",
+"no flow":
+  "no fluye",
+"P = P_heart − ρ_blood g h (h above the heart); IV flows when ρ_IV g h > P_vein; {#} mmHg = {#} Pa":
+  "P = P_corazón − ρ_sangre g h (h sobre el corazón); el suero fluye cuando ρ_suero g h > P_vena; {#} mmHg = {#} Pa",
+"A patient standing.":
+  "Un paciente de pie.",
+"A blood pressure cuff on the upper arm, {#} cm above the heart.":
+  "Un brazalete para medir la presión en la parte superior del brazo, {#} cm arriba del corazón.",
+"The cuff gauge reads {#} mmHg.":
+  "El manómetro del brazalete marca {#} mmHg.",
+"An IV bag hangs {#} cm above the needle; the venous pressure is {#} mmHg.":
+  "Una bolsa de suero cuelga {#} cm arriba de la aguja; la presión venosa es {#} mmHg.",
+"The IV fluid does not flow in.":
+  "El suero no entra.",
+"The pressure at the heart is {#} over {#} mmHg.":
+  "La presión en el corazón es {#} sobre {#} mmHg.",
 "Seawater, {#} kg/m³":
   "Agua de mar, {#} kg/m³",
 "seawater, {#} kg/m³":
@@ -678,6 +846,16 @@ VDI18N.add('es', 'demo/fluids', {
   "Agua en el vaso",
 "Scale reading T = W − F_B = W − ρ_f V_sub g; the beaker gains ρ_f V_sub g.":
   "Lectura del dinamómetro T = W − F_B = W − ρ_f V_sub g; el vaso gana ρ_f V_sub g.",
+"The block hangs from a spring scale.":
+  "El bloque cuelga de un dinamómetro de resorte.",
+"The tank is a full overflow can, with a beaker catching the spill.":
+  "El tanque es una lata de derrame llena, con un vaso que recoge lo que se derrama.",
+"The spring scale reads {#} N.":
+  "El dinamómetro marca {#} N.",
+"The beaker holds {#} cm³ of water.":
+  "El vaso contiene {#} cm³ de agua.",
+"The block is denser than the liquid, so it sinks.":
+  "El bloque es más denso que el líquido, así que se hunde.",
 "Your readings: buoyant force W − T against submerged volume, water":
   "Tus lecturas: fuerza de flotación W − T en función del volumen sumergido, agua",
 "{#} of {#} Buoyancy readings used (this liquid). model: slope ρ_f g = {#} N/m³, through the origin":
@@ -698,6 +876,12 @@ VDI18N.add('es', 'demo/fluids', {
   "A, masa y volumen desconocidos",
 "ρ = m/V: m = W/g from the scale in air; V from the water a block all the way under pushes into the beaker.":
   "ρ = m/V: m = W/g con el dinamómetro en el aire; V a partir del agua que un bloque completamente sumergido empuja al vaso.",
+"A flat upright plate, a rectangle, {#} m tall and {#} m wide, its top {#} m below the surface.":
+  "Una placa plana vertical, un rectángulo, de {#} m de alto y {#} m de ancho, con su borde superior {#} m bajo la superficie.",
+"It is cut into {#} horizontal strips; their forces add to {#} MN.":
+  "Se corta en {#} franjas horizontales; sus fuerzas suman {#} MN.",
+"The integral gives {#} MN, acting {#} m below the surface.":
+  "La integral da {#} MN, que actúan {#} m bajo la superficie.",
 "strip {#}: h = {#} m, w = {#} m, ρgh·w·Δh = {#} kN":
   "franja {#}: h = {#} m, w = {#} m, ρgh·w·Δh = {#} kN",
 "∫ρgh·w dh = {#} kN":
@@ -710,48 +894,26 @@ VDI18N.add('es', 'demo/fluids', {
   "Una ventana redonda de {#} cm de diámetro en el costado de un acuario, con su borde superior {#} m bajo la superficie. Las franjas son más anchas en el centro que en los extremos, así que w(h) también cambia con la profundidad. La fuerza es la presión en el centro de la ventana por su área, ρg·h_c·πr², y el centro de presión queda un poco abajo del centro.",
 "The end of a full water trough: a triangle {#} m across the top and {#} m deep, point down. The deepest strips, where the pressure is greatest, are the narrowest. F = ρg·a²b/{#}, and the force acts halfway down.":
   "El extremo de un canal lleno de agua: un triángulo de {#} m de ancho arriba y {#} m de profundidad, con la punta hacia abajo. Las franjas más profundas, donde la presión es mayor, son las más angostas. F = ρg·a²b/{#}, y la fuerza actúa a la mitad de la profundidad.",
-"A flat upright plate, a triangle, point down, {#} m tall and {#} m wide, its top {#} m below the surface.":
-  "Una placa plana vertical, un triángulo con la punta hacia abajo, de {#} m de alto y {#} m de ancho, con su borde superior {#} m bajo la superficie.",
-"It is cut into {#} horizontal strips; their forces add to {#} kN.":
-  "Se corta en {#} franjas horizontales; sus fuerzas suman {#} kN.",
-"The integral gives {#} kN, acting {#} m below the surface.":
-  "La integral da {#} kN, que actúan {#} m bajo la superficie.",
+"{#} J, level {#} m":
+  "{#} J, nivel {#} m",
 "Radius at the top R":
   "Radio arriba R",
 "A cone point down, {#} m across at its {#} m high rim, full of water and pumped out over the rim. Most of the water is near the top, where it hardly has to rise: the center of mass sits three quarters of the way up, so W = ρgV·(H/{#}).":
   "Un cono con la punta hacia abajo, de {#} m de diámetro en su borde a {#} m de altura, lleno de agua y vaciado por encima del borde. Casi toda el agua está cerca de arriba, donde apenas tiene que subir: el centro de masa queda a tres cuartos de la altura, así que W = ρgV·(H/{#}).",
-"{#} J, level {#} m":
-  "{#} J, nivel {#} m",
-"vegetable oil, {#} kg/m³":
-  "aceite vegetal, {#} kg/m³",
-"− y) dy = {#} MJ":
-  "− y) dy = {#} MJ",
-"Work per meter of height, ρg·A(y)·(y_o − y): the area under the curve is W. Bars: the {#} slices, area {#} MJ; under the curve {#} MJ":
-  "Trabajo por metro de altura, ρg·A(y)·(y_o − y): el área bajo la curva es W. Barras: las {#} rebanadas, área {#} MJ; bajo la curva {#} MJ",
-"{#} kJ, level {#} m":
-  "{#} kJ, nivel {#} m",
-"The liquid is mercury, density {#} kg/m³.":
-  "El líquido es mercurio, de densidad {#} kg/m³.",
-"A cone shaped tank, point down, {#} m tall holds water {#} m deep; it is pumped out through a spout {#} m above the bottom.":
-  "Un tanque en forma de cono, con la punta hacia abajo, de {#} m de altura tiene agua de {#} m de profundidad; se vacía por una salida {#} m arriba del fondo.",
-"The water is cut into {#} slices; the work to lift them adds to {#} MJ.":
-  "El agua se corta en {#} rebanadas; el trabajo para subirlas suma {#} MJ.",
-"The integral gives {#} MJ.":
-  "La integral da {#} MJ.",
-"end view: {#} m long into the page":
-  "vista desde el extremo: {#} m de largo hacia dentro de la página",
-"Half the width at the top R":
-  "Mitad del ancho arriba R",
-"A trough with triangular ends, seen from one end, {#} m tall holds water {#} m deep; it is pumped out through a spout {#} m above the bottom.":
-  "Un canal con extremos triangulares, visto desde un extremo, de {#} m de altura tiene agua de {#} m de profundidad; se vacía por una salida {#} m arriba del fondo.",
-"{#}, {#} m, taken at its bottom":
-  "{#}, {#} m, tomada en su borde inferior",
+"The liquid is oil, density {#} kg/m³.":
+  "El líquido es aceite, de densidad {#} kg/m³.",
+"head, heart and feet level: {#}/{#} mmHg":
+  "cabeza, corazón y pies al mismo nivel: {#}/{#} mmHg",
+"At the head, lying":
+  "En la cabeza, acostado",
+"At the feet, lying":
+  "En los pies, acostado",
+"A patient lying flat on a bed.":
+  "Un paciente acostado en una cama.",
+"mmHg":
+  "mmHg",
 "Readings and fits work in the Depth, Buoyancy and Venturi scenes.":
   "Las lecturas y los ajustes funcionan en las escenas Profundidad, Flotación y Venturi.",
-"The tank is empty.":
-  "El tanque está vacío.",
-"empty":
-  "vacío",
 "Choose a metal first.":
   "Primero elige un metal.",
 "Record reading works in the Depth, Buoyancy and Venturi scenes.":
@@ -794,6 +956,8 @@ VDI18N.add('es', 'demo/fluids', {
   "mídela: oculta para el aceite misterioso",
 "At the interface’s level: P_atm + ρ₁gh₁ = P_atm + ρ₂gh₂, so ρ₁ = ρ₂h₂/h₁":
   "Al nivel de la interfaz: P_atm + ρ₁gh₁ = P_atm + ρ₂gh₂, así que ρ₁ = ρ₂h₂/h₁",
+"The liquid is mercury, density {#} kg/m³.":
+  "El líquido es mercurio, de densidad {#} kg/m³.",
 "A U tube holding two liquids that meet at an interface.":
   "Un tubo en U con dos líquidos que se encuentran en una interfaz.",
 "A mystery oil is poured into the left arm.":
@@ -816,14 +980,6 @@ VDI18N.add('es', 'demo/fluids', {
   "Tus lecturas: fuerza de flotación W − T en función del volumen sumergido, mercurio",
 "Mystery block E in a tank of liquid, its mass and volume unknown.":
   "El bloque misterioso E en un tanque de líquido, con masa y volumen desconocidos.",
-"The block hangs from a spring scale.":
-  "El bloque cuelga de un dinamómetro de resorte.",
-"The tank is a full overflow can, with a beaker catching the spill.":
-  "El tanque es una lata de derrame llena, con un vaso que recoge lo que se derrama.",
-"The spring scale reads {#} N.":
-  "El dinamómetro marca {#} N.",
-"The beaker holds {#} cm³ of water.":
-  "El vaso contiene {#} cm³ de agua.",
 "Δh = {#} cm":
   "Δh = {#} cm",
 "Your readings: standpipe drop h₁ − h₂ against v₁², D₁ = {#} cm, D₂ = {#} cm":
@@ -862,6 +1018,32 @@ VDI18N.add('es', 'demo/fluids', {
   "ρgh·w·Δh = {#} kN",
 "A flat round plate {#} m across, standing upright in the liquid, its top {#} m below the surface.":
   "Una placa plana redonda de {#} m de diámetro, vertical en el líquido, con su borde superior {#} m bajo la superficie.",
+"It is cut into {#} horizontal strips; their forces add to {#} kN.":
+  "Se corta en {#} franjas horizontales; sus fuerzas suman {#} kN.",
+"The integral gives {#} kN, acting {#} m below the surface.":
+  "La integral da {#} kN, que actúan {#} m bajo la superficie.",
+"end view: {#} m long into the page":
+  "vista desde el extremo: {#} m de largo hacia dentro de la página",
+"Half the width at the top R":
+  "Mitad del ancho arriba R",
+"A trough with triangular ends, seen from one end, {#} m tall holds water {#} m deep; it is pumped out through a spout {#} m above the bottom.":
+  "Un canal con extremos triangulares, visto desde un extremo, de {#} m de altura tiene agua de {#} m de profundidad; se vacía por una salida {#} m arriba del fondo.",
+"The water is cut into {#} slices; the work to lift them adds to {#} kJ.":
+  "El agua se corta en {#} rebanadas; el trabajo para subirlas suma {#} kJ.",
+"The integral gives {#} kJ.":
+  "La integral da {#} kJ.",
+"The water level is now {#} m.":
+  "El nivel del agua está ahora en {#} m.",
+"A hydraulic lift: a small piston {#} cm across joined by liquid to a large piston {#} cm across carrying a {#} kg car.":
+  "Un elevador hidráulico: un pistón pequeño de {#} cm de diámetro unido por líquido a un pistón grande de {#} cm de diámetro que carga un auto de {#} kg.",
+"The small piston has been pushed down {#} m and the car has risen {#} cm.":
+  "El pistón pequeño se ha empujado {#} m hacia abajo y el auto ha subido {#} cm.",
+"It takes {#} N on the small piston to hold the car's weight of {#} N.":
+  "Se necesitan {#} N sobre el pistón pequeño para sostener el peso del auto de {#} N.",
+"The pressure is {#} kPa under the small piston and {#} kPa under the large one.":
+  "La presión es {#} kPa bajo el pistón pequeño y {#} kPa bajo el grande.",
+"The work in is {#} J and the car has gained {#} J.":
+  "El trabajo de entrada es {#} J y el auto ha ganado {#} J.",
 "Your readings: buoyant force W − T against submerged volume, water. Not enough readings to fit.":
   "Tus lecturas: fuerza de flotación W − T en función del volumen sumergido, agua. No hay suficientes lecturas para ajustar.",
 "Your readings: buoyant force W − T against submerged volume, seawater":
@@ -870,30 +1052,24 @@ VDI18N.add('es', 'demo/fluids', {
   "Tus lecturas: fuerza de flotación W − T en función del volumen sumergido, agua de mar. No hay suficientes lecturas para ajustar.",
 "The liquid is seawater, density {#} kg/m³.":
   "El líquido es agua de mar, de densidad {#} kg/m³.",
-"The block is denser than the liquid, so it sinks.":
-  "El bloque es más denso que el líquido, así que se hunde.",
 "Mystery block A in a tank of liquid, its mass and volume unknown.":
   "El bloque misterioso A en un tanque de líquido, con masa y volumen desconocidos.",
 "ρgh·w·Δh = {#} MN":
   "ρgh·w·Δh = {#} MN",
-"A flat upright plate, a rectangle, {#} m tall and {#} m wide, its top {#} m below the surface.":
-  "Una placa plana vertical, un rectángulo, de {#} m de alto y {#} m de ancho, con su borde superior {#} m bajo la superficie.",
-"It is cut into {#} horizontal strips; their forces add to {#} MN.":
-  "Se corta en {#} franjas horizontales; sus fuerzas suman {#} MN.",
-"The integral gives {#} MN, acting {#} m below the surface.":
-  "La integral da {#} MN, que actúan {#} m bajo la superficie.",
-"The liquid is oil, density {#} kg/m³.":
-  "El líquido es aceite, de densidad {#} kg/m³.",
-"Slices of water: height, area, lift and work; sum {#} kJ, integral {#} kJ":
-  "Rebanadas de agua: altura, área, elevación y trabajo; suma {#} kJ, integral {#} kJ",
-"slice":
-  "rebanada",
-"area A (m²)":
-  "área A (m²)",
-"lift (m)":
-  "elevación (m)",
-"ρgAΔy·lift (J)":
-  "ρgAΔy·elevación (J)",
+"A flat upright plate, a triangle, point down, {#} m tall and {#} m wide, its top {#} m below the surface.":
+  "Una placa plana vertical, un triángulo con la punta hacia abajo, de {#} m de alto y {#} m de ancho, con su borde superior {#} m bajo la superficie.",
+"{#} kJ, level {#} m":
+  "{#} kJ, nivel {#} m",
+"A cylindrical tank {#} m tall holds water {#} m deep; it is pumped out through a spout {#} m above the bottom.":
+  "Un tanque cilíndrico de {#} m de altura tiene agua de {#} m de profundidad; se vacía por una salida {#} m arriba del fondo.",
+"A cone shaped tank, point down, {#} m tall holds water {#} m deep; it is pumped out through a spout {#} m above the bottom.":
+  "Un tanque en forma de cono, con la punta hacia abajo, de {#} m de altura tiene agua de {#} m de profundidad; se vacía por una salida {#} m arriba del fondo.",
+"Blood pressure against height above the heart, P = Pheart − ρgh":
+  "Presión arterial en función de la altura sobre el corazón, P = Pcorazón − ρgh",
+"systolic (mmHg)":
+  "sistólica (mmHg)",
+"diastolic (mmHg)":
+  "diastólica (mmHg)",
 "Your readings: absolute pressure against depth, water":
   "Tus lecturas: presión absoluta en función de la profundidad, agua",
 "{#} of {#} Depth readings used (this liquid and pressure mode). model: slope ρg = {#} kPa/m, intercept {#} kPa":
@@ -974,14 +1150,72 @@ VDI18N.add('es', 'demo/fluids', {
   "Un tanque cilíndrico lleno que se vacía por una salida {#} m arriba de su borde. Suma el trabajo de cada rebanada, luego sube n.",
 "A full cone, point down, pumped out over its rim. Add up the work for each slice, then raise n.":
   "Un cono lleno, con la punta hacia abajo, que se vacía por encima de su borde. Suma el trabajo de cada rebanada, luego sube n.",
+"{#}, {#} m, taken at its bottom":
+  "{#}, {#} m, tomada en su borde inferior",
+"The tank is empty.":
+  "El tanque está vacío.",
+"empty":
+  "vacío",
 "Turn on Spring scale. Record reading stores the depth ruler d, the spring scale T and the scale reading in air W. The table works out V_sub = L²·d (at most L³) and F_B = W − T; the fit is F_B = intercept + slope·V_sub. {#} readings from other scenes are kept for the CSV.":
   "Activa Dinamómetro. Registrar lectura guarda la regla de profundidad d, el dinamómetro T y la lectura del dinamómetro en el aire W. La tabla calcula V_sub = L²·d (como máximo L³) y F_B = W − T; el ajuste es F_B = ordenada al origen + pendiente·V_sub. Se guardan {#} lecturas de otras escenas para el CSV.",
-"Graph for the current scene: pressure against depth, forces on the vessels, column heights, forces on the block, pressure along the pipe, or jet range against hole depth. Show data table in the Lab section lists the plotted values.":
-  "Gráfica de la escena actual: presión en función de la profundidad, fuerzas sobre los recipientes, alturas de columna, fuerzas sobre el bloque, presión a lo largo del tubo o alcance del chorro en función de la profundidad del orificio. Mostrar la tabla de datos, en la sección Laboratorio, lista los valores graficados.",
 "The tank, hole height and jet are to scale; the tape on the floor is in cm from the wall. Drag to turn, scroll to zoom, double click to go back; drag a grip to change a value.":
   "El tanque, la altura del orificio y el chorro están a escala; la cinta del piso está en cm desde la pared. Arrastra para girar, desplaza para acercar, doble clic para volver; arrastra un agarre para cambiar un valor.",
 "Range against hole depth, H = {#} m, R = {#}√(h(H − h))":
   "Alcance en función de la profundidad del orificio, H = {#} m, R = {#}√(h(H − h))",
+"= −{#} m: ρg(y":
+  "= −{#} m: ρg(y",
+"Push the small piston down and compare how far it moves with how far the car rises, and the force on it with the car’s weight. Compare the two pressure gauges.":
+  "Empuja el pistón pequeño hacia abajo y compara cuánto se mueve con cuánto sube el auto, y la fuerza sobre él con el peso del auto. Compara los dos manómetros.",
+"pulse spurts through: a tap each beat":
+  "el pulso pasa a chorros: un golpe en cada latido",
+"first tap: {#} mmHg":
+  "primer golpe: {#} mmHg",
+"The first tap came at {#} mmHg.":
+  "El primer golpe llegó a {#} mmHg.",
+"tap":
+  "golpe",
+"steady flow: no sound":
+  "flujo continuo: no se oye nada",
+"last tap: {#} mmHg":
+  "último golpe: {#} mmHg",
+"The last tap came at {#} mmHg.":
+  "El último golpe llegó a {#} mmHg.",
+"IV: ρgh = {#} mmHg > vein {#} mmHg":
+  "suero: ρgh = {#} mmHg > vena {#} mmHg",
+"fluid flows in":
+  "el líquido entra",
+"flows in":
+  "entra",
+"The IV fluid flows in.":
+  "El suero entra.",
+"IV bag {#} cm above the needle":
+  "bolsa de suero {#} cm arriba de la aguja",
+"Let the cuff down and note the pressure at the first tap and at the last. Then raise the arm, or lie the patient down, and predict how the readings change before you measure again. How high must the IV bag go before the fluid flows in?":
+  "Desinfla el brazalete y anota la presión en el primer golpe y en el último. Luego sube el brazo, o acuesta al paciente, y predice cómo cambian las lecturas antes de medir otra vez. ¿Qué tan alto debe estar la bolsa de suero para que el líquido entre?",
+"Graph for the current scene: pressure against depth, forces on the vessels, column heights, forces on the block, pressure along the pipe, jet range against hole depth, force per meter of depth on a plate, or work per meter of height to pump a tank. Show data table in the Lab section lists the plotted values.":
+  "Gráfica de la escena actual: presión en función de la profundidad, fuerzas sobre los recipientes, alturas de columna, fuerzas sobre el bloque, presión a lo largo del tubo, alcance del chorro en función de la profundidad del orificio, fuerza por metro de profundidad sobre una placa o trabajo por metro de altura para vaciar un tanque. Mostrar la tabla de datos, en la sección Laboratorio, lista los valores graficados.",
+"Graph for the current scene: pressure against depth, forces on the vessels, column heights, forces on the block, pressure along the pipe, jet range against hole depth, the lift's force against push, or blood pressure against height. Show data table in the Lab section lists the plotted values.":
+  "Gráfica de la escena actual: presión en función de la profundidad, fuerzas sobre los recipientes, alturas de columna, fuerzas sobre el bloque, presión a lo largo del tubo, alcance del chorro en función de la profundidad del orificio, fuerza del elevador en función del empuje, o presión arterial en función de la altura. Mostrar la tabla de datos, en la sección Laboratorio, lista los valores graficados.",
+"− y) dy = {#} MJ":
+  "− y) dy = {#} MJ",
+"Work per meter of height, ρg·A(y)·(y_o − y): the area under the curve is W. Bars: the {#} slices, area {#} MJ; under the curve {#} MJ":
+  "Trabajo por metro de altura, ρg·A(y)·(y_o − y): el área bajo la curva es W. Barras: las {#} rebanadas, área {#} MJ; bajo la curva {#} MJ",
+"The water is cut into {#} slices; the work to lift them adds to {#} MJ.":
+  "El agua se corta en {#} rebanadas; el trabajo para subirlas suma {#} MJ.",
+"The integral gives {#} MJ.":
+  "La integral da {#} MJ.",
+"Slices of water: height, area, lift and work; sum {#} kJ, integral {#} kJ":
+  "Rebanadas de agua: altura, área, elevación y trabajo; suma {#} kJ, integral {#} kJ",
+"slice":
+  "rebanada",
+"area A (m²)":
+  "área A (m²)",
+"lift (m)":
+  "elevación (m)",
+"ρgAΔy·lift (J)":
+  "ρgAΔy·elevación (J)",
+"Graph for the current scene: pressure against depth, forces on the vessels, column heights, forces on the block, pressure along the pipe, or jet range against hole depth. Show data table in the Lab section lists the plotted values.":
+  "Gráfica de la escena actual: presión en función de la profundidad, fuerzas sobre los recipientes, alturas de columna, fuerzas sobre el bloque, presión a lo largo del tubo o alcance del chorro en función de la profundidad del orificio. Mostrar la tabla de datos, en la sección Laboratorio, lista los valores graficados.",
 "Describe the picture":
   "Describir la imagen",
 "Time controls":

@@ -3,7 +3,7 @@
 // microphones with a 48 kHz recorder (OpenStax Vol 1 §17.1, §17.2).
 const assert = require('node:assert');
 const { core } = require('./demo_source.cjs');
-const c = core('sound-waves', 'R_GAS,T0K,P_ATM,GASES,FS,soundSpeed,gasDensity,wave,displacement,pressure,timerReading,clapSignal,fitLine,readingsCSV,LANE_W,SOURCES,MATERIALS,materialById,materialSpeed,raceFront');
+const c = core('sound-waves', 'R_GAS,T0K,P_ATM,GASES,FS,soundSpeed,gasDensity,wave,displacement,pressure,timerReading,clapSignal,fitLine,readingsCSV,LANE_W,SOURCES,MATERIALS,materialById,materialSpeed,raceFront,SLINKY_L,slinkyHand,slinkyU,slinkyAmax');
 let n = 0;
 const near = (a, b, tol, w) => assert(Math.abs(a - b) <= tol * Math.abs(b), `${w || ''}: expected ${b}, got ${a}`);
 function group(name, f) { f(); n++; console.log('PASS', name); }
@@ -70,5 +70,31 @@ group('race: every material has a cited speed, the textbook values are kept, t =
   /* the preset's numbers: steel over 1 km in 0.168 s, when air has gone 58 m; air takes 2.91 s, diamond 0.0556 s */
   const air = c.materialSpeed(c.materialById('air'), 20), tS = L / 5940; near(tS, 0.16835, 1e-4); near(air * tS, 57.8, 2e-3); near(L / air, 2.9135, 1e-4); near(L / v, 0.05556, 1e-3);
   assert.strictEqual(c.LANE_W, 3);
+});
+group('slinkies: u(x, t) = h(t − x/v) moves at v unchanged, a pulse is v/f long and leaves each coil where it was, λ = v/f, coils never touch', () => {
+  const A = 0.15, f = 1, v = 1, st = [0];
+  /* the hand: one smooth shake, zero before and after, largest A at half a period */
+  assert.strictEqual(c.slinkyHand('pulse', A, f, -0.1, st), 0); assert.strictEqual(c.slinkyHand('pulse', A, f, 1.2, st), 0);
+  near(c.slinkyHand('pulse', A, f, 0.5, st), A, 1e-12);
+  /* the shape travels at v: the coil at x does at t what the hand did at t − x/v */
+  for (const [x, t] of [[0.3, 0.7], [1.5, 2.1], [2.9, 3.3]]) near(c.slinkyU('pulse', A, f, v, x + v * 0.4, t + 0.4, st), c.slinkyU('pulse', A, f, v, x, t, st), 1e-12);
+  /* the pulse is v/f long: nonzero only between x = v(t − 1/f) and x = vt */
+  const t = 2.5; for (let x = 0; x <= 4; x += 0.01) { const u = c.slinkyU('pulse', A, f, v, x, t, st); if (x < v * (t - 1 / f) - 1e-9 || x > v * t + 1e-9) assert.strictEqual(u, 0, 'outside the pulse at ' + x); }
+  /* the marked coil (1.5 m) is at rest before the pulse arrives and after it passes, and moves at most A */
+  let big = 0; for (let tt = 0; tt <= 4; tt += 0.001) big = Math.max(big, Math.abs(c.slinkyU('pulse', A, f, v, 1.5, tt, st)));
+  near(big, A, 1e-5); assert.strictEqual(c.slinkyU('pulse', A, f, v, 1.5, 1.4, st), 0); assert.strictEqual(c.slinkyU('pulse', A, f, v, 1.5, 2.6, st), 0);
+  /* periodic: one wavelength λ = v/f repeats the pattern behind the front, and one period later every coil is back */
+  const lam = v / f; near(c.slinkyU('periodic', 0.1, f, v, 0.4 + lam, 5, st), c.slinkyU('periodic', 0.1, f, v, 0.4, 5, st), 1e-9);
+  near(c.slinkyU('periodic', 0.1, f, v, 0.4, 5 + 1 / f, st), c.slinkyU('periodic', 0.1, f, v, 0.4, 5, st), 1e-9);
+  assert.strictEqual(c.slinkyU('periodic', 0.1, f, v, 3, 2, st), 0, 'ahead of the front the slinky is still');
+  /* superposition: two pulses add */
+  near(c.slinkyHand('pulse', A, f, 3.5, [0, 3]), c.slinkyHand('pulse', A, f, 0.5, [0]), 1e-12);
+  /* the amplitude limit keeps the stretch of the pushed slinky within ±0.8, so neighboring coils never meet */
+  for (const kind of ['pulse', 'periodic']) for (const [ff, vv] of [[0.5, 1], [2.5, 1], [1, 5], [2.5, 5]]) {
+    const Am = c.slinkyAmax(kind, ff, vv), tt = kind === 'pulse' ? 1 / vv + 1 / (4 * ff) : 5; let s = 0; const h = 1e-5;
+    for (let x = 0.01; x < 4; x += 0.003) s = Math.max(s, Math.abs(c.slinkyU(kind, Am, ff, vv, x + h, tt, st) - c.slinkyU(kind, Am, ff, vv, x - h, tt, st)) / (2 * h));
+    assert(s <= 0.8 + 1e-4 && s > 0.79, kind + ' stretch ' + s);
+  }
+  assert.strictEqual(c.SLINKY_L, 4);
 });
 console.log(`${n} groups passed`);
