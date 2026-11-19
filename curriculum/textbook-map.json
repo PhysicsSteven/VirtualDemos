@@ -12259,9 +12259,12 @@
       "role": "demo",
       "beyond_book": true,
       "status": "usable",
-      "note": "New 2026-11-09 (Claude, at Steve's request): a math tool. Type a function and see f, its first, second and third derivatives (exact, symbolic) and its integral from a (numerical), with a tangent line at a point. No worksheet, notes or video for now (Steve).",
+      "note": "New 2026-11-09 (Claude, at Steve's request): a math tool. Type a function and see f, its first, second and third derivatives (exact, symbolic) and its integral from a (numerical), with a tangent line at a point. Worksheet derivatives-reading-graphs (Steve 2026-11-19): f′ and f″ from the graph of f, a dropped ball and a damped oscillation.",
       "title": "Functions and Their Derivatives",
-      "url": "demos/derivatives.html"
+      "url": "demos/derivatives.html",
+      "handouts": [
+        "derivatives-reading-graphs"
+      ]
     },
     {
       "demo": "integrals",

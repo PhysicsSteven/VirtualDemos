@@ -1,7 +1,8 @@
 /* Known values for the break-it test (tools/breakit.cjs). While the function is x³ − 3x:
    the f′ curve is drawn through (0, −3) at any zoom or pan, and the readout's f′ equals 3x² − 3 at the point's x. In Secant to
    tangent the secant slope readout is [f(x + h) − f(x)]/h; in Newton's method every step is x − f(x)/f′(x), and a settled root
-   has f = 0 to rounding. Steps: √2 from 1, −4π from 1.5 for sin x, the cycle of x³ − 2x + 2 from 0, and the MVT points ±2/√3. */
+   has f = 0 to rounding. Steps: √2 from 1, −4π from 1.5 for sin x, the cycle of x³ − 2x + 2 from 0, the MVT points ±2/√3, and the rows Record reading
+   gives for the worksheet derivatives-reading-graphs (the dropped ball, the damped oscillation, the average velocity). */
 const cubic = `document.getElementById('fx').value.replace(/\\s/g, '') === 'x^3-3x'`;
 module.exports = {
   checks: [
@@ -48,5 +49,11 @@ module.exports = {
     { name: 'Newton from 1.5 on sin x jumps to −4π', fn: `(() => { const F = window.__fg; F.applyPreset('nwJump'); const S = F.S, r = F.newtonRoot(S.fns.f, S.fns.d1, S.px); return Math.abs(r + 4 * Math.PI) < 1e-12 ? true : 'root ' + r; })()` },
     { name: 'Newton from 0 on x³ − 2x + 2 cycles', fn: `(() => { const F = window.__fg; F.applyPreset('nwCycle'); for (let k = 0; k < 10; k++) F.nwStep(); const r = F.nwRun(); return r.stop === 'cycle' ? true : 'stop ' + r.stop + ' after ' + r.xs.join(', '); })()` },
     { name: 'MVT on x³ − 3x from −2 to 2: c = ±2/√3', fn: `(() => { const F = window.__fg; F.applyPreset('mvt'); const S = F.S, m = F.diffQuot(S.fns.f, S.px, S.h), c = F.mvtPoints(S.fns.d1, S.px, S.px + S.h, m); return c.length === 2 && Math.abs(c[0] + 2 / Math.sqrt(3)) < 1e-12 && Math.abs(c[1] - 2 / Math.sqrt(3)) < 1e-12 ? true : 'c = ' + c.join(', '); })()` },
+    { name: 'Record reading: the dropped ball at t = 1.5 s and the damped oscillation obey a = −9.81 and f″ = −16.09f − 0.6f′', fn: `(() => {
+      const F = window.__fg, S = F.S; F.setMode('graph'); F.applyPreset('drop'); S.px = 1.5; let r = window.vdReadingRow();
+      if (r.f !== 8.96375 || r.d1 !== -14.715 || r.d2 !== -9.81) return 'drop row ' + JSON.stringify(r);
+      F.applyPreset('damped'); for (const t of [0, 0.4, 1.2]) { S.px = t; r = window.vdReadingRow(); const res = r.d2 + 16.09 * r.f + 0.6 * r.d1;
+        if (Math.abs(res) > 1e-5) return 'damped row at t = ' + t + ': f″ + 16.09f + 0.6f′ = ' + res; }
+      F.applyPreset('dropAvg'); r = window.vdReadingRow(); return r.secant === -12.2625 && r.tangent === -9.81 ? true : 'secant row ' + JSON.stringify(r); })()` },
   ],
 };

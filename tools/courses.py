@@ -330,6 +330,7 @@ HANDOUT_TOPIC = {
     'mp-ct-reconstruction': 'CT Image Reconstruction: From Projections to an Image (Medical Physics)',
     'slope-fields-cooling': 'Slope Fields: Cooling Tea and a Growing Culture',
     'integrals-error-order': 'How Fast Do Riemann Sums Converge?',
+    'derivatives-reading-graphs': 'Reading Derivatives from a Graph',
     'quantum-tunneling': 'Quantum Tunneling', 'energy-levels': 'Energy Levels in a Box and a Spring', 'uncertainty-principle': 'The Uncertainty Principle', 'hydrogen-atom': 'The Hydrogen Atom', 'laser-threshold': 'Laser Threshold, Efficiency and Cavity Modes', 'spin-resonance': 'Spin Resonance',
 }
 

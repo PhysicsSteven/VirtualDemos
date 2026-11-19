@@ -111,6 +111,7 @@
         "motion-graphs"
        ],
        "worksheets": [
+        "derivatives-reading-graphs",
         "motion-graphs"
        ]
       },
@@ -119,6 +120,9 @@
        "title": "Differentiation Rules",
        "demos": [
         "derivatives"
+       ],
+       "worksheets": [
+        "derivatives-reading-graphs"
        ]
       },
       {
@@ -129,6 +133,7 @@
         "derivatives"
        ],
        "worksheets": [
+        "derivatives-reading-graphs",
         "motion-graphs"
        ]
       },

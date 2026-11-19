@@ -4,7 +4,7 @@ VDI18N.add('en', 'demo/derivatives', [
 "f curves downward: f″ < {#}",
 "Functions and Their Derivatives",
 "<a>Math for physics</a>",
-"<span><a><span>Numerical Methods for Motion</span> <span>→</span></a></span>",
+"<a><span>←</span> <span>Limits</span></a><a><span>Numerical Methods for Motion</span> <span>→</span></a>",
 "Type or paste a function and see it graphed with its first and second derivatives on the same axes, updating as you type. Turn on the third derivative or the integral too. The derivatives are worked out exactly, by the rules of calculus; the integral is computed numerically.",
 "Put the point back at its starting place",
 "Show",
@@ -62,6 +62,7 @@ VDI18N.add('en', 'demo/derivatives', [
 "A start that jumps to another root",
 "Where f has a peak or a valley (x = −{#} and x = {#}), f′ crosses zero. Where f is steepest, f′ has its own valley and f″ crosses zero: that is the inflection point at x = {#}, where f changes from curving down to curving up.",
 "At the point",
+"Move the point to",
 "f is rising: f′ > {#}<br>f curves downward: f″ &lt; {#}",
 "Table",
 "Formulas",
@@ -191,5 +192,9 @@ VDI18N.add('en', 'demo/derivatives', [
 "f is not bending here: f″ = 0",
 "f curves upward: f″ > 0",
 "f curves downward: f″ < 0",
-"Your own function. Every setup above can be edited in the box, too."
+"Your own function. Every setup above can be edited in the box, too.",
+"Type a function first.",
+"Turn off Blind (under Lab) to record the derivatives.",
+"Switch to Derivatives or Secant to tangent to record a reading.",
+"f has no value at the point."
 ]);
