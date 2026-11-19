@@ -3,13 +3,23 @@
    j01 = 2.40483 and square sqrt(2), f = lambda^2 * fs with fs = c/(2 pi a) or c/(2L), c = sqrt(T/sigma); plate fs from D = E h^3/12(1 - nu^2);
    the mass readout equals rho h A; the lowest mode readout equals lambda^2 fs; the bending wavelength readout is 2 pi / k with
    k = (w^2 rho h / D)^(1/4); the resonance list is positive and increasing. Reads the state after the page has recomputed. */
-const pre = `const c = window.__ch; if (!c || !c.D || !c.D.lowest || !c.D.res) return true;
+const pre = `const c = window.__ch; if (!c || !c.D || !c.D.lowest || !c.D.res || c.S.kind === 'liquid') return true;
   const S = c.S, D = c.D, MAT = { steel: { E: 200e9, rho: 7850, nu: 0.30 }, aluminum: { E: 69e9, rho: 2700, nu: 0.33 } }[S.mat], drum = S.kind === 'drum';
   const L = 0.24, a = 0.12, rd = (id) => document.getElementById(id).textContent, near = (x, y, t) => Math.abs(x - y) <= t * Math.max(Math.abs(y), 1e-12);
   const area = S.shape === 'square' ? L * L : S.shape === 'bar' ? L * 0.03 : Math.PI * a * a;
 `;
 module.exports = {
   checks: [
+    /* liquid layer (Faraday waves): the dish's Γ = min(F/M, x_max ω²)/g with M = 50 g + 60 g + ρ A d, the liquid mass readout ρ A d, and
+       the onset readout from the Floquet onset; the subharmonic wave's frequency is f/2 */
+    { name: "liquid layer: dish acceleration, liquid mass and onset readouts agree with the physics", fn: `(() => { const c = window.__ch; if (!c || c.S.kind !== 'liquid' || !c.D.L || !c.D.L.on) return true;
+      const S = c.S, L = c.D.L, LIQ = { water: 998.2, oil10: 935, oil100: 965 }[S.liq], A = S.shape === 'square' ? 0.15 * 0.15 : Math.PI * 0.075 * 0.075, rd = (id) => document.getElementById(id).textContent;
+      const m = LIQ * A * S.depth, M = 0.05 + 0.06 + m, w = 2 * Math.PI * S.f, F = 0.05 * (2 * Math.PI * 50) ** 2 * S.x0, a = Math.min(F / M, 0.0035 * w * w) / 9.81;
+      if (Math.abs(L.gam - a) > 1e-9 * a) return 'Γ = ' + L.gam + ', dish model ' + a;
+      if (Math.abs(parseFloat(rd('rMass')) - m * 1000) > 0.51) return 'liquid mass shows ' + rd('rMass') + ', ρAd = ' + m * 1000 + ' g';
+      const on = parseFloat(rd('rGrains')); if (isFinite(L.on.gam) && Math.abs(on - L.on.gam) > (L.on.gam < 0.1 ? 0.00051 : L.on.gam < 10 ? 0.0051 : 0.051)) return 'onset shows ' + rd('rGrains') + ', computed ' + L.on.gam;
+      if (!(L.on.gam > 0)) return 'onset ' + L.on.gam;
+      return true; })()` },
     { name: "cited lowest modes: steel square 13.468, bar 22.373, drum circle j01, drum square sqrt 2", fn: `(() => { ${pre}
       const l = D.lowest.lam2; if (!isFinite(l) || l <= 0) return 'lowest lambda^2 = ' + l;
       if (drum) { const want = S.shape === 'circle' ? 2.404826 : Math.SQRT2; if (!near(l, want, 1e-4)) return 'drum ' + S.shape + ' lowest ' + l + ', should be ' + want; return true; }

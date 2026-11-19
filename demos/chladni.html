@@ -174,7 +174,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   <header class="bar">
     <div>
       <h1>Chladni Plates</h1>
-      <p>Drive a thin metal plate at one of its resonant frequencies and sand sprinkled on it dances off the moving parts and settles on the lines that stay still. Sweep the drive, watch the response peak at each mode, and compare a square plate with a circular one. Switch to a drumhead and hear why a drum has no clear pitch.</p>
+      <p>Drive a thin metal plate at one of its resonant frequencies and sand sprinkled on it dances off the moving parts and settles on the lines that stay still. Sweep the drive, watch the response peak at each mode, and compare a square plate with a circular one. Switch to a drumhead and hear why a drum has no clear pitch, or put a dish of liquid on the driver: above a threshold its surface breaks into standing waves at half the drive frequency (Faraday waves).</p>
     </div>
     <div class="bar-right">
       <div class="units mono">f in Hz · λ² = ω ℓ² √(ρh/D) · |a| in g = 9.81 m/s²</div>
@@ -227,13 +227,14 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <span class="card-title" id="setupTitle">Set up the plate and driver</span>
         <div class="inline">
           <span class="lab">Vibrating</span>
-          <div class="seg" role="group" aria-label="Metal plate or drumhead" id="kindSeg">
+          <div class="seg" role="group" aria-label="Metal plate, drumhead or liquid" id="kindSeg">
             <button type="button" data-k="plate" aria-pressed="true">Metal plate</button>
             <button type="button" data-k="drum" aria-pressed="false">Drumhead</button>
+            <button type="button" data-k="liquid" aria-pressed="false" title="A dish of liquid on the wave driver: Faraday waves">Liquid layer</button>
           </div>
         </div>
         <div class="inline">
-          <span class="lab">Shape</span>
+          <span class="lab" id="shapeLab">Shape</span>
           <div class="seg" role="group" aria-label="Plate shape" id="shapeSeg">
             <button type="button" data-s="square" aria-pressed="true">Square</button>
             <button type="button" data-s="circle" aria-pressed="false">Circle</button>
@@ -243,6 +244,18 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         <div id="drumGrp" hidden>
           <div class="slider-head"><label for="tens">Head tension T</label><output id="tensOut" class="mono" for="tens"></output></div>
           <input type="range" id="tens" min="200" max="4000" step="10" value="1000">
+        </div>
+        <div class="inline" id="liqRow" hidden>
+          <span class="lab">Liquid</span>
+          <div class="seg" role="group" aria-label="Liquid" id="liqSeg">
+            <button type="button" data-l="water" aria-pressed="true">Water</button>
+            <button type="button" data-l="oil10" aria-pressed="false" title="Silicone oil, 10 times as viscous as water">Silicone oil, 10 cSt</button>
+            <button type="button" data-l="oil100" aria-pressed="false" title="Silicone oil, 100 times as viscous as water">Silicone oil, 100 cSt</button>
+          </div>
+        </div>
+        <div id="depthRow" hidden>
+          <div class="slider-head"><label for="depth">Liquid depth d</label><output id="depthOut" class="mono" for="depth"></output></div>
+          <input type="range" id="depth" min="1" max="20" step="0.5" value="5">
         </div>
         <div class="inline" id="metalRow">
           <span class="lab">Metal</span>
@@ -255,7 +268,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <div class="slider-head"><label for="thick">Thickness h</label><output id="thickOut" class="mono" for="thick"></output></div>
           <input type="range" id="thick" min="0.5" max="2" step="0.05" value="1">
         </div>
-        <div class="inline">
+        <div class="inline" id="driveRow">
           <span class="lab">Drive point</span>
           <div class="seg" role="group" aria-label="Drive point" id="driveSeg">
             <button type="button" data-d="center" aria-pressed="true">Center</button>
@@ -279,7 +292,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <div class="slider-head"><label for="force">Drive force F₀</label><output id="forceOut" class="mono" for="force"></output></div>
           <input type="range" id="force" min="0" max="100" step="1" value="50">
         </div>
-        <div>
+        <div id="qualRow">
           <div class="slider-head"><label for="qual">Modal Q (damping)</label><output id="qualOut" class="mono" for="qual"></output></div>
           <input type="range" id="qual" min="0" max="100" step="1" value="50">
         </div>
@@ -302,24 +315,29 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" data-p="drumOff" aria-pressed="false">Drumhead overtones</button>
           <button type="button" data-p="bar" aria-pressed="false">Bar: bending overtones</button>
           <button type="button" data-p="barMid" aria-pressed="false">Bar on the driver</button>
+          <button type="button" data-p="farSquares" aria-pressed="false">Liquid: Faraday squares</button>
+          <button type="button" data-p="farStripes" aria-pressed="false">Liquid: stripes in thick oil</button>
+          <button type="button" data-p="farHex" aria-pressed="false">Liquid: hexagons</button>
+          <button type="button" data-p="farQuasi" aria-pressed="false">Liquid: eightfold pattern</button>
+          <button type="button" data-p="farOnset" aria-pressed="false">Liquid: find the onset</button>
         </div>
         <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
 
       <section>
-        <h2>Drive</h2>
+        <h2 id="driveH">Drive</h2>
         <dl class="readout">
-          <div><dt>Peak |a| on the plate</dt><dd id="rPeak">—</dd></div>
-          <div><dt>Grains on the plate</dt><dd id="rGrains">—</dd></div>
-          <div id="rPostRow"><dt>Post motion</dt><dd id="rPost">—</dd></div>
+          <div><dt id="rPeakLab">Peak |a| on the plate</dt><dd id="rPeak">—</dd></div>
+          <div><dt id="rGrainsLab">Grains on the plate</dt><dd id="rGrains">—</dd></div>
+          <div id="rPostRow"><dt id="rPostLab">Post motion</dt><dd id="rPost">—</dd></div>
           <div id="rCoilRow"><dt>Driver force</dt><dd id="rCoil">—</dd></div>
-          <div class="wide"><dt>Nearest resonance</dt><dd id="rMode" class="txt">—</dd></div>
+          <div class="wide"><dt id="rModeLab">Nearest resonance</dt><dd id="rMode" class="txt">—</dd></div>
         </dl>
         <p class="hint" id="driveHint"></p>
       </section>
 
       <section>
-        <h2>Plate</h2>
+        <h2 id="plateH">Plate</h2>
         <dl class="readout">
           <div><dt id="rMassLab">Plate mass M</dt><dd id="rMass">—</dd></div>
           <div><dt id="rLowLab">Lowest flexural mode</dt><dd id="rLow">—</dd></div>
@@ -330,7 +348,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 
       <section>
         <details class="fold"><summary>Display</summary><div class="foldbody">
-        <div class="toggles">
+        <div class="toggles" id="toggles">
           <label><input type="checkbox" id="tNodal">Nodal lines</label>
           <label><input type="checkbox" id="tHeat">Where |a| &gt; g</label>
         </div>
@@ -339,6 +357,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <div class="seg" role="group" aria-label="Plot" id="plotSeg">
             <button type="button" data-pl="resp" aria-pressed="true">Response</button>
             <button type="button" data-pl="law" aria-pressed="false">Chladni's law</button>
+            <button type="button" data-pl="thr" aria-pressed="false" hidden>Onset</button>
+            <button type="button" data-pl="tongue" aria-pressed="false" hidden>Tongues</button>
           </div>
         </div>
         <p class="hint" id="plotHint"></p>
@@ -382,6 +402,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
           <span><i class="swatch curve"></i>RMS acceleration of the plate vs f</span>
           <span><i class="swatch fline"></i>drive frequency f (drag it)</span>
           <span><i class="swatch gline"></i>1 g</span>
+          <span><i class="swatch curve"></i>liquid: drive acceleration Γ needed for waves (onset)</span>
         </div>
         </div></details>
       </section>
@@ -393,6 +414,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
           <p>Every edge is free. Two drives: <b>Wave driver</b> (the default for the center and off center posts) is a voice coil bolted to the plate: its coil pushes with force F_c on its own moving mass m_d = 50 g (an estimate) and on the plate, so the post moves x = F_c/(1/G − m_d ω²), with G the plate's point receptance at the post (the modal sum, rigid modes included, plus the share of the modes above the computed range from the plate's average mode density). The bolt is treated as a point; the clamp's width and the driver's suspension are left out. At low frequency the whole plate rides up and down with the post, |a| ≈ F_c/(M + m_d) everywhere. The plate with the driver's mass at its center has its own resonances, between those of a free plate and those of a plate pinned at the post. <b>Point force</b> (the default at the edge, like a bow) is an ideal force F₀ cos(2πft) on a free plate.</p>
           <p>Circle: exact solution, w = [J_n(λr/a) + C I_n(λr/a)] cos nθ, with the free edge frequency equation solved to 12 digits. Square: no closed form; Rayleigh–Ritz with Legendre polynomials up to degree 30 in x and in y (961 terms, split into symmetry classes), converged to better than 1 part in a million for every mode shown.</p>
           <p>Drumhead: an ideal membrane, σ ∂²w/∂t² = T ∇²w, clamped at its rim (w = 0), with no bending stiffness and no air: Mylar film 0.19 mm thick (chosen) at 1390 kg/m³, so σ = 0.264 kg/m², and the tension T per unit length set by the slider (chosen range 200 to 4000 N/m). Square: φ = 2 sin(mπx/L) sin(nπy/L), f = (c/2L)√(m² + n²), c = √(T/σ). Circle: φ = N J_n(j r/a) cos nθ, f = j c/(2πa), j a zero of J_n found to 12 digits. Kept: Λ below 22 (square) or 40 (circle). The drive is a pad 2 cm across (the mean of φ over it) or a loudspeaker under the head, a uniform pressure (the mean of φ over the head), with the same Q for every mode. A real drum's air (inside a kettle or shell and around the head) lowers the low modes and moves them toward harmonic ratios in a timpani; that is left out, so these are the ideal membrane's inharmonic ratios. The sand model is the same as on the plate.</p>
+          <p><b>Liquid layer (Faraday waves).</b> A dish 15 cm across (circle) or on a side (square), 60 g (an estimate), holds a layer of liquid of depth d and is bolted to the wave driver; dish and liquid move as one rigid load, so the dish's acceleration amplitude is a = F_c/(m_d + m_dish + m_liquid), or less where the stroke limit holds the post to 3.5 mm. Γ = a/g. In the dish's frame gravity becomes g(1 + Γ cos 2πft), so each surface wave of wavenumber k obeys a damped Mathieu equation, ä + 2αȧ + [ω₀² + Γ g k tanh(kd) cos 2πft] a = 0, with ω₀² = (g k + σk³/ρ) tanh(kd), the linear dispersion relation of gravity capillary waves. The demo integrates it over one drive period for two starting conditions (fourth order Runge–Kutta) and takes the Floquet multipliers: a wave grows when one exceeds 1 in size. The onset Γ_c(f) is the least Γ at which any k grows. It falls in the first Mathieu tongue, a response at f/2 with ω₀ close to πf, unless the damping is so large that the second tongue (a response at f) comes lower. The damping α is the bulk viscous rate 2νk² (Lamb, Hydrodynamics, §348) plus the boundary layer on the dish floor, k√(νω/2)/sinh 2kd. Left out: the side walls, the meniscus and contact line, and any contaminating film on the surface, which all add damping, so measured onsets in water are often several times higher than the demo's. The dish is wide compared with a wavelength, so the pattern is drawn as in an endless layer, cut off at the rim. Liquid data: water at 20 °C, 998.2 kg/m³, 1.002 mPa·s (CRC Handbook), σ = 72.74 mN/m (IAPWS); silicone oils (PDMS) at 25 °C from the Dow XIAMETER PMX-200 data sheet: 10 cSt, 935 kg/m³, 20.1 mN/m; 100 cSt, 965 kg/m³, 20.9 mN/m.</p>
+          <p>Which pattern forms is a nonlinear question this linear model cannot answer, so the demo follows a rule taken from experiments and weakly nonlinear theory near onset (single frequency drive): stripes when the waves are strongly damped, α/ω₀ above 0.15 (a model choice; viscous liquids and shallow layers, Kudrolli and Gollub 1996, Chen and Viñals 1999); otherwise squares when capillarity dominates the restoring force, and hexagons, then an eightfold quasipattern, as gravity takes over. Those two changes sit where s = σk²/(ρg + σk²) passes 0.48 and 0.37, the values at which Binks and van de Water (1997) saw squares give way to hexagons (about 35 Hz) and hexagons to an eightfold pattern (about 29 Hz) in a deep, weakly viscous layer. A pattern is drawn as the sum of 1, 2, 3 or 4 standing waves at equal angles. How tall the waves grow is set by nonlinear effects too: the picture grows the pattern at the computed Floquet rate μ and then levels it off, so its height is a picture, not a calculation. Well above onset real patterns turn disordered and throw droplets; that is not modeled. The motion on the liquid view is slowed by the factor f, so the dish moves once a second and the surface, at f/2, once every two seconds; the growth and decay of the waves run in real time.</p>
           <p>Damping: every flexural mode has the same Q (default 50, a model choice: a plate bolted to a driver and carrying sand is heavily damped). The response is the sum over all computed modes, between resonances too. The sand's mass does not load the plate.</p>
           <p>Drive level: PASCO publishes no force rating for its wave drivers. The SF-9324 manual gives amplitudes up to 7 mm peak to peak at low frequency, and its product page about 5 mm up to about 50 Hz; the WA-9855 takes at most 1.2 A. The demo takes full drive to be the coil force that moves the driver's 50 g alone 3.5 mm at 50 Hz, F = m_d (2π·50 Hz)² × 3.5 mm = 17 N, and never lets the post move more than 3.5 mm (the stroke limit). The <b>Driver setting x₀</b> is the amplitude the setting would give the driver alone at 50 Hz. These numbers are estimates, not measurements.</p>
           <p>Sand is phenomenological, not a granular simulation. Where the local acceleration amplitude |a| exceeds g the plate throws a grain off once a cycle, at the moment its acceleration passes −g, with launch speed v_L = (g/2πf)√((|a|/g)² − 1). It flies for t_f = 2v_L/g. A grain moves on average at v_L: when t_f is shorter than 1/60 s it moves v_L × 1/60 s every 1/60 s; when it is longer it lands only once per flight, a hop of v_L × t_f in a random direction plus a drift of up to 0.5 of a hop toward smaller |a|: full where |a| changes by a factor of 4 or more across a half plate width relative to itself (near nodes), proportionally less where the plate moves nearly as a whole. The drift stands in for grains bouncing off the tilted, moving surface, which carries them toward the nodes. Where |a| &lt; g a grain stays put. So at low frequency, where v_L is large, sand hops far and the plate looks chaotic; at high frequency it buzzes and creeps. Grains in flight are drawn with a slight blur; grains that pass the edge fall off. The plate starts with 24,000 grains (12,000 on a phone, a tablet or a computer with 4 cores or fewer), each drawn about a pixel across: the count and the drawn size are a picture, not real sand. Very light powder (lycopodium) gathers at the antinodes instead, carried by air currents over the plate (Faraday, 1831); air is not modeled.</p>
@@ -898,6 +921,106 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
     return s / 48;
   }
+  // ---------- Faraday waves: a layer of liquid in a dish shaken up and down (2026-11-19) ----------
+  /* Liquids. Water at 20 °C: 998.2 kg/m³ and 1.002 mPa·s (CRC Handbook), σ = 72.74 mN/m (IAPWS R1-76, 2014).
+     Silicone oils (PDMS) at 25 °C: Dow XIAMETER PMX-200 data sheet (10 cSt: 0.935 g/cm³, 20.1 mN/m; 100 cSt: 0.965 g/cm³, 20.9 mN/m). */
+  const LIQUIDS = {
+    water: { name: 'Water', lc: 'water', rho: 998.2, sigma: 0.07274, nu: 0.001002 / 998.2 },
+    oil10: { name: 'Silicone oil, 10 cSt', lc: 'silicone oil, 10 cSt', rho: 935, sigma: 0.0201, nu: 10e-6 },
+    oil100: { name: 'Silicone oil, 100 cSt', lc: 'silicone oil, 100 cSt', rho: 965, sigma: 0.0209, nu: 100e-6 }
+  };
+  const DISH = { L: 0.15, a: 0.075, m: 0.06 };          // dish: square side and circle radius (m); its mass (kg, an estimate for a thin acrylic dish)
+  function dishArea(shape) { return shape === 'square' ? DISH.L * DISH.L : Math.PI * DISH.a * DISH.a; }
+  /* gravity capillary waves on a layer of depth h: ω² = (g k + σk³/ρ) tanh kh (inviscid, linear) */
+  function liqOmega2(k, liq, h, g = G0) { return (g * k + liq.sigma * k * k * k / liq.rho) * Math.tanh(k * h); }
+  function liqK(w, liq, h) {                           // the k with ω(k) = w (ω rises with k), by bisection on ln k
+    let lo = 1e-4, hi = 1e7;
+    for (let i = 0; i < 200 && hi / lo > 1 + 1e-14; i++) { const m = Math.sqrt(lo * hi); if (liqOmega2(m, liq, h) < w * w) lo = m; else hi = m; }
+    return Math.sqrt(lo * hi);
+  }
+  /* amplitude decay rate of a free wave: bulk viscosity 2νk² (Lamb, Hydrodynamics §348) plus the boundary layer on the
+     dish floor k√(νω/2)/sinh 2kh (the floor layer's dissipation over the wave's energy). Side walls, the meniscus and any
+     film on the surface are left out, so real thresholds run higher. */
+  function liqDamp(k, liq, h) {
+    const w = Math.sqrt(liqOmega2(k, liq, h)), s = 2 * k * h;
+    return 2 * liq.nu * k * k + (s < 700 ? k * Math.sqrt(liq.nu * w / 2) / Math.sinh(s) : 0);
+  }
+  /* one surface mode in the shaken dish (the dish frame, gravity g(1 + Γ cos Ωt)): a damped Mathieu equation
+     ä + 2αȧ + [ω₀² + Γ g k tanh(kh) cos Ωt] a = 0. Floquet: integrate two solutions over one drive period (RK4, N steps),
+     then the multipliers of the monodromy matrix. Returns the growth rate μ (1/s, the log of the larger |multiplier| per
+     period) and the multiplier's sign: −1 a response at Ω/2 (subharmonic), +1 at Ω (harmonic), 0 a complex pair (decays). */
+  function mathieuFloquet(w0sq, alpha, eps, Om, N = 48) {
+    const T = 2 * Math.PI / Om, dt = T / N;
+    let a1 = 1, v1 = 0, a2 = 0, v2 = 1;
+    const acc = (c, a, v) => -2 * alpha * v - (w0sq + eps * c) * a;
+    for (let i = 0; i < N; i++) {
+      const c0 = Math.cos(Om * i * dt), ch = Math.cos(Om * (i + 0.5) * dt), c1 = Math.cos(Om * (i + 1) * dt);
+      let k1a = v1, k1v = acc(c0, a1, v1), k2a = v1 + 0.5 * dt * k1v, k2v = acc(ch, a1 + 0.5 * dt * k1a, v1 + 0.5 * dt * k1v);
+      let k3a = v1 + 0.5 * dt * k2v, k3v = acc(ch, a1 + 0.5 * dt * k2a, v1 + 0.5 * dt * k2v), k4a = v1 + dt * k3v, k4v = acc(c1, a1 + dt * k3a, v1 + dt * k3v);
+      a1 += dt / 6 * (k1a + 2 * k2a + 2 * k3a + k4a); v1 += dt / 6 * (k1v + 2 * k2v + 2 * k3v + k4v);
+      k1a = v2; k1v = acc(c0, a2, v2); k2a = v2 + 0.5 * dt * k1v; k2v = acc(ch, a2 + 0.5 * dt * k1a, v2 + 0.5 * dt * k1v);
+      k3a = v2 + 0.5 * dt * k2v; k3v = acc(ch, a2 + 0.5 * dt * k2a, v2 + 0.5 * dt * k2v); k4a = v2 + dt * k3v; k4v = acc(c1, a2 + dt * k3a, v2 + dt * k3v);
+      a2 += dt / 6 * (k1a + 2 * k2a + 2 * k3a + k4a); v2 += dt / 6 * (k1v + 2 * k2v + 2 * k3v + k4v);
+    }
+    const tr = a1 + v2, det = a1 * v2 - a2 * v1, disc = tr * tr / 4 - det;
+    let mag, sign;
+    if (disc >= 0) { const r1 = tr / 2 + Math.sqrt(disc), r2 = tr / 2 - Math.sqrt(disc), r = Math.abs(r1) >= Math.abs(r2) ? r1 : r2; mag = Math.abs(r); sign = Math.sign(r); }
+    else { mag = Math.sqrt(Math.max(det, 1e-300)); sign = 0; }
+    return { mu: Math.log(mag) / T, sign };
+  }
+  function faradayGrowth(k, liq, h, gam, Om, N) {
+    return mathieuFloquet(liqOmega2(k, liq, h), liqDamp(k, liq, h), gam * G0 * k * Math.tanh(k * h), Om, N);
+  }
+  /* the smallest drive Γ = a/g at which a wave of wavenumber k grows (the edge of the lowest Mathieu tongue at that k) */
+  function faradayOnsetK(k, liq, h, Om, gMax = 60) {
+    const grows = (g) => faradayGrowth(k, liq, h, g, Om).mu > 0;
+    const w0 = Math.sqrt(liqOmega2(k, liq, h)), cap = liq.sigma * k * k / (liq.rho * G0);
+    let hi = Math.min(gMax, Math.max(1e-4, 4 * liqDamp(k, liq, h) * (1 + cap) / w0)), lo = 0;   /* start from the weak damping estimate 4α(1 + σk²/ρg)/ω₀ */
+    if (grows(hi)) { while (hi > 1e-6 && grows(hi / 1.5)) hi /= 1.5; lo = hi / 1.5; }
+    else { while (hi < gMax && !grows(hi)) { lo = hi; hi = Math.min(gMax, hi * 1.5); } if (!grows(hi)) return { gam: Infinity, sign: 0 }; }
+    for (let i = 0; i < 60 && hi - lo > 1e-4 * hi; i++) { const m = 0.5 * (lo + hi); if (grows(m)) hi = m; else lo = m; }
+    return { gam: hi, sign: faradayGrowth(k, liq, h, hi, Om).sign };
+  }
+  /* golden section for the minimum of fn over ln k in [ka, kb] */
+  function goldenK(fn, ka, kb, iters) {
+    const r = (Math.sqrt(5) - 1) / 2; let a = Math.log(ka), b = Math.log(kb), c = b - r * (b - a), d = a + r * (b - a), fc = fn(Math.exp(c)), fd = fn(Math.exp(d));
+    for (let i = 0; i < iters; i++) { if (fc < fd) { b = d; d = c; fd = fc; c = b - r * (b - a); fc = fn(Math.exp(c)); } else { a = c; c = d; fc = fd; d = a + r * (b - a); fd = fn(Math.exp(d)); } }
+    return fc < fd ? { k: Math.exp(c), v: fc } : { k: Math.exp(d), v: fd };
+  }
+  /* onset of Faraday waves at drive frequency f: the least Γ over all k, searched near the subharmonic wave (ω = Ω/2, the
+     first tongue) and near the harmonic one (ω = Ω, the second tongue). The tongue whose minimum is lower sets the onset. */
+  function faradayOnset(f, liq, h, iters = 14) {
+    const Om = 2 * Math.PI * f, out = [];
+    for (const [w, tongue] of [[Om / 2, 1], [Om, 2]]) {
+      const k0 = liqK(w, liq, h), m = goldenK((k) => faradayOnsetK(k, liq, h, Om).gam, k0 / 1.5, k0 * 1.5, iters);
+      out.push({ gam: m.v, k: m.k, tongue, k0 });
+    }
+    const best = out[0].gam <= out[1].gam ? out[0] : out[1];
+    return { gam: best.gam, k: best.k, tongue: best.tongue, kSub: out[0].k0, kHarm: out[1].k0, gamSub: out[0].gam, gamHarm: out[1].gam };
+  }
+  /* above onset: the fastest growing k at drive Γ and its growth rate (1/s). The band of growing k can be narrow (weak
+     damping), so a scan over k0/1.3 to 1.3 k0 finds it first and a golden section search then refines the best point. */
+  function faradayFastest(f, liq, h, gam, k0, iters = 22) {
+    const Om = 2 * Math.PI * f, mu = (k) => faradayGrowth(k, liq, h, gam, Om).mu, NS = 80, ks = [];
+    let bi = 0, bv = -Infinity;
+    for (let i = 0; i <= NS; i++) { const k = k0 * Math.pow(1.3, 2 * i / NS - 1), v = mu(k); ks.push(k); if (v > bv) { bv = v; bi = i; } }
+    const m = goldenK((k) => -mu(k), ks[Math.max(0, bi - 1)], ks[Math.min(NS, bi + 1)], iters);
+    return -m.v >= bv ? { k: m.k, mu: -m.v } : { k: ks[bi], mu: bv };
+  }
+  /* which pattern the surface forms near onset (single frequency drive), a rule taken from experiments and weakly nonlinear
+     theory, not computed here: stripes when the waves are strongly damped (a viscous liquid or a shallow layer; Kudrolli and
+     Gollub 1996, Chen and Viñals 1999); with weak damping, squares when capillarity dominates and hexagons, then eightfold
+     quasipatterns, as gravity takes over. The boundaries in s = σk²/(ρg + σk²), 0.48 and 0.37, are where Binks and van de
+     Water (1997) saw squares give way to hexagons (about 35 Hz) and hexagons to an eightfold pattern (about 29 Hz) in a deep,
+     weakly viscous layer, as Chen and Viñals reproduce; the damping boundary, α/ω = 0.15, is a model choice. */
+  const FAR_PAT = { stripeDamp: 0.15, sq: 0.48, hex: 0.37 };
+  function faradayPattern(k, liq, h) {
+    const w = Math.sqrt(liqOmega2(k, liq, h)), cap = liq.sigma * k * k / liq.rho, s = cap / (G0 + cap), damp = liqDamp(k, liq, h) / w;
+    const pattern = damp > FAR_PAT.stripeDamp ? 'stripes' : s >= FAR_PAT.sq ? 'squares' : s >= FAR_PAT.hex ? 'hexagons' : 'quasi8';
+    return { pattern, s, damp, waves: { stripes: 1, squares: 2, hexagons: 3, quasi8: 4 }[pattern] };
+  }
+  /* the surface pattern: N standing plane waves of wavenumber k at angles jπ/N, normalized to a peak of 1 at the center */
+  function patternHeight(N, k, x, y) { let s = 0; for (let j = 0; j < N; j++) { const t = j * Math.PI / N; s += Math.cos(k * (x * Math.cos(t) + y * Math.sin(t))); } return s / N; }
   // ==CORE END==
 
   if (typeof document === 'undefined') return;
@@ -909,7 +1032,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   /* sand grains: 24000 of them (12000 on a phone or tablet, or a computer with 4 cores or fewer, to stay smooth); how big a grain is drawn is a picture */
   const LITE = (() => { try { return (navigator.hardwareConcurrency || 4) <= 4 || matchMedia('(pointer: coarse)').matches; } catch (_) { return false; } })();
   const GN = 101, NSAND = LITE ? 12000 : 24000, HALF = 0.12;      // field grid nodes per side; sand grains; half width of either plate, m
-  const F_MIN = 20, F_CAP = 8000;
+  const F_MIN = 20, F_CAP = 8000;   /* a plate's lowest drive frequency; D.fmin holds the one in use (8 Hz for a liquid) */
   const EPS = 1, DRIFT = 0.5, REL0 = 4, TICK = 1 / 60;   // sand: grain speed = EPS × launch speed, drift, relative slope for full drift (per half width), tick (s)
   const hop = (gam, u) => hopLength(gam, S.f, EPS, TICK, u) / HALF;
   // wave driver: moving mass (estimate), stroke limit and full drive from PASCO's figures (see Model)
@@ -927,9 +1050,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   /* a drumhead: Mylar film clamped in a hoop, driven by a pad 2 cm across or by a loudspeaker under it (uniform pressure) */
   const DRUM_DRIVES = { square: { center: [0, 0], off: [0.42, 0.22], edge: [0.8, 0.3], speaker: [0, 0] }, circle: { center: [0, 0], off: [0.5, 0], edge: [0.8, 0], speaker: [0, 0] } };
   const SIGMA = MYLAR.rho * MYLAR.h;   /* kg/m², areal density of the head */
-  const drum = () => S.kind === 'drum';
+  const drum = () => S.kind === 'drum', liquid = () => S.kind === 'liquid';
   const drivesOf = () => (drum() ? DRUM_DRIVES : DRIVES)[S.shape];
-  const S = { kind: 'plate', T: 1000, shape: 'square', mat: 'steel', h: 1.0e-3, f: 100, Q: 50, F: 1, driver: 'wave', x0: 2e-3, drive: 'center', du: 0, dv: 0,
+  const S = { kind: 'plate', liq: 'water', depth: 5e-3, T: 1000, shape: 'square', mat: 'steel', h: 1.0e-3, f: 100, Q: 50, F: 1, driver: 'wave', x0: 2e-3, drive: 'center', du: 0, dv: 0,
     view: 'sand', plot: 'resp', nodal: false, heat: false, follow: true, sweep: false, rate: 4 };
   let presetId = null, running = !reduce, frameMs = 0, dirty = true;
 
@@ -1006,10 +1129,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
 
   // ---------- derived quantities ----------
-  const D = { ms: null, phiP: null, fs: 1, M: 1, fmax: 1000, Wre: new Float32Array(GN * GN), Wim: new Float32Array(GN * GN),
+  const D = { ms: null, phiP: null, fs: 1, M: 1, fmin: 20, fmax: 1000, L: null, Wre: new Float32Array(GN * GN), Wim: new Float32Array(GN * GN),
     gam: new Float32Array(GN * GN), gmax: 0, Wmax: 0, arms: 0, curve: null, curveMax: 0, near: null, fit: null };
   function inside(u, v) { return S.shape === 'square' ? Math.abs(u) <= 1 && Math.abs(v) <= 1 : S.shape === 'bar' ? Math.abs(u) <= 1 && Math.abs(v) <= BW : u * u + v * v <= 1; }
   function recomputeStatic() {
+    if (liquid()) { liquidStatic(); return; }
+    D.fmin = F_MIN; D.L = null;
     const mat = MATERIALS[S.mat];
     D.ms = modeSet();
     if (drum()) {
@@ -1052,8 +1177,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   // resonances: point force, the free plate's modes that move at the drive point; wave driver, the zeros of Z (plate + driver mass)
   function resonances() {
     const out = [];
-    if (S.driver === 'force') D.ms.modes.forEach((md, k) => { if (!md.rigid && isDriven(k)) { const f = modeF(md); if (f >= F_MIN && f <= D.fmax) out.push({ f, k }); } });
-    else for (const L of driveResonances(D.ms.lam2, D.phiP, D.Lc, D.wA, D.M / MD, D.fmax / D.fs)) { const f = L * D.fs; if (f >= F_MIN) out.push({ f, k: dominant(f) }); }
+    if (S.driver === 'force') D.ms.modes.forEach((md, k) => { if (!md.rigid && isDriven(k)) { const f = modeF(md); if (f >= D.fmin && f <= D.fmax) out.push({ f, k }); } });
+    else for (const L of driveResonances(D.ms.lam2, D.phiP, D.Lc, D.wA, D.M / MD, D.fmax / D.fs)) { const f = L * D.fs; if (f >= D.fmin) out.push({ f, k: dominant(f) }); }
     out.sort((a, b) => a.f - b.f);
     /* a square drumhead's (m, n) and (n, m) modes share one frequency: one resonance, listed once, under the mode the drive
        excites more (2026-11-15: 405.39 Hz was listed twice) */
@@ -1066,9 +1191,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function isDriven(k) { return Math.abs(D.phiP[k]) >= (drum() ? 0.01 : DRIVEN); }
   // response curve: RMS acceleration over the plate on a log grid, plus points around every mode so no peak is missed
   function updateCurve() {
-    const ms = D.ms, lo = Math.log(F_MIN), hi = Math.log(D.fmax), pts = [];
+    const ms = D.ms, lo = Math.log(D.fmin), hi = Math.log(D.fmax), pts = [];
     for (let i = 0; i <= 700; i++) pts.push(Math.exp(lo + (hi - lo) * i / 700));
-    for (const r of D.res) for (const d of [-3, -1.5, -0.75, -0.3, 0, 0.3, 0.75, 1.5, 3]) { const f = r.f * (1 + d / (2 * S.Q)); if (f > F_MIN && f < D.fmax) pts.push(f); }
+    for (const r of D.res) for (const d of [-3, -1.5, -0.75, -0.3, 0, 0.3, 0.75, 1.5, 3]) { const f = r.f * (1 + d / (2 * S.Q)); if (f > D.fmin && f < D.fmax) pts.push(f); }
     pts.sort((a, b) => a - b);
     const a = new Float64Array(pts.length); let mx = 0;
     for (let i = 0; i < pts.length; i++) {
@@ -1080,6 +1205,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   // the complex displacement amplitude W on the grid, and Γ = ω²|W|/g
   let cosTab = null;
   function updateField() {
+    if (liquid()) { liquidField(); return; }
     const ms = D.ms, n = ms.modes.length, q = modalAmps(ms.lam2, D.phiP, S.f, D.fs, S.Q, 1, D.M), NN = GN * GN;
     const dr = driveAt(S.f); D.drv = dr;
     for (let k = 0; k < n; k++) { const a = q.re[k], b = q.im[k]; q.re[k] = a * dr.Fr - b * dr.Fi; q.im[k] = a * dr.Fi + b * dr.Fr; }
@@ -1155,10 +1281,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
 
   // ---------- frequency controls ----------
-  const fOfPos = (p) => F_MIN * Math.pow(D.fmax / F_MIN, p / 1000);
-  const posOfF = (f) => 1000 * Math.log(f / F_MIN) / Math.log(D.fmax / F_MIN);
+  const fOfPos = (p) => D.fmin * Math.pow(D.fmax / D.fmin, p / 1000);
+  const posOfF = (f) => 1000 * Math.log(f / D.fmin) / Math.log(D.fmax / D.fmin);
   function setF(f, opts = {}) {
-    S.f = clamp(f, F_MIN, D.fmax);
+    S.f = clamp(f, D.fmin, D.fmax);
     if (!opts.fromSlider) {
       const p = clamp(Math.round(posOfF(S.f)), 0, 1000);
       $('freq').value = p; $('fine').value = (1200 * Math.log2(S.f / fOfPos(p))).toFixed(1);
@@ -1181,21 +1307,34 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const qOf = (p) => 10 * Math.pow(100, p / 100), posOfQ = (Q) => 50 * Math.log10(Q / 10);
   function syncControls() {
     for (const b of $('kindSeg').querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.k === S.kind));
-    $('drumGrp').hidden = !drum(); $('metalRow').hidden = drum(); $('thickRow').hidden = drum(); $('driverRow').hidden = drum();
+    const lq = liquid();
+    $('drumGrp').hidden = !drum(); $('metalRow').hidden = drum() || lq; $('thickRow').hidden = drum() || lq; $('driverRow').hidden = drum() || lq;
     $('rPostRow').hidden = drum(); $('rCoilRow').hidden = drum();
+    $('liqRow').hidden = !lq; $('depthRow').hidden = !lq; $('driveRow').hidden = lq; $('qualRow').hidden = lq;
+    for (const b of $('liqSeg').querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.l === S.liq));
+    $('depth').value = (S.depth * 1000).toFixed(1); $('depthOut').textContent = `${(S.depth * 1000).toFixed(1)} mm`;
+    for (const id of ['sprinkle', 'viewSeg', 'prevRes', 'nextRes', 'toggles']) $(id).hidden = lq;
+    $('shapeLab').textContent = lq ? 'Dish' : 'Shape';
+    $('driveH').textContent = lq ? 'Drive and surface' : 'Drive'; $('plateH').textContent = lq ? 'Liquid' : 'Plate';
+    $('rPeakLab').textContent = lq ? 'Dish acceleration Γ = a/g' : 'Peak |a| on the plate';
+    $('rGrainsLab').textContent = lq ? 'Onset Γ at this f' : 'Grains on the plate';
+    $('rPostLab').textContent = lq ? 'Dish motion (amplitude)' : 'Post motion';
+    $('rModeLab').textContent = lq ? 'Surface' : 'Nearest resonance';
+    if (lq) { $('rMassLab').textContent = 'Liquid mass'; $('rLowLab').textContent = 'Free wave at f/2'; $('rKhLab').textContent = 'Damping and pattern'; }
     $('driveSeg').querySelector('[data-d="speaker"]').hidden = !drum(); $('tens').value = S.T;
-    $('setupTitle').textContent = drum() ? 'Set up the drumhead and drive' : 'Set up the plate and driver';
+    $('setupTitle').textContent = lq ? 'Set up the dish and driver' : drum() ? 'Set up the drumhead and drive' : 'Set up the plate and driver';
     for (const b of $('shapeSeg').querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.s === S.shape));
-    $('shapeSeg').querySelector('[data-s="bar"]').hidden = drum();
+    $('shapeSeg').querySelector('[data-s="bar"]').hidden = drum() || lq;
     for (const b of $('matSeg').querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.m === S.mat));
     for (const b of $('driveSeg').querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.d === S.drive));
     for (const b of $('driverSeg').querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.dr === S.driver));
-    $('waveGrp').hidden = S.driver !== 'wave' || drum(); $('forceGrp').hidden = S.driver !== 'force' && !drum();
-    $('x0').value = Math.round(posOfX0(S.x0));
+    $('waveGrp').hidden = !lq && (S.driver !== 'wave' || drum()); $('forceGrp').hidden = lq || (S.driver !== 'force' && !drum());
+    $('x0').value = Math.round(lq ? posOfX0L(S.x0) : posOfX0(S.x0));
     for (const b of $('viewSeg').querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.v === S.view));
     for (const b of $('rateSeg').querySelectorAll('button')) b.setAttribute('aria-pressed', String(+b.dataset.r === S.rate));
     for (const b of $('plotSeg').querySelectorAll('button')) {
       b.setAttribute('aria-pressed', String(b.dataset.pl === S.plot));
+      b.hidden = (b.dataset.pl === 'thr' || b.dataset.pl === 'tongue') !== lq;
       if (b.dataset.pl === 'law') b.disabled = S.shape !== 'circle' || drum();
     }
     $('thick').value = (S.h * 1000).toFixed(2);
@@ -1210,7 +1349,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     clearPreset(); staticDirty = true; recomputeNow(); sprinkle(); setF(S.f); syncControls(); glBuild();
   }
   function setDrive(name) {
-    S.drive = name; const d = drivesOf()[name]; S.du = d[0]; S.dv = d[1];
+    const d = drivesOf()[name]; if (!d || liquid()) return;   /* a hidden button (the loudspeaker on a plate, any drive point for a dish) does nothing */
+    S.drive = name; S.du = d[0]; S.dv = d[1];
     S.driver = name === 'edge' || drum() ? 'force' : 'wave';   // a bolt at the center or the off center hole; a bow (point force) at the rim; a pad or a speaker on a drumhead
     staticDirty = true; dirty = true; syncControls();
   }
@@ -1218,12 +1358,26 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   /* Metal plate or Drumhead (2026-10-31): the same shapes, sand and response; a drumhead is clamped at its rim */
   function setKind(k) {
     if (k === S.kind) return;
+    if (k === 'liquid') { enterLiquid(); clearPreset(); return; }
+    if (S.kind === 'liquid') { S.plot = 'resp'; S.x0 = 2e-3; }
     S.kind = k; S.F = k === 'drum' ? 0.05 : 1; if (k === 'drum' && S.shape === 'bar') S.shape = 'square';
     if (k === 'drum') { S.drive = 'speaker'; S.driver = 'force'; if (S.plot === 'law') S.plot = 'resp'; }
     else { if (S.drive === 'speaker') S.drive = 'center'; S.driver = S.drive === 'edge' ? 'force' : 'wave'; }
     const d = drivesOf()[S.drive]; S.du = d[0]; S.dv = d[1];
     clearPreset(); staticDirty = true; recomputeNow(); sprinkle(); setF(D.res.length ? D.res[0].f : S.f); syncControls(); glBuild(); plotHintText(); dirty = true;
   }
+  /* into the liquid: the flat view, the onset plot, 50 Hz, and a driver setting 1.3 times the onset so waves grow at once */
+  function enterLiquid(o = {}) {
+    S.kind = 'liquid'; if (S.shape === 'bar') S.shape = 'circle';
+    if (o.shape) S.shape = o.shape; if (o.liq) S.liq = o.liq; if (o.depth) S.depth = o.depth;
+    if (S.view === '3d') setView('sand');
+    S.plot = 'thr'; stopSweep(); staticDirty = true; recomputeNow(); setF(o.f || 50);
+    const on = faradayOnset(S.f, LIQUIDS[S.liq], S.depth, 12), M = MD + DISH.m + liqMassOf();
+    S.x0 = clamp(on.gam * (o.over || 1.3) * G0 * M / (MD * W50 * W50), x0OfL(0), x0OfL(100));
+    LQ.A = 0.002; fieldDirty = true; syncControls(); plotHintText(); driveHintText(); dirty = true;
+  }
+  $('liqSeg').addEventListener('click', (e) => { const b = e.target.closest('button'); if (!b) return; S.liq = b.dataset.l; clearPreset(); staticDirty = true; syncControls(); });
+  $('depth').addEventListener('input', () => { S.depth = +$('depth').value / 1000; clearPreset(); staticDirty = true; syncControls(); });
   $('kindSeg').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) setKind(b.dataset.k); });
   $('tens').addEventListener('input', () => { S.T = +$('tens').value; clearPreset(); staticDirty = true; recomputeNow(); setF(S.f); });
   $('matSeg').addEventListener('click', (e) => { const b = e.target.closest('button'); if (!b) return; S.mat = b.dataset.m; clearPreset(); staticDirty = true; recomputeNow(); setF(S.f); syncControls(); });
@@ -1235,7 +1389,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   $('freq').addEventListener('input', () => { stopSweep(); $('fine').value = 0; setF(fOfPos(+$('freq').value), { fromSlider: true }); clearPreset(); });
   $('fine').addEventListener('input', () => { stopSweep(); setF(fOfPos(+$('freq').value) * Math.pow(2, +$('fine').value / 1200), { fromSlider: true }); clearPreset(); });
   $('force').addEventListener('input', () => { S.F = forceOf(+$('force').value); staticDirty = true; clearPreset(); });
-  $('x0').addEventListener('input', () => { S.x0 = x0Of(+$('x0').value); staticDirty = true; clearPreset(); });
+  $('x0').addEventListener('input', () => { S.x0 = liquid() ? x0OfL(+$('x0').value) : x0Of(+$('x0').value); if (liquid()) fieldDirty = true; else staticDirty = true; clearPreset(); });
   $('driverSeg').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) { S.driver = b.dataset.dr; clearPreset(); staticDirty = true; syncControls(); } });
   $('qual').addEventListener('input', () => { S.Q = qOf(+$('qual').value); staticDirty = true; clearPreset(); });
   $('prevRes').addEventListener('click', () => jumpRes(-1));
@@ -1246,7 +1400,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   $('tHeat').addEventListener('change', () => { S.heat = $('tHeat').checked; dirty = true; });
   $('tFollow').addEventListener('change', () => { S.follow = $('tFollow').checked; soundDirty = true; soundHintText(); });
   function startSweep() {
-    if (S.f >= D.fmax * 0.999) setF(F_MIN * 2);
+    if (S.f >= D.fmax * 0.999) setF(D.fmin * 2);
     S.sweep = true; if (!running) setRunning(true); syncControls();
   }
   function stopSweep() { if (!S.sweep) return; S.sweep = false; syncControls(); }
@@ -1279,9 +1433,26 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     presetId = null;
     for (const b of $('presets').querySelectorAll('button')) b.setAttribute('aria-pressed', 'false');
   }
+  const LIQ_PRESETS = {
+    farSquares: { liq: 'water', depth: 5e-3, shape: 'circle', f: 50, over: 1.9,
+      hint: 'Water 5 mm deep in a dish on the wave driver, shaken at 50 Hz at 1.9 times the onset. The surface answers at 25 Hz, half the drive: each wave is pumped twice per swing, like a child on a swing standing up and crouching twice each cycle. The waves are about 1 cm long, short enough that surface tension holds most of their restoring force, and they cross at right angles in a square pattern, as in the experiments. Open the side view to see the dish move twice for each rise and fall of the surface.' },
+    farStripes: { liq: 'oil100', depth: 3e-3, shape: 'circle', f: 20, over: 1.3,
+      hint: 'Silicone oil 100 times as viscous as water, 3 mm deep, at 20 Hz. The waves are so strongly damped (α/ω₀ about 0.5) that it takes almost 3 g to start them, and they settle into parallel stripes, as viscous layers do in the experiments. Compare the onset with water at the same frequency.' },
+    farHex: { liq: 'oil10', depth: 3e-3, shape: 'circle', f: 30, over: 1.3,
+      hint: 'Silicone oil 10 times as viscous as water, 3 mm deep, at 30 Hz. The waves are about 11 mm long, where gravity and surface tension share the restoring force, and the surface forms hexagons, three standing waves at 60° to each other. Raise f and the pattern turns to squares once surface tension dominates.' },
+    farQuasi: { liq: 'oil10', depth: 10e-3, shape: 'circle', f: 25, over: 1.3,
+      hint: 'A deep, weakly damped layer at 25 Hz: longer waves, mostly held by gravity. Four standing waves at 45° form an eightfold pattern that never repeats exactly, a quasipattern like those Binks and van de Water photographed. The rule the demo uses for which pattern forms is taken from experiments (see Model).' },
+    farOnset: { liq: 'water', depth: 2e-3, shape: 'square', f: 40, over: 0.8,
+      hint: 'Water 2 mm deep at 40 Hz, driven at 0.8 of the onset: the surface stays flat, and any ripple dies away. Turn up the Driver setting x₀ slowly and read Dish acceleration Γ and Onset Γ: waves appear only once Γ passes the onset. Then switch the Plot to Tongues to see which wavelengths a given Γ can grow. A shallow layer has a higher onset, because the dish floor drags on the moving liquid.' }
+  };
   function applyPreset(id) {
+    if (LIQ_PRESETS[id]) {
+      const p = LIQ_PRESETS[id]; enterLiquid(p); presetId = id;
+      for (const b of $('presets').querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.p === id));
+      $('presetHint').textContent = p.hint; return;
+    }
     const p = PRESETS[id]; if (!p) return;
-    stopSweep();
+    stopSweep(); if (S.kind === 'liquid') S.plot = 'resp';
     S.kind = p.kind || 'plate'; S.T = p.T || 1000;
     S.shape = p.shape; S.mat = p.mat; S.h = p.h; S.Q = p.Q; S.F = p.F || 1; S.drive = p.drive; S.driver = p.driver; S.x0 = p.x0 || 2e-3;
     const d = drivesOf()[S.drive]; S.du = d[0]; S.dv = d[1];
@@ -1309,6 +1480,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     $('fTop').innerHTML = `f = ${fmtF(S.f)}`;
     $('freqOut').textContent = fmtF(S.f);
     const fine = +$('fine').value; $('fineOut').textContent = `${fine >= 0 ? '+' : '−'}${Math.abs(fine).toFixed(1)} cents`;
+    $('x0Out').textContent = `${(S.x0 * 1000).toFixed(2)} mm (${(MD * W50 * W50 * S.x0).toFixed(S.x0 < 0.2e-3 ? 2 : 1)} N)`;
+    if (liquid()) { liquidReadouts(); return; }
     $('forceOut').textContent = S.F >= 0.1 ? `${S.F.toFixed(2)} N` : `${(S.F * 1000).toFixed(0)} mN`;
     $('qualOut').textContent = Math.round(S.Q);
     $('thickOut').textContent = `${(S.h * 1000).toFixed(2)} mm`;
@@ -1350,6 +1523,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     $('plateHint').textContent = `A ${name}, as in common teaching kits (PASCO WA-9607); makers rarely state the thickness, about 1 mm is typical. ${mat.name}: E = ${mat.E / 1e9} GPa, ρ = ${mat.rho} kg/m³, ν = ${mat.nu}. Every frequency scales as h/ℓ² × √(E/ρ(1 − ν²)): twice as thick, an octave higher. Modes are computed up to ${fmtF(D.fmax)} for this plate.`;
   }
   function driveHintText() {
+    if (liquid()) { $('driveHint').textContent = 'The wave driver shakes the dish straight up and down, so nothing pushes the surface sideways. Instead the shaking makes gravity in the dish swing between g(1 − Γ) and g(1 + Γ), twice per cycle stiffening and softening the restoring force on every surface wave. A wave at half the drive frequency is pumped in step, as a child pumps a swing, and grows once that pumping beats its viscous damping: the onset Γ. Below it the surface stays flat however long you wait.'; return; }
     if (drum()) { $('driveHint').textContent = S.drive === 'speaker'
       ? `A loudspeaker under the head pushes on all of it at once with a uniform pressure p₀ (total force F₀ = p₀A). A mode answers only if the head moves on average in it: on a circle only the (0, m) modes, on a square only (odd, odd). Q = ${Math.round(S.Q)} gives each peak a width f/Q.`
       : `A pad 2 cm across pushes on the head with F₀ cos(2πft), spread over the pad. A mode answers if the pad is not on one of its nodal lines. Q = ${Math.round(S.Q)} gives each peak a width f/Q.`; return; }
@@ -1358,6 +1532,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       : `An ideal point force on a free plate. A mode is excited only if the drive point moves in it: a drive on a nodal line of a mode cannot pump it. Between resonances a free plate moves little, so the sand mostly stays put. Q = ${Math.round(S.Q)} gives each peak a width f/Q.`;
   }
   function plotHintText() {
+    if (liquid()) { $('plotHint').textContent = S.plot === 'tongue'
+      ? 'Tongues: at this drive frequency, the drive Γ a wave of each wavelength needs to grow, computed from the Floquet multipliers. The deepest dip sits at the wavelength of a free wave at f/2 (the first Mathieu tongue); the next, at f, needs far more drive. Where your drive line lies inside a tongue, those wavelengths grow.'
+      : 'Onset: the drive acceleration Γ = a/g at which waves first grow, at each frequency (solid), and the Γ your driver setting gives (dashed: flat where the coil force sets it, falling below where the 3.5 mm stroke limits the dish). The dot is where you are. Click or drag on the plot to set f.'; return; }
     $('plotHint').textContent = S.plot === 'law'
       ? 'Chladni’s law is empirical: for a flat circular plate f ≈ C (n + 2m)^p, with n nodal diameters, m nodal circles and p close to 2. The line is a least squares fit to the computed modes; click a point to drive that mode.'
       : 'Response: RMS acceleration over the plate for the drive set, on log scales. Dark ticks along the bottom mark modes the drive point can excite, faint ticks modes it cannot. Click or drag on the plot to set f.';
@@ -1542,7 +1719,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function plotGeom() {
     const ps = projScale(), r = G.plot;
     const L = r.x + 46 * ps, R = r.x + r.w - 8 * ps, top = r.y + 26 * ps, bot = r.y + r.h - 34 * ps;
-    return { L, R, top, bot, ps, lfmin: Math.log(F_MIN), lfmax: Math.log(D.fmax) };
+    return { L, R, top, bot, ps, lfmin: Math.log(D.fmin), lfmax: Math.log(D.fmax) };
   }
   const fX = (g, f) => g.L + (Math.log(f) - g.lfmin) / (g.lfmax - g.lfmin) * (g.R - g.L);
   const xF = (g, x) => Math.exp(g.lfmin + (x - g.L) / (g.R - g.L) * (g.lfmax - g.lfmin));
@@ -1565,7 +1742,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       c.fillStyle = T.muted; c.fillText(e >= 0 ? `${Math.pow(10, e)}` : `10${sup(e)}`, g.L - 5, y);
     }
     c.textAlign = 'center'; c.textBaseline = 'top';
-    for (const f of fTicks(F_MIN, D.fmax)) {
+    for (const f of fTicks(D.fmin, D.fmax)) {
       const x = Math.round(fX(g, f)) + 0.5;
       c.strokeStyle = T.gridStrong; c.globalAlpha = 0.6; c.beginPath(); c.moveTo(x, g.top); c.lineTo(x, g.bot); c.stroke(); c.globalAlpha = 1;
       c.fillStyle = T.muted; c.fillText(f >= 1000 ? `${f / 1000}k` : `${f}`, x, g.bot + 4 * ps);
@@ -1580,7 +1757,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     // mode ticks along the bottom
     const ms = D.ms;
     ms.modes.forEach((md, k) => {
-      if (md.rigid) return; const f = modeF(md); if (f < F_MIN || f > D.fmax) return;
+      if (md.rigid) return; const f = modeF(md); if (f < D.fmin || f > D.fmax) return;
       const x = Math.round(fX(g, f)) + 0.5, drv = isDriven(k);
       c.strokeStyle = drv ? T.ink : T.muted; c.globalAlpha = drv ? 0.9 : 0.35; c.lineWidth = drv ? 1.5 * ps : 1;
       c.beginPath(); c.moveTo(x, g.bot); c.lineTo(x, g.bot - (drv ? 9 : 5) * ps); c.stroke();
@@ -1669,6 +1846,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const c = ctx; c.setTransform(dpr, 0, 0, dpr, 0, 0);
     c.fillStyle = T.bench; c.fillRect(0, 0, W, H);
     const ps = projScale();
+    if (liquid()) { drawLiquid(ps); if (S.plot === 'tongue') drawTongues(); else drawOnset(); return; }
     if (S.view === 'sand' || !G3.ok) drawPlate(ps);
     if (S.view === '3d' && G3.ok) {
       c.font = `${11 * ps}px ${T.ui}`; c.textBaseline = 'alphabetic';
@@ -1682,10 +1860,250 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (S.plot === 'law' && S.shape === 'circle') drawLaw(); else drawResponse();
   }
 
+  // ---------- liquid layer: Faraday waves (2026-11-19) ----------
+  /* a dish of liquid bolted to the wave driver. The physics is in CORE (faradayOnset, faradayGrowth, faradayPattern); here the
+     onset curve and the tongue chart are filled in a few points a frame, and the picture's wave height grows at the computed
+     Floquet rate μ and then levels off (a picture: the level is nonlinear and not computed). */
+  const FL_MIN = 8, FL_MAX = 160, THR_N = 48;
+  const x0OfL = (p) => 0.01e-3 * Math.pow(350, p / 100), posOfX0L = (x) => 100 * Math.log(x / 0.01e-3) / Math.log(350);
+  const LQ = { A: 0, phase: 0, field: null, fieldKey: '', slice: null };
+  function liqMassOf() { return LIQUIDS[S.liq].rho * dishArea(S.shape) * S.depth; }
+  /* the dish rides on the post as one rigid load: a = F_c/(m_d + m_dish + m_liquid), held to the 3.5 mm stroke */
+  function dishDrive(f) {
+    const w = TAU * f, F = MD * W50 * W50 * S.x0, M = MD + DISH.m + liqMassOf(), x = Math.min(F / (M * w * w), X_MAX);
+    return { x, a: x * w * w, F: Math.min(F, M * w * w * X_MAX), lim: F / (M * w * w) > X_MAX, M };
+  }
+  function liquidStatic() {
+    D.fmin = FL_MIN; D.fmax = FL_MAX; D.res = []; D.fit = null; D.near = null; D.nearRes = null;
+    const fs = []; for (let i = 0; i < THR_N; i++) fs.push(FL_MIN * Math.pow(FL_MAX / FL_MIN, i / (THR_N - 1)));
+    D.L = { thr: { f: fs, g: new Float64Array(THR_N).fill(NaN), t: new Uint8Array(THR_N), n: 0 }, tg: null, on: null };
+  }
+  function liquidField() {
+    const liq = LIQUIDS[S.liq], Om = TAU * S.f, on = faradayOnset(S.f, liq, S.depth, 12), dr = dishDrive(S.f), gam = dr.a / G0;
+    const above = gam > on.gam;
+    const fast = above ? faradayFastest(S.f, liq, S.depth, gam, on.k, 16) : { k: on.k, mu: faradayGrowth(on.k, liq, S.depth, gam, Om).mu };
+    const pat = faradayPattern(on.k, liq, S.depth);
+    Object.assign(D.L, { on, dr, gam, above, k: fast.k, mu: fast.mu, pat, alpha: liqDamp(on.k, liq, S.depth), w0: Math.sqrt(liqOmega2(on.k, liq, S.depth)) });
+    /* the tongue chart's wavelengths: an even log grid, plus points packed around each tongue's tip (ω₀ = nΩ/2, n = 1 to 4),
+       which is narrow when the damping is weak */
+    const lo = 0.5 * TAU / on.kHarm, hi = 2 * TAU / on.kSub, lam = [], tips = [];
+    for (let i = 0; i < 100; i++) lam.push(lo * Math.pow(hi / lo, i / 99));
+    for (let n = 1; n <= 4; n++) { const kn = liqK(n * Om / 2, liq, S.depth); tips.push([TAU / kn, n]);
+      for (const e of [0, 0.002, 0.005, 0.01, 0.02, 0.04, 0.07]) for (const sg of [1, -1]) { const l = TAU / (kn * (1 + sg * e)); if (l > lo && l < hi) lam.push(l); } }
+    lam.sort((a, b) => a - b);
+    D.L.tg = { f: S.f, lam, g: new Float64Array(lam.length).fill(NaN), n: 0, N: lam.length, lo, hi, tips };
+    if (!running) LQ.A = above ? liqSat() : 0;
+  }
+  function liqSat() { const L = D.L; return L && L.above ? clamp(Math.sqrt(L.gam / L.on.gam - 1) * 1.6, 0.25, 1) : 0; }
+  /* a few points of the onset curve, then of the tongue chart, each frame (about 8 ms of work) */
+  function liquidWork(budget) {
+    const L = D.L; if (!L) return false; const t0 = performance.now(), liq = LIQUIDS[S.liq]; let did = false;
+    while (L.thr.n < THR_N && performance.now() - t0 < budget) { const i = L.thr.n, o = faradayOnset(L.thr.f[i], liq, S.depth, 12); L.thr.g[i] = o.gam; L.thr.t[i] = o.tongue; L.thr.n++; did = true; }
+    const tg = L.tg;
+    while (tg && tg.n < tg.N && performance.now() - t0 < budget) { const i = tg.n; tg.g[i] = faradayOnsetK(TAU / tg.lam[i], liq, S.depth, TAU * tg.f, 60).gam; tg.n++; did = true; }
+    return did;
+  }
+  function liquidStep(dt) {
+    const L = D.L; if (!L) return;
+    const dtr = dt;   /* the oscillation is drawn slowed by the factor f, but the waves grow and die away in real time (said on the picture) */
+    LQ.phase = (LQ.phase + (L.on.tongue === 2 ? TAU : Math.PI) * dt) % (2 * TAU);
+    const sat = liqSat(), A = Math.max(LQ.A, 1e-3);
+    let nA = A + L.mu * A * (1 - (sat > 0 ? (A / sat) * (A / sat) : 0)) * dtr;
+    if (!(nA > 0)) nA = 0; LQ.A = Math.min(1.2, nA < 1e-3 && L.mu < 0 ? 0 : nA);
+  }
+  const LIQ_TINT = { water: [[44, 96, 128], [96, 160, 196]], oil10: [[58, 92, 104], [128, 170, 178]], oil100: [[70, 92, 96], [140, 168, 170]] };
+  const liqCv = document.createElement('canvas'); let liqImg = null;
+  /* the pattern P = (1/N) Σ cos(k·n_j x) and its slope on the picture's grid, rebuilt when k, N, the dish or the size change */
+  function liqFieldFor(n, k, N, X) {
+    const key = `${n}|${k.toPrecision(4)}|${N}|${X}`; if (LQ.fieldKey === key) return LQ.field;
+    const P = new Float32Array(n * n), Px = new Float32Array(n * n), Py = new Float32Array(n * n), dirs = [];
+    for (let j = 0; j < N; j++) { const t = j * Math.PI / N; dirs.push([Math.cos(t), Math.sin(t)]); }
+    for (let b = 0; b < n; b++) { const y = X * (1 - 2 * (b + 0.5) / n);
+      for (let a = 0; a < n; a++) { const x = X * (2 * (a + 0.5) / n - 1); let p = 0, px = 0, py = 0;
+        for (const [cx, cy] of dirs) { const ph = k * (x * cx + y * cy), sn = Math.sin(ph); p += Math.cos(ph); px -= cx * sn; py -= cy * sn; }
+        const i = b * n + a; P[i] = p / N; Px[i] = px / N; Py[i] = py / N; } }
+    LQ.field = { P, Px, Py, n }; LQ.fieldKey = key; return LQ.field;
+  }
+  function liqBox() {
+    const p = G.plate, hs = p.s * 0.22, top = p.s - hs - 8;
+    const R = Math.max(10, top / 2 * 0.94);
+    return { cx: p.cx, cy: p.y + top / 2, R, sx: p.cx - R, sw: 2 * R, sy: p.y + top + 8, sh: hs };
+  }
+  function drawLiquid(ps) {
+    const p = G.plate, c = ctx, L = D.L; if (!(p.s > 0) || !L || !L.on) return;
+    const b = liqBox(), X = S.shape === 'square' ? DISH.L / 2 : DISH.a, dk = window.VDGear ? VDGear.dark() : false;
+    const lg = c.createRadialGradient(p.cx - p.s * 0.15, p.cy - p.s * 0.2, p.s * 0.05, p.cx, p.cy, p.s * 0.85);
+    lg.addColorStop(0, T.lamp); lg.addColorStop(1, T.bench); c.fillStyle = lg; c.fillRect(p.x - 10, p.y - 10, p.s + 20, p.s + 20);
+    const dish = (grow) => { c.beginPath(); if (S.shape === 'square') c.rect(b.cx - b.R - grow, b.cy - b.R - grow, 2 * (b.R + grow), 2 * (b.R + grow)); else c.arc(b.cx, b.cy, b.R + grow, 0, TAU); };
+    const rimW = Math.max(3, b.R * 0.04);
+    c.save(); c.shadowColor = 'rgba(0,0,0,0.35)'; c.shadowBlur = 16 * ps; c.shadowOffsetY = 5 * ps; dish(rimW); c.fillStyle = dk ? '#3a4144' : '#c9d2d4'; c.fill(); c.restore();
+    /* the surface, lit from the upper left: brightness from its slope, with a highlight */
+    const n = clamp(Math.round(2 * b.R * Math.min(dpr, 1.5)), 60, 400), N = L.above || LQ.A > 0.002 ? L.pat.waves : 1;
+    const fld = liqFieldFor(n, D.L.k, N, X);
+    if (liqCv.width !== n || !liqImg) { liqCv.width = n; liqCv.height = n; liqImg = liqCv.getContext('2d').createImageData(n, n); }
+    const tint = LIQ_TINT[S.liq][dk ? 0 : 1], d = liqImg.data, amp = 1.1 * LQ.A * Math.cos(LQ.phase), lx = -0.42, ly = 0.5, lz = 0.76;
+    const hx = lx, hy = ly, hz = lz + 1, hn = Math.hypot(hx, hy, hz);
+    for (let i = 0, m = n * n; i < m; i++) {
+      const sx = amp * fld.Px[i], sy = amp * fld.Py[i], nn = 1 / Math.sqrt(1 + sx * sx + sy * sy), nx = -sx * nn, ny = -sy * nn, nz = nn;
+      const dif = Math.max(0, nx * lx + ny * ly + nz * lz), sp = Math.pow(Math.max(0, (nx * hx + ny * hy + nz * hz) / hn), 60);
+      const sh = 0.45 + 0.7 * dif + 0.08 * amp * fld.P[i], o = i * 4;
+      d[o] = Math.min(255, tint[0] * sh + 235 * sp); d[o + 1] = Math.min(255, tint[1] * sh + 235 * sp); d[o + 2] = Math.min(255, tint[2] * sh + 235 * sp); d[o + 3] = 255;
+    }
+    liqCv.getContext('2d').putImageData(liqImg, 0, 0);
+    c.save(); dish(0); c.clip(); c.imageSmoothingEnabled = true; c.drawImage(liqCv, b.cx - b.R, b.cy - b.R, 2 * b.R, 2 * b.R);
+    const vg = c.createRadialGradient(b.cx, b.cy, b.R * 0.7, b.cx, b.cy, b.R * 1.05); vg.addColorStop(0, 'rgba(0,0,0,0)'); vg.addColorStop(1, 'rgba(0,0,0,0.28)'); c.fillStyle = vg; c.fill();
+    c.restore();
+    dish(rimW / 2); c.strokeStyle = dk ? 'rgba(220,235,240,0.45)' : 'rgba(255,255,255,0.8)'; c.lineWidth = rimW; c.stroke();
+    dish(rimW); c.strokeStyle = T.plateEdge; c.lineWidth = 1.2 * ps; c.stroke();
+    /* a wavelength scale bar */
+    const lam = TAU / D.L.k, px = lam / X * b.R;
+    c.font = `${11 * ps}px ${T.mono}`; c.textBaseline = 'alphabetic';
+    if (px > 6 && px < b.R) {
+      const x1 = b.cx + b.R * 0.62 - px / 2, y1 = b.cy + b.R * (S.shape === 'square' ? 0.9 : 0.78);
+      c.strokeStyle = '#fff'; c.lineWidth = 2 * ps; c.beginPath(); c.moveTo(x1, y1); c.lineTo(x1 + px, y1); c.moveTo(x1, y1 - 4 * ps); c.lineTo(x1, y1 + 4 * ps); c.moveTo(x1 + px, y1 - 4 * ps); c.lineTo(x1 + px, y1 + 4 * ps); c.stroke();
+      halo(c, `λ = ${(lam * 1000).toFixed(1)} mm`, x1 + px / 2, y1 - 7 * ps, 'center', T.ink, ps);
+    }
+    /* the side slice through the middle: the dish moves at f, the surface (first tongue) at f/2; heights exaggerated */
+    const ny2 = 160, sy0 = b.sy, sh2 = b.sh, flo = sy0 + sh2 * 0.88, dishY = 0.06 * sh2 * Math.cos(L.on.tongue === 2 ? LQ.phase : 2 * LQ.phase);
+    const lev = sy0 + sh2 * 0.42, wav = 0.2 * sh2 * LQ.A * Math.cos(LQ.phase);
+    c.save(); c.beginPath(); c.rect(p.x, sy0 - 2, p.s, sh2 + 4); c.clip();
+    c.fillStyle = `rgb(${tint.join(',')})`; c.beginPath(); c.moveTo(b.sx, flo + dishY);
+    for (let i = 0; i <= ny2; i++) { const u = -1 + 2 * i / ny2, x = b.sx + (u + 1) / 2 * b.sw; c.lineTo(x, lev + dishY - wav * patternHeight(N, D.L.k, u * X, 0)); }
+    c.lineTo(b.sx + b.sw, flo + dishY); c.closePath(); c.fill();
+    c.strokeStyle = dk ? '#cfe3ea' : '#2b5468'; c.lineWidth = 1.4 * ps; c.beginPath();
+    for (let i = 0; i <= ny2; i++) { const u = -1 + 2 * i / ny2, x = b.sx + (u + 1) / 2 * b.sw, y = lev + dishY - wav * patternHeight(N, D.L.k, u * X, 0); i ? c.lineTo(x, y) : c.moveTo(x, y); }
+    c.stroke();
+    c.strokeStyle = T.plateEdge; c.lineWidth = 3 * ps; c.beginPath(); c.moveTo(b.sx - 2 * ps, sy0 + sh2 * 0.12 + dishY); c.lineTo(b.sx - 2 * ps, flo + dishY + 2 * ps); c.lineTo(b.sx + b.sw + 2 * ps, flo + dishY + 2 * ps); c.lineTo(b.sx + b.sw + 2 * ps, sy0 + sh2 * 0.12 + dishY); c.stroke();
+    c.fillStyle = T.brass; c.fillRect(b.cx - 5 * ps, flo + dishY + 3 * ps, 10 * ps, sh2);
+    c.restore();
+    c.font = `${10.5 * ps}px ${T.ui}`;
+    halo(c, 'side view through the middle, heights exaggerated', b.sx, sy0 + 9 * ps, 'left', T.muted, ps);
+    halo(c, `motion slowed ${S.f.toFixed(0)}×, growth in real time`, b.sx + b.sw, sy0 + 23 * ps, 'right', T.muted, ps);
+    /* labels */
+    c.font = `${12 * ps}px ${T.ui}`;
+    const liq = LIQUIDS[S.liq];
+    let l1 = `${S.shape === 'square' ? 'Square dish, 15 cm' : 'Dish 15 cm across'} · ${liq.lc} · ${(S.depth * 1000).toFixed(1)} mm deep`;
+    if (c.measureText(l1).width > p.s - 8) l1 = `${liq.name} · ${(S.depth * 1000).toFixed(1)} mm`;
+    halo(c, l1, p.x + 4, p.y + 14 * ps, 'left', T.muted, ps);
+    c.font = `700 ${13.5 * ps}px ${T.ui}`;
+    const st = L.above ? `${PAT_NAME[L.pat.pattern]}, waves at ${L.on.tongue === 2 ? 'f' : 'f/2'}` : 'below onset: the surface stays flat';
+    halo(c, st, p.x + 4, b.sy - 6 * ps, 'left', T.ink, ps);
+    c.font = `${12 * ps}px ${T.mono}`;
+    const g2 = `Γ = ${fmtG(L.gam)} · onset ${fmtG(L.on.gam)}`;
+    if (c.measureText(st).width + c.measureText(g2).width + 24 < p.s) halo(c, g2, p.x + p.s - 4, b.sy - 6 * ps, 'right', L.above ? T.ink : T.muted, ps);
+    if (L.above && L.gam > 2 * L.on.gam) { c.font = `${11 * ps}px ${T.ui}`; halo(c, 'far above onset: a real surface turns disordered', p.x + 4, p.y + 30 * ps, 'left', T.heat, ps); }
+  }
+  const PAT_NAME = { stripes: 'Stripes', squares: 'Squares', hexagons: 'Hexagons', quasi8: 'Eightfold quasipattern' };
+  const PAT_PHRASE = { stripes: 'stripes', squares: 'squares', hexagons: 'hexagons', quasi8: 'an eightfold quasipattern' };
+  function fmtG(g) { return !isFinite(g) ? '> 60' : g < 0.1 ? g.toFixed(3) : g < 10 ? g.toFixed(2) : g.toFixed(1); }
+  function logAxisY(g, ymin, ymax) { return (v) => g.bot - (Math.log10(Math.max(v, 1e-9)) - ymin) / (ymax - ymin) * (g.bot - g.top); }
+  function gridY(c, g, Y, ymin, ymax, ps) {
+    c.font = `${10.5 * ps}px ${T.mono}`; c.textBaseline = 'middle'; c.textAlign = 'right';
+    for (let e = ymin; e <= ymax; e++) {
+      const y = Math.round(Y(Math.pow(10, e))) + 0.5;
+      c.strokeStyle = T.gridStrong; c.globalAlpha = 0.6; c.lineWidth = 1; c.beginPath(); c.moveTo(g.L, y); c.lineTo(g.R, y); c.stroke(); c.globalAlpha = 1;
+      c.fillStyle = T.muted; c.fillText(e >= 0 ? `${Math.pow(10, e)}` : `10${sup(e)}`, g.L - 5, y);
+    }
+  }
+  /* Onset plot: the Γ needed for waves at each f, the drive available at this driver setting, and where you are */
+  function drawOnset() {
+    const g = plotGeom(), c = ctx, ps = g.ps, L = D.L; if (!L || g.R - g.L < 40 || g.bot - g.top < 40) return;
+    const th = L.thr, vals = []; for (let i = 0; i < th.n; i++) if (isFinite(th.g[i])) vals.push(th.g[i]);
+    if (L.on && isFinite(L.on.gam)) vals.push(L.on.gam); vals.push(L.gam);
+    let ymin = Math.floor(Math.log10(Math.min(...vals) * 0.8)), ymax = Math.ceil(Math.log10(Math.max(...vals.filter((v) => v < 60)) * 1.3));
+    if (ymax - ymin < 2) ymax = ymin + 2; ymin = Math.max(ymin, -3); ymax = Math.min(ymax, 2);
+    const Y = logAxisY(g, ymin, ymax); G.resp = g; G.respY = Y;
+    gridY(c, g, Y, ymin, ymax, ps);
+    c.textAlign = 'center'; c.textBaseline = 'top';
+    for (const f of [10, 20, 50, 100]) { const x = Math.round(fX(g, f)) + 0.5;
+      c.strokeStyle = T.gridStrong; c.globalAlpha = 0.6; c.beginPath(); c.moveTo(x, g.top); c.lineTo(x, g.bot); c.stroke(); c.globalAlpha = 1;
+      c.fillStyle = T.muted; c.fillText(`${f}`, x, g.bot + 4 * ps); }
+    c.textAlign = 'right'; c.fillText('drive frequency f (Hz)', g.R, g.bot + 17 * ps);
+    c.textAlign = 'left'; c.textBaseline = 'alphabetic'; c.font = `${11.5 * ps}px ${T.ui}`; c.fillStyle = T.muted;
+    c.fillText('Drive acceleration Γ = a/g', g.L, g.top - 9 * ps);
+    c.save(); c.beginPath(); c.rect(g.L, g.top, g.R - g.L, g.bot - g.top); c.clip();
+    /* waves grow above the onset curve */
+    const pts = []; for (let i = 0; i < th.n; i++) if (isFinite(th.g[i])) pts.push([fX(g, th.f[i]), Y(th.g[i]), th.t[i]]);
+    if (pts.length > 1) {
+      c.fillStyle = T.accent; c.globalAlpha = 0.1; c.beginPath(); c.moveTo(pts[0][0], g.top); for (const q of pts) c.lineTo(q[0], q[1]); c.lineTo(pts[pts.length - 1][0], g.top); c.closePath(); c.fill(); c.globalAlpha = 1;
+      c.strokeStyle = T.accent; c.lineWidth = 2 * ps; c.lineJoin = 'round'; c.beginPath(); pts.forEach((q, i) => (i ? c.lineTo(q[0], q[1]) : c.moveTo(q[0], q[1]))); c.stroke();
+    }
+    /* the drive this setting gives at each f: flat where the force sets it, falling as f² below where the stroke limit holds */
+    c.strokeStyle = T.brass; c.lineWidth = 1.5 * ps; c.setLineDash([6 * ps, 4 * ps]); c.beginPath();
+    for (let i = 0; i <= 80; i++) { const f = FL_MIN * Math.pow(FL_MAX / FL_MIN, i / 80), x = fX(g, f), y = Y(dishDrive(f).a / G0); i ? c.lineTo(x, y) : c.moveTo(x, y); }
+    c.stroke(); c.setLineDash([]);
+    c.restore();
+    c.font = `${11 * ps}px ${T.ui}`;
+    if (pts.length > 4) { const q = pts[Math.min(pts.length - 1, Math.round(pts.length * 0.12))]; if (q[1] - 22 * ps > g.top) halo(c, 'waves grow', q[0], q[1] - 22 * ps, 'left', T.accent, ps); if (q[1] + 34 * ps < g.bot) halo(c, 'surface stays flat', q[0], q[1] + 34 * ps, 'left', T.muted, ps); }
+    if (th.n < THR_N) { c.font = `${10.5 * ps}px ${T.ui}`; halo(c, `computing the onset… ${Math.round(100 * th.n / THR_N)} %`, g.R - 4, g.bot - 8 * ps, 'right', T.muted, ps); }
+    else { c.font = `${10.5 * ps}px ${T.ui}`; const yd = Y(dishDrive(FL_MAX).a / G0); halo(c, 'your drive', g.R - 4, clamp(yd - 6 * ps, g.top + 12 * ps, g.bot - 4 * ps), 'right', T.brass, ps); }
+    /* the drive frequency line and the operating point */
+    const hot = (drag && drag.id === 'f') || (!drag && hoverId === 'f'), x = fX(g, S.f);
+    if (hot) { c.globalAlpha = 0.3; c.strokeStyle = T.pos; c.lineWidth = 7 * ps; c.beginPath(); c.moveTo(x, g.top); c.lineTo(x, g.bot); c.stroke(); c.globalAlpha = 1; }
+    c.strokeStyle = T.pos; c.lineWidth = 1.8 * ps; c.beginPath(); c.moveTo(x, g.top); c.lineTo(x, g.bot); c.stroke();
+    if (L.on && isFinite(L.on.gam)) { c.strokeStyle = T.accent; c.lineWidth = 1.5 * ps; c.beginPath(); c.arc(x, clamp(Y(L.on.gam), g.top, g.bot), 4 * ps, 0, TAU); c.stroke(); }
+    c.fillStyle = T.pos; c.beginPath(); c.arc(x, clamp(Y(L.gam), g.top, g.bot), 4.5 * ps, 0, TAU); c.fill();
+    const gy = (g.top + g.bot) / 2; c.fillStyle = T.canvas; c.strokeStyle = T.pos; c.lineWidth = 1.4 * ps;
+    c.beginPath(); c.roundRect ? c.roundRect(x - 5 * ps, gy - 9 * ps, 10 * ps, 18 * ps, 3 * ps) : c.rect(x - 5 * ps, gy - 9 * ps, 10 * ps, 18 * ps); c.fill(); c.stroke();
+    c.beginPath(); for (let k = -1; k <= 1; k++) { c.moveTo(x - 2.5 * ps, gy + k * 3.5 * ps); c.lineTo(x + 2.5 * ps, gy + k * 3.5 * ps); } c.stroke();
+    c.font = `600 ${11 * ps}px ${T.mono}`; const right = x < (g.L + g.R) / 2;
+    halo(c, `${fmtF(S.f)}, Γ = ${fmtG(L.gam)}`, x + (right ? 7 : -7) * ps, g.top + 12 * ps, right ? 'left' : 'right', T.pos, ps);
+    c.strokeStyle = T.gridStrong; c.lineWidth = 1; c.strokeRect(g.L + 0.5, g.top + 0.5, g.R - g.L, g.bot - g.top);
+  }
+  /* Tongues plot: at this f, the Γ needed for a wave of each wavelength; the dips are the Mathieu tongues */
+  function drawTongues() {
+    G.resp = null;
+    const r = G.plot, ps = projScale(), c = ctx, L = D.L, tg = L && L.tg; if (!tg) return;
+    const g = { L: r.x + 46 * ps, R: r.x + r.w - 8 * ps, top: r.y + 26 * ps, bot: r.y + r.h - 34 * ps, ps };
+    if (g.R - g.L < 40 || g.bot - g.top < 40) return;
+    const l0 = Math.log(tg.lo), l1 = Math.log(tg.hi), X = (lam) => g.L + (Math.log(lam) - l0) / (l1 - l0) * (g.R - g.L);
+    const vals = [L.gam]; for (let i = 0; i < tg.n; i++) if (isFinite(tg.g[i])) vals.push(tg.g[i]);
+    let ymin = Math.floor(Math.log10(Math.min(...vals) * 0.8)), ymax = Math.min(2, ymin + 3); ymin = Math.max(ymin, -3);
+    const Y = logAxisY(g, ymin, ymax);
+    gridY(c, g, Y, ymin, ymax, ps);
+    c.textAlign = 'center'; c.textBaseline = 'top'; c.font = `${10.5 * ps}px ${T.mono}`;
+    for (const v of [1, 2, 5, 10, 20, 50, 100, 200]) { const lam = v / 1000; if (lam < tg.lo || lam > tg.hi) continue; const x = Math.round(X(lam)) + 0.5;
+      c.strokeStyle = T.gridStrong; c.globalAlpha = 0.6; c.beginPath(); c.moveTo(x, g.top); c.lineTo(x, g.bot); c.stroke(); c.globalAlpha = 1; c.fillStyle = T.muted; c.fillText(`${v}`, x, g.bot + 4 * ps); }
+    c.textAlign = 'right'; c.fillText('wavelength λ (mm)', g.R, g.bot + 17 * ps);
+    c.textAlign = 'left'; c.textBaseline = 'alphabetic'; c.font = `${11.5 * ps}px ${T.ui}`; c.fillStyle = T.muted;
+    c.fillText(`Γ needed for each wavelength at f = ${fmtF(tg.f)}`, g.L, g.top - 9 * ps);
+    c.save(); c.beginPath(); c.rect(g.L, g.top, g.R - g.L, g.bot - g.top); c.clip();
+    const pts = []; for (let i = 0; i < tg.n; i++) pts.push([X(tg.lam[i]), isFinite(tg.g[i]) ? Y(tg.g[i]) : g.top - 10]);
+    if (pts.length > 1) {
+      c.fillStyle = T.accent; c.globalAlpha = 0.12; c.beginPath(); c.moveTo(pts[0][0], g.top); for (const q of pts) c.lineTo(q[0], q[1]); c.lineTo(pts[pts.length - 1][0], g.top); c.closePath(); c.fill(); c.globalAlpha = 1;
+      c.strokeStyle = T.accent; c.lineWidth = 2 * ps; c.beginPath(); pts.forEach((q, i) => (i ? c.lineTo(q[0], q[1]) : c.moveTo(q[0], q[1]))); c.stroke();
+    }
+    const yd = Y(L.gam); c.strokeStyle = T.pos; c.lineWidth = 1.8 * ps; c.beginPath(); c.moveTo(g.L, yd); c.lineTo(g.R, yd); c.stroke();
+    c.restore();
+    c.font = `${10.5 * ps}px ${T.mono}`;
+    for (const [lam, n] of tg.tips) { if (lam < tg.lo || lam > tg.hi) continue; const x = X(lam), t = ['f/2', 'f', '3f/2', '2f'][n - 1]; c.strokeStyle = T.ink; c.lineWidth = 1.5 * ps; c.beginPath(); c.moveTo(x, g.bot); c.lineTo(x, g.bot - 9 * ps); c.stroke(); halo(c, t, x, g.bot - 12 * ps, 'center', T.ink, ps); }
+    c.font = `${11 * ps}px ${T.ui}`;
+    halo(c, `your drive, Γ = ${fmtG(L.gam)}`, g.R - 4, clamp(yd - 6 * ps, g.top + 12 * ps, g.bot - 4 * ps), 'right', T.pos, ps);
+    if (tg.n < tg.N) halo(c, `computing… ${Math.round(100 * tg.n / tg.N)} %`, g.L + 6 * ps, g.bot - 24 * ps, 'left', T.muted, ps);
+    c.strokeStyle = T.gridStrong; c.lineWidth = 1; c.strokeRect(g.L + 0.5, g.top + 0.5, g.R - g.L, g.bot - g.top);
+  }
+  function liquidReadouts() {
+    const L = D.L, liq = LIQUIDS[S.liq]; if (!L || !L.on) return;
+    const tr = (t) => (window.VDI18N ? VDI18N.t(t) : t);
+    $('rPeak').textContent = fmtG(L.gam);
+    $('rGrains').textContent = fmtG(L.on.gam);
+    $('rPost').innerHTML = `${L.dr.x >= 1e-4 ? (L.dr.x * 1000).toFixed(2) + ' <small>mm</small>' : (L.dr.x * 1e6).toFixed(1) + ' <small>µm</small>'}`;
+    $('rCoil').innerHTML = `${L.dr.F < 1 ? L.dr.F.toFixed(2) : L.dr.F.toFixed(1)} <small>N${L.dr.lim ? ', stroke limit' : ''}</small>`;
+    const ff = L.on.tongue === 2 ? S.f : S.f / 2, lam = TAU / L.k;
+    $('rMode').textContent = L.above
+      ? tr(`Waves grow at ${(L.mu).toFixed(1)} per second (Floquet rate μ) and form ${PAT_PHRASE[L.pat.pattern]}. The surface moves at ${L.on.tongue === 2 ? 'f' : 'f/2'} = ${fmtF(ff)}, wavelength ${(lam * 1000).toFixed(2)} mm.`)
+      : tr(`Below onset by ${(100 * (1 - L.gam / L.on.gam)).toFixed(0)} %: any ripple dies away at ${(-L.mu).toFixed(1)} per second. Raise the driver setting past Γ = ${fmtG(L.on.gam)}.`);
+    $('rMass').innerHTML = `${(liqMassOf() * 1000).toFixed(0)} <small>g</small>`;
+    $('rLow').innerHTML = `${fmtF(ff)}, λ = ${(TAU / (L.on.tongue === 2 ? L.on.kHarm : L.on.kSub) * 1000).toFixed(2)} <small>mm</small>`;
+    $('rKh').textContent = tr(`α = ${L.alpha.toFixed(2)} per second, α/ω₀ = ${L.pat.damp.toFixed(3)}; capillary share s = ${L.pat.s.toFixed(2)}, so ${PAT_PHRASE[L.pat.pattern]} near onset.`);
+    $('plateHint').textContent = tr(`${liq.name}: ρ = ${liq.rho} kg/m³, σ = ${(liq.sigma * 1000).toFixed(2)} mN/m, ν = ${(liq.nu * 1e6).toFixed(liq.nu < 2e-6 ? 3 : 0)} mm²/s, in a ${S.shape === 'square' ? 'square dish 15 cm on a side' : 'dish 15 cm across'}, ${(S.depth * 1000).toFixed(1)} mm deep. A wave at f/2 obeys ω² = (gk + σk³/ρ) tanh(kd): short waves are held flat mostly by surface tension, long ones by gravity, and a layer shallower than about a sixth of a wavelength slows them.`);
+  }
+
   // ---------- pointer: drag the drive post, drag the frequency line, click the plots ----------
   let drag = null, hoverId = null;
   function dragHandles() {
     const out = [];
+    if (liquid()) { const g = G.resp; if (S.plot === 'thr' && g) out.push({ id: 'f', seg: [fX(g, S.f), g.top, g.bot], cursor: 'ew-resize' }); return out; }
     if ((S.view === 'sand' || !G3.ok) && !(drum() && S.drive === 'speaker')) out.push({ id: 'drive', pt: [U2X(S.du), V2Y(S.dv)], cursor: 'move' });
     if (S.plot === 'resp' || S.shape !== 'circle') { const g = G.resp; if (g) out.push({ id: 'f', seg: [fX(g, S.f), g.top, g.bot], cursor: 'ew-resize' }); }
     return out;
@@ -1836,7 +2254,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   // mesh: the square uses the field grid itself; the circle a polar mesh whose heights are read from the grid
   function glBuild() {
-    if (!G3.ok) return;
+    if (!G3.ok || liquid()) return;
     const pos = [], idx = [];
     if (S.shape === 'bar') {
       const NV = 6; for (let b = 0; b <= NV; b++) for (let a = 0; a < GN; a++) pos.push(gridU(a), -BW + 2 * BW * b / NV, 0);
@@ -1882,7 +2300,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const ZVIS = 0.14;   // largest drawn displacement, in plate half widths
   const POST_LEN = 0.8, DRV_H = 0.4, BENCH_Z = -POST_LEN - DRV_H - 0.02;   // the picture under the plate, in plate half widths
   function glFrame() {
-    if (!G3.ok || S.view !== '3d') return;
+    if (!G3.ok || S.view !== '3d' || liquid()) return;
     // exaggeration: the largest displacement draws at ZVIS, or less when |a| < g everywhere (scaled to the displacement that gives g)
     const wg = G0 / Math.pow(TAU * S.f, 2), ref = Math.max(D.Wmax, wg), sc = ZVIS / ref;
     G3.note = `3D: displacement exaggerated about ${fmtBig(ZVIS * HALF / ref)}×, motion slowed from ${fmtF(S.f)} to one cycle per second.`;
@@ -1931,7 +2349,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   // relative tone level: the drive tone, its amplitude following √(RMS acceleration / largest on the curve) if asked (half the dB difference)
   function toneGain() {
     let w = 1;
-    if (S.follow && D.curveMax > 0) w = Math.max(0.03, Math.sqrt(Math.min(1, D.arms / D.curveMax)));
+    if (S.follow && D.curveMax > 0 && !liquid()) w = Math.max(0.03, Math.sqrt(Math.min(1, D.arms / D.curveMax)));
     return PEAK_MAX * w * (S.f > HF_EDGE ? HF_GAIN : 1);
   }
   function soundUpdate() {
@@ -2018,7 +2436,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
     if (staticDirty) { recomputeStatic(); staticDirty = false; fieldDirty = true; driveHintText(); }
     if (fieldDirty) { updateField(); fieldDirty = false; dirty = true; }
-    if (running) {
+    if (liquid()) { if (liquidWork(8)) dirty = true; if (running) { liquidStep(dt); dirty = true; } }
+    else if (running) {
       tickAcc += dt; let n = 0;
       while (tickAcc >= TICK && n < 4) { sandTick(); tickAcc -= TICK; n++; }
       if (n === 4) tickAcc = 0;
@@ -2034,7 +2453,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     requestAnimationFrame(loop);
   }
   window.__ch = { S, D, sand, get frameMs() { return frameMs; }, get presetId() { return presetId; }, orbit, get running() { return running; }, get ticks() { return ticks; }, tick: (n) => { for (let i = 0; i < n; i++) sandTick(); dirty = true; }, G, G3,
-    applyPreset, setF, jumpRes, sprinkle, setView, setShape, setDrive, setRunning, resonanceList, modeF, recomputeNow, updateField, dragHandles,
+    applyPreset, setF, jumpRes, setKind, LQ, liquidWork, sprinkle, setView, setShape, setDrive, setRunning, resonanceList, modeF, recomputeNow, updateField, dragHandles,
     sandStats: () => { let s = 0, n = 0, wm = D.Wmax || 1; for (let i = 0; i < NSAND; i++) if (sand.alive[i]) { s += Math.hypot(wAt(D.Wre, sand.x[i], sand.y[i]), wAt(D.Wim, sand.x[i], sand.y[i])) / wm; n++; } return { mean: n ? s / n : 0, n }; },
     cacheMs: () => Object.fromEntries(Object.entries(cache).map(([k, v]) => [k, Math.round(v.ms)])) };
 
@@ -2069,12 +2488,16 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   /* click the generator's display (or double click a knob, or type a digit on one) to type the frequency in Hz; the slider is a
      log scale, so the typed value goes straight to setF, which puts the coarse and fine sliders where they belong */
   VD.typeIn($('freqOut'), { get: () => S.f, seed: () => String(+S.f.toFixed(S.f < 100 ? 2 : 1)), set: (f) => { stopSweep(); setF(f); clearPreset(); },
-    min: F_MIN, max: () => D.fmax, unit: 'Hz', label: 'Frequency f', can: () => !$('freq').disabled, knobs: [...document.querySelectorAll('.knob[data-for]')] });
+    min: () => D.fmin, max: () => D.fmax, unit: 'Hz', label: 'Frequency f', can: () => !$('freq').disabled, knobs: [...document.querySelectorAll('.knob[data-for]')] });
   /* a reading for the Readings section (tools/readings_panel.py): the plate, the drive and the frequency. The mode is the nearest
      resonance's, given only when f is within that resonance's width f/Q; the pattern itself is the student's to sketch. */
   window.vdVersion = 'chladni@2026-10-23';
   window.vdShowCols = [['shape', 'Shape'], ['material', 'Metal'], ['h_mm', 'h (mm)'], ['f_Hz', 'f (Hz)']];
   window.vdReadingRow = () => {
+    if (liquid()) { const L = D.L; if (!L || !L.on) return 'Wait a moment: the onset is still being computed.';
+      return { shape: S.shape, material: LIQUIDS[S.liq].lc, h_mm: +(S.depth * 1000).toFixed(1), f_Hz: +S.f.toFixed(S.f < 100 ? 3 : 2),
+        gamma: +L.gam.toFixed(3), gamma_onset: isFinite(L.on.gam) ? +L.on.gam.toFixed(3) : '', surface: L.above ? PAT_PHRASE[L.pat.pattern] : 'flat',
+        wave_Hz: +(L.on.tongue === 2 ? S.f : S.f / 2).toFixed(2), wavelength_mm: +(TAU / L.k * 1000).toFixed(2) }; }
     let mode = '';
     if (D.nearRes != null && D.res[D.nearRes]) {
       const r = D.res[D.nearRes], md = D.ms.modes[r.k];
@@ -2091,6 +2514,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   /* How this works: a short video of one sample reading (made by tools/howto/) */
   /* what the picture shows now, for a screen reader (VD.describe): the plate and drive, the drive frequency, the nearest resonance, the peak acceleration */
   if (window.VD && VD.describe) VD.describe($('can'), () => {
+    if (liquid()) { const L = D.L; if (!L || !L.on) return [];
+      return [`A ${S.shape === 'square' ? 'square' : 'round'} dish of ${LIQUIDS[S.liq].lc}, ${(S.depth * 1000).toFixed(1)} mm deep, on the wave driver.`, `Drive frequency f = ${fmtF(S.f)}.`,
+        `Dish acceleration ${fmtG(L.gam)} g; waves need ${fmtG(L.on.gam)} g here.`,
+        L.above ? `The surface forms ${PAT_PHRASE[L.pat.pattern]} at ${fmtF(L.on.tongue === 2 ? S.f : S.f / 2)}, wavelength ${(TAU / L.k * 1000).toFixed(1)} mm.` : 'The surface stays flat.',
+        running ? 'Running.' : 'Paused.', S.sweep ? { t: 'The frequency is sweeping up.', live: false } : { t: 'Not sweeping.', live: false }]; }
     if (!isFinite(S.f) || !isFinite(D.gmax)) return [];
     const out = [], r = D.nearRes != null ? D.res[D.nearRes] : null, md = r ? D.ms.modes[r.k] : null;
     const nm = S.shape === 'square' ? 'square' : S.shape === 'circle' ? 'circular' : 'bar';

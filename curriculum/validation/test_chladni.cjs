@@ -319,4 +319,52 @@ test('bar: free ends, cos βL cosh βL = 1 (βL = 4.7300408, 7.8532046, 10.99560
   close(r[0] ** 2 * C.fScale('bar', C.MATERIALS.steel, 1e-3), 4.730040745 ** 2 * 1e-3 / 0.0576 * Math.sqrt(200e9 / (12 * 7850)) / (2 * Math.PI), 1e-9);
   close(C.plateArea('bar') * 7850 * 1e-3, 0.05652, 1e-12);
 });
+
+// ---------- Faraday waves (liquid layer, 2026-11-19) ----------
+const F = core('chladni', 'G0,LIQUIDS,DISH,dishArea,liqOmega2,liqK,liqDamp,mathieuFloquet,faradayGrowth,faradayOnsetK,faradayOnset,faradayFastest,faradayPattern,patternHeight');
+test('chladni: gravity capillary dispersion has the right limits and inverse', () => {
+  const w = F.LIQUIDS.water;
+  close(F.liqOmega2(10, w, 10), F.G0 * 10 + w.sigma * 1000 / w.rho, 1e-12);            // deep: tanh kh = 1
+  close(F.liqOmega2(0.01, { sigma: 0, rho: 1000 }, 0.01), F.G0 * 0.01 * Math.tanh(1e-4), 1e-12);   // shallow gravity wave
+  close(Math.sqrt(F.liqOmega2(0.01, { sigma: 0, rho: 1000 }, 0.01) / (0.01 * 0.01)), Math.sqrt(F.G0 * 0.01), 1e-6);   // c → √(gh)
+  for (const f of [8, 25, 80, 160]) { const k = F.liqK(Math.PI * f, w, 5e-3); close(Math.sqrt(F.liqOmega2(k, w, 5e-3)), Math.PI * f, 1e-12); }
+  // capillary waves: water at 25 Hz subharmonic of a 50 Hz drive, deep: λ near 1 cm (Faraday wave experiments in water at 50 Hz show λ ≈ 1 cm)
+  const lam = 2 * Math.PI / F.liqK(Math.PI * 50, w, 0.05); assert(lam > 0.0095 && lam < 0.0102, `λ = ${lam}`);
+});
+test('chladni: Floquet growth of the damped Mathieu equation', () => {
+  // no drive: the multipliers are e^(−αT ± iω T), so μ = −α exactly (complex pair)
+  const r0 = F.mathieuFloquet(100 * 100, 3, 0, 2 * Math.PI * 40, 400); close(r0.mu, -3, 1e-6);
+  // undamped, exactly at the first tongue's center (Ω = 2ω₀): growth μ ≈ ε/(4ω₀) for small ε, with a negative multiplier (response at Ω/2)
+  const w0 = 100, eps = 0.02 * w0 * w0, r1 = F.mathieuFloquet(w0 * w0, 0, eps, 2 * w0, 400);
+  assert.equal(r1.sign, -1); close(r1.mu, eps / (4 * w0), 0.01);
+  // N = 48 steps (the demo) against 1600: the same growth to 1e-4 per second
+  const w = F.LIQUIDS.oil100, Om = 2 * Math.PI * 60;
+  close(F.faradayGrowth(700, w, 3e-3, 3, Om).mu, F.faradayGrowth(700, w, 3e-3, 3, Om, 1600).mu, 0, 1e-4);
+});
+test('chladni: Faraday onset matches the weak damping result Γc = 4α(1 + σk²/ρg)/ω₀ and responds at f/2', () => {
+  // weak damping (water, deep enough that the floor matters little): the exact Floquet onset agrees within 0.5 %
+  for (const [f, h] of [[50, 5e-3], [20, 5e-3], [120, 5e-3], [50, 1e-3]]) {
+    const w = F.LIQUIDS.water, o = F.faradayOnset(f, w, h), k = o.kSub, w0 = Math.PI * f, est = 4 * F.liqDamp(k, w, h) * (1 + w.sigma * k * k / (w.rho * F.G0)) / w0;
+    close(o.gam, est, 0.005); assert.equal(o.tongue, 1); close(o.k, k, 0.01);
+    const just = F.faradayGrowth(o.k, w, h, o.gam * 1.001, 2 * Math.PI * f); assert(just.mu > 0 && just.sign === -1);
+    assert(F.faradayGrowth(o.k, w, h, o.gam * 0.999, 2 * Math.PI * f).mu < 0);
+  }
+  // a shallow layer damps more: the onset rises as the layer gets shallower
+  const on = (h) => F.faradayOnset(30, F.LIQUIDS.oil10, h).gam; assert(on(1.5e-3) > on(3e-3) && on(3e-3) > on(10e-3));
+  // more viscous, higher onset
+  assert(F.faradayOnset(30, F.LIQUIDS.oil100, 3e-3).gam > 3 * F.faradayOnset(30, F.LIQUIDS.oil10, 3e-3).gam);
+  // above onset the fastest growing wave grows; it sits close to the onset wavenumber
+  const o = F.faradayOnset(50, F.LIQUIDS.water, 5e-3), fa = F.faradayFastest(50, F.LIQUIDS.water, 5e-3, 1.9 * o.gam, o.k);
+  assert(fa.mu > 0 && Math.abs(fa.k / o.k - 1) < 0.05, JSON.stringify(fa));
+});
+test('chladni: Faraday pattern rule and pattern field', () => {
+  const P = (liq, h, f) => { const o = F.faradayOnset(f, F.LIQUIDS[liq], h); return F.faradayPattern(o.k, F.LIQUIDS[liq], h).pattern; };
+  assert.equal(P('water', 5e-3, 50), 'squares'); assert.equal(P('oil100', 3e-3, 20), 'stripes');
+  assert.equal(P('oil10', 3e-3, 30), 'hexagons'); assert.equal(P('oil10', 10e-3, 25), 'quasi8');
+  // the Binks and van de Water boundaries: s = 0.48 and 0.37 at 35.4 and 28.7 Hz (Chen and Viñals' fluid: ρ = 950 kg/m³, σ = 20.6 mN/m, deep)
+  const bv = { rho: 950, sigma: 0.0206, nu: 3.4e-6 };
+  for (const [f, s] of [[35.4, 0.48], [28.7, 0.37]]) { const k = F.liqK(Math.PI * f, bv, 1), c = bv.sigma * k * k / bv.rho; close(c / (F.G0 + c), s, 0.02); }
+  for (let N = 1; N <= 4; N++) close(F.patternHeight(N, 300, 0, 0), 1, 1e-12);
+  close(F.patternHeight(2, 300, Math.PI / 300, 0), 0, 1e-12, 1e-12);   // squares: half a wavelength along x, cos π + cos 0 = 0
+});
 console.log(`${count} chladni tests passed`);
