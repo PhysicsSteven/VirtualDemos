@@ -1,0 +1,882 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="lib/theme.js"></script>
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
+<script src="lib/constants.js"></script>
+<script src="lib/vdmath.js"></script>
+<title>Slope Fields and Euler's Method</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css: the curve colors, the equation box, the field and the shelf under it */
+:root { --sf-exact: #8f5000; --sf-euler: #0f766e; --sf-iso: #a21caf; --sf-field: #5b5348; --sf-stable: #3f7d1f; --sf-unstable: #b42318; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --sf-exact: #e8a440; --sf-euler: #5eead4; --sf-iso: #f0abfc; --sf-field: #b9ad9c; --sf-stable: #a3e07a; --sf-unstable: #ff8a7a; } }
+:root[data-theme="dark"] { --sf-exact: #e8a440; --sf-euler: #5eead4; --sf-iso: #f0abfc; --sf-field: #b9ad9c; --sf-stable: #a3e07a; --sf-unstable: #ff8a7a; }
+.stage { position: relative; display: flex; flex-direction: column; min-height: min-content; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.stage-ctl .note { margin-left: auto; font-size: 0.8rem; color: var(--muted); }
+.fbar { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; padding: 10px 12px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.fbar label { font-family: var(--font-mono); font-weight: 600; font-size: 1.05rem; color: var(--sf-exact); white-space: nowrap; }
+.fbar input { flex: 1 1 260px; min-width: 0; font-family: var(--font-mono); font-size: 1.1rem; padding: 7px 10px; color: var(--ink); background: var(--canvas);
+  border: 2px solid var(--line2, var(--line)); border-radius: 8px; }
+.fbar input:focus { outline: none; border-color: var(--sf-exact); }
+.fbar input:focus-visible { box-shadow: 0 0 0 1px var(--sf-exact); }
+.fbar input.bad { border-color: var(--red); }
+.fbar .status { flex: 1 1 100%; font-size: 0.84rem; color: var(--muted); min-height: 1.3em; overflow-wrap: anywhere; }
+.fbar .status.bad { color: var(--red); }
+.pane { position: relative; flex: 1 1 auto; min-height: 480px; }
+.pane canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; outline: none; touch-action: pan-y; cursor: crosshair; }
+.shelf { display: flex; flex-wrap: wrap; align-items: stretch; gap: 12px; padding: 10px; border-top: 1px solid var(--line); background: var(--surface); }
+.shelf-card { flex: 1 1 230px; display: grid; grid-template-columns: minmax(0, 1fr); align-content: start; gap: 7px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--canvas); }
+.shelf-card > .card-title { font-size: 0.78rem; font-weight: 700; color: var(--muted); }
+.shelf-card .row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; font-size: 0.86rem; }
+.shelf-card input[type="number"] { width: 6.6em; font: inherit; font-size: 0.84rem; font-family: var(--font-mono); padding: 3px 6px; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; }
+.sw { display: inline-block; width: 26px; height: 0; border-top: 3px solid; vertical-align: middle; margin-right: 6px; }
+.sw.exact { border-color: var(--sf-exact); }
+.sw.euler { border-color: var(--sf-euler); border-top-style: dashed; }
+.sw.iso { border-color: var(--sf-iso); border-top-style: dotted; }
+.sw.field { border-color: var(--sf-field); border-top-width: 2px; width: 12px; transform: rotate(-30deg); margin: 0 13px 0 7px; }
+.sw.phase { width: 0; height: 14px; border-top: 0; border-left: 3px solid var(--muted); margin: 0 18px 0 10px; }
+.rail ul.typing { margin: 6px 0 0; padding-left: 1.2em; font-size: 0.86rem; color: var(--muted); }
+.rail ul.typing code { font-family: var(--font-mono); color: var(--ink); }
+#mystRow { display: none; margin-top: 8px; }
+#mystRow.on { display: flex; flex-wrap: wrap; gap: 6px; }
+@media (min-width: 821px) { .bench > .stage { align-self: start; min-height: max(760px, 100%); } }
+@media (max-width: 820px) { .pane { min-height: 0; height: 420px; flex: none; } .shelf-card { flex: 1 1 100%; } }
+@media (max-width: 520px) { .stage-ctl .note { margin-left: 0; } }
+</style>
+<link rel="stylesheet" id="vd-paper" href="lib/paper.css">
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Slope Fields and Euler's Method</h1>
+      <p>Type a differential equation dy/dt = f(t, y) and see its slope field: a short line at each point with the slope the equation gives there. Click to start a solution curve, step along it with Euler's method, and compare with the accurate solution. The phase line beside the field marks the equilibria and whether they are stable.</p>
+    </div>
+    <div class="bar-right">
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/slope-fields.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/slope-fields.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM10 2h1v1h-1zM12 2h2v1h-2zM18 2h2v1h-2zM21 2h2v1h-2zM25 2h1v1h-1zM27 2h4v1h-4zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM11 3h2v1h-2zM14 3h3v1h-3zM18 3h1v1h-1zM20 3h2v1h-2zM24 3h1v1h-1zM28 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM11 4h1v1h-1zM13 4h1v1h-1zM18 4h3v1h-3zM23 4h4v1h-4zM28 4h1v1h-1zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h1v1h-1zM13 5h2v1h-2zM16 5h1v1h-1zM18 5h1v1h-1zM20 5h1v1h-1zM26 5h4v1h-4zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h1v1h-1zM12 6h2v1h-2zM15 6h1v1h-1zM17 6h3v1h-3zM23 6h1v1h-1zM25 6h1v1h-1zM29 6h2v1h-2zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h1v1h-1zM14 7h2v1h-2zM17 7h1v1h-1zM19 7h1v1h-1zM21 7h2v1h-2zM24 7h1v1h-1zM27 7h2v1h-2zM30 7h1v1h-1zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h1v1h-1zM12 9h3v1h-3zM18 9h1v1h-1zM21 9h5v1h-5zM28 9h1v1h-1zM30 9h1v1h-1zM2 10h1v1h-1zM6 10h1v1h-1zM8 10h5v1h-5zM16 10h1v1h-1zM18 10h1v1h-1zM21 10h2v1h-2zM25 10h2v1h-2zM31 10h5v1h-5zM38 10h1v1h-1zM2 11h1v1h-1zM4 11h1v1h-1zM6 11h1v1h-1zM9 11h4v1h-4zM20 11h2v1h-2zM23 11h1v1h-1zM25 11h1v1h-1zM27 11h5v1h-5zM34 11h4v1h-4zM4 12h1v1h-1zM7 12h5v1h-5zM13 12h3v1h-3zM17 12h1v1h-1zM21 12h1v1h-1zM23 12h3v1h-3zM28 12h2v1h-2zM31 12h1v1h-1zM33 12h2v1h-2zM2 13h4v1h-4zM7 13h1v1h-1zM10 13h1v1h-1zM14 13h1v1h-1zM17 13h3v1h-3zM21 13h6v1h-6zM29 13h1v1h-1zM31 13h1v1h-1zM33 13h2v1h-2zM36 13h2v1h-2zM4 14h1v1h-1zM7 14h3v1h-3zM16 14h1v1h-1zM19 14h1v1h-1zM23 14h2v1h-2zM26 14h1v1h-1zM29 14h4v1h-4zM36 14h3v1h-3zM3 15h3v1h-3zM7 15h1v1h-1zM11 15h3v1h-3zM15 15h1v1h-1zM17 15h2v1h-2zM21 15h1v1h-1zM23 15h3v1h-3zM27 15h4v1h-4zM34 15h2v1h-2zM2 16h1v1h-1zM5 16h1v1h-1zM7 16h4v1h-4zM14 16h4v1h-4zM19 16h1v1h-1zM22 16h1v1h-1zM25 16h2v1h-2zM28 16h2v1h-2zM31 16h1v1h-1zM33 16h5v1h-5zM2 17h1v1h-1zM4 17h1v1h-1zM7 17h1v1h-1zM12 17h1v1h-1zM17 17h1v1h-1zM19 17h4v1h-4zM24 17h1v1h-1zM26 17h1v1h-1zM28 17h1v1h-1zM30 17h1v1h-1zM32 17h3v1h-3zM36 17h1v1h-1zM38 17h1v1h-1zM2 18h2v1h-2zM6 18h3v1h-3zM11 18h1v1h-1zM13 18h1v1h-1zM15 18h2v1h-2zM20 18h1v1h-1zM24 18h1v1h-1zM31 18h3v1h-3zM35 18h2v1h-2zM38 18h1v1h-1zM2 19h1v1h-1zM5 19h1v1h-1zM7 19h1v1h-1zM10 19h1v1h-1zM13 19h2v1h-2zM16 19h1v1h-1zM18 19h1v1h-1zM21 19h2v1h-2zM25 19h1v1h-1zM27 19h3v1h-3zM33 19h3v1h-3zM37 19h1v1h-1zM2 20h1v1h-1zM4 20h1v1h-1zM6 20h1v1h-1zM8 20h3v1h-3zM14 20h1v1h-1zM18 20h3v1h-3zM22 20h2v1h-2zM25 20h1v1h-1zM28 20h2v1h-2zM31 20h6v1h-6zM2 21h1v1h-1zM4 21h2v1h-2zM10 21h1v1h-1zM13 21h1v1h-1zM19 21h1v1h-1zM23 21h1v1h-1zM25 21h1v1h-1zM28 21h2v1h-2zM31 21h1v1h-1zM36 21h2v1h-2zM2 22h1v1h-1zM4 22h3v1h-3zM8 22h1v1h-1zM12 22h2v1h-2zM17 22h1v1h-1zM19 22h1v1h-1zM21 22h6v1h-6zM31 22h3v1h-3zM36 22h1v1h-1zM2 23h3v1h-3zM9 23h1v1h-1zM12 23h3v1h-3zM17 23h3v1h-3zM22 23h1v1h-1zM25 23h1v1h-1zM29 23h3v1h-3zM33 23h2v1h-2zM37 23h1v1h-1zM2 24h1v1h-1zM4 24h2v1h-2zM7 24h2v1h-2zM10 24h2v1h-2zM13 24h3v1h-3zM17 24h2v1h-2zM20 24h1v1h-1zM22 24h4v1h-4zM28 24h2v1h-2zM32 24h5v1h-5zM2 25h2v1h-2zM5 25h1v1h-1zM7 25h1v1h-1zM9 25h2v1h-2zM12 25h1v1h-1zM14 25h2v1h-2zM17 25h1v1h-1zM21 25h3v1h-3zM26 25h1v1h-1zM29 25h3v1h-3zM33 25h2v1h-2zM36 25h1v1h-1zM38 25h1v1h-1zM5 26h1v1h-1zM8 26h1v1h-1zM10 26h1v1h-1zM13 26h2v1h-2zM18 26h1v1h-1zM22 26h1v1h-1zM25 26h2v1h-2zM29 26h1v1h-1zM31 26h2v1h-2zM35 26h3v1h-3zM2 27h2v1h-2zM9 27h2v1h-2zM15 27h2v1h-2zM20 27h2v1h-2zM24 27h2v1h-2zM27 27h4v1h-4zM34 27h2v1h-2zM5 28h1v1h-1zM8 28h1v1h-1zM11 28h3v1h-3zM17 28h1v1h-1zM19 28h3v1h-3zM24 28h2v1h-2zM27 28h8v1h-8zM36 28h1v1h-1zM4 29h1v1h-1zM7 29h1v1h-1zM10 29h2v1h-2zM13 29h1v1h-1zM17 29h8v1h-8zM26 29h1v1h-1zM29 29h2v1h-2zM33 29h2v1h-2zM36 29h2v1h-2zM2 30h7v1h-7zM10 30h1v1h-1zM14 30h1v1h-1zM16 30h1v1h-1zM19 30h1v1h-1zM22 30h2v1h-2zM25 30h2v1h-2zM30 30h5v1h-5zM36 30h3v1h-3zM10 31h6v1h-6zM18 31h1v1h-1zM20 31h1v1h-1zM23 31h1v1h-1zM25 31h4v1h-4zM30 31h1v1h-1zM34 31h1v1h-1zM2 32h7v1h-7zM10 32h1v1h-1zM15 32h5v1h-5zM22 32h1v1h-1zM25 32h1v1h-1zM28 32h1v1h-1zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM13 33h1v1h-1zM15 33h1v1h-1zM17 33h1v1h-1zM19 33h2v1h-2zM24 33h1v1h-1zM26 33h1v1h-1zM30 33h1v1h-1zM34 33h3v1h-3zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h2v1h-2zM13 34h1v1h-1zM17 34h1v1h-1zM20 34h1v1h-1zM24 34h3v1h-3zM30 34h8v1h-8zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM12 35h3v1h-3zM18 35h1v1h-1zM21 35h3v1h-3zM25 35h3v1h-3zM29 35h5v1h-5zM35 35h2v1h-2zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM18 36h2v1h-2zM22 36h1v1h-1zM25 36h2v1h-2zM28 36h3v1h-3zM32 36h1v1h-1zM36 36h1v1h-1zM2 37h1v1h-1zM8 37h1v1h-1zM11 37h2v1h-2zM14 37h1v1h-1zM16 37h1v1h-1zM19 37h2v1h-2zM23 37h2v1h-2zM28 37h1v1h-1zM32 37h1v1h-1zM34 37h1v1h-1zM36 37h2v1h-2zM2 38h7v1h-7zM10 38h8v1h-8zM19 38h1v1h-1zM21 38h4v1h-4zM26 38h1v1h-1zM29 38h1v1h-1zM31 38h1v1h-1zM33 38h1v1h-1zM36 38h3v1h-3z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl" id="strip">
+        <button type="button" class="spin attn" id="play" data-vd-key="play">Play</button>
+        <button type="button" class="btn" id="reset" title="Take the Euler steps away, back to the start point">Reset</button>
+        <span class="note" id="note">Play takes Euler's steps one at a time. Click the field to start a curve; drag to pan; scroll or pinch to zoom.</span>
+      </div>
+      <div class="fbar">
+        <label for="fy" translate="no">dy/dt =</label>
+        <input type="text" id="fy" translate="no" spellcheck="false" autocomplete="off" autocapitalize="off" autocorrect="off" inputmode="text" aria-describedby="fyStatus" value="-0.1(y - 20)">
+        <div class="status" id="fyStatus" role="status" aria-live="polite"></div>
+      </div>
+      <div class="pane" id="pane">
+        <canvas id="can" tabindex="0" role="img" aria-label="The slope field of the equation with solution curves, Euler's steps and the phase line. Arrow keys move the start point; plus and minus zoom; Space plays or pauses."></canvas>
+      </div>
+      <div class="shelf" id="shelf">
+        <div class="shelf-card" role="group" aria-label="Euler's method">
+          <span class="card-title">Euler's method</span>
+          <div class="row"><label for="hIn">Step size h</label><input type="number" id="hIn" step="any" min="0" value="5"><label for="tEndIn">Run to t =</label><input type="number" id="tEndIn" step="any" value="30"></div>
+          <div class="row"><button type="button" class="btn" id="halveH">Halve h</button><button type="button" class="btn" id="doubleH">Double h</button></div>
+          <label class="check"><input type="checkbox" id="showEuler" checked><span><span class="sw euler"></span>Euler's steps from the start point</span></label>
+          <label class="check"><input type="checkbox" id="showExact" checked><span><span class="sw exact"></span>The accurate solution through it</span></label>
+        </div>
+        <div class="shelf-card" role="group" aria-label="Start point">
+          <span class="card-title">Start point</span>
+          <div class="row"><label for="t0In">t₀</label><input type="number" id="t0In" step="any"><label for="y0In">y₀</label><input type="number" id="y0In" step="any"></div>
+          <span class="hint">Click the field to start a new curve there; drag its dot to move it. Earlier curves stay, drawn thinner.</span>
+          <div class="row"><button type="button" class="btn" id="clearCurves">Clear other curves</button></div>
+        </div>
+        <div class="shelf-card" role="group" aria-label="The field">
+          <span class="card-title">The field</span>
+          <label class="check"><input type="checkbox" id="showField" checked><span><span class="sw field"></span>Slope field</span></label>
+          <label class="check"><input type="checkbox" id="showIso"><span><span class="sw iso"></span>Isoclines: where the slope is the same</span></label>
+          <label class="check"><input type="checkbox" id="showPhase" checked><span><span class="sw phase"></span>Phase line and equilibria</span></label>
+        </div>
+        <div class="shelf-card" role="group" aria-label="The view">
+          <span class="card-title">The view</span>
+          <div class="row"><label for="ta">t from</label><input type="number" id="ta" step="any"><label for="tb">to</label><input type="number" id="tb" step="any"></div>
+          <div class="row"><label for="ya">y from</label><input type="number" id="ya" step="any"><label for="yb">to</label><input type="number" id="yb" step="any"></div>
+          <div class="row"><button type="button" class="btn" id="zin">Zoom in</button><button type="button" class="btn" id="zout">Zoom out</button><button type="button" class="btn" id="homeView">Reset view</button></div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/slope-fields-cooling.html" target="slope-fields-cooling-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="cool" aria-pressed="true">Newton's cooling: a cup of coffee</button>
+          <button type="button" data-p="decay" aria-pressed="false">Radioactive decay</button>
+          <button type="button" data-p="rcOff" aria-pressed="false">A capacitor discharging (RC)</button>
+          <button type="button" data-p="rcOn" aria-pressed="false">A capacitor charging (RC)</button>
+          <button type="button" data-p="linDrag" aria-pressed="false">Falling with linear drag</button>
+          <button type="button" data-p="quadDrag" aria-pressed="false">A skydiver: quadratic drag</button>
+          <button type="button" data-p="logistic" aria-pressed="false">Logistic growth</button>
+          <button type="button" data-p="harvest" aria-pressed="false">Logistic growth with harvesting</button>
+          <button type="button" data-p="well" aria-pressed="false">Overdamped motion in a double well</button>
+          <button type="button" data-p="tMinusY" aria-pressed="false">dy/dt = t − y: isoclines</button>
+          <button type="button" data-p="eulerE" aria-pressed="false">Euler's method and the number e</button>
+          <button type="button" data-p="mystCool" aria-pressed="false">Mystery: a cooling cup</button>
+          <button type="button" data-p="mystLog" aria-pressed="false">Mystery: a growing culture</button>
+        </div>
+        <details class="more" open><summary>About this setup</summary><p class="hint" id="presetHint"></p>
+          <div id="mystRow"><button type="button" class="btn" id="newMystery">New mystery</button></div></details>
+      </section>
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+      </section>
+      <!-- vd-readings --><section class="vd-readings" data-ws="slope-fields-cooling" data-title="Slope Fields and Euler's Method" data-demo="slope-fields">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings ('+(typeof window.vdDataNote==='function'&&window.vdDataNote()?'catalog data':'simulated data')+')','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:(typeof window.vdDataNote==='function'&&window.vdDataNote())||'Simulated data from '+(/^The /.test(title)?'':'the ')+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the accurate solution, the error and the equilibria, to sketch them first</span></label>
+        <details class="more"><summary>What you can type</summary>
+          <ul class="typing">
+            <li>Write the right side in <code>t</code> and <code>y</code>: <code>-0.1(y - 20)</code>, <code>t - y</code>, <code>y(1 - y/50)</code>.</li>
+            <li><code>+ − * / ^</code> and parentheses; <code>2y</code>, <code>3sin(t)</code> and <code>(y+1)(y−1)</code> multiply.</li>
+            <li><code>sin cos tan</code>, <code>exp</code> or <code>e^t</code>, <code>ln</code>, <code>sqrt</code>, <code>abs</code> or <code>|y|</code>, <code>pi</code></li>
+            <li>A pasted <code>dy/dt =</code> or <code>y' =</code> at the start is fine.</li>
+          </ul>
+        </details>
+        <details class="more"><summary>How it works</summary>
+          <p class="hint">The box is read by the site's own parser (nothing you type is run as code). Each short line of the field has the slope f(t, y) at its center, drawn at the same angle the graph shows for that slope on these axes.</p>
+          <p class="hint">Euler's method steps from the start point with the slope at the start of each step: y ← y + h·f(t, y), t ← t + h. It takes as many whole steps of h as fit before the Run to t time. The accurate solution is computed with an adaptive Runge–Kutta method (Dormand and Prince's fifth order pair) to about ten significant figures, so the error readout is Euler's own error; where the equation has a formula for its solution (cooling, decay, the RC circuit, linear drag, logistic growth) the two agree to that accuracy.</p>
+          <p class="hint">The phase line is drawn when f depends on y only (an autonomous equation). Its equilibria are the zeros of f(y) in the view, found by bisection; an arrow up means y grows, down means it falls. A filled dot is stable (arrows point in on both sides), an open dot unstable, a half dot semistable. Isoclines join the points where the slope has one value; the one for slope 0 is the nullcline.</p>
+          <p class="hint">The mystery setups draw their k, room temperature, growth rate and carrying capacity at random each time the page opens or New mystery is pressed. The thermometer readings of the cooling cup are simulated from that model, rounded to 0.1 °C.</p>
+        </details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  /* Slope fields, Euler's method and an accurate solution for dy/dt = f(t, y), runnable in Node (curriculum/validation/test_slope-fields.cjs).
+     What the student types is read by the shared parser VDMATH (demos/lib/vdmath.js), never run as code. */
+  const VARS = ['t', 'y'];
+  /* the equation: the tree, f(t, y), ∂f/∂y and whether f is free of t (autonomous, so it has a phase line) */
+  function equation(node) {
+    return { node, f: VDMATH.compile(node, VARS), auto: !VDMATH.hasV(node, 't'), text: VDMATH.text(node) };
+  }
+  function readEquation(src) { return equation(VDMATH.parse(src, { vars: VARS }).node); }
+
+  /* Euler's method: n steps of h from (t0, y0), each with the slope at its start. t is t0 + i·h, never a running sum. */
+  function euler(f, t0, y0, h, n) {
+    const ts = [t0], ys = [y0];
+    let y = y0;
+    for (let i = 0; i < n; i++) {
+      y = y + h * f(t0 + i * h, y);
+      ts.push(t0 + (i + 1) * h); ys.push(y);
+      if (!isFinite(y)) break;
+    }
+    return { t: ts, y: ys };
+  }
+  /* how many whole steps of h fit from t0 to tEnd (at most 5,000) */
+  function eulerSteps(t0, tEnd, h) {
+    if (!(h > 0) || !(tEnd > t0)) return 0;
+    return Math.min(5000, Math.floor((tEnd - t0) / h + 1e-9));
+  }
+
+  /* the accurate solution: Dormand and Prince's adaptive Runge–Kutta 5(4) pair (Hairer, Nørsett and Wanner, Solving ODEs I, table 5.2),
+     from (t0, y0) to t1 (either direction), with relative tolerance rtol (default 1e-10). o.stops lists times the steps must land on
+     exactly (their values come back in .at); o.hmax caps the step so a drawn curve is smooth; o.cap stops it once |y| passes cap.
+     end says why it stopped: 'done', 'left' (passed cap), 'undefined' (f has no value) or 'blowup' (the step shrank to nothing). */
+  const DP = {
+    c: [0, 1 / 5, 3 / 10, 4 / 5, 8 / 9, 1, 1],
+    a: [[], [1 / 5], [3 / 40, 9 / 40], [44 / 45, -56 / 15, 32 / 9], [19372 / 6561, -25360 / 2187, 64448 / 6561, -212 / 729],
+      [9017 / 3168, -355 / 33, 46732 / 5247, 49 / 176, -5103 / 18656], [35 / 384, 0, 500 / 1113, 125 / 192, -2187 / 6784, 11 / 84]],
+    e: [71 / 57600, 0, -71 / 16695, 71 / 1920, -17253 / 339200, 22 / 525, -1 / 40],
+  };
+  function solve(f, t0, y0, t1, o) {
+    o = o || {};
+    const rtol = o.rtol || 1e-10, span = Math.abs(t1 - t0), dir = t1 >= t0 ? 1 : -1, hmax = o.hmax || span / 20 || 1, cap = o.cap || Infinity;
+    const stops = (o.stops || []).filter((s) => dir * (s - t0) > 0 && dir * (t1 - s) >= 0).sort((p, q) => dir * (p - q));
+    const ts = [t0], ys = [y0], at = [];
+    let t = t0, y = y0, k1 = f(t, y), end = 'done', si = 0, scale = Math.abs(y0);
+    if (!isFinite(y0) || !isFinite(k1)) return { t: ts, y: ys, at, end: 'undefined' };
+    if (span === 0) return { t: ts, y: ys, at, end };
+    let h = dir * Math.min(hmax, span) / 16;
+    const k = new Array(7);
+    for (let guard = 0; guard < 400000; guard++) {
+      const target = si < stops.length ? stops[si] : t1;
+      if (dir * (target - t) <= 1e-13 * (span + Math.abs(t))) { if (si < stops.length) { at.push(y); si++; continue; } break; }
+      let hit = false;
+      if (dir * (t + h - target) >= 0) { h = target - t; hit = true; }
+      k[0] = k1;
+      let ok = true, y5 = y;
+      for (let s = 1; s < 7; s++) {
+        let yy = y; const a = DP.a[s];
+        for (let j = 0; j < s; j++) yy += h * a[j] * k[j];
+        k[s] = f(t + DP.c[s] * h, yy);
+        if (s === 6) y5 = yy;
+        if (!isFinite(k[s])) { ok = false; break; }
+      }
+      if (!ok) {
+        if (Math.abs(h) < 1e-12 * (span + Math.abs(t))) { end = 'undefined'; break; }
+        h /= 4; continue;
+      }
+      let err = 0; for (let s = 0; s < 7; s++) err += DP.e[s] * k[s];
+      err = Math.abs(h * err);
+      scale = Math.max(scale, Math.abs(y5));
+      const tol = rtol * Math.max(Math.abs(y), Math.abs(y5), 1e-3 * scale, 1e-300);
+      const ratio = err / tol;
+      if (ratio <= 1) {
+        t = hit ? target : t + h; y = y5; k1 = k[6];
+        ts.push(t); ys.push(y);
+        if (hit && si < stops.length) { at.push(y); si++; }
+        if (Math.abs(y) > cap) { end = 'left'; break; }
+        if (hit && si >= stops.length && t === t1) break;
+      }
+      const fac = ratio === 0 ? 5 : Math.min(5, Math.max(0.2, 0.9 * Math.pow(ratio, -0.2)));
+      h = dir * Math.min(hmax, Math.abs(h) * (ratio <= 1 ? fac : Math.min(1, fac)));
+      if (Math.abs(h) < 1e-13 * (span + Math.abs(t))) { end = 'blowup'; break; }
+    }
+    return { t: ts, y: ys, at, end };
+  }
+  /* y at time t1 on the solution through (t0, y0); NaN when the solution does not reach t1 */
+  function yAt(f, t0, y0, t1) { const r = solve(f, t0, y0, t1); return r.end === 'done' || r.end === 'left' && r.t[r.t.length - 1] === t1 ? r.y[r.y.length - 1] : NaN; }
+
+  /* the equilibria of an autonomous dy/dt = g(y) between lo and hi: zeros of g by bisection (a sign change) or a golden section
+     search on |g| (a zero where g touches 0 without changing sign), each sorted as stable (g goes from + to − going up), unstable
+     (− to +) or semistable (the same sign on both sides). all: g is zero everywhere. */
+  function equilibria(g, lo, hi, n) {
+    n = n || 1500;
+    const ys = new Float64Array(n + 1), gs = new Float64Array(n + 1);
+    let big = 0, finite = 0;
+    for (let i = 0; i <= n; i++) { ys[i] = lo + (hi - lo) * i / n; gs[i] = g(ys[i]); if (isFinite(gs[i])) { finite++; big = Math.max(big, Math.abs(gs[i])); } }
+    if (finite && big === 0) return { all: true, list: [] };
+    const roots = [], tiny = (hi - lo) * 1e-7;
+    const bisect = (a, b, ga) => {
+      for (let i = 0; i < 200 && b - a > 1e-15 * (Math.abs(a) + Math.abs(b) + 1e-300); i++) {
+        const m = (a + b) / 2, gm = g(m);
+        if (gm === 0) return m;
+        if ((gm < 0) === (ga < 0)) { a = m; ga = gm; } else b = m;
+      }
+      return (a + b) / 2;
+    };
+    for (let i = 0; i < n; i++) {
+      const a = gs[i], b = gs[i + 1];
+      if (!isFinite(a) || !isFinite(b)) continue;
+      if (a === 0) { roots.push(ys[i]); continue; }
+      if (b !== 0 && (a < 0) !== (b < 0)) roots.push(bisect(ys[i], ys[i + 1], a));
+    }
+    if (gs[n] === 0) roots.push(ys[n]);
+    for (let i = 1; i < n; i++) {
+      const a = gs[i - 1], m = gs[i], b = gs[i + 1];
+      if (!isFinite(a) || !isFinite(m) || !isFinite(b) || m === 0) continue;
+      if (Math.abs(m) > Math.abs(a) || Math.abs(m) > Math.abs(b) || (a < 0) !== (b < 0) || (a < 0) !== (m < 0)) continue;
+      let p = ys[i - 1], q = ys[i + 1];
+      const r = (Math.sqrt(5) - 1) / 2;
+      for (let j = 0; j < 120; j++) {
+        const x1 = q - r * (q - p), x2 = p + r * (q - p);
+        if (Math.abs(g(x1)) < Math.abs(g(x2))) q = x2; else p = x1;
+      }
+      const y = (p + q) / 2;
+      if (Math.abs(g(y)) <= 1e-10 * big) roots.push(y);
+    }
+    roots.sort((p, q) => p - q);
+    const list = [];
+    for (const y of roots) {
+      if (list.length && Math.abs(y - list[list.length - 1].y) < tiny) continue;
+      const d = Math.max(tiny * 10, Math.abs(y) * 1e-6), below = g(y - d), above = g(y + d);
+      const kind = below > 0 && above < 0 ? 'stable' : below < 0 && above > 0 ? 'unstable' : 'semistable';
+      list.push({ y: Math.abs(y) < tiny * 1e-3 ? 0 : y, kind });
+    }
+    return { all: false, list };
+  }
+
+  /* the mystery setups: a cooling cup with a hidden k and room temperature, and a culture with a hidden growth rate and carrying
+     capacity, each drawn from rand() (Math.random on the page) */
+  function mysteryCup(rand) {
+    return { k: Math.round((0.04 + 0.05 * rand()) * 1000) / 1000, Ta: Math.round((18 + 8 * rand()) * 10) / 10, T0: 92 };
+  }
+  function mysteryCulture(rand) {
+    return { r: Math.round((0.3 + 0.3 * rand()) * 100) / 100, K: Math.round(60 + 80 * rand()), y0: 5 };
+  }
+  const cupSrc = (m) => `-${m.k}(y - ${m.Ta})`;
+  const cultureSrc = (m) => `${m.r}y(1 - y/${m.K})`;
+  /* the cup's simulated thermometer readings every 5 min from 0 to 40 min, from the exact solution, rounded to 0.1 °C */
+  function cupReadings(m) {
+    const out = [];
+    for (let t = 0; t <= 40; t += 5) out.push([t, Math.round((m.Ta + (m.T0 - m.Ta) * Math.exp(-m.k * t)) * 10) / 10]);
+    return out;
+  }
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  const VDI18N = window.VDI18N || { t: (s, o) => s.replace(/\{(\w+)\}/g, (m, k) => (o && k in o ? o[k] : m)) };
+  const G = (typeof VDC === 'object' && VDC.g) ? VDC.g : 9.81;   /* g = 9.81 m/s², demos/lib/constants.js */
+  const fmt = VDMATH.fmt, sup = VDMATH.sup;
+  const PRESETS = {
+    cool: { src: '-0.1(y - 20)', t: [-2, 45], y: [0, 100], starts: [[0, 90]], h: 5, tEnd: 30, tl: 't (min)', yl: 'temperature (°C)',
+      hint: 'Newton\'s law of cooling: coffee poured at 90 °C into a cup in a 20 °C room cools at a rate in proportion to how much warmer it is than the room, dT/dt = −k(T − 20) with k = 0.1 per minute (here y is the temperature T). Every curve heads for the stable equilibrium at 20 °C, the room. Euler with h = 5 min cools too fast: each step uses the steepest slope of its interval.' },
+    decay: { src: '-ln(2)/6 y', t: [-1, 26], y: [-30, 1000], starts: [[0, 800]], h: 2, tEnd: 24, tl: 't (h)', yl: 'activity (MBq)',
+      hint: 'A radioactive sample whose half life is 6.0 h (about that of technetium 99m, used in medical imaging): dA/dt = −λA with λ = ln 2 / 6.0 h. Its activity A (here y) halves every 6 h, from 800 MBq to 400, 200, 100 and 50 MBq at 24 h. The field lines get flatter as A falls, so every curve has the same shape, only shifted in time.' },
+    rcOff: { src: '-y/2', t: [-0.4, 10], y: [-0.5, 14], starts: [[0, 12]], h: 1, tEnd: 8, tl: 't (s)', yl: 'capacitor voltage (V)',
+      hint: 'A capacitor charged to 12 V discharges through a resistor: dV/dt = −V/(RC), with time constant RC = 2.0 s (for example 2.0 MΩ and 1.0 μF). After one time constant the voltage is 12/e = 4.41 V. Euler with h = 1 s multiplies V by exactly 1 − h/RC = 0.5 each step.' },
+    rcOn: { src: '(12 - y)/2', t: [-0.4, 10], y: [-0.5, 14], starts: [[0, 0]], h: 1, tEnd: 8, tl: 't (s)', yl: 'capacitor voltage (V)',
+      hint: 'A 12 V battery charges a capacitor through a resistor, RC = 2.0 s: dV/dt = (12 − V)/(RC). The charge flows fastest at first, when the whole 12 V is across the resistor, and the voltage creeps up to the equilibrium at 12 V, reaching 63 % of it (7.59 V) at t = RC.' },
+    linDrag: { src: `${G} - 2y`, t: [-0.15, 4], y: [-0.3, 7], starts: [[0, 0], [0, 6.5]], h: 0.25, tEnd: 3, tl: 't (s)', yl: 'velocity, down (m/s)',
+      hint: 'A small object falling with a drag force in proportion to its speed (slow motion through a thick fluid): dv/dt = g − (b/m)v with g = 9.81 m/s² and b/m = 2.0 per second, down taken positive. The equilibrium is the terminal velocity g/(b/m) = 4.905 m/s: started from rest it speeds up toward it, thrown down faster it slows toward it.' },
+    quadDrag: { src: `${G}(1 - (y/55)^2)`, t: [-1, 25], y: [-3, 80], starts: [[0, 0], [0, 75]], h: 2, tEnd: 20, tl: 't (s)', yl: 'velocity, down (m/s)',
+      hint: 'A skydiver in free fall: air drag in proportion to the square of the speed, dv/dt = g − (c/m)v², written here as g(1 − (v/vₜ)²) with terminal velocity vₜ = 55 m/s (about 200 km/h, belly down). From rest v = vₜ tanh(gt/vₜ). The second curve starts at 75 m/s, as if diving head down and then turning belly down: the drag is larger than the weight, so it slows to 55 m/s.' },
+    logistic: { src: '0.5y(1 - y/1000)', t: [-1, 25], y: [-40, 1200], starts: [[0, 50]], h: 2, tEnd: 20, tl: 't (days)', yl: 'population',
+      hint: 'Logistic growth: dP/dt = rP(1 − P/K) with growth rate r = 0.5 per day and carrying capacity K = 1,000. When P is small the growth is nearly exponential; it slows as P nears K, the stable equilibrium. The slope is largest at P = K/2 = 500, where every curve has its inflection point. P = 0 is an unstable equilibrium.' },
+    harvest: { src: '0.5y(1 - y/1000) - 100', t: [-1, 25], y: [-40, 1200], starts: [[0, 300], [0, 250]], h: 1, tEnd: 20, tl: 't (days)', yl: 'population',
+      hint: 'The same population with 100 taken away each day: dP/dt = 0.5P(1 − P/1000) − 100. Now there are two equilibria, P = 500 ± √50,000 = 276.4 (unstable) and 723.6 (stable). A population that starts above 276.4 settles at 723.6; one that starts below it dies out. Harvest more than 125 a day and both equilibria vanish.' },
+    well: { src: 'y - y^3', t: [-0.3, 8], y: [-2, 2], starts: [[0, 0.1], [0, -0.1], [0, 1.8]], h: 0.5, tEnd: 6, tl: 't (relaxation times)', yl: 'position x (scaled)',
+      hint: 'A particle in a double well potential U = −x²/2 + x⁴/4, with friction so strong that its velocity follows the force, dx/dt = −dU/dx = x − x³ (overdamped motion, scaled units). The bottoms of the two wells, x = −1 and x = 1, are stable equilibria; the hilltop between them, x = 0, is unstable: a nudge either way sends it into one well.' },
+    tMinusY: { src: 't - y', t: [-3, 5], y: [-3, 5], starts: [[-2, 4]], h: 0.5, tEnd: 4, tl: 't', yl: 'y', iso: true,
+      hint: 'dy/dt = t − y depends on t as well as y, so it has no phase line. Its isoclines t − y = c are straight lines of slope 1: along the one for c = 1, y = t − 1, the field segments lie along the line itself, so it is a solution, and every other solution, y = t − 1 + Ce^(−t), closes in on it.' },
+    eulerE: { src: 'y', t: [-0.1, 1.25], y: [-0.1, 3.2], starts: [[0, 1]], h: 0.5, tEnd: 1, tl: 't', yl: 'y',
+      hint: 'dy/dt = y with y(0) = 1 has the solution y = e^t, so y(1) = e = 2.71828. Euler with n steps of h = 1/n multiplies y by 1 + h each step, so it gives (1 + 1/n)ⁿ: 2.25 for h = 0.5, 2.5937 for h = 0.1, 2.7048 for h = 0.01. Halve h and the error roughly halves: Euler\'s method is first order.' },
+    mystCool: { mystery: 'cup', t: [-2, 45], y: [0, 100], starts: [[0, 92]], h: 5, tEnd: 40, tl: 't (min)', yl: 'temperature (°C)',
+      hint: 'A cup of tea at 92 °C cools in a room. The equation is hidden: the field is drawn from Newton\'s law of cooling with a k and a room temperature you do not know, and the dots are thermometer readings every 5 min (simulated from the same model). Click the field (or type a start point) to read the slope dy/dt there. Type your own model in the box to compare its curve with the readings; press this setup again to bring the mystery field back.' },
+    mystLog: { mystery: 'culture', t: [-1, 30], y: [-6, 200], starts: [[0, 5]], h: 2, tEnd: 30, tl: 't (h)', yl: 'population (millions of cells per mL)',
+      hint: 'A yeast culture grows in a flask with a hidden growth rate and carrying capacity. The equation is hidden and the phase line marks the equilibria without their values. Click the field (or type a start point) to read the slope dy/dt there, and find where the culture levels off and where it grows fastest.' },
+  };
+  const S = { preset: 'cool', src: '', eq: null, mystEq: null, myst: null, cup: null, culture: null, data: null, typed: false,
+    V: { t0: 0, t1: 45, y0: 0, y1: 100 }, curves: [], h: 5, tEnd: 30, prog: 0, run: false, blind: false, tl: 't', yl: 'y', hover: null, iso: false };
+  const can = $('can'), ctx = can.getContext('2d');
+  let W = 0, H = 0, dpr = 1, T = null, need = true;
+  const f6 = (v) => (isFinite(v) ? fmt(Math.abs(v) < 1e-12 ? 0 : Number(v.toPrecision(6))) : '—');
+  const r6 = (v) => (isFinite(v) ? Number(v.toPrecision(6)) : '');
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), surface: g('--surface'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), mono: g('--font-mono') || 'monospace',
+      exact: g('--sf-exact'), euler: g('--sf-euler'), iso: g('--sf-iso'), field: g('--sf-field'), stable: g('--sf-stable'), unstable: g('--sf-unstable') };
+  }
+  const proj = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.35 : 1);
+
+  /* the field area is the canvas less the phase line strip on its right */
+  const eqNow = () => (S.typed || !S.mystEq ? S.eq : S.mystEq);
+  const hidden = () => !S.typed && !!S.mystEq;
+  const phaseOn = () => $('showPhase').checked && !S.blind && eqNow() && eqNow().auto;
+  const stripW = () => (phaseOn() ? Math.round((W < 520 ? 46 : 62) * proj()) : 0);
+  let WF = 0;
+  const X = (t) => (t - S.V.t0) / (S.V.t1 - S.V.t0) * WF, Y = (y) => H - (y - S.V.y0) / (S.V.y1 - S.V.y0) * H;
+  const Xi = (px) => S.V.t0 + px / WF * (S.V.t1 - S.V.t0), Yi = (py) => S.V.y0 + (H - py) / H * (S.V.y1 - S.V.y0);
+
+  /* the box */
+  const MSG = {
+    name: (e) => VDI18N.t('“{n}” is not a name I know. Use t and y, and functions like sin, ln, sqrt.', { n: e.name2 }),
+    char: (e) => VDI18N.t('“{n}” is not something I can read here.', { n: e.name2 }),
+    unexpected: (e) => VDI18N.t('“{n}” is out of place.', { n: e.name2 }),
+    close: () => VDI18N.t('There is a ) without a matching (.'),
+    comma: () => VDI18N.t('Functions here take one input; there is no comma form.'),
+    arg: (e) => VDI18N.t('{n} needs something to act on, like {n}(y).', { n: e.name2 }),
+    end: () => VDI18N.t('Not finished yet.'),
+  };
+  function status(text, bad) { const st = $('fyStatus'); st.textContent = text; st.classList.toggle('bad', !!bad); $('fy').classList.toggle('bad', !!bad); }
+  function read() {
+    const src = $('fy').value;
+    if (src === S.src && (S.eq || hidden())) return;
+    S.src = src;
+    if (!src.trim()) {
+      if (S.mystEq && !S.typed) { status(VDI18N.t('The equation is hidden: read the slopes from the field.')); return; }
+      status(VDI18N.t('Type the right side of dy/dt = f(t, y), like -0.5y or t - y.')); return;
+    }
+    const r = VDMATH.parseLive(src, { vars: VARS });
+    if (!r.node) { status((S.eq ? VDI18N.t('Still showing the last field. ') : '') + (MSG[r.error.code] || MSG.end)(r.error), true); return; }
+    S.eq = equation(r.node); S.typed = true;
+    status(r.partial ? VDI18N.t('Drawing what is finished so far, while you type.') : VDI18N.t('Read as dy/dt = {f}', { f: S.eq.text }));
+    changed();
+  }
+  /* anything that changes the curves: recompute on the next draw */
+  function changed() { S.cache = null; S.eqCache = null; need = true; readouts(); }
+
+  /* the solutions */
+  const active = () => S.curves[S.curves.length - 1];
+  function exactCurve(c, f) {
+    const span = S.V.t1 - S.V.t0, yspan = S.V.y1 - S.V.y0, cap = Math.max(Math.abs(S.V.y0), Math.abs(S.V.y1)) + 20 * yspan;
+    const o = { rtol: 1e-9, hmax: span / 300, cap };
+    const fw = c.t0 < S.V.t1 ? solve(f, c.t0, c.y0, S.V.t1, o) : { t: [c.t0], y: [c.y0] };
+    const bw = c.t0 > S.V.t0 ? solve(f, c.t0, c.y0, S.V.t0, o) : { t: [c.t0], y: [c.y0] };
+    return { t: bw.t.slice().reverse().concat(fw.t.slice(1)), y: bw.y.slice().reverse().concat(fw.y.slice(1)) };
+  }
+  /* the Euler run of the active curve and the accurate values at its steps */
+  function run() {
+    const e = eqNow(), c = active();
+    if (!e || !c) return null;
+    const key = `${S.src}|${hidden()}|${c.t0}|${c.y0}|${S.h}|${S.tEnd}`;
+    if (S.runCache && S.runCache.key === key) return S.runCache;
+    const n = eulerSteps(c.t0, S.tEnd, S.h), eu = euler(e.f, c.t0, c.y0, S.h, n);
+    const ex = n ? solve(e.f, c.t0, c.y0, eu.t[eu.t.length - 1], { stops: eu.t.slice(1) }) : { at: [] };
+    const exact = [c.y0].concat(ex.at); while (exact.length < eu.t.length) exact.push(NaN);
+    S.runCache = { key, n, t: eu.t, y: eu.y, exact };
+    return S.runCache;
+  }
+
+  /* drawing */
+  function niceStep(span, px) {
+    const raw = span / Math.max(2, px), p10 = Math.pow(10, Math.floor(Math.log10(raw))), m = raw / p10;
+    return (m <= 1 ? 1 : m <= 2 ? 2 : m <= 5 ? 5 : 10) * p10;
+  }
+  function tick(v, step) {
+    if (Math.abs(v) < step * 1e-6) return '0';
+    if (step >= 1e5 || step < 1e-3) { const e = Math.floor(Math.log10(Math.abs(v))), m = Number((v / Math.pow(10, e)).toPrecision(3)); return (m === 1 ? '' : m === -1 ? '−' : fmt(m) + '×') + '10' + sup(e); }
+    return fmt(Number(v.toFixed(Math.max(0, -Math.floor(Math.log10(step)) + 1))));
+  }
+  const label = (t, x, y) => { ctx.save(); ctx.strokeStyle = T.canvas; ctx.lineWidth = 4; ctx.lineJoin = 'round'; ctx.strokeText(t, x, y); ctx.restore(); ctx.fillText(t, x, y); };
+  function grid(p) {
+    const sx = niceStep(S.V.t1 - S.V.t0, WF / (90 * p)), sy = niceStep(S.V.y1 - S.V.y0, H / (55 * p));
+    ctx.lineWidth = 1; ctx.strokeStyle = T.line; ctx.globalAlpha = 0.6; ctx.beginPath();
+    for (let x = Math.ceil(S.V.t0 / sx) * sx; x <= S.V.t1; x += sx) { const u = Math.round(X(x)) + 0.5; ctx.moveTo(u, 0); ctx.lineTo(u, H); }
+    for (let y = Math.ceil(S.V.y0 / sy) * sy; y <= S.V.y1; y += sy) { const u = Math.round(Y(y)) + 0.5; ctx.moveTo(0, u); ctx.lineTo(WF, u); }
+    ctx.stroke(); ctx.globalAlpha = 1;
+    const ax = Math.min(Math.max(Y(0), 0), H), ay = Math.min(Math.max(X(0), 0), WF);
+    ctx.strokeStyle = T.muted; ctx.lineWidth = 1.5; ctx.beginPath();
+    if (Y(0) >= 0 && Y(0) <= H) { ctx.moveTo(0, Y(0)); ctx.lineTo(WF, Y(0)); }
+    if (X(0) >= 0 && X(0) <= WF) { ctx.moveTo(X(0), 0); ctx.lineTo(X(0), H); }
+    ctx.stroke();
+    ctx.fillStyle = T.muted; ctx.font = `${11 * p}px ${T.mono}`;
+    const below = ax + 16 * p < H; ctx.textAlign = 'center'; ctx.textBaseline = below ? 'top' : 'bottom';
+    for (let x = Math.ceil(S.V.t0 / sx) * sx; x <= S.V.t1; x += sx) { if (Math.abs(x) < sx / 2) continue; const u = X(x); if (u > WF - 12 * p) continue; label(tick(x, sx), u, below ? ax + 4 * p : ax - 4 * p); }
+    const right = ay + 50 * p < WF; ctx.textAlign = right ? 'left' : 'right'; ctx.textBaseline = 'middle';
+    for (let y = Math.ceil(S.V.y0 / sy) * sy; y <= S.V.y1; y += sy) { if (Math.abs(y) < sy / 2) continue; const u = Y(y); if (u < 26 * p || u > H - 10) continue; label(tick(y, sy), right ? ay + 5 * p : ay - 5 * p, u); }
+    /* axis names with their units */
+    ctx.font = `600 ${12 * p}px ${T.mono}`; ctx.fillStyle = T.ink;
+    ctx.textAlign = 'right'; ctx.textBaseline = 'bottom'; label(S.tl + ' →', WF - 6 * p, H - 4 * p);
+    ctx.textAlign = 'left'; ctx.textBaseline = 'top'; label('y: ' + VDI18N.t(S.yl), (right ? ay : 0) + 6 * p, 6 * p);
+  }
+  function field(e, p) {
+    const gap = 30 * p, nx = Math.max(6, Math.round(WF / gap)), ny = Math.max(5, Math.round(H / gap)), len = Math.min(WF / nx, H / ny) * 0.36;
+    const kx = WF / (S.V.t1 - S.V.t0), ky = H / (S.V.y1 - S.V.y0);
+    ctx.strokeStyle = T.field; ctx.lineWidth = 1.6 * p; ctx.lineCap = 'round'; ctx.globalAlpha = 0.75; ctx.beginPath();
+    for (let i = 0; i < nx; i++) for (let j = 0; j < ny; j++) {
+      const u = (i + 0.5) * WF / nx, w = (j + 0.5) * H / ny, s = e.f(Xi(u), Yi(w));
+      if (!isFinite(s)) continue;
+      const dx = kx, dy = -s * ky, m = Math.hypot(dx, dy), a = len * dx / m, b = len * dy / m;
+      ctx.moveTo(u - a, w - b); ctx.lineTo(u + a, w + b);
+    }
+    ctx.stroke(); ctx.globalAlpha = 1; ctx.lineCap = 'butt';
+  }
+  /* isoclines f = c by marching squares on a grid, each level labeled with its slope */
+  function isoclines(e, p) {
+    const nx = 140, ny = Math.max(40, Math.round(140 * H / Math.max(1, WF))), F = new Float64Array((nx + 1) * (ny + 1)), vals = [];
+    for (let j = 0; j <= ny; j++) for (let i = 0; i <= nx; i++) { const v = e.f(S.V.t0 + (S.V.t1 - S.V.t0) * i / nx, S.V.y0 + (S.V.y1 - S.V.y0) * j / ny); F[j * (nx + 1) + i] = v; if (isFinite(v)) vals.push(Math.abs(v)); }
+    if (!vals.length) return;
+    vals.sort((a, b) => a - b);
+    const q = vals[Math.floor(vals.length * 0.9)], step = q > 0 ? niceStep(q, 6) : 1, levels = [];
+    for (let k = -6; k <= 6; k++) levels.push(k * step);
+    const gx = (i) => i / nx * WF, gy = (j) => H - j / ny * H;
+    ctx.font = `${11 * p}px ${T.mono}`; ctx.textBaseline = 'middle'; ctx.textAlign = 'center';
+    levels.forEach((c, li) => {
+      const segs = [];
+      for (let j = 0; j < ny; j++) for (let i = 0; i < nx; i++) {
+        const a = F[j * (nx + 1) + i] - c, b = F[j * (nx + 1) + i + 1] - c, d = F[(j + 1) * (nx + 1) + i] - c, g = F[(j + 1) * (nx + 1) + i + 1] - c;
+        if (!isFinite(a + b + d + g)) continue;
+        if (Math.max(Math.abs(a), Math.abs(b), Math.abs(d), Math.abs(g)) > 40 * step) continue;   /* a pole, not a crossing */
+        const pts = [];
+        if ((a < 0) !== (b < 0)) pts.push([gx(i + a / (a - b)), gy(j)]);
+        if ((b < 0) !== (g < 0)) pts.push([gx(i + 1), gy(j + b / (b - g))]);
+        if ((d < 0) !== (g < 0)) pts.push([gx(i + d / (d - g)), gy(j + 1)]);
+        if ((a < 0) !== (d < 0)) pts.push([gx(i), gy(j + a / (a - d))]);
+        if (pts.length >= 2) segs.push([pts[0], pts[1]]);
+        if (pts.length === 4) segs.push([pts[2], pts[3]]);
+      }
+      if (!segs.length) return;
+      ctx.strokeStyle = T.iso; ctx.lineWidth = (c === 0 ? 2.2 : 1.4) * p; ctx.setLineDash(c === 0 ? [7 * p, 4 * p] : [2 * p, 4 * p]); ctx.globalAlpha = c === 0 ? 0.95 : 0.8;
+      ctx.beginPath(); for (const [s0, s1] of segs) { ctx.moveTo(s0[0], s0[1]); ctx.lineTo(s1[0], s1[1]); } ctx.stroke();
+      ctx.setLineDash([]); ctx.globalAlpha = 1;
+      /* the label goes on the piece nearest a spot that moves along the field from level to level, so labels do not stack up */
+      const tx = WF * (0.15 + 0.7 * ((li * 0.37) % 1)), ty = H * (0.2 + 0.6 * ((li * 0.61) % 1));
+      let best = null, bd = Infinity;
+      for (const [s0, s1] of segs) { const mx = (s0[0] + s1[0]) / 2, my = (s0[1] + s1[1]) / 2; if (mx < 40 * p || mx > WF - 40 * p || my < 30 * p || my > H - 20 * p) continue; const d = Math.hypot(mx - tx, (my - ty) * 0.5); if (d < bd) { bd = d; best = [mx, my]; } }
+      if (best) { ctx.fillStyle = T.iso; label(VDI18N.t('slope {s}', { s: tick(c, step) }), best[0], best[1]); }
+    });
+  }
+  function polyline(ts, ys, color, width, dash) {
+    ctx.strokeStyle = color; ctx.lineWidth = width; ctx.setLineDash(dash || []); ctx.lineJoin = 'round'; ctx.lineCap = 'round'; ctx.beginPath();
+    let on = false;
+    for (let i = 0; i < ts.length; i++) {
+      const u = X(ts[i]), w = Y(ys[i]);
+      if (!isFinite(w) || w < -4 * H || w > 5 * H) { on = false; continue; }
+      if (on) ctx.lineTo(u, w); else { ctx.moveTo(u, w); on = true; }
+    }
+    ctx.stroke(); ctx.setLineDash([]);
+  }
+  function arrowHead(x, y, dx, dy, s) {
+    const m = Math.hypot(dx, dy) || 1, ux = dx / m, uy = dy / m;
+    ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x - s * ux + s * 0.55 * uy, y - s * uy - s * 0.55 * ux); ctx.lineTo(x - s * ux - s * 0.55 * uy, y - s * uy + s * 0.55 * ux); ctx.closePath(); ctx.fill();
+  }
+  function equilibriaNow() {
+    const e = eqNow(); if (!e || !e.auto) return null;
+    const key = `${S.src}|${hidden()}|${S.V.y0}|${S.V.y1}`;
+    if (S.eqCache && S.eqCache.key === key) return S.eqCache.r;
+    const pad = (S.V.y1 - S.V.y0) * 1e-9, r = equilibria((y) => e.f(0, y), S.V.y0 - pad, S.V.y1 + pad);
+    S.eqCache = { key, r }; return r;
+  }
+  function phaseLine(e, p) {
+    const sw = stripW(), x0 = WF, cx = x0 + sw / 2, r = equilibriaNow();
+    ctx.fillStyle = T.surface; ctx.fillRect(x0, 0, sw, H);
+    ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(x0 + 0.5, 0); ctx.lineTo(x0 + 0.5, H); ctx.stroke();
+    ctx.fillStyle = T.muted; ctx.font = `600 ${10 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    ctx.fillText(VDI18N.t('phase'), cx, 5 * p); ctx.fillText(VDI18N.t('line'), cx, 17 * p);
+    const top = 34 * p;
+    ctx.strokeStyle = T.ink; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(cx, top); ctx.lineTo(cx, H - 6 * p); ctx.stroke();
+    if (!r) return;
+    if (r.all) return;
+    const eqs = r.list.filter((q) => Y(q.y) >= top - 4 && Y(q.y) <= H);
+    /* arrows between the equilibria: up where f > 0, down where f < 0 */
+    const cuts = [H - 6 * p].concat(eqs.map((q) => Y(q.y)).sort((a, b) => b - a)).concat([top]);
+    ctx.fillStyle = T.ink;
+    for (let i = 0; i + 1 < cuts.length; i++) {
+      const lo = cuts[i], hi = cuts[i + 1], len = lo - hi; if (len < 18 * p) continue;
+      const count = Math.max(1, Math.min(3, Math.floor(len / (90 * p))));
+      for (let k = 1; k <= count; k++) {
+        const w = lo - len * k / (count + 1), v = e.f(0, Yi(w)); if (!isFinite(v) || v === 0) continue;
+        arrowHead(cx, w + (v > 0 ? -6 : 6) * p, 0, v > 0 ? -1 : 1, 10 * p);
+      }
+    }
+    for (const q of eqs) {
+      const w = Y(q.y), col = q.kind === 'stable' ? T.stable : q.kind === 'unstable' ? T.unstable : T.muted;
+      /* the equilibrium solution across the field */
+      ctx.strokeStyle = col; ctx.lineWidth = 1.5 * p; ctx.setLineDash([8 * p, 5 * p]); ctx.globalAlpha = 0.85; ctx.beginPath(); ctx.moveTo(0, w); ctx.lineTo(WF, w); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1;
+      const rr = 6.5 * p;
+      ctx.lineWidth = 2.2 * p; ctx.strokeStyle = col; ctx.fillStyle = T.canvas; ctx.beginPath(); ctx.arc(cx, w, rr, 0, 7); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = col;
+      if (q.kind === 'stable') { ctx.beginPath(); ctx.arc(cx, w, rr, 0, 7); ctx.fill(); }
+      if (q.kind === 'semistable') { ctx.beginPath(); ctx.arc(cx, w, rr, Math.PI, 0); ctx.fill(); }
+      ctx.font = `600 ${11 * p}px ${T.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = w < 40 * p ? 'top' : 'bottom';
+      const name = q.kind === 'stable' ? VDI18N.t('stable') : q.kind === 'unstable' ? VDI18N.t('unstable') : VDI18N.t('semistable');
+      label(hidden() ? name : `y = ${f6(q.y)}, ${name}`, WF - 8 * p, w + (w < 40 * p ? 4 : -4) * p);
+    }
+  }
+  function draw() {
+    if (!T || !W) return;
+    const p = proj(), e = eqNow();
+    WF = W - stripW();
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    ctx.save(); ctx.beginPath(); ctx.rect(0, 0, WF, H); ctx.clip();
+    grid(p);
+    if (e) {
+      if ($('showIso').checked) isoclines(e, p);
+      if ($('showField').checked) field(e, p);
+      /* the curves: earlier ones thin, the active one bold */
+      const key = `${S.src}|${hidden()}|${S.V.t0},${S.V.t1},${S.V.y0},${S.V.y1}|${S.curves.map((c) => c.t0 + ',' + c.y0).join(';')}`;
+      if (!S.cache || S.cache.key !== key) S.cache = { key, curves: S.curves.map((c) => exactCurve(c, e.f)) };
+      const showExact = $('showExact').checked && !S.blind;
+      S.cache.curves.forEach((cv, i) => { const last = i === S.curves.length - 1; if (!last) polyline(cv.t, cv.y, T.ink, 1.6 * p); else if (showExact) polyline(cv.t, cv.y, T.exact, 3.2 * p); });
+      /* simulated thermometer readings */
+      if (S.data) {
+        for (const [t, y] of S.data) { const u = X(t), w = Y(y); ctx.fillStyle = T.ink; ctx.strokeStyle = T.canvas; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(u, w, 4.5 * p, 0, 7); ctx.fill(); ctx.stroke(); }
+      }
+      const R = run(), c = active();
+      if (R && $('showEuler').checked && R.n) {
+        const k = Math.floor(S.prog), fr = S.prog - k;
+        ctx.fillStyle = T.euler;
+        polyline(R.t.slice(0, k + 1), R.y.slice(0, k + 1), T.euler, 2.6 * p, [9 * p, 5 * p]);
+        if (k < R.n && fr > 0) polyline([R.t[k], R.t[k] + fr * S.h], [R.y[k], R.y[k] + fr * (R.y[k + 1] - R.y[k])], T.euler, 2.6 * p, [9 * p, 5 * p]);
+        for (let i = 1; i <= Math.min(k, R.n); i++) { const u = X(R.t[i]), w = Y(R.y[i]); if (w > -10 && w < H + 10) { ctx.fillStyle = T.euler; ctx.beginPath(); ctx.arc(u, w, 4 * p, 0, 7); ctx.fill(); } }
+        /* the tangent that the next step follows, a full step long */
+        if (k < R.n && (S.run || S.prog > 0)) {
+          const s = e.f(R.t[k], R.y[k]), u0 = X(R.t[k]), w0 = Y(R.y[k]), u1 = X(R.t[k] + S.h), w1 = Y(R.y[k] + S.h * s);
+          ctx.strokeStyle = T.euler; ctx.globalAlpha = 0.5; ctx.lineWidth = 1.4 * p; ctx.beginPath(); ctx.moveTo(u0, w0); ctx.lineTo(u1, w1); ctx.stroke(); ctx.globalAlpha = 1;
+        }
+        /* the error at the end of the run */
+        if (k >= R.n && !S.blind && isFinite(R.exact[R.n])) {
+          const u = X(R.t[R.n]), a = Y(R.y[R.n]), b = Y(R.exact[R.n]);
+          if (Math.abs(a - b) > 6 * p) {
+            ctx.strokeStyle = T.ink; ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.moveTo(u + 8 * p, a); ctx.lineTo(u + 12 * p, a); ctx.lineTo(u + 12 * p, b); ctx.lineTo(u + 8 * p, b); ctx.stroke();
+            ctx.fillStyle = T.ink; ctx.font = `${11 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+            label(VDI18N.t('error {e}', { e: f6(+(R.y[R.n] - R.exact[R.n]).toPrecision(3)) }), u + 16 * p, (a + b) / 2);
+          }
+        }
+      }
+      /* the start point, a handle to drag */
+      if (c) { const u = X(c.t0), w = Y(c.y0); ctx.fillStyle = T.exact; ctx.strokeStyle = T.canvas; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.arc(u, w, 7 * p, 0, 7); ctx.fill(); ctx.stroke(); ctx.strokeStyle = T.exact; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.arc(u, w, 11 * p, 0, 7); ctx.stroke(); }
+      /* the slope under the pointer */
+      if (S.hover && !drag) {
+        const { u, w } = S.hover, t = Xi(u), y = Yi(w), s = e.f(t, y);
+        if (u < WF && isFinite(s)) {
+          ctx.font = `${11 * p}px ${T.mono}`; ctx.fillStyle = T.ink; ctx.textBaseline = 'bottom';
+          const lab = `t = ${f6(+t.toPrecision(4))}, y = ${f6(+y.toPrecision(4))}, dy/dt = ${f6(+s.toPrecision(4))}`, wl = ctx.measureText(lab).width;
+          ctx.textAlign = u + wl + 20 > WF ? 'right' : 'left'; label(lab, u + (u + wl + 20 > WF ? -12 : 12) * p, w - 8 * p);
+        }
+      }
+      legend(p, R);
+    }
+    ctx.restore();
+    if (e && phaseOn()) phaseLine(e, p);
+  }
+  function legend(p, R) {
+    const rows = [];
+    if ($('showExact').checked && !S.blind) rows.push([T.exact, [], VDI18N.t('accurate solution')]);
+    if ($('showEuler').checked && R && R.n) rows.push([T.euler, [9 * p, 5 * p], VDI18N.t('Euler, h = {h}', { h: f6(S.h) })]);
+    if (S.data) rows.push([T.ink, null, VDI18N.t('thermometer readings (simulated)')]);
+    ctx.font = `${11 * p}px ${T.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    rows.forEach(([col, dash, text], i) => {
+      const y = ((WF < 560 ? 34 : 14) + 16 * i) * p, x = WF - 8 * p, tw = ctx.measureText(text).width;
+      ctx.fillStyle = T.ink; label(text, x, y);
+      if (dash) { ctx.strokeStyle = col; ctx.lineWidth = 2.6 * p; ctx.setLineDash(dash); ctx.beginPath(); ctx.moveTo(x - tw - 34 * p, y); ctx.lineTo(x - tw - 8 * p, y); ctx.stroke(); ctx.setLineDash([]); }
+      else { ctx.fillStyle = col; ctx.beginPath(); ctx.arc(x - tw - 14 * p, y, 4 * p, 0, 7); ctx.fill(); }
+    });
+  }
+
+  /* the rail */
+  function readouts() {
+    const dd = (a, b, cls) => `<div${cls ? ` class="${cls}"` : ''}><dt>${a}</dt><dd translate="no">${b}</dd></div>`, e = eqNow(), c = active();
+    if (!e || !c) { $('out').innerHTML = ''; return; }
+    const R = run(), blind = S.blind;
+    let h = dd(VDI18N.t('Equation'), hidden() ? VDI18N.t('hidden') : 'dy/dt = ' + e.text, 'wide');
+    h += dd(VDI18N.t('Start point'), `t₀ = ${f6(c.t0)}, y₀ = ${f6(c.y0)}`, 'wide');
+    h += dd(VDI18N.t('Slope there, dy/dt'), f6(e.f(c.t0, c.y0)));
+    if (R) {
+      if (!R.n) h += `<div class="wide"><dt>${VDI18N.t('Euler')}</dt><dd>${VDI18N.t('Set Run to t later than the start, and h smaller than the run.')}</dd></div>`;
+      else {
+        const tn = R.t[R.n], yn = R.y[R.n], ex = R.exact[R.n];
+        h += dd(VDI18N.t('Euler steps'), `${R.n} × h = ${f6(S.h)}`);
+        h += dd(VDI18N.t('Euler ends at t'), f6(tn));
+        h += dd(VDI18N.t('Euler y there'), f6(yn));
+        h += dd(VDI18N.t('Accurate y there'), blind ? '?' : f6(ex));
+        h += dd(VDI18N.t('Error, Euler − accurate'), blind ? '?' : f6(yn - ex));
+      }
+    }
+    if (S.data) h += `<div class="wide"><dt>${VDI18N.t('Thermometer readings (simulated)')}</dt><dd translate="no">${S.data.map(([t, y]) => `${t} min: ${y.toFixed(1)} °C`).join(', ')}</dd></div>`;
+    if (!e.auto) h += `<div class="wide"><dt>${VDI18N.t('Equilibria')}</dt><dd>${VDI18N.t('f depends on t, so there are no equilibria and no phase line.')}</dd></div>`;
+    else if (blind) h += dd(VDI18N.t('Equilibria'), '?');
+    else {
+      const r = equilibriaNow();
+      const name = (k) => (k === 'stable' ? VDI18N.t('stable') : k === 'unstable' ? VDI18N.t('unstable') : VDI18N.t('semistable'));
+      const txt = !r ? '' : r.all ? VDI18N.t('every y: f is zero everywhere') : !r.list.length ? VDI18N.t('none in view') : hidden() ? VDI18N.t('hidden: find them from the field') : r.list.map((q) => `y = ${f6(q.y)}, ${name(q.kind)}`).join('<br>');
+      h += `<div class="wide"><dt>${VDI18N.t('Equilibria in view')}</dt><dd translate="no">${txt}</dd></div>`;
+    }
+    $('out').innerHTML = h;
+  }
+  function viewInputs() {
+    const set = (id, v) => { const el = $(id); if (document.activeElement !== el) el.value = Math.abs(v) >= 1e5 || (v !== 0 && Math.abs(v) < 1e-3) ? v.toExponential(1).replace('+', '') : Number(v.toPrecision(5)); };
+    set('ta', S.V.t0); set('tb', S.V.t1); set('ya', S.V.y0); set('yb', S.V.y1);
+  }
+  function startInputs() {
+    const c = active(); if (!c) return;
+    for (const [id, v] of [['t0In', c.t0], ['y0In', c.y0]]) if (document.activeElement !== $(id)) $(id).value = Number(v.toPrecision(6));
+  }
+  function eulerInputs() { if (document.activeElement !== $('hIn')) $('hIn').value = S.h; if (document.activeElement !== $('tEndIn')) $('tEndIn').value = S.tEnd; }
+
+  /* controls */
+  const pressPreset = (k) => { for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === k)); };
+  function setMystery(kind, fresh) {
+    if (kind === 'cup') {
+      if (fresh || !S.cup) S.cup = mysteryCup(Math.random);
+      S.mystEq = readEquation(cupSrc(S.cup)); S.data = cupReadings(S.cup);
+    } else {
+      if (fresh || !S.culture) S.culture = mysteryCulture(Math.random);
+      S.mystEq = readEquation(cultureSrc(S.culture)); S.data = null;
+    }
+    S.myst = kind;
+  }
+  function applyPreset(k) {
+    const c = PRESETS[k]; S.preset = k;
+    S.V = { t0: c.t[0], t1: c.t[1], y0: c.y[0], y1: c.y[1] };
+    S.curves = c.starts.map(([t0, y0]) => ({ t0, y0 })).reverse();
+    S.h = c.h; S.tEnd = c.tEnd; S.tl = c.tl; S.yl = c.yl; S.prog = 0;
+    $('showIso').checked = !!c.iso;
+    if (c.mystery) { setMystery(c.mystery); S.typed = false; $('fy').value = ''; $('fy').placeholder = VDI18N.t('hidden: read the field'); }
+    else { S.mystEq = null; S.myst = null; S.data = null; $('fy').value = c.src; $('fy').placeholder = ''; }
+    $('mystRow').classList.toggle('on', !!c.mystery);
+    $('presetHint').textContent = c.hint; pressPreset(k); setRun(false);
+    S.src = null; S.eq = null; S.runCache = null; read(); viewInputs(); startInputs(); eulerInputs(); changed();
+  }
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  $('newMystery').addEventListener('click', () => { if (!S.myst) return; setMystery(S.myst, true); S.typed = false; $('fy').value = ''; S.src = null; S.runCache = null; read(); pressPreset(S.myst === 'cup' ? 'mystCool' : 'mystLog'); S.preset = S.myst === 'cup' ? 'mystCool' : 'mystLog'; S.prog = 0; changed(); });
+  $('fy').addEventListener('input', () => {
+    if (S.preset !== 'custom') {
+      S.preset = 'custom'; pressPreset('');
+      $('presetHint').textContent = S.myst ? VDI18N.t('Your own model, drawn over the mystery readings. Press the mystery setup again to bring its hidden field back.') : VDI18N.t('Your own equation. Every setup above can be edited in the box, too.');
+    }
+    S.prog = 0; read(); need = true;
+  });
+  function setRun(on) {
+    S.run = on; $('play').textContent = on ? VDI18N.t('Pause') : VDI18N.t('Play'); $('play').classList.toggle('attn', !on);
+  }
+  $('play').addEventListener('click', () => {
+    const R = run();
+    if (!S.run && R && S.prog >= R.n) S.prog = 0;
+    if (!S.run && matchMedia('(prefers-reduced-motion: reduce)').matches && R) { S.prog = R.n; need = true; readouts(); return; }
+    setRun(!S.run); need = true;
+  });
+  function stepOnce() { const R = run(); if (!R || !R.n) return; S.prog = Math.min(R.n, Math.floor(S.prog) + 1); need = true; }
+  $('reset').addEventListener('click', () => { setRun(false); S.prog = 0; need = true; });
+  const eulerChanged = () => { S.prog = 0; setRun(false); changed(); };
+  $('hIn').addEventListener('change', () => { const v = parseFloat($('hIn').value); if (v > 0 && isFinite(v)) { S.h = v; eulerChanged(); } else eulerInputs(); });
+  $('tEndIn').addEventListener('change', () => { const v = parseFloat($('tEndIn').value); if (isFinite(v)) { S.tEnd = v; eulerChanged(); } else eulerInputs(); });
+  $('halveH').addEventListener('click', () => { S.h = Number((S.h / 2).toPrecision(12)); eulerInputs(); eulerChanged(); });
+  $('doubleH').addEventListener('click', () => { S.h = Number((S.h * 2).toPrecision(12)); eulerInputs(); eulerChanged(); });
+  for (const id of ['t0In', 'y0In']) $(id).addEventListener('change', () => {
+    const c = active(), t = parseFloat($('t0In').value), y = parseFloat($('y0In').value);
+    if (c && isFinite(t) && isFinite(y)) { c.t0 = t; c.y0 = y; eulerChanged(); } else startInputs();
+  });
+  $('clearCurves').addEventListener('click', () => { S.curves = S.curves.slice(-1); changed(); });
+  for (const id of ['showEuler', 'showExact', 'showField', 'showIso', 'showPhase']) $(id).addEventListener('change', () => { need = true; readouts(); });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; changed(); });
+  function setView(t0, t1, y0, y1) {
+    if (!(t1 > t0) || !(y1 > y0) || !isFinite(t0 + t1 + y0 + y1)) return;
+    const lim = (a, b) => { const span = Math.min(1e6, Math.max(1e-6, b - a)); if (span === b - a) return [a, b]; const k = span / (b - a), c = (a + b) / 2; return [c - (c - a) * k, c + (b - c) * k]; };
+    [t0, t1] = lim(t0, t1); [y0, y1] = lim(y0, y1);
+    S.V = { t0, t1, y0, y1 }; viewInputs(); need = true; S.eqCache = null;
+  }
+  /* zoom about the middle of the view (Steve 2026-11-12), both axes together */
+  function zoom(fct) {
+    const ct = (S.V.t0 + S.V.t1) / 2, cy = (S.V.y0 + S.V.y1) / 2, st = S.V.t1 - S.V.t0, sy = S.V.y1 - S.V.y0;
+    /* stop both axes together at the ends of the range (spans 1e-6 to 1e6), so a zoom out and back returns to the same view */
+    fct = Math.min(fct, 1e6 / Math.max(st, sy)); fct = Math.max(fct, 1e-6 / Math.min(st, sy));
+    if (Math.abs(fct - 1) < 1e-12) return;
+    setView(ct - (ct - S.V.t0) * fct, ct + (S.V.t1 - ct) * fct, cy - (cy - S.V.y0) * fct, cy + (S.V.y1 - cy) * fct);
+    readouts();
+  }
+  $('zin').addEventListener('click', () => zoom(1 / 1.5));
+  $('zout').addEventListener('click', () => zoom(1.5));
+  $('homeView').addEventListener('click', () => { const c = PRESETS[S.preset] || PRESETS[S.myst === 'cup' ? 'mystCool' : S.myst ? 'mystLog' : 'cool']; if (S.preset === 'custom' && !S.myst) { setView(-5, 5, -5, 5); } else setView(c.t[0], c.t[1], c.y[0], c.y[1]); readouts(); });
+  for (const id of ['ta', 'tb', 'ya', 'yb']) $(id).addEventListener('change', () => { setView(+$('ta').value, +$('tb').value, +$('ya').value, +$('yb').value); viewInputs(); readouts(); });
+
+  /* the field: drag the start dot, drag elsewhere to pan, click or tap to start a new curve; wheel or pinch zooms; arrows move the start */
+  const ptrs = new Map(); let drag = null;
+  const nearStart = (x, y) => { const c = active(); return c && Math.hypot(x - X(c.t0), y - Y(c.y0)) < 16 * proj(); };
+  can.addEventListener('pointerdown', (e) => {
+    const r = can.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
+    ptrs.set(e.pointerId, { x, y });
+    can.setPointerCapture(e.pointerId);
+    if (ptrs.size === 2) { const [a, b] = [...ptrs.values()]; drag = { pinch: Math.hypot(a.x - b.x, a.y - b.y), view: { ...S.V } }; return; }
+    drag = { mode: nearStart(x, y) ? 'start' : 'pan', x, y, view: { ...S.V }, moved: false };
+    if (drag.mode === 'start') setRun(false);
+  });
+  can.addEventListener('pointermove', (e) => {
+    const r = can.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
+    if (!ptrs.has(e.pointerId) || !drag) {
+      can.style.cursor = nearStart(x, y) ? 'grab' : 'crosshair';
+      if (e.pointerType === 'mouse') { S.hover = { u: x, w: y }; need = true; }
+      return;
+    }
+    ptrs.set(e.pointerId, { x, y });
+    if (drag.pinch) {
+      const [a, b] = [...ptrs.values()], d = Math.hypot(a.x - b.x, a.y - b.y); if (d < 10) return;
+      const f = drag.pinch / d, v = drag.view, ct = (v.t0 + v.t1) / 2, cy = (v.y0 + v.y1) / 2;
+      setView(ct - (ct - v.t0) * f, ct + (v.t1 - ct) * f, cy - (cy - v.y0) * f, cy + (v.y1 - cy) * f); return;
+    }
+    if (Math.hypot(x - drag.x, y - drag.y) > 4) drag.moved = true;
+    if (drag.mode === 'start') { const c = active(); c.t0 = Number(Xi(Math.min(x, WF)).toPrecision(6)); c.y0 = Number(Yi(y).toPrecision(6)); S.prog = 0; S.runCache = null; S.cache = null; startInputs(); need = true; return; }
+    if (!drag.moved) return;
+    const v = drag.view, dt = (x - drag.x) / WF * (v.t1 - v.t0), dy = (y - drag.y) / H * (v.y1 - v.y0);
+    setView(v.t0 - dt, v.t1 - dt, v.y0 + dy, v.y1 + dy);
+  });
+  can.addEventListener('pointerleave', () => { if (S.hover) { S.hover = null; need = true; } });
+  const up = (e) => {
+    if (!ptrs.has(e.pointerId)) return;
+    ptrs.delete(e.pointerId);
+    if (drag && drag.mode === 'pan' && !drag.moved && !ptrs.size) {
+      const r = can.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
+      if (x < WF) { S.curves.push({ t0: Number(Xi(x).toPrecision(6)), y0: Number(Yi(y).toPrecision(6)) }); if (S.curves.length > 12) S.curves.shift(); S.prog = 0; setRun(false); startInputs(); changed(); }
+    } else if (drag && (drag.mode === 'start' || drag.moved)) readouts();
+    if (!ptrs.size) drag = null; else if (drag && drag.pinch) drag = null;
+  };
+  can.addEventListener('pointerup', up); can.addEventListener('pointercancel', up);
+  can.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    const d = e.deltaY * (e.deltaMode === 1 ? 33 : e.deltaMode === 2 ? 400 : 1);
+    zoom(Math.exp(Math.max(-100, Math.min(100, d)) * 0.0018));
+  }, { passive: false });
+  can.addEventListener('keydown', (e) => {
+    const c = active(), k = e.shiftKey ? 10 : 100;
+    if (c && ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(e.key)) {
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') c.t0 = Number((c.t0 + (e.key === 'ArrowLeft' ? -1 : 1) * (S.V.t1 - S.V.t0) / k).toPrecision(6));
+      else c.y0 = Number((c.y0 + (e.key === 'ArrowDown' ? -1 : 1) * (S.V.y1 - S.V.y0) / k).toPrecision(6));
+      setRun(false); S.prog = 0; startInputs(); changed(); e.preventDefault();
+    } else if (e.key === '+' || e.key === '=') { zoom(1 / 1.5); e.preventDefault(); }
+    else if (e.key === '-' || e.key === '_') { zoom(1.5); e.preventDefault(); }
+    else if (e.key === ' ') { $('play').click(); e.preventDefault(); }
+  });
+
+  /* Play: Euler's steps appear one after another, about six seconds for the whole run (at least 0.6 s a step) */
+  let last = performance.now(), lastRead = '';
+  function frame(now) {
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    if (S.run) {
+      const R = run();
+      if (!R || !R.n) setRun(false);
+      else { S.prog = Math.min(R.n, S.prog + dt * Math.max(1 / 0.6, R.n / 6)); if (S.prog >= R.n) setRun(false); }
+      need = true;
+    }
+    if (need) { need = false; draw(); const c = active(), k = `${S.src}|${hidden()}|${c && c.t0},${c && c.y0}|${S.h}|${S.tEnd}|${S.blind}`; if (k !== lastRead) { lastRead = k; readouts(); } }
+    requestAnimationFrame(frame);
+  }
+  function resize() {
+    dpr = window.devicePixelRatio || 1; const r = $('pane').getBoundingClientRect(); W = r.width; H = r.height;
+    can.width = Math.round(W * dpr); can.height = Math.round(H * dpr); S.cache = null; need = true;
+  }
+  const retheme = () => { tokens(); need = true; };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'data-vd-look'] });
+  VD.projector({ onChange: resize });
+  if (window.VD && VD.panel) VD.panel({ play: '#play', reset: '#reset', step: { run: stepOnce, label: 'Step', title: 'Take one Euler step' } });
+  if (window.VD && VD.howTo) VD.howTo({ src: 'media/how-this-works/slope-fields-cooling.mp4', poster: 'media/how-this-works/slope-fields-cooling.jpg' });
+  /* Copy link carries the equation in the box */
+  if (window.VD && VD.share && VD.share.picture) VD.share.picture('f', {
+    get: () => (S.preset === 'custom' ? $('fy').value : ''),
+    set: (s) => { if (s) { $('fy').value = s; $('fy').dispatchEvent(new Event('input')); } },
+  });
+  /* Readings: the start point, its slope and the Euler run (tools/readings_panel.py) */
+  window.vdVersion = 'slope-fields@2026-11-19';
+  window.vdShowCols = [['t0', 't₀'], ['y0', 'y₀'], ['slope', 'dy/dt'], ['h', 'h'], ['error', VDI18N.t('Euler error')]];
+  window.vdReadingRow = () => {
+    const e = eqNow(), c = active(); if (!e || !c) return VDI18N.t('Type an equation first.');
+    const R = run(), n = R ? R.n : 0;
+    const setup = S.preset === 'custom' ? (S.myst ? `your model, ${S.myst === 'cup' ? 'mystery cup' : 'mystery culture'}` : 'your equation') : S.preset === 'mystCool' ? 'mystery cup' : S.preset === 'mystLog' ? 'mystery culture' : S.preset;
+    return { setup, equation: hidden() ? 'hidden' : 'dy/dt = ' + e.text, t0: r6(c.t0), y0: r6(c.y0), slope: r6(e.f(c.t0, c.y0)), h: n ? r6(S.h) : '', steps: n,
+      t_end: n ? r6(R.t[n]) : '', y_euler: n ? r6(R.y[n]) : '', y_exact: n && !S.blind ? r6(R.exact[n]) : '', error: n && !S.blind ? r6(R.y[n] - R.exact[n]) : '' };
+  };
+  /* what the picture shows now, for a screen reader (VD.describe) */
+  if (window.VD && VD.describe) VD.describe(can, () => {
+    const e = eqNow(), c = active(); if (!e || !c) return [];
+    const R = run(), out = [hidden() ? 'The equation is hidden.' : `The equation is dy/dt = ${e.text}.`, $('showField').checked ? 'Its slope field is drawn.' : 'The slope field is hidden.'];
+    out.push(`The start point is t = ${f6(c.t0)}, y = ${f6(c.y0)}, where the slope is ${f6(e.f(c.t0, c.y0))}.`);
+    if (R && R.n) out.push({ t: `Euler takes ${R.n} steps of ${f6(S.h)} to t = ${f6(R.t[R.n])} and ends at y = ${f6(R.y[R.n])}.`, live: !S.run });
+    if (R && R.n && !S.blind) out.push({ t: `The accurate solution there is ${f6(R.exact[R.n])}.`, live: !S.run });
+    if (e.auto && !S.blind && !hidden()) { const r = equilibriaNow(); if (r && r.list.length) out.push('Equilibria: ' + r.list.map((q) => `y = ${f6(q.y)} ${q.kind}`).join('; ') + '.'); }
+    if (S.data) out.push(`Simulated thermometer readings: ${S.data.map(([t, y]) => `${t} min ${y} °C`).join(', ')}.`);
+    out.push(`The view runs from t = ${f6(S.V.t0)} to ${f6(S.V.t1)} and from y = ${f6(S.V.y0)} to ${f6(S.V.y1)}.`);
+    return out;
+  });
+  tokens(); new ResizeObserver(resize).observe($('pane')); resize(); applyPreset('cool');
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  window.__sf = { S, applyPreset, run, eqNow, equilibriaNow, setRun, stepOnce, solve, euler, X, Y, draw: () => { need = true; } };
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

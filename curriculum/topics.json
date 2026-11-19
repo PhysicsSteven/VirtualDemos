@@ -443,11 +443,12 @@
     {
      "id": "math",
      "title": "Math for physics",
-     "blurb": "Type any function and see its derivatives and its integral graphed with it, follow a point along a curve with its velocity, acceleration and curvature, and watch how a computer solves the equations of motion step by step.",
+     "blurb": "Type any function and see its derivatives and integrals, its Taylor polynomials, the slope field of a differential equation, a vector field with its work and curl, or a point moving along a curve, and watch how a computer solves the equations of motion step by step.",
      "demos": [
       "derivatives",
       "numerical-methods",
-      "curves-and-motion"
+      "curves-and-motion",
+      "slope-fields"
      ]
     }
    ]
