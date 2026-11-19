@@ -13,7 +13,7 @@ Textbook: OpenStax *University Physics*, Vol. 1, §15.4 (pendulums); OpenStax *C
 **Using the demo.**
 
 - The orange curve is the function f, the teal curve its Taylor polynomial Tₙ about the center a (the diamond on the axis). **Order n** sets the highest power kept; **+** and **−** step it by one. The polynomial and its exact coefficients are printed under the graph.
-- **Probe θ** (the box above the graph) sets the angle the readouts use; you can also drag the dashed probe line. **At the probe** gives f, Tₙ, the error f − Tₙ and the relative error |f − Tₙ|/|f| in percent.
+- **Probe θ** (the box above the graph) sets the angle the readouts use; you can also drag the dashed probe line. **At the probe** gives f, Tₙ, the error f − Tₙ and the relative error \|f − Tₙ\|/\|f\| in percent.
 - The green column on the graph is where Tₙ is within the chosen tolerance (1% unless you change it under **Show**), and the **Convergence** readouts give its ends as **Tₙ within 1% of f**, in radians and degrees.
 - **Record reading** stores n, θ, sin θ, Tₙ(θ) and the relative error. **Export to worksheet** sends the rows to Table 1 below.
 - These are computed values, not measurements: the same settings always give the same numbers.
@@ -34,7 +34,7 @@ $$\sin\theta = \theta - \frac{\theta^3}{3!} + \frac{\theta^5}{5!} - \cdots,$$
 
 with θ in radians. Keeping only θ gives $$\ddot\theta = -(g/L)\theta$$, simple harmonic motion with the period $$T_0 = 2\pi\sqrt{L/g}$$, the same for every amplitude.
 
-The Taylor polynomial of order n about a is $$T_n(x) = \sum_{k=0}^{n} \frac{f^{(k)}(a)}{k!}(x-a)^k$$. For sin θ about 0 the even terms are zero, so $$T_1 = T_2 = \theta$$ and $$T_3 = T_4 = \theta - \theta^3/6$$. When the terms shrink quickly, the error is close to the first term left out. For θ alone that is θ³/6, so the relative error is about θ²/6; for θ − θ³/6 it is θ⁵/120, a relative error of about θ⁴/120. Lagrange's form of the remainder makes this exact: $$|f(x) - T_n(x)| \le M\,|x-a|^{n+1}/(n+1)!$$, where M is the largest $$|f^{(n+1)}|$$ between a and x.
+The Taylor polynomial of order n about a is $$T_n(x) = \sum_{k=0}^{n} \frac{f^{(k)}(a)}{k!}(x-a)^k$$. For sin θ about 0 the even terms are zero, so $$T_1 = T_2 = \theta$$ and $$T_3 = T_4 = \theta - \theta^3/6$$. When the terms shrink quickly, the error is close to the first term left out. For θ alone that is θ³/6, so the relative error is about θ²/6; for θ − θ³/6 it is θ⁵/120, a relative error of about θ⁴/120. Lagrange's form of the remainder makes this exact: $$\lvert f(x) - T_n(x)\rvert \le M\,\lvert x-a\rvert^{n+1}/(n+1)!$$, where M is the largest $$\lvert f^{(n+1)}\rvert$$ between a and x.
 
 A relative error that grows as $$\theta^p$$ is a straight line of slope p on a graph with log scales on both axes.
 
@@ -84,7 +84,7 @@ Table 2. A pendulum with L = 1.00 m, from the Pendulums demo.
 
 1. Graph Table 1 with **Log scales** ticked: relative error (vertical) against θ (horizontal), one line for n = 1 and one for n = 3. Find the slope of each line between its first and last points and compare with the powers 2 and 4 from the Background.
 2. Compare the 1% angles the demo gave in steps A and B with your estimates in Before the lab 2. Which estimate is closer, and why does the first term left out predict the n = 1 edge so well?
-3. At θ = 0.5 rad, check Lagrange's bound for n = 3: here f⁽⁴⁾ = sin θ, so M = sin 0.5. Work out M(0.5)⁴/4! and compare it with the error |sin 0.5 − T₃(0.5)|: set Probe θ to 0.5 at Order n = 3 and read the error under **At the probe**.
+3. At θ = 0.5 rad, check Lagrange's bound for n = 3: here f⁽⁴⁾ = sin θ, so M = sin 0.5. Work out M(0.5)⁴/4! and compare it with the error \|sin 0.5 − T₃(0.5)\|: set Probe θ to 0.5 at Order n = 3 and read the error under **At the probe**.
 4. Fill in the θ₀ (rad) and 100 θ₀²/16 columns of Table 2. How well does θ₀²/16 alone predict how much longer the period is, and where does it start to fall short?
 5. From Table 2, estimate the release angle at which the period is 1% longer than T₀. How does it compare with the angle at which sin θ ≈ θ is off by 1%?
 

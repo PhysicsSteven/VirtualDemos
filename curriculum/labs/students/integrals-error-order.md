@@ -44,9 +44,9 @@ As n grows, every one of these closes in on the definite integral $$\int_a^b f(x
 
 $$\text{error} \approx \frac{C}{n^{p}},$$
 
-and p is the **order** of the rule. Doubling n divides the error by $$2^p$$. Taking logarithms, $$\log|\text{error}| = \log|C| - p\log n$$: on log scales the error against n is a straight line of slope −p. From two readings with $$n_1$$ and $$n_2$$ and errors $$e_1$$ and $$e_2$$, the observed order is
+and p is the **order** of the rule. Doubling n divides the error by $$2^p$$. Taking logarithms, $$\log\lvert\text{error}\rvert = \log\lvert C\rvert - p\log n$$: on log scales the error against n is a straight line of slope −p. From two readings with $$n_1$$ and $$n_2$$ and errors $$e_1$$ and $$e_2$$, the observed order is
 
-$$p = \frac{\ln(|e_1|/|e_2|)}{\ln(n_2/n_1)}.$$
+$$p = \frac{\ln(\lvert e_1\rvert/\lvert e_2\rvert)}{\ln(n_2/n_1)}.$$
 
 The leading errors are known (OpenStax Vol. 2, §3.6):
 
