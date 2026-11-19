@@ -1,0 +1,879 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="lib/theme.js"></script>
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
+<script src="lib/vdstats.js"></script>
+<title>Chance Lab: Dice, Cards and Candies</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css: the felt table, the two events' colors, the panels under the table */
+:root { --cl-a: #c2410c; --cl-b: #0f766e; --cl-x: #6d28d9; --cl-felt: #2e6a49; --cl-felt2: #1f4f35; --cl-felt-ink: #f4ecd8; --cl-gold: #e9b949; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --cl-a: #fb923c; --cl-b: #2dd4bf; --cl-x: #c4b5fd; --cl-felt: #1f4a33; --cl-felt2: #12301f; --cl-felt-ink: #efe6cf; --cl-gold: #f2c94c; } }
+:root[data-theme="dark"] { --cl-a: #fb923c; --cl-b: #2dd4bf; --cl-x: #c4b5fd; --cl-felt: #1f4a33; --cl-felt2: #12301f; --cl-felt-ink: #efe6cf; --cl-gold: #f2c94c; }
+.stage { position: relative; display: flex; flex-direction: column; min-height: min-content; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.stage-ctl select, .xbar select, .tabbar select { font: inherit; font-size: 0.86rem; padding: 3px 6px; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; max-width: 100%; }
+.stage-ctl .ctlgroup { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.stage-ctl .note { margin-left: auto; font-size: 0.8rem; color: var(--muted); }
+.xbar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); font-size: 0.86rem; }
+.xbar .lab { font-weight: 700; color: var(--muted); font-size: 0.78rem; }
+.xbar label { display: inline-flex; align-items: center; gap: 6px; }
+.felt { position: relative; height: 250px; flex: none; }
+.felt canvas, .pane canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; outline: none; }
+.tabbar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; padding: 8px 10px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); background: var(--surface); font-size: 0.86rem; }
+.tabbar .ctl { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; }
+.tabbar label { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 6px; min-width: 0; max-width: 100%; }
+.tabbar label select { min-width: 0; max-width: min(320px, 70vw); }
+.swatch { display: inline-block; width: 12px; height: 12px; border-radius: 50%; flex: none; }
+.swatch.a { background: var(--cl-a); } .swatch.b { background: var(--cl-b); } .swatch.x { background: var(--cl-x); border-radius: 2px; }
+.tab[hidden] { display: none !important; }
+.tabbar .seg, .xbar .seg { flex-wrap: wrap; max-width: 100%; }
+.evgrid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); border-bottom: 1px solid var(--line); }
+.pane { position: relative; height: 270px; min-width: 0; }
+.evgrid > .pane + .pane { border-left: 1px solid var(--line); }
+.cards { display: flex; flex-wrap: wrap; gap: 12px; padding: 10px; }
+.card { flex: 1 1 260px; min-width: 0; padding: 8px 10px; border: 1px solid var(--line); border-radius: 10px; background: var(--canvas); }
+.card > .card-title { display: block; font-size: 0.78rem; font-weight: 700; color: var(--muted); margin-bottom: 6px; }
+table.ct { border-collapse: collapse; width: 100%; font-size: 0.84rem; font-variant-numeric: tabular-nums; }
+table.ct th, table.ct td { border: 1px solid var(--line); padding: 4px 6px; text-align: right; vertical-align: top; }
+table.ct th { font-weight: 700; color: var(--muted); background: var(--surface); }
+table.ct th.ra { color: var(--cl-a); } table.ct th.rb { color: var(--cl-b); }
+table.ct td small, table.rules td small { display: block; color: var(--muted); font-size: 0.74rem; }
+table.ct td.hit { background: color-mix(in srgb, var(--cl-gold) 34%, transparent); transition: background 0.15s; }
+table.ct td.tot, table.ct tr.tot td { font-weight: 700; }
+table.rules { border-collapse: collapse; width: 100%; font-size: 0.82rem; font-variant-numeric: tabular-nums; }
+table.rules th, table.rules td { border-bottom: 1px solid var(--line); padding: 4px 5px; text-align: left; vertical-align: top; }
+table.rules th { color: var(--muted); font-size: 0.76rem; }
+table.rules td.yes { color: var(--ok, #3f7d1f); font-weight: 700; } table.rules td.no { color: var(--red, #b42318); font-weight: 700; }
+.mono { font-family: var(--font-mono); }
+.pdfwrap { overflow-x: auto; }
+#pdfTable td:first-child, #pdfTable th:first-child { text-align: center; }
+.bigpane { position: relative; height: 300px; border-bottom: 1px solid var(--line); }
+.lrnote { font-size: 0.84rem; color: var(--muted); padding: 8px 12px; margin: 0; }
+.rail .drawrow { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 8px; font-size: 0.86rem; }
+@media (min-width: 821px) { .bench > .stage { align-self: start; } }
+@media (max-width: 820px) { .evgrid { grid-template-columns: minmax(0, 1fr); } .evgrid > .pane + .pane { border-left: 0; border-top: 1px solid var(--line); } .felt { height: 210px; } .pane { height: 250px; } .bigpane { height: 260px; } }
+@media (max-width: 520px) { .stage-ctl .note { margin-left: 0; } .card { flex-basis: 100%; } table.ct th, table.ct td { padding: 3px 4px; } }
+</style>
+<link rel="stylesheet" id="vd-paper" href="lib/paper.css">
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Chance Lab: Dice, Cards and Candies</h1>
+      <p>Roll dice, deal cards with or without putting them back, and draw candies from a cup. Pick two events and watch every trial land in a Venn diagram, a tree diagram and a contingency table; check the rules of probability; and see the relative frequency settle toward the probability and the average toward the expected value as the trials pile up.</p>
+    </div>
+    <div class="bar-right">
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/chance-lab.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/chance-lab.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM10 2h1v1h-1zM13 2h3v1h-3zM21 2h5v1h-5zM27 2h2v1h-2zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM10 3h2v1h-2zM14 3h1v1h-1zM18 3h1v1h-1zM20 3h2v1h-2zM24 3h3v1h-3zM28 3h1v1h-1zM30 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h4v1h-4zM21 4h1v1h-1zM23 4h3v1h-3zM27 4h3v1h-3zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM12 5h2v1h-2zM16 5h1v1h-1zM19 5h1v1h-1zM22 5h2v1h-2zM25 5h1v1h-1zM27 5h1v1h-1zM29 5h1v1h-1zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h3v1h-3zM15 6h3v1h-3zM21 6h1v1h-1zM23 6h1v1h-1zM27 6h1v1h-1zM30 6h1v1h-1zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM13 7h3v1h-3zM24 7h2v1h-2zM28 7h1v1h-1zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM11 9h5v1h-5zM17 9h1v1h-1zM19 9h2v1h-2zM24 9h1v1h-1zM26 9h4v1h-4zM2 10h1v1h-1zM5 10h6v1h-6zM14 10h2v1h-2zM21 10h1v1h-1zM23 10h4v1h-4zM28 10h4v1h-4zM34 10h1v1h-1zM36 10h3v1h-3zM5 11h1v1h-1zM9 11h5v1h-5zM15 11h1v1h-1zM18 11h1v1h-1zM20 11h1v1h-1zM23 11h1v1h-1zM26 11h1v1h-1zM28 11h3v1h-3zM33 11h3v1h-3zM37 11h1v1h-1zM2 12h1v1h-1zM4 12h1v1h-1zM7 12h3v1h-3zM11 12h2v1h-2zM14 12h2v1h-2zM17 12h2v1h-2zM20 12h4v1h-4zM25 12h2v1h-2zM29 12h5v1h-5zM36 12h1v1h-1zM38 12h1v1h-1zM4 13h2v1h-2zM7 13h1v1h-1zM10 13h1v1h-1zM14 13h3v1h-3zM18 13h5v1h-5zM24 13h2v1h-2zM31 13h8v1h-8zM4 14h6v1h-6zM14 14h1v1h-1zM16 14h3v1h-3zM26 14h1v1h-1zM29 14h1v1h-1zM32 14h1v1h-1zM35 14h1v1h-1zM38 14h1v1h-1zM2 15h1v1h-1zM6 15h2v1h-2zM9 15h1v1h-1zM12 15h2v1h-2zM15 15h4v1h-4zM21 15h1v1h-1zM23 15h3v1h-3zM27 15h4v1h-4zM34 15h2v1h-2zM3 16h2v1h-2zM7 16h2v1h-2zM10 16h4v1h-4zM15 16h1v1h-1zM17 16h1v1h-1zM20 16h3v1h-3zM27 16h1v1h-1zM29 16h1v1h-1zM32 16h1v1h-1zM34 16h3v1h-3zM38 16h1v1h-1zM3 17h2v1h-2zM6 17h2v1h-2zM12 17h1v1h-1zM16 17h1v1h-1zM21 17h1v1h-1zM23 17h3v1h-3zM29 17h3v1h-3zM33 17h1v1h-1zM35 17h3v1h-3zM2 18h4v1h-4zM8 18h3v1h-3zM12 18h3v1h-3zM17 18h1v1h-1zM19 18h3v1h-3zM23 18h5v1h-5zM29 18h1v1h-1zM32 18h1v1h-1zM36 18h3v1h-3zM5 19h1v1h-1zM10 19h1v1h-1zM16 19h1v1h-1zM19 19h1v1h-1zM24 19h1v1h-1zM29 19h1v1h-1zM31 19h1v1h-1zM35 19h2v1h-2zM3 20h3v1h-3zM8 20h1v1h-1zM10 20h1v1h-1zM12 20h1v1h-1zM14 20h3v1h-3zM18 20h2v1h-2zM21 20h1v1h-1zM23 20h1v1h-1zM25 20h1v1h-1zM27 20h1v1h-1zM29 20h1v1h-1zM31 20h1v1h-1zM35 20h2v1h-2zM38 20h1v1h-1zM4 21h1v1h-1zM7 21h1v1h-1zM11 21h1v1h-1zM13 21h1v1h-1zM15 21h1v1h-1zM17 21h2v1h-2zM20 21h3v1h-3zM24 21h1v1h-1zM27 21h1v1h-1zM29 21h1v1h-1zM32 21h4v1h-4zM38 21h1v1h-1zM3 22h1v1h-1zM5 22h1v1h-1zM8 22h2v1h-2zM11 22h2v1h-2zM18 22h2v1h-2zM21 22h1v1h-1zM25 22h2v1h-2zM28 22h8v1h-8zM2 23h1v1h-1zM4 23h1v1h-1zM6 23h1v1h-1zM9 23h1v1h-1zM12 23h6v1h-6zM19 23h1v1h-1zM21 23h2v1h-2zM24 23h2v1h-2zM29 23h1v1h-1zM31 23h1v1h-1zM34 23h1v1h-1zM36 23h2v1h-2zM3 24h3v1h-3zM7 24h4v1h-4zM12 24h1v1h-1zM15 24h1v1h-1zM17 24h1v1h-1zM23 24h1v1h-1zM25 24h7v1h-7zM33 24h1v1h-1zM35 24h1v1h-1zM38 24h1v1h-1zM2 25h2v1h-2zM9 25h1v1h-1zM11 25h1v1h-1zM14 25h3v1h-3zM20 25h3v1h-3zM30 25h7v1h-7zM2 26h3v1h-3zM8 26h1v1h-1zM11 26h5v1h-5zM17 26h1v1h-1zM19 26h1v1h-1zM22 26h3v1h-3zM26 26h1v1h-1zM28 26h1v1h-1zM30 26h1v1h-1zM32 26h1v1h-1zM2 27h1v1h-1zM4 27h1v1h-1zM9 27h2v1h-2zM12 27h1v1h-1zM16 27h1v1h-1zM20 27h2v1h-2zM24 27h2v1h-2zM27 27h4v1h-4zM34 27h2v1h-2zM2 28h2v1h-2zM5 28h2v1h-2zM8 28h1v1h-1zM11 28h2v1h-2zM14 28h2v1h-2zM17 28h1v1h-1zM24 28h1v1h-1zM26 28h1v1h-1zM28 28h3v1h-3zM34 28h1v1h-1zM36 28h3v1h-3zM2 29h1v1h-1zM5 29h1v1h-1zM7 29h1v1h-1zM9 29h1v1h-1zM11 29h1v1h-1zM15 29h2v1h-2zM18 29h1v1h-1zM21 29h1v1h-1zM24 29h1v1h-1zM28 29h2v1h-2zM31 29h3v1h-3zM35 29h2v1h-2zM2 30h1v1h-1zM8 30h1v1h-1zM12 30h1v1h-1zM17 30h1v1h-1zM21 30h2v1h-2zM25 30h3v1h-3zM30 30h9v1h-9zM10 31h2v1h-2zM13 31h3v1h-3zM19 31h6v1h-6zM26 31h2v1h-2zM30 31h1v1h-1zM34 31h1v1h-1zM36 31h2v1h-2zM2 32h7v1h-7zM10 32h4v1h-4zM15 32h1v1h-1zM17 32h5v1h-5zM25 32h2v1h-2zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM38 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h3v1h-3zM15 33h1v1h-1zM18 33h1v1h-1zM21 33h3v1h-3zM25 33h1v1h-1zM27 33h4v1h-4zM34 33h1v1h-1zM37 33h2v1h-2zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h3v1h-3zM15 34h1v1h-1zM18 34h1v1h-1zM20 34h1v1h-1zM22 34h2v1h-2zM25 34h1v1h-1zM28 34h7v1h-7zM37 34h1v1h-1zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h3v1h-3zM15 35h1v1h-1zM22 35h4v1h-4zM28 35h2v1h-2zM31 35h2v1h-2zM35 35h1v1h-1zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM12 36h3v1h-3zM19 36h2v1h-2zM24 36h3v1h-3zM29 36h1v1h-1zM34 36h1v1h-1zM38 36h1v1h-1zM2 37h1v1h-1zM8 37h1v1h-1zM11 37h5v1h-5zM17 37h1v1h-1zM19 37h1v1h-1zM24 37h3v1h-3zM28 37h1v1h-1zM31 37h2v1h-2zM34 37h5v1h-5zM2 38h7v1h-7zM10 38h1v1h-1zM12 38h3v1h-3zM16 38h1v1h-1zM18 38h1v1h-1zM21 38h2v1h-2zM26 38h1v1h-1zM30 38h1v1h-1zM32 38h2v1h-2zM35 38h1v1h-1zM38 38h1v1h-1z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl" id="strip">
+        <button type="button" class="spin attn" id="play" data-vd-key="play">Play</button>
+        <button type="button" class="btn" id="reset" title="Clear every trial and start the same draw set again">Reset</button>
+        <span class="ctlgroup"><button type="button" class="btn" id="run10">Run 10</button><button type="button" class="btn" id="run100">Run 100</button><button type="button" class="btn" id="run1000">Run 1,000</button><button type="button" class="btn" id="run10000">Run 10,000</button></span>
+        <select id="speed" aria-label="Trials a second"><option value="1">1</option><option value="2" selected>2</option><option value="5">5</option><option value="20">20</option><option value="100">100</option><option value="1000">1,000</option></select>
+        <span class="note" id="note">Simulated trials: every roll and draw comes from a seeded random number generator.</span>
+      </div>
+      <div class="xbar" id="xbar">
+        <span class="lab">Experiment</span>
+        <div class="seg" id="kindSeg" role="group" aria-label="Experiment">
+          <button type="button" data-k="dice" aria-pressed="true">Dice</button>
+          <button type="button" data-k="cards" aria-pressed="false">Cards</button>
+          <button type="button" data-k="cup" aria-pressed="false">Cup of candies</button>
+        </div>
+        <label data-for="dice">Dice <select id="nDice"><option value="1">1</option><option value="2" selected>2</option><option value="3">3</option><option value="4">4</option></select></label>
+        <label data-for="dice">Your number <select id="bet"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6" selected>6</option></select></label>
+        <label data-for="cards">Cards drawn <select id="nCards"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10" selected>10</option></select></label>
+        <label class="check" data-for="cards cup"><input type="checkbox" id="repl" checked><span>With replacement</span></label>
+      </div>
+      <div class="felt" id="felt">
+        <canvas id="can" tabindex="0" role="img" aria-label="The table where the dice are rolled, the cards dealt or the candies drawn, with the last trial and whether events A and B happened. Space plays or pauses."></canvas>
+      </div>
+      <div class="tabbar" id="tabbar">
+        <div class="seg" id="tabSeg" role="group" aria-label="View">
+          <button type="button" data-t="events" aria-pressed="true">Events</button>
+          <button type="button" data-t="rv" aria-pressed="false">Random variable</button>
+          <button type="button" data-t="long" aria-pressed="false">Long run</button>
+        </div>
+        <span class="ctl" data-tabctl="events">
+          <label><span class="swatch a"></span><span>Event A</span> <select id="evA"></select></label>
+          <label><span class="swatch b"></span><span>Event B</span> <select id="evB"></select></label>
+        </span>
+        <span class="ctl" data-tabctl="rv long">
+          <label><span class="swatch x"></span><span>Random variable X</span> <select id="xSel"></select></label>
+        </span>
+        <span class="ctl" data-tabctl="long">
+          <span class="seg" id="lrSeg" role="group" aria-label="Long run graph">
+            <button type="button" data-l="rfA" aria-pressed="false">Relative frequency of A</button>
+            <button type="button" data-l="mX" aria-pressed="true">Average of X</button>
+            <button type="button" data-l="mY" aria-pressed="false">Average profit Y</button>
+          </span>
+        </span>
+      </div>
+      <div class="tab" data-tab="events">
+        <div class="evgrid" id="evgrid">
+          <div class="pane" id="vennPane"><canvas id="venn" role="img" aria-label="Venn diagram of events A and B with the count of trials in each region"></canvas></div>
+          <div class="pane" id="treePane"><canvas id="tree" role="img" aria-label="Tree diagram: first A or not A, then B or not B, with probabilities and counts on each branch"></canvas></div>
+        </div>
+        <div class="cards">
+          <div class="card"><span class="card-title">Contingency table: counts, with the relative frequency under each</span><table class="ct" id="ctable"></table></div>
+          <div class="card"><span class="card-title">The rules, in theory and in your trials</span><table class="rules" id="rules"></table></div>
+        </div>
+      </div>
+      <div class="tab" data-tab="rv" hidden>
+        <div class="bigpane" id="barsPane"><canvas id="bars" role="img" aria-label="The probability distribution of X as outlined bars, and the relative frequencies of the trials as filled bars"></canvas></div>
+        <div class="cards"><div class="card"><span class="card-title" id="pdfTitle">Probability distribution function of X</span><div class="pdfwrap"><table class="ct" id="pdfTable"></table></div></div></div>
+      </div>
+      <div class="tab" data-tab="long" hidden>
+        <div class="bigpane" id="longPane"><canvas id="lr" role="img" aria-label="The running relative frequency or running average against the number of trials, on a logarithmic axis, with the probability or expected value as a dashed line"></canvas></div>
+        <p class="lrnote" id="lrNote"></p>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/ws-probability.html" target="ws-probability-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="dice2" aria-pressed="true">Two dice: sums and doubles</button>
+          <button type="button" data-p="dice3" aria-pressed="false">Three dice: bet on a number</button>
+          <button type="button" data-p="oneCard" aria-pressed="false">One card: hearts and face cards</button>
+          <button type="button" data-p="cardsW" aria-pressed="false">Ten cards with replacement</button>
+          <button type="button" data-p="cardsWO" aria-pressed="false">Ten cards without replacement</button>
+          <button type="button" data-p="cupW" aria-pressed="false">Cup of candies with replacement</button>
+          <button type="button" data-p="cupWO" aria-pressed="false">Cup of candies without replacement</button>
+        </div>
+        <details class="more" open><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+        <div class="drawrow"><span id="drawLabel">Draw set 1</span><button type="button" class="btn" id="newDraw" title="A different set of random trials (Reset goes back to the start of the same set)">New draw</button></div>
+      </section>
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+      </section>
+      <!-- vd-readings --><section class="vd-readings" data-ws="ws-probability" data-title="Chance Lab" data-demo="chance-lab">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings ('+(typeof window.vdDataNote==='function'&&window.vdDataNote()?'catalog data':'simulated data')+')','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:(typeof window.vdDataNote==='function'&&window.vdDataNote())||'Simulated data from '+(/^The /.test(title)?'':'the ')+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the probabilities, μ and σ, to predict them first</span></label>
+        <details class="more"><summary>How it works</summary>
+          <p class="hint">Every trial is simulated with a seeded random number generator (mulberry32, demos/lib/vdstats.js), so the same draw set always gives the same trials: Reset starts it again from its first trial, and New draw moves to the next set. Dice are rolled with replacement (each die is a fresh draw of 1 to 6). Cards come from one shuffled deck of 52; with replacement each card goes back and the deck is shuffled before the next draw. The cup holds 40 candies: 12 red, 8 green, 8 blue, 6 yellow, 4 brown and 2 orange, and two are drawn.</p>
+          <p class="hint">The probabilities are exact: the demo counts every equally likely ordered outcome (every way the first draws can come out) and writes P as a fraction of them. The distribution of X is exact too: a binomial distribution for draws with replacement, a hypergeometric one without (book 4.3 and 4.5), and a full count of the 6ⁿ outcomes for the sum of the dice. μ = Σ x·P(x) and σ = √(Σ (x − μ)²·P(x)); the sample mean x̄ and the sample standard deviation s (dividing by n − 1) come from your trials.</p>
+          <p class="hint">The shaded band in the Long run graph is μ ± 2σ/√n (for a relative frequency, p ± 2√(p(1 − p)/n)): by the central limit theorem about 95 % of running averages lie inside it once n is large (a normal approximation). Its narrowing as 1/√n is the law of large numbers at work.</p>
+          <p class="hint">Three dice: the book's lab (4.8) bets on a number and counts the matching dice, but leaves the payout to you. This demo pays as the old fairground game chuck-a-luck does: bet $1, win $1 for each die that matches your number, lose your $1 when none match.</p>
+        </details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  /* Chance Lab: populations, events, random variables and seeded trials, runnable in Node (curriculum/validation/test_chance-lab.cjs).
+     Needs VDSTATS (demos/lib/vdstats.js) for the seeded generator and the binomial and hypergeometric distributions. */
+  const RANKS = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
+  const SUITS = ['♠', '♥', '♦', '♣'];   /* suit 1 hearts and 2 diamonds are red */
+  const CUP = [['red', 12], ['green', 8], ['blue', 8], ['yellow', 6], ['brown', 4], ['orange', 2]];   /* 40 candies */
+  function population(kind) {
+    if (kind === 'dice') return [1, 2, 3, 4, 5, 6].map((v) => ({ face: v }));
+    if (kind === 'cards') { const a = []; for (let s = 0; s < 4; s++) for (let r = 1; r <= 13; r++) a.push({ rank: r, suit: s }); return a; }
+    const a = []; for (const [c, k] of CUP) for (let i = 0; i < k; i++) a.push({ color: c }); return a;
+  }
+  const isRed = (c) => c.suit === 1 || c.suit === 2;
+  const sumF = (o) => o.reduce((s, d) => s + d.face, 0);
+  /* each event: what it says, how many draws it looks at (k: a number, or 'n' for all of them) and the fewest draws it needs */
+  const EVENTS = {
+    dice: [
+      { id: 'm1', name: 'The first die matches your number', k: 1, f: (o, c) => o[0].face === c.bet },
+      { id: 'm2', name: 'The second die matches your number', k: 2, f: (o, c) => o[1].face === c.bet },
+      { id: 'e1', name: 'The first die shows an even number', k: 1, f: (o) => o[0].face % 2 === 0 },
+      { id: 'h2', name: 'The second die shows 4 or more', k: 2, f: (o) => o[1].face >= 4 },
+      { id: 'dbl', name: 'The first two dice show the same number (doubles)', k: 2, f: (o) => o[0].face === o[1].face },
+      { id: 's7', name: 'The dice add up to 7', k: 'n', min: 2, f: (o) => sumF(o) === 7 },
+      { id: 's8', name: 'The dice add up to 8 or more', k: 'n', min: 2, f: (o) => sumF(o) >= 8 },
+      { id: 'any', name: 'At least one die matches your number', k: 'n', f: (o, c) => o.some((d) => d.face === c.bet) },
+      { id: 'none', name: 'No die matches your number', k: 'n', f: (o, c) => !o.some((d) => d.face === c.bet) },
+    ],
+    cards: [
+      { id: 'd1', name: 'The first card is a diamond', k: 1, f: (o) => o[0].suit === 2 },
+      { id: 'd2', name: 'The second card is a diamond', k: 2, f: (o) => o[1].suit === 2 },
+      { id: 'h1', name: 'The first card is a heart', k: 1, f: (o) => o[0].suit === 1 },
+      { id: 'h2', name: 'The second card is a heart', k: 2, f: (o) => o[1].suit === 1 },
+      { id: 'r1', name: 'The first card is red', k: 1, f: (o) => isRed(o[0]) },
+      { id: 'f1', name: 'The first card is a face card (J, Q or K)', k: 1, f: (o) => o[0].rank >= 11 },
+      { id: 'a1', name: 'The first card is an ace', k: 1, f: (o) => o[0].rank === 1 },
+      { id: 'dd', name: 'The first two cards are both diamonds', k: 2, f: (o) => o[0].suit === 2 && o[1].suit === 2 },
+    ],
+    cup: [
+      { id: 'R1', name: 'The first candy is red (R1)', k: 1, f: (o) => o[0].color === 'red' },
+      { id: 'R2', name: 'The second candy is red (R2)', k: 2, f: (o) => o[1].color === 'red' },
+      { id: 'G2', name: 'The second candy is green (G2)', k: 2, f: (o) => o[1].color === 'green' },
+      { id: 'B1', name: 'The first candy is blue (B1)', k: 1, f: (o) => o[0].color === 'blue' },
+      { id: 'RR', name: 'Both candies are red', k: 2, f: (o) => o[0].color === 'red' && o[1].color === 'red' },
+      { id: 'RB', name: 'One red and one blue (R1B2 or B1R2)', k: 2, f: (o) => (o[0].color === 'red' && o[1].color === 'blue') || (o[0].color === 'blue' && o[1].color === 'red') },
+      { id: 'noY', name: 'No yellow candy', k: 2, f: (o) => o[0].color !== 'yellow' && o[1].color !== 'yellow' },
+      { id: 'dbl', name: 'Both candies are the same color (doubles)', k: 2, f: (o) => o[0].color === o[1].color },
+    ],
+  };
+  /* random variables: a count of the draws that are of one kind (binomial with replacement, hypergeometric without), or the sum of the dice */
+  const XVARS = {
+    dice: [
+      { id: 'match', name: 'Number of dice that match your number', kind: 'count', is: (d, c) => d.face === c.bet, profit: true },
+      { id: 'sum', name: 'Sum of the dice', kind: 'sum' },
+      { id: 'even', name: 'Number of dice that show an even number', kind: 'count', is: (d) => d.face % 2 === 0 },
+    ],
+    cards: [
+      { id: 'diam', name: 'Number of diamonds', kind: 'count', is: (c) => c.suit === 2 },
+      { id: 'red', name: 'Number of red cards', kind: 'count', is: isRed },
+      { id: 'face', name: 'Number of face cards', kind: 'count', is: (c) => c.rank >= 11 },
+      { id: 'ace', name: 'Number of aces', kind: 'count', is: (c) => c.rank === 1 },
+    ],
+    cup: [
+      { id: 'red', name: 'Number of red candies', kind: 'count', is: (c) => c.color === 'red' },
+      { id: 'green', name: 'Number of green candies', kind: 'count', is: (c) => c.color === 'green' },
+      { id: 'yellow', name: 'Number of yellow candies', kind: 'count', is: (c) => c.color === 'yellow' },
+    ],
+  };
+  /* the experiment: kind, draws n, replacement, your number (dice) */
+  function config(o) {
+    const kind = o.kind, n = kind === 'cup' ? 2 : Math.max(1, Math.min(kind === 'dice' ? 4 : 10, o.n | 0)), repl = kind === 'dice' ? true : !!o.repl;
+    return { kind, n, repl, bet: o.bet || 6, pop: population(kind) };
+  }
+  const evById = (cfg, id) => EVENTS[cfg.kind].find((e) => e.id === id);
+  const xById = (cfg, id) => XVARS[cfg.kind].find((x) => x.id === id);
+  const draws = (cfg, e) => (e.k === 'n' ? cfg.n : e.k);
+  const allowed = (cfg, e) => draws(cfg, e) <= cfg.n && (!e.min || cfg.n >= e.min);
+  /* one trial: the indices of the items drawn, in order */
+  function drawTrial(cfg, rng) {
+    const N = cfg.pop.length, out = [];
+    if (cfg.repl) { for (let i = 0; i < cfg.n; i++) out.push(rng.int(N)); return out; }
+    const idx = Array.from({ length: N }, (_, i) => i);
+    for (let i = 0; i < cfg.n; i++) { const j = i + rng.int(N - i); const t = idx[i]; idx[i] = idx[j]; idx[j] = t; out.push(idx[i]); }
+    return out;
+  }
+  /* every equally likely ordered outcome of the first k draws */
+  function eachOutcome(cfg, k, visit) {
+    const N = cfg.pop.length, cur = [], used = new Uint8Array(N);
+    const go = (d) => {
+      if (d === k) { visit(cur.map((i) => cfg.pop[i])); return; }
+      for (let i = 0; i < N; i++) { if (!cfg.repl && used[i]) continue; used[i] = 1; cur.push(i); go(d + 1); cur.pop(); used[i] = 0; }
+    };
+    go(0);
+  }
+  /* exact P(A), P(B), P(A and B) as counts out of the number of equally likely outcomes */
+  function theory(cfg, A, B) {
+    const k = Math.max(draws(cfg, A), draws(cfg, B));
+    let N = 0, a = 0, b = 0, ab = 0;
+    eachOutcome(cfg, k, (o) => { N++; const x = A.f(o, cfg), y = B.f(o, cfg); if (x) a++; if (y) b++; if (x && y) ab++; });
+    return { N, a, b, ab, k };
+  }
+  const gcd = (p, q) => { p = Math.abs(p); q = Math.abs(q); while (q) { const t = p % q; p = q; q = t; } return p; };
+  function frac(p, q) { if (!q) return null; const g = gcd(p, q) || 1; return [p / g, q / g]; }
+  /* X for one trial, and its exact distribution: [{ x, p }] in order of x */
+  function xValue(cfg, X, o) { return X.kind === 'sum' ? sumF(o) : o.reduce((s, it) => s + (X.is(it, cfg) ? 1 : 0), 0); }
+  const profit = (x) => (x === 0 ? -1 : x);
+  function pdf(cfg, X) {
+    if (X.kind === 'sum') {
+      const tally = new Map(); let N = 0;
+      eachOutcome(cfg, cfg.n, (o) => { N++; const v = sumF(o); tally.set(v, (tally.get(v) || 0) + 1); });
+      return [...tally.keys()].sort((p, q) => p - q).map((x) => ({ x, p: tally.get(x) / N, c: tally.get(x), N }));
+    }
+    const N = cfg.pop.length, K = cfg.pop.filter((it) => X.is(it, cfg)).length;
+    const D = cfg.repl ? VDSTATS.dist.binomial(cfg.n, K / N) : VDSTATS.dist.hypergeometric(N, K, cfg.n);
+    const out = []; for (let x = D.lo; x <= D.hi; x++) out.push({ x, p: D.pmf(x) });
+    return out;
+  }
+  /* μ = Σ g(x)P(x), σ = √(Σ (g(x) − μ)² P(x)) */
+  function moments(P, g) {
+    g = g || ((x) => x);
+    const mu = P.reduce((s, r) => s + g(r.x) * r.p, 0), v = P.reduce((s, r) => s + (g(r.x) - mu) ** 2 * r.p, 0);
+    return { mu, sd: Math.sqrt(v) };
+  }
+  /* counts of the trials so far: events A and B, X and its frequencies, and the running series for the long run graph */
+  const CAP = 100000;
+  function tally() { return { n: 0, a: 0, b: 0, ab: 0, freq: new Map(), sx: 0, sy: 0, rfA: new Float32Array(1024), mX: new Float32Array(1024), mY: new Float32Array(1024) }; }
+  function addTrial(T, cfg, A, B, X, idx) {
+    const o = idx.map((i) => cfg.pop[i]), inA = A.f(o, cfg), inB = B.f(o, cfg), x = xValue(cfg, X, o);
+    T.n++; if (inA) T.a++; if (inB) T.b++; if (inA && inB) T.ab++;
+    T.freq.set(x, (T.freq.get(x) || 0) + 1); T.sx += x; T.sy += profit(x);
+    if (T.n > T.rfA.length) { for (const key of ['rfA', 'mX', 'mY']) { const g = new Float32Array(Math.min(CAP, T[key].length * 2)); g.set(T[key]); T[key] = g; } }
+    T.rfA[T.n - 1] = T.a / T.n; T.mX[T.n - 1] = T.sx / T.n; T.mY[T.n - 1] = T.sy / T.n;
+    return { o, inA, inB, x };
+  }
+  /* sample mean and standard deviation (n − 1) of g(X) from the frequency table */
+  function sampleStats(T, g) {
+    g = g || ((x) => x); if (!T.n) return { mean: NaN, sd: NaN };
+    let s = 0; for (const [x, f] of T.freq) s += f * g(x); const m = s / T.n;
+    let v = 0; for (const [x, f] of T.freq) v += f * (g(x) - m) ** 2;
+    return { mean: m, sd: T.n > 1 ? Math.sqrt(v / (T.n - 1)) : NaN };
+  }
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  const VDI18N = window.VDI18N || { t: (s, o) => s.replace(/\{(\w+)\}/g, (m, k) => (o && k in o ? o[k] : m)) };
+  const PRESETS = {
+    dice2: { kind: 'dice', n: 2, bet: 6, A: 's8', B: 'dbl', X: 'sum', tab: 'events',
+      hint: 'Roll two dice. A: they add up to 8 or more (15 of the 36 equally likely outcomes). B: doubles (6 of 36). Both happen for 4 and 4, 5 and 5, 6 and 6, so P(A and B) = 3/36. Is B independent of A? Compare P(B | A) with P(B). Try A: the dice add up to 7, which no doubles can do: mutually exclusive events, drawn apart.' },
+    dice3: { kind: 'dice', n: 3, bet: 6, A: 'm1', B: 'm2', X: 'match', tab: 'rv',
+      hint: 'The book\'s lab with three dice (Introductory Statistics 4.8): bet $1 on a number (Your number), roll three dice and count the matches X, which is binomial, B(3, 1/6). The payout, as in the game chuck-a-luck: win $1 for each matching die, lose your $1 when none match. Is the game fair? Look at the expected profit μ_Y and the Long run tab.' },
+    oneCard: { kind: 'cards', n: 1, repl: true, A: 'h1', B: 'f1', X: 'face', tab: 'events',
+      hint: 'Draw one card from a deck of 52. A: a heart (13 cards). B: a face card, J, Q or K (12 cards). The jack, queen and king of hearts are both, so P(A and B) = 3/52 = (13/52)(12/52): independent events, even though they overlap. Switch B to "The first card is a diamond" for events that cannot happen together.' },
+    cardsW: { kind: 'cards', n: 10, repl: true, A: 'd1', B: 'd2', X: 'diam', tab: 'rv',
+      hint: 'The book\'s playing card lab (4.7): draw a card, note whether it is a diamond, put it back and shuffle, ten times. X, the number of diamonds, is binomial, B(10, 0.25): μ = np = 2.5 and σ = √(npq) = 1.3693. The first and second cards are independent: P(second is a diamond | first is a diamond) = 13/52.' },
+    cardsWO: { kind: 'cards', n: 10, repl: false, A: 'd1', B: 'd2', X: 'diam', tab: 'rv',
+      hint: 'The same ten cards dealt without putting them back. X is now hypergeometric (book 4.5): μ is still 2.5, but σ = 1.2426 is smaller, since each diamond drawn makes the next one less likely. The second card depends on the first: P(second is a diamond | first is a diamond) = 12/51, not 13/52.' },
+    cupW: { kind: 'cup', n: 2, repl: true, A: 'R1', B: 'G2', X: 'red', tab: 'events',
+      hint: 'The book\'s candy lab (3.6) with this cup of 40: 12 red, 8 green, 8 blue, 6 yellow, 4 brown, 2 orange (the book uses the colors of your own bag). Draw one, put it back, draw again. A: the first is red (R1). B: the second is green (G2). P(G2 | R1) = 8/40, the same as P(G2): independent.' },
+    cupWO: { kind: 'cup', n: 2, repl: false, A: 'R1', B: 'G2', X: 'red', tab: 'events',
+      hint: 'The same cup, but the first candy stays out. Now P(G2 | R1) = 8/39, a little more than P(G2) = 8/40: the draws depend on each other. The multiplication rule still holds: P(R1 and G2) = (12/40)(8/39).' },
+  };
+  const S = { preset: 'dice2', kind: 'dice', nDice: 2, nCards: 10, bet: 6, repl: true, A: 's8', B: 'dbl', X: 'sum', tab: 'events', lr: 'mX', seed: 1,
+    cfg: null, th: null, P: null, T: null, rng: null, last: null, run: false, acc: 0, blind: false, anim: 0 };
+  let W = 0, H = 0, dpr = 1, TK = null, need = true, needHtml = true;
+  const f4 = (v) => (isFinite(v) ? (Math.abs(v) < 5e-5 ? 0 : v).toFixed(4).replace('-', '−') : '—');
+  const sgn = (v) => (v > 0 ? '+' : v < 0 ? '−' : '') + Math.abs(v);
+  const money = (v) => (v < 0 ? '−$' : '$') + Math.abs(v);
+  const big = (n) => n.toLocaleString('en-US');
+  const fr = (p, q) => { const r = frac(p, q); return r ? (r[1] === 1 ? String(r[0]) : r[0] + '/' + r[1]) : '—'; };
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    TK = { canvas: g('--canvas'), surface: g('--surface'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif',
+      a: g('--cl-a'), b: g('--cl-b'), x: g('--cl-x'), felt: g('--cl-felt'), felt2: g('--cl-felt2'), feltInk: g('--cl-felt-ink'), gold: g('--cl-gold') };
+  }
+  const proj = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
+  const reduce = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- state ---------- */
+  const evA = () => evById(S.cfg, S.A), evB = () => evById(S.cfg, S.B), xv = () => xById(S.cfg, S.X);
+  const hasY = () => S.kind === 'dice' && S.X === 'match';
+  function rebuild() {
+    S.cfg = config({ kind: S.kind, n: S.kind === 'dice' ? S.nDice : S.nCards, repl: S.repl, bet: S.bet });
+    const ok = (id) => { const e = evById(S.cfg, id); return e && allowed(S.cfg, e); };
+    if (!ok(S.A)) S.A = EVENTS[S.kind].find((e) => allowed(S.cfg, e)).id;
+    if (!ok(S.B)) S.B = EVENTS[S.kind].filter((e) => allowed(S.cfg, e) && e.id !== S.A)[0].id;
+    if (!xById(S.cfg, S.X)) S.X = XVARS[S.kind][0].id;
+    if (!hasY() && S.lr === 'mY') S.lr = 'mX';
+    S.th = theory(S.cfg, evA(), evB()); S.P = pdf(S.cfg, xv());
+    S.mom = moments(S.P); S.momY = moments(S.P, profit);
+    fillSelects(); resetTrials();
+  }
+  function resetTrials() { S.T = tally(); S.rng = VDSTATS.rng(S.seed); S.last = null; S.acc = 0; need = true; needHtml = true; }
+  function oneTrial() {
+    if (S.T.n >= CAP) { setRun(false); return null; }
+    const idx = drawTrial(S.cfg, S.rng), r = addTrial(S.T, S.cfg, evA(), evB(), xv(), idx);
+    S.last = { idx, ...r, n: S.T.n };
+    return S.last;
+  }
+  function runMany(k) {
+    for (let i = 0; i < k && S.T.n < CAP; i++) oneTrial();
+    S.anim = 0; need = true; needHtml = true;
+  }
+
+  /* ---------- controls ---------- */
+  function fillSelects() {
+    const opt = (list, cur, ok) => list.map((e) => `<option value="${e.id}"${e.id === cur ? ' selected' : ''}${ok && !ok(e) ? ' disabled' : ''}>${e.name}</option>`).join('');
+    $('evA').innerHTML = opt(EVENTS[S.kind], S.A, (e) => allowed(S.cfg, e));
+    $('evB').innerHTML = opt(EVENTS[S.kind], S.B, (e) => allowed(S.cfg, e));
+    $('xSel').innerHTML = opt(XVARS[S.kind], S.X);
+    $('evA').value = S.A; $('evB').value = S.B; $('xSel').value = S.X;
+    for (const b of $('kindSeg').querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.k === S.kind));
+    for (const l of document.querySelectorAll('#xbar [data-for]')) l.hidden = !l.dataset.for.split(' ').includes(S.kind);
+    $('nDice').value = S.nDice; $('nCards').value = S.nCards; $('bet').value = S.bet; $('repl').checked = S.repl;
+    $('lrSeg').querySelector('[data-l="mY"]').hidden = !hasY();
+    for (const b of $('lrSeg').querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.l === S.lr));
+  }
+  function showTab(t) {
+    S.tab = t;
+    for (const b of $('tabSeg').querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.t === t));
+    for (const p of document.querySelectorAll('.tab')) p.hidden = p.dataset.tab !== t;
+    for (const c of document.querySelectorAll('[data-tabctl]')) c.hidden = !c.dataset.tabctl.split(' ').includes(t);
+    sizeAll(); need = true; needHtml = true;
+  }
+  const pressPreset = (k) => { for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === k)); };
+  function applyPreset(k) {
+    const c = PRESETS[k]; S.preset = k;
+    S.kind = c.kind; if (c.kind === 'dice') { S.nDice = c.n; S.bet = c.bet; } else if (c.kind === 'cards') S.nCards = c.n;
+    if (c.kind !== 'dice') S.repl = c.repl;
+    S.A = c.A; S.B = c.B; S.X = c.X; S.lr = c.X === 'match' ? 'mY' : 'mX';
+    $('presetHint').textContent = c.hint; pressPreset(k); setRun(false);
+    rebuild(); showTab(c.tab);
+  }
+  function custom() { if (S.preset !== 'custom') { S.preset = 'custom'; pressPreset(''); $('presetHint').textContent = VDI18N.t('Your own experiment. Press a setup to go back to one of the book\'s.'); } }
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  for (const b of $('kindSeg').querySelectorAll('button')) b.addEventListener('click', () => {
+    if (b.dataset.k === S.kind) return;
+    S.kind = b.dataset.k; S.A = ''; S.B = ''; S.X = ''; custom(); setRun(false); rebuild();
+  });
+  $('nDice').addEventListener('change', () => { S.nDice = +$('nDice').value; custom(); setRun(false); rebuild(); });
+  $('nCards').addEventListener('change', () => { S.nCards = +$('nCards').value; custom(); setRun(false); rebuild(); });
+  $('bet').addEventListener('change', () => { S.bet = +$('bet').value; custom(); setRun(false); rebuild(); });
+  $('repl').addEventListener('change', () => { S.repl = $('repl').checked; custom(); setRun(false); rebuild(); });
+  $('evA').addEventListener('change', () => { S.A = $('evA').value; custom(); setRun(false); rebuild(); });
+  $('evB').addEventListener('change', () => { S.B = $('evB').value; custom(); setRun(false); rebuild(); });
+  $('xSel').addEventListener('change', () => { S.X = $('xSel').value; custom(); setRun(false); rebuild(); });
+  for (const b of $('tabSeg').querySelectorAll('button')) b.addEventListener('click', () => showTab(b.dataset.t));
+  for (const b of $('lrSeg').querySelectorAll('button')) b.addEventListener('click', () => { S.lr = b.dataset.l; fillSelects(); need = true; needHtml = true; });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; need = true; needHtml = true; });
+  $('newDraw').addEventListener('click', () => { S.seed++; setRun(false); resetTrials(); });
+  function setRun(on) { S.run = on; $('play').textContent = on ? VDI18N.t('Pause') : VDI18N.t('Play'); $('play').classList.toggle('attn', !on); }
+  $('play').addEventListener('click', () => { if (!S.run && S.T.n >= CAP) return; setRun(!S.run); S.acc = Math.max(S.acc, 0.999); });
+  $('reset').addEventListener('click', () => { setRun(false); resetTrials(); });
+  const step = () => { oneTrial(); S.anim = 1; need = true; needHtml = true; };
+  $('run10').addEventListener('click', () => runMany(10));
+  $('run100').addEventListener('click', () => runMany(100));
+  $('run1000').addEventListener('click', () => runMany(1000));
+  $('run10000').addEventListener('click', () => runMany(10000));
+  $('speed').addEventListener('change', () => { need = true; });
+
+  /* ---------- the table (felt) ---------- */
+  const can = $('can'), ctx = can.getContext('2d');
+  const CANDY = { red: '#d4372c', green: '#2f9e44', blue: '#2f6fd6', yellow: '#f2c230', brown: '#7b4a26', orange: '#f08a1c' };
+  function rr(c, x, y, w, h, r) { c.beginPath(); c.moveTo(x + r, y); c.arcTo(x + w, y, x + w, y + h, r); c.arcTo(x + w, y + h, x, y + h, r); c.arcTo(x, y + h, x, y, r); c.arcTo(x, y, x + w, y, r); c.closePath(); }
+  const PIPS = { 1: [[0, 0]], 2: [[-1, -1], [1, 1]], 3: [[-1, -1], [0, 0], [1, 1]], 4: [[-1, -1], [1, -1], [-1, 1], [1, 1]], 5: [[-1, -1], [1, -1], [0, 0], [-1, 1], [1, 1]], 6: [[-1, -1], [1, -1], [-1, 0], [1, 0], [-1, 1], [1, 1]] };
+  function die(cx, cy, s, face, rot, ring) {
+    ctx.save(); ctx.translate(cx, cy); ctx.rotate(rot);
+    ctx.shadowColor = 'rgba(0,0,0,0.35)'; ctx.shadowBlur = 8; ctx.shadowOffsetY = 3;
+    rr(ctx, -s / 2, -s / 2, s, s, s * 0.18); ctx.fillStyle = '#fbf8f1'; ctx.fill(); ctx.shadowColor = 'transparent';
+    ctx.strokeStyle = ring ? TK.gold : 'rgba(0,0,0,0.25)'; ctx.lineWidth = ring ? 4 : 1; ctx.stroke();
+    ctx.fillStyle = face === 1 ? '#b42318' : '#1c1a17';
+    for (const [u, v] of PIPS[face]) { ctx.beginPath(); ctx.arc(u * s * 0.26, v * s * 0.26, s * (face === 1 ? 0.11 : 0.085), 0, 7); ctx.fill(); }
+    ctx.restore();
+  }
+  function cardFace(x, y, w, h, c, tag, ring) {
+    ctx.save(); ctx.shadowColor = 'rgba(0,0,0,0.35)'; ctx.shadowBlur = 6; ctx.shadowOffsetY = 2;
+    rr(ctx, x, y, w, h, w * 0.1); ctx.fillStyle = '#fdfbf6'; ctx.fill(); ctx.restore();
+    ctx.strokeStyle = ring ? TK.gold : 'rgba(0,0,0,0.3)'; ctx.lineWidth = ring ? 3 : 1; rr(ctx, x, y, w, h, w * 0.1); ctx.stroke();
+    const col = isRed(c) ? '#c0262d' : '#1c1a17';
+    ctx.fillStyle = col; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.font = `700 ${Math.round(w * 0.3)}px ${TK.ui}`;
+    ctx.fillText(RANKS[c.rank - 1], x + w * 0.09, y + w * 0.07);
+    ctx.font = `${Math.round(w * 0.24)}px ${TK.ui}`; ctx.fillText(SUITS[c.suit], x + w * 0.1, y + w * 0.4);
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.font = `${Math.round(w * 0.62)}px ${TK.ui}`; ctx.fillText(SUITS[c.suit], x + w * 0.56, y + h * 0.6);
+    if (tag) { ctx.fillStyle = TK.feltInk; ctx.font = `600 ${Math.round(Math.max(10, w * 0.2))}px ${TK.mono}`; ctx.textBaseline = 'top'; ctx.fillText(tag, x + w / 2, y + h + 4); }
+  }
+  function cardBack(x, y, w, h) {
+    rr(ctx, x, y, w, h, w * 0.1); ctx.fillStyle = '#7a2330'; ctx.fill(); ctx.strokeStyle = '#f4ecd8'; ctx.lineWidth = 2; ctx.stroke();
+    rr(ctx, x + 5, y + 5, w - 10, h - 10, w * 0.06); ctx.strokeStyle = 'rgba(244,236,216,0.5)'; ctx.lineWidth = 1; ctx.stroke();
+  }
+  function candy(x, y, r, color) {
+    const g = ctx.createRadialGradient(x - r * 0.35, y - r * 0.35, r * 0.1, x, y, r);
+    g.addColorStop(0, 'rgba(255,255,255,0.75)'); g.addColorStop(0.35, CANDY[color]); g.addColorStop(1, CANDY[color]);
+    ctx.fillStyle = g; ctx.beginPath(); ctx.ellipse(x, y, r, r * 0.82, 0, 0, 7); ctx.fill();
+    ctx.strokeStyle = 'rgba(0,0,0,0.25)'; ctx.lineWidth = 1; ctx.stroke();
+  }
+  /* the spots of the 40 candies in the cup: a fixed jumble, the same every time */
+  const SPOTS = (() => { const r = VDSTATS.rng(40), a = []; for (let i = 0; i < 40; i++) { const row = Math.floor(i / 8), col = i % 8; a.push([(col + 0.5 + (r() - 0.5) * 0.5) / 8, (row + 0.5 + (r() - 0.5) * 0.4) / 5]); } return a; })();
+  const label = (t, x, y) => { ctx.save(); ctx.strokeStyle = TK.canvas; ctx.lineWidth = 4; ctx.lineJoin = 'round'; ctx.strokeText(t, x, y); ctx.restore(); ctx.fillText(t, x, y); };
+  function drawFelt() {
+    const p = proj();
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const g = ctx.createRadialGradient(W / 2, H * 0.4, 20, W / 2, H / 2, Math.max(W, H) * 0.75);
+    g.addColorStop(0, TK.felt); g.addColorStop(1, TK.felt2); ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+    const L = S.last, a = Math.max(0, Math.min(1, S.anim)), tumble = a > 0 && !reduce();
+    ctx.fillStyle = TK.feltInk; ctx.font = `600 ${12 * p}px ${TK.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText(VDI18N.t('Trials: {n}', { n: big(S.T.n) }), 12 * p, 10 * p);
+    ctx.textAlign = 'right';
+    ctx.fillText(VDI18N.t('Draw set {n}', { n: S.seed }) + ' · ' + VDI18N.t('simulated'), W - 12 * p, 10 * p);
+    const midY = H * 0.47;
+    if (S.kind === 'dice') {
+      const n = S.cfg.n, s = Math.min(78 * p, (W - 40) / (n * 1.5), H * 0.42), gap = s * 0.5, x0 = W / 2 - (n * s + (n - 1) * gap) / 2 + s / 2;
+      for (let i = 0; i < n; i++) {
+        const face = L ? S.cfg.pop[L.idx[i]].face : 1 + ((i * 2 + 4) % 6);
+        const jig = tumble ? Math.sin((1 - a) * 20 + i * 2) * a : 0;
+        const shown = tumble && a > 0.25 ? 1 + Math.floor(Math.random() * 6) : face;
+        die(x0 + i * (s + gap) + jig * 30, midY - Math.abs(jig) * 30, s, shown, (tumble ? a * 6 + i : 0) + (L ? 0 : (i - 1) * 0.12), L && !tumble && face === S.cfg.bet && S.X === 'match');
+        if (!L) continue;
+      }
+      if (!L) { ctx.textAlign = 'center'; ctx.font = `${13 * p}px ${TK.ui}`; ctx.fillStyle = TK.feltInk; ctx.fillText(VDI18N.t('Press Play to roll'), W / 2, midY + s * 0.75); }
+    } else if (S.kind === 'cards') {
+      /* the deck at the left, the cards dealt in one row (two on a narrow screen), the first two tagged */
+      const n = S.cfg.n, rows = W < 560 && n > 5 ? 2 : 1, per = Math.ceil(n / rows), dx = 14 * p;
+      const w = Math.min(64 * p, (W - 100 * p) / (per * 1.08 + 0.95), (H - 80 * p) / (rows * 1.4 + (rows - 1) * 0.35)), h = w * 1.4, gapY = h * 0.35;
+      const top = midY - (rows * h + (rows - 1) * gapY) / 2 + 6 * p;
+      cardBack(dx, top, w * 0.9, h * 0.9); cardBack(dx + 3, top - 3, w * 0.9, h * 0.9);
+      ctx.fillStyle = TK.feltInk; ctx.font = `${11 * p}px ${TK.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+      const left = L ? (S.cfg.repl ? 52 : 52 - n) : 52;
+      const note = S.cfg.repl ? VDI18N.t('each card goes back') : VDI18N.t('{n} left in the deck', { n: left });
+      ctx.fillText(note, dx, top + rows * h + (rows - 1) * gapY + 8 * p);
+      const x0 = dx + w + 18 * p, step = Math.min(w * 1.12, (W - x0 - w - 10 * p) / Math.max(1, per - 1));
+      if (L) for (let i = 0; i < n; i++) {
+        const show = tumble ? Math.min(1, Math.max(0, (1 - a) * (n + 2) - i)) : 1; if (show <= 0) continue;
+        const row = Math.floor(i / per), col = i % per, c = S.cfg.pop[L.idx[i]];
+        const x = dx + (x0 + col * step - dx) * show, y = top + row * (h + gapY);
+        const ring = xv().kind === 'count' && xv().is(c, S.cfg) && show >= 1;
+        cardFace(x, y, w, h, c, '', ring);
+        if (i < 2) { ctx.fillStyle = TK.feltInk; ctx.font = `600 ${Math.round(Math.max(10, 11 * p))}px ${TK.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.fillText(i === 0 ? VDI18N.t('1st') : VDI18N.t('2nd'), x + w / 2, y - 3 * p); }
+      } else { ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.font = `${13 * p}px ${TK.ui}`; ctx.fillText(VDI18N.t('Press Play to deal'), (x0 + W) / 2, midY); }
+    } else {
+      const cw = Math.min(170 * p, W * 0.36), ch = Math.min(H - 70 * p, cw * 0.9), cx = 22 * p, cy = midY - ch / 2 + 6 * p;
+      /* the cup: a glass beaker */
+      ctx.fillStyle = 'rgba(255,255,255,0.10)'; ctx.strokeStyle = 'rgba(244,236,216,0.8)'; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + cw * 0.06, cy + ch); ctx.lineTo(cx + cw * 0.94, cy + ch); ctx.lineTo(cx + cw, cy); ctx.fill(); ctx.stroke();
+      const r = Math.min(cw / 19, ch / 12), gone = new Set();
+      const firstOut = L && (!tumble || a < 0.75), secondOut = L && (!tumble || a < 0.35);
+      if (L && !S.cfg.repl) { if (firstOut) gone.add(L.idx[0]); if (secondOut) gone.add(L.idx[1]); }
+      if (L && S.cfg.repl && tumble && a > 0.4 && a < 0.75) gone.add(L.idx[0]);
+      for (let i = 0; i < 40; i++) { if (gone.has(i)) continue; const [u, v] = SPOTS[i]; candy(cx + cw * (0.1 + 0.8 * u), cy + ch * (0.12 + 0.8 * v), r, S.cfg.pop[i].color); }
+      ctx.fillStyle = TK.feltInk; ctx.font = `${11 * p}px ${TK.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+      ctx.fillText(S.cfg.repl ? VDI18N.t('the first candy goes back before the second draw') : VDI18N.t('the first candy stays out'), cx, cy + ch + 6 * p);
+      const bx = cx + cw + 40 * p, R = Math.min(30 * p, (W - bx) / 6);
+      if (L) for (let i = 0; i < 2; i++) {
+        if (tumble && (i === 0 ? !firstOut : !secondOut)) continue;
+        const x = bx + R + i * R * 3.2, y = midY;
+        candy(x, y, R, S.cfg.pop[L.idx[i]].color);
+        ctx.fillStyle = TK.feltInk; ctx.textAlign = 'center'; ctx.font = `600 ${11 * p}px ${TK.mono}`; ctx.fillText(i === 0 ? VDI18N.t('1st') : VDI18N.t('2nd'), x, y + R + 6 * p);
+      } else { ctx.textAlign = 'left'; ctx.font = `${13 * p}px ${TK.ui}`; ctx.fillText(VDI18N.t('Press Play to draw two'), bx, midY); }
+    }
+    /* what the last trial gave: the events and X */
+    let endX = 0;
+    if (L && !tumble) {
+      const y = H - 12 * p; ctx.textBaseline = 'bottom'; ctx.font = `600 ${12 * p}px ${TK.mono}`;
+      let x = 12 * p; ctx.textAlign = 'left';
+      const chip = (txt, col, on) => { const w = ctx.measureText(txt).width + 16 * p; rr(ctx, x, y - 20 * p, w, 20 * p, 10 * p); ctx.fillStyle = on ? col : 'rgba(0,0,0,0.25)'; ctx.fill(); ctx.strokeStyle = col; ctx.lineWidth = 1.5; ctx.stroke(); ctx.fillStyle = on ? '#fff' : TK.feltInk; ctx.fillText(txt, x + 8 * p, y - 4 * p); x += w + 8 * p; };
+      chip(L.inA ? VDI18N.t('A happened') : VDI18N.t('not A'), TK.a, L.inA);
+      chip(L.inB ? VDI18N.t('B happened') : VDI18N.t('not B'), TK.b, L.inB);
+      const xt = `X = ${L.x}` + (hasY() ? `,  Y = ${money(profit(L.x))}` : '');
+      ctx.fillStyle = TK.feltInk; ctx.fillText(xt, x + 4 * p, y - 4 * p); endX = x + 4 * p + ctx.measureText(xt).width;
+    }
+    const rate = +$('speed').value;
+    ctx.textAlign = 'right'; ctx.textBaseline = 'bottom'; ctx.font = `${11 * p}px ${TK.mono}`; ctx.fillStyle = TK.feltInk;
+    /* the rate note is left out when the last trial's line reaches it (narrow phones); the Trials a second menu says the same */
+    const rt = rate === 1 ? VDI18N.t('1 trial a second') : VDI18N.t('{n} trials a second', { n: big(rate) });
+    if (endX + 12 * p < W - 12 * p - ctx.measureText(rt).width) ctx.fillText(rt, W - 12 * p, H - 10 * p);
+  }
+
+  /* ---------- Venn and tree ---------- */
+  const venn = $('venn'), vctx = venn.getContext('2d'), tree = $('tree'), tctx = tree.getContext('2d');
+  const hl = document.createElement('canvas'), hctx = hl.getContext('2d');
+  const sizes = {};
+  function fit(c, pane) { const r = $(pane).getBoundingClientRect(); const w = Math.max(1, r.width), h = Math.max(1, r.height); c.width = Math.round(w * dpr); c.height = Math.round(h * dpr); sizes[c.id] = [w, h]; }
+  function tlabel(c, t, x, y) { c.save(); c.strokeStyle = TK.canvas; c.lineWidth = 4; c.lineJoin = 'round'; c.strokeText(t, x, y); c.restore(); c.fillText(t, x, y); }
+  function region(T, k) { /* 0 A only, 1 both, 2 B only, 3 neither */ return k === 0 ? T.a - T.ab : k === 1 ? T.ab : k === 2 ? T.b - T.ab : T.n - T.a - T.b + T.ab; }
+  function drawVenn() {
+    const [w, h] = sizes.venn || [0, 0]; if (!w) return; const c = vctx, p = proj();
+    c.setTransform(dpr, 0, 0, dpr, 0, 0); c.fillStyle = TK.canvas; c.fillRect(0, 0, w, h);
+    const th = S.th, sep = th.ab === 0, R = Math.min(w * 0.22, h * 0.32), cy = h * 0.53, d = sep ? R * 2.3 : R * 1.1;
+    const ax = w / 2 - d / 2, bx = w / 2 + d / 2, box = [10, 30 * p, w - 20, h - 40 * p];
+    c.strokeStyle = TK.line; c.lineWidth = 1.5; c.strokeRect(...box);
+    c.fillStyle = TK.muted; c.font = `600 ${11 * p}px ${TK.mono}`; c.textAlign = 'left'; c.textBaseline = 'top';
+    c.fillText(VDI18N.t('S: every outcome'), box[0] + 6, box[1] + 5);
+    c.fillText(VDI18N.t('Venn diagram'), 10, 8 * p);
+    /* the region the last trial fell in lights up */
+    const L = S.last;
+    if (L && S.anim > -0.6) {
+      const k = L.inA && L.inB ? 1 : L.inA ? 0 : L.inB ? 2 : 3;
+      hl.width = venn.width; hl.height = venn.height; hctx.setTransform(dpr, 0, 0, dpr, 0, 0); hctx.clearRect(0, 0, w, h); hctx.fillStyle = TK.gold;
+      const circ = (x) => { hctx.beginPath(); hctx.arc(x, cy, R, 0, 7); };
+      if (k === 3) { hctx.fillRect(...box); hctx.globalCompositeOperation = 'destination-out'; circ(ax); hctx.fill(); circ(bx); hctx.fill(); }
+      else if (k === 1) { circ(ax); hctx.fill(); hctx.globalCompositeOperation = 'destination-in'; circ(bx); hctx.fill(); }
+      else { circ(k === 0 ? ax : bx); hctx.fill(); hctx.globalCompositeOperation = 'destination-out'; circ(k === 0 ? bx : ax); hctx.fill(); }
+      hctx.globalCompositeOperation = 'source-over';
+      c.save(); c.setTransform(1, 0, 0, 1, 0, 0); c.globalAlpha = 0.45; c.drawImage(hl, 0, 0); c.restore();
+    }
+    for (const [x, col] of [[ax, TK.a], [bx, TK.b]]) { c.beginPath(); c.arc(x, cy, R, 0, 7); c.fillStyle = col; c.globalAlpha = 0.13; c.fill(); c.globalAlpha = 1; c.strokeStyle = col; c.lineWidth = 2.5 * p; c.stroke(); }
+    c.font = `700 ${14 * p}px ${TK.mono}`; c.textBaseline = 'bottom'; c.textAlign = 'center';
+    c.fillStyle = TK.a; tlabel(c, 'A', ax - R * 0.7, cy - R * 0.72); c.fillStyle = TK.b; tlabel(c, 'B', bx + R * 0.7, cy - R * 0.72);
+    /* counts and probabilities in each region */
+    const spots = sep ? [[ax, cy], null, [bx, cy], [w / 2, box[1] + box[3] - 22 * p]] : [[ax - R * 0.45, cy], [w / 2, cy], [bx + R * 0.45, cy], [w - 20 - 48 * p, box[1] + box[3] - 30 * p]];
+    const probs = [th.a - th.ab, th.ab, th.b - th.ab, th.N - th.a - th.b + th.ab];
+    for (let k = 0; k < 4; k++) {
+      if (!spots[k]) continue; const [x, y] = spots[k];
+      c.fillStyle = TK.ink; c.font = `700 ${16 * p}px ${TK.mono}`; c.textBaseline = 'middle'; c.textAlign = 'center'; tlabel(c, big(region(S.T, k)), x, y - 8 * p);
+      if (!S.blind) { c.fillStyle = TK.muted; c.font = `${10.5 * p}px ${TK.mono}`; tlabel(c, 'P = ' + f4(probs[k] / th.N), x, y + 10 * p); }
+    }
+    if (sep) { c.fillStyle = TK.muted; c.font = `${11 * p}px ${TK.ui}`; c.textAlign = 'center'; c.textBaseline = 'bottom'; tlabel(c, VDI18N.t('A and B cannot both happen: mutually exclusive'), w / 2, cy - R - 6 * p); }
+  }
+  function drawTree() {
+    const [w, h] = sizes.tree || [0, 0]; if (!w) return; const c = tctx, p = proj();
+    c.setTransform(dpr, 0, 0, dpr, 0, 0); c.fillStyle = TK.canvas; c.fillRect(0, 0, w, h);
+    c.fillStyle = TK.muted; c.font = `600 ${11 * p}px ${TK.mono}`; c.textAlign = 'left'; c.textBaseline = 'top'; c.fillText(VDI18N.t('Tree diagram'), 10, 8 * p);
+    const th = S.th, T = S.T, x0 = 16 * p, x1 = w * 0.3, x2 = Math.min(w * 0.64, w - 150 * p), top = 34 * p, bot = h - 10 * p;
+    const ys = [0, 1, 2, 3].map((i) => top + (bot - top) * (i + 0.5) / 4), y1 = [(ys[0] + ys[1]) / 2, (ys[2] + ys[3]) / 2], y0 = (top + bot) / 2;
+    const L = S.last, k = L ? (L.inA ? (L.inB ? 0 : 1) : (L.inB ? 2 : 3)) : -1;
+    const counts = [T.ab, T.a - T.ab, T.b - T.ab, T.n - T.a - T.b + T.ab], tc = [th.ab, th.a - th.ab, th.b - th.ab, th.N - th.a - th.b + th.ab];
+    const branch = (xa, ya, xb, yb, on, txt, sub, col) => {
+      c.strokeStyle = on ? TK.gold : TK.line; c.lineWidth = (on ? 4 : 2) * p; c.beginPath(); c.moveTo(xa, ya); c.lineTo(xb, yb); c.stroke();
+      /* labels sit two thirds along, where the branches have spread apart: the probability on the outer side, the count on the inner */
+      const mx = xa + (xb - xa) * 0.62, my = ya + (yb - ya) * 0.62, up = yb < ya; c.font = `${10.5 * p}px ${TK.mono}`; c.textAlign = 'center'; c.fillStyle = col || TK.ink;
+      c.textBaseline = up ? 'bottom' : 'top'; if (txt) tlabel(c, txt, mx - (up ? 8 : -8) * p, my + (up ? -5 : 5) * p);
+      c.textBaseline = up ? 'top' : 'bottom'; c.fillStyle = TK.muted; if (sub) tlabel(c, sub, mx + (up ? 10 : -10) * p, my + (up ? 4 : -4) * p);
+    };
+    const nA = T.a, nA_ = T.n - T.a;
+    /* first branch: A or A′ */
+    branch(x0, y0, x1, y1[0], k === 0 || k === 1, S.blind ? 'A' : 'A: ' + fr(th.a, th.N), VDI18N.t('n = {n}', { n: big(nA) }), TK.a);
+    branch(x0, y0, x1, y1[1], k === 2 || k === 3, S.blind ? 'A′' : 'A′: ' + fr(th.N - th.a, th.N), VDI18N.t('n = {n}', { n: big(nA_) }), TK.a);
+    /* second: B given A or A′ */
+    const cond = [[th.ab, th.a], [th.a - th.ab, th.a], [th.b - th.ab, th.N - th.a], [th.N - th.a - th.b + th.ab, th.N - th.a]];
+    const names = ['B | A', 'B′ | A', 'B | A′', 'B′ | A′'];
+    for (let i = 0; i < 4; i++) {
+      const [pn, pd] = cond[i];
+      branch(x1, y1[i < 2 ? 0 : 1], x2, ys[i], k === i, S.blind || !pd ? names[i] : names[i] + ': ' + fr(pn, pd), VDI18N.t('n = {n}', { n: big(counts[i]) }), TK.b);
+      c.fillStyle = TK.ink; c.font = `600 ${11 * p}px ${TK.mono}`; c.textAlign = 'left'; c.textBaseline = 'middle';
+      const leaf = ['A and B', 'A and B′', 'A′ and B', 'A′ and B′'][i];
+      tlabel(c, leaf, x2 + 6 * p, ys[i] - 7 * p);
+      c.fillStyle = TK.muted; c.font = `${10.5 * p}px ${TK.mono}`;
+      tlabel(c, (S.blind ? '' : 'P = ' + f4(tc[i] / th.N) + '  ') + VDI18N.t('n = {n}', { n: big(counts[i]) }), x2 + 6 * p, ys[i] + 8 * p);
+    }
+    c.fillStyle = TK.ink; c.beginPath(); c.arc(x0, y0, 4 * p, 0, 7); c.fill();
+  }
+
+  /* ---------- the distribution of X ---------- */
+  const bars = $('bars'), bctx = bars.getContext('2d');
+  function drawBars() {
+    const [w, h] = sizes.bars || [0, 0]; if (!w) return; const c = bctx, p = proj();
+    c.setTransform(dpr, 0, 0, dpr, 0, 0); c.fillStyle = TK.canvas; c.fillRect(0, 0, w, h);
+    const P = S.P, T = S.T, xs = P.map((r) => r.x), lo = xs[0], hi = xs[xs.length - 1], nb = hi - lo + 1;
+    const pl = 46 * p, pr = 14 * p, pt = 34 * p, pb = 34 * p, bw = (w - pl - pr) / nb;
+    let ymax = Math.max(...P.map((r) => r.p)); if (T.n) for (const [, f] of T.freq) ymax = Math.max(ymax, f / T.n); ymax = Math.min(1, ymax * 1.15);
+    const X = (x) => pl + (x - lo + 0.5) * bw, Y = (v) => h - pb - v / ymax * (h - pt - pb);
+    c.strokeStyle = TK.line; c.lineWidth = 1; c.fillStyle = TK.muted; c.font = `${10.5 * p}px ${TK.mono}`; c.textAlign = 'right'; c.textBaseline = 'middle';
+    const st = ymax > 0.5 ? 0.1 : ymax > 0.2 ? 0.05 : ymax > 0.1 ? 0.02 : 0.01;
+    for (let v = 0; v <= ymax + 1e-9; v += st) { const y = Y(v); c.beginPath(); c.moveTo(pl, y); c.lineTo(w - pr, y); c.globalAlpha = 0.5; c.stroke(); c.globalAlpha = 1; c.fillText(v.toFixed(st < 0.05 ? 2 : 2), pl - 6 * p, y); }
+    c.textAlign = 'center'; c.textBaseline = 'top'; const every = Math.ceil(nb / Math.max(2, (w - pl) / (26 * p)));
+    for (const x of xs) if ((x - lo) % every === 0) c.fillText(String(x).replace('-', '−'), X(x), h - pb + 5 * p);
+    /* filled bars: relative frequency; outlined: P(x) */
+    for (const r of P) {
+      const f = T.n ? (T.freq.get(r.x) || 0) / T.n : 0;
+      if (f > 0) { c.fillStyle = TK.x; c.globalAlpha = 0.75; c.fillRect(X(r.x) - bw * 0.36, Y(f), bw * 0.72, Y(0) - Y(f)); c.globalAlpha = 1; }
+      if (!S.blind) { c.strokeStyle = TK.ink; c.lineWidth = 2 * p; c.strokeRect(X(r.x) - bw * 0.42, Y(r.p), bw * 0.84, Y(0) - Y(r.p)); }
+    }
+    if (S.last && S.anim > 0) { const x = S.last.x; c.fillStyle = TK.gold; c.beginPath(); c.arc(X(x), Y(0) - 8 * p, 5 * p, 0, 7); c.fill(); }
+    /* μ and x̄ */
+    const tri = (x, col, txt, up) => { c.fillStyle = col; c.beginPath(); const y = up ? pt - 4 * p : pt - 4 * p; c.moveTo(x, y + 8 * p); c.lineTo(x - 6 * p, y); c.lineTo(x + 6 * p, y); c.fill(); c.font = `600 ${11 * p}px ${TK.mono}`; c.textBaseline = 'bottom'; c.textAlign = 'center'; tlabel(c, txt, x, y - 1 * p); };
+    const Xc = (v) => pl + (v - lo + 0.5) * bw;
+    if (!S.blind) tri(Xc(S.mom.mu), TK.ink, 'μ = ' + f4(S.mom.mu), false);
+    if (T.n) { const m = T.sx / T.n; c.strokeStyle = TK.x; c.lineWidth = 2 * p; c.setLineDash([5 * p, 4 * p]); c.beginPath(); c.moveTo(Xc(m), pt + 6 * p); c.lineTo(Xc(m), h - pb); c.stroke(); c.setLineDash([]); c.fillStyle = TK.x; c.font = `600 ${11 * p}px ${TK.mono}`; c.textAlign = 'left'; c.textBaseline = 'top'; tlabel(c, 'x̄ = ' + f4(m), Xc(m) + 4 * p, pt + 8 * p); }
+    c.fillStyle = TK.ink; c.font = `600 ${11 * p}px ${TK.mono}`; c.textAlign = 'left'; c.textBaseline = 'top';
+    tlabel(c, 'x: ' + VDI18N.t(xv().name), pl, h - 14 * p);
+    c.textAlign = 'right'; tlabel(c, S.blind ? VDI18N.t('filled: relative frequency') : VDI18N.t('outline: P(x)   filled: relative frequency'), w - pr, 8 * p);
+  }
+
+  /* ---------- the long run ---------- */
+  const lr = $('lr'), lctx = lr.getContext('2d');
+  function lrSeries() {
+    const T = S.T;
+    if (S.lr === 'rfA') { const pA = S.th.a / S.th.N; return { arr: T.rfA, mu: pA, sd: Math.sqrt(pA * (1 - pA)), lo: 0, hi: 1, name: VDI18N.t('relative frequency of A'), tname: 'P(A)' }; }
+    const y = S.lr === 'mY', P = S.P, vals = P.map((r) => (y ? profit(r.x) : r.x)), m = y ? S.momY : S.mom;
+    return { arr: y ? T.mY : T.mX, mu: m.mu, sd: m.sd, lo: Math.min(...vals), hi: Math.max(...vals), name: y ? VDI18N.t('average profit ȳ ($)') : VDI18N.t('average of X, x̄'), tname: y ? 'μ_Y' : 'μ' };
+  }
+  function drawLong() {
+    const [w, h] = sizes.lr || [0, 0]; if (!w) return; const c = lctx, p = proj(), T = S.T, L = lrSeries();
+    c.setTransform(dpr, 0, 0, dpr, 0, 0); c.fillStyle = TK.canvas; c.fillRect(0, 0, w, h);
+    const pl = 54 * p, pr = 16 * p, pt = 26 * p, pb = 34 * p, decs = Math.max(2, Math.ceil(Math.log10(Math.max(10, T.n)) - 1e-9));
+    const X = (n) => pl + Math.log10(n) / decs * (w - pl - pr);
+    /* the view: the possible range of the series, cut to μ ± 4σ so the settling stays visible (an early value outside is clipped) */
+    let lo = Math.max(L.lo, L.mu - 4 * L.sd), hi = Math.min(L.hi, L.mu + 4 * L.sd); if (hi - lo < 1e-9) { lo -= 0.5; hi += 0.5; }
+    const Y = (v) => h - pb - (v - lo) / (hi - lo) * (h - pt - pb);
+    c.strokeStyle = TK.line; c.lineWidth = 1; c.fillStyle = TK.muted; c.font = `${10.5 * p}px ${TK.mono}`;
+    c.textAlign = 'center'; c.textBaseline = 'top';
+    for (let d = 0; d <= decs; d++) { const x = X(10 ** d); c.beginPath(); c.moveTo(x, pt); c.lineTo(x, h - pb); c.globalAlpha = 0.5; c.stroke(); c.globalAlpha = 1; c.fillText(big(10 ** d), x, h - pb + 5 * p); }
+    c.textAlign = 'right'; c.textBaseline = 'middle';
+    for (let i = 0; i <= 4; i++) { const v = lo + (hi - lo) * i / 4, y = Y(v); c.beginPath(); c.moveTo(pl, y); c.lineTo(w - pr, y); c.globalAlpha = 0.5; c.stroke(); c.globalAlpha = 1; c.fillText(String(+v.toFixed(2)).replace('-', '−'), pl - 6 * p, y); }
+    c.save(); c.beginPath(); c.rect(pl, pt, w - pl - pr, h - pt - pb); c.clip();
+    if (!S.blind) {
+      /* μ ± 2σ/√n */
+      c.fillStyle = TK.x; c.globalAlpha = 0.12; c.beginPath();
+      const N = 10 ** decs, steps = 120;
+      for (let i = 0; i <= steps; i++) { const n = 10 ** (decs * i / steps); c.lineTo(X(n), Y(L.mu + 2 * L.sd / Math.sqrt(n))); }
+      for (let i = steps; i >= 0; i--) { const n = 10 ** (decs * i / steps); c.lineTo(X(n), Y(L.mu - 2 * L.sd / Math.sqrt(n))); }
+      c.fill(); c.globalAlpha = 1; void N;
+      c.strokeStyle = TK.ink; c.lineWidth = 1.6 * p; c.setLineDash([7 * p, 5 * p]); c.beginPath(); c.moveTo(pl, Y(L.mu)); c.lineTo(w - pr, Y(L.mu)); c.stroke(); c.setLineDash([]);
+    }
+    if (T.n) {
+      c.strokeStyle = S.lr === 'rfA' ? TK.a : TK.x; c.lineWidth = 2.2 * p; c.lineJoin = 'round'; c.beginPath();
+      const px = w - pl - pr; let lastI = -1;
+      for (let k = 0; k <= px * 2; k++) {
+        const n = Math.max(1, Math.min(T.n, Math.round(10 ** (decs * k / (px * 2))))); if (n - 1 === lastI) continue; if (n - 1 < lastI) continue;
+        if (n - 1 > lastI + 1 && lastI >= 0 && n < 400) { for (let j = lastI + 1; j < n; j++) c.lineTo(X(j + 1), Y(L.arr[j])); }
+        lastI = n - 1; if (k === 0) c.moveTo(X(n), Y(L.arr[n - 1])); else c.lineTo(X(n), Y(L.arr[n - 1]));
+        if (n >= T.n) break;
+      }
+      c.stroke();
+      c.fillStyle = S.lr === 'rfA' ? TK.a : TK.x; c.beginPath(); c.arc(X(T.n), Y(L.arr[T.n - 1]), 4 * p, 0, 7); c.fill();
+    }
+    c.restore();
+    c.fillStyle = TK.ink; c.font = `600 ${11 * p}px ${TK.mono}`; c.textAlign = 'left'; c.textBaseline = 'top';
+    tlabel(c, L.name + (S.blind ? '' : '   - - ' + L.tname + ' = ' + f4(L.mu)), pl, 6 * p);
+    c.textAlign = 'right'; c.textBaseline = 'bottom'; c.fillStyle = TK.muted; tlabel(c, VDI18N.t('trials n (logarithmic scale) →'), w - pr, h - 2 * p);
+  }
+
+  /* ---------- HTML: contingency table, rules, PDF table, readouts ---------- */
+  function htmlCt() {
+    const T = S.T, th = S.th, L = S.last, hit = L && S.anim > -0.6 ? (L.inA ? 'A' : 'a') + (L.inB ? 'B' : 'b') : '';
+    const cell = (cnt, tp, key, cls) => `<td class="${cls || ''}${key && key === hit ? ' hit' : ''}">${big(cnt)}<small>${T.n ? f4(cnt / T.n) : '—'}${S.blind ? '' : ' · P ' + f4(tp / th.N)}</small></td>`;
+    const ab = T.ab, aB = T.a - T.ab, Ab = T.b - T.ab, AB = T.n - T.a - T.b + T.ab;
+    $('ctable').innerHTML = `<tr><th></th><th class="rb">B</th><th class="rb">B′</th><th>${VDI18N.t('Total')}</th></tr>`
+      + `<tr><th class="ra">A</th>${cell(ab, th.ab, 'AB')}${cell(aB, th.a - th.ab, 'Ab')}${cell(T.a, th.a, '', 'tot')}</tr>`
+      + `<tr><th class="ra">A′</th>${cell(Ab, th.b - th.ab, 'aB')}${cell(AB, th.N - th.a - th.b + th.ab, 'ab')}${cell(T.n - T.a, th.N - th.a, '', 'tot')}</tr>`
+      + `<tr class="tot"><th>${VDI18N.t('Total')}</th>${cell(T.b, th.b, '')}${cell(T.n - T.b, th.N - th.b, '')}${cell(T.n, th.N, '')}</tr>`;
+    /* the rules */
+    const t = (a) => f4(a / th.N), n = T.n, s = (a) => (n ? f4(a / n) : '—');
+    const pA = th.a / th.N, pB = th.b / th.N, pAB = th.ab / th.N;
+    const indepT = th.ab * th.N === th.a * th.b, excl = th.ab === 0;
+    const rows = [
+      [VDI18N.t('Complement'), 'P(A′) = 1 − P(A)', S.blind ? '?' : `${t(th.N - th.a)} = 1 − ${t(th.a)}`, n ? `${s(n - T.a)} = 1 − ${s(T.a)}` : '—'],
+      [VDI18N.t('Addition rule'), VDI18N.t('P(A or B) = P(A) + P(B) − P(A and B)'), S.blind ? '?' : `${t(th.a + th.b - th.ab)} = ${t(th.a)} + ${t(th.b)} − ${t(th.ab)}`, n ? `${s(T.a + T.b - T.ab)} = ${s(T.a)} + ${s(T.b)} − ${s(T.ab)}` : '—'],
+      [VDI18N.t('Multiplication rule'), VDI18N.t('P(A and B) = P(A)·P(B | A)'), S.blind ? '?' : `${t(th.ab)} = ${f4(pA)} × ${th.a ? fr(th.ab, th.a) : '—'}`, n && T.a ? `${s(T.ab)} = ${s(T.a)} × ${f4(T.ab / T.a)}` : '—'],
+      [VDI18N.t('Conditional'), VDI18N.t('P(B | A) = P(A and B)/P(A)'), S.blind ? '?' : (th.a ? `${fr(th.ab, th.a)} = ${f4(th.ab / th.a)}` : '—'), T.a ? `${big(T.ab)}/${big(T.a)} = ${f4(T.ab / T.a)}` : '—'],
+    ];
+    let h = `<tr><th>${VDI18N.t('Rule')}</th><th>${VDI18N.t('In theory')}</th><th>${VDI18N.t('In your trials')}</th></tr>`;
+    for (const [nm, fm, a, b] of rows) h += `<tr><td>${nm}<small class="mono">${fm}</small></td><td class="mono">${a}</td><td class="mono">${b}</td></tr>`;
+    const indepS = T.a && n ? `P(B | A) ≈ ${f4(T.ab / T.a)}, P(B) ≈ ${s(T.b)}` : '—';
+    h += `<tr><td>${VDI18N.t('Independent?')}<small class="mono">P(B | A) = P(B)</small></td>`
+      + (S.blind ? '<td>?</td>' : `<td class="${indepT ? 'yes' : 'no'}">${indepT ? VDI18N.t('yes') : VDI18N.t('no')}<small class="mono">${th.a ? fr(th.ab, th.a) : '—'} ${indepT ? '=' : '≠'} ${fr(th.b, th.N)}</small></td>`)
+      + `<td class="mono">${indepS}<small>${VDI18N.t('a sample only comes close')}</small></td></tr>`;
+    h += `<tr><td>${VDI18N.t('Mutually exclusive?')}<small class="mono">${VDI18N.t('P(A and B) = 0')}</small></td>`
+      + (S.blind ? '<td>?</td>' : `<td class="${excl ? 'yes' : 'no'}">${excl ? VDI18N.t('yes') : VDI18N.t('no')}<small class="mono">${VDI18N.t('P(A and B) = {p}', { p: fr(th.ab, th.N) })}</small></td>`)
+      + `<td class="mono">${n ? big(T.ab) + ' / ' + big(n) : '—'}</td></tr>`;
+    $('rules').innerHTML = h; void pB; void pAB;
+  }
+  function htmlPdf() {
+    const T = S.T, P = S.P, y = hasY();
+    $('pdfTitle').textContent = VDI18N.t('Probability distribution function of X: {x}', { x: VDI18N.t(xv().name) });
+    let h = `<tr><th>x</th>${y ? `<th>${VDI18N.t('profit y')}</th>` : ''}<th>P(x)</th><th>x·P(x)</th><th>${VDI18N.t('Frequency')}</th><th>${VDI18N.t('Relative frequency')}</th></tr>`;
+    for (const r of P) {
+      const f = T.freq.get(r.x) || 0, hit = S.last && S.anim > -0.6 && S.last.x === r.x;
+      h += `<tr><td>${r.x}</td>${y ? `<td>${money(profit(r.x))}</td>` : ''}<td>${S.blind ? '?' : f4(r.p)}</td><td>${S.blind ? '?' : f4(r.x * r.p)}</td><td class="${hit ? 'hit' : ''}">${big(f)}</td><td>${T.n ? f4(f / T.n) : '—'}</td></tr>`;
+    }
+    const st = sampleStats(T), sy = sampleStats(T, profit);
+    h += `<tr class="tot"><td>${VDI18N.t('Total')}</td>${y ? '<td></td>' : ''}<td>${S.blind ? '?' : f4(P.reduce((s, r) => s + r.p, 0))}</td><td>${S.blind ? '?' : 'μ = ' + f4(S.mom.mu)}</td><td>${big(T.n)}</td><td>${T.n ? f4(1) : '—'}</td></tr>`;
+    h += `<tr><td colspan="${y ? 6 : 5}" style="text-align:left">μ = ${S.blind ? '?' : f4(S.mom.mu)}, σ = ${S.blind ? '?' : f4(S.mom.sd)}; x̄ = ${f4(st.mean)}, s = ${f4(st.sd)}`
+      + (y ? `<br>μ_Y = ${S.blind ? '?' : f4(S.momY.mu)}, σ_Y = ${S.blind ? '?' : f4(S.momY.sd)}; ȳ = ${f4(sy.mean)}, s_Y = ${f4(sy.sd)}` : '') + '</td></tr>';
+    $('pdfTable').innerHTML = h;
+  }
+  function htmlLong() {
+    const L = lrSeries(), n = S.T.n, last = n ? L.arr[n - 1] : NaN;
+    $('lrNote').textContent = n ? VDI18N.t('After {n} trials: {v}. The band is ±2σ/√n around the dashed line; it narrows as the trials pile up.', { n: big(n), v: f4(last) })
+      : VDI18N.t('Press Play or Run 1,000 and watch the line settle toward the dashed one.');
+  }
+  function readouts() {
+    const T = S.T, th = S.th, dd = (a, b, cls) => `<div${cls ? ` class="${cls}"` : ''}><dt>${a}</dt><dd translate="no">${b}</dd></div>`, B = S.blind;
+    let h = dd(VDI18N.t('Trials'), big(T.n));
+    if (S.last) {
+      const o = S.last.idx.map((i) => S.cfg.pop[i]);
+      const txt = S.kind === 'dice' ? o.map((d) => d.face).join(', ') : S.kind === 'cards' ? o.map((c) => RANKS[c.rank - 1] + SUITS[c.suit]).join(' ') : o.map((c) => VDI18N.t(c.color)).join(', ');
+      h += dd(VDI18N.t('Last trial'), txt, 'wide');
+    }
+    h += dd('P(A)', B ? '?' : f4(th.a / th.N)) + dd(VDI18N.t('Relative frequency of A'), T.n ? f4(T.a / T.n) : '—');
+    h += dd('P(B)', B ? '?' : f4(th.b / th.N)) + dd(VDI18N.t('Relative frequency of B'), T.n ? f4(T.b / T.n) : '—');
+    h += dd('P(A and B)', B ? '?' : f4(th.ab / th.N)) + dd(VDI18N.t('Relative frequency of A and B'), T.n ? f4(T.ab / T.n) : '—');
+    h += dd('P(B | A)', B ? '?' : th.a ? f4(th.ab / th.a) : '—') + dd(VDI18N.t('Relative frequency of B given A'), T.a ? f4(T.ab / T.a) : '—');
+    const st = sampleStats(T);
+    h += dd(VDI18N.t('Expected value μ'), B ? '?' : f4(S.mom.mu)) + dd(VDI18N.t('Average x̄'), f4(st.mean));
+    h += dd(VDI18N.t('Standard deviation σ'), B ? '?' : f4(S.mom.sd)) + dd(VDI18N.t('Sample SD s'), f4(st.sd));
+    if (hasY()) { const sy = sampleStats(T, profit); h += dd(VDI18N.t('Expected profit μ_Y'), B ? '?' : f4(S.momY.mu)) + dd(VDI18N.t('Average profit ȳ'), f4(sy.mean)); }
+    $('out').innerHTML = h;
+    $('drawLabel').textContent = VDI18N.t('Draw set {n}', { n: S.seed });
+  }
+
+  /* ---------- loop ---------- */
+  function sizeAll() {
+    dpr = window.devicePixelRatio || 1;
+    const r = $('felt').getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr);
+    if (S.tab === 'events') { fit(venn, 'vennPane'); fit(tree, 'treePane'); }
+    if (S.tab === 'rv') fit(bars, 'barsPane');
+    if (S.tab === 'long') fit(lr, 'longPane');
+    need = true;
+  }
+  function draw() {
+    if (!TK || !W) return;
+    drawFelt();
+    if (S.tab === 'events') { drawVenn(); drawTree(); }
+    if (S.tab === 'rv') drawBars();
+    if (S.tab === 'long') drawLong();
+  }
+  let last = performance.now(), lastHtml = 0;
+  function frame(now) {
+    const dt = Math.min(0.1, (now - last) / 1000); last = now;
+    if (S.run) {
+      const rate = +$('speed').value; S.acc += dt * rate;
+      let k = Math.floor(S.acc); S.acc -= k; k = Math.min(k, 5000);
+      if (k > 0) { for (let i = 0; i < k; i++) if (!oneTrial()) break; S.anim = rate <= 5 ? 1 : 0; needHtml = true; }
+      if (S.T.n >= CAP) setRun(false);
+      need = true;
+    }
+    if (S.anim > -0.6) { const rate = +$('speed').value, dur = Math.min(0.55, 0.8 / rate); S.anim -= dt / dur; need = true; if (S.anim <= 0 && S.anim + dt / dur > 0) needHtml = true; }
+    if (need) { need = false; draw(); }
+    if (needHtml && now - lastHtml > (S.run ? 120 : 0)) { needHtml = false; lastHtml = now; readouts(); if (S.tab === 'events') htmlCt(); if (S.tab === 'rv') htmlPdf(); if (S.tab === 'long') htmlLong(); }
+    requestAnimationFrame(frame);
+  }
+  const retheme = () => { tokens(); need = true; };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'data-vd-look'] });
+  VD.projector({ onChange: sizeAll });
+  if (window.VD && VD.panel) VD.panel({ play: '#play', reset: '#reset', speed: '#speed', speedLabel: 'Trials a second', step: { run: step, label: 'Step', title: 'Run one trial' } });
+  can.addEventListener('keydown', (e) => { if (e.key === ' ') { $('play').click(); e.preventDefault(); } });
+  /* Readings: what is recorded follows the view on show (tools/readings_panel.py) */
+  window.vdVersion = 'chance-lab@2026-11-19';
+  const setupName = () => (S.preset === 'custom' ? 'custom' : S.preset);
+  window.vdReadingRow = () => {
+    const T = S.T, th = S.th;
+    if (!T.n) return VDI18N.t('Run some trials first.');
+    if (S.tab === 'rv') {
+      return S.P.map((r) => { const f = T.freq.get(r.x) || 0, row = { kind: 'pdf', setup: setupName(), X: S.X, trials: T.n, x: r.x };
+        if (hasY()) row.y = profit(r.x);
+        Object.assign(row, { P_x: S.blind ? '' : +r.p.toFixed(4), freq: f, rel_freq: +(f / T.n).toFixed(4) }); return row; });
+    }
+    if (S.tab === 'long') {
+      const st = sampleStats(T), sy = sampleStats(T, profit);
+      return { kind: 'long', setup: setupName(), trials: T.n, rf_A: +(T.a / T.n).toFixed(4), P_A: S.blind ? '' : +(th.a / th.N).toFixed(4), mean_X: +st.mean.toFixed(4), mu_X: S.blind ? '' : +S.mom.mu.toFixed(4), s_X: T.n > 1 ? +st.sd.toFixed(4) : '', sigma_X: S.blind ? '' : +S.mom.sd.toFixed(4),
+        mean_Y: hasY() ? +sy.mean.toFixed(4) : '', mu_Y: hasY() && !S.blind ? +S.momY.mu.toFixed(4) : '' };
+    }
+    return { kind: 'events', setup: setupName(), A: S.A, B: S.B, trials: T.n, P_A: S.blind ? '' : +(th.a / th.N).toFixed(4), rf_A: +(T.a / T.n).toFixed(4),
+      P_B: S.blind ? '' : +(th.b / th.N).toFixed(4), rf_B: +(T.b / T.n).toFixed(4), P_AB: S.blind ? '' : +(th.ab / th.N).toFixed(4), rf_AB: +(T.ab / T.n).toFixed(4),
+      P_BgA: S.blind || !th.a ? '' : +(th.ab / th.a).toFixed(4), rf_BgA: T.a ? +(T.ab / T.a).toFixed(4) : '' };
+  };
+  window.vdShowCols = [['trials', VDI18N.t('Trials')], ['x', 'x'], ['rel_freq', VDI18N.t('Rel. freq.')], ['rf_A', VDI18N.t('Rel. freq. A')]];
+  if (window.VD && VD.describe) VD.describe(can, () => {
+    const out = [`${S.T.n} trials so far.`];
+    if (S.last) out.push({ t: `Last trial: X = ${S.last.x}; A ${S.last.inA ? 'happened' : 'did not happen'}; B ${S.last.inB ? 'happened' : 'did not happen'}.`, live: !S.run });
+    if (!S.blind) out.push(`P(A) = ${f4(S.th.a / S.th.N)}, P(B) = ${f4(S.th.b / S.th.N)}, P(A and B) = ${f4(S.th.ab / S.th.N)}; μ = ${f4(S.mom.mu)}, σ = ${f4(S.mom.sd)}.`);
+    if (S.T.n) out.push(`Relative frequency of A ${f4(S.T.a / S.T.n)}; average of X ${f4(S.T.sx / S.T.n)}.`);
+    return out;
+  });
+  if (window.VD && VD.splitPanes) VD.splitPanes($('vennPane'), $('treePane'), { key: 'events', label: 'Venn and tree' });
+  tokens();
+  const ro = new ResizeObserver(sizeAll); for (const id of ['felt', 'vennPane', 'treePane', 'barsPane', 'longPane']) ro.observe($(id));
+  applyPreset('dice2'); sizeAll();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  if (window.VD && VD.howTo) VD.howTo({ src: 'media/how-this-works/ws-probability.mp4', poster: 'media/how-this-works/ws-probability.jpg' });
+  window.__cl = { S, resize: () => sizeAll(), applyPreset, showTab, runMany, oneTrial, step, setRun, theory, pdf, moments, sampleStats, draw: () => { need = true; needHtml = true; } };
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

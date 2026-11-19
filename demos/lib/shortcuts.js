@@ -87,6 +87,8 @@ window.VD_SHORTCUTS = {
     ["← →", "Move the point along the curve (Shift for bigger steps)", "on the picture"],
     ["+ −", "Zoom in or out about the center (or scroll over the picture)", "on the picture"]
   ],
+  "chance-lab": [],
+  "chi-square-tests": [],
   "slope-fields": [
     ["← → ↑ ↓", "Move the start point of the curve in t or y (Shift for bigger steps)", "on the picture"],
     ["+ −", "Zoom in or out about the middle of the view (or scroll over the field)", "on the picture"]

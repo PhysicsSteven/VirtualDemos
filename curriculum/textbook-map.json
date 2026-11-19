@@ -12716,6 +12716,38 @@
       "note": "New 2026-11-19 (Claude, from Steve's approved Calculus plan): a math tool for OpenStax Calculus Vol 1 4.1 (related rates) and 4.7 (applied optimization). A sliding ladder, a filling cone and a lengthening shadow with live rates and the chain rule checked against the motion; the biggest box, a fence along a river, the can with least metal; the lifeguard and Fermat's principle giving Snell's law; the longest throw, 45° on level ground and less from a height.",
       "title": "Related Rates and Optimization",
       "url": "demos/rates-and-optimization.html"
+    },
+    {
+      "demo": "chance-lab",
+      "course": [
+        "later"
+      ],
+      "sections": [],
+      "role": "demo",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "New 2026-11-19 (Claude, OpenStax Introductory Statistics plan, group chance): dice, cards with or without replacement and a cup of 40 candies; two events shown live in a Venn diagram, a tree diagram and a contingency table with exact probabilities from counting outcomes; the complement, addition and multiplication rules, conditional probability, independence and mutual exclusion checked in theory and in the trials; the PDF table of a discrete random variable (binomial, hypergeometric or the sum of dice) with μ, σ, the sample mean and SD; the long run graph with the band μ ± 2σ/√n. Serves Introductory Statistics ch 3 and 4 (the statistics map holds the sections). Worksheet ws-probability.",
+      "title": "Chance Lab: Dice, Cards and Candies",
+      "url": "demos/chance-lab.html",
+      "handouts": [
+        "ws-probability"
+      ]
+    },
+    {
+      "demo": "chi-square-tests",
+      "course": [
+        "later"
+      ],
+      "sections": [],
+      "role": "demo",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "New 2026-11-19 (Claude, OpenStax Introductory Statistics plan, group chance): observed against expected bars with each cell's (O − E)²/E as a square and the chi square total as a stacked bar; goodness of fit (simulated fair and loaded dice, Mendel 1866, simulated Geiger counts against a Poisson distribution with and without dead time, book Examples 11.2 to 11.4), independence (book 11.6, 11.7, a simulated die and coin), homogeneity (book 11.8, 11.9), single variance (book 11.11, simulated stopwatch timings); simulated null statistics against the chi square curve, df explained, the expected count of 5 rule shown. Serves Introductory Statistics ch 11 (and 3.4). Worksheet ws-chi-square.",
+      "title": "Chi-Square Tests",
+      "url": "demos/chi-square-tests.html",
+      "handouts": [
+        "ws-chi-square"
+      ]
     }
   ],
   "activities": [
