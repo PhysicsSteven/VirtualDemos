@@ -218,6 +218,7 @@ HANDOUT_TOPIC = {
     'doppler-light': 'Doppler Effect for Light',
     'e-over-m': 'Charge to Mass Ratio of the Electron',
     'millikan': "Millikan's Oil Drops",
+    'hearing': 'Hearing: Decibels, Phons and the Cochlea',
     'household-wiring': 'Household Wiring and Electrical Safety',
     'van-de-graaff': 'Van de Graaff Generator',
     'ink-jet-printer': 'Ink Jet Printer',
@@ -335,6 +336,8 @@ HANDOUT_TOPIC = {
     'hs-simple-machines': 'Simple Machines: Mechanical Advantage and Efficiency', 'hs-series-parallel': 'Series and Parallel Circuits',
     'hs-energy-skate': 'Energy on a Track: Height, Speed and Friction', 'hs-projectiles': 'Projectiles: Sideways and Up',
     'hs-half-life': 'Half Life and Radioactive Dating', 'hs-heat-engines': 'Heat Engines and Refrigerators',
+    'surface-tension': 'Surface Tension and Capillary Rise',
+    'osmosis': 'Diffusion and Osmosis: Random Walks, Osmotic Pressure and Red Cells',
     'derivatives-reading-graphs': 'Reading Derivatives from a Graph',
     # statistics for physics, on two physics demos (2026-11-19)
     'g-statistics': 'Is g Really 9.81? Statistics on a Pendulum', 'counting-statistics': 'Counting Statistics',
@@ -345,6 +348,7 @@ HANDOUT_TOPIC = {
     'sampling-methods': 'How You Sample Matters', 'central-limit-theorem': 'The Central Limit Theorem', 'ci-coverage': 'What 95 % Confident Means',
     'ws-probability': 'Dice and Cards: Predict, Simulate, Compare',
     'ws-chi-square': 'Chi-Square Tests: A Loaded Die, Decay Counts and a Table',
+    'nerve-signals': 'Nerve Signals and the ECG: Conduction Speed and the Heart\'s Axis',
     'quantum-tunneling': 'Quantum Tunneling', 'energy-levels': 'Energy Levels in a Box and a Spring', 'uncertainty-principle': 'The Uncertainty Principle', 'hydrogen-atom': 'The Hydrogen Atom', 'laser-threshold': 'Laser Threshold, Efficiency and Cavity Modes', 'spin-resonance': 'Spin Resonance',
 }
 

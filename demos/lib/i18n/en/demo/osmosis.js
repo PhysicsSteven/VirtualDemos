@@ -6,6 +6,8 @@ VDI18N.add('en', 'demo/osmosis', [
 "Where the molecules are",
 "bars: simulated molecules",
 "Diffusion and Osmosis",
+"<a>Fluids</a>",
+"<span><a><span>←</span> <span>Surface Tension and Capillarity</span></a></span>",
 "Molecules wander at random, so spreading out takes four times as long to go twice as far. Watch a drop spread and a layer leak through, then let water cross a membrane that holds back sugar or salt: it lifts a column of liquid, swells a red blood cell until it bursts, and moves fluid out of a capillary at one end and back in at the other.",
 "SI units · x_rms = √(2Dt) · J = DΔC/L · Π = iMRT",
 "Forward a little",

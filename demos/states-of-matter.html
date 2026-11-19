@@ -963,7 +963,9 @@ table.rows td input { width: 7ch; font: inherit; font-family: var(--font-mono); 
     const y = F.Y(ph.P), tr = phStops();
     ctx.strokeStyle = T.accent; ctx.lineWidth = 1.4 * p; ctx.setLineDash([6, 4]); ctx.beginPath(); ctx.moveTo(F.L, y); ctx.lineTo(F.L + F.pw, y); ctx.stroke(); ctx.setLineDash([]);
     tr.forEach((q, i) => { const x = F.X(q.T); ctx.strokeStyle = T.accent; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.arc(x, y, 5 * p, 0, 7); ctx.stroke();
-      const lab = `${{ subl: 'sublimes', melt: 'melts', boil: 'boils' }[q.k]} ${f(q.T - 273.15, 2)} °C`;
+      /* Blind names the change but keeps its temperature for the student to find */
+      const lab = S.blind ? (I ? { subl: VDI18N.t('sublimes'), melt: VDI18N.t('melts'), boil: VDI18N.t('boils') } : { subl: 'sublimes', melt: 'melts', boil: 'boils' })[q.k]
+        : `${{ subl: 'sublimes', melt: 'melts', boil: 'boils' }[q.k]} ${f(q.T - 273.15, 2)} °C`;
       /* kept inside the plot: a long label (or a longer language) beside a line near the edge would run over the axis */
       ctx.font = `700 ${10 * p}px ${T.ui}`; const w = ctx.measureText(lab).width + 8 * p;
       const lx = Math.max(F.L + 3 * p, Math.min(F.L + F.pw - w - 3 * p, i % 2 ? x + 6 * p : x - 6 * p - w));

@@ -74,6 +74,47 @@
     cells: [{ table: 1, col: 11, from: (r) => r.n(9) / r.n(10) }],
   };
 
+  /* Surface Tension and Capillary Rise (2026-11-19): γ = ρg × slope/2 from the slope of h (mm) against 1/r (mm⁻¹), with the
+     slope in m²; from h against cos θ, γ = ρgr × slope/2 with r = 0.25 mm; cos θ = ρgrh/2γ in Table 3 (ρ g in SI, r = 0.25 mm) */
+  C['surface-tension'] = {
+    items: {
+      'analysis-1': { tol: 2, expect: (D) => ({ any: [D.slope(1)] }) },
+      'analysis-2': { tol: 2, expect: (D) => 1000 * 9.81 * D.slope(1) * 1e-6 / 2 },
+      'analysis-3': { tol: 2, expect: (D) => ({ any: [D.slope(2), 1000 * 9.81 * 0.25e-3 * D.slope(2) * 1e-3 / 2] }) },
+    },
+    cells: [{ table: 2, col: 2, from: (r) => Math.cos(r.n(1) * Math.PI / 180) },
+      { table: 3, col: 5, from: (r) => r.n(3) * 9.81 * 0.25e-3 * (r.n(4) / 1000) / (2 * r.n(2)) },
+      { table: 3, col: 6, from: (r) => Math.acos(r.n(5)) * 180 / Math.PI }],
+  };
+
+  /* Nerve Signals and the ECG (2026-11-19): v² from the row's own v; the axis from the net QRS in lead I and aVF,
+     tan θ = (2/√3) aVF / I, with 180° added when lead I is negative (as the Background says) */
+  C['nerve-signals'] = {
+    cells: [{ table: 1, col: 7, from: (r) => r.n(6) * r.n(6) },
+      { table: 2, col: 8, tol: 1, from: (r) => { const x = r.n(4), y = 2 / Math.sqrt(3) * r.n(7); return Math.atan(y / x) * 180 / Math.PI + (x < 0 ? 180 : 0); } }],
+  };
+
+  /* Hearing (2026-11-19): log₁₀ f in Table 1 and I = 10⁻¹² × 10^(β/10) in Table 2; the slopes of place against log₁₀ f and of phons
+     against β (the 100 Hz copy) */
+  C['hearing'] = {
+    items: {
+      'analysis-1': { tol: 2, expect: (D) => ({ any: [D.slope(1)] }) },
+      'analysis-4': { tol: 2, expect: (D) => ({ any: [D.slope(2, 1)] }) },
+    },
+    cells: [{ table: 1, col: 3, from: (r) => Math.log10(r.n(2)) },
+      { table: 2, col: 4, from: (r) => 1e-12 * Math.pow(10, r.n(3) / 10) }],
+  };
+
+  /* Diffusion and Osmosis (2026-11-19): x_rms² from x_rms (Table 1), 1000/c_out (Table 3); the slope of P against c over T in
+     kelvins (20 °C) is R in J/(mol·K), the salt slope over the sugar slope is i; the intercept of V against 1000/c is V_s */
+  C['osmosis'] = {
+    items: {
+      'analysis-3': { tol: 2, expect: (D) => ({ any: [D.slope(2, 0), D.slope(2, 0) * 1000 / 293.15, D.slope(2, 1) / D.slope(2, 0)] }) },
+      'analysis-5': { tol: 2, expect: (D) => ({ any: [D.intercept(3)] }) },
+    },
+    cells: [{ table: 1, col: 5, from: (r) => r.n(4) * r.n(4) }, { table: 3, col: 6, from: (r) => 1000 / r.n(3) }],
+  };
+
   C['faraday-waves'] = {
     items: {
       'analysis-2': { tol: 2, expect: (D) => ({ any: [D.intercept(1), D.slope(1) * 998.2 * 1000] }) },

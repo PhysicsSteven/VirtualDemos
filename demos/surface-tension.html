@@ -213,7 +213,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const METAL = { steel: 7800, aluminum: 2700, gold: 19320, copper: 8800 };
   const D2R = Math.PI / 180;
   /* capillary rise (negative: the liquid is pushed down) and the capillary length, below which a tube counts as narrow */
-  const capRise = (gam, thDeg, rho, r) => 2 * gam * Math.cos(thDeg * D2R) / (rho * G * r);
+  /* cos θ in degrees, exactly 0 at 90° (Math.cos gives 6 × 10⁻¹⁷ there, which the readouts would show as a height) */
+  const cosd = (thDeg) => (Math.abs(thDeg - 90) < 1e-9 ? 0 : Math.cos(thDeg * D2R));
+  const capRise = (gam, thDeg, rho, r) => 2 * gam * cosd(thDeg) / (rho * G * r);
   const capLength = (gam, rho) => Math.sqrt(gam / (rho * G));
   /* the rise in time, viscous flow (Poiseuille) against the capillary push minus the column's weight; inertia left out:
      dh/dt = A (h_eq − h)/h with A = r² ρ g/(8η), so A t = −h − h_eq ln(1 − h/h_eq), the same with |h| for a fall */
@@ -817,20 +819,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const L = LIQ[S.F.liq]; return { part: 'film', film: S.blind ? '' : NAMES[S.F.liq], l_cm: +(S.F.l * 100).toFixed(2), x_cm: +(S.F.x * 100).toFixed(2), F_mN: +(filmF(L.gam, S.F.l) * 1000).toPrecision(4), energy_mJ: +(filmF(L.gam, S.F.l) * S.F.x * 1000).toPrecision(4) };
   };
   const SHOWCOLS = { tubes: [['tube', 'tube'], ['r_mm', 'r (mm)'], ['h_mm', 'h (mm)']], drops: [['kind', 'kind'], ['r_mm', 'r (mm)'], ['P_Pa', 'P (Pa)']], surf: [['object', 'object'], ['w_mN', 'w (mN)'], ['result', 'result']], film: [['l_cm', 'l (cm)'], ['x_cm', 'x (cm)'], ['F_mN', 'F (mN)']] };
-  /* no worksheet for this demo yet: Export to worksheet saves the readings as a CSV file */
-  window.addEventListener('load', () => {
-    const sec = document.querySelector('.vd-readings'), ex = sec && sec.querySelector('.vd-export'); if (!ex) return;
-    ex.addEventListener('click', (e) => {
-      e.stopImmediatePropagation();
-      const rows = window.vdRows ? window.vdRows() : [], st = sec.querySelector('.status'), T = (s, v) => (typeof VDI18N === 'object' && VDI18N.t ? VDI18N.t(s, v) : s.replace(/\{(\w+)\}/g, (a, n) => (v && v[n] != null ? v[n] : a)));
-      if (!rows.length) { st.textContent = T('No readings to export.'); return; }
-      const cols = []; rows.forEach((r) => Object.keys(r).forEach((k) => { if (!cols.includes(k)) cols.push(k); }));
-      const cell = (v) => { const s = v == null ? '' : String(v); return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s; };
-      const txt = ['# Surface Tension and Capillarity virtual apparatus: recorded readings (simulated data)', `# demo version,${window.vdVersion}`, ['row'].concat(cols).join(','), ...rows.map((r, i) => [i + 1].concat(cols.map((k) => r[k])).map(cell).join(','))].join('\n') + '\n';
-      try { const u = URL.createObjectURL(new Blob([txt], { type: 'text/csv' })), a = document.createElement('a'); a.href = u; a.download = 'surface-tension-readings.csv'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 1000); } catch (_) {}
-      st.textContent = T('There is no worksheet for this demo yet, so the readings were saved as a CSV file ({n} rows).', { n: rows.length });
-    }, true);
-  });
+  VD.howTo({ src: 'media/how-this-works/surface-tension.mp4', poster: 'media/how-this-works/surface-tension.jpg' });
   window.__st = { S, LIQ, PRE, applyPreset, setScene, setRun, advance, finish, tubeState, bubbleNow, surfNow, redraw, isDone, restart, capRise, bubbleP, dropP, filmF };
   tokens(); applyPreset('water3');
   new ResizeObserver(resize).observe($('scene')); resize();

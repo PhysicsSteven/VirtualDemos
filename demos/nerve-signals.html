@@ -899,9 +899,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
   const FIRST = { axon: 'race', rest: 'human', ecg: 'normal' };
   for (const b of document.querySelectorAll('#viewSeg button')) b.addEventListener('click', () => { if (b.dataset.v === S.view) return; S.view = b.dataset.v; applyPreset(FIRST[S.view]); });
-  for (const b of document.querySelectorAll('#myelinSeg button')) b.addEventListener('click', () => { S.my = b.dataset.my === '1'; changedAxon(); });
+  for (const b of document.querySelectorAll('#myelinSeg button')) b.addEventListener('click', () => { S.my = b.dataset.my === '1'; changedAxon(); autoRate(); });
   for (const b of document.querySelectorAll('#damageSeg button')) b.addEventListener('click', () => { S.damage = b.dataset.dmg; changedAxon(); });
-  $('race').addEventListener('change', (e) => { S.race = e.target.checked; changedAxon(); });
+  $('race').addEventListener('change', (e) => { S.race = e.target.checked; changedAxon(); autoRate(); });
   $('sD').addEventListener('input', (e) => { S.d = sliderToD(+e.target.value); if (!canMyelin()) S.my = false; S.sched = [0.02]; changedAxon(); autoRate(); });
   $('sV').addEventListener('input', (e) => { S.dV = +e.target.value; S.preset = null; resetRunKeep(); });
   function resetRunKeep() { for (const ln of S.lanes) restAxon(ln.ax); S.t = 0; S.next = 0; trace(); setRun(false); sync(); draw(); readouts(); }
@@ -985,9 +985,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
   VD.projector({ onChange: resize });
-  tokens(); applyPreset('race'); new ResizeObserver(resize).observe($('pane')); new ResizeObserver(plotSpeeds).observe(vplot); resize();
+  tokens(); { const q = new URLSearchParams(location.search).get('setup'); applyPreset(PRESETS[q] ? q : 'race'); } new ResizeObserver(resize).observe($('pane')); new ResizeObserver(plotSpeeds).observe(vplot); resize();
   if (window.VD && VD.panel) VD.panel({ play: '#play', reset: '#reset', speed: '#speedBox', speedLabel: 'Speed', clock: '#tclock', end: ['#viewSeg'],
     step: { label: 'Step', title: 'Advance a little and pause', run: () => { if (S.view === 'axon') advance(S.rate * 0.1); else if (S.view === 'ecg') S.tE += 0.02; draw(); readouts(); } } });
+  VD.howTo({ src: 'media/how-this-works/nerve-signals.mp4', poster: 'media/how-this-works/nerve-signals.jpg' });
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   setInterval(() => { $('tclock').textContent = S.view === 'axon' ? 't = ' + sig(S.t, 3) + ' ms' : S.view === 'ecg' ? 't = ' + fmt(S.tE, 2) + ' s' : ''; }, 100);
   window.__ns = { S, PRESETS, laneSpeed, thresholdOf, restNow, vModel, applyPreset, advance, draw };

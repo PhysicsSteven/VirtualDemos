@@ -522,6 +522,12 @@ VDI18N.add('es', 'demo/states-of-matter', {
   "hirviendo: la presión de vapor iguala a la presión exterior, así que pueden crecer burbujas de vapor",
 "The water is boiling.":
   "El agua está hirviendo.",
+"sublimes":
+  "se sublima",
+"melts":
+  "se funde",
+"boils":
+  "hierve",
 "shaded: squeezed":
   "sombreado: comprimido",
 "piston {n} nm up":

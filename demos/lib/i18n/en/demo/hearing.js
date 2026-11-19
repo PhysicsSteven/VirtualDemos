@@ -15,6 +15,7 @@ VDI18N.add('en', 'demo/hearing', [
 "Place of the peak, from the base",
 "Place of the peak, from the apex",
 "Hearing and the Ear",
+"<a><span>←</span> <span>Room Acoustics and the Anechoic Chamber</span></a><a><span>Timbre and Harmonics</span> <span>→</span></a>",
 "The cochlea sorts sound by frequency: each tone makes a traveling wave on the basilar membrane that peaks at its own place. Loudness is not intensity: the equal loudness contours show how many decibels each frequency needs to sound as loud. Then take your own audiogram with headphones and compare it with the {#} kHz notch that noise leaves.",
 "Hz · dB · phon",
 "Advance a quarter cycle and pause",

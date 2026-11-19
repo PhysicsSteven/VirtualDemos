@@ -28,7 +28,7 @@ let n = 0; const ok = (s) => { n++; console.log(`ok ${n} ${s}`); };
   near(C.capRise(w.gam, 0, w.rho, 0.25e-3), 0.05937, 1e-3, 'water in a 0.25 mm glass tube');
   near(C.capRise(w.gam, 0, w.rho, 0.5e-3) * 2, C.capRise(w.gam, 0, w.rho, 0.25e-3), 1e-12, 'half the radius, twice the height');
   assert.ok(C.capRise(C.LIQ.mercury.gam, 140, C.LIQ.mercury.rho, 1e-3) < 0, 'mercury is pushed down');
-  assert.ok(Math.abs(C.capRise(w.gam, 90, w.rho, 1e-3)) < 1e-15, 'silver, 90°: flat');
+  assert.equal(C.capRise(w.gam, 90, w.rho, 1e-3), 0, 'silver, 90°: flat, exactly (the readouts show 0, not 10⁻¹² μm)');
   const s = C.LIQ.sap;
   near(2 * s.gam / (s.rho * C.G * 100), 1.41e-7, 3e-3, 'radius that would lift sap 100 m (book: 1.41e-7 m)');
   near(C.capRise(s.gam, 0, s.rho, 2.5e-5), 0.565, 1e-3, 'xylem of radius 2.50e-5 m lifts sap 0.565 m');

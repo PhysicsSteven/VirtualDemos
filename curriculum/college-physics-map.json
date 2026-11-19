@@ -828,6 +828,9 @@
      "title": "Cohesion and Adhesion in Liquids: Surface Tension and Capillary Action",
      "demos": [
       "surface-tension"
+     ],
+     "worksheets": [
+      "surface-tension"
      ]
     },
     {
@@ -914,6 +917,7 @@
       "osmosis"
      ],
      "worksheets": [
+      "osmosis",
       "diffusion"
      ]
     }
@@ -1343,6 +1347,9 @@
       "hearing",
       "sound-intensity",
       "timbre"
+     ],
+     "worksheets": [
+      "hearing"
      ]
     },
     {
@@ -1598,6 +1605,9 @@
      "sec": "20.7",
      "title": "Nerve Conduction–Electrocardiograms",
      "demos": [
+      "nerve-signals"
+     ],
+     "worksheets": [
       "nerve-signals"
      ]
     }

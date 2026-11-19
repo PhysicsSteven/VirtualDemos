@@ -1170,11 +1170,11 @@
      "see_es": "T pasa de 4000 K (4521 K y 4641 K en dos corridas), unas siete veces lo que dio la compresión lenta con el mismo cambio de área. Una molécula golpeada por una pared que se mueve a 1000 m/s regresa hasta 2000 m/s más rápido, así que un empujón rápido hace mucho más trabajo que uno lento."
     },
     {
-     "setup": "set=nIn~150!tIn~895.4!wIn~50!sIn~300!wtIn~800!accIn~1!tColor~1!tTrail~1!g%3Apresets~walls!g%3AstartSeg~thermal!g%3AwallSeg~held",
-     "do": "<b>Cold walls</b>: the gas starts at 300 K and every wall is held at 100 K. Predict the heat Q that leaves the 150 molecules as they cool to 100 K, then watch <b>Temperature T</b> and <b>Heat into the gas Q</b> for about 20 s.",
-     "do_es": "<b>Paredes frías</b>: el gas empieza a 300 K y todas las paredes se mantienen a 100 K. Predice el calor Q que sale de las 150 moléculas al enfriarse a 100 K, luego observa la <b>Temperatura T</b> y el <b>Calor hacia el gas Q</b> durante unos 20 s.",
-     "see": "T settles near 100 K and Q levels off near −414 zJ. In this 2D gas each molecule's average kinetic energy is kT, so the heat out is the drop in kinetic energy: Q = NkΔT = 150 × 1.381 × 10⁻²³ J/K × (−200 K) = −414 zJ.",
-     "see_es": "T se estabiliza cerca de 100 K y Q se queda cerca de −414 zJ. En este gas 2D la energía cinética promedio de cada molécula es kT, así que el calor que sale es la caída de energía cinética: Q = NkΔT = 150 × 1.381 × 10⁻²³ J/K × (−200 K) = −414 zJ."
+     "setup": "set=nIn~150!tIn~895.4!tColor~1!tTrail~1!g%3AdimSeg~flat!g%3Apresets~brown!g%3AstartSeg~thermal!g%3AbrownRate~2000",
+     "do": "<b>Brownian motion</b>: a large disk, 4.0 nm across and 60 times as heavy as an argon atom, among 150 argon molecules at 300 K, shown at <b>2,000 ps per second</b>. The graph plots its mean square displacement ⟨x²⟩ against time. Decide whether in four times as long the disk ends up four times as far from where it started, as it would if it drifted steadily, then watch the path and the graph for about 30 s and read <b>Boltzmann's constant, k = γD/T</b> under <b>Measurements</b>.",
+     "do_es": "<b>Movimiento browniano</b>: un disco grande, de 4.0 nm de diámetro y 60 veces más pesado que un átomo de argón, entre 150 moléculas de argón a 300 K, mostrado a <b>2,000 ps por segundo</b>. La gráfica muestra su desplazamiento cuadrático medio ⟨x²⟩ contra el tiempo. Decide si en cuatro veces más tiempo el disco termina cuatro veces más lejos de donde empezó, como si avanzara de forma constante, luego observa la trayectoria y la gráfica unos 30 s y lee la <b>Constante de Boltzmann, k = γD/T</b> en <b>Mediciones</b>.",
+     "see": "The path is jagged and keeps turning back, and the points of ⟨x²⟩ fall on a straight line: ⟨x²⟩ = 2Dt grows in proportion to t, so four times as long spreads the disk only twice as far (a steady drift would give t²). The slope gives D, and k = γD/T. One disk is a small sample, so k lands well off the true 1.381 × 10⁻²³ J/K (90 ns runs here gave −45 % to +36 %); Perrin followed many grains to pin it down. These data are simulated.",
+     "see_es": "La trayectoria es quebrada y se regresa una y otra vez, y los puntos de ⟨x²⟩ caen en una recta: ⟨x²⟩ = 2Dt crece en proporción a t, así que en cuatro veces más tiempo el disco se aleja solo el doble (un avance constante daría t²). La pendiente da D, y k = γD/T. Un solo disco es una muestra pequeña, así que k queda bastante lejos del valor verdadero, 1.381 × 10⁻²³ J/K (corridas de 90 ns aquí dieron de −45 % a +36 %); Perrin siguió muchos granos para fijarla. Estos datos son simulados."
     }
    ]
   },
@@ -1707,18 +1707,18 @@
      "see_es": "Las cuatro sienten 15.8 N, aunque el ensanchado tiene 7.27 L (71.4 N de agua) y el que se angosta 1.00 L. La presión manométrica en cada base es 3.14 kPa, ρgh = 1000 × 9.81 × 0.32 Pa, fijada solo por la profundidad, y todas las bases tienen la misma área. Las paredes inclinadas del ensanchado sostienen el agua extra; en el que se angosta las paredes empujan el agua hacia abajo."
     },
     {
-     "setup": "set=s_buoy_rho~920!s_buoy_L~20!s_buoy_h0~0.26!s_buoy_zeta~0.1!tScale~0!tOver~0!blind~0!tForces~1!tGhost~1!g%3ArateSeg~1!g%3Apresets~iceberg!g%3AliqSeg~sea!g%3AmatSeg~ice",
-     "do": "<b>Iceberg</b>: a 20 cm cube of ice, 917 kg/m³, dropped into seawater, 1025 kg/m³. Predict the fraction that will float below the surface from ρ<sub>obj</sub>/ρ<sub>fluid</sub>, then let it bob and settle and read <b>Fraction under now</b> in <b>Results</b>.",
-     "do_es": "<b>Iceberg</b>: un cubo de hielo de 20 cm, 917 kg/m³, que cae en agua de mar, 1025 kg/m³. Predice la fracción que quedará bajo la superficie con ρ<sub>obj</sub>/ρ<sub>fluid</sub>, luego deja que oscile y se asiente y lee la <b>Fracción sumergida ahora</b> en <b>Resultados</b>.",
-     "see": "It settles at 89.5 %, as 917/1025 = 0.895 says. A floating block sinks until the water it pushes aside weighs as much as the block, so only about a tenth of an iceberg shows above the sea.",
-     "see_es": "Se asienta en 89.5 %, como dice 917/1025 = 0.895. Un bloque que flota se hunde hasta que el agua que desplaza pesa lo mismo que el bloque, así que solo una décima parte de un iceberg se ve sobre el mar."
-    },
-    {
      "setup": "set=s_venturi_D1~6!s_venturi_D2~3!s_venturi_v1~0.8!s_venturi_h1~0.8!blind~0!g%3ArateSeg~0.25!g%3AsceneSeg~venturi!g%3Apresets~venturi!g%3AmatSeg~ice!g%3ApModeSeg~gauge",
      "do": "<b>Venturi tube</b>: water enters a 6.0 cm pipe at 0.80 m/s and runs through a 3.0 cm throat. Decide whether the water in the standpipe over the fast throat will stand higher or lower than over the inlet, then press <b>Set it up</b> and read <b>Standpipe h₁</b>, <b>Standpipe h₂</b> and <b>v₂ (throat)</b> in <b>Results</b>.",
      "do_es": "<b>Tubo de Venturi</b>: el agua entra a un tubo de 6.0 cm a 0.80 m/s y pasa por una garganta de 3.0 cm. Decide si el agua en el tubo vertical sobre la garganta rápida quedará más alta o más baja que sobre la entrada, luego presiona <b>Prepáralo</b> y lee <b>Tubo vertical h₁</b>, <b>Tubo vertical h₂</b> y <b>v₂ (garganta)</b> en <b>Resultados</b>.",
      "see": "The throat has half the diameter, a quarter of the area, so the water runs 4 times faster, 3.20 m/s, and its standpipe stands at 31.1 cm against 80.0 cm, 48.9 cm lower. Bernoulli: P₁ − P₂ = ½ρ(v₂² − v₁²) = 4.80 kPa, the push that speeds the water up as it enters the throat.",
      "see_es": "La garganta tiene la mitad del diámetro, un cuarto del área, así que el agua corre 4 veces más rápido, 3.20 m/s, y su tubo vertical marca 31.1 cm contra 80.0 cm, 48.9 cm más abajo. Bernoulli: P₁ − P₂ = ½ρ(v₂² − v₁²) = 4.80 kPa, el empuje que acelera el agua al entrar a la garganta."
+    },
+    {
+     "setup": "set=s_body_sys~120!s_body_dia~80!s_body_hc~0.25!s_body_hiv~0.15!s_body_pv~18!g%3ArateSeg~1!g%3AsceneSeg~body!g%3Apresets~bp",
+     "do": "<b>Blood pressure</b>: the heart pumps at 120/80 mmHg, and the patient's raised arm puts the cuff 25 cm above the heart. Decide whether the cuff will read higher than, lower than or the same as at heart level, then press <b>Play</b> to let the cuff down at 4 mmHg/s and read <b>First tap (systolic)</b> and <b>Last tap (diastolic)</b> in <b>Results</b>.",
+     "do_es": "<b>Presión arterial</b>: el corazón bombea a 120/80 mmHg, y el brazo levantado del paciente pone el brazalete 25 cm arriba del corazón. Decide si el brazalete marcará más, menos o lo mismo que a la altura del corazón, luego presiona <b>Iniciar</b> para desinflar el brazalete a 4 mmHg/s y lee el <b>Primer golpe (sistólica)</b> y el <b>Último golpe (diastólica)</b> en <b>Resultados</b>.",
+     "see": "Lower: the first tap comes at 99 mmHg and the last at 62 mmHg, against 119 and 82 mmHg with the cuff at heart level. The artery under the cuff is 25 cm above the heart, so its blood pressure is less by ρgh = 1050 × 9.81 × 0.25 Pa = 19.3 mmHg, giving 101/61 mmHg (<b>In the artery under the cuff</b>); each tap can miss by up to 3.3 mmHg, the fall of the cuff between beats. That is why the cuff goes on at heart level.",
+     "see_es": "Menos: el primer golpe llega a 99 mmHg y el último a 62 mmHg, contra 119 y 82 mmHg con el brazalete a la altura del corazón. La arteria bajo el brazalete está 25 cm arriba del corazón, así que su presión es menor por ρgh = 1050 × 9.81 × 0.25 Pa = 19.3 mmHg, lo que da 101/61 mmHg (<b>En la arteria bajo el brazalete</b>); cada golpe puede fallar hasta por 3.3 mmHg, lo que baja el brazalete entre latidos. Por eso el brazalete se pone a la altura del corazón."
     }
    ]
   },
@@ -1931,11 +1931,11 @@
      "see_es": "1.355 s para 1.000 m, tres veces más. Solo la diferencia de pesos, 24.5 − 19.6 = 4.9 N, impulsa el movimiento, y tiene que acelerar las dos masas: a = 4.9 N/4.5 kg = 1.09 m/s², y t = √(2 × 1.000/1.09) = 1.355 s. La <b>Tensión T</b> marca 21.8 N, entre los dos pesos."
     },
     {
-     "setup": "set=sTh~30!sM~5!sMs~0.2!sMk~0.15!sF~0!sPhi~0!sM2~2!mystery~0!tComp~1!tNet~1!tPairs~0!labBlind~0!g%3Apresets~rampm",
-     "do": "<b>Ramp and hanging mass</b>: 5 kg on a 30° ramp tied to 2 kg hanging. Press <b>Release</b> and see which way friction points in the free body diagram. Decide whether it will still point that way with 4 kg hanging, then set <b>Hanging mass m₂ (0 = none)</b> to 4 kg.",
-     "do_es": "<b>Rampa y masa colgante</b>: 5 kg en una rampa de 30° atados a 2 kg que cuelgan. Presiona <b>Soltar</b> y mira hacia dónde apunta la fricción en el diagrama de cuerpo libre. Decide si seguirá apuntando igual con 4 kg colgando, y luego pon la <b>Masa colgante m₂ (0 = ninguna)</b> en 4 kg.",
-     "see": "With 2 kg nothing moves, and static friction is 4.9 N up the ramp: the slope pulls 24.5 N down and the string only 19.6 N up. With 4 kg the block slides up at 0.927 m/s², and kinetic friction, 6.4 N, now points down the ramp. Friction opposes the sliding, or the sliding that would happen without it.",
-     "see_es": "Con 2 kg nada se mueve, y la fricción estática es de 4.9 N rampa arriba: la pendiente jala 24.5 N hacia abajo y la cuerda solo 19.6 N hacia arriba. Con 4 kg el bloque sube a 0.927 m/s², y la fricción cinética, 6.4 N, ahora apunta rampa abajo. La fricción se opone al deslizamiento, o al deslizamiento que habría sin ella."
+     "setup": "set=sM~10!sWR~0.4!sAR~0.1!sMu~0.2!labBlind~0!g%3AviewSeg~flat!g%3AmachSeg~wheel!g%3Apresets~machines",
+     "do": "<b>Simple machines</b>, <b>Wheel and axle</b>: a rope on a wheel 0.40 m in radius turns an axle 0.10 m in radius that winds up a 10 kg load (98.10 N), with <b>Friction μ</b> 0.20 at the axle. The effort is 25.13 N, a little more than a quarter of the load. Decide how far your rope must move while the load rises 1.000 m, and whether your work equals the load's gain in energy, then press <b>Play</b> and read the readouts when the load reaches the top.",
+     "do_es": "<b>Máquinas simples</b>, <b>Rueda y eje</b>: una cuerda en una rueda de 0.40 m de radio hace girar un eje de 0.10 m de radio que enrolla una carga de 10 kg (98.10 N), con <b>Fricción μ</b> de 0.20 en el eje. El esfuerzo es de 25.13 N, un poco más de la cuarta parte de la carga. Decide cuánto debe moverse tu cuerda mientras la carga sube 1.000 m, y si tu trabajo es igual a lo que gana la carga en energía, luego presiona <b>Iniciar</b> y lee las lecturas cuando la carga llegue arriba.",
+     "see": "The rope moves 4.000 m, four times as far, because the wheel has four times the axle's radius: IMA = R/r = 4. Your work, 25.13 N × 4.000 m = 100.52 J, is more than the load's gain, 98.10 J; the other 2.42 J heats the axle, so the efficiency is 97.6 %. Set <b>Friction μ</b> to 0 and the effort falls to 24.53 N, exactly a quarter, at 100.0 %: a machine trades force for distance and never gives back more work than it takes.",
+     "see_es": "La cuerda se mueve 4.000 m, cuatro veces más, porque la rueda tiene cuatro veces el radio del eje: VMI = R/r = 4. Tu trabajo, 25.13 N × 4.000 m = 100.52 J, es mayor que lo que gana la carga, 98.10 J; los otros 2.42 J calientan el eje, así que la eficiencia es de 97.6 %. Pon la <b>Fricción μ</b> en 0 y el esfuerzo baja a 24.53 N, justo la cuarta parte, con 100.0 %: una máquina cambia fuerza por distancia y nunca devuelve más trabajo del que recibe."
     }
    ]
   },
@@ -2773,6 +2773,74 @@
      "do_es": "<b>Tu audiograma</b>, <b>Daño por ruido: la muesca de 4 kHz</b>. Lee el nivel de audición en cada frecuencia y el promedio a 0.5, 1, 2 y 4 kHz.",
      "see": "The loss dips to 50 dB HL at 4 kHz and recovers to 20 dB HL at 8 kHz: the notch that years of loud noise leave, where the hair cells about 12 mm from the base wear out first. The average is 17.5 dB, only a slight loss, so the notch can go unnoticed for years.",
      "see_es": "La pérdida baja a 50 dB HL a 4 kHz y se recupera a 20 dB HL a 8 kHz: la muesca que dejan años de ruido fuerte, donde se desgastan primero las células ciliadas a unos 12 mm de la base. El promedio es 17.5 dB, solo una pérdida leve, así que la muesca puede pasar inadvertida durante años."
+    }
+   ]
+  },
+  "equilibrium": {
+   "q": "You hold a 4 kg load in your hand with your forearm level. How hard does your biceps pull?",
+   "q_es": "Sostienes una carga de 4 kg en la mano con el antebrazo horizontal. ¿Con qué fuerza jala tu bíceps?",
+   "setup": "set=c_mb~4!c_el~90!c_r1~4!c_ma~2.5!labBlind~1!g%3AviewSeg~flat!g%3Apresets~body!g%3ApartSeg~arm",
+   "do": "<b>Body levers</b>, <b>Forearm</b>: a 4.0 kg load in the hand, 0.380 m from the elbow, with the 2.5 kg forearm level (<b>Elbow angle</b> 90°). The biceps is attached 4.0 cm from the elbow, and <b>Blind</b> hides the forces. The forearm and load weigh 63.8 N together. Decide whether the biceps pulls less than that, about the same, or many times more, then untick <b>Blind: hide predictions and answers</b> in the <b>Lab</b> fold and read <b>Biceps force F_B</b>.",
+   "do_es": "<b>Palancas del cuerpo</b>, <b>Antebrazo</b>: una carga de 4.0 kg en la mano, a 0.380 m del codo, con el antebrazo de 2.5 kg horizontal (<b>Ángulo del codo</b> de 90°). El bíceps está unido a 4.0 cm del codo, y <b>A ciegas</b> oculta las fuerzas. El antebrazo y la carga pesan 63.8 N juntos. Decide si el bíceps jala menos que eso, más o menos lo mismo, o muchas veces más, luego desmarca <b>A ciegas: ocultar predicciones y respuestas</b> en la sección <b>Laboratorio</b> y lee la <b>Fuerza del bíceps F_B</b>.",
+   "see": "The biceps pulls 474 N, 7.44 times the 63.8 N it holds up, and the elbow joint pushes on the forearm with 411 N, almost straight down (407 N downward). The torques about the elbow balance: the weights turn the forearm with 18.8 N·m, and the biceps pulls only 3.97 cm from the elbow (<b>Lever arm of the biceps</b>), so it needs 18.8 N·m ÷ 0.0397 m = 474 N. Muscles attach close to the joint: they pull hard, but the hand moves about 9.5 times as far as the point where the biceps pulls.",
+   "see_es": "El bíceps jala 474 N, 7.44 veces los 63.8 N que sostiene, y la articulación del codo empuja el antebrazo con 411 N, casi directo hacia abajo (407 N hacia abajo). Las torcas respecto al codo se equilibran: los pesos hacen girar el antebrazo con 18.8 N·m, y el bíceps jala a solo 3.97 cm del codo (<b>Brazo de palanca del bíceps</b>), así que necesita 18.8 N·m ÷ 0.0397 m = 474 N. Los músculos se unen cerca de la articulación: jalan fuerte, pero la mano se mueve unas 9.5 veces lo que se mueve el punto donde jala el bíceps.",
+   "explore": [
+    {
+     "setup": "set=c_mb~4!c_el~90!c_r1~4!c_ma~2.5!labBlind~0!g%3AviewSeg~flat!g%3Apresets~body!g%3ApartSeg~arm",
+     "do": "The same arm with the forces shown. Lower the hand to an <b>Elbow angle</b> of 150°: the load and the forearm then sit half as far out from the elbow, so <b>Torque of the weights about the elbow</b> halves. Decide whether the biceps will pull less, then set <b>Elbow angle</b> to 150° and read <b>Biceps force F_B</b> and <b>Lever arm of the biceps</b>.",
+     "do_es": "El mismo brazo con las fuerzas a la vista. Baja la mano a un <b>Ángulo del codo</b> de 150°: la carga y el antebrazo quedan a la mitad de distancia horizontal del codo, así que la <b>Torca de los pesos respecto al codo</b> se reduce a la mitad. Decide si el bíceps jalará menos, luego pon el <b>Ángulo del codo</b> en 150° y lee la <b>Fuerza del bíceps F_B</b> y el <b>Brazo de palanca del bíceps</b>.",
+     "see": "It pulls harder, 521 N instead of 474 N. The torque of the weights fell from 18.8 to 9.4 N·m, but the biceps now runs almost along the forearm, so its lever arm fell even more, from 3.97 cm to 1.81 cm. With the hand raised to 30° it needs only 422 N.",
+     "see_es": "Jala más fuerte, 521 N en vez de 474 N. La torca de los pesos bajó de 18.8 a 9.4 N·m, pero ahora el bíceps queda casi a lo largo del antebrazo, así que su brazo de palanca bajó todavía más, de 3.97 cm a 1.81 cm. Con la mano levantada a 30° solo necesita 422 N."
+    },
+    {
+     "setup": "set=c_mbox~30!c_lean~61!c_mub~55!labBlind~1!g%3AviewSeg~flat!g%3Apresets~body!g%3ApartSeg~back",
+     "do": "<b>Bent back</b>: lifting a 30 kg box with the trunk leaning 61° from vertical; the upper body is 55 kg, and together they weigh 834 N. The back muscles pull along the spine only 8.0 cm behind the pivot at its base. Decide how many times 834 N they must pull, then untick <b>Blind</b> and read <b>Back muscle force F_B</b> and <b>Vertebrae push F_V</b>. Then set <b>Trunk lean from vertical</b> to 30°.",
+     "do_es": "<b>Espalda inclinada</b>: se levanta una caja de 30 kg con el tronco inclinado 61° respecto a la vertical; la parte superior del cuerpo es de 55 kg, y juntas pesan 834 N. Los músculos de la espalda jalan a lo largo de la columna a solo 8.0 cm detrás del pivote en su base. Decide cuántas veces 834 N deben jalar, luego desmarca <b>A ciegas</b> y lee la <b>Fuerza de los músculos de la espalda F_B</b> y el <b>Empuje de las vértebras F_V</b>. Luego pon la <b>Inclinación del tronco respecto a la vertical</b> en 30°.",
+     "see": "The back muscles pull 4200 N, 5.04 times the weight held up, and the vertebrae push back with 4662 N, the weight of a 475 kg mass. Leaning 30°, the box and upper body sit closer in front of the pivot (0.286 m and 0.200 m instead of 0.500 m and 0.350 m), and the pull falls to 2401 N. Lift with the back upright and the knees bent.",
+     "see_es": "Los músculos de la espalda jalan 4200 N, 5.04 veces el peso sostenido, y las vértebras empujan de vuelta con 4662 N, el peso de una masa de 475 kg. Con 30° de inclinación, la caja y la parte superior del cuerpo quedan más cerca frente al pivote (0.286 m y 0.200 m en vez de 0.500 m y 0.350 m), y el jalón baja a 2401 N. Levanta con la espalda recta y las rodillas dobladas."
+    }
+   ]
+  },
+  "states-of-matter": {
+   "q": "On top of Mount Everest, at what temperature does water boil?",
+   "q_es": "En la cima del monte Everest, ¿a qué temperatura hierve el agua?",
+   "setup": "set=labBlind~0!g%3AspeedSeg~1!g%3AviewSeg~phase",
+   "do": "The <b>Phase diagram</b> of water: the dot is ice at −10 °C and 1 atm, where water boils at 99.97 °C. The air pressure on top of Everest is 31.44 kPa, about a third of an atmosphere. Decide at what temperature water boils there, then press <b>Top of Everest</b> under Pressure, press <b>Play</b> to heat the ice, and watch <b>Temperature T</b> and <b>Phase</b> in Readouts.",
+   "do_es": "El <b>Diagrama de fases</b> del agua: el punto es hielo a −10 °C y 1 atm, donde el agua hierve a 99.97 °C. La presión del aire en la cima del Everest es de 31.44 kPa, como un tercio de atmósfera. Decide a qué temperatura hierve el agua ahí, luego presiona <b>Cima del Everest</b> en Presión, presiona <b>Iniciar</b> para calentar el hielo y observa la <b>Temperatura T</b> y la <b>Fase</b> en las lecturas.",
+   "see": "The ice melts at 0.01 °C, then the temperature holds at 70.18 °C while the water boils. Water boils where its vapor pressure reaches the pressure on it: at 1 atm that takes 99.97 °C, but at 31.44 kPa only 70.18 °C. The boiling line on the diagram drops steeply toward low pressure, while the melting line hardly moves.",
+   "see_es": "El hielo se funde a 0.01 °C, y luego la temperatura se queda en 70.18 °C mientras el agua hierve. El agua hierve cuando su presión de vapor alcanza la presión sobre ella: a 1 atm eso requiere 99.97 °C, pero a 31.44 kPa solo 70.18 °C. La curva de ebullición del diagrama baja mucho hacia las presiones bajas, mientras que la de fusión casi no se mueve.",
+   "explore": [
+    {
+     "setup": "set=labBlind~0!g%3AspeedSeg~1!g%3AviewSeg~phase!g%3AphSub~co2",
+     "do": "<b>Carbon dioxide</b> at 1 atm: the dot is dry ice at −100 °C. Decide whether it will melt into a liquid as it warms, then press <b>Play</b> and watch the dot, the sketch of the molecules and <b>Phase</b>.",
+     "do_es": "<b>Dióxido de carbono</b> a 1 atm: el punto es hielo seco a −100 °C. Decide si se fundirá en un líquido al calentarse, luego presiona <b>Iniciar</b> y observa el punto, el dibujo de las moléculas y la <b>Fase</b>.",
+     "see": "It never melts: at −78.46 °C it turns straight into gas (it sublimes), which is why dry ice leaves no puddle. Liquid carbon dioxide exists only above its triple point pressure, 518.0 kPa, about 5.1 atm, so at 1 atm the dot crosses from solid straight to gas.",
+     "see_es": "Nunca se funde: a −78.46 °C pasa directo a gas (se sublima), y por eso el hielo seco no deja charco. El dióxido de carbono líquido solo existe arriba de la presión de su punto triple, 518.0 kPa, unas 5.1 atm, así que a 1 atm el punto pasa directo de sólido a gas."
+    },
+    {
+     "setup": "set=sTset~20!sPout~101.3!labBlind~0!g%3AspeedSeg~1!g%3AviewSeg~vapor!g%3Apresets~vpress",
+     "do": "<b>Vapor pressure</b>: water in a <b>Sealed jar</b> of dry air at 20 °C. Decide whether the water will keep evaporating until the jar is dry, then press <b>Play</b> and watch <b>Vapor pressure p</b> and <b>Relative humidity p/p_sat</b> for about 20 s. Then set the <b>Thermostat</b> to 10 °C.",
+     "do_es": "<b>Presión de vapor</b>: agua en un <b>Frasco cerrado</b> con aire seco a 20 °C. Decide si el agua seguirá evaporándose hasta que el frasco quede seco, luego presiona <b>Iniciar</b> y observa la <b>Presión de vapor p</b> y la <b>Humedad relativa p/p_sat</b> unos 20 s. Luego pon el <b>Termostato</b> en 10 °C.",
+     "see": "The vapor pressure climbs fast, then levels off at 2.339 kPa, the saturation vapor pressure at 20 °C, with the relative humidity at 100 %: now as many molecules return to the water as leave it, and the rest of the water stays liquid. At 10 °C the saturation vapor pressure is only 1.228 kPa, so the extra vapor condenses as dew on the glass.",
+     "see_es": "La presión de vapor sube rápido y luego se queda en 2.339 kPa, la presión de vapor de saturación a 20 °C, con la humedad relativa en 100 %: ahora regresan al agua tantas moléculas como salen, y el resto del agua sigue líquida. A 10 °C la presión de vapor de saturación es solo de 1.228 kPa, así que el vapor que sobra se condensa como rocío en el vidrio."
+    }
+   ]
+  },
+  "sound-waves": {
+   "q": "A pulse runs 4 m along a slinky. Does the coil it passes travel along with it?",
+   "q_es": "Un pulso recorre 4 m a lo largo de un resorte. ¿La espira por la que pasa viaja con él?",
+   "setup": "set=sSF~1!sSA~15!sSV~1!labBlind~0!g%3AviewSeg~slinky!g%3Apresets~slinky",
+   "do": "<b>Slinky</b> view: two slinkies 4 m long. The top hand shakes its end sideways once and the bottom hand pushes its end along once, the same 15 cm motion, and each pulse runs at 1.0 m/s. Decide what the marked red coil, 1.50 m from the hand, will do as a pulse passes, then watch it and <b>Marked coil, 1.50 m from the hand</b> in Readouts. <b>Send a pulse</b> sends another.",
+   "do_es": "Vista <b>Resorte</b>: dos resortes de 4 m de largo. La mano de arriba sacude su extremo de lado una vez y la de abajo empuja su extremo a lo largo una vez, con el mismo movimiento de 15 cm, y cada pulso avanza a 1.0 m/s. Decide qué hará la espira roja marcada, a 1.50 m de la mano, cuando pase un pulso, luego obsérvala junto con <b>Espira marcada, a 1.50 m de la mano</b> en las lecturas. <b>Enviar un pulso</b> manda otro.",
+   "see": "The pulse reaches the coil 1.5 s after it leaves the hand, moves it 15 cm, across the slinky on the top one (transverse) and along it on the bottom one (longitudinal), and 1.0 s later leaves it back at its rest place, while the pulse runs on to the far end at 4.0 s. A wave carries energy along, not the coils. Sound in air is a longitudinal wave, like the bottom one.",
+   "see_es": "El pulso llega a la espira 1.5 s después de salir de la mano, la mueve 15 cm, de lado en el resorte de arriba (transversal) y a lo largo en el de abajo (longitudinal), y 1.0 s después la deja de nuevo en su lugar de reposo, mientras el pulso sigue hasta el otro extremo a los 4.0 s. Una onda lleva energía, no las espiras. El sonido en el aire es una onda longitudinal, como la de abajo.",
+   "explore": [
+    {
+     "setup": "set=sSF~2!sSA~6!sSV~1!labBlind~0!g%3AviewSeg~slinky!g%3AslKind~periodic",
+     "do": "<b>Periodic wave</b>: the hands now shake 2.0 times a second (<b>Hand frequency f</b>), and the wave still runs at 1.0 m/s. Predict the distance from one crest to the next on the top slinky, and from one bunch of coils to the next on the bottom one. Then set <b>Wave speed v</b> to 2.0 m/s and predict again.",
+     "do_es": "<b>Onda periódica</b>: ahora las manos se sacuden 2.0 veces por segundo (<b>Frecuencia de la mano f</b>), y la onda sigue avanzando a 1.0 m/s. Predice la distancia de una cresta a la siguiente en el resorte de arriba, y de un grupo de espiras juntas al siguiente en el de abajo. Luego pon la <b>Rapidez de la onda v</b> en 2.0 m/s y predice otra vez.",
+     "see": "0.50 m on both: in one period, 0.50 s, the wave moves on vT, so λ = v/f = 1.0/2.0 = 0.50 m, as <b>Wavelength λ = v/f</b> reads. At 2.0 m/s the wavelength doubles to 1.00 m with the same hand frequency.",
+     "see_es": "0.50 m en los dos: en un periodo, 0.50 s, la onda avanza vT, así que λ = v/f = 1.0/2.0 = 0.50 m, como marca <b>Longitud de onda λ = v/f</b>. A 2.0 m/s la longitud de onda se duplica a 1.00 m con la misma frecuencia de la mano."
     }
    ]
   }

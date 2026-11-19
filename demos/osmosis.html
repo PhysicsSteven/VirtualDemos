@@ -699,20 +699,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const c = S.K; return { part: 'capillary', Pa_mmHg: c.Pa, Pv_mmHg: c.Pv, pi_c_mmHg: c.pic, P_t_mmHg: c.Pt, pi_t_mmHg: c.pit, NFP_art: S.blind ? '' : +nfp(c.Pa, c.Pt, c.pic, c.pit).toFixed(1), NFP_ven: S.blind ? '' : +nfp(c.Pv, c.Pt, c.pic, c.pit).toFixed(1) };
   };
   const SHOWCOLS = { diff: [['t_s', 't (s)'], ['xrms_sim_um', 'x_rms (μm)'], ['Q_sim_per_CL', 'Q/CL']], utube: [['cR_mM', 'c (mM)'], ['piston_kPa', 'P (kPa)'], ['dh_cm', 'Δh (cm)']], cell: [['NaCl_pct', 'NaCl %'], ['V_um3', 'V (μm³)'], ['fate', 'fate']], cap: [['Pa_mmHg', 'P art'], ['Pv_mmHg', 'P ven'], ['pi_c_mmHg', 'π_c']] };
-  /* no worksheet for this demo yet: Export to worksheet saves the readings as a CSV file */
-  window.addEventListener('load', () => {
-    const sec = document.querySelector('.vd-readings'), ex = sec && sec.querySelector('.vd-export'); if (!ex) return;
-    ex.addEventListener('click', (e) => {
-      e.stopImmediatePropagation();
-      const rows = window.vdRows ? window.vdRows() : [], st = sec.querySelector('.status'), T = (s, v) => (typeof VDI18N === 'object' && VDI18N.t ? VDI18N.t(s, v) : s.replace(/\{(\w+)\}/g, (a, n) => (v && v[n] != null ? v[n] : a)));
-      if (!rows.length) { st.textContent = T('No readings to export.'); return; }
-      const cols = []; rows.forEach((r) => Object.keys(r).forEach((k) => { if (!cols.includes(k)) cols.push(k); }));
-      const cell = (v) => { const s = v == null ? '' : String(v); return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s; };
-      const txt = ['# Diffusion and Osmosis virtual apparatus: recorded readings (simulated data)', `# demo version,${window.vdVersion}`, ['row'].concat(cols).join(','), ...rows.map((r, i) => [i + 1].concat(cols.map((k) => r[k])).map(cell).join(','))].join('\n') + '\n';
-      try { const u = URL.createObjectURL(new Blob([txt], { type: 'text/csv' })), a = document.createElement('a'); a.href = u; a.download = 'osmosis-readings.csv'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 1000); } catch (_) {}
-      st.textContent = T('There is no worksheet for this demo yet, so the readings were saved as a CSV file ({n} rows).', { n: rows.length });
-    }, true);
-  });
+  /* Export to worksheet sends the readings to the worksheet osmosis (2026-11-19): spreading rows to Table 1, U tube rows to Table 2,
+     red cell rows to Table 3 (curriculum/labs/worksheet.js FROM_DEMO.osmosis) */
+  VD.howTo({ src: 'media/how-this-works/osmosis.mp4', poster: 'media/how-this-works/osmosis.jpg' });
   window.__os = { S, PRE, applyPreset, setScene, setRun, advance, finish, isDone, redraw, restart, uState, cellState, simRms, simQ, rate, get parts() { return parts; } };
   tokens(); applyPreset('glucose');
   new ResizeObserver(resize).observe($('scene')); resize();
