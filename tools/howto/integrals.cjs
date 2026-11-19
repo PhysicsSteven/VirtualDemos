@@ -33,10 +33,16 @@ require('./lib.cjs')({ demo: 'integrals', title: 'Riemann Sums and Integrals' },
   state.arrow = null;
 
   state.caption = 'The lower graph shows each rule\'s error against n on log axes';
+  /* bring the lower graph on screen, smoothly, before pointing at it */
+  const pageTo = async (y1) => { const y0 = await p.evaluate(() => scrollY), n = 14;
+    for (let i = 1; i <= n; i++) { const u = i / n, e = u < 0.5 ? 2 * u * u : 1 - (-2 * u + 2) ** 2 / 2; await p.evaluate(v => scrollTo(0, v), y0 + (y1 - y0) * e); await r.tick(); } };
+  const lb = await r.box('#lower'), sy = await p.evaluate(() => scrollY);
+  await pageTo(Math.max(0, sy + lb[1] + lb[3] - r.H + 40));
   const lw = await r.box('#lower');
   state.arrow = { rect: lw };
   await r.secs(2.2);
   state.arrow = null;
+  await pageTo(sy);
 
   state.caption = 'Record the reading. It goes into the table';
   await r.scrollRail('.rail .vd-rec');
