@@ -2805,7 +2805,8 @@
       "requirement": "required",
       "status": "usable",
       "demos": [
-        "vectors"
+        "vectors",
+        "space-3d"
       ],
       "unit": "measurements-vectors",
       "note": "Vectors and Relative Motion: components, sums, differences, dot and cross products on a grid; river crossing for relative velocity."
@@ -2839,7 +2840,8 @@
       "requirement": "required",
       "status": "usable",
       "demos": [
-        "vectors"
+        "vectors",
+        "space-3d"
       ],
       "unit": "measurements-vectors",
       "note": "Vectors and Relative Motion: components, sums, differences, dot and cross products on a grid; river crossing for relative velocity."
@@ -3380,7 +3382,8 @@
       "requirement": "required",
       "status": "usable",
       "demos": [
-        "potential-curves"
+        "potential-curves",
+        "surfaces-and-gradients"
       ],
       "unit": "energy"
     },
@@ -3622,7 +3625,8 @@
       "demos": [
         "rotation",
         "rotational-dynamics",
-        "pendulum"
+        "pendulum",
+        "space-3d"
       ],
       "unit": "rotation",
       "note": "Rotational Dynamics: the string's torque rT on the turntable. (OpenStax recheck 2026-10-24, Claude)"
@@ -4389,7 +4393,8 @@
       "requirement": "required",
       "status": "usable",
       "demos": [
-        "coulomb-sandbox"
+        "coulomb-sandbox",
+        "surfaces-and-gradients"
       ],
       "unit": "potential"
     },
@@ -4739,7 +4744,8 @@
       "status": "usable",
       "demos": [
         "magnetic-force",
-        "currents-fields"
+        "currents-fields",
+        "space-3d"
       ],
       "unit": "magnetic-forces",
       "note": "Magnetic Force: uniform field with ⊗/⊙ direction and particle paths; Currents and Fields: field lines of straight wires, a loop and a solenoid (field lines never cross, denser where B is larger). Reviewed by Claude 2026-10-23."
@@ -12775,6 +12781,64 @@
       "note": "New 2026-11-19 (Claude, Steve's approved Calculus plan): a math tool for OpenStax Calculus Vol 1 6.2, 6.3 and 6.4. Type f and g, a and b and an axis y = k or x = k; slice by disks and washers, shells or cross sections (square, semicircle, equilateral triangle) with n from 1 to 256, in 3D (vd3kit) or flat, with the sum against n and the integral (Gauss–Legendre). Arc length as a chain of chords, surface area as frustum bands. Moments of inertia by disks and shells: cone (3/10)MR², sphere (2/5)MR², which serves 10.5. Physics setups: a vase's capacity, water in a hemispherical bowl, a catenary cable, Gabriel's horn.",
       "title": "Solids of Revolution",
       "url": "demos/solids-of-revolution.html"
+    },
+    {
+      "demo": "surfaces-and-gradients",
+      "course": [
+        "later"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "8.4",
+          "title": "Potential Energy Diagrams and Stability"
+        },
+        {
+          "vol": 2,
+          "sec": "7.4",
+          "title": "Determining Field from Potential"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "New 2026-11-19 (Claude, Steve's approved Calculus plan): a math tool for OpenStax Calculus Vol 3 4.1 to 4.8. A typed z = f(x, y) as a 3D surface beside its contour map, with slices and the tangent plane, the gradient and directional derivative, critical points sorted by the second derivative test, Lagrange multipliers along a typed constraint, and limits along paths. Mapped here only where it serves University Physics: E = −∇V for two charges (Vol 2 7.4) and a potential energy surface with its pits and saddle, where a ball rolls (Vol 1 8.4). No worksheet yet.",
+      "title": "Surfaces and Gradients",
+      "url": "demos/surfaces-and-gradients.html"
+    },
+    {
+      "demo": "space-3d",
+      "course": [
+        "later"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "2.2",
+          "title": "Coordinate Systems and Components of a Vector"
+        },
+        {
+          "vol": 1,
+          "sec": "2.4",
+          "title": "Products of Vectors"
+        },
+        {
+          "vol": 1,
+          "sec": "10.6",
+          "title": "Torque"
+        },
+        {
+          "vol": 2,
+          "sec": "11.2",
+          "title": "Magnetic Fields and Lines"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "New 2026-11-19 (Claude, Steve's approved Calculus plan): a math tool for OpenStax Calculus Vol 3 2.1 to 2.7. Vectors in three dimensions with the dot and cross products, lines and planes, the quadric surfaces and their traces, and cylindrical and spherical coordinates (physics convention, θ from +z). Mapped here only where it serves University Physics: components in 3D (Vol 1 2.2), the dot and cross products (Vol 1 2.4), torque r × F (Vol 1 10.6) and F = qv × B (Vol 2 11.2). The 2D vector addition demo is Vectors and Relative Motion. No worksheet yet.",
+      "title": "Vectors and Surfaces in Space",
+      "url": "demos/space-3d.html"
     }
   ],
   "activities": [

@@ -1,0 +1,755 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="lib/theme.js"></script>
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<script src="lib/vdpanel.js"></script>
+<script src="lib/constants.js"></script>
+<script src="lib/vd3.js"></script>
+<script src="lib/vd3kit.js"></script>
+<title>Vectors and Surfaces in Space</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css: the vector colors, the component boxes and the picture */
+:root { --sp-a: #c2410c; --sp-b: #0f766e; --sp-c: #7c3aed; --sp-s: #b45309; --sp-pl: #be185d; --sp-surf: #b08a3e; --sp-tr: #b91c1c; --sp-x: #b91c1c; --sp-y: #4d7c0f; --sp-z: #1d4ed8; --sp-pt: #1f2937; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --sp-a: #fb923c; --sp-b: #5eead4; --sp-c: #c4b5fd; --sp-s: #fbbf24; --sp-pl: #f9a8d4; --sp-surf: #d6b06a; --sp-tr: #fca5a5; --sp-x: #fca5a5; --sp-y: #bef264; --sp-z: #93c5fd; --sp-pt: #f9fafb; } }
+:root[data-theme="dark"] { --sp-a: #fb923c; --sp-b: #5eead4; --sp-c: #c4b5fd; --sp-s: #fbbf24; --sp-pl: #f9a8d4; --sp-surf: #d6b06a; --sp-tr: #fca5a5; --sp-x: #fca5a5; --sp-y: #bef264; --sp-z: #93c5fd; --sp-pt: #f9fafb; }
+.stage { position: relative; display: flex; flex-direction: column; min-height: min-content; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.pane { position: relative; flex: 1 1 auto; min-height: 520px; }
+.pane canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; outline: none; touch-action: none; cursor: grab; }
+.pane canvas.hid { visibility: hidden; }
+.shelf { display: flex; flex-wrap: wrap; align-items: stretch; gap: 12px; padding: 10px; border-top: 1px solid var(--line); background: var(--surface); }
+.shelf-card { flex: 1 1 250px; display: grid; grid-template-columns: minmax(0, 1fr); align-content: start; gap: 6px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--canvas); }
+.shelf-card[hidden] { display: none; }
+.shelf-card > .card-title { font-size: 0.78rem; font-weight: 700; color: var(--muted); }
+.shelf-card .row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; font-size: 0.86rem; }
+.shelf-card .row[hidden], .shelf-card label.check[hidden] { display: none; }
+.vin { display: grid; grid-template-columns: max-content repeat(3, minmax(0, 1fr)); gap: 4px 6px; align-items: center; font-size: 0.86rem; }
+.vin input { width: 100%; min-width: 0; font: inherit; font-size: 0.84rem; font-family: var(--font-mono); padding: 3px 5px; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; }
+.vin .nm { font-family: var(--font-mono); font-weight: 600; white-space: nowrap; }
+.vin .hd { font-size: 0.74rem; color: var(--muted); text-align: center; font-family: var(--font-mono); }
+.sl { flex: 1 1 100%; min-width: 0; }
+.sw { display: inline-block; width: 22px; height: 0; border-top: 3px solid; vertical-align: middle; margin-right: 6px; }
+.sw.a { border-color: var(--sp-a); } .sw.b { border-color: var(--sp-b); } .sw.c { border-color: var(--sp-c); } .sw.s { border-color: var(--sp-s); border-top-style: dashed; }
+.c-a { color: var(--sp-a); } .c-b { color: var(--sp-b); } .c-c { color: var(--sp-c); } .c-pl { color: var(--sp-pl); }
+.shelf-card select { font: inherit; font-size: 0.86rem; padding: 3px 6px; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; max-width: 100%; }
+.verdict { margin: 8px 0 0; font-size: 0.88rem; }
+.rail .setlab { flex: 1 1 100%; margin: 8px 0 2px; font-size: 0.76rem; font-weight: 700; color: var(--muted); }
+.rail .setlab:first-of-type { margin-top: 0; }
+@media (min-width: 821px) { .bench > .stage { align-self: start; } }
+@media (max-width: 820px) { .pane { min-height: 0; height: 430px; flex: none; } .shelf-card { flex: 1 1 100%; } }
+</style>
+<link rel="stylesheet" id="vd-paper" href="lib/paper.css">
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Vectors and Surfaces in Space</h1>
+      <p>A space you can turn: vectors by their x, y and z components with their sum, dot product and cross product, a line and a plane and where they meet, the quadric surfaces with their traces, and a point in rectangular, cylindrical and spherical coordinates with its coordinate surfaces. The physics: torque r × F, the magnetic force qv × B, work F · d, a ray meeting a mirror and the potential of a point charge.</p>
+    </div>
+    <div class="bar-right">
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/space-3d.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/space-3d.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM10 2h1v1h-1zM13 2h1v1h-1zM15 2h1v1h-1zM19 2h1v1h-1zM21 2h2v1h-2zM27 2h4v1h-4zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM14 3h1v1h-1zM16 3h1v1h-1zM20 3h2v1h-2zM24 3h3v1h-3zM28 3h1v1h-1zM30 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM14 4h1v1h-1zM16 4h5v1h-5zM23 4h2v1h-2zM26 4h1v1h-1zM28 4h1v1h-1zM30 4h1v1h-1zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h3v1h-3zM14 5h2v1h-2zM17 5h2v1h-2zM20 5h1v1h-1zM26 5h4v1h-4zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h1v1h-1zM13 6h1v1h-1zM15 6h1v1h-1zM18 6h2v1h-2zM25 6h1v1h-1zM27 6h1v1h-1zM29 6h2v1h-2zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h1v1h-1zM14 7h1v1h-1zM19 7h1v1h-1zM21 7h2v1h-2zM27 7h1v1h-1zM30 7h1v1h-1zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h2v1h-2zM13 9h1v1h-1zM15 9h1v1h-1zM17 9h1v1h-1zM21 9h3v1h-3zM25 9h1v1h-1zM30 9h1v1h-1zM2 10h1v1h-1zM6 10h1v1h-1zM8 10h4v1h-4zM14 10h1v1h-1zM17 10h2v1h-2zM21 10h2v1h-2zM25 10h1v1h-1zM28 10h1v1h-1zM30 10h6v1h-6zM38 10h1v1h-1zM2 11h1v1h-1zM5 11h2v1h-2zM9 11h2v1h-2zM16 11h1v1h-1zM20 11h2v1h-2zM23 11h2v1h-2zM26 11h4v1h-4zM31 11h1v1h-1zM34 11h4v1h-4zM4 12h6v1h-6zM12 12h3v1h-3zM16 12h2v1h-2zM21 12h1v1h-1zM23 12h4v1h-4zM28 12h2v1h-2zM31 12h1v1h-1zM33 12h2v1h-2zM2 13h1v1h-1zM4 13h3v1h-3zM10 13h6v1h-6zM17 13h3v1h-3zM21 13h5v1h-5zM29 13h1v1h-1zM31 13h1v1h-1zM33 13h2v1h-2zM36 13h2v1h-2zM3 14h3v1h-3zM7 14h2v1h-2zM11 14h3v1h-3zM15 14h1v1h-1zM19 14h1v1h-1zM23 14h2v1h-2zM26 14h1v1h-1zM29 14h4v1h-4zM36 14h3v1h-3zM7 15h1v1h-1zM10 15h2v1h-2zM14 15h2v1h-2zM17 15h2v1h-2zM21 15h1v1h-1zM23 15h3v1h-3zM28 15h3v1h-3zM34 15h2v1h-2zM2 16h1v1h-1zM4 16h1v1h-1zM8 16h1v1h-1zM11 16h3v1h-3zM16 16h2v1h-2zM19 16h1v1h-1zM22 16h1v1h-1zM25 16h5v1h-5zM31 16h1v1h-1zM33 16h5v1h-5zM4 17h2v1h-2zM9 17h5v1h-5zM15 17h1v1h-1zM17 17h1v1h-1zM19 17h4v1h-4zM24 17h1v1h-1zM26 17h1v1h-1zM30 17h1v1h-1zM32 17h3v1h-3zM36 17h1v1h-1zM38 17h1v1h-1zM3 18h1v1h-1zM6 18h3v1h-3zM10 18h2v1h-2zM14 18h2v1h-2zM20 18h1v1h-1zM24 18h1v1h-1zM26 18h1v1h-1zM31 18h3v1h-3zM35 18h2v1h-2zM38 18h1v1h-1zM4 19h1v1h-1zM7 19h1v1h-1zM12 19h1v1h-1zM15 19h1v1h-1zM18 19h1v1h-1zM21 19h2v1h-2zM27 19h3v1h-3zM31 19h1v1h-1zM33 19h3v1h-3zM37 19h1v1h-1zM3 20h1v1h-1zM5 20h1v1h-1zM8 20h6v1h-6zM15 20h2v1h-2zM18 20h3v1h-3zM22 20h2v1h-2zM28 20h2v1h-2zM31 20h6v1h-6zM2 21h1v1h-1zM5 21h3v1h-3zM9 21h1v1h-1zM19 21h1v1h-1zM23 21h1v1h-1zM26 21h1v1h-1zM28 21h2v1h-2zM31 21h1v1h-1zM36 21h2v1h-2zM2 22h2v1h-2zM8 22h1v1h-1zM10 22h2v1h-2zM14 22h4v1h-4zM19 22h1v1h-1zM21 22h6v1h-6zM31 22h3v1h-3zM36 22h1v1h-1zM3 23h3v1h-3zM7 23h1v1h-1zM9 23h1v1h-1zM12 23h1v1h-1zM14 23h1v1h-1zM17 23h3v1h-3zM22 23h1v1h-1zM25 23h1v1h-1zM29 23h3v1h-3zM33 23h2v1h-2zM37 23h1v1h-1zM3 24h7v1h-7zM11 24h2v1h-2zM17 24h2v1h-2zM20 24h1v1h-1zM22 24h4v1h-4zM29 24h1v1h-1zM31 24h1v1h-1zM33 24h4v1h-4zM2 25h1v1h-1zM5 25h2v1h-2zM9 25h2v1h-2zM13 25h1v1h-1zM17 25h1v1h-1zM21 25h3v1h-3zM26 25h1v1h-1zM29 25h3v1h-3zM33 25h2v1h-2zM36 25h1v1h-1zM38 25h1v1h-1zM2 26h1v1h-1zM6 26h4v1h-4zM12 26h2v1h-2zM16 26h1v1h-1zM18 26h1v1h-1zM22 26h1v1h-1zM25 26h2v1h-2zM29 26h1v1h-1zM31 26h2v1h-2zM35 26h3v1h-3zM2 27h1v1h-1zM4 27h1v1h-1zM11 27h2v1h-2zM15 27h2v1h-2zM20 27h2v1h-2zM24 27h1v1h-1zM26 27h2v1h-2zM29 27h2v1h-2zM34 27h2v1h-2zM5 28h1v1h-1zM7 28h3v1h-3zM13 28h2v1h-2zM17 28h1v1h-1zM19 28h3v1h-3zM24 28h2v1h-2zM27 28h3v1h-3zM31 28h4v1h-4zM36 28h1v1h-1zM4 29h1v1h-1zM6 29h1v1h-1zM9 29h2v1h-2zM12 29h3v1h-3zM17 29h10v1h-10zM30 29h1v1h-1zM33 29h2v1h-2zM36 29h2v1h-2zM2 30h5v1h-5zM8 30h5v1h-5zM14 30h1v1h-1zM16 30h1v1h-1zM19 30h1v1h-1zM22 30h2v1h-2zM25 30h2v1h-2zM30 30h5v1h-5zM36 30h1v1h-1zM38 30h1v1h-1zM10 31h2v1h-2zM14 31h1v1h-1zM16 31h1v1h-1zM18 31h1v1h-1zM20 31h1v1h-1zM23 31h1v1h-1zM25 31h4v1h-4zM30 31h1v1h-1zM34 31h1v1h-1zM2 32h7v1h-7zM10 32h3v1h-3zM14 32h6v1h-6zM22 32h1v1h-1zM25 32h1v1h-1zM28 32h1v1h-1zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM11 33h1v1h-1zM13 33h1v1h-1zM15 33h1v1h-1zM17 33h1v1h-1zM19 33h2v1h-2zM24 33h1v1h-1zM26 33h1v1h-1zM30 33h1v1h-1zM34 33h3v1h-3zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h1v1h-1zM12 34h1v1h-1zM17 34h1v1h-1zM20 34h1v1h-1zM24 34h3v1h-3zM30 34h8v1h-8zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM11 35h2v1h-2zM14 35h1v1h-1zM16 35h1v1h-1zM18 35h1v1h-1zM21 35h3v1h-3zM25 35h1v1h-1zM27 35h7v1h-7zM35 35h2v1h-2zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM11 36h3v1h-3zM15 36h2v1h-2zM18 36h2v1h-2zM22 36h1v1h-1zM25 36h2v1h-2zM28 36h3v1h-3zM32 36h1v1h-1zM36 36h1v1h-1zM2 37h1v1h-1zM8 37h1v1h-1zM11 37h1v1h-1zM13 37h1v1h-1zM15 37h2v1h-2zM19 37h2v1h-2zM23 37h4v1h-4zM28 37h2v1h-2zM31 37h1v1h-1zM34 37h1v1h-1zM36 37h2v1h-2zM2 38h7v1h-7zM10 38h1v1h-1zM14 38h2v1h-2zM17 38h1v1h-1zM19 38h1v1h-1zM21 38h6v1h-6zM29 38h1v1h-1zM31 38h3v1h-3zM36 38h3v1h-3z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl" id="strip">
+        <button type="button" class="btn attn" id="play" data-vd-key="play">Play</button>
+        <button type="button" class="btn" id="reset" title="Put this setup back the way it started">Reset</button>
+        <label class="mono" for="speed" style="font-size:0.82rem;color:var(--muted)">Speed</label>
+        <select id="speed" aria-label="Speed">
+          <option value="0.25">× 0.25</option>
+          <option value="0.5">× 0.5</option>
+          <option value="1" selected>× 1</option>
+          <option value="2">× 2</option>
+        </select>
+        <div class="seg" role="group" aria-label="What to explore" id="modeSeg"><button type="button" data-mode="vec" aria-pressed="true">Vectors</button><button type="button" data-mode="lp" aria-pressed="false">Line and plane</button><button type="button" data-mode="quad" aria-pressed="false">Quadric surfaces</button><button type="button" data-mode="coord" aria-pressed="false">Coordinates</button></div>
+        <div class="seg" role="group" aria-label="Perspective" id="dimSeg"><button type="button" data-dim="3d" aria-pressed="true">3D</button><button type="button" data-dim="flat" aria-pressed="false">Flat</button></div>
+      </div>
+      <div class="pane" id="pane">
+        <canvas id="can" tabindex="0" role="img" aria-label="The x, y and z axes with the vectors, line, plane, surface or point of the chosen mode. Drag to turn; comma and period turn; plus and minus zoom; Space plays or pauses."></canvas>
+      </div>
+      <div class="shelf" id="shelf">
+        <div class="shelf-card" id="cardVec" role="group" aria-label="The vectors">
+          <span class="card-title">Components</span>
+          <div class="vin" id="vinVec">
+            <span></span><span class="hd">x</span><span class="hd">y</span><span class="hd">z</span>
+            <label class="nm c-a" for="ax" id="nmA" translate="no">a</label><input type="number" id="ax" step="any" aria-label="a, x"><input type="number" id="ay" step="any" aria-label="a, y"><input type="number" id="az" step="any" aria-label="a, z">
+            <label class="nm c-b" for="bx" id="nmB" translate="no">b</label><input type="number" id="bx" step="any" aria-label="b, x"><input type="number" id="by" step="any" aria-label="b, y"><input type="number" id="bz" step="any" aria-label="b, z">
+          </div>
+          <label class="check"><input type="checkbox" id="showSum"><span><span class="sw s"></span>Sum a + b (the parallelogram)</span></label>
+          <label class="check"><input type="checkbox" id="showDot" checked><span>Dot product: the angle and the projection of b on a</span></label>
+          <label class="check"><input type="checkbox" id="showCross" checked><span><span class="sw c"></span>Cross product a × b and its area</span></label>
+          <span class="hint">Drag an arrow tip to move it across; type a component for height. Play turns b about the z axis.</span>
+        </div>
+        <div class="shelf-card" id="cardLP" role="group" aria-label="The line and the plane" hidden>
+          <span class="card-title">A line r = P₀ + t d and a plane n · (r − Q) = 0</span>
+          <div class="vin">
+            <span></span><span class="hd">x</span><span class="hd">y</span><span class="hd">z</span>
+            <label class="nm c-a" for="p0x" translate="no">P₀</label><input type="number" id="p0x" step="any" aria-label="P0, x"><input type="number" id="p0y" step="any" aria-label="P0, y"><input type="number" id="p0z" step="any" aria-label="P0, z">
+            <label class="nm c-a" for="dx" translate="no">d</label><input type="number" id="dx" step="any" aria-label="d, x"><input type="number" id="dy" step="any" aria-label="d, y"><input type="number" id="dz" step="any" aria-label="d, z">
+            <label class="nm c-pl" for="qx" translate="no">Q</label><input type="number" id="qx" step="any" aria-label="Q, x"><input type="number" id="qy" step="any" aria-label="Q, y"><input type="number" id="qz" step="any" aria-label="Q, z">
+            <label class="nm c-pl" for="nx" translate="no">n</label><input type="number" id="nx" step="any" aria-label="n, x"><input type="number" id="ny" step="any" aria-label="n, y"><input type="number" id="nz" step="any" aria-label="n, z">
+          </div>
+          <label class="check"><input type="checkbox" id="showRefl"><span><span class="sw c"></span>Reflected ray (the plane as a mirror)</span></label>
+          <span class="hint">Play moves a point along the line, through the plane.</span>
+        </div>
+        <div class="shelf-card" id="cardQuad" role="group" aria-label="The quadric surface" hidden>
+          <span class="card-title">Quadric surface</span>
+          <div class="row"><label for="qtype">Surface</label><select id="qtype">
+            <option value="ell">Ellipsoid</option>
+            <option value="hyp1">Hyperboloid of one sheet</option>
+            <option value="hyp2">Hyperboloid of two sheets</option>
+            <option value="cone">Elliptic cone</option>
+            <option value="par">Elliptic paraboloid</option>
+            <option value="hpar">Hyperbolic paraboloid (saddle)</option>
+          </select></div>
+          <div class="row"><div class="sl"><div class="slider-head"><label for="qa">a</label><output id="oA" for="qa"></output></div><input type="range" id="qa" min="0.5" max="3" step="0.1" value="2"></div></div>
+          <div class="row"><div class="sl"><div class="slider-head"><label for="qb">b</label><output id="oB" for="qb"></output></div><input type="range" id="qb" min="0.5" max="3" step="0.1" value="1.5"></div></div>
+          <div class="row"><div class="sl"><div class="slider-head"><label for="qc">c</label><output id="oC" for="qc"></output></div><input type="range" id="qc" min="0.5" max="3" step="0.1" value="1"></div></div>
+          <div class="row"><span>Trace in the plane</span><div class="seg" id="axSeg" role="group" aria-label="Trace in the plane"><button type="button" data-ax="z" aria-pressed="true">z = k</button><button type="button" data-ax="x" aria-pressed="false">x = k</button><button type="button" data-ax="y" aria-pressed="false">y = k</button></div></div>
+          <div class="row"><div class="sl"><div class="slider-head"><label for="qk">k</label><output id="oK" for="qk"></output></div><input type="range" id="qk" min="-2.8" max="2.8" step="0.05" value="0.5"></div></div>
+          <span class="hint">Play sweeps the plane through the surface.</span>
+        </div>
+        <div class="shelf-card" id="cardCo" role="group" aria-label="The point" hidden>
+          <span class="card-title">The point P</span>
+          <div class="row"><span>Coordinates</span><div class="seg" id="sysSeg" role="group" aria-label="Coordinate system"><button type="button" data-sys="rect" aria-pressed="false">Rectangular</button><button type="button" data-sys="cyl" aria-pressed="false">Cylindrical</button><button type="button" data-sys="sph" aria-pressed="true">Spherical</button></div></div>
+          <div class="row"><div class="sl"><div class="slider-head"><label for="c1" id="lc1" translate="no">r</label><output id="o1" for="c1"></output></div><input type="range" id="c1" min="0" max="3" step="0.01" value="2"></div></div>
+          <div class="row"><div class="sl"><div class="slider-head"><label for="c2" id="lc2" translate="no">θ</label><output id="o2" for="c2"></output></div><input type="range" id="c2" min="0" max="180" step="1" value="50"></div></div>
+          <div class="row"><div class="sl"><div class="slider-head"><label for="c3" id="lc3" translate="no">φ</label><output id="o3" for="c3"></output></div><input type="range" id="c3" min="0" max="360" step="1" value="35"></div></div>
+          <label class="check"><input type="checkbox" id="showSurf" checked><span>Coordinate surfaces through P</span></label>
+          <span class="hint" id="convNote">Physics convention (ISO 80000-2): θ is the polar angle down from +z and φ the azimuth from +x. OpenStax Calculus swaps the letters: it writes θ for the azimuth and φ for the angle from +z, and ρ for the distance r.</span>
+        </div>
+        <div class="shelf-card" role="group" aria-label="The view">
+          <span class="card-title">The view</span>
+          <div class="row"><button type="button" class="btn" id="zin">Zoom in</button><button type="button" class="btn" id="zout">Zoom out</button><button type="button" class="btn" id="homeView">Reset view</button></div>
+          <div class="row"><span>Look along</span><button type="button" class="btn" id="lookZ">z (from above)</button><button type="button" class="btn" id="lookY">y</button><button type="button" class="btn" id="lookX">x</button></div>
+          <span class="hint">Drag to turn the space; drag a dot to move it. Scroll or pinch to zoom.</span>
+        </div>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <p class="setlab">Vectors</p>
+          <button type="button" data-p="vec" aria-pressed="true">Two vectors: sum, dot and cross</button>
+          <button type="button" data-p="torque" aria-pressed="false">Torque on a wrench: τ = r × F</button>
+          <button type="button" data-p="lorentz" aria-pressed="false">A proton in a magnetic field: F = qv × B</button>
+          <button type="button" data-p="work" aria-pressed="false">Work by a force along a displacement: F · d</button>
+          <p class="setlab">Lines and planes</p>
+          <button type="button" data-p="lp" aria-pressed="false">Where a line meets a plane</button>
+          <button type="button" data-p="ray" aria-pressed="false">A light ray and a mirror</button>
+          <p class="setlab">Quadric surfaces</p>
+          <button type="button" data-p="ell" aria-pressed="false">An ellipsoid</button>
+          <button type="button" data-p="tower" aria-pressed="false">A cooling tower: hyperboloid of one sheet</button>
+          <button type="button" data-p="hyp2" aria-pressed="false">Hyperboloid of two sheets</button>
+          <button type="button" data-p="mach" aria-pressed="false">The shock cone of a jet at Mach 2</button>
+          <button type="button" data-p="dish" aria-pressed="false">A dish antenna: the paraboloid</button>
+          <button type="button" data-p="saddle" aria-pressed="false">A saddle: the hyperbolic paraboloid</button>
+          <p class="setlab">Coordinates</p>
+          <button type="button" data-p="sph" aria-pressed="false">A point in spherical coordinates</button>
+          <button type="button" data-p="cyl" aria-pressed="false">A point in cylindrical coordinates</button>
+          <button type="button" data-p="charge" aria-pressed="false">A point charge: V and E depend only on r</button>
+        </div>
+        <details class="more" open><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+        <p class="hint">Adding and subtracting vectors in a plane by dragging their tips, relative velocity and a force table: <a href="vectors.html">Vectors and Relative Motion</a>.</p>
+      </section>
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+        <p class="verdict" id="verdict" aria-live="polite"></p>
+      </section>
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the products, the meeting point and the trace's name, to work them out first</span></label>
+        <details class="more"><summary>The formulas</summary>
+          <p class="formula">a · b = a<sub>x</sub>b<sub>x</sub> + a<sub>y</sub>b<sub>y</sub> + a<sub>z</sub>b<sub>z</sub> = |a||b| cos θ, a × b = (a<sub>y</sub>b<sub>z</sub> − a<sub>z</sub>b<sub>y</sub>, a<sub>z</sub>b<sub>x</sub> − a<sub>x</sub>b<sub>z</sub>, a<sub>x</sub>b<sub>y</sub> − a<sub>y</sub>b<sub>x</sub>), |a × b| = |a||b| sin θ</p>
+          <p class="formula">line r = P₀ + t d meets the plane n · (r − Q) = 0 at t = n · (Q − P₀)/(n · d); reflected direction d − 2(d · n̂)n̂</p>
+          <p class="formula">x = r sin θ cos φ, y = r sin θ sin φ, z = r cos θ; x = ρ cos φ, y = ρ sin φ, z = z</p>
+          <p class="hint">Every number is computed from the components in the boxes, exactly as the formulas say, and rounded only for display. Vectors with different units (r and F, v and B) are drawn to different scales, each named on the picture; their directions, and the direction of the cross product, are true. The proton's charge is e from CODATA 2022 (exact); the point charge uses the CODATA 2022 Coulomb constant with q = 1 nC.</p>
+        </details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  /* Vectors and Surfaces in Space: vectors, lines, planes, quadric surfaces and coordinates in three dimensions, runnable in Node
+     (curriculum/validation/test_space_3d.cjs). Spherical coordinates follow the physics convention (ISO 80000-2): r the distance
+     from the origin, θ the polar angle from +z, φ the azimuth from +x; cylindrical are ρ, φ, z. A quadric is written
+     p x² + q y² + r z² + s z = d, and its trace in a plane x, y or z = k is the conic α u² + β v² + σ v = D in the other two
+     coordinates (v the later of them), named and drawn by spConic. */
+  const spDot = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+  const spCross = (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
+  const spLen = (a) => Math.hypot(a[0], a[1], a[2]);
+  const spAdd = (a, b) => [a[0] + b[0], a[1] + b[1], a[2] + b[2]];
+  const spScale = (a, k) => [a[0] * k, a[1] * k, a[2] * k];
+  /* the angle between two vectors, from atan2 of |a × b| and a · b (accurate near 0 and π, where acos is not) */
+  const spAngle = (a, b) => Math.atan2(spLen(spCross(a, b)), spDot(a, b));
+  /* where the line P0 + t d meets the plane n · (r − Q) = 0: { t, P } or { parallel, inPlane } */
+  function spMeet(P0, d, Q, n) {
+    const nd = spDot(n, d), num = spDot(n, [Q[0] - P0[0], Q[1] - P0[1], Q[2] - P0[2]]), sc = spLen(n) * Math.max(spLen(d), 1e-300);
+    if (Math.abs(nd) <= 1e-12 * sc) return { parallel: true, inPlane: Math.abs(num) <= 1e-12 * spLen(n) * Math.max(1, spLen(Q), spLen(P0)) };
+    const t = num / nd; return { t, P: spAdd(P0, spScale(d, t)) };
+  }
+  /* the signed distance from a point to the plane, along n̂; the angle between the line and the plane */
+  const spDist = (X, Q, n) => spDot(n, [X[0] - Q[0], X[1] - Q[1], X[2] - Q[2]]) / spLen(n);
+  const spLinePlaneAngle = (d, n) => Math.asin(Math.min(1, Math.abs(spDot(d, n)) / (spLen(d) * spLen(n))));
+  /* the mirror image of a direction in a plane with normal n: d − 2(d · n̂)n̂ */
+  function spReflect(d, n) { const k = 2 * spDot(d, n) / spDot(n, n); return [d[0] - k * n[0], d[1] - k * n[1], d[2] - k * n[2]]; }
+  /* coordinates: rectangular to cylindrical (ρ, φ, z) and spherical (r, θ, φ), angles in radians, φ in [0, 2π) */
+  const spPhi = (x, y) => { const f = Math.atan2(y, x); return f < 0 ? f + 2 * Math.PI : f; };
+  const spToCyl = (p) => [Math.hypot(p[0], p[1]), spPhi(p[0], p[1]), p[2]];
+  const spToSph = (p) => { const r = spLen(p); return [r, r > 0 ? Math.acos(Math.max(-1, Math.min(1, p[2] / r))) : 0, spPhi(p[0], p[1])]; };
+  const spFromCyl = (rho, phi, z) => [rho * Math.cos(phi), rho * Math.sin(phi), z];
+  const spFromSph = (r, th, phi) => [r * Math.sin(th) * Math.cos(phi), r * Math.sin(th) * Math.sin(phi), r * Math.cos(th)];
+  /* the quadric surfaces as p x² + q y² + r z² + s z = d */
+  function spQuadric(type, a, b, c) {
+    const A = 1 / (a * a), B = 1 / (b * b), C = 1 / (c * c);
+    return { ell: [A, B, C, 0, 1], hyp1: [A, B, -C, 0, 1], hyp2: [-A, -B, C, 0, 1], cone: [A, B, -C, 0, 0], par: [A, B, 0, -1 / c, 0], hpar: [A, -B, 0, -1 / c, 0] }[type];
+  }
+  /* the trace in the plane ax = k ('x', 'y' or 'z'): coefficients of α u² + β v² + σ v = D, with (u, v) the other two axes in order */
+  function spTraceEq(Qd, ax, k) {
+    const [p, q, r, s, d] = Qd;
+    if (ax === 'z') return { u: 'x', v: 'y', al: p, be: q, si: 0, D: d - r * k * k - s * k };
+    if (ax === 'x') return { u: 'y', v: 'z', al: q, be: r, si: s, D: d - p * k * k };
+    return { u: 'x', v: 'z', al: p, be: r, si: s, D: d - q * k * k };
+  }
+  /* the conic α u² + β v² + σ v = D: its kind and its curves as lists of [u, v] within |u|, |v| ≤ L */
+  function spConic(e, L) {
+    let { al, be, si, D } = e; const out = { kind: '', curves: [] }, n = 160, tol = 1e-12 * (Math.abs(al) + Math.abs(be) + Math.abs(si) + Math.abs(D) + 1e-300);
+    const clip = (pts) => { const cs = []; let cur = []; for (const p of pts) { if (Math.abs(p[0]) <= L && Math.abs(p[1]) <= L && p.every(isFinite)) cur.push(p); else if (cur.length) { cs.push(cur); cur = []; } } if (cur.length) cs.push(cur); return cs.filter((c) => c.length > 1); };
+    if (Math.abs(si) > tol && Math.abs(be) <= tol) {
+      if (Math.abs(al) <= tol) { out.kind = 'line'; out.curves = clip([[-L, D / si], [L, D / si]]); return out; }
+      out.kind = 'parabola'; const pts = []; for (let i = 0; i <= n; i++) { const u = -L + 2 * L * i / n; pts.push([u, (D - al * u * u) / si]); } out.curves = clip(pts); return out;
+    }
+    if (Math.abs(al) <= tol && Math.abs(be) <= tol) { out.kind = Math.abs(D) <= tol ? 'plane' : 'none'; return out; }
+    if (Math.abs(al) <= tol || Math.abs(be) <= tol) {
+      /* one squared term: two parallel lines, one line, or nothing */
+      const onU = Math.abs(be) <= tol, c = D / (onU ? al : be);
+      if (c < -tol) { out.kind = 'none'; return out; }
+      const w = Math.sqrt(Math.max(0, c)); out.kind = w > 0 ? 'two parallel lines' : 'line';
+      for (const sg of w > 0 ? [1, -1] : [1]) out.curves.push(...clip(onU ? [[sg * w, -L], [sg * w, L]] : [[-L, sg * w], [L, sg * w]]));
+      return out;
+    }
+    if (al < 0 && be < 0) { al = -al; be = -be; D = -D; }
+    if (al > 0 && be > 0) {
+      if (D < -tol) { out.kind = 'none'; return out; }
+      if (D <= tol) { out.kind = 'point'; out.curves = [[[0, 0]]]; return out; }
+      const A = Math.sqrt(D / al), B = Math.sqrt(D / be); out.kind = Math.abs(A - B) <= 1e-9 * A ? 'circle' : 'ellipse'; out.A = A; out.B = B;
+      const pts = []; for (let i = 0; i <= n; i++) { const t = 2 * Math.PI * i / n; pts.push([A * Math.cos(t), B * Math.sin(t)]); } out.curves = clip(pts); return out;
+    }
+    /* opposite signs: a hyperbola, or two crossing lines when D = 0 */
+    if (Math.abs(D) <= tol) { out.kind = 'two crossing lines'; const m = Math.sqrt(-al / be); out.curves = clip([[-L, -m * L], [L, m * L]]).concat(clip([[-L, m * L], [L, -m * L]])); return out; }
+    out.kind = 'hyperbola'; const alongU = D / al > 0, A = Math.sqrt(Math.abs(D / al)), B = Math.sqrt(Math.abs(D / be)); out.A = A; out.B = B; out.opens = alongU ? 'u' : 'v';
+    const T = Math.acosh(Math.max(1, 1.01 * Math.max(L / A, L / B, 1.5)));
+    for (const sg of [1, -1]) { const pts = []; for (let i = 0; i <= n; i++) { const t = -T + 2 * T * i / n, ch = sg * Math.cosh(t), sh = Math.sinh(t); pts.push(alongU ? [A * ch, B * sh] : [A * sh, B * ch]); } out.curves.push(...clip(pts)); }
+    return out;
+  }
+  /* the half angle of the shock cone at Mach number M: sin μ = 1/M */
+  const spMach = (M) => Math.asin(1 / M);
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  const VDI18N = window.VDI18N || { t: (s, o) => s.replace(/\{(\w+)\}/g, (m, k) => (o && k in o ? o[k] : m)) };
+  const C0 = window.VDC || {}, QE = C0.e || 1.602176634e-19, KE = C0.ke || 8.9875517862e9;
+  const DEG = Math.PI / 180, BOX = 3;
+  const PRESETS = {
+    vec: { mode: 'vec', a: [2, 1, 0.5], b: [0.5, 2, 1.5], names: ['a', 'b', 'a × b'], units: ['', '', ''], show: { sum: 1, dot: 1, cross: 1 },
+      hint: 'Two vectors by their components. Their sum adds component by component, the tail of b on the tip of a. The dot product a · b = |a||b| cos θ multiplies the components and adds; it is |a| times the shadow of b on a. The cross product a × b is at right angles to both, by the right hand rule (fingers from a toward b, thumb along a × b), with length |a||b| sin θ, the area of the parallelogram. Press Play to turn b about the z axis and watch a · b and a × b change.' },
+    torque: { mode: 'vec', a: [0.3, 0, 0], b: [0, 20, 10], names: ['r', 'F', 'τ = r × F'], units: ['m', 'N', 'N·m'], show: { sum: 0, dot: 0, cross: 1 },
+      hint: 'A wrench 0.30 m long along x, pushed at its end with F = (0, 20, 10) N. The torque τ = r × F = (0, −3, 6) N·m points along the axis the wrench turns the bolt about, by the right hand rule; its size is |r||F| sin θ. Only the part of F at right angles to r turns the bolt: the part along r does nothing. Play turns F about the z axis: the torque is largest with F at right angles to the wrench and zero when F points along it.' },
+    lorentz: { mode: 'vec', a: [2, 0, 1], b: [0, 0, 0.5], names: ['v', 'B', 'v × B'], units: ['10⁵ m/s', 'T', 'm·T/s'], show: { sum: 0, dot: 1, cross: 1 }, charge: true,
+      hint: 'A proton with v = (2, 0, 1) × 10⁵ m/s in a magnetic field B = 0.50 T along z. The force is F = qv × B: at right angles to both v and B, so it never does work and only turns the motion. The part of v along B (here vz) feels nothing, which is why the path is a helix. Play turns v about z: the force turns with it, always sideways.' },
+    work: { mode: 'vec', a: [30, 0, 10], b: [4, 2, 0], names: ['F', 'd', 'F × d'], units: ['N', 'm', 'N·m'], show: { sum: 0, dot: 1, cross: 0 },
+      hint: 'A constant force F = (30, 0, 10) N pulls a crate through the displacement d = (4, 2, 0) m across the floor. The work is the dot product W = F · d = 30 × 4 + 0 × 2 + 10 × 0 = 120 J: only the part of F along d counts. The upward 10 N does no work on a horizontal displacement. Play turns d about z: the work changes sign when d turns more than 90° from F.' },
+    lp: { mode: 'lp', P0: [1, -2, 1], d: [1, 2, 1], Q: [1, 1, 1], n: [1, 1, 1], refl: 0,
+      hint: 'The line r = (1, −2, 1) + t(1, 2, 1) and the plane through Q = (1, 1, 1) with normal n = (1, 1, 1), that is x + y + z = 3. Putting the line into the plane equation gives one equation for t: t = n · (Q − P₀)/(n · d) = 3/4, so they meet at (1.75, −0.5, 1.75). When n · d = 0 the line is parallel to the plane: it never meets it, or lies in it. Press Play to move a point along the line and watch its signed distance to the plane change sign.' },
+    ray: { mode: 'lp', P0: [-2, -0.6, 2], d: [1, 0.3, -1], Q: [0, 0, 0], n: [0, 0, 1], refl: 1,
+      hint: 'A light ray from (−2, −0.6, 2) heading along d = (1, 0.3, −1) meets a flat mirror, the plane z = 0. The reflected direction is d − 2(d · n̂)n̂ = (1, 0.3, 1): the part along the mirror is kept and the part along the normal is reversed, so the angle of reflection equals the angle of incidence, and the incoming ray, the normal and the reflected ray lie in one plane. Tilt the mirror by changing n.' },
+    ell: { mode: 'quad', q: 'ell', a: 2.5, b: 1.8, c: 1.2, ax: 'z', k: 0.6, hint: 'x²/a² + y²/b² + z²/c² = 1. Every trace is an ellipse (or a point, or nothing past the top): cut at z = k and the ellipse shrinks as |k| grows to c. With a = b = c it is a sphere of radius a.' },
+    tower: { mode: 'quad', q: 'hyp1', a: 1.2, b: 1.2, c: 1.6, ax: 'z', k: 0, hint: 'x²/a² + y²/b² − z²/c² = 1, the shape of a cooling tower. The horizontal traces are ellipses (circles here, a = b), smallest at the waist z = 0; the vertical traces are hyperbolas. It is a ruled surface: two families of straight lines lie in it, which is why it can be built from straight beams.' },
+    hyp2: { mode: 'quad', q: 'hyp2', a: 1.2, b: 1.6, c: 0.8, ax: 'z', k: 1.6, hint: '−x²/a² − y²/b² + z²/c² = 1: two separate bowls. A horizontal plane between z = −c and z = c misses the surface (no trace); beyond, the traces are ellipses. Vertical traces are hyperbolas.' },
+    mach: { mode: 'quad', q: 'cone', a: 1, b: 1, c: 1, mach: 2, ax: 'z', k: 1.5, hint: '' },
+    dish: { mode: 'quad', q: 'par', a: 2.4, b: 2.4, c: 1.2, ax: 'x', k: 0, dish: true, hint: '' },
+    saddle: { mode: 'quad', q: 'hpar', a: 1.6, b: 1.6, c: 1, ax: 'z', k: 0.6, hint: 'z/c = x²/a² − y²/b², the saddle. Along x it curves up, along y down: the shape of a potential energy surface near a saddle point, or of a mountain pass. Horizontal traces are hyperbolas, and at z = 0 two crossing lines; vertical traces are parabolas opening up (x = k) and down (y = k).' },
+    sph: { mode: 'coord', sys: 'sph', P: [2, 50, 35], hint: 'A point by its spherical coordinates: the distance r from the origin, the angle θ down from the +z axis, and the azimuth φ around from +x. Each coordinate held fixed is a surface: r = constant a sphere, θ = constant a cone around the z axis, φ = constant a half plane hinged on the z axis. The point is where the three meet. Play turns φ.' },
+    cyl: { mode: 'coord', sys: 'cyl', P: [2, 0.5, 35], hint: 'A point by its cylindrical coordinates: the distance ρ from the z axis, the azimuth φ from +x and the height z. Its coordinate surfaces are a cylinder (ρ fixed), a half plane (φ fixed) and a horizontal plane (z fixed). Polar coordinates in the xy plane, with z added. Play turns φ.' },
+    charge: { mode: 'coord', sys: 'sph', P: [1.5, 70, 20], charge: true, hint: 'A point charge q = 1 nC at the origin. Its potential V = kq/r and its field E = kq/r² r̂ depend only on r, so in spherical coordinates the equipotentials are the spheres r = constant and E points straight out along r̂. Change θ or φ (or press Play) and V and |E| stay the same; change r and they fall as 1/r and 1/r². Lengths in meters.' },
+  };
+  const MODE_FIRST = { vec: 'vec', lp: 'lp', quad: 'ell', coord: 'sph' };
+  const S = { preset: 'vec', mode: 'vec', a: [2, 1, 0.5], b: [0.5, 2, 1.5], names: ['a', 'b', 'a × b'], units: ['', '', ''], P0: [0, 0, 0], d: [1, 0, 0], Q: [0, 0, 0], n: [0, 0, 1],
+    sys: 'sph', P: [1, 1, 1], ax: 'z', run: false, blind: false, tline: -3, sweep: 1, o: { th: -Math.PI / 2 + 0.6, ph: 1.12, zoom: 1 } };
+  const can = $('can'), ctx = can.getContext('2d');
+  let W = 0, H = 0, dpr = 1, TK = null, need = true, lastRead = '';
+  const proj = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.35 : 1);
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    TK = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), mono: g('--font-mono') || 'monospace',
+      a: g('--sp-a'), b: g('--sp-b'), c: g('--sp-c'), s: g('--sp-s'), pl: g('--sp-pl'), surf: g('--sp-surf'), tr: g('--sp-tr'), x: g('--sp-x'), y: g('--sp-y'), z: g('--sp-z'), pt: g('--sp-pt') };
+  }
+  const fmt = (v, s = 4) => {
+    if (!isFinite(v)) return '—';
+    if (Math.abs(v) < 1e-10) return '0';
+    const a = Math.abs(v);
+    if (a >= 1e6 || a < 1e-3) { const e = Math.floor(Math.log10(a)), m = v / Math.pow(10, e), sup = String(e).replace(/[-0-9]/g, (c) => '⁻⁰¹²³⁴⁵⁶⁷⁸⁹'['-0123456789'.indexOf(c)]); return `${m.toFixed(s - 1).replace('-', '−')} × 10${sup}`; }
+    const t = Number(v.toPrecision(s)).toString();
+    return (a >= 1e4 ? t.replace(/^(-?\d+)/, (m) => m.replace(/\B(?=(\d{3})+$)/g, ',')) : t).replace('-', '−');
+  };
+  const vfmt = (v, s) => `(${v.map((q) => fmt(q, s || 4)).join(', ')})`;
+  const un = (s) => (s ? ' ' + s : '');
+
+  /* ---------- the scene as a list of primitives, drawn by the 3D view or the flat one ---------- */
+  /* { k: 'line', pts, c, w, dash } { k: 'arrow', a, b, c, w, name } { k: 'dot', p, c, r } { k: 'poly', pts, c, op } { k: 'mesh', key, grid: [[p]], c, op } { k: 'text', p, t, c } */
+  /* scale factors so each vector shows 1 to 3.2 grid units long */
+  function niceK(L) { if (!(L > 0)) return 1; const raw = 2.4 / L, e = Math.floor(Math.log10(raw)), m = raw / Math.pow(10, e); return (m < 2 ? 1 : m < 5 ? 2 : 5) * Math.pow(10, e); }
+  function scales() {
+    const u = S.units, same = u[0] === u[1];
+    const ka = niceK(spLen(S.a)), kb = same ? ka : niceK(spLen(S.b));
+    const kab = same ? Math.min(ka, niceK(Math.max(spLen(S.a), spLen(S.b)))) : null;
+    const KA = same ? kab : ka, KB = same ? kab : kb, c = spCross(S.a, S.b), kc = same && !u[0] ? Math.min(KA, niceK(spLen(c))) : niceK(spLen(c));
+    return { ka: KA, kb: KB, kc, same };
+  }
+  function arc(o, u, v, ang, R, n) { const e1 = spScale(u, 1 / spLen(u)), w = spCross(spCross(u, v), u), wl = spLen(w); if (!(wl > 0)) return []; const e2 = spScale(w, 1 / wl), pts = []; for (let i = 0; i <= n; i++) { const t = ang * i / n; pts.push(spAdd(o, spAdd(spScale(e1, R * Math.cos(t)), spScale(e2, R * Math.sin(t))))); } return pts; }
+  function scene() {
+    const L = [], blind = S.blind;
+    if (S.mode === 'vec') {
+      const k = scales(), A = spScale(S.a, k.ka), B = spScale(S.b, k.kb), n = S.names;
+      L.push({ k: 'arrow', a: [0, 0, 0], b: A, c: TK.a, w: 3, name: n[0] }, { k: 'arrow', a: [0, 0, 0], b: B, c: TK.b, w: 3, name: n[1] });
+      /* drop lines from the tips to the xy plane, so the height reads */
+      for (const [P, c] of [[A, TK.a], [B, TK.b]]) if (Math.abs(P[2]) > 1e-9) L.push({ k: 'line', pts: [P, [P[0], P[1], 0]], c, w: 1, dash: [3, 3] }, { k: 'line', pts: [[0, 0, 0], [P[0], P[1], 0]], c, w: 1, dash: [3, 3] });
+      L.push({ k: 'dot', p: A, c: TK.a, r: 6, drag: 'a' }, { k: 'dot', p: B, c: TK.b, r: 6, drag: 'b' });
+      if ($('showSum').checked && k.same) { const Sm = spAdd(A, B); L.push({ k: 'line', pts: [A, Sm], c: TK.b, w: 1.4, dash: [6, 4] }, { k: 'line', pts: [B, Sm], c: TK.a, w: 1.4, dash: [6, 4] }, { k: 'arrow', a: [0, 0, 0], b: Sm, c: TK.s, w: 2.5, name: `${n[0]} + ${n[1]}` }); }
+      const th = spAngle(S.a, S.b);
+      if ($('showDot').checked && spLen(A) > 0 && spLen(B) > 0) {
+        const R = 0.45 * Math.min(spLen(A), spLen(B), 1.5); L.push({ k: 'line', pts: arc([0, 0, 0], A, B, th, R, 30), c: TK.ink, w: 1.6 });
+        const mid = arc([0, 0, 0], A, B, th / 2, R * 1.35, 1)[1]; if (mid) L.push({ k: 'text', p: mid, t: 'θ', c: TK.ink });
+        if (!blind) { const pr = spScale(A, spDot(B, A) / spDot(A, A)); L.push({ k: 'line', pts: [B, pr], c: TK.muted, w: 1.2, dash: [2, 3] }, { k: 'line', pts: [[0, 0, 0], pr], c: TK.b, w: 5, op: 0.45 }); }
+      }
+      if ($('showCross').checked && !blind) {
+        const C = spScale(spCross(S.a, S.b), k.kc);
+        if (k.same) L.push({ k: 'poly', pts: [[0, 0, 0], A, spAdd(A, B), B], c: TK.c, op: 0.22 });
+        L.push({ k: 'arrow', a: [0, 0, 0], b: C, c: TK.c, w: 3, name: n[2] });
+      }
+    } else if (S.mode === 'lp') {
+      const m = spMeet(S.P0, S.d, S.Q, S.n), nn = spScale(S.n, 1 / spLen(S.n));
+      L.push({ k: 'poly', pts: planeCorners(S.Q, nn, 2.6), c: TK.pl, op: 0.2 }, { k: 'line', pts: [...planeCorners(S.Q, nn, 2.6), planeCorners(S.Q, nn, 2.6)[0]], c: TK.pl, w: 1 });
+      L.push({ k: 'arrow', a: S.Q, b: spAdd(S.Q, nn), c: TK.pl, w: 2.5, name: 'n' }, { k: 'dot', p: S.Q, c: TK.pl, r: 5, drag: 'Q' });
+      const dl = spLen(S.d), T = 12 / Math.max(dl, 1e-9), seg = clipLine(S.P0, S.d, -T, T);
+      if (seg) L.push({ k: 'line', pts: seg, c: TK.a, w: 2.4 });
+      L.push({ k: 'arrow', a: S.P0, b: spAdd(S.P0, S.d), c: TK.a, w: 3, name: 'd' }, { k: 'dot', p: S.P0, c: TK.a, r: 6, drag: 'P0' }, { k: 'text', p: spAdd(S.P0, [0, 0, -0.3]), t: 'P₀', c: TK.a });
+      const X = spAdd(S.P0, spScale(S.d, S.tline)); if (inBox(X)) L.push({ k: 'dot', p: X, c: TK.pt, r: 5 });
+      if (!m.parallel && !S.blind) {
+        L.push({ k: 'dot', p: m.P, c: TK.c, r: 7 });
+        if ($('showRefl').checked) { const R = spReflect(S.d, S.n), sg = clipLine(m.P, R, 0, 12 / Math.max(spLen(R), 1e-9)); if (sg) L.push({ k: 'line', pts: sg, c: TK.c, w: 2.4, dash: [7, 4] }); L.push({ k: 'arrow', a: m.P, b: spAdd(m.P, R), c: TK.c, w: 3, name: VDI18N.t('reflected') }); L.push({ k: 'line', pts: [m.P, spAdd(m.P, spScale(nn, 1.6))], c: TK.muted, w: 1.2, dash: [3, 3] }); }
+      }
+    } else if (S.mode === 'quad') {
+      const q = quadNow(), Qd = spQuadric(q.type, q.a, q.b, q.c);
+      for (const g of quadMesh(q)) L.push({ k: 'mesh', key: JSON.stringify(q) + g.id, grid: g.grid, c: TK.surf, op: 0.55 });
+      const ax = S.ax, k = +$('qk').value, e = spTraceEq(Qd, ax, k), cn = spConic(e, BOX), map = (uv) => (ax === 'z' ? [uv[0], uv[1], k] : ax === 'x' ? [k, uv[0], uv[1]] : [uv[0], k, uv[1]]);
+      const sq = [[-BOX, -BOX], [BOX, -BOX], [BOX, BOX], [-BOX, BOX]].map(map);
+      L.push({ k: 'poly', pts: sq, c: TK.pl, op: 0.14 }, { k: 'line', pts: [...sq, sq[0]], c: TK.pl, w: 1 });
+      for (const cv of cn.curves) { if (cv.length === 1) L.push({ k: 'dot', p: map(cv[0]), c: TK.tr, r: 6 }); else L.push({ k: 'line', pts: cv.map(map), c: TK.tr, w: 3.5 }); }
+      if (q.dish) { const f = q.a * q.a / (4 * q.c); L.push({ k: 'dot', p: [0, 0, f], c: TK.c, r: 6 }, { k: 'text', p: [0.35, 0, f + 0.25], t: VDI18N.t('focus'), c: TK.c }); for (const x of [-1.6, -0.8, 0.8, 1.6]) { const z = q.c * x * x / (q.a * q.a); L.push({ k: 'line', pts: [[x, 0, 2.8], [x, 0, z], [0, 0, f]], c: TK.s, w: 1.2, dash: [4, 3] }); } }
+    } else if (S.mode === 'coord') {
+      const P = S.P, cyl = spToCyl(P), sph = spToSph(P);
+      if ($('showSurf').checked) {
+        if (S.sys === 'rect') {
+          for (const [i, c] of [[0, TK.x], [1, TK.y], [2, TK.z]]) { const sq = [[-BOX, -BOX], [BOX, -BOX], [BOX, BOX], [-BOX, BOX]].map(([u, v]) => (i === 0 ? [P[0], u, v] : i === 1 ? [u, P[1], v] : [u, v, P[2]])); L.push({ k: 'poly', pts: sq, c, op: 0.12 }); }
+        } else if (S.sys === 'cyl') {
+          L.push({ k: 'mesh', key: 'cyl' + cyl[0].toFixed(4), grid: gridOf(32, 8, (i, j) => [cyl[0] * Math.cos(2 * Math.PI * i / 32), cyl[0] * Math.sin(2 * Math.PI * i / 32), -BOX + 2 * BOX * j / 8]), c: TK.x, op: 0.3 });
+          L.push({ k: 'poly', pts: halfPlane(cyl[1]), c: TK.y, op: 0.16 });
+          L.push({ k: 'poly', pts: [[-BOX, -BOX, P[2]], [BOX, -BOX, P[2]], [BOX, BOX, P[2]], [-BOX, BOX, P[2]]], c: TK.z, op: 0.12 });
+        } else {
+          const r = sph[0], th = sph[1];
+          L.push({ k: 'mesh', key: 'sph' + r.toFixed(4), grid: gridOf(32, 16, (i, j) => spFromSph(r, Math.PI * j / 16, 2 * Math.PI * i / 32)), c: TK.x, op: 0.28 });
+          const R = BOX * 1.1; L.push({ k: 'mesh', key: 'cone' + th.toFixed(4), grid: gridOf(32, 6, (i, j) => spFromSph(R * j / 6, th, 2 * Math.PI * i / 32)), c: TK.y, op: 0.22 });
+          L.push({ k: 'poly', pts: halfPlane(sph[2]), c: TK.z, op: 0.14 });
+        }
+      }
+      /* the construction: the shadow on the xy plane, ρ, the angles */
+      const F = [P[0], P[1], 0];
+      L.push({ k: 'line', pts: [P, F], c: TK.muted, w: 1.2, dash: [4, 3] }, { k: 'line', pts: [[0, 0, 0], F], c: TK.muted, w: 1.2, dash: [4, 3] });
+      if (S.sys === 'rect') L.push({ k: 'line', pts: [[P[0], 0, 0], F, [0, P[1], 0]], c: TK.muted, w: 1, dash: [2, 3] });
+      if (S.sys !== 'rect' && cyl[0] > 1e-6) { const R = Math.min(0.8, 0.6 * cyl[0]) || 0.5; L.push({ k: 'line', pts: arc([0, 0, 0], [1, 0, 0], [Math.cos(cyl[1]), Math.sin(cyl[1]), 0], cyl[1], R, 40), c: TK.z, w: 2 }); const m = spFromCyl(R * 1.3, cyl[1] / 2, 0); L.push({ k: 'text', p: m, t: 'φ', c: TK.z }); }
+      if (S.sys === 'sph' && sph[0] > 1e-6) { L.push({ k: 'line', pts: [[0, 0, 0], P], c: TK.x, w: 2 }); const R = Math.min(0.9, 0.5 * sph[0]); L.push({ k: 'line', pts: arc([0, 0, 0], [0, 0, 1], P, sph[1], R, 40), c: TK.y, w: 2 }); const m = arc([0, 0, 0], [0, 0, 1], P, sph[1] / 2, R * 1.35, 1)[1]; if (m) L.push({ k: 'text', p: m, t: 'θ', c: TK.y }); }
+      if (S.sys === 'cyl') L.push({ k: 'line', pts: [[0, 0, P[2]], P], c: TK.x, w: 2 });
+      if (S.charge && sph[0] > 0) { const rh = spScale(P, 1 / sph[0]); L.push({ k: 'dot', p: [0, 0, 0], c: TK.a, r: 8 }, { k: 'text', p: [0.25, 0, 0.3], t: '+q', c: TK.a }, { k: 'arrow', a: P, b: spAdd(P, spScale(rh, Math.min(1.2, 1.8 / (sph[0] * sph[0])))), c: TK.a, w: 3, name: 'E' }); }
+      L.push({ k: 'dot', p: P, c: TK.pt, r: 7, drag: 'P' }, { k: 'text', p: spAdd(P, [0.2, 0.2, 0.25]), t: 'P', c: TK.pt });
+    }
+    return L;
+  }
+  const inBox = (p) => p.every((v) => Math.abs(v) <= BOX + 1e-9);
+  function gridOf(nu, nv, f) { const g = []; for (let i = 0; i <= nu; i++) { const row = []; for (let j = 0; j <= nv; j++) row.push(f(i, j)); g.push(row); } return g; }
+  function halfPlane(phi) { const e = [Math.cos(phi), Math.sin(phi), 0], R = BOX * 1.1; return [[0, 0, -BOX], spAdd(spScale(e, R), [0, 0, -BOX]), spAdd(spScale(e, R), [0, 0, BOX]), [0, 0, BOX]]; }
+  /* a square of half side h in the plane through Q with unit normal n */
+  function planeCorners(Q, n, h) {
+    const t = Math.abs(n[2]) < 0.9 ? [0, 0, 1] : [1, 0, 0], e1 = spCross(n, t), l1 = spLen(e1), u = spScale(e1, 1 / l1), v = spCross(n, u);
+    /* center the square on the point of the plane nearest the middle of the box */
+    const c = spAdd([0, 0, 0], spScale(n, spDot(n, Q)));
+    return [[-1, -1], [1, -1], [1, 1], [-1, 1]].map(([a, b]) => spAdd(c, spAdd(spScale(u, a * h), spScale(v, b * h))));
+  }
+  /* the part of the line P0 + t d with t in [t0, t1] inside the box */
+  function clipLine(P0, d, t0, t1) {
+    for (let i = 0; i < 3; i++) {
+      if (Math.abs(d[i]) < 1e-12) { if (Math.abs(P0[i]) > BOX) return null; continue; }
+      let a = (-BOX - P0[i]) / d[i], b = (BOX - P0[i]) / d[i]; if (a > b) [a, b] = [b, a]; t0 = Math.max(t0, a); t1 = Math.min(t1, b);
+    }
+    return t1 > t0 ? [spAdd(P0, spScale(d, t0)), spAdd(P0, spScale(d, t1))] : null;
+  }
+  function quadNow() { const c = PRESETS[S.preset] || {}; return { type: $('qtype').value, a: +$('qa').value, b: +$('qb').value, c: +$('qc').value, dish: !!(c.dish && S.preset === 'dish' && $('qtype').value === 'par') }; }
+  /* the quadric as parametric grids, kept inside the box |x|, |y|, |z| ≤ 3: each parameter range ends where the surface first
+     reaches a face, so the rim is a smooth curve rather than a staircase of dropped cells */
+  function quadMesh(q) {
+    const { type, a, b, c } = q, Z = BOX, nu = 40, nv = 20, TP = 2 * Math.PI, out = [];
+    if (type === 'ell') out.push({ id: 'e', grid: gridOf(nu, nv, (i, j) => { const t = TP * i / nu, f = Math.PI * j / nv; return [a * Math.sin(f) * Math.cos(t), b * Math.sin(f) * Math.sin(t), c * Math.cos(f)]; }) });
+    else if (type === 'hyp1') { const m = Math.max(a, b), U = m < 0.98 * Z ? Math.min(Math.asinh(Z / c), Math.acosh(Z / m)) : Math.asinh(Z / c); out.push({ id: 'h', grid: gridOf(nu, nv, (i, j) => { const t = TP * i / nu, u = -U + 2 * U * j / nv; return [a * Math.cosh(u) * Math.cos(t), b * Math.cosh(u) * Math.sin(t), c * Math.sinh(u)]; }) }); }
+    else if (type === 'hyp2') { const U = Math.min(Math.acosh(Math.max(1, Z / c)), Math.asinh(Z / Math.max(a, b))); for (const sg of [1, -1]) out.push({ id: 'h' + sg, grid: gridOf(nu, nv, (i, j) => { const t = TP * i / nu, u = U * j / nv; return [a * Math.sinh(u) * Math.cos(t), b * Math.sinh(u) * Math.sin(t), sg * c * Math.cosh(u)]; }) }); }
+    else if (type === 'cone') { const T = Math.min(Z / c, Z / Math.max(a, b)); out.push({ id: 'c', grid: gridOf(nu, nv, (i, j) => { const t = TP * i / nu, s = -T + 2 * T * j / nv; return [a * s * Math.cos(t), b * s * Math.sin(t), c * s]; }) }); }
+    else if (type === 'par') { const R = Math.min(Math.sqrt(Z / c), Z / Math.max(a, b)); out.push({ id: 'p', grid: gridOf(nu, nv, (i, j) => { const t = TP * i / nu, r = R * j / nv; return [a * r * Math.cos(t), b * r * Math.sin(t), c * r * r]; }) }); }
+    else {
+      /* the saddle in two halves, y ≥ 0 and y ≤ 0: along each line x = constant, y runs only over the range where |z| ≤ 3 */
+      for (const sg of [1, -1]) out.push({ id: 's' + sg, grid: gridOf(nv * 2, nv, (i, j) => {
+        const x = -Z + 2 * Z * i / (nv * 2), q = x * x / (a * a), lo = b * Math.sqrt(Math.max(0, q - Z / c)), hi = Math.min(Z, b * Math.sqrt(q + Z / c));
+        if (lo > hi) return [x, 0, 9 * Z];
+        const y = sg * (lo + (hi - lo) * j / nv); return [x, y, c * (q - y * y / (b * b))];
+      }) });
+    }
+    /* keep the grid inside the box: a point outside is pulled back to the box edge along z only for drawing */
+    for (const g of out) for (const row of g.grid) for (let j = 0; j < row.length; j++) { const p = row[j]; if (Math.abs(p[0]) > Z * 1.02 || Math.abs(p[1]) > Z * 1.02 || Math.abs(p[2]) > Z * 1.02) row[j] = null; }
+    return out;
+  }
+
+  /* ---------- the flat view: the same scene, projected along the view direction ---------- */
+  function basis() { const { th, ph } = S.o; return { d: [Math.sin(ph) * Math.cos(th), Math.sin(ph) * Math.sin(th), Math.cos(ph)], r: [-Math.sin(th), Math.cos(th), 0], up: [-Math.cos(ph) * Math.cos(th), -Math.cos(ph) * Math.sin(th), Math.sin(ph)] }; }
+  let B2 = basis();
+  const kpx = () => Math.min(W, H) / (2 * BOX * 1.35) * S.o.zoom;
+  const scr = (p) => [W / 2 + spDot(p, B2.r) * kpx(), H / 2 - spDot(p, B2.up) * kpx()];
+  const depth = (p) => spDot(p, B2.d);
+  const label = (t, x, y) => { ctx.save(); ctx.strokeStyle = TK.canvas; ctx.lineWidth = 4; ctx.lineJoin = 'round'; ctx.strokeText(t, x, y); ctx.restore(); ctx.fillText(t, x, y); };
+  function arrow2(a, b, c, w, name) {
+    const A = scr(a), Bp = scr(b), dx = Bp[0] - A[0], dy = Bp[1] - A[1], L = Math.hypot(dx, dy), p = proj(); if (!(L > 1)) { if (name) { ctx.fillStyle = c; label(name, A[0] + 10, A[1] - 10); } return; }
+    const hd = Math.min(12 * p, 0.45 * L), ux = dx / L, uy = dy / L;
+    ctx.strokeStyle = c; ctx.fillStyle = c; ctx.lineWidth = w * p; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(A[0], A[1]); ctx.lineTo(Bp[0] - ux * hd * 0.8, Bp[1] - uy * hd * 0.8); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(Bp[0], Bp[1]); ctx.lineTo(Bp[0] - ux * hd - uy * hd * 0.45, Bp[1] - uy * hd + ux * hd * 0.45); ctx.lineTo(Bp[0] - ux * hd + uy * hd * 0.45, Bp[1] - uy * hd - ux * hd * 0.45); ctx.closePath(); ctx.fill();
+    if (name) { ctx.font = `700 ${13 * p}px ${TK.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; label(name, Bp[0] + ux * 16 * p, Bp[1] + uy * 16 * p); }
+  }
+  function axesPrims() {
+    const L = [], g = [];
+    for (let i = -BOX; i <= BOX; i++) { g.push({ k: 'line', pts: [[i, -BOX, 0], [i, BOX, 0]], c: TK.line, w: 1 }, { k: 'line', pts: [[-BOX, i, 0], [BOX, i, 0]], c: TK.line, w: 1 }); }
+    L.push(...g);
+    for (const [e, c, n] of [[[1, 0, 0], TK.x, 'x'], [[0, 1, 0], TK.y, 'y'], [[0, 0, 1], TK.z, 'z']]) {
+      L.push({ k: 'line', pts: [spScale(e, -BOX), [0, 0, 0]], c, w: 1.2, dash: [3, 3] }, { k: 'arrow', a: [0, 0, 0], b: spScale(e, BOX + 0.4), c, w: 2, name: n, axis: true });
+      for (let i = -BOX; i <= BOX; i++) if (i) L.push({ k: 'text', p: spAdd(spScale(e, i), e[2] ? [0.22, 0, 0] : [0, 0, -0.22]), t: String(i), c: TK.muted, small: true });
+    }
+    return L;
+  }
+  function draw2() {
+    if (!TK || !W) return;
+    const p = proj(); B2 = basis(); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = TK.canvas; ctx.fillRect(0, 0, W, H);
+    const all = axesPrims().concat(scene());
+    /* meshes and polygons first, back to front, then lines, arrows, dots and words */
+    const order = { mesh: 0, poly: 1, line: 2, arrow: 3, dot: 4, text: 5 };
+    all.sort((a, b) => order[a.k] - order[b.k]);
+    for (const q of all) {
+      if (q.k === 'mesh') {
+        ctx.strokeStyle = q.c; ctx.globalAlpha = 0.45; ctx.lineWidth = 1; ctx.beginPath();
+        const G = q.grid, seg = (u, v) => { if (!u || !v) return; const a = scr(u), b = scr(v); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); };
+        for (let i = 0; i < G.length; i++) for (let j = 0; j < G[i].length; j++) { if (i + 1 < G.length) seg(G[i][j], G[i + 1][j]); if (j + 1 < G[i].length) seg(G[i][j], G[i][j + 1]); }
+        ctx.stroke(); ctx.globalAlpha = 1;
+      } else if (q.k === 'poly') {
+        ctx.fillStyle = q.c; ctx.globalAlpha = q.op || 0.2; ctx.beginPath(); q.pts.forEach((v, i) => { const s = scr(v); if (i) ctx.lineTo(s[0], s[1]); else ctx.moveTo(s[0], s[1]); }); ctx.closePath(); ctx.fill(); ctx.globalAlpha = 1;
+      } else if (q.k === 'line') {
+        ctx.strokeStyle = q.c; ctx.lineWidth = q.w * p; ctx.globalAlpha = q.op || 1; ctx.setLineDash((q.dash || []).map((v) => v * p)); ctx.lineJoin = 'round'; ctx.lineCap = 'round'; ctx.beginPath();
+        q.pts.forEach((v, i) => { const s = scr(v); if (i) ctx.lineTo(s[0], s[1]); else ctx.moveTo(s[0], s[1]); }); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1;
+      } else if (q.k === 'arrow') arrow2(q.a, q.b, q.c, q.w, q.name);
+      else if (q.k === 'dot') { const s = scr(q.p); ctx.fillStyle = q.c; ctx.strokeStyle = TK.canvas; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(s[0], s[1], q.r * p, 0, 7); ctx.fill(); ctx.stroke(); }
+      else if (q.k === 'text') { const s = scr(q.p); ctx.fillStyle = q.c; ctx.font = `${q.small ? '' : '700 '}${(q.small ? 10 : 13) * p}px ${TK.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; label(q.t, s[0], s[1]); }
+    }
+    legend2(p);
+  }
+  function legend2(p) {
+    const lines = legendLines(); if (!lines.length) return;
+    ctx.font = `${12 * p}px ${TK.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
+    lines.forEach((t, i) => { ctx.fillStyle = TK.muted; label(t, 10 * p, H - 10 * p - (lines.length - 1 - i) * 17 * p); });
+  }
+  /* the scale of each vector, on the picture */
+  function legendLines() {
+    if (S.mode !== 'vec') return [];
+    const k = scales(), u = S.units, n = S.names, one = (kk, unit) => `1 ${VDI18N.t('grid unit')} = ${fmt(1 / kk, 3)}${un(unit)}`;
+    if (k.same && !u[0]) return [];
+    if (k.same) return [`${n[0]}, ${n[1]}: ${one(k.ka, u[0])}`, `${n[2]}: ${one(k.kc, u[2])}`];
+    return [`${n[0]}: ${one(k.ka, u[0])}`, `${n[1]}: ${one(k.kb, u[1])}`, `${n[2]}: ${one(k.kc, u[2])}`];
+  }
+
+  /* ---------- the 3D view: the same primitives as three.js objects, made again only when one changes ---------- */
+  let st3 = null, view3 = null, g3 = null;
+  const use3 = () => !!(st3 && view3 && view3.is3d());
+  function init3() {
+    const st = VD3K.stage($('pane'), { before: can, fov: 32, near: 0.05, far: 100 }); if (!st) return false;
+    st3 = st; Object.assign(st.el.style, { position: 'absolute', inset: '0', width: '100%', height: '100%' });
+    g3 = { root: new THREE.Group(), have: new Map(), labels: [] }; st.scene.add(g3.root);
+    st.onTheme(() => { for (const o of g3.have.values()) disposeObj(o); g3.have.clear(); need = true; });
+    st.orbit(st.el, S.o, () => { need = true; }, { zMin: 0.4, zMax: 4, phMin: 0.02, phMax: Math.PI - 0.02, grab: grab3 });
+    st.el.tabIndex = 0; return true;
+  }
+  function disposeObj(o) { o.traverse((x) => { if (x.geometry) x.geometry.dispose(); if (x.material) { if (x.material.map) x.material.map.dispose(); x.material.dispose(); } }); if (o.parent) o.parent.remove(o); }
+  const mat = (c, op, o) => new THREE.MeshBasicMaterial(Object.assign({ color: new THREE.Color(c), transparent: op != null && op < 1, opacity: op == null ? 1 : op, depthWrite: !(op != null && op < 1) }, o || {}));
+  const V3 = (p) => new THREE.Vector3(p[0], p[1], p[2]);
+  function make3(q) {
+    const p = proj();
+    if (q.k === 'line') {
+      const pts = q.pts.map(V3);
+      if (q.dash || q.w < 1.5) { const g = new THREE.BufferGeometry().setFromPoints(pts), m = q.dash ? new THREE.LineDashedMaterial({ color: q.c, dashSize: 0.1, gapSize: 0.07, transparent: true, opacity: q.op || 0.9 }) : new THREE.LineBasicMaterial({ color: q.c, transparent: true, opacity: q.op || 0.9 }); const l = new THREE.Line(g, m); if (q.dash) l.computeLineDistances(); return l; }
+      const grp = new THREE.Group(), r = 0.006 * q.w * p;
+      for (let i = 0; i + 1 < pts.length; i++) { const a = pts[i], b = pts[i + 1], L = a.distanceTo(b); if (!(L > 1e-6)) continue; const m = new THREE.Mesh(new THREE.CylinderGeometry(r, r, L, 8), mat(q.c, q.op)); m.position.copy(a).add(b).multiplyScalar(0.5); m.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), b.clone().sub(a).normalize()); grp.add(m); if (i) { const j = new THREE.Mesh(new THREE.SphereGeometry(r, 8, 6), mat(q.c, q.op)); j.position.copy(a); grp.add(j); } }
+      return grp;
+    }
+    if (q.k === 'arrow') {
+      const a = V3(q.a), d = V3(q.b).sub(a), L = d.length(), g = new THREE.Group(); if (!(L > 1e-6)) return g;
+      const hl = Math.min(0.22, 0.4 * L), rr = (q.axis ? 0.008 : 0.016) * p * (q.w / 3 + 0.3), m = mat(q.c);
+      const sh = new THREE.Mesh(new THREE.CylinderGeometry(rr, rr, L - hl, 12), m), hd = new THREE.Mesh(new THREE.ConeGeometry(Math.max(rr * 2.8, 0.045), hl, 16), m);
+      sh.position.y = (L - hl) / 2; hd.position.y = L - hl / 2; const inner = new THREE.Group(); inner.add(sh, hd); inner.position.copy(a); inner.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), d.clone().normalize()); g.add(inner);
+      if (q.name) { const lb = VD3K.label(q.name, { size: 0.2 * p, color: q.c, font: TK.mono, weight: 700 }); lb.position.copy(V3(q.b)).add(d.clone().normalize().multiplyScalar(0.25)); g.add(lb); }
+      return g;
+    }
+    if (q.k === 'dot') { const m = new THREE.Mesh(new THREE.SphereGeometry(0.011 * q.r * p, 20, 14), mat(q.c)); m.position.copy(V3(q.p)); return m; }
+    if (q.k === 'text') { const lb = VD3K.label(q.t, { size: (q.small ? 0.15 : 0.2) * p, color: q.c, font: TK.mono, weight: q.small ? 500 : 700 }); lb.position.copy(V3(q.p)); return lb; }
+    if (q.k === 'poly') {
+      const v = q.pts, g = new THREE.BufferGeometry(), pos = []; for (let i = 1; i + 1 < v.length; i++) pos.push(...v[0], ...v[i], ...v[i + 1]);
+      g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); const m = new THREE.Mesh(g, mat(q.c, q.op || 0.2, { side: THREE.DoubleSide })); m.renderOrder = 2; return m;
+    }
+    if (q.k === 'mesh') {
+      const G = q.grid, nu = G.length, nv = G[0].length, pos = new Float32Array(nu * nv * 3), idx = [], ok = new Uint8Array(nu * nv);
+      for (let i = 0; i < nu; i++) for (let j = 0; j < nv; j++) { const p0 = G[i][j]; if (p0) { pos.set(p0, (i * nv + j) * 3); ok[i * nv + j] = 1; } }
+      for (let i = 0; i + 1 < nu; i++) for (let j = 0; j + 1 < nv; j++) { const a = i * nv + j, b = a + nv, c = a + 1, d = b + 1; if (ok[a] && ok[b] && ok[d]) idx.push(a, b, d); if (ok[a] && ok[d] && ok[c]) idx.push(a, d, c); }
+      const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(pos, 3)); g.setIndex(idx); g.computeVertexNormals();
+      const grp = new THREE.Group(), sm = new THREE.MeshStandardMaterial({ color: q.c, roughness: 0.6, metalness: 0.05, transparent: true, opacity: q.op || 0.5, side: THREE.DoubleSide, depthWrite: false });
+      const mesh = new THREE.Mesh(g, sm); mesh.renderOrder = 1; grp.add(mesh);
+      const lp = []; for (let i = 0; i < nu; i++) for (let j = 0; j < nv; j++) { if (i + 1 < nu && ok[i * nv + j] && ok[(i + 1) * nv + j]) lp.push(...G[i][j], ...G[i + 1][j]); if (j + 1 < nv && ok[i * nv + j] && ok[i * nv + j + 1]) lp.push(...G[i][j], ...G[i][j + 1]); }
+      const lg = new THREE.BufferGeometry(); lg.setAttribute('position', new THREE.Float32BufferAttribute(lp, 3)); grp.add(new THREE.LineSegments(lg, new THREE.LineBasicMaterial({ color: q.c, transparent: true, opacity: 0.35 })));
+      return grp;
+    }
+    return new THREE.Group();
+  }
+  function render3() {
+    const pane = $('pane'); st3.size(pane.clientWidth, pane.clientHeight); st3.theme();
+    const prims = axesPrims().concat(scene()), used = new Set();
+    for (const q of prims) {
+      const key = q.k === 'mesh' ? 'mesh|' + q.key + '|' + q.c + '|' + q.op + '|' + proj() : JSON.stringify(q) + proj(); used.add(key);
+      if (!g3.have.has(key)) { const o = make3(q); g3.have.set(key, o); g3.root.add(o); }
+    }
+    for (const [k, o] of g3.have) if (!used.has(k)) { disposeObj(o); g3.have.delete(k); }
+    st3.place(S.o, [0, 0, 0.3], st3.fit(11, 1.1));
+    st3.scene.updateMatrixWorld(); st3.r.render(st3.scene, st3.cam);
+    if (S.mode === 'vec') legendDom(); else $('legend3') && ($('legend3').textContent = '');
+  }
+  function legendDom() { let el = $('legend3'); if (!el) { el = document.createElement('div'); el.id = 'legend3'; Object.assign(el.style, { position: 'absolute', left: '10px', bottom: '8px', fontFamily: 'var(--font-mono)', fontSize: '0.8rem', color: 'var(--muted)', whiteSpace: 'pre-line', pointerEvents: 'none', zIndex: 2 }); $('pane').appendChild(el); } el.textContent = use3() ? legendLines().join('\n') : ''; }
+
+  /* ---------- dragging a dot: in the horizontal plane through it ---------- */
+  function handles() { return scene().filter((q) => q.k === 'dot' && q.drag); }
+  function setHandle(id, p) {
+    p = p.map((v) => Math.max(-BOX, Math.min(BOX, v)));
+    if (id === 'a' || id === 'b') { const k = scales(), kk = id === 'a' ? k.ka : k.kb, v = spScale(p, 1 / kk).map((x) => +x.toPrecision(3)); S[id] = [v[0], v[1], S[id][2]]; custom(); }
+    else if (id === 'P0' || id === 'Q') { S[id] = [+p[0].toFixed(2), +p[1].toFixed(2), S[id][2]]; custom(); }
+    else if (id === 'P') { S.P = [p[0], p[1], S.P[2]]; }
+    syncInputs(); need = true; lastRead = '';
+  }
+  /* screen point to the horizontal plane z = h, by the camera ray (3D) or the view direction (flat) */
+  function toPlane(ev, h, el) {
+    const r = el.getBoundingClientRect(), x = ev.clientX - r.left, y = ev.clientY - r.top;
+    if (use3()) {
+      const rc = new THREE.Raycaster(); rc.setFromCamera(new THREE.Vector2(x / r.width * 2 - 1, -(y / r.height) * 2 + 1), st3.cam);
+      const q = rc.ray.intersectPlane(new THREE.Plane(new THREE.Vector3(0, 0, 1), -h), new THREE.Vector3()); return q ? [q.x, q.y, h] : null;
+    }
+    /* flat: the point on the screen line along d that has z = h */
+    const s = [(x - W / 2) / kpx(), -(y - H / 2) / kpx()], base = spAdd(spScale(B2.r, s[0]), spScale(B2.up, s[1])), dz = B2.d[2];
+    if (Math.abs(dz) < 1e-3) return null; const t = (h - base[2]) / dz; return spAdd(base, spScale(B2.d, t));
+  }
+  function grabAt(ev, el, project) {
+    const r = el.getBoundingClientRect(), x = ev.clientX - r.left, y = ev.clientY - r.top;
+    let best = null, bd = 20 * proj();
+    for (const hd of handles()) { const s = project(hd.p); const d = Math.hypot(s[0] - x, s[1] - y); if (d < bd) { bd = d; best = hd; } }
+    if (!best) return false;
+    setRun(false); const h = best.p[2], id = best.drag;
+    const mv = (e) => { const q = toPlane(e, h, el); if (q) setHandle(id, q); };
+    const done = () => { window.removeEventListener('pointermove', mv); window.removeEventListener('pointerup', done); };
+    window.addEventListener('pointermove', mv); window.addEventListener('pointerup', done); return true;
+  }
+  const grab3 = (e) => grabAt(e, st3.el, (p) => st3.project(p));
+  VD3.orbit(can, S.o, () => { need = true; }, { zMin: 0.4, zMax: 4, phMin: 0.02, phMax: Math.PI - 0.02, active: () => !use3(), grab: (e) => grabAt(e, can, scr) });
+
+  /* ---------- readouts ---------- */
+  function readouts() {
+    const dd = (a, b) => `<div><dt>${a}</dt><dd translate="no">${b}</dd></div>`, H_ = (s) => (S.blind ? '?' : s);
+    let h = '', v = '';
+    if (S.mode === 'vec') {
+      const [na, nb, nc] = S.names, [ua, ub, uc] = S.units, a = S.a, b = S.b, c = spCross(a, b), th = spAngle(a, b);
+      h += dd(`|${na}|`, `${fmt(spLen(a))}${un(ua)}`) + dd(`|${nb}|`, `${fmt(spLen(b))}${un(ub)}`);
+      if (ua === ub) h += dd(`${na} + ${nb}`, `${vfmt(spAdd(a, b))}${un(ua)}`);
+      h += dd(`${na} · ${nb}`, H_(`${fmt(spDot(a, b))}${un(S.preset === 'work' ? 'J' : ua && ub ? (ua === ub ? ua + '²' : `${ua}·${ub}`) : ua || ub)}`));
+      h += dd(VDI18N.t('Angle θ between them'), H_(`${fmt(th / DEG)}°`));
+      if (spLen(a) > 0) h += dd(VDI18N.t('Part of {b} along {a}', { a: na, b: nb }), H_(`${fmt(spDot(a, b) / spLen(a))}${un(ub)}`));
+      h += dd(nc, H_(`${vfmt(c)}${un(uc)}`)) + dd(`|${nc.split(' = ')[0]}|`, H_(`${fmt(spLen(c))}${un(uc)}`));
+      h += dd(`|${na}||${nb}| sin θ`, H_(`${fmt(spLen(a) * spLen(b) * Math.sin(th))}${un(uc)}`));
+      if (S.charge) { const F = spScale(c, QE * 1e5); h += dd('F = qv × B', H_(`${vfmt(F)} N`)) + dd('|F|', H_(`${fmt(spLen(F))} N`)); }
+      if (S.preset === 'work') h += dd(VDI18N.t('Work W = F · d'), H_(`${fmt(spDot(a, b))} J`));
+      const NN = { a: S.names[0], b: S.names[1] };
+      v = S.blind ? '' : Math.abs(spDot(a, b)) <= 1e-12 * spLen(a) * spLen(b) ? VDI18N.t('{a} · {b} = 0: the vectors are at right angles.', NN) : spLen(c) <= 1e-12 * spLen(a) * spLen(b) ? VDI18N.t('{a} × {b} = 0: the vectors are parallel, so they span no area.', NN) : VDI18N.t('{a} × {b} is at right angles to both: ({a} × {b}) · {a} = ({a} × {b}) · {b} = 0.', NN);
+    } else if (S.mode === 'lp') {
+      const m = spMeet(S.P0, S.d, S.Q, S.n), n = S.n, D0 = spDot(n, S.Q);
+      h += dd(VDI18N.t('Plane'), `${fmt(n[0])}x ${sg(n[1])} ${fmt(Math.abs(n[1]))}y ${sg(n[2])} ${fmt(Math.abs(n[2]))}z = ${fmt(D0)}`);
+      h += dd(VDI18N.t('Line'), `x = ${fmt(S.P0[0])} ${sg(S.d[0])} ${fmt(Math.abs(S.d[0]))}t, y = ${fmt(S.P0[1])} ${sg(S.d[1])} ${fmt(Math.abs(S.d[1]))}t, z = ${fmt(S.P0[2])} ${sg(S.d[2])} ${fmt(Math.abs(S.d[2]))}t`);
+      h += dd('n · d', fmt(spDot(n, S.d)));
+      if (m.parallel) v = m.inPlane ? VDI18N.t('n · d = 0 and P₀ is in the plane: the whole line lies in the plane.') : VDI18N.t('n · d = 0: the line is parallel to the plane and never meets it.');
+      else { h += dd(VDI18N.t('They meet at t'), H_(fmt(m.t, 5))) + dd(VDI18N.t('Meeting point'), H_(vfmt(m.P))) + dd(VDI18N.t('Angle between line and plane'), H_(`${fmt(spLinePlaneAngle(S.d, n) / DEG)}°`)); v = VDI18N.t('One point in common: put x, y and z of the line into the plane equation and solve for t.'); }
+      h += dd(VDI18N.t('Distance from P₀ to the plane'), fmt(Math.abs(spDist(S.P0, S.Q, n))));
+      const X = spAdd(S.P0, spScale(S.d, S.tline)); h += dd(VDI18N.t('Moving point: t'), fmt(S.tline, 3)) + dd(VDI18N.t('its signed distance to the plane'), fmt(spDist(X, S.Q, n)));
+      if ($('showRefl').checked && !m.parallel) { const R = spReflect(S.d, n); h += dd(VDI18N.t('Reflected direction'), H_(vfmt(R))) + dd(VDI18N.t('Angle of incidence, of reflection'), H_(`${fmt(90 - spLinePlaneAngle(S.d, n) / DEG)}°, ${fmt(90 - spLinePlaneAngle(R, n) / DEG)}°`)); }
+    } else if (S.mode === 'quad') {
+      const q = quadNow(), Qd = spQuadric(q.type, q.a, q.b, q.c), k = +$('qk').value, e = spTraceEq(Qd, S.ax, k), cn = spConic(e, 1e9);
+      h += dd(VDI18N.t('Surface'), quadText(q));
+      const term = (co, nm) => (Math.abs(co) < 1e-12 ? '' : `${co < 0 ? '− ' : '+ '}${fmt(Math.abs(co))}${nm}`);
+      const lhs = [term(e.al, e.u + '²'), term(e.be, e.v + '²'), term(e.si, e.v)].filter(Boolean).join(' ').replace(/^\+ /, '').replace(/^− /, '−');
+      h += dd(VDI18N.t('Trace in {p}', { p: `${S.ax} = ${fmt(k, 3)}` }), `${lhs || '0'} = ${fmt(e.D)}`);
+      h += dd(VDI18N.t('The trace is'), H_(VDI18N.t(KINDS[cn.kind] || cn.kind)));
+      if (!S.blind && (cn.kind === 'ellipse' || cn.kind === 'circle')) h += dd(VDI18N.t('Semiaxes'), `${fmt(cn.A)} ${VDI18N.t('along')} ${e.u}, ${fmt(cn.B)} ${VDI18N.t('along')} ${e.v}`);
+      if (q.dish) h += dd(VDI18N.t('Focus'), `(0, 0, ${fmt(q.a * q.a / (4 * q.c))})`);
+      const c = PRESETS[S.preset]; if (c && c.mach && S.preset === 'mach') h += dd(VDI18N.t('Mach angle μ'), `${fmt(spMach(c.mach) / DEG)}°`);
+    } else if (S.mode === 'coord') {
+      const P = S.P, cy = spToCyl(P), sp = spToSph(P);
+      h += dd(VDI18N.t('Rectangular (x, y, z)'), vfmt(P, 4)) + dd(VDI18N.t('Cylindrical (ρ, φ, z)'), `(${fmt(cy[0])}, ${fmt(cy[1] / DEG)}°, ${fmt(cy[2])})`) + dd(VDI18N.t('Spherical (r, θ, φ)'), `(${fmt(sp[0])}, ${fmt(sp[1] / DEG)}°, ${fmt(sp[2] / DEG)}°)`);
+      if (S.charge) { const r = sp[0]; h += dd('V = kq/r', `${fmt(KE * 1e-9 / r)} V`) + dd('|E| = kq/r²', `${fmt(KE * 1e-9 / (r * r))} V/m`); }
+      v = { rect: VDI18N.t('x, y and z fixed: three planes, each parallel to two axes.'), cyl: VDI18N.t('ρ fixed: a cylinder about z. φ fixed: a half plane. z fixed: a horizontal plane.'), sph: VDI18N.t('r fixed: a sphere. θ fixed: a cone about z. φ fixed: a half plane.') }[S.sys];
+    }
+    $('out').innerHTML = h; $('verdict').textContent = v;
+  }
+  const sg = (v) => (v < 0 ? '−' : '+');
+  const KINDS = { ellipse: 'an ellipse', circle: 'a circle', hyperbola: 'a hyperbola', parabola: 'a parabola', point: 'a single point', none: 'empty: the plane misses the surface', 'two crossing lines': 'two crossing lines', 'two parallel lines': 'two parallel lines', line: 'a line', plane: 'the whole plane' };
+  function quadText(q) {
+    const s = (v) => fmt(v * v, 3), A = `x²/${s(q.a)}`, B = `y²/${s(q.b)}`, C = `z²/${s(q.c)}`;
+    return { ell: `${A} + ${B} + ${C} = 1`, hyp1: `${A} + ${B} − ${C} = 1`, hyp2: `−${A} − ${B} + ${C} = 1`, cone: `${A} + ${B} = ${C}`, par: `z/${fmt(q.c, 3)} = ${A} + ${B}`, hpar: `z/${fmt(q.c, 3)} = ${A} − ${B}` }[q.type];
+  }
+
+  /* ---------- controls ---------- */
+  const VIN = { a: ['ax', 'ay', 'az'], b: ['bx', 'by', 'bz'], P0: ['p0x', 'p0y', 'p0z'], d: ['dx', 'dy', 'dz'], Q: ['qx', 'qy', 'qz'], n: ['nx', 'ny', 'nz'] };
+  const SYS = { rect: [['x', -3, 3, 0.01], ['y', -3, 3, 0.01], ['z', -3, 3, 0.01]], cyl: [['ρ', 0, 3, 0.01], ['φ', 0, 360, 1], ['z', -3, 3, 0.01]], sph: [['r', 0, 3, 0.01], ['θ', 0, 180, 1], ['φ', 0, 360, 1]] };
+  function syncInputs() {
+    for (const [k, ids] of Object.entries(VIN)) ids.forEach((id, i) => { if (document.activeElement !== $(id)) $(id).value = +(+S[k][i]).toPrecision(4); });
+    $('nmA').textContent = S.names[0]; $('nmB').textContent = S.names[1];
+    $('oA').textContent = (+$('qa').value).toFixed(1); $('oB').textContent = (+$('qb').value).toFixed(1); $('oC').textContent = (+$('qc').value).toFixed(1); $('oK').textContent = (+$('qk').value).toFixed(2);
+    const def = SYS[S.sys], P = S.P, vals = S.sys === 'rect' ? P : S.sys === 'cyl' ? (([r, f, z]) => [r, f / DEG, z])(spToCyl(P)) : (([r, t, f]) => [r, t / DEG, f / DEG])(spToSph(P));
+    def.forEach(([nm, lo, hi, st], i) => { const el = $('c' + (i + 1)); $('lc' + (i + 1)).textContent = nm; el.min = lo; el.max = hi; el.step = st; if (document.activeElement !== el) el.value = vals[i]; $('o' + (i + 1)).textContent = `${fmt(vals[i], 3)}${st === 1 ? '°' : ''}`; });
+  }
+  function showMode(m) {
+    S.mode = m; for (const b of document.querySelectorAll('#modeSeg button')) b.setAttribute('aria-pressed', String(b.dataset.mode === m));
+    $('cardVec').hidden = m !== 'vec'; $('cardLP').hidden = m !== 'lp'; $('cardQuad').hidden = m !== 'quad'; $('cardCo').hidden = m !== 'coord';
+  }
+  const pressPreset = (k) => { for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === k)); };
+  function applyPreset(k) {
+    const c = PRESETS[k]; S.preset = k; setRun(false); showMode(c.mode); S.charge = !!c.charge;
+    if (c.mode === 'vec') { S.a = c.a.slice(); S.b = c.b.slice(); S.names = c.names.slice(); S.units = c.units.slice(); $('showSum').checked = !!c.show.sum; $('showDot').checked = !!c.show.dot; $('showCross').checked = !!c.show.cross; }
+    else { S.names = ['a', 'b', 'a × b']; S.units = ['', '', '']; }
+    if (c.mode === 'lp') { S.P0 = c.P0.slice(); S.d = c.d.slice(); S.Q = c.Q.slice(); S.n = c.n.slice(); $('showRefl').checked = !!c.refl; S.tline = -3; }
+    if (c.mode === 'quad') {
+      let a = c.a, b = c.b, cc = c.c;
+      if (c.mach) { a = b = 1.5; cc = 2.6; }   /* a/c = 0.5769 against tan 30° = 0.5774: the drawn half angle is 29.98° */
+      $('qtype').value = c.q; $('qa').value = a; $('qb').value = b; $('qc').value = cc; $('qk').value = c.k; setAx(c.ax);
+    }
+    if (c.mode === 'coord') { S.sys = c.sys; setSys(c.sys, true); const [p1, p2, p3] = c.P; S.P = c.sys === 'cyl' ? spFromCyl(p1, p3 * DEG, p2) : spFromSph(p1, p2 * DEG, p3 * DEG); }
+    $('presetHint').textContent = c.hint || hintFor(k); pressPreset(k); syncInputs(); need = true; lastRead = '';
+  }
+  function hintFor(k) {
+    if (k === 'mach') { const mu = spMach(2); return VDI18N.t('A jet at Mach 2 drags a cone of shock waves behind it, with half angle μ where sin μ = 1/M: μ = {m}° here, so the cone is x² + y² = z² tan² μ, with tan μ = {t}; the boxes use a/c = 1.5/2.6 = {r}, a half angle of {d}°. Its horizontal traces are circles that grow with distance behind the jet; a vertical plane through its axis cuts it in two crossing lines; one off the axis in a hyperbola, the edge of the boom on the ground.', { m: fmt(mu / DEG, 4), t: fmt(Math.tan(mu), 4), r: fmt(1.5 / 2.6, 4), d: fmt(Math.atan(1.5 / 2.6) / DEG, 4) }); }
+    if (k === 'dish') { const f = 2.4 * 2.4 / (4 * 1.2); return VDI18N.t('z/c = (x² + y²)/a², a paraboloid of revolution: a dish antenna or a telescope mirror. Every ray coming in parallel to the axis reflects through one point, the focus, at z = a²/(4c) = {f} here. Vertical traces through the axis are parabolas; horizontal traces are circles.', { f: fmt(f, 4) }); }
+    return '';
+  }
+  function custom() { if (S.preset === 'custom') return; S.preset = 'custom'; pressPreset(''); }
+  function setAx(a) { S.ax = a; for (const b of document.querySelectorAll('#axSeg button')) b.setAttribute('aria-pressed', String(b.dataset.ax === a)); }
+  function setSys(s, quiet) { S.sys = s; for (const b of document.querySelectorAll('#sysSeg button')) b.setAttribute('aria-pressed', String(b.dataset.sys === s)); if (!quiet) { syncInputs(); need = true; lastRead = ''; } }
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  for (const b of document.querySelectorAll('#modeSeg button')) b.addEventListener('click', () => { if (b.dataset.mode !== S.mode) applyPreset(MODE_FIRST[b.dataset.mode]); });
+  for (const b of document.querySelectorAll('#axSeg button')) b.addEventListener('click', () => { setAx(b.dataset.ax); need = true; lastRead = ''; });
+  for (const b of document.querySelectorAll('#sysSeg button')) b.addEventListener('click', () => setSys(b.dataset.sys));
+  for (const [k, ids] of Object.entries(VIN)) ids.forEach((id, i) => $(id).addEventListener('input', () => {
+    const v = +$(id).value; if ($(id).value === '' || !isFinite(v)) return; S[k][i] = Math.max(-1e6, Math.min(1e6, v));
+    if (k === 'n' && spLen(S.n) === 0) S.n[i] = 1e-9; custom(); need = true; lastRead = '';
+  }));
+  for (const id of ['qtype', 'qa', 'qb', 'qc', 'qk']) $(id).addEventListener('input', () => { if (id !== 'qk') custom(); syncInputs(); need = true; lastRead = ''; });
+  $('qtype').addEventListener('change', () => { custom(); need = true; lastRead = ''; });
+  for (const id of ['c1', 'c2', 'c3']) $(id).addEventListener('input', () => {
+    const v = [+$('c1').value, +$('c2').value, +$('c3').value];
+    S.P = S.sys === 'rect' ? v : S.sys === 'cyl' ? spFromCyl(v[0], v[1] * DEG, v[2]) : spFromSph(v[0], v[1] * DEG, v[2] * DEG);
+    syncInputs(); need = true; lastRead = '';
+  });
+  for (const id of ['showSum', 'showDot', 'showCross', 'showRefl', 'showSurf']) $(id).addEventListener('change', () => { need = true; lastRead = ''; });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; need = true; lastRead = ''; });
+  $('zin').addEventListener('click', () => { S.o.zoom = Math.min(4, S.o.zoom * 1.25); need = true; });
+  $('zout').addEventListener('click', () => { S.o.zoom = Math.max(0.4, S.o.zoom / 1.25); need = true; });
+  $('homeView').addEventListener('click', () => { Object.assign(S.o, { th: -Math.PI / 2 + 0.6, ph: 1.12, zoom: 1 }); need = true; });
+  $('lookZ').addEventListener('click', () => { Object.assign(S.o, { th: -Math.PI / 2, ph: 0.02 }); need = true; });
+  $('lookY').addEventListener('click', () => { Object.assign(S.o, { th: -Math.PI / 2, ph: Math.PI / 2 }); need = true; });
+  $('lookX').addEventListener('click', () => { Object.assign(S.o, { th: 0, ph: Math.PI / 2 }); need = true; });
+  function setRun(on) { S.run = on; $('play').textContent = on ? VDI18N.t('Pause') : VDI18N.t('Play'); $('play').classList.toggle('attn', !on); }
+  $('play').addEventListener('click', () => setRun(!S.run));
+  $('reset').addEventListener('click', () => { const k = S.preset in PRESETS ? S.preset : MODE_FIRST[S.mode]; applyPreset(k); });
+  $('speed').addEventListener('change', () => { need = true; });
+  can.addEventListener('keydown', (e) => { if (e.key === ' ') { $('play').click(); e.preventDefault(); } });
+
+  /* ---------- the clock ---------- */
+  let last = performance.now();
+  const rotZ = (v, a) => [v[0] * Math.cos(a) - v[1] * Math.sin(a), v[0] * Math.sin(a) + v[1] * Math.cos(a), v[2]];
+  function advance(dt) {
+    const w = +$('speed').value * dt;
+    if (S.mode === 'vec') S.b = rotZ(S.b, 0.5 * w);
+    else if (S.mode === 'lp') { const T = 3.5; S.tline += 0.8 * w; if (S.tline > T) S.tline = -T; }
+    else if (S.mode === 'quad') { let k = +$('qk').value + S.sweep * 0.9 * w; if (k > 2.8) { k = 2.8; S.sweep = -1; } if (k < -2.8) { k = -2.8; S.sweep = 1; } $('qk').value = k; }
+    else if (S.mode === 'coord') S.P = rotZ(S.P, 0.5 * w);
+    syncInputs(); lastRead = '';
+  }
+  function frame(now) {
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    if (S.run) { advance(dt); need = true; }
+    if (need) { need = false; if (use3()) render3(); else draw2(); if (lastRead !== 'x') { readouts(); lastRead = 'x'; } }
+    requestAnimationFrame(frame);
+  }
+  function resize() { dpr = window.devicePixelRatio || 1; const r = $('pane').getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr); need = true; }
+  function view3sync() { const on = use3(); if (st3) st3.el.style.display = on ? '' : 'none'; can.classList.toggle('hid', on); if (!on && $('legend3')) $('legend3').textContent = ''; need = true; }
+  const retheme = () => { tokens(); if (st3) st3.theme(true); need = true; };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'data-vd-look'] });
+  VD.projector({ onChange: resize });
+  if (window.VD && VD.panel) VD.panel({ play: '#play', reset: '#reset', speed: '#speed' });
+  if (window.VD && VD.describe) VD.describe(can, () => {
+    const f3 = (q) => fmt(q, 3).replace('−', '-');
+    if (S.mode === 'vec') return [`Vectors ${S.names[0]} = (${S.a.map(f3).join(', ')}) and ${S.names[1]} = (${S.b.map(f3).join(', ')}).`, { t: `Their cross product is (${spCross(S.a, S.b).map(f3).join(', ')}).`, live: !S.run }];
+    if (S.mode === 'coord') return [{ t: `The point is at (${S.P.map(f3).join(', ')}).`, live: !S.run }];
+    if (S.mode === 'quad') return [`The surface ${quadText(quadNow())}, cut by the plane ${S.ax} = ${f3(+$('qk').value)}.`];
+    return ['A line and a plane in space.'];
+  });
+  tokens(); new ResizeObserver(resize).observe($('pane')); resize(); applyPreset('vec');
+  view3 = VD3K.view({ seg: '#dimSeg', start: '3d', init: init3, status: (m) => { $('verdict').textContent = m; }, change: () => view3sync() });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  window.__sp = { S, applyPreset, spDot, spCross, spAngle, spMeet, spReflect, spToSph, spToCyl, spFromSph, spConic, spTraceEq, spQuadric, readouts, draw: () => { need = true; } };
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

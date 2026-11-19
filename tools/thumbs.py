@@ -67,6 +67,8 @@ OVERRIDES = {
     "series": {"wait": 1200, "crop": ".pane", "js": "const pn = document.getElementById('pane'); pn.style.flex = 'none'; pn.style.minHeight = '0'; pn.style.height = '400px'; pn.style.width = '640px'; window.__ser.applyPreset('madelung'); window.__ser.setN(9); window.__ser.draw();"},
     "taylor": {"wait": 1200, "crop": ".pane", "js": "window.__ty.applyPreset('poles'); window.__ty.setN(12); window.__ty.draw();"},
     "rates-and-optimization": {"wait": 1000, "crop": ".pane", "js": "window.__ro.applyPreset('guard'); window.__ro.setX(40); window.__ro.draw();"},
+    "space-3d": {"wait": 2500, "crop": "#pane", "js": "window.__sp.applyPreset('vec'); window.__sp.draw();"},
+    "surfaces-and-gradients": {"wait": 2500, "crop": ".panes", "js": "window.__sg.applyPreset('hill'); window.__sg.S.alpha = 0.6; window.__sg.draw();"},
     "derivatives": {"wait": 900, "crop": ".pane", "js": "window.__fg.S.px = -1.6; window.__fg.draw();"},
     "slope-fields": {"wait": 900, "crop": ".pane", "js": "const pn = document.getElementById('pane'); pn.style.flex = 'none'; pn.style.minHeight = '0'; pn.style.height = '400px'; pn.style.width = '640px'; window.__sf.applyPreset('harvest'); window.__sf.S.prog = 99; window.__sf.draw();"},
     "numerical-methods": {"wait": 900, "crop": "#scene", "anchor": "top", "js": "window.__nm.applyPreset('orbit'); window.__nm.plusPeriod(); window.__nm.plusPeriod(); window.__nm.plusPeriod();"},

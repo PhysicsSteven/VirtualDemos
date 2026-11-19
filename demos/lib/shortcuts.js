@@ -102,6 +102,16 @@ window.VD_SHORTCUTS = {
     ["← →", "Move the point along the curve (Shift for bigger steps)", "on the picture"],
     ["+ −", "Zoom in or out about the center (or scroll over the picture)", "on the picture"]
   ],
+  "surfaces-and-gradients": [
+    ["← → ↑ ↓", "Move the point on the contour map (Shift for bigger steps)", "on the map"],
+    ["+ −", "Zoom in or out about the center (or scroll over the map)", "on the map"],
+    [", .", "Turn the surface", "on the 3D view"]
+  ],
+  "space-3d": [
+    [", .", "Turn the space about the z axis", "on the picture"],
+    ["+ −", "Zoom in or out about the center (or scroll over the picture)", "on the picture"],
+    ["Space", "Play or pause", "on the picture"]
+  ],
   "slope-fields": [
     ["← → ↑ ↓", "Move the start point of the curve in t or y (Shift for bigger steps)", "on the picture"],
     ["+ −", "Zoom in or out about the middle of the view (or scroll over the field)", "on the picture"]

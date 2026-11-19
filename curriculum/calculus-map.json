@@ -327,17 +327,23 @@
       {
        "sec": "6.2",
        "title": "Determining Volumes by Slicing",
-       "demos": []
+       "demos": [
+        "solids-of-revolution"
+       ]
       },
       {
        "sec": "6.3",
        "title": "Volumes of Revolution: Cylindrical Shells",
-       "demos": []
+       "demos": [
+        "solids-of-revolution"
+       ]
       },
       {
        "sec": "6.4",
        "title": "Arc Length of a Curve and Surface Area",
-       "demos": []
+       "demos": [
+        "solids-of-revolution"
+       ]
       },
       {
        "sec": "6.5",
@@ -474,17 +480,23 @@
       {
        "sec": "2.2",
        "title": "Determining Volumes by Slicing",
-       "demos": []
+       "demos": [
+        "solids-of-revolution"
+       ]
       },
       {
        "sec": "2.3",
        "title": "Volumes of Revolution: Cylindrical Shells",
-       "demos": []
+       "demos": [
+        "solids-of-revolution"
+       ]
       },
       {
        "sec": "2.4",
        "title": "Arc Length of a Curve and Surface Area",
-       "demos": []
+       "demos": [
+        "solids-of-revolution"
+       ]
       },
       {
        "sec": "2.5",
@@ -654,27 +666,37 @@
       {
        "sec": "5.1",
        "title": "Sequences",
-       "demos": []
+       "demos": [
+        "series"
+       ]
       },
       {
        "sec": "5.2",
        "title": "Infinite Series",
-       "demos": []
+       "demos": [
+        "series"
+       ]
       },
       {
        "sec": "5.3",
        "title": "The Divergence and Integral Tests",
-       "demos": []
+       "demos": [
+        "series"
+       ]
       },
       {
        "sec": "5.4",
        "title": "Comparison Tests",
-       "demos": []
+       "demos": [
+        "series"
+       ]
       },
       {
        "sec": "5.5",
        "title": "Alternating Series",
-       "demos": []
+       "demos": [
+        "series"
+       ]
       },
       {
        "sec": "5.6",
@@ -841,6 +863,7 @@
        "sec": "2.2",
        "title": "Vectors in Three Dimensions",
        "demos": [
+        "space-3d",
         "vectors"
        ]
       },
@@ -867,17 +890,23 @@
       {
        "sec": "2.5",
        "title": "Equations of Lines and Planes in Space",
-       "demos": []
+       "demos": [
+        "space-3d"
+       ]
       },
       {
        "sec": "2.6",
        "title": "Quadric Surfaces",
-       "demos": []
+       "demos": [
+        "space-3d"
+       ]
       },
       {
        "sec": "2.7",
        "title": "Cylindrical and Spherical Coordinates",
-       "demos": []
+       "demos": [
+        "space-3d"
+       ]
       }
      ]
     },
@@ -931,23 +960,30 @@
        "sec": "4.1",
        "title": "Functions of Several Variables",
        "demos": [
+        "surfaces-and-gradients",
         "coulomb-sandbox"
        ]
       },
       {
        "sec": "4.2",
        "title": "Limits and Continuity",
-       "demos": []
+       "demos": [
+        "surfaces-and-gradients"
+       ]
       },
       {
        "sec": "4.3",
        "title": "Partial Derivatives",
-       "demos": []
+       "demos": [
+        "surfaces-and-gradients"
+       ]
       },
       {
        "sec": "4.4",
        "title": "Tangent Planes and Linear Approximations",
-       "demos": []
+       "demos": [
+        "surfaces-and-gradients"
+       ]
       },
       {
        "sec": "4.5",
@@ -958,18 +994,23 @@
        "sec": "4.6",
        "title": "Directional Derivatives and the Gradient",
        "demos": [
+        "surfaces-and-gradients",
         "coulomb-sandbox"
        ]
       },
       {
        "sec": "4.7",
        "title": "Maxima/Minima Problems",
-       "demos": []
+       "demos": [
+        "surfaces-and-gradients"
+       ]
       },
       {
        "sec": "4.8",
        "title": "Lagrange Multipliers",
-       "demos": []
+       "demos": [
+        "surfaces-and-gradients"
+       ]
       }
      ]
     },
@@ -1009,7 +1050,8 @@
        "sec": "5.5",
        "title": "Triple Integrals in Cylindrical and Spherical Coordinates",
        "demos": [
-        "multiple-integrals"
+        "multiple-integrals",
+        "space-3d"
        ]
       },
       {
