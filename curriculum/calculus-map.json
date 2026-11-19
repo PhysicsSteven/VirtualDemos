@@ -1,0 +1,1154 @@
+{
+ "schema_version": 1,
+ "book": {
+  "title": "Calculus Volumes 1, 2 and 3",
+  "publisher": "OpenStax",
+  "toc_source": "github.com/openstax/osbooks-calculus-bundle, collections/calculus-volume-1, -2, -3 (read 2026-11-19)"
+ },
+ "policy": "Each section lists the demos that serve it, the Calculus demos first, then the worksheets that fit it. A section with no demo shows \"no activity yet\". Volume 1 chapters 5 and 6 come back as Volume 2 chapters 1 and 2, and Volume 2 chapter 7 as Volume 3 chapter 1, with the same demos. Built 2026-11-19 from the OpenStax books scan (thread \"Plan demos for more OpenStax books\") and the Calculus demos. Edit this file and rerun tools/courses.py.",
+ "volumes": [
+  {
+   "vol": 1,
+   "title": "Calculus Volume 1",
+   "url": "https://openstax.org/details/books/calculus-volume-1",
+   "chapters": [
+    {
+     "chapter": 1,
+     "title": "Functions and Graphs",
+     "sections": [
+      {
+       "sec": "1.1",
+       "title": "Review of Functions",
+       "demos": []
+      },
+      {
+       "sec": "1.2",
+       "title": "Basic Classes of Functions",
+       "demos": []
+      },
+      {
+       "sec": "1.3",
+       "title": "Trigonometric Functions",
+       "demos": [
+        "function-families"
+       ]
+      },
+      {
+       "sec": "1.4",
+       "title": "Inverse Functions",
+       "demos": [
+        "function-families"
+       ]
+      },
+      {
+       "sec": "1.5",
+       "title": "Exponential and Logarithmic Functions",
+       "demos": [
+        "function-families",
+        "derivatives",
+        "radioactive-decay"
+       ]
+      }
+     ]
+    },
+    {
+     "chapter": 2,
+     "title": "Limits",
+     "sections": [
+      {
+       "sec": "2.1",
+       "title": "A Preview of Calculus",
+       "demos": [
+        "derivatives",
+        "integrals",
+        "motion-graphs"
+       ]
+      },
+      {
+       "sec": "2.2",
+       "title": "The Limit of a Function",
+       "demos": [
+        "limits"
+       ]
+      },
+      {
+       "sec": "2.3",
+       "title": "The Limit Laws",
+       "demos": []
+      },
+      {
+       "sec": "2.4",
+       "title": "Continuity",
+       "demos": [
+        "limits"
+       ]
+      },
+      {
+       "sec": "2.5",
+       "title": "The Precise Definition of a Limit",
+       "demos": [
+        "limits"
+       ]
+      }
+     ]
+    },
+    {
+     "chapter": 3,
+     "title": "Derivatives",
+     "sections": [
+      {
+       "sec": "3.1",
+       "title": "Defining the Derivative",
+       "demos": [
+        "derivatives"
+       ]
+      },
+      {
+       "sec": "3.2",
+       "title": "The Derivative as a Function",
+       "demos": [
+        "derivatives",
+        "motion-graphs"
+       ],
+       "worksheets": [
+        "motion-graphs"
+       ]
+      },
+      {
+       "sec": "3.3",
+       "title": "Differentiation Rules",
+       "demos": [
+        "derivatives"
+       ]
+      },
+      {
+       "sec": "3.4",
+       "title": "Derivatives as Rates of Change",
+       "demos": [
+        "motion-graphs",
+        "derivatives"
+       ],
+       "worksheets": [
+        "motion-graphs"
+       ]
+      },
+      {
+       "sec": "3.5",
+       "title": "Derivatives of Trigonometric Functions",
+       "demos": [
+        "derivatives",
+        "springs"
+       ]
+      },
+      {
+       "sec": "3.6",
+       "title": "The Chain Rule",
+       "demos": [
+        "derivatives"
+       ]
+      },
+      {
+       "sec": "3.7",
+       "title": "Derivatives of Inverse Functions",
+       "demos": [
+        "function-families"
+       ]
+      },
+      {
+       "sec": "3.8",
+       "title": "Implicit Differentiation",
+       "demos": []
+      },
+      {
+       "sec": "3.9",
+       "title": "Derivatives of Exponential and Logarithmic Functions",
+       "demos": [
+        "derivatives"
+       ]
+      }
+     ]
+    },
+    {
+     "chapter": 4,
+     "title": "Applications of Derivatives",
+     "sections": [
+      {
+       "sec": "4.1",
+       "title": "Related Rates",
+       "demos": []
+      },
+      {
+       "sec": "4.2",
+       "title": "Linear Approximations and Differentials",
+       "demos": [
+        "derivatives",
+        "taylor"
+       ]
+      },
+      {
+       "sec": "4.3",
+       "title": "Maxima and Minima",
+       "demos": [
+        "derivatives"
+       ]
+      },
+      {
+       "sec": "4.4",
+       "title": "The Mean Value Theorem",
+       "demos": [
+        "derivatives"
+       ]
+      },
+      {
+       "sec": "4.5",
+       "title": "Derivatives and the Shape of a Graph",
+       "demos": [
+        "derivatives"
+       ]
+      },
+      {
+       "sec": "4.6",
+       "title": "Limits at Infinity and Asymptotes",
+       "demos": [
+        "limits"
+       ]
+      },
+      {
+       "sec": "4.7",
+       "title": "Applied Optimization Problems",
+       "demos": []
+      },
+      {
+       "sec": "4.8",
+       "title": "L’Hôpital’s Rule",
+       "demos": [
+        "limits"
+       ]
+      },
+      {
+       "sec": "4.9",
+       "title": "Newton’s Method",
+       "demos": [
+        "derivatives"
+       ]
+      },
+      {
+       "sec": "4.10",
+       "title": "Antiderivatives",
+       "demos": [
+        "derivatives",
+        "motion-graphs"
+       ],
+       "worksheets": [
+        "motion-graphs"
+       ]
+      }
+     ]
+    },
+    {
+     "chapter": 5,
+     "title": "Integration",
+     "sections": [
+      {
+       "sec": "5.1",
+       "title": "Approximating Areas",
+       "demos": [
+        "integrals"
+       ]
+      },
+      {
+       "sec": "5.2",
+       "title": "The Definite Integral",
+       "demos": [
+        "integrals",
+        "derivatives",
+        "impulse"
+       ],
+       "worksheets": [
+        "impulse"
+       ]
+      },
+      {
+       "sec": "5.3",
+       "title": "The Fundamental Theorem of Calculus",
+       "demos": [
+        "integrals",
+        "derivatives",
+        "motion-graphs"
+       ],
+       "worksheets": [
+        "motion-graphs"
+       ]
+      },
+      {
+       "sec": "5.4",
+       "title": "Integration Formulas and the Net Change Theorem",
+       "demos": [
+        "motion-graphs",
+        "impulse"
+       ],
+       "worksheets": [
+        "motion-graphs",
+        "impulse"
+       ]
+      },
+      {
+       "sec": "5.5",
+       "title": "Substitution",
+       "demos": []
+      },
+      {
+       "sec": "5.6",
+       "title": "Integrals Involving Exponential and Logarithmic Functions",
+       "demos": []
+      },
+      {
+       "sec": "5.7",
+       "title": "Integrals Resulting in Inverse Trigonometric Functions",
+       "demos": []
+      }
+     ]
+    },
+    {
+     "chapter": 6,
+     "title": "Applications of Integration",
+     "sections": [
+      {
+       "sec": "6.1",
+       "title": "Areas between Curves",
+       "demos": [
+        "integrals"
+       ]
+      },
+      {
+       "sec": "6.2",
+       "title": "Determining Volumes by Slicing",
+       "demos": []
+      },
+      {
+       "sec": "6.3",
+       "title": "Volumes of Revolution: Cylindrical Shells",
+       "demos": []
+      },
+      {
+       "sec": "6.4",
+       "title": "Arc Length of a Curve and Surface Area",
+       "demos": []
+      },
+      {
+       "sec": "6.5",
+       "title": "Physical Applications",
+       "demos": [
+        "fluids",
+        "springs",
+        "force-lab"
+       ]
+      },
+      {
+       "sec": "6.6",
+       "title": "Moments and Centers of Mass",
+       "demos": [
+        "center-of-mass",
+        "equilibrium"
+       ],
+       "worksheets": [
+        "center-of-mass"
+       ]
+      },
+      {
+       "sec": "6.7",
+       "title": "Integrals, Exponential Functions, and Logarithms",
+       "demos": [
+        "derivatives"
+       ]
+      },
+      {
+       "sec": "6.8",
+       "title": "Exponential Growth and Decay",
+       "demos": [
+        "radioactive-decay"
+       ],
+       "worksheets": [
+        "radioactive-decay",
+        "decay-chains"
+       ]
+      },
+      {
+       "sec": "6.9",
+       "title": "Calculus of the Hyperbolic Functions",
+       "demos": [
+        "catenary"
+       ],
+       "worksheets": [
+        "catenary"
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "vol": 2,
+   "title": "Calculus Volume 2",
+   "url": "https://openstax.org/details/books/calculus-volume-2",
+   "chapters": [
+    {
+     "chapter": 1,
+     "title": "Integration",
+     "sections": [
+      {
+       "sec": "1.1",
+       "title": "Approximating Areas",
+       "demos": [
+        "integrals"
+       ]
+      },
+      {
+       "sec": "1.2",
+       "title": "The Definite Integral",
+       "demos": [
+        "integrals",
+        "derivatives",
+        "impulse"
+       ],
+       "worksheets": [
+        "impulse"
+       ]
+      },
+      {
+       "sec": "1.3",
+       "title": "The Fundamental Theorem of Calculus",
+       "demos": [
+        "integrals",
+        "derivatives",
+        "motion-graphs"
+       ],
+       "worksheets": [
+        "motion-graphs"
+       ]
+      },
+      {
+       "sec": "1.4",
+       "title": "Integration Formulas and the Net Change Theorem",
+       "demos": [
+        "motion-graphs",
+        "impulse"
+       ],
+       "worksheets": [
+        "motion-graphs",
+        "impulse"
+       ]
+      },
+      {
+       "sec": "1.5",
+       "title": "Substitution",
+       "demos": []
+      },
+      {
+       "sec": "1.6",
+       "title": "Integrals Involving Exponential and Logarithmic Functions",
+       "demos": []
+      },
+      {
+       "sec": "1.7",
+       "title": "Integrals Resulting in Inverse Trigonometric Functions",
+       "demos": []
+      }
+     ]
+    },
+    {
+     "chapter": 2,
+     "title": "Applications of Integration",
+     "sections": [
+      {
+       "sec": "2.1",
+       "title": "Areas between Curves",
+       "demos": [
+        "integrals"
+       ]
+      },
+      {
+       "sec": "2.2",
+       "title": "Determining Volumes by Slicing",
+       "demos": []
+      },
+      {
+       "sec": "2.3",
+       "title": "Volumes of Revolution: Cylindrical Shells",
+       "demos": []
+      },
+      {
+       "sec": "2.4",
+       "title": "Arc Length of a Curve and Surface Area",
+       "demos": []
+      },
+      {
+       "sec": "2.5",
+       "title": "Physical Applications",
+       "demos": [
+        "fluids",
+        "springs",
+        "force-lab"
+       ]
+      },
+      {
+       "sec": "2.6",
+       "title": "Moments and Centers of Mass",
+       "demos": [
+        "center-of-mass",
+        "equilibrium"
+       ],
+       "worksheets": [
+        "center-of-mass"
+       ]
+      },
+      {
+       "sec": "2.7",
+       "title": "Integrals, Exponential Functions, and Logarithms",
+       "demos": [
+        "derivatives"
+       ]
+      },
+      {
+       "sec": "2.8",
+       "title": "Exponential Growth and Decay",
+       "demos": [
+        "radioactive-decay"
+       ],
+       "worksheets": [
+        "radioactive-decay",
+        "decay-chains"
+       ]
+      },
+      {
+       "sec": "2.9",
+       "title": "Calculus of the Hyperbolic Functions",
+       "demos": [
+        "catenary"
+       ],
+       "worksheets": [
+        "catenary"
+       ]
+      }
+     ]
+    },
+    {
+     "chapter": 3,
+     "title": "Techniques of Integration",
+     "sections": [
+      {
+       "sec": "3.1",
+       "title": "Integration by Parts",
+       "demos": []
+      },
+      {
+       "sec": "3.2",
+       "title": "Trigonometric Integrals",
+       "demos": []
+      },
+      {
+       "sec": "3.3",
+       "title": "Trigonometric Substitution",
+       "demos": []
+      },
+      {
+       "sec": "3.4",
+       "title": "Partial Fractions",
+       "demos": []
+      },
+      {
+       "sec": "3.5",
+       "title": "Other Strategies for Integration",
+       "demos": []
+      },
+      {
+       "sec": "3.6",
+       "title": "Numerical Integration",
+       "demos": [
+        "integrals",
+        "numerical-methods"
+       ],
+       "worksheets": [
+        "integrals-error-order"
+       ]
+      },
+      {
+       "sec": "3.7",
+       "title": "Improper Integrals",
+       "demos": [
+        "integrals"
+       ]
+      }
+     ]
+    },
+    {
+     "chapter": 4,
+     "title": "Introduction to Differential Equations",
+     "sections": [
+      {
+       "sec": "4.1",
+       "title": "Basics of Differential Equations",
+       "demos": [
+        "slope-fields",
+        "numerical-methods",
+        "radioactive-decay",
+        "terminal-velocity"
+       ]
+      },
+      {
+       "sec": "4.2",
+       "title": "Direction Fields and Numerical Methods",
+       "demos": [
+        "slope-fields",
+        "numerical-methods"
+       ],
+       "worksheets": [
+        "numerical-methods"
+       ]
+      },
+      {
+       "sec": "4.3",
+       "title": "Separable Equations",
+       "demos": [
+        "slope-fields",
+        "radioactive-decay",
+        "terminal-velocity"
+       ],
+       "worksheets": [
+        "slope-fields-cooling",
+        "terminal-velocity"
+       ]
+      },
+      {
+       "sec": "4.4",
+       "title": "The Logistic Equation",
+       "demos": [
+        "slope-fields"
+       ],
+       "worksheets": [
+        "slope-fields-cooling"
+       ]
+      },
+      {
+       "sec": "4.5",
+       "title": "First-Order Linear Equations",
+       "demos": [
+        "slope-fields",
+        "circuits",
+        "terminal-velocity"
+       ],
+       "worksheets": [
+        "rc-circuits"
+       ]
+      }
+     ]
+    },
+    {
+     "chapter": 5,
+     "title": "Sequences and Series",
+     "sections": [
+      {
+       "sec": "5.1",
+       "title": "Sequences",
+       "demos": []
+      },
+      {
+       "sec": "5.2",
+       "title": "Infinite Series",
+       "demos": []
+      },
+      {
+       "sec": "5.3",
+       "title": "The Divergence and Integral Tests",
+       "demos": []
+      },
+      {
+       "sec": "5.4",
+       "title": "Comparison Tests",
+       "demos": []
+      },
+      {
+       "sec": "5.5",
+       "title": "Alternating Series",
+       "demos": []
+      },
+      {
+       "sec": "5.6",
+       "title": "Ratio and Root Tests",
+       "demos": []
+      }
+     ]
+    },
+    {
+     "chapter": 6,
+     "title": "Power Series",
+     "sections": [
+      {
+       "sec": "6.1",
+       "title": "Power Series and Functions",
+       "demos": [
+        "taylor"
+       ]
+      },
+      {
+       "sec": "6.2",
+       "title": "Properties of Power Series",
+       "demos": []
+      },
+      {
+       "sec": "6.3",
+       "title": "Taylor and Maclaurin Series",
+       "demos": [
+        "taylor"
+       ],
+       "worksheets": [
+        "taylor-small-angle"
+       ]
+      },
+      {
+       "sec": "6.4",
+       "title": "Working with Taylor Series",
+       "demos": [
+        "taylor",
+        "pendulum"
+       ],
+       "worksheets": [
+        "taylor-small-angle"
+       ]
+      }
+     ]
+    },
+    {
+     "chapter": 7,
+     "title": "Parametric Equations and Polar Coordinates",
+     "sections": [
+      {
+       "sec": "7.1",
+       "title": "Parametric Equations",
+       "demos": [
+        "curves-and-motion",
+        "rotation",
+        "projectile-drag"
+       ]
+      },
+      {
+       "sec": "7.2",
+       "title": "Calculus of Parametric Curves",
+       "demos": [
+        "curves-and-motion"
+       ]
+      },
+      {
+       "sec": "7.3",
+       "title": "Polar Coordinates",
+       "demos": [
+        "curves-and-motion"
+       ]
+      },
+      {
+       "sec": "7.4",
+       "title": "Area and Arc Length in Polar Coordinates",
+       "demos": [
+        "curves-and-motion"
+       ]
+      },
+      {
+       "sec": "7.5",
+       "title": "Conic Sections",
+       "demos": [
+        "curves-and-motion",
+        "kepler-orbits"
+       ],
+       "worksheets": [
+        "kepler-orbits"
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "vol": 3,
+   "title": "Calculus Volume 3",
+   "url": "https://openstax.org/details/books/calculus-volume-3",
+   "chapters": [
+    {
+     "chapter": 1,
+     "title": "Parametric Equations and Polar Coordinates",
+     "sections": [
+      {
+       "sec": "1.1",
+       "title": "Parametric Equations",
+       "demos": [
+        "curves-and-motion",
+        "rotation",
+        "projectile-drag"
+       ]
+      },
+      {
+       "sec": "1.2",
+       "title": "Calculus of Parametric Curves",
+       "demos": [
+        "curves-and-motion"
+       ]
+      },
+      {
+       "sec": "1.3",
+       "title": "Polar Coordinates",
+       "demos": [
+        "curves-and-motion"
+       ]
+      },
+      {
+       "sec": "1.4",
+       "title": "Area and Arc Length in Polar Coordinates",
+       "demos": [
+        "curves-and-motion"
+       ]
+      },
+      {
+       "sec": "1.5",
+       "title": "Conic Sections",
+       "demos": [
+        "curves-and-motion",
+        "kepler-orbits"
+       ],
+       "worksheets": [
+        "kepler-orbits"
+       ]
+      }
+     ]
+    },
+    {
+     "chapter": 2,
+     "title": "Vectors in Space",
+     "sections": [
+      {
+       "sec": "2.1",
+       "title": "Vectors in the Plane",
+       "demos": [
+        "vectors"
+       ],
+       "worksheets": [
+        "vectors"
+       ]
+      },
+      {
+       "sec": "2.2",
+       "title": "Vectors in Three Dimensions",
+       "demos": [
+        "vectors"
+       ]
+      },
+      {
+       "sec": "2.3",
+       "title": "The Dot Product",
+       "demos": [
+        "vectors"
+       ],
+       "worksheets": [
+        "vectors"
+       ]
+      },
+      {
+       "sec": "2.4",
+       "title": "The Cross Product",
+       "demos": [
+        "vectors"
+       ],
+       "worksheets": [
+        "vectors"
+       ]
+      },
+      {
+       "sec": "2.5",
+       "title": "Equations of Lines and Planes in Space",
+       "demos": []
+      },
+      {
+       "sec": "2.6",
+       "title": "Quadric Surfaces",
+       "demos": []
+      },
+      {
+       "sec": "2.7",
+       "title": "Cylindrical and Spherical Coordinates",
+       "demos": []
+      }
+     ]
+    },
+    {
+     "chapter": 3,
+     "title": "Vector-Valued Functions",
+     "sections": [
+      {
+       "sec": "3.1",
+       "title": "Vector-Valued Functions and Space Curves",
+       "demos": [
+        "curves-and-motion"
+       ]
+      },
+      {
+       "sec": "3.2",
+       "title": "Calculus of Vector-Valued Functions",
+       "demos": [
+        "curves-and-motion",
+        "circular-motion",
+        "projectile-drag"
+       ]
+      },
+      {
+       "sec": "3.3",
+       "title": "Arc Length and Curvature",
+       "demos": [
+        "curves-and-motion"
+       ]
+      },
+      {
+       "sec": "3.4",
+       "title": "Motion in Space",
+       "demos": [
+        "curves-and-motion",
+        "circular-motion",
+        "projectile-drag",
+        "kepler-orbits"
+       ],
+       "worksheets": [
+        "kepler-orbits"
+       ]
+      }
+     ]
+    },
+    {
+     "chapter": 4,
+     "title": "Differentiation of Functions of Several Variables",
+     "sections": [
+      {
+       "sec": "4.1",
+       "title": "Functions of Several Variables",
+       "demos": [
+        "coulomb-sandbox"
+       ]
+      },
+      {
+       "sec": "4.2",
+       "title": "Limits and Continuity",
+       "demos": []
+      },
+      {
+       "sec": "4.3",
+       "title": "Partial Derivatives",
+       "demos": []
+      },
+      {
+       "sec": "4.4",
+       "title": "Tangent Planes and Linear Approximations",
+       "demos": []
+      },
+      {
+       "sec": "4.5",
+       "title": "The Chain Rule",
+       "demos": []
+      },
+      {
+       "sec": "4.6",
+       "title": "Directional Derivatives and the Gradient",
+       "demos": [
+        "coulomb-sandbox"
+       ]
+      },
+      {
+       "sec": "4.7",
+       "title": "Maxima/Minima Problems",
+       "demos": []
+      },
+      {
+       "sec": "4.8",
+       "title": "Lagrange Multipliers",
+       "demos": []
+      }
+     ]
+    },
+    {
+     "chapter": 5,
+     "title": "Multiple Integration",
+     "sections": [
+      {
+       "sec": "5.1",
+       "title": "Double Integrals over Rectangular Regions",
+       "demos": []
+      },
+      {
+       "sec": "5.2",
+       "title": "Double Integrals over General Regions",
+       "demos": []
+      },
+      {
+       "sec": "5.3",
+       "title": "Double Integrals in Polar Coordinates",
+       "demos": []
+      },
+      {
+       "sec": "5.4",
+       "title": "Triple Integrals",
+       "demos": []
+      },
+      {
+       "sec": "5.5",
+       "title": "Triple Integrals in Cylindrical and Spherical Coordinates",
+       "demos": []
+      },
+      {
+       "sec": "5.6",
+       "title": "Calculating Centers of Mass and Moments of Inertia",
+       "demos": [
+        "center-of-mass",
+        "rotation",
+        "rotational-dynamics"
+       ]
+      },
+      {
+       "sec": "5.7",
+       "title": "Change of Variables in Multiple Integrals",
+       "demos": []
+      }
+     ]
+    },
+    {
+     "chapter": 6,
+     "title": "Vector Calculus",
+     "sections": [
+      {
+       "sec": "6.1",
+       "title": "Vector Fields",
+       "demos": [
+        "vector-fields",
+        "coulomb-sandbox",
+        "currents-fields"
+       ]
+      },
+      {
+       "sec": "6.2",
+       "title": "Line Integrals",
+       "demos": [
+        "vector-fields",
+        "currents-fields"
+       ],
+       "worksheets": [
+        "vector-fields-work",
+        "straight-wire-fields-ampere"
+       ]
+      },
+      {
+       "sec": "6.3",
+       "title": "Conservative Vector Fields",
+       "demos": [
+        "vector-fields",
+        "potential-curves",
+        "coulomb-sandbox"
+       ],
+       "worksheets": [
+        "vector-fields-work"
+       ]
+      },
+      {
+       "sec": "6.4",
+       "title": "Green’s Theorem",
+       "demos": [
+        "vector-fields"
+       ]
+      },
+      {
+       "sec": "6.5",
+       "title": "Divergence and Curl",
+       "demos": [
+        "vector-fields",
+        "gauss-law",
+        "currents-fields"
+       ]
+      },
+      {
+       "sec": "6.6",
+       "title": "Surface Integrals",
+       "demos": [
+        "gauss-law"
+       ],
+       "worksheets": [
+        "gauss-law"
+       ]
+      },
+      {
+       "sec": "6.7",
+       "title": "Stokes’ Theorem",
+       "demos": [
+        "vector-fields",
+        "currents-fields",
+        "displacement-current"
+       ],
+       "worksheets": [
+        "straight-wire-fields-ampere",
+        "displacement-current"
+       ]
+      },
+      {
+       "sec": "6.8",
+       "title": "The Divergence Theorem",
+       "demos": [
+        "gauss-law"
+       ],
+       "worksheets": [
+        "gauss-law"
+       ]
+      }
+     ]
+    },
+    {
+     "chapter": 7,
+     "title": "Second-Order Differential Equations",
+     "sections": [
+      {
+       "sec": "7.1",
+       "title": "Second-Order Linear Equations",
+       "demos": [
+        "springs",
+        "circuits"
+       ],
+       "worksheets": [
+        "springs"
+       ]
+      },
+      {
+       "sec": "7.2",
+       "title": "Nonhomogeneous Linear Equations",
+       "demos": [
+        "springs"
+       ],
+       "worksheets": [
+        "springs-driven"
+       ]
+      },
+      {
+       "sec": "7.3",
+       "title": "Applications",
+       "demos": [
+        "springs",
+        "circuits",
+        "pendulum"
+       ],
+       "worksheets": [
+        "springs",
+        "springs-driven",
+        "rlc-transients"
+       ]
+      },
+      {
+       "sec": "7.4",
+       "title": "Series Solutions of Differential Equations",
+       "demos": []
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}
