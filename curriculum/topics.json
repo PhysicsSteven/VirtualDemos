@@ -415,8 +415,8 @@
    ]
   },
   {
-   "id": "medical-beyond",
-   "title": "Medical physics and beyond",
+   "id": "life-medicine",
+   "title": "Life and medicine",
    "topics": [
     {
      "id": "medical",
@@ -436,42 +436,102 @@
      ]
     },
     {
-     "id": "chemistry-biology",
-     "title": "Chemistry and biology",
-     "blurb": "An oscillating chemical reaction, the structure of DNA, nerve signals, the ECG and the ear, surface tension in the lungs, and osmosis in cells and capillaries.",
+     "id": "body-senses",
+     "title": "The body and senses",
+     "blurb": "Nerve signals and the ECG, the ear and the eye, color vision, ultrasound echoes and blood flow, and osmosis in cells and capillaries.",
      "demos": [
-      "bz-reaction",
-      "dna",
       "nerve-signals",
       "hearing",
-      "surface-tension",
+      "the-eye",
+      "color-vision",
+      "ultrasound",
       "osmosis"
      ]
     },
     {
-     "id": "math",
-     "title": "Math for physics",
-     "blurb": "Type any function and see its derivatives and integrals, its Taylor polynomials, the slope field of a differential equation, a vector field with its work and curl, or a point moving along a curve, and watch how a computer solves the equations of motion step by step. Then statistics for the lab: describe a data set, roll and draw for probability, sample a population and watch the central limit theorem, build confidence intervals, test hypotheses, and fit a line or compare groups.",
+     "id": "chemistry-patterns",
+     "title": "Chemistry and patterns",
+     "blurb": "An oscillating chemical reaction, the structure of DNA, molecules and their bonds, surface tension in the lungs, osmosis, and grains that sort themselves and slide.",
+     "demos": [
+      "bz-reaction",
+      "dna",
+      "molecules",
+      "surface-tension",
+      "osmosis",
+      "granular-flow"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "mathematics",
+   "title": "Mathematics",
+   "links": [
+    {
+     "href": "openstax-calculus.html",
+     "title": "OpenStax Calculus by section"
+    },
+    {
+     "href": "openstax-statistics.html",
+     "title": "OpenStax Statistics by section"
+    }
+   ],
+   "topics": [
+    {
+     "id": "functions-derivatives",
+     "title": "Functions and derivatives",
+     "blurb": "Families of functions, limits, any typed function with its derivatives, related rates and optimization.",
      "demos": [
       "function-families",
       "limits",
       "derivatives",
-      "numerical-methods",
-      "curves-and-motion",
-      "slope-fields",
+      "rates-and-optimization"
+     ]
+    },
+    {
+     "id": "integrals-series",
+     "title": "Integrals, series and change",
+     "blurb": "Riemann sums and integrals, solids of revolution, sequences and series, Taylor polynomials, slope fields, and how a computer steps the equations of motion.",
+     "demos": [
       "integrals",
-      "taylor",
-      "vector-fields",
-      "rates-and-optimization",
-      "multiple-integrals",
-      "series",
       "solids-of-revolution",
-      "surfaces-and-gradients",
+      "series",
+      "taylor",
+      "slope-fields",
+      "numerical-methods"
+     ]
+    },
+    {
+     "id": "space-vectors-fields",
+     "title": "Space, vectors and fields",
+     "blurb": "Curves and motion, vectors and surfaces in space, gradients, multiple integrals, and vector fields with their work and curl.",
+     "demos": [
+      "curves-and-motion",
       "space-3d",
+      "surfaces-and-gradients",
+      "multiple-integrals",
+      "vector-fields"
+     ]
+    },
+    {
+     "id": "probability-data",
+     "title": "Probability and data",
+     "blurb": "Describe a data set, roll dice and draw cards, explore distributions, sample a population and watch the central limit theorem, and see chance at work in a Galton board, lab timings and quantum coins.",
+     "demos": [
       "data-explorer",
       "chance-lab",
       "distribution-explorer",
       "sampling-lab",
+      "galton-board",
+      "measurement-uncertainty",
+      "quantum-coin"
+     ]
+    },
+    {
+     "id": "statistical-inference",
+     "title": "Statistical inference",
+     "blurb": "Confidence intervals, hypothesis tests, chi-square tests, fitting a line, and comparing groups with ANOVA.",
+     "demos": [
       "confidence-intervals",
       "hypothesis-tests",
       "chi-square-tests",

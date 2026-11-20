@@ -1,7 +1,7 @@
 /* site in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'site', {
-"Dosimetry: Kerma, Equilibrium and the Ion Chamber":
-  "Dosimetría: kerma, equilibrio y la cámara de ionización",
+"Thin Film Interference":
+  "Interferencia en películas delgadas",
 "See the recent changes to the site":
   "Ve los cambios recientes del sitio",
 "What’s new":
@@ -26,8 +26,8 @@ VDI18N.add('es', 'site', {
   "<span>Celular, laptop o proyector</span>",
 "<a><span>Teaching notes</span></a>":
   "<a><span>Notas para la enseñanza</span></a>",
-"<span>Dosimetry: Kerma, Equilibrium and the Ion Chamber →</span>":
-  "<span>Dosimetría: kerma, equilibrio y la cámara de ionización →</span>",
+"<span>Thin Film Interference →</span>":
+  "<span>Interferencia en películas delgadas →</span>",
 "Teaching with the site":
   "Enseñar con el sitio",
 "Projector mode and a QR code on every demo, so students follow on their phones":
@@ -54,8 +54,10 @@ VDI18N.add('es', 'site', {
   "<a>Física moderna <span>{#}</span></a>",
 "<a>Astronomy <span>{#}</span></a>":
   "<a>Astronomía <span>{#}</span></a>",
-"<a>Medical physics and beyond <span>{#}</span></a>":
-  "<a>Física médica y más <span>{#}</span></a>",
+"<a>Life and medicine <span>{#}</span></a>":
+  "<a>Vida y medicina <span>{#}</span></a>",
+"<a>Mathematics <span>{#}</span></a>":
+  "<a>Matemáticas <span>{#}</span></a>",
 "<a>OpenStax</a>":
   "<a>OpenStax</a>",
 "<a>Courses</a>":
@@ -548,8 +550,6 @@ VDI18N.add('es', 'site', {
   "Doble rendija, una partícula a la vez",
 "Fire photons, electrons or buckyballs through two slits one at a time. Single dots pile up into fringes, and a which slit detector washes them out.":
   "Dispara fotones, electrones o buckybolas a través de dos rendijas, uno a la vez. Los puntos individuales se acumulan en franjas, y un detector de rendija las borra.",
-"Thin Film Interference":
-  "Interferencia en películas delgadas",
 "See why soap bubbles and oil slicks are colored: two reflections from a thin film add or cancel, computed exactly with the reflected color of white light, plus the black film, air wedge fringes, Newton's rings and anti reflection coatings.":
   "Ve por qué las burbujas de jabón y las manchas de aceite tienen colores: dos reflexiones en una película delgada se suman o se cancelan, calculadas exactamente con el color reflejado de la luz blanca, además de la película negra, las franjas de una cuña de aire, los anillos de Newton y los recubrimientos antirreflejantes.",
 "Michelson Interferometer":
@@ -816,16 +816,16 @@ VDI18N.add('es', 'site', {
   "La vida en el universo",
 "Squeeze Earth's history into one day or one year and see how late animals and people arrive. Find the habitable zone of the Sun, a red dwarf or TRAPPIST-{#} and watch it move out as the Sun brightens. Then multiply the Drake equation, factor by factor, and scatter the civilizations it predicts across a model Milky Way.":
   "Comprime la historia de la Tierra en un día o en un año y ve qué tan tarde llegan los animales y las personas. Encuentra la zona habitable del Sol, de una enana roja o de TRAPPIST-{#} y mira cómo se aleja a medida que el Sol se vuelve más brillante. Luego multiplica la ecuación de Drake, factor por factor, y reparte las civilizaciones que predice por un modelo de la Vía Láctea.",
-"Medical physics and beyond <span>{#} demos · {#} topics</span>":
-  "Física médica y más <span>{#} demos · {#} temas</span>",
-"Topics in Medical physics and beyond":
-  "Temas de Física médica y más",
+"Life and medicine <span>{#} demos · {#} topics</span>":
+  "Vida y medicina <span>{#} demos · {#} temas</span>",
+"Topics in Life and medicine":
+  "Temas de Vida y medicina",
 "<a>Radiation in medicine <span>{#}</span></a>":
   "<a>Radiación en medicina <span>{#}</span></a>",
-"<a>Chemistry and biology <span>{#}</span></a>":
-  "<a>Química y biología <span>{#}</span></a>",
-"<a>Math for physics <span>{#}</span></a>":
-  "<a>Matemáticas para física <span>{#}</span></a>",
+"<a>The body and senses <span>{#}</span></a>":
+  "<a>El cuerpo y los sentidos <span>{#}</span></a>",
+"<a>Chemistry and patterns <span>{#}</span></a>":
+  "<a>Química y patrones <span>{#}</span></a>",
 "Photon Interactions in Matter":
   "Interacciones de fotones con la materia",
 "How X-rays and gamma rays are stopped: the NIST coefficients of any element or tissue from {#} keV to {#} MeV split into coherent, Compton, photoelectric and pair, where each one wins, a Monte Carlo beam through a slab for buildup, and beam hardening with half value layers.":
@@ -834,6 +834,8 @@ VDI18N.add('es', 'site', {
   "Partículas cargadas en la materia",
 "Send protons, alpha particles or carbon ions into water, through bone, lung, plastic or metal first. Watch the tracks slow, scatter and stop, build the Bragg peak from them, and compare the Bethe stopping power and CSDA range with NIST PSTAR.":
   "Manda protones, partículas alfa o iones de carbono al agua, pasando primero por hueso, pulmón, plástico o metal. Observa cómo las trazas se frenan, se dispersan y se detienen, construye con ellas el pico de Bragg y compara el poder de frenado de Bethe y el alcance CSDA con NIST PSTAR.",
+"Dosimetry: Kerma, Equilibrium and the Ion Chamber":
+  "Dosimetría: kerma, equilibrio y la cámara de ionización",
 "Watch collision kerma and absorbed dose part in the buildup and run together past it, with Monte Carlo histories; collect the ions in a Farmer chamber against its voltage; and calibrate a proton beam step by step as TRS-{#} does it: temperature and pressure, polarity, recombination and k_Q.":
   "Observa cómo el kerma de colisión y la dosis absorbida se separan en la región de acumulación y van juntos después, con historias Monte Carlo; recoge los iones en una cámara Farmer en función de su voltaje; y calibra un haz de protones paso a paso como lo hace el TRS-{#}: temperatura y presión, polaridad, recombinación y k_Q.",
 "Radiobiology: Cell Survival and Fractionation":
@@ -860,6 +862,10 @@ VDI18N.add('es', 'site', {
   "Blindaje de salas",
 "Design the walls of a CT room, a linear accelerator vault with its maze door, and a proton therapy room, and compare how lead, steel, concrete and polyethylene do at each energy.":
   "Diseña las paredes de una sala de CT, un búnker de acelerador lineal con su puerta en laberinto y una sala de protonterapia, y compara cómo se comportan el plomo, el acero, el concreto y el polietileno a cada energía.",
+"Nerve Signals and the ECG":
+  "Señales nerviosas y el ECG",
+"An axon as a leaky cable: find the threshold, time an action potential between two electrodes, and see myelin make it jump from node to node, so its speed grows with the diameter instead of its square root. Then watch the heart's turning dipole draw ECG leads I, II and III.":
+  "Un axón como un cable con fugas: encuentra el umbral, mide el tiempo de un potencial de acción entre dos electrodos y mira cómo la mielina lo hace saltar de nodo en nodo, de modo que su rapidez crece con el diámetro y no con su raíz cuadrada. Luego observa cómo el dipolo giratorio del corazón dibuja las derivaciones I, II y III del ECG.",
 "Belousov–Zhabotinsky Reaction":
   "Reacción de Belousov–Zhabotinsky",
 "A chemical clock: a stirred beaker oscillates on a limit cycle, an unstirred dish carries target and spiral waves, and a flow reactor goes through period doubling to chaos.":
@@ -868,10 +874,22 @@ VDI18N.add('es', 'site', {
   "ADN en 3D",
 "Build a DNA double helix atom by atom from any sequence or a random one: B and A forms, ball and stick, space filling or cartoon, hydrogen bonds, the two grooves, and a PDB export.":
   "Construye una doble hélice de ADN átomo por átomo a partir de cualquier secuencia o de una al azar: formas B y A, barras y esferas, esferas compactas o caricatura, puentes de hidrógeno, los dos surcos y exportación a PDB.",
-"Nerve Signals and the ECG":
-  "Señales nerviosas y el ECG",
-"An axon as a leaky cable: find the threshold, time an action potential between two electrodes, and see myelin make it jump from node to node, so its speed grows with the diameter instead of its square root. Then watch the heart's turning dipole draw ECG leads I, II and III.":
-  "Un axón como un cable con fugas: encuentra el umbral, mide el tiempo de un potencial de acción entre dos electrodos y mira cómo la mielina lo hace saltar de nodo en nodo, de modo que su rapidez crece con el diámetro y no con su raíz cuadrada. Luego observa cómo el dipolo giratorio del corazón dibuja las derivaciones I, II y III del ECG.",
+"Mathematics <span>{#} demos · {#} topics</span>":
+  "Matemáticas <span>{#} demos · {#} temas</span>",
+"<a>OpenStax Calculus by section</a> · <a>OpenStax Statistics by section</a>":
+  "<a>OpenStax Cálculo por sección</a> · <a>OpenStax Estadística por sección</a>",
+"Topics in Mathematics":
+  "Temas de Matemáticas",
+"<a>Functions and derivatives <span>{#}</span></a>":
+  "<a>Funciones y derivadas <span>{#}</span></a>",
+"<a>Integrals, series and change <span>{#}</span></a>":
+  "<a>Integrales, series y cambio <span>{#}</span></a>",
+"<a>Space, vectors and fields <span>{#}</span></a>":
+  "<a>Espacio, vectores y campos <span>{#}</span></a>",
+"<a>Probability and data <span>{#}</span></a>":
+  "<a>Probabilidad y datos <span>{#}</span></a>",
+"<a>Statistical inference <span>{#}</span></a>":
+  "<a>Inferencia estadística <span>{#}</span></a>",
 "Families of Functions":
   "Familias de funciones",
 "Turn a point around the unit circle and watch it draw sine and cosine with the angle as arc length; stretch and shift any typed function and see what each number does; reflect a graph in y = x to make its inverse, with the slope turning into {#}/slope. Phasors, simple harmonic motion and exponential decay with its half life are the same moves.":
@@ -884,6 +902,30 @@ VDI18N.add('es', 'site', {
   "Funciones y sus derivadas",
 "Type or paste any function and see it graphed with its first, second and third derivatives and its integral, updating as you type; slide a point along the curve to see the tangent slope.":
   "Escribe o pega cualquier función y mírala graficada con su primera, segunda y tercera derivada y su integral, actualizándose mientras escribes; desliza un punto por la curva para ver la pendiente de la tangente.",
+"Related Rates and Optimization":
+  "Razones de cambio relacionadas y optimización",
+"One quantity drives a whole scene: a ladder slides down a wall, a cone fills with water, a shadow grows as you walk from a lamp, with every rate shown and the chain rule checked against the motion. Then find the best box, field and can, where the derivative is zero, and the physics: the lifeguard's fastest path is Snell's law (Fermat's principle), and the longest throw is at {#}° on level ground and lower from a height.":
+  "Una cantidad mueve toda una escena: una escalera se desliza por una pared, un cono se llena de agua, una sombra crece al alejarte de una lámpara, con cada razón de cambio a la vista y la regla de la cadena comprobada con el movimiento. Luego halla la mejor caja, el mejor terreno y la mejor lata, donde la derivada es cero, y la física: la trayectoria más rápida del salvavidas es la ley de Snell (el principio de Fermat), y el lanzamiento más largo es a {#}° en terreno plano y a menos desde una altura.",
+"Riemann Sums and Integrals":
+  "Sumas de Riemann e integrales",
+"Fill the area under any typed function with left, right, midpoint, trapezoid or Simpson pieces, raise n and watch the sum close in on the exact integral, read each rule's order from its error on log axes, and follow the area as it builds up: work, impulse, charge, displacement and improper integrals.":
+  "Llena el área bajo cualquier función que escribas con piezas izquierdas, derechas, de punto medio, trapecios o de Simpson, aumenta n y mira cómo la suma se acerca a la integral exacta, lee el orden de cada regla a partir de su error en ejes logarítmicos y sigue cómo se acumula el área: trabajo, impulso, carga, desplazamiento e integrales impropias.",
+"Solids of Revolution":
+  "Sólidos de revolución",
+"Spin the region under any typed curve about an axis and slice the solid into disks, washers or cylindrical shells with an n slider, in 3D or flat: the sum of the slices closes in on the integral. Cross sections standing on a base (squares, semicircles, triangles), arc length as a chain of segments, surface area as frustum bands, the moment of inertia of a cone, ({#}/{#})MR², and a sphere, ({#}/{#})MR², and the volume of a vase and of water in a bowl.":
+  "Gira la región bajo cualquier curva que escribas alrededor de un eje y rebana el sólido en discos, arandelas o capas cilíndricas con un control deslizante de n, en 3D o plano: la suma de las rebanadas se acerca a la integral. Secciones transversales sobre una base (cuadrados, semicírculos, triángulos), longitud de arco como una cadena de segmentos, área superficial como bandas de tronco de cono, el momento de inercia de un cono, ({#}/{#})MR², y de una esfera, ({#}/{#})MR², y el volumen de un florero y del agua en un tazón.",
+"Sequences and Series":
+  "Sucesiones y series",
+"Type the terms of any series and add them one at a time: terms as bars, partial sums as a running total. Geometric sums of a bouncing ball's distance and time, the harmonic series passing every bound, the integral test as rectangles under a curve, comparison, the ratio and root tests, the alternating series bound, and sequences with their limits.":
+  "Escribe los términos de cualquier serie y súmalos uno por uno: los términos como barras y las sumas parciales como un total acumulado. Sumas geométricas de la distancia y el tiempo de una pelota que rebota, la serie armónica que rebasa cualquier cota, la prueba de la integral como rectángulos bajo una curva, la comparación, las pruebas de la razón y de la raíz, la cota de las series alternantes, y sucesiones con sus límites.",
+"Taylor Polynomials and Series":
+  "Polinomios y series de Taylor",
+"Type any function and add the terms of its Taylor polynomial about any center: watch it hug the curve, see where it stays within {#}% and the Lagrange error bound, and find the radius of convergence from the poles and branch points in the complex plane. Physics setups: the small angle pendulum, the binomial approximation, relativistic kinetic energy, gravity above Earth and the dipole field. Build new series by substitution, differentiation and integration.":
+  "Escribe cualquier función y agrega los términos de su polinomio de Taylor alrededor de cualquier centro: mira cómo se pega a la curva, ve dónde se mantiene dentro de {#}% y la cota de error de Lagrange, y halla el radio de convergencia a partir de los polos y puntos de ramificación en el plano complejo. Configuraciones de física: el péndulo de ángulo pequeño, la aproximación binomial, la energía cinética relativista, la gravedad sobre la Tierra y el campo de un dipolo. Construye series nuevas por sustitución, derivación e integración.",
+"Slope Fields and Euler's Method":
+  "Campos de pendientes y el método de Euler",
+"Type a differential equation dy/dt = f(t, y) and see its slope field; click to start solution curves, step along them with Euler's method against the accurate solution, and read the equilibria and their stability from the phase line. Newton's cooling, decay, RC circuits, falling with drag, logistic growth and two mysteries to solve.":
+  "Escribe una ecuación diferencial dy/dt = f(t, y) y mira su campo de pendientes; haz clic para iniciar curvas solución, avanza por ellas con el método de Euler frente a la solución exacta y lee los equilibrios y su estabilidad en la línea de fase. Enfriamiento de Newton, decaimiento, circuitos RC, caída con arrastre, crecimiento logístico y dos misterios por resolver.",
 "Numerical Methods for Motion":
   "Métodos numéricos para el movimiento",
 "Run Euler, symplectic Euler, Verlet and RK4 side by side on a spring, a pendulum and an orbit, against the exact motion; watch the energy drift, and plot the error against the time step to find each method's order.":
@@ -892,46 +934,22 @@ VDI18N.add('es', 'site', {
   "Curvas y movimiento",
 "Type a path as x(t) and y(t), a polar curve r(θ) or a curve in space and watch a point move along it: velocity and acceleration, the acceleration split into tangential and normal parts, T and N, the osculating circle and curvature, arc length and swept area. Cycloid, projectile, circular motion, a proton's helix, and orbits as conics from a focus and a directrix with Kepler's equal areas.":
   "Escribe una trayectoria como x(t) y y(t), una curva polar r(θ) o una curva en el espacio y mira cómo un punto se mueve a lo largo de ella: velocidad y aceleración, la aceleración separada en partes tangencial y normal, T y N, el círculo osculador y la curvatura, la longitud de arco y el área barrida. Cicloide, proyectil, movimiento circular, la hélice de un protón y órbitas como cónicas a partir de un foco y una directriz, con las áreas iguales de Kepler.",
-"Slope Fields and Euler's Method":
-  "Campos de pendientes y el método de Euler",
-"Type a differential equation dy/dt = f(t, y) and see its slope field; click to start solution curves, step along them with Euler's method against the accurate solution, and read the equilibria and their stability from the phase line. Newton's cooling, decay, RC circuits, falling with drag, logistic growth and two mysteries to solve.":
-  "Escribe una ecuación diferencial dy/dt = f(t, y) y mira su campo de pendientes; haz clic para iniciar curvas solución, avanza por ellas con el método de Euler frente a la solución exacta y lee los equilibrios y su estabilidad en la línea de fase. Enfriamiento de Newton, decaimiento, circuitos RC, caída con arrastre, crecimiento logístico y dos misterios por resolver.",
-"Riemann Sums and Integrals":
-  "Sumas de Riemann e integrales",
-"Fill the area under any typed function with left, right, midpoint, trapezoid or Simpson pieces, raise n and watch the sum close in on the exact integral, read each rule's order from its error on log axes, and follow the area as it builds up: work, impulse, charge, displacement and improper integrals.":
-  "Llena el área bajo cualquier función que escribas con piezas izquierdas, derechas, de punto medio, trapecios o de Simpson, aumenta n y mira cómo la suma se acerca a la integral exacta, lee el orden de cada regla a partir de su error en ejes logarítmicos y sigue cómo se acumula el área: trabajo, impulso, carga, desplazamiento e integrales impropias.",
-"Taylor Polynomials and Series":
-  "Polinomios y series de Taylor",
-"Type any function and add the terms of its Taylor polynomial about any center: watch it hug the curve, see where it stays within {#}% and the Lagrange error bound, and find the radius of convergence from the poles and branch points in the complex plane. Physics setups: the small angle pendulum, the binomial approximation, relativistic kinetic energy, gravity above Earth and the dipole field. Build new series by substitution, differentiation and integration.":
-  "Escribe cualquier función y agrega los términos de su polinomio de Taylor alrededor de cualquier centro: mira cómo se pega a la curva, ve dónde se mantiene dentro de {#}% y la cota de error de Lagrange, y halla el radio de convergencia a partir de los polos y puntos de ramificación en el plano complejo. Configuraciones de física: el péndulo de ángulo pequeño, la aproximación binomial, la energía cinética relativista, la gravedad sobre la Tierra y el campo de un dipolo. Construye series nuevas por sustitución, derivación e integración.",
-"Vector Fields, Work and Curl":
-  "Campos vectoriales, trabajo y rotacional",
-"Type a 2D field and see its arrows and flowing tracers; add up the work along a path, test path independence, find the potential of a conservative field, measure curl with a paddle wheel and divergence with a small box, and check Green's theorem around a loop.":
-  "Escribe un campo 2D y mira sus flechas y sus trazadores en movimiento; suma el trabajo a lo largo de una trayectoria, prueba la independencia de la trayectoria, halla el potencial de un campo conservativo, mide el rotacional con una rueda de paletas y la divergencia con una caja pequeña, y comprueba el teorema de Green alrededor de un lazo.",
-"Related Rates and Optimization":
-  "Razones de cambio relacionadas y optimización",
-"One quantity drives a whole scene: a ladder slides down a wall, a cone fills with water, a shadow grows as you walk from a lamp, with every rate shown and the chain rule checked against the motion. Then find the best box, field and can, where the derivative is zero, and the physics: the lifeguard's fastest path is Snell's law (Fermat's principle), and the longest throw is at {#}° on level ground and lower from a height.":
-  "Una cantidad mueve toda una escena: una escalera se desliza por una pared, un cono se llena de agua, una sombra crece al alejarte de una lámpara, con cada razón de cambio a la vista y la regla de la cadena comprobada con el movimiento. Luego halla la mejor caja, el mejor terreno y la mejor lata, donde la derivada es cero, y la física: la trayectoria más rápida del salvavidas es la ley de Snell (el principio de Fermat), y el lanzamiento más largo es a {#}° en terreno plano y a menos desde una altura.",
-"Multiple Integrals":
-  "Integrales múltiples",
-"Boxes under a surface turning into a double integral as the grid refines; slices in either order over a region you type, with the reversed bounds checked; polar wedges and the Gaussian integral √π; triple integrals filled with rectangular, cylindrical or spherical cells; the mass, center of mass and moment of inertia of a rod, plate, disk, sphere or cone (½MR², ⅖MR², ⅓ML² checked); and a grid stretched by a change of variables and its Jacobian.":
-  "Cajas bajo una superficie que se convierten en una integral doble al refinar la cuadrícula; rebanadas en cualquier orden sobre una región que tú escribes, con los límites invertidos verificados; sectores polares y la integral gaussiana √π; integrales triples rellenas con celdas rectangulares, cilíndricas o esféricas; la masa, el centro de masa y el momento de inercia de una barra, placa, disco, esfera o cono (½MR², ⅖MR², ⅓ML² verificados); y una cuadrícula deformada por un cambio de variables y su jacobiano.",
-"Sequences and Series":
-  "Sucesiones y series",
-"Type the terms of any series and add them one at a time: terms as bars, partial sums as a running total. Geometric sums of a bouncing ball's distance and time, the harmonic series passing every bound, the integral test as rectangles under a curve, comparison, the ratio and root tests, the alternating series bound, and sequences with their limits.":
-  "Escribe los términos de cualquier serie y súmalos uno por uno: los términos como barras y las sumas parciales como un total acumulado. Sumas geométricas de la distancia y el tiempo de una pelota que rebota, la serie armónica que rebasa cualquier cota, la prueba de la integral como rectángulos bajo una curva, la comparación, las pruebas de la razón y de la raíz, la cota de las series alternantes, y sucesiones con sus límites.",
-"Solids of Revolution":
-  "Sólidos de revolución",
-"Spin the region under any typed curve about an axis and slice the solid into disks, washers or cylindrical shells with an n slider, in 3D or flat: the sum of the slices closes in on the integral. Cross sections standing on a base (squares, semicircles, triangles), arc length as a chain of segments, surface area as frustum bands, the moment of inertia of a cone, ({#}/{#})MR², and a sphere, ({#}/{#})MR², and the volume of a vase and of water in a bowl.":
-  "Gira la región bajo cualquier curva que escribas alrededor de un eje y rebana el sólido en discos, arandelas o capas cilíndricas con un control deslizante de n, en 3D o plano: la suma de las rebanadas se acerca a la integral. Secciones transversales sobre una base (cuadrados, semicírculos, triángulos), longitud de arco como una cadena de segmentos, área superficial como bandas de tronco de cono, el momento de inercia de un cono, ({#}/{#})MR², y de una esfera, ({#}/{#})MR², y el volumen de un florero y del agua en un tazón.",
-"Surfaces and Gradients":
-  "Superficies y gradientes",
-"Type z = f(x, y) and see the surface beside its contour map: partial derivatives as slopes of slices, the tangent plane, the directional derivative and the gradient pointing uphill across the level curves, peaks, pits and saddles by the second derivative test, Lagrange multipliers on a constraint, and limits along different paths. E = −∇V for two charges, a potential energy surface with a rolling ball, the ideal gas P(V, T).":
-  "Escribe z = f(x, y) y mira la superficie junto a su mapa de contorno: derivadas parciales como pendientes de rebanadas, el plano tangente, la derivada direccional y el gradiente que apunta cuesta arriba a través de las curvas de nivel, picos, valles y puntos silla con el criterio de la segunda derivada, multiplicadores de Lagrange con una restricción, y límites a lo largo de distintas trayectorias. E = −∇V para dos cargas, una superficie de energía potencial con una bola que rueda, el gas ideal P(V, T).",
 "Vectors and Surfaces in Space":
   "Vectores y superficies en el espacio",
 "A space you can turn: vectors by their x, y and z components with their sum, dot product and angle, and cross product with the right hand rule and its area; a line and a plane and where they meet; the quadric surfaces with their traces; a point in rectangular, cylindrical and spherical coordinates with its coordinate surfaces. Torque r × F, the magnetic force qv × B, work F · d and the potential of a point charge.":
   "Un espacio que puedes girar: vectores con sus componentes x, y y z, con su suma, producto punto y ángulo, y producto cruz con la regla de la mano derecha y su área; una recta y un plano y dónde se cortan; las superficies cuádricas con sus trazas; un punto en coordenadas rectangulares, cilíndricas y esféricas con sus superficies coordenadas. Torque r × F, la fuerza magnética qv × B, el trabajo F · d y el potencial de una carga puntual.",
+"Surfaces and Gradients":
+  "Superficies y gradientes",
+"Type z = f(x, y) and see the surface beside its contour map: partial derivatives as slopes of slices, the tangent plane, the directional derivative and the gradient pointing uphill across the level curves, peaks, pits and saddles by the second derivative test, Lagrange multipliers on a constraint, and limits along different paths. E = −∇V for two charges, a potential energy surface with a rolling ball, the ideal gas P(V, T).":
+  "Escribe z = f(x, y) y mira la superficie junto a su mapa de contorno: derivadas parciales como pendientes de rebanadas, el plano tangente, la derivada direccional y el gradiente que apunta cuesta arriba a través de las curvas de nivel, picos, valles y puntos silla con el criterio de la segunda derivada, multiplicadores de Lagrange con una restricción, y límites a lo largo de distintas trayectorias. E = −∇V para dos cargas, una superficie de energía potencial con una bola que rueda, el gas ideal P(V, T).",
+"Multiple Integrals":
+  "Integrales múltiples",
+"Boxes under a surface turning into a double integral as the grid refines; slices in either order over a region you type, with the reversed bounds checked; polar wedges and the Gaussian integral √π; triple integrals filled with rectangular, cylindrical or spherical cells; the mass, center of mass and moment of inertia of a rod, plate, disk, sphere or cone (½MR², ⅖MR², ⅓ML² checked); and a grid stretched by a change of variables and its Jacobian.":
+  "Cajas bajo una superficie que se convierten en una integral doble al refinar la cuadrícula; rebanadas en cualquier orden sobre una región que tú escribes, con los límites invertidos verificados; sectores polares y la integral gaussiana √π; integrales triples rellenas con celdas rectangulares, cilíndricas o esféricas; la masa, el centro de masa y el momento de inercia de una barra, placa, disco, esfera o cono (½MR², ⅖MR², ⅓ML² verificados); y una cuadrícula deformada por un cambio de variables y su jacobiano.",
+"Vector Fields, Work and Curl":
+  "Campos vectoriales, trabajo y rotacional",
+"Type a 2D field and see its arrows and flowing tracers; add up the work along a path, test path independence, find the potential of a conservative field, measure curl with a paddle wheel and divergence with a small box, and check Green's theorem around a loop.":
+  "Escribe un campo 2D y mira sus flechas y sus trazadores en movimiento; suma el trabajo a lo largo de una trayectoria, prueba la independencia de la trayectoria, halla el potencial de un campo conservativo, mide el rotacional con una rueda de paletas y la divergencia con una caja pequeña, y comprueba el teorema de Green alrededor de un lazo.",
 "Data Explorer":
   "Explorador de datos",
 "One data set shown every way the statistics book draws it, all at once: frequency table with relative and cumulative relative frequency, stemplot, dot plot, histogram with a draggable start and bin width, box plot and time series. Drag a point and watch the mean and median, quartiles and percentiles, IQR and the outlier fences, s and skew respond. Simulated lab readings (pendulum timings, lap times, decay counts) and data sets from OpenStax Introductory Statistics, or your own.":
@@ -1074,28 +1092,28 @@ VDI18N.add('es', 'site', {
   "<a>Física I</a><a>Oscilaciones y ondas</a><a>Hoja de trabajo {#}: Medir g</a><a>Hoja de trabajo {#}: Modos normales y caos</a><a>Hoja de trabajo {#}: Péndulo esférico</a><span><span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span></span>",
 "<a>Confidence Intervals</a><span>Demo</span>":
   "<a>Intervalos de confianza</a><span>Demo</span>",
-"<a>Math for physics</a><a>Worksheet: What {#} % Confident Means</a>":
-  "<a>Matemáticas para física</a><a>Hoja de trabajo: Qué significa tener {#} % de confianza</a>",
+"<a>Statistical inference</a><a>Worksheet: What {#} % Confident Means</a>":
+  "<a>Inferencia estadística</a><a>Hoja de trabajo: Qué significa tener {#} % de confianza</a>",
 "<a>Data Explorer</a><span>Demo</span>":
   "<a>Explorador de datos</a><span>Demo</span>",
-"<a>Math for physics</a><a>Worksheet: Describing a Data Set: Center, Spread and One Bad Timing</a>":
-  "<a>Matemáticas para física</a><a>Hoja de trabajo: Cómo describir un conjunto de datos: centro, dispersión y una medición mala</a>",
+"<a>Probability and data</a><a>Worksheet: Describing a Data Set: Center, Spread and One Bad Timing</a>":
+  "<a>Probabilidad y datos</a><a>Hoja de trabajo: Cómo describir un conjunto de datos: centro, dispersión y una medición mala</a>",
 "<a>Limits</a><span>Demo</span>":
   "<a>Límites</a><span>Demo</span>",
-"<a>Math for physics</a><span><span>{#}:{#}</span></span>":
-  "<a>Matemáticas para la física</a><span><span>{#}:{#}</span></span>",
+"<a>Functions and derivatives</a><span><span>{#}:{#}</span></span>":
+  "<a>Funciones y derivadas</a><span><span>{#}:{#}</span></span>",
 "<a>Linear Regression and Correlation</a><span>Demo</span>":
   "<a>Regresión lineal y correlación</a><span>Demo</span>",
-"<a>Math for physics</a><a>Worksheet: Fitting a Line and Judging the Fit</a>":
-  "<a>Matemáticas para física</a><a>Hoja de trabajo: Ajustar una recta y juzgar el ajuste</a>",
+"<a>Statistical inference</a><a>Worksheet: Fitting a Line and Judging the Fit</a>":
+  "<a>Inferencia estadística</a><a>Hoja de trabajo: Ajustar una recta y juzgar el ajuste</a>",
 "<a>Measurement Uncertainty</a><span>Lab</span>":
   "<a>Incertidumbre de medición</a><span>Laboratorio</span>",
-"<a>Physics I</a><a>Kinematics</a><a>Oscillations and waves</a><a>Worksheet {#}: Random Scatter and Bias</a><a>Worksheet {#}: Is g Really {#}? Statistics on a Pendulum</a><span><span>{#}:{#}</span> <span>{#}:{#}</span></span>":
-  "<a>Física I</a><a>Cinemática</a><a>Oscilaciones y ondas</a><a>Hoja de trabajo {#}: Dispersión aleatoria y sesgo</a><a>Hoja de trabajo {#}: ¿Realmente g es {#}? Estadística con un péndulo</a><span><span>{#}:{#}</span> <span>{#}:{#}</span></span>",
+"<a>Physics I</a><a>Kinematics</a><a>Oscillations and waves</a><a>Probability and data</a><a>Worksheet {#}: Random Scatter and Bias</a><a>Worksheet {#}: Is g Really {#}? Statistics on a Pendulum</a><span><span>{#}:{#}</span> <span>{#}:{#}</span></span>":
+  "<a>Física I</a><a>Cinemática</a><a>Oscilaciones y ondas</a><a>Probabilidad y datos</a><a>Hoja de trabajo {#}: Dispersión aleatoria y sesgo</a><a>Hoja de trabajo {#}: ¿Realmente g es {#}? Estadística con un péndulo</a><span><span>{#}:{#}</span> <span>{#}:{#}</span></span>",
 "<a>Numerical Methods for Motion</a><span>Demo</span>":
   "<a>Métodos numéricos para el movimiento</a><span>Demo</span>",
-"<a>Physics I</a><a>Math for physics</a><a>Worksheet: How Good Is a Computed Motion?</a><span><span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span></span>":
-  "<a>Física I</a><a>Matemáticas para la física</a><a>Hoja de trabajo: ¿Qué tan bueno es un movimiento calculado?</a><span><span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span></span>",
+"<a>Physics I</a><a>Integrals, series and change</a><a>Worksheet: How Good Is a Computed Motion?</a><span><span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span></span>":
+  "<a>Física I</a><a>Integrales, series y cambio</a><a>Hoja de trabajo: ¿Qué tan bueno es un movimiento calculado?</a><span><span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span></span>",
 "<a>Potential Energy Curves</a><span>Demo</span>":
   "<a>Curvas de energía potencial</a><span>Demo</span>",
 "<a>Physics I</a><a>Energy and momentum</a><a>Worksheet: Potential Energy Diagrams</a><span><span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span> …</span>":
@@ -1106,8 +1124,8 @@ VDI18N.add('es', 'site', {
   "<a>Física I</a><a>Astronomía</a><a>Fuerzas y leyes de Newton</a><a>El cielo</a><span><span>{#}:{#}</span></span>",
 "<a>Taylor Polynomials and Series</a><span>Demo</span>":
   "<a>Polinomios y series de Taylor</a><span>Demo</span>",
-"<a>Math for physics</a><a>Worksheet: The Small Angle Approximation: How Small Is Small?</a><span><span>{#}:{#}</span> <span>{#}:{#}</span></span>":
-  "<a>Matemáticas para la física</a><a>Hoja de trabajo: La aproximación de ángulo pequeño: ¿qué tan pequeño es pequeño?</a><span><span>{#}:{#}</span> <span>{#}:{#}</span></span>",
+"<a>Integrals, series and change</a><a>Worksheet: The Small Angle Approximation: How Small Is Small?</a><span><span>{#}:{#}</span> <span>{#}:{#}</span></span>":
+  "<a>Integrales, series y cambio</a><a>Hoja de trabajo: La aproximación de ángulo pequeño: ¿qué tan pequeño es pequeño?</a><span><span>{#}:{#}</span> <span>{#}:{#}</span></span>",
 "<a>Millikan Oil Drop</a><span>Demo</span>":
   "<a>Gota de aceite de Millikan</a><span>Demo</span>",
 "<a>Physics II</a><a>Modern Physics</a><a>Charges and fields</a><a>Photons and quanta</a><a>Worksheet: Millikan's Oil Drops</a><span><span>{#}:{#}</span></span>":
@@ -5764,10 +5782,10 @@ VDI18N.add('es', 'site', {
   "<span>Cap. {#}–{#}</span><span>{#} secciones</span><span>{#} con una actividad</span><span><a>Libro de texto gratuito: OpenStax Cálculo volumen {#}</a></span>",
 "<span>Chapter {#}</span> Functions and Graphs <span>{#} sections · {#} demos</span>":
   "<span>Capítulo {#}</span> Funciones y gráficas <span>{#} secciones · {#} demos</span>",
-"<span>{#}:{#}</span><span>Review of Functions<span>no activity yet</span></span><span></span>":
-  "<span>{#}:{#}</span><span>Repaso de funciones<span>sin actividad todavía</span></span><span></span>",
-"<span>{#}:{#}</span><span>Basic Classes of Functions<span>no activity yet</span></span><span></span>":
-  "<span>{#}:{#}</span><span>Clases básicas de funciones<span>sin actividad todavía</span></span><span></span>",
+"<span>{#}:{#}</span><span>Review of Functions</span><span><a>Families of Functions</a></span>":
+  "<span>{#}:{#}</span><span>Repaso de funciones</span><span><a>Familias de funciones</a></span>",
+"<span>{#}:{#}</span><span>Basic Classes of Functions</span><span><a>Families of Functions</a></span>":
+  "<span>{#}:{#}</span><span>Clases básicas de funciones</span><span><a>Familias de funciones</a></span>",
 "<span>{#}:{#}</span><span>Trigonometric Functions</span><span><a>Families of Functions</a></span>":
   "<span>{#}:{#}</span><span>Funciones trigonométricas</span><span><a>Familias de funciones</a></span>",
 "<span>{#}:{#}</span><span>Inverse Functions</span><span><a>Families of Functions</a></span>":
@@ -5784,8 +5802,8 @@ VDI18N.add('es', 'site', {
   "<a>Funciones y sus derivadas</a> · <a>Sumas de Riemann e integrales</a> · <a>Gráficas de movimiento</a>",
 "<span>{#}:{#}</span><span>The Limit of a Function</span><span><a>Limits</a></span>":
   "<span>{#}:{#}</span><span>El límite de una función</span><span><a>Límites</a></span>",
-"<span>{#}:{#}</span><span>The Limit Laws<span>no activity yet</span></span><span></span>":
-  "<span>{#}:{#}</span><span>Las leyes de los límites<span>sin actividad todavía</span></span><span></span>",
+"<span>{#}:{#}</span><span>The Limit Laws</span><span><a>Limits</a></span>":
+  "<span>{#}:{#}</span><span>Las leyes de los límites</span><span><a>Límites</a></span>",
 "<span>{#}:{#}</span><span>Continuity</span><span><a>Limits</a></span>":
   "<span>{#}:{#}</span><span>Continuidad</span><span><a>Límites</a></span>",
 "<span>{#}:{#}</span><span>The Precise Definition of a Limit</span><span><a>Limits</a></span>":
@@ -5814,8 +5832,8 @@ VDI18N.add('es', 'site', {
   "<span>{#}:{#}</span><span>La regla de la cadena</span><span><a>Funciones y sus derivadas</a></span>",
 "<span>{#}:{#}</span><span>Derivatives of Inverse Functions</span><span><a>Families of Functions</a></span>":
   "<span>{#}:{#}</span><span>Derivadas de funciones inversas</span><span><a>Familias de funciones</a></span>",
-"<span>{#}:{#}</span><span>Implicit Differentiation<span>no activity yet</span></span><span></span>":
-  "<span>{#}:{#}</span><span>Derivación implícita<span>sin actividad todavía</span></span><span></span>",
+"<span>{#}:{#}</span><span>Implicit Differentiation</span><span><a>Related Rates and Optimization</a></span>":
+  "<span>{#}:{#}</span><span>Derivación implícita</span><span><a>Razones de cambio relacionadas y optimización</a></span>",
 "<span>{#}:{#}</span><span>Derivatives of Exponential and Logarithmic Functions</span><span><a>Functions and Their Derivatives</a></span>":
   "<span>{#}:{#}</span><span>Derivadas de funciones exponenciales y logarítmicas</span><span><a>Funciones y sus derivadas</a></span>",
 "<span>Chapter {#}</span> Applications of Derivatives <span>{#} sections · {#} demos</span>":
@@ -5948,14 +5966,14 @@ VDI18N.add('es', 'site', {
   "<span>{#}:{#}</span><span>Pruebas de comparación</span><span><a>Sucesiones y series</a></span>",
 "<span>{#}:{#}</span><span>Alternating Series</span><span><a>Sequences and Series</a></span>":
   "<span>{#}:{#}</span><span>Series alternantes</span><span><a>Sucesiones y series</a></span>",
-"<span>{#}:{#}</span><span>Ratio and Root Tests<span>no activity yet</span></span><span></span>":
-  "<span>{#}:{#}</span><span>Pruebas del cociente y de la raíz<span>sin actividad todavía</span></span><span></span>",
+"<span>{#}:{#}</span><span>Ratio and Root Tests</span><span><a>Sequences and Series</a></span>":
+  "<span>{#}:{#}</span><span>Pruebas del cociente y de la raíz</span><span><a>Sucesiones y series</a></span>",
 "<span>Chapter {#}</span> Power Series <span>{#} sections · {#} demos</span>":
   "<span>Capítulo {#}</span> Series de potencias <span>{#} secciones · {#} demos</span>",
 "<span>{#}:{#}</span><span>Power Series and Functions</span><span><a>Taylor Polynomials and Series</a></span>":
   "<span>{#}:{#}</span><span>Series de potencias y funciones</span><span><a>Polinomios y series de Taylor</a></span>",
-"<span>{#}:{#}</span><span>Properties of Power Series<span>no activity yet</span></span><span></span>":
-  "<span>{#}:{#}</span><span>Propiedades de las series de potencias<span>sin actividad todavía</span></span><span></span>",
+"<span>{#}:{#}</span><span>Properties of Power Series</span><span><a>Taylor Polynomials and Series</a></span>":
+  "<span>{#}:{#}</span><span>Propiedades de las series de potencias</span><span><a>Polinomios y series de Taylor</a></span>",
 "<span>{#}:{#}</span><span>Taylor and Maclaurin Series</span>":
   "<span>{#}:{#}</span><span>Series de Taylor y de Maclaurin</span>",
 "<a>Taylor Polynomials and Series</a> · <a>Worksheet: The Small Angle Approximation: How Small Is Small?</a>":
@@ -6026,8 +6044,8 @@ VDI18N.add('es', 'site', {
   "<span>{#}:{#}</span><span>Derivadas parciales</span><span><a>Superficies y gradientes</a></span>",
 "<span>{#}:{#}</span><span>Tangent Planes and Linear Approximations</span><span><a>Surfaces and Gradients</a></span>":
   "<span>{#}:{#}</span><span>Planos tangentes y aproximaciones lineales</span><span><a>Superficies y gradientes</a></span>",
-"<span>{#}:{#}</span><span>The Chain Rule<span>no activity yet</span></span><span></span>":
-  "<span>{#}:{#}</span><span>La regla de la cadena<span>sin actividad todavía</span></span><span></span>",
+"<span>{#}:{#}</span><span>The Chain Rule</span><span><a>Surfaces and Gradients</a></span>":
+  "<span>{#}:{#}</span><span>La regla de la cadena</span><span><a>Superficies y gradientes</a></span>",
 "<span>{#}:{#}</span><span>Directional Derivatives and the Gradient</span>":
   "<span>{#}:{#}</span><span>Derivadas direccionales y el gradiente</span>",
 "<span>{#}:{#}</span><span>Maxima/Minima Problems</span><span><a>Surfaces and Gradients</a></span>":
@@ -6292,8 +6310,10 @@ VDI18N.add('es', 'site', {
   "<a>Pruebas de hipótesis</a> · <a>Incertidumbre de medición</a> · <a>Hoja de trabajo: Errores tipo I, errores tipo II y potencia</a> · <a>Hoja de trabajo: ¿Realmente g es {#}? Estadística con un péndulo</a>",
 "<span>Chapter {#}</span> Hypothesis Testing with Two Samples <span>{#} sections · {#} demos</span>":
   "<span>Capítulo {#}</span> Prueba de hipótesis con dos muestras <span>{#} secciones · {#} demos</span>",
-"<span>{#}</span><span>Two Population Means with Unknown Standard Deviations</span><span><a>Hypothesis Tests</a></span>":
-  "<span>{#}</span><span>Dos medias poblacionales con desviaciones estándar desconocidas</span><span><a>Pruebas de hipótesis</a></span>",
+"<span>{#}</span><span>Two Population Means with Unknown Standard Deviations</span>":
+  "<span>{#}</span><span>Dos medias poblacionales con desviaciones estándar desconocidas</span>",
+"<a>Hypothesis Tests</a> · <a>Worksheet: Is g Really {#}? Statistics on a Pendulum</a>":
+  "<a>Pruebas de hipótesis</a> · <a>Hoja de trabajo: ¿Realmente g es {#}? Estadística con un péndulo</a>",
 "<span>{#}</span><span>Two Population Means with Known Standard Deviations</span><span><a>Hypothesis Tests</a></span>":
   "<span>{#}</span><span>Dos medias poblacionales con desviaciones estándar conocidas</span><span><a>Pruebas de hipótesis</a></span>",
 "<span>{#}</span><span>Comparing Two Independent Population Proportions</span><span><a>Hypothesis Tests</a></span>":
@@ -6312,10 +6332,12 @@ VDI18N.add('es', 'site', {
   "<a>Explorador de distribuciones</a> · <a>Pruebas de chi cuadrada</a>",
 "<span>{#}</span><span>Goodness-of-Fit Test</span>":
   "<span>{#}</span><span>Prueba de bondad de ajuste</span>",
-"<a>Radioactive Decay</a> · <a>Chi-Square Tests</a> · <a>Galton Board</a> · <a>Quantum Coin Toss</a>":
-  "<a>Decaimiento radiactivo</a> · <a>Pruebas de chi cuadrada</a> · <a>Tablero de Galton</a> · <a>Lanzamiento de moneda cuántica</a>",
-"<span>{#}</span><span>Test of Independence</span><span><a>Chi-Square Tests</a></span>":
-  "<span>{#}</span><span>Prueba de independencia</span><span><a>Pruebas de chi cuadrada</a></span>",
+"<a>Radioactive Decay</a> · <a>Chi-Square Tests</a> · <a>Galton Board</a> · <a>Quantum Coin Toss</a> · <a>Worksheet: Chi-Square Tests: A Loaded Die, Decay Counts and a Table</a> · <a>Worksheet: Counting Statistics</a>":
+  "<a>Decaimiento radiactivo</a> · <a>Pruebas de chi cuadrada</a> · <a>Tablero de Galton</a> · <a>Volado cuántico</a> · <a>Hoja de trabajo: Pruebas de chi cuadrada: un dado cargado, conteos de decaimiento y una tabla</a> · <a>Hoja de trabajo: Estadística de conteo</a>",
+"<span>{#}</span><span>Test of Independence</span>":
+  "<span>{#}</span><span>Prueba de independencia</span>",
+"<a>Chi-Square Tests</a> · <a>Worksheet: Chi-Square Tests: A Loaded Die, Decay Counts and a Table</a>":
+  "<a>Pruebas de chi cuadrada</a> · <a>Hoja de trabajo: Pruebas de chi cuadrada: un dado cargado, conteos de decaimiento y una tabla</a>",
 "<span>{#}</span><span>Test for Homogeneity</span><span><a>Chi-Square Tests</a></span>":
   "<span>{#}</span><span>Prueba de homogeneidad</span><span><a>Pruebas de chi cuadrada</a></span>",
 "<span>{#}</span><span>Comparison of the Chi-Square Tests</span><span><a>Chi-Square Tests</a></span>":
@@ -6324,8 +6346,6 @@ VDI18N.add('es', 'site', {
   "<span>{#}</span><span>Prueba para una sola varianza</span><span><a>Pruebas de chi cuadrada</a></span>",
 "<span>{#}</span><span>Lab {#}: Chi-Square Goodness-of-Fit</span>":
   "<span>{#}</span><span>Laboratorio {#}: bondad de ajuste con chi cuadrada</span>",
-"<a>Chi-Square Tests</a> · <a>Worksheet: Chi-Square Tests: A Loaded Die, Decay Counts and a Table</a>":
-  "<a>Pruebas de chi cuadrada</a> · <a>Hoja de trabajo: Pruebas de chi cuadrada: un dado cargado, conteos de decaimiento y una tabla</a>",
 "<span>{#}</span><span>Lab {#}: Chi-Square Test of Independence</span>":
   "<span>{#}</span><span>Laboratorio {#}: prueba de independencia con chi cuadrada</span>",
 "<span>Chapter {#}</span> Linear Regression and Correlation <span>{#} sections · {#} demos</span>":
@@ -6364,8 +6384,8 @@ VDI18N.add('es', 'site', {
   "<a>ANOVA de un factor</a> · <a>Explorador de distribuciones</a>",
 "<span>{#}</span><span>Facts About the F Distribution</span>":
   "<span>{#}</span><span>Datos sobre la distribución F</span>",
-"<span>{#}</span><span>Test of Two Variances</span><span><a>One Way ANOVA</a></span>":
-  "<span>{#}</span><span>Prueba de dos varianzas</span><span><a>ANOVA de un factor</a></span>",
+"<span>{#}</span><span>Test of Two Variances</span>":
+  "<span>{#}</span><span>Prueba de dos varianzas</span>",
 "<span>{#}</span><span>Lab: One-Way ANOVA</span>":
   "<span>{#}</span><span>Laboratorio: ANOVA de un factor</span>",
 "Courses · Virtual Physics Demos":
@@ -6430,62 +6450,64 @@ VDI18N.add('es', 'site', {
   "<a>ADN en 3D</a>",
 "Mechanics":
   "Mecánica",
-"<a>Families of Functions</a>":
-  "<a>Familias de funciones</a>",
-"<a>Limits</a>":
-  "<a>Límites</a>",
-"<a>Functions and Their Derivatives</a>":
-  "<a>Funciones y sus derivadas</a>",
-"<a>Riemann Sums and Integrals</a>":
-  "<a>Sumas de Riemann e integrales</a>",
-"<a>Numerical Methods for Motion</a>":
-  "<a>Métodos numéricos para el movimiento</a>",
-"<a>Curves and Motion</a>":
-  "<a>Curvas y movimiento</a>",
-"<a>Slope Fields and Euler's Method</a>":
-  "<a>Campos de pendientes y el método de Euler</a>",
-"<a>Taylor Polynomials and Series</a>":
-  "<a>Polinomios y series de Taylor</a>",
-"<a>Vector Fields, Work and Curl</a>":
-  "<a>Campos vectoriales, trabajo y rotacional</a>",
-"<a>Related Rates and Optimization</a>":
-  "<a>Razones de cambio relacionadas y optimización</a>",
-"Hypothesis Tests (notes to come)":
-  "Pruebas de hipótesis (notas por venir)",
-"One Way ANOVA (notes to come)":
-  "ANOVA de un factor (notas por venir)",
-"Linear Regression and Correlation (notes to come)":
-  "Regresión lineal y correlación (notas por venir)",
 "<a>Surface Tension and Capillarity</a>":
   "<a>Tensión superficial y capilaridad</a>",
-"<a>Multiple Integrals</a>":
-  "<a>Integrales múltiples</a>",
-"<a>Sequences and Series</a>":
-  "<a>Sucesiones y series</a>",
-"<a>Solids of Revolution</a>":
-  "<a>Sólidos de revolución</a>",
-"<a>Surfaces and Gradients</a>":
-  "<a>Superficies y gradientes</a>",
-"<a>Vectors and Surfaces in Space</a>":
-  "<a>Vectores y superficies en el espacio</a>",
-"Data Explorer (notes to come)":
-  "Explorador de datos (notas por venir)",
-"Distribution Explorer (notes to come)":
-  "Explorador de distribuciones (notas por venir)",
-"Sampling Lab (notes to come)":
-  "Laboratorio de muestreo (notas por venir)",
-"Confidence Intervals (notes to come)":
-  "Intervalos de confianza (notas por venir)",
-"Chance Lab: Dice, Cards and Candies (notes to come)":
-  "Laboratorio de azar: dados, cartas y dulces (notas por venir)",
-"Chi-Square Tests (notes to come)":
-  "Pruebas de chi cuadrada (notas por venir)",
 "<a>Belousov–Zhabotinsky Reaction</a>":
   "<a>Reacción de Belousov–Zhabotinsky</a>",
 "Waves and sound":
   "Ondas y sonido",
 "Optics":
   "Óptica",
+"Mathematics":
+  "Matemáticas",
+"<a>Families of Functions</a>":
+  "<a>Familias de funciones</a>",
+"<a>Limits</a>":
+  "<a>Límites</a>",
+"<a>Functions and Their Derivatives</a>":
+  "<a>Funciones y sus derivadas</a>",
+"<a>Related Rates and Optimization</a>":
+  "<a>Razones de cambio relacionadas y optimización</a>",
+"<a>Riemann Sums and Integrals</a>":
+  "<a>Sumas de Riemann e integrales</a>",
+"<a>Solids of Revolution</a>":
+  "<a>Sólidos de revolución</a>",
+"<a>Sequences and Series</a>":
+  "<a>Sucesiones y series</a>",
+"<a>Taylor Polynomials and Series</a>":
+  "<a>Polinomios y series de Taylor</a>",
+"<a>Slope Fields and Euler's Method</a>":
+  "<a>Campos de pendientes y el método de Euler</a>",
+"<a>Numerical Methods for Motion</a>":
+  "<a>Métodos numéricos para el movimiento</a>",
+"<a>Curves and Motion</a>":
+  "<a>Curvas y movimiento</a>",
+"<a>Vectors and Surfaces in Space</a>":
+  "<a>Vectores y superficies en el espacio</a>",
+"<a>Surfaces and Gradients</a>":
+  "<a>Superficies y gradientes</a>",
+"<a>Multiple Integrals</a>":
+  "<a>Integrales múltiples</a>",
+"<a>Vector Fields, Work and Curl</a>":
+  "<a>Campos vectoriales, trabajo y rotacional</a>",
+"<a>Data Explorer</a>":
+  "<a>Explorador de datos</a>",
+"<a>Chance Lab: Dice, Cards and Candies</a>":
+  "<a>Laboratorio de azar: dados, cartas y dulces</a>",
+"<a>Distribution Explorer</a>":
+  "<a>Explorador de distribuciones</a>",
+"<a>Sampling Lab</a>":
+  "<a>Laboratorio de muestreo</a>",
+"<a>Confidence Intervals</a>":
+  "<a>Intervalos de confianza</a>",
+"<a>Hypothesis Tests</a>":
+  "<a>Pruebas de hipótesis</a>",
+"<a>Chi-Square Tests</a>":
+  "<a>Pruebas de chi cuadrada</a>",
+"<a>Linear Regression and Correlation</a>":
+  "<a>Regresión lineal y correlación</a>",
+"<a>One Way ANOVA</a>":
+  "<a>ANOVA de un factor</a>",
 "Atoms, molecules and solids · Virtual Physics Demos":
   "Átomos, moléculas y sólidos · Demos virtuales de física",
 "<b>Modern physics</b>":
@@ -6538,6 +6560,8 @@ VDI18N.add('es', 'site', {
   "<b>Antes de la hoja de trabajo:</b> Espín del electrón y momento magnético; niveles de energía en un campo magnético; energía del fotón",
 "<b>Before the worksheet:</b> Photon energy; energy levels and stimulated emission; standing waves in a cavity":
   "<b>Antes de la hoja de trabajo:</b> Energía del fotón; niveles de energía y emisión estimulada; ondas estacionarias en una cavidad",
+"Also under <a>Chemistry and patterns</a>":
+  "También en <a>Química y patrones</a>",
 "<b>Before the worksheets:</b> {#}. Coulomb energy; potential energy curves; exclusion principle; ionic and covalent bonds · {#}. Quantized vibration and rotation; selection rule; reduced mass; fitting a line · {#}. Photon energy E = hc/λ; electric dipole; molecular vibration; greenhouse effect":
   "<b>Antes de las hojas de trabajo:</b> {#}. Energía de Coulomb; curvas de energía potencial; principio de exclusión; enlaces iónico y covalente · {#}. Vibración y rotación cuantizadas; regla de selección; masa reducida; ajuste de una recta · {#}. Energía del fotón E = hc/λ; dipolo eléctrico; vibración molecular; efecto invernadero",
 "<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet {#}: Ionic and Covalent Bonds<span>{#} min · algebra</span></a> <a>Worksheet {#}: The Infrared Spectrum of HCl<span>{#} min · algebra</span></a> <a>Worksheet {#}: Molecules and Light<span>{#} min · algebra</span></a> <a>Notes</a>":
@@ -6568,6 +6592,56 @@ VDI18N.add('es', 'site', {
   "También en <a>Fotones y cuantos</a>",
 "<a>Back to all topics</a>":
   "<a>Regresar a todos los temas</a>",
+"The body and senses · Virtual Physics Demos":
+  "El cuerpo y los sentidos · Demos virtuales de física",
+"<b>Life and medicine</b>":
+  "<b>Vida y medicina</b>",
+"The body and senses":
+  "El cuerpo y los sentidos",
+"Nerve signals and the ECG, the ear and the eye, color vision, ultrasound echoes and blood flow, and osmosis in cells and capillaries.":
+  "Señales nerviosas y el ECG, el oído y el ojo, la visión del color, ecos de ultrasonido y flujo sanguíneo, y la ósmosis en células y capilares.",
+"<span>OpenStax Vol {#} · Ch. {#} · Vol {#} · Ch. {#}</span>":
+  "<span>OpenStax Vol. {#} · Cap. {#} · Vol. {#} · Cap. {#}</span>",
+"<a>Radiation in medicine</a>":
+  "<a>Radiación en medicina</a>",
+"<a>The body and senses</a>":
+  "<a>El cuerpo y los sentidos</a>",
+"<a>Chemistry and patterns</a>":
+  "<a>Química y patrones</a>",
+"Every demo on this subject, from every course and module, with all of its worksheets. Opened from here, a demo steps through this topic with its previous and next links. The other topics in Life and medicine are in the bar above; the <a>home page</a> lists them all.":
+  "Todas las demos de este tema, de cada curso y módulo, con todas sus hojas de trabajo. Abierta desde aquí, una demo recorre este tema con sus enlaces de anterior y siguiente. Los demás temas de Vida y medicina están en la barra de arriba; la <a>página de inicio</a> los enlista todos.",
+"The body and senses demos":
+  "Demos del cuerpo y los sentidos",
+"In <a>Medical Physics</a>":
+  "En <a>Física médica</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet: Nerve Signals and the ECG: Conduction Speed and the Heart's Axis</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo: Señales nerviosas y el ECG: rapidez de conducción y eje del corazón</a> <a>Notas</a>",
+"In <a>Acoustics</a> · <a>Medical Physics</a>":
+  "En <a>Acústica</a> · <a>Física médica</a>",
+"Also under <a>Sound and acoustics</a>":
+  "También en <a>Sonido y acústica</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet: Hearing: Decibels, Phons and the Cochlea</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo: Audición: decibeles, fones y la cóclea</a> <a>Notas</a>",
+"In <a>Physics II</a>":
+  "En <a>Física II</a>",
+"Also under <a>Optics</a>":
+  "También en <a>Óptica</a>",
+"<b>Before the worksheets:</b> {#}. Thin lens equation; image formation by a lens; nearsighted and farsighted vision · {#}. Thin lens equation; real images; similar triangles; fitting a line to reciprocals":
+  "<b>Antes de las hojas de trabajo:</b> {#}. Ecuación de lentes delgadas; formación de imágenes con una lente; miopía e hipermetropía · {#}. Ecuación de lentes delgadas; imágenes reales; triángulos semejantes; ajuste lineal de recíprocos",
+"<b>Before the worksheet:</b> Light and wavelength; additive color mixing; how the eye responds; reading graphs":
+  "<b>Antes de la hoja de trabajo:</b> Luz y longitud de onda; mezcla aditiva de colores; respuesta del ojo; leer gráficas",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet: Cones, Mixing and Filters<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo: Conos, mezclas y filtros<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"Also under <a>Sound and acoustics</a> · <a>Radiation in medicine</a>":
+  "También en <a>Sonido y acústica</a> · <a>Radiación en medicina</a>",
+"<b>Before the worksheets:</b> {#}. Speed of sound; echoes and reflection; the Doppler effect · {#}. Wave intensity and decibels; exponential decay; logarithms; fitting a line":
+  "<b>Antes de las hojas de trabajo:</b> {#}. Rapidez del sonido; ecos y reflexión; efecto Doppler · {#}. Intensidad de ondas y decibeles; decaimiento exponencial; logaritmos; ajuste de una recta",
+"<a>Open demo</a> <a>Worksheet {#}: Ultrasound Echoes and Doppler Flow<span>{#} min · algebra</span></a> <a>Worksheet {#}: Attenuation in Tissue (Medical Physics)<span>{#} min · calculus</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Ecos de ultrasonido y flujo Doppler<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Atenuación en tejido (Física médica)<span>{#} min · cálculo</span></a> <a>Notas</a>",
+"Also under <a>Fluids</a> · <a>Heat and thermodynamics</a> · <a>Chemistry and patterns</a>":
+  "También en <a>Fluidos</a> · <a>Calor y termodinámica</a> · <a>Química y patrones</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet: Diffusion and Osmosis: Random Walks, Osmotic Pressure and Red Cells</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo: Difusión y ósmosis: caminatas aleatorias, presión osmótica y glóbulos rojos</a> <a>Notas</a>",
 "Charges and fields · Virtual Physics Demos":
   "Cargas y campos · Demos virtuales de física",
 "Charges and fields":
@@ -6586,8 +6660,6 @@ VDI18N.add('es', 'site', {
   "Todas las demos de este tema, de cada curso y módulo, con todas sus hojas de trabajo. Abierta desde aquí, una demo recorre este tema con sus enlaces de anterior y siguiente. Los demás temas de Electricidad y magnetismo están en la barra de arriba; la <a>página de inicio</a> los enlista todos.",
 "Charges and fields demos":
   "Demos de cargas y campos",
-"In <a>Physics II</a>":
-  "En <a>Física II</a>",
 "<b>Before the worksheets:</b> {#}. Conductors and induced charge; grounding; Coulomb's law; charge sharing · {#}. Coulomb's law and electric field; polarization of insulators; log log graphs":
   "<b>Antes de las hojas de trabajo:</b> {#}. Conductores y carga inducida; conexión a tierra; ley de Coulomb; reparto de carga · {#}. Ley de Coulomb y campo eléctrico; polarización de aislantes; gráficas log log",
 "<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet {#}: Charging by Induction<span>{#} min · algebra</span></a> <a>Worksheet {#}: Attracting a Neutral Insulator<span>{#} min · algebra</span></a> <a>Notes</a>":
@@ -6618,44 +6690,28 @@ VDI18N.add('es', 'site', {
   "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo {#}: Capacitancia y dieléctricos<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Capacitores esféricos, polarización y ruptura<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "In <a>Physics II</a> · <a>Modern Physics</a>":
   "En <a>Física II</a> · <a>Física moderna</a>",
-"Chemistry and biology · Virtual Physics Demos":
-  "Química y biología · Demos virtuales de física",
-"<b>Medical physics and beyond</b>":
-  "<b>Física médica y más</b>",
-"Chemistry and biology":
-  "Química y biología",
-"An oscillating chemical reaction, the structure of DNA, nerve signals, the ECG and the ear, surface tension in the lungs, and osmosis in cells and capillaries.":
-  "Una reacción química oscilante, la estructura del ADN, las señales nerviosas, el ECG y el oído, la tensión superficial en los pulmones y la ósmosis en las células y los capilares.",
-"<span>OpenStax Vol {#} · Ch. {#}</span>":
-  "<span>OpenStax Vol. {#} · Cap. {#}</span>",
-"<a>Radiation in medicine</a>":
-  "<a>Radiación en medicina</a>",
-"<a>Chemistry and biology</a>":
-  "<a>Química y biología</a>",
-"<a>Math for physics</a>":
-  "<a>Matemáticas para física</a>",
-"Every demo on this subject, from every course and module, with all of its worksheets. Opened from here, a demo steps through this topic with its previous and next links. The other topics in Medical physics and beyond are in the bar above; the <a>home page</a> lists them all.":
-  "Todas las demos de este tema, de cada curso y módulo, con todas sus hojas de trabajo. Abierta desde aquí, una demo recorre este tema con sus enlaces de anterior y siguiente. Los demás temas de Física médica y más están en la barra de arriba; la <a>página de inicio</a> los enlista todos.",
-"Chemistry and biology demos":
-  "Demos de química y biología",
-"In <a>Medical Physics</a>":
-  "En <a>Física médica</a>",
-"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet: Nerve Signals and the ECG: Conduction Speed and the Heart's Axis</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo: Señales nerviosas y el ECG: rapidez de conducción y eje del corazón</a> <a>Notas</a>",
-"In <a>Acoustics</a> · <a>Medical Physics</a>":
-  "En <a>Acústica</a> · <a>Física médica</a>",
-"Also under <a>Sound and acoustics</a>":
-  "También en <a>Sonido y acústica</a>",
-"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet: Hearing: Decibels, Phons and the Cochlea</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo: Audición: decibeles, fones y la cóclea</a> <a>Notas</a>",
+"Chemistry and patterns · Virtual Physics Demos":
+  "Química y patrones · Demos virtuales de física",
+"Chemistry and patterns":
+  "Química y patrones",
+"An oscillating chemical reaction, the structure of DNA, molecules and their bonds, surface tension in the lungs, osmosis, and grains that sort themselves and slide.":
+  "Una reacción química oscilante, la estructura del ADN, las moléculas y sus enlaces, la tensión superficial en los pulmones, la ósmosis, y granos que se separan solos y se deslizan.",
+"<span>OpenStax Vol {#} · Ch. {#}, {#} · Vol {#} · Ch. {#}</span>":
+  "<span>OpenStax Vol. {#} · Cap. {#}, {#} · Vol. {#} · Cap. {#}</span>",
+"Chemistry and patterns demos":
+  "Demos de química y patrones",
+"Also under <a>Atoms, molecules and solids</a>":
+  "También en <a>Átomos, moléculas y sólidos</a>",
 "Also under <a>Fluids</a>":
   "También en <a>Fluidos</a>",
 "<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet: Surface Tension and Capillary Rise</a> <a>Notes</a>":
   "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo: Tensión superficial y ascenso capilar</a> <a>Notas</a>",
-"Also under <a>Fluids</a> · <a>Heat and thermodynamics</a>":
-  "También en <a>Fluidos</a> · <a>Calor y termodinámica</a>",
-"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet: Diffusion and Osmosis: Random Walks, Osmotic Pressure and Red Cells</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo: Difusión y ósmosis: caminatas aleatorias, presión osmótica y glóbulos rojos</a> <a>Notas</a>",
+"Also under <a>Fluids</a> · <a>Heat and thermodynamics</a> · <a>The body and senses</a>":
+  "También en <a>Fluidos</a> · <a>Calor y termodinámica</a> · <a>El cuerpo y los sentidos</a>",
+"In <a>Physics I</a>":
+  "En <a>Física I</a>",
+"Also under <a>Forces and Newton's laws</a> · <a>Fluids</a>":
+  "También en <a>Fuerzas y leyes de Newton</a> · <a>Fluidos</a>",
 "Circuits · Virtual Physics Demos":
   "Circuitos · Demos virtuales de física",
 "Resistance, DC and RC circuits, household wiring, transformers.":
@@ -6700,8 +6756,6 @@ VDI18N.add('es', 'site', {
   "Todas las demos de este tema, de cada curso y módulo, con todas sus hojas de trabajo. Abierta desde aquí, una demo recorre este tema con sus enlaces de anterior y siguiente. Los demás temas de Mecánica están en la barra de arriba; la <a>página de inicio</a> los enlista todos.",
 "Energy and momentum demos":
   "Demos de energía y momento",
-"In <a>Physics I</a>":
-  "En <a>Física I</a>",
 "OpenStax <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span>":
   "OpenStax <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span>",
 "<b>Before the worksheet:</b> Potential energy and conservation of energy; force from the slope of U; reading graphs":
@@ -6726,6 +6780,8 @@ VDI18N.add('es', 'site', {
   "Equilibrio y materiales",
 "Static equilibrium, stress and strain, hanging chains.":
   "Equilibrio estático, esfuerzo y deformación, cadenas colgantes.",
+"<span>OpenStax Vol {#} · Ch. {#}</span>":
+  "<span>OpenStax Vol. {#} · Cap. {#}</span>",
 "Equilibrium and materials demos":
   "Demos de equilibrio y materiales",
 "<b>Before the worksheet:</b> Force balance; torque about a point; free body diagrams; trigonometry":
@@ -6756,10 +6812,10 @@ VDI18N.add('es', 'site', {
   "También en <a>Fuerzas y leyes de Newton</a>",
 "<b>Before the worksheet:</b> Newton's second law; free body diagrams; drag force growing with speed":
   "<b>Antes de la hoja de trabajo:</b> Segunda ley de Newton; diagramas de cuerpo libre; fuerza de arrastre que crece con la rapidez",
-"Also under <a>Chemistry and biology</a>":
-  "También en <a>Química y biología</a>",
-"Also under <a>Heat and thermodynamics</a> · <a>Chemistry and biology</a>":
-  "También en <a>Calor y termodinámica</a> · <a>Química y biología</a>",
+"Also under <a>Forces and Newton's laws</a> · <a>Chemistry and patterns</a>":
+  "También en <a>Fuerzas y leyes de Newton</a> · <a>Química y patrones</a>",
+"Also under <a>Heat and thermodynamics</a> · <a>The body and senses</a> · <a>Chemistry and patterns</a>":
+  "También en <a>Calor y termodinámica</a> · <a>El cuerpo y los sentidos</a> · <a>Química y patrones</a>",
 "Forces and Newton's laws · Virtual Physics Demos":
   "Fuerzas y leyes de Newton · Demos virtuales de física",
 "Forces and Newton's laws":
@@ -6780,18 +6836,46 @@ VDI18N.add('es', 'site', {
   "También en <a>Cinemática</a>",
 "<b>Before the worksheet:</b> Centripetal acceleration; Newton's second law; static friction; energy conservation; fitting a line":
   "<b>Antes de la hoja de trabajo:</b> Aceleración centrípeta; segunda ley de Newton; fricción estática; conservación de la energía; ajuste lineal",
+"Also under <a>Fluids</a> · <a>Chemistry and patterns</a>":
+  "También en <a>Fluidos</a> · <a>Química y patrones</a>",
 "In <a>Physics I</a> · <a>Astronomy</a>":
   "En <a>Física I</a> · <a>Astronomía</a>",
 "Also under <a>The sky</a>":
   "También en <a>El cielo</a>",
+"Functions and derivatives · Virtual Physics Demos":
+  "Funciones y derivadas · Demos virtuales de física",
+"<b>Mathematics</b>":
+  "<b>Matemáticas</b>",
+"Functions and derivatives":
+  "Funciones y derivadas",
+"Families of functions, limits, any typed function with its derivatives, related rates and optimization.":
+  "Familias de funciones, límites, cualquier función que escribas con sus derivadas, razones de cambio relacionadas y optimización.",
+"<span><strong>{#}</strong> worksheet</span>":
+  "<span><strong>{#}</strong> hoja de trabajo</span>",
+"<span>OpenStax Vol {#} · Ch. {#}–{#}, {#} · Vol {#} · Ch. {#} · Vol {#} · Ch. {#}</span>":
+  "<span>OpenStax Vol. {#} · Cap. {#}–{#}, {#} · Vol. {#} · Cap. {#} · Vol. {#} · Cap. {#}</span>",
+"<a>Functions and derivatives</a>":
+  "<a>Funciones y derivadas</a>",
+"<a>Integrals, series and change</a>":
+  "<a>Integrales, series y cambio</a>",
+"<a>Space, vectors and fields</a>":
+  "<a>Espacio, vectores y campos</a>",
+"<a>Probability and data</a>":
+  "<a>Probabilidad y datos</a>",
+"<a>Statistical inference</a>":
+  "<a>Inferencia estadística</a>",
+"Every demo on this subject, from every course and module, with all of its worksheets. Opened from here, a demo steps through this topic with its previous and next links. The other topics in Mathematics are in the bar above; the <a>home page</a> lists them all.":
+  "Todas las demos de este tema, de cada curso y módulo, con todas sus hojas de trabajo. Abierta desde aquí, una demo recorre este tema con sus enlaces de anterior y siguiente. Los demás temas de Matemáticas están en la barra de arriba; la <a>página de inicio</a> los enlista todos.",
+"Functions and derivatives demos":
+  "Demos de funciones y derivadas",
+"<a>Open demo</a> <a>Worksheet: Reading Derivatives from a Graph</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Lectura de derivadas en una gráfica</a> <a>Notas</a>",
 "Galaxies and cosmology · Virtual Physics Demos":
   "Galaxias y cosmología · Demos virtuales de física",
 "<b>Astronomy</b>":
   "<b>Astronomía</b>",
 "The Milky Way, colliding and active galaxies, dark matter, the distance ladder and the early universe.":
   "La Vía Láctea, galaxias en choque y galaxias activas, la materia oscura, la escalera de distancias y el universo temprano.",
-"<span>OpenStax Vol {#} · Ch. {#} · Vol {#} · Ch. {#}</span>":
-  "<span>OpenStax Vol. {#} · Cap. {#} · Vol. {#} · Cap. {#}</span>",
 "<a>The sky</a>":
   "<a>El cielo</a>",
 "<a>Planets and the solar system</a>":
@@ -6950,12 +7034,12 @@ VDI18N.add('es', 'site', {
   "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo {#}: Radiación de cuerpo negro<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Colores y temperaturas de las estrellas (Astro {#})<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Colores de las estrellas con los filtros U, B y V<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<b>Before the worksheet:</b> Boltzmann probability and entropy; ferromagnetism and the Curie temperature; log log graphs":
   "<b>Antes de la hoja de trabajo:</b> Probabilidad de Boltzmann y entropía; ferromagnetismo y temperatura de Curie; gráficas log log",
+"Also under <a>Probability and data</a>":
+  "También en <a>Probabilidad y datos</a>",
 "<b>Before the worksheet:</b> Probability of independent events; counting paths; mean and standard deviation":
   "<b>Antes de la hoja de trabajo:</b> Probabilidad de eventos independientes; conteo de trayectorias; media y desviación estándar",
-"Also under <a>Atoms, molecules and solids</a>":
-  "También en <a>Átomos, moléculas y sólidos</a>",
-"Also under <a>Fluids</a> · <a>Chemistry and biology</a>":
-  "También en <a>Fluidos</a> · <a>Química y biología</a>",
+"Also under <a>Fluids</a> · <a>The body and senses</a> · <a>Chemistry and patterns</a>":
+  "También en <a>Fluidos</a> · <a>El cuerpo y los sentidos</a> · <a>Química y patrones</a>",
 "Induction and EM waves · Virtual Physics Demos":
   "Inducción y ondas EM · Demos virtuales de física",
 "Induction and EM waves":
@@ -6980,6 +7064,26 @@ VDI18N.add('es', 'site', {
   "<b>Antes de las hojas de trabajo:</b> {#}. Campos eléctrico y magnético; ondas electromagnéticas; intensidad; leer una pendiente · {#}. Rapidez de onda igual a longitud de onda por frecuencia; notación científica; prefijos métricos",
 "<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet {#}: Electromagnetic Waves: Fields, Intensity and Pressure<span>{#} min · algebra</span></a> <a>Worksheet {#}: The Electromagnetic Spectrum (Astro {#})<span>{#} min · algebra</span></a> <a>Notes</a>":
   "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo {#}: Ondas electromagnéticas: campos, intensidad y presión<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: El espectro electromagnético (Astro {#})<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"Integrals, series and change · Virtual Physics Demos":
+  "Integrales, series y cambio · Demos virtuales de física",
+"Integrals, series and change":
+  "Integrales, series y cambio",
+"Riemann sums and integrals, solids of revolution, sequences and series, Taylor polynomials, slope fields, and how a computer steps the equations of motion.":
+  "Sumas de Riemann e integrales, sólidos de revolución, sucesiones y series, polinomios de Taylor, campos de pendientes, y cómo una computadora avanza paso a paso las ecuaciones de movimiento.",
+"<span>OpenStax Vol {#} · Ch. {#}, {#}–{#}, {#}–{#}, {#}, {#} · Vol {#} · Ch. {#} · Vol {#} · Ch. {#}</span>":
+  "<span>OpenStax Vol. {#} · Cap. {#}, {#}–{#}, {#}–{#}, {#}, {#} · Vol. {#} · Cap. {#} · Vol. {#} · Cap. {#}</span>",
+"Integrals, series and change demos":
+  "Demos de integrales, series y cambio",
+"<a>Open demo</a> <a>Worksheet: How Fast Do Riemann Sums Converge?</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: ¿Qué tan rápido convergen las sumas de Riemann?</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: The Small Angle Approximation: How Small Is Small?</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: La aproximación de ángulo pequeño: ¿qué tan pequeño es pequeño?</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Slope Fields: Cooling Tea and a Growing Culture</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Campos de pendientes: té que se enfría y un cultivo que crece</a> <a>Notas</a>",
+"<b>Before the worksheet:</b> Simple harmonic motion; conservation of energy; slopes on log scale graphs":
+  "<b>Antes de la hoja de trabajo:</b> Movimiento armónico simple; conservación de la energía; pendientes en gráficas logarítmicas",
+"<a>Open demo</a> <a>Worksheet: How Good Is a Computed Motion?<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: ¿Qué tan buena es una trayectoria calculada?<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "Kinematics · Virtual Physics Demos":
   "Cinemática · Demos virtuales de física",
 "Position, velocity and acceleration, projectiles and circular motion.":
@@ -6992,8 +7096,8 @@ VDI18N.add('es', 'site', {
   "<b>Antes de las hojas de trabajo:</b> {#}. Conversión de unidades; cifras significativas; lectura de una regla y su incertidumbre · {#}. Potencias de diez; cifras significativas; cinemática con aceleración constante; revisar unidades · {#}. Notación científica; unidad astronómica y año luz; rapidez de la luz como distancia entre tiempo",
 "<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet {#}: Units and Dimensions<span>{#} min · algebra</span></a> <a>Worksheet {#}: Estimates and Uncertainty<span>{#} min · algebra</span></a> <a>Worksheet {#}: How Big Is the Solar System? (Astro {#})<span>{#} min · algebra</span></a> <a>Notes</a>":
   "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo {#}: Unidades y dimensiones<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Estimaciones e incertidumbre<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: ¿Qué tan grande es el sistema solar? (Astro {#})<span>{#} min · álgebra</span></a> <a>Notas</a>",
-"Also under <a>Oscillations and waves</a>":
-  "También en <a>Oscilaciones y ondas</a>",
+"Also under <a>Oscillations and waves</a> · <a>Probability and data</a>":
+  "También en <a>Oscilaciones y ondas</a> · <a>Probabilidad y datos</a>",
 "<b>Before the worksheets:</b> {#}. Period of a simple pendulum; mean and standard deviation; fitting a line · {#}. Period of a simple pendulum; mean and standard deviation; the normal distribution; t intervals and t tests":
   "<b>Antes de las hojas de trabajo:</b> {#}. Periodo de un péndulo simple; media y desviación estándar; ajuste de una recta · {#}. Periodo de un péndulo simple; media y desviación estándar; la distribución normal; intervalos t y pruebas t",
 "<b>Before the worksheets:</b> {#}. Newton's first law; force vectors and components; sine and cosine; equilibrium · {#}. Components of a vector; trigonometry; average acceleration; dot and cross products":
@@ -7034,68 +7138,6 @@ VDI18N.add('es', 'site', {
   "<b>Antes de la hoja de trabajo:</b> Fuerza magnética sobre una carga en movimiento; movimiento circular; energía cinética y voltaje",
 "<b>Before the worksheet:</b> Length contraction; relativistic velocity addition; magnetic force on a moving charge":
   "<b>Antes de la hoja de trabajo:</b> Contracción de la longitud; suma relativista de velocidades; fuerza magnética sobre una carga en movimiento",
-"Math for physics · Virtual Physics Demos":
-  "Matemáticas para física · Demos virtuales de física",
-"Math for physics":
-  "Matemáticas para física",
-"Type any function and see its derivatives and integrals, its Taylor polynomials, the slope field of a differential equation, a vector field with its work and curl, or a point moving along a curve, and watch how a computer solves the equations of motion step by step. Then statistics for the lab: describe a data set, roll and draw for probability, sample a population and watch the central limit theorem, build confidence intervals, test hypotheses, and fit a line or compare groups.":
-  "Escribe cualquier función y mira sus derivadas e integrales, sus polinomios de Taylor, el campo de pendientes de una ecuación diferencial, un campo vectorial con su trabajo y su rotacional, o un punto que se mueve a lo largo de una curva, y observa cómo una computadora resuelve paso a paso las ecuaciones de movimiento. Luego, estadística para el laboratorio: describe un conjunto de datos, lanza y saca para estudiar probabilidad, toma muestras de una población y observa el teorema del límite central, construye intervalos de confianza, haz pruebas de hipótesis, y ajusta una recta o compara grupos.",
-"<span>OpenStax Vol {#} · Ch. {#}–{#}, {#}–{#}, {#}, {#} · Vol {#} · Ch. {#}, {#}–{#} · Vol {#} · Ch. {#}, {#}</span>":
-  "<span>OpenStax Vol. {#} · Cap. {#}–{#}, {#}–{#}, {#}, {#} · Vol. {#} · Cap. {#}, {#}–{#} · Vol. {#} · Cap. {#}, {#}</span>",
-"Math for physics demos":
-  "Demos de matemáticas para física",
-"<a>Open demo</a> <a>Worksheet: Reading Derivatives from a Graph</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Lectura de derivadas en una gráfica</a> <a>Notas</a>",
-"<b>Before the worksheet:</b> Simple harmonic motion; conservation of energy; slopes on log scale graphs":
-  "<b>Antes de la hoja de trabajo:</b> Movimiento armónico simple; conservación de la energía; pendientes en gráficas logarítmicas",
-"<a>Open demo</a> <a>Worksheet: How Good Is a Computed Motion?<span>{#} min · algebra</span></a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: ¿Qué tan buena es una trayectoria calculada?<span>{#} min · álgebra</span></a> <a>Notas</a>",
-"<a>Open demo</a> <a>Worksheet: Slope Fields: Cooling Tea and a Growing Culture</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Campos de pendientes: té que se enfría y un cultivo que crece</a> <a>Notas</a>",
-"<a>Open demo</a> <a>Worksheet: How Fast Do Riemann Sums Converge?</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: ¿Qué tan rápido convergen las sumas de Riemann?</a> <a>Notas</a>",
-"<a>Open demo</a> <a>Worksheet: The Small Angle Approximation: How Small Is Small?</a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: La aproximación de ángulo pequeño: ¿qué tan pequeño es pequeño?</a> <a>Notas</a>",
-"<b>Before the worksheet:</b> Vectors and components; work as force times displacement; partial derivatives; integrals along a parameter":
-  "<b>Antes de la hoja de trabajo:</b> Vectores y componentes; el trabajo como fuerza por desplazamiento; derivadas parciales; integrales a lo largo de un parámetro",
-"<a>Open demo</a> <a>Worksheet: Work Along Different Paths<span>{#} min · calculus</span></a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Trabajo por distintas trayectorias<span>{#} min · cálculo</span></a> <a>Notas</a>",
-"<a>Data Explorer</a>":
-  "<a>Explorador de datos</a>",
-"<a>Open demo</a> <a>Worksheet: Describing a Data Set: Center, Spread and One Bad Timing</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Cómo describir un conjunto de datos: centro, dispersión y una medición mala</a>",
-"<a>Chance Lab: Dice, Cards and Candies</a>":
-  "<a>Laboratorio de azar: dados, cartas y dulces</a>",
-"<a>Open demo</a> <a>Worksheet: Dice and Cards: Predict, Simulate, Compare</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Dados y cartas: predice, simula, compara</a>",
-"<a>Distribution Explorer</a>":
-  "<a>Explorador de distribuciones</a>",
-"<a>Open demo</a>":
-  "<a>Abrir demo</a>",
-"<a>Sampling Lab</a>":
-  "<a>Laboratorio de muestreo</a>",
-"<a>Open demo</a> <a>Worksheet {#}: How You Sample Matters</a> <a>Worksheet {#}: The Central Limit Theorem</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Importa cómo muestreas</a> <a>Hoja de trabajo {#}: El teorema del límite central</a>",
-"<a>Confidence Intervals</a>":
-  "<a>Intervalos de confianza</a>",
-"<a>Open demo</a> <a>Worksheet: What {#} % Confident Means</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Qué significa tener {#} % de confianza</a>",
-"<a>Hypothesis Tests</a>":
-  "<a>Pruebas de hipótesis</a>",
-"<a>Open demo</a> <a>Worksheet: Type I Errors, Type II Errors and Power</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Errores tipo I, errores tipo II y potencia</a>",
-"<a>Chi-Square Tests</a>":
-  "<a>Pruebas de chi cuadrada</a>",
-"<a>Open demo</a> <a>Worksheet: Chi-Square Tests: A Loaded Die, Decay Counts and a Table</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Pruebas de chi cuadrada: un dado cargado, conteos de decaimiento y una tabla</a>",
-"<a>Linear Regression and Correlation</a>":
-  "<a>Regresión lineal y correlación</a>",
-"<a>Open demo</a> <a>Worksheet: Fitting a Line and Judging the Fit</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Ajustar una recta y juzgar el ajuste</a>",
-"<a>One Way ANOVA</a>":
-  "<a>ANOVA de un factor</a>",
-"<a>Open demo</a> <a>Worksheet: One Way ANOVA: Gaps, Spreads and False Alarms</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: ANOVA de un factor: brechas, dispersiones y falsas alarmas</a>",
 "Radiation in medicine · Virtual Physics Demos":
   "Radiación en medicina · Demos virtuales de física",
 "Radiation in medicine":
@@ -7138,10 +7180,8 @@ VDI18N.add('es', 'site', {
   "<b>Antes de la hoja de trabajo:</b> Ley del inverso del cuadrado; atenuación exponencial de radiación; logaritmos y capas decimirreductoras",
 "<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet: Shielding Rooms: CT, Linac Vault and Proton Room (Medical Physics)<span>{#} min · algebra</span></a> <a>Notes</a>":
   "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo: Blindaje de salas: CT, búnker de linac y sala de protones (Física médica)<span>{#} min · álgebra</span></a> <a>Notas</a>",
-"<b>Before the worksheets:</b> {#}. Speed of sound; echoes and reflection; the Doppler effect · {#}. Wave intensity and decibels; exponential decay; logarithms; fitting a line":
-  "<b>Antes de las hojas de trabajo:</b> {#}. Rapidez del sonido; ecos y reflexión; efecto Doppler · {#}. Intensidad de ondas y decibeles; decaimiento exponencial; logaritmos; ajuste de una recta",
-"<a>Open demo</a> <a>Worksheet {#}: Ultrasound Echoes and Doppler Flow<span>{#} min · algebra</span></a> <a>Worksheet {#}: Attenuation in Tissue (Medical Physics)<span>{#} min · calculus</span></a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Ecos de ultrasonido y flujo Doppler<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Atenuación en tejido (Física médica)<span>{#} min · cálculo</span></a> <a>Notas</a>",
+"Also under <a>Sound and acoustics</a> · <a>The body and senses</a>":
+  "También en <a>Sonido y acústica</a> · <a>El cuerpo y los sentidos</a>",
 "Nuclear and particle physics · Virtual Physics Demos":
   "Física nuclear y de partículas · Demos virtuales de física",
 "Nuclear and particle physics":
@@ -7188,8 +7228,8 @@ VDI18N.add('es', 'site', {
   "<b>Antes de las hojas de trabajo:</b> {#}. Ley de Snell; índice de refracción; longitud de onda y rapidez de la luz; ajuste de rectas · {#}. Reflexión y refracción; ecuación de los espejos; convención de signos para imágenes · {#}. Trazado de rayos en lentes; ecuación de lentes delgadas; imágenes reales y virtuales · {#}. Ecuación de lentes delgadas; aumento angular; punto próximo del ojo · {#}. Refracción de la luz e índice de refracción; distancia focal de lentes y espejos",
 "<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet {#}: Dispersion<span>{#} min · algebra</span></a> <a>Worksheet {#}: Mirrors and Refracting Surfaces<span>{#} min · algebra</span></a> <a>Worksheet {#}: Thin Lenses and the Depth of an Image<span>{#} min · algebra</span></a> <a>Worksheet {#}: Magnifiers, Microscopes and Telescopes<span>{#} min · algebra</span></a> <a>Worksheet {#}: Lenses, Mirrors and Color (Astro {#})<span>{#} min · algebra</span></a> <a>Notes</a>":
   "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo {#}: Dispersión<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Espejos y superficies refractoras<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Lentes delgadas y la profundidad de una imagen<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Lupas, microscopios y telescopios<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Lentes, espejos y color (Astro {#})<span>{#} min · álgebra</span></a> <a>Notas</a>",
-"<b>Before the worksheets:</b> {#}. Thin lens equation; image formation by a lens; nearsighted and farsighted vision · {#}. Thin lens equation; real images; similar triangles; fitting a line to reciprocals":
-  "<b>Antes de las hojas de trabajo:</b> {#}. Ecuación de lentes delgadas; formación de imágenes con una lente; miopía e hipermetropía · {#}. Ecuación de lentes delgadas; imágenes reales; triángulos semejantes; ajuste lineal de recíprocos",
+"Also under <a>The body and senses</a>":
+  "También en <a>El cuerpo y los sentidos</a>",
 "<b>Before the worksheet:</b> Lenses and focal length; magnification as a ratio; circle area; reading a slope":
   "<b>Antes de la hoja de trabajo:</b> Lentes y distancia focal; aumento como razón; área de un círculo; leer una pendiente",
 "<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet: Building a Telescope (Astro {#})<span>{#} min · algebra</span></a> <a>Notes</a>":
@@ -7204,10 +7244,6 @@ VDI18N.add('es', 'site', {
   "<b>Antes de la hoja de trabajo:</b> La luz como onda transversal; ley de Malus; reflexión y refracción; funciones trigonométricas",
 "<b>Before the worksheet:</b> Reflection of light; angular speed; lenses and image distance; fitting a line":
   "<b>Antes de la hoja de trabajo:</b> Reflexión de la luz; rapidez angular; lentes y distancia imagen; ajustar una línea",
-"<b>Before the worksheet:</b> Light and wavelength; additive color mixing; how the eye responds; reading graphs":
-  "<b>Antes de la hoja de trabajo:</b> Luz y longitud de onda; mezcla aditiva de colores; respuesta del ojo; leer gráficas",
-"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet: Cones, Mixing and Filters<span>{#} min · algebra</span></a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo: Conos, mezclas y filtros<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "In <a>Physics II</a> · <a>Astronomy</a>":
   "En <a>Física II</a> · <a>Astronomía</a>",
 "Oscillations and waves · Virtual Physics Demos":
@@ -7228,6 +7264,8 @@ VDI18N.add('es', 'site', {
   "<b>Antes de las hojas de trabajo:</b> {#}. Movimiento armónico simple y periodo; leer una pendiente; elevar al cuadrado para linealizar una gráfica · {#}. Oscilación y periodo del péndulo; frecuencia angular; osciladores acoplados; logaritmos; ajuste de rectas",
 "<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet {#}: Measuring g<span>{#} min · algebra</span></a> <a>Worksheet {#}: Normal Modes and Chaos<span>{#} min · algebra</span></a> <a>Worksheet {#}: Spherical Pendulum</a> <a>Notes</a>":
   "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo {#}: Medir g<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Modos normales y caos<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Péndulo esférico</a> <a>Notas</a>",
+"Also under <a>Kinematics</a> · <a>Probability and data</a>":
+  "También en <a>Cinemática</a> · <a>Probabilidad y datos</a>",
 "In <a>Physics II</a> · <a>Acoustics</a>":
   "En <a>Física II</a> · <a>Acústica</a>",
 "<b>Before the worksheet:</b> Standing waves on a string; harmonics; wave speed; beats between two tones":
@@ -7282,6 +7320,28 @@ VDI18N.add('es', 'site', {
   "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo {#}: Encontrar exoplanetas<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Encontrar planetas alrededor de otras estrellas (Astro {#})<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Estrellas binarias eclipsantes<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Cómo pesar estrellas binarias<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "Also under <a>Gravitation and orbits</a> · <a>Relativity</a>":
   "También en <a>Gravitación y órbitas</a> · <a>Relatividad</a>",
+"Probability and data · Virtual Physics Demos":
+  "Probabilidad y datos · Demos virtuales de física",
+"Probability and data":
+  "Probabilidad y datos",
+"Describe a data set, roll dice and draw cards, explore distributions, sample a population and watch the central limit theorem, and see chance at work in a Galton board, lab timings and quantum coins.":
+  "Describe un conjunto de datos, tira dados y saca cartas, explora distribuciones, muestrea una población y observa el teorema del límite central, y ve el azar en acción en un tablero de Galton, en tiempos medidos en el laboratorio y en volados cuánticos.",
+"<span>OpenStax Vol {#} · Ch. {#}, {#} · Vol {#} · Ch. {#} · Vol {#} · Ch. {#}–{#}</span>":
+  "<span>OpenStax Vol. {#} · Cap. {#}, {#} · Vol. {#} · Cap. {#} · Vol. {#} · Cap. {#}–{#}</span>",
+"Probability and data demos":
+  "Demos de probabilidad y datos",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet: Describing a Data Set: Center, Spread and One Bad Timing</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo: Cómo describir un conjunto de datos: centro, dispersión y una medición mala</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet: Dice and Cards: Predict, Simulate, Compare</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo: Dados y cartas: predice, simula, compara</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet {#}: How You Sample Matters</a> <a>Worksheet {#}: The Central Limit Theorem</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo {#}: Importa cómo muestreas</a> <a>Hoja de trabajo {#}: El teorema del límite central</a> <a>Notas</a>",
+"Also under <a>Kinematics</a> · <a>Oscillations and waves</a>":
+  "También en <a>Cinemática</a> · <a>Oscilaciones y ondas</a>",
+"<b>Before the worksheet:</b> Probability; superposition and measurement of a two state system; spin; trig functions":
+  "<b>Antes de la hoja de trabajo:</b> Probabilidad; superposición y medición en un sistema de dos estados; espín; funciones trigonométricas",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet: Superposition and Measurement<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo: Superposición y medición<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "Photons and quanta · Virtual Physics Demos":
   "Fotones y cuantos · Demos virtuales de física",
 "Photons and quanta":
@@ -7308,10 +7368,6 @@ VDI18N.add('es', 'site', {
   "<b>Antes de la hoja de trabajo:</b> Modelo de Bohr; niveles de energía de los átomos; electronvolts; longitud de onda y energía del fotón",
 "Also under <a>Heat and thermodynamics</a> · <a>Telescopes and light</a>":
   "También en <a>Calor y termodinámica</a> · <a>Telescopios y luz</a>",
-"<b>Before the worksheet:</b> Probability; superposition and measurement of a two state system; spin; trig functions":
-  "<b>Antes de la hoja de trabajo:</b> Probabilidad; superposición y medición en un sistema de dos estados; espín; funciones trigonométricas",
-"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet: Superposition and Measurement<span>{#} min · algebra</span></a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo: Superposición y medición<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "Relativity · Virtual Physics Demos":
   "Relatividad · Demos virtuales de física",
 "Spacetime diagrams, time dilation, relativistic momentum and energy.":
@@ -7326,8 +7382,6 @@ VDI18N.add('es', 'site', {
   "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo: Diagramas de espacio-tiempo y la transformación de Lorentz<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<b>Before the worksheets:</b> {#}. Special relativity postulates; Galilean velocity addition; Lorentz factor · {#}. Newton's second law as F = dp/dt; kinetic energy and work; reading a slope · {#}. Relativistic energy and momentum; gamma factor; circular motion in a magnetic field":
   "<b>Antes de las hojas de trabajo:</b> {#}. Postulados de la relatividad especial; suma galileana de velocidades; factor de Lorentz · {#}. Segunda ley de Newton como F = dp/dt; energía cinética y trabajo; leer una pendiente · {#}. Energía y momento relativistas; factor gamma; movimiento circular en un campo magnético",
-"Also under <a>Optics</a>":
-  "También en <a>Óptica</a>",
 "<b>Before the worksheet:</b> Orbits and gravity; waves and frequency; E = mc²":
   "<b>Antes de la hoja de trabajo:</b> Órbitas y gravedad; ondas y frecuencia; E = mc²",
 "Also under <a>Gravitation and orbits</a> · <a>Planets and the solar system</a>":
@@ -7402,6 +7456,8 @@ VDI18N.add('es', 'site', {
   "<b>Antes de las hojas de trabajo:</b> {#}. Ondas sonoras, frecuencia y armónicos; decibeles; suma de ondas · {#}. Frecuencia y periodo; armónicos de un tono; ondas senoidales",
 "<b>Before the worksheet:</b> Standing waves in a pipe; nodes and antinodes; speed of sound; fitting a line":
   "<b>Antes de la hoja de trabajo:</b> Ondas estacionarias en un tubo; nodos y antinodos; rapidez del sonido; ajustar una línea",
+"Also under <a>Oscillations and waves</a>":
+  "También en <a>Oscilaciones y ondas</a>",
 "<b>Before the worksheets:</b> {#}. Sound level in decibels; sound absorption; reciprocals and fitting a line · {#}. Sound intensity and decibels; inverse square law; logarithms; reading a slope from a graph":
   "<b>Antes de las hojas de trabajo:</b> {#}. Nivel de sonido en decibeles; absorción del sonido; recíprocos y ajuste de una línea · {#}. Intensidad del sonido y decibeles; ley del inverso del cuadrado; logaritmos; pendiente de una gráfica",
 "<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet {#}: Reverberation Time<span>{#} min · algebra</span></a> <a>Worksheet {#}: Anechoic Chamber<span>{#} min · algebra</span></a> <a>Notes</a>":
@@ -7412,8 +7468,22 @@ VDI18N.add('es', 'site', {
   "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo {#}: Placas de Chladni<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Ondas de Faraday<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<b>Before the worksheet:</b> Standing waves and nodes; wavelength and frequency; force and weight; fitting a line":
   "<b>Antes de la hoja de trabajo:</b> Ondas estacionarias y nodos; longitud de onda y frecuencia; fuerza y peso; ajuste de una recta",
-"Also under <a>Radiation in medicine</a>":
-  "También en <a>Radiación en medicina</a>",
+"Also under <a>Radiation in medicine</a> · <a>The body and senses</a>":
+  "También en <a>Radiación en medicina</a> · <a>El cuerpo y los sentidos</a>",
+"Space, vectors and fields · Virtual Physics Demos":
+  "Espacio, vectores y campos · Demos virtuales de física",
+"Space, vectors and fields":
+  "Espacio, vectores y campos",
+"Curves and motion, vectors and surfaces in space, gradients, multiple integrals, and vector fields with their work and curl.":
+  "Curvas y movimiento, vectores y superficies en el espacio, gradientes, integrales múltiples, y campos vectoriales con su trabajo y su rotacional.",
+"<span>OpenStax Vol {#} · Ch. {#}, {#}, {#}–{#}, {#} · Vol {#} · Ch. {#}, {#}–{#}</span>":
+  "<span>OpenStax Vol. {#} · Cap. {#}, {#}, {#}–{#}, {#} · Vol. {#} · Cap. {#}, {#}–{#}</span>",
+"Space, vectors and fields demos":
+  "Demos de espacio, vectores y campos",
+"<b>Before the worksheet:</b> Vectors and components; work as force times displacement; partial derivatives; integrals along a parameter":
+  "<b>Antes de la hoja de trabajo:</b> Vectores y componentes; el trabajo como fuerza por desplazamiento; derivadas parciales; integrales a lo largo de un parámetro",
+"<a>Open demo</a> <a>Worksheet: Work Along Different Paths<span>{#} min · calculus</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Trabajo por distintas trayectorias<span>{#} min · cálculo</span></a> <a>Notas</a>",
 "Stars · Virtual Physics Demos":
   "Estrellas · Demos virtuales de física",
 "The Sun inside and out, starlight and magnitudes, spectral classes, the HR diagram, binary stars, the gas between the stars, star birth, inside a star, white dwarfs, neutron stars and black holes.":
@@ -7448,6 +7518,24 @@ VDI18N.add('es', 'site', {
   "<b>Antes de la hoja de trabajo:</b> Luminosidad y estructura estelar; enanas blancas; leer gráficas log log y pendientes",
 "<b>Before the worksheet:</b> Density as mass over volume; a spinning object that shrinks turns faster; powers of ten":
   "<b>Antes de la hoja de trabajo:</b> La densidad como masa entre volumen; un objeto que gira y se encoge gira más rápido; potencias de diez",
+"Statistical inference · Virtual Physics Demos":
+  "Inferencia estadística · Demos virtuales de física",
+"Statistical inference":
+  "Inferencia estadística",
+"Confidence intervals, hypothesis tests, chi-square tests, fitting a line, and comparing groups with ANOVA.":
+  "Intervalos de confianza, pruebas de hipótesis, pruebas de chi cuadrada, ajuste de una recta y comparación de grupos con ANOVA.",
+"Statistical inference demos":
+  "Demos de inferencia estadística",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet: What {#} % Confident Means</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo: Qué significa tener {#} % de confianza</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet: Type I Errors, Type II Errors and Power</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo: Errores tipo I, errores tipo II y potencia</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet: Chi-Square Tests: A Loaded Die, Decay Counts and a Table</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo: Pruebas de chi cuadrada: un dado cargado, conteos de decaimiento y una tabla</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet: Fitting a Line and Judging the Fit</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo: Ajustar una recta y juzgar el ajuste</a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet: One Way ANOVA: Gaps, Spreads and False Alarms</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo: ANOVA de un factor: brechas, dispersiones y falsas alarmas</a> <a>Notas</a>",
 "Telescopes and light · Virtual Physics Demos":
   "Telescopios y luz · Demos virtuales de física",
 "Collecting and resolving light, the spectrum and what it tells us.":
@@ -7488,6 +7576,126 @@ VDI18N.add('es', 'site', {
   "{n} demos tienen una actividad así.",
 "No demo has that combination. A Start here needs no math; try Any.":
   "Ninguna demo tiene esa combinación. Un Empieza aquí no necesita matemáticas; prueba Cualquiera.",
+"<span>Dosimetry: Kerma, Equilibrium and the Ion Chamber →</span>":
+  "<span>Dosimetría: kerma, equilibrio y la cámara de ionización →</span>",
+"<a>Medical physics and beyond <span>{#}</span></a>":
+  "<a>Física médica y más <span>{#}</span></a>",
+"Medical physics and beyond <span>{#} demos · {#} topics</span>":
+  "Física médica y más <span>{#} demos · {#} temas</span>",
+"Topics in Medical physics and beyond":
+  "Temas de Física médica y más",
+"<a>Chemistry and biology <span>{#}</span></a>":
+  "<a>Química y biología <span>{#}</span></a>",
+"<a>Math for physics <span>{#}</span></a>":
+  "<a>Matemáticas para física <span>{#}</span></a>",
+"<a>Math for physics</a><a>Worksheet: What {#} % Confident Means</a>":
+  "<a>Matemáticas para física</a><a>Hoja de trabajo: Qué significa tener {#} % de confianza</a>",
+"<a>Math for physics</a><a>Worksheet: Describing a Data Set: Center, Spread and One Bad Timing</a>":
+  "<a>Matemáticas para física</a><a>Hoja de trabajo: Cómo describir un conjunto de datos: centro, dispersión y una medición mala</a>",
+"<a>Math for physics</a><span><span>{#}:{#}</span></span>":
+  "<a>Matemáticas para la física</a><span><span>{#}:{#}</span></span>",
+"<a>Math for physics</a><a>Worksheet: Fitting a Line and Judging the Fit</a>":
+  "<a>Matemáticas para física</a><a>Hoja de trabajo: Ajustar una recta y juzgar el ajuste</a>",
+"<a>Physics I</a><a>Kinematics</a><a>Oscillations and waves</a><a>Worksheet {#}: Random Scatter and Bias</a><a>Worksheet {#}: Is g Really {#}? Statistics on a Pendulum</a><span><span>{#}:{#}</span> <span>{#}:{#}</span></span>":
+  "<a>Física I</a><a>Cinemática</a><a>Oscilaciones y ondas</a><a>Hoja de trabajo {#}: Dispersión aleatoria y sesgo</a><a>Hoja de trabajo {#}: ¿Realmente g es {#}? Estadística con un péndulo</a><span><span>{#}:{#}</span> <span>{#}:{#}</span></span>",
+"<a>Physics I</a><a>Math for physics</a><a>Worksheet: How Good Is a Computed Motion?</a><span><span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span></span>":
+  "<a>Física I</a><a>Matemáticas para la física</a><a>Hoja de trabajo: ¿Qué tan bueno es un movimiento calculado?</a><span><span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span> <span>{#}:{#}</span></span>",
+"<a>Math for physics</a><a>Worksheet: The Small Angle Approximation: How Small Is Small?</a><span><span>{#}:{#}</span> <span>{#}:{#}</span></span>":
+  "<a>Matemáticas para la física</a><a>Hoja de trabajo: La aproximación de ángulo pequeño: ¿qué tan pequeño es pequeño?</a><span><span>{#}:{#}</span> <span>{#}:{#}</span></span>",
+"<span>{#}:{#}</span><span>Review of Functions<span>no activity yet</span></span><span></span>":
+  "<span>{#}:{#}</span><span>Repaso de funciones<span>sin actividad todavía</span></span><span></span>",
+"<span>{#}:{#}</span><span>Basic Classes of Functions<span>no activity yet</span></span><span></span>":
+  "<span>{#}:{#}</span><span>Clases básicas de funciones<span>sin actividad todavía</span></span><span></span>",
+"<span>{#}:{#}</span><span>The Limit Laws<span>no activity yet</span></span><span></span>":
+  "<span>{#}:{#}</span><span>Las leyes de los límites<span>sin actividad todavía</span></span><span></span>",
+"<span>{#}:{#}</span><span>Implicit Differentiation<span>no activity yet</span></span><span></span>":
+  "<span>{#}:{#}</span><span>Derivación implícita<span>sin actividad todavía</span></span><span></span>",
+"<span>{#}:{#}</span><span>Ratio and Root Tests<span>no activity yet</span></span><span></span>":
+  "<span>{#}:{#}</span><span>Pruebas del cociente y de la raíz<span>sin actividad todavía</span></span><span></span>",
+"<span>{#}:{#}</span><span>Properties of Power Series<span>no activity yet</span></span><span></span>":
+  "<span>{#}:{#}</span><span>Propiedades de las series de potencias<span>sin actividad todavía</span></span><span></span>",
+"<span>{#}:{#}</span><span>The Chain Rule<span>no activity yet</span></span><span></span>":
+  "<span>{#}:{#}</span><span>La regla de la cadena<span>sin actividad todavía</span></span><span></span>",
+"<span>{#}</span><span>Two Population Means with Unknown Standard Deviations</span><span><a>Hypothesis Tests</a></span>":
+  "<span>{#}</span><span>Dos medias poblacionales con desviaciones estándar desconocidas</span><span><a>Pruebas de hipótesis</a></span>",
+"<a>Radioactive Decay</a> · <a>Chi-Square Tests</a> · <a>Galton Board</a> · <a>Quantum Coin Toss</a>":
+  "<a>Decaimiento radiactivo</a> · <a>Pruebas de chi cuadrada</a> · <a>Tablero de Galton</a> · <a>Lanzamiento de moneda cuántica</a>",
+"<span>{#}</span><span>Test of Independence</span><span><a>Chi-Square Tests</a></span>":
+  "<span>{#}</span><span>Prueba de independencia</span><span><a>Pruebas de chi cuadrada</a></span>",
+"<span>{#}</span><span>Test of Two Variances</span><span><a>One Way ANOVA</a></span>":
+  "<span>{#}</span><span>Prueba de dos varianzas</span><span><a>ANOVA de un factor</a></span>",
+"Hypothesis Tests (notes to come)":
+  "Pruebas de hipótesis (notas por venir)",
+"One Way ANOVA (notes to come)":
+  "ANOVA de un factor (notas por venir)",
+"Linear Regression and Correlation (notes to come)":
+  "Regresión lineal y correlación (notas por venir)",
+"Data Explorer (notes to come)":
+  "Explorador de datos (notas por venir)",
+"Distribution Explorer (notes to come)":
+  "Explorador de distribuciones (notas por venir)",
+"Sampling Lab (notes to come)":
+  "Laboratorio de muestreo (notas por venir)",
+"Confidence Intervals (notes to come)":
+  "Intervalos de confianza (notas por venir)",
+"Chance Lab: Dice, Cards and Candies (notes to come)":
+  "Laboratorio de azar: dados, cartas y dulces (notas por venir)",
+"Chi-Square Tests (notes to come)":
+  "Pruebas de chi cuadrada (notas por venir)",
+"Chemistry and biology · Virtual Physics Demos":
+  "Química y biología · Demos virtuales de física",
+"<b>Medical physics and beyond</b>":
+  "<b>Física médica y más</b>",
+"Chemistry and biology":
+  "Química y biología",
+"An oscillating chemical reaction, the structure of DNA, nerve signals, the ECG and the ear, surface tension in the lungs, and osmosis in cells and capillaries.":
+  "Una reacción química oscilante, la estructura del ADN, las señales nerviosas, el ECG y el oído, la tensión superficial en los pulmones y la ósmosis en las células y los capilares.",
+"<a>Chemistry and biology</a>":
+  "<a>Química y biología</a>",
+"<a>Math for physics</a>":
+  "<a>Matemáticas para física</a>",
+"Every demo on this subject, from every course and module, with all of its worksheets. Opened from here, a demo steps through this topic with its previous and next links. The other topics in Medical physics and beyond are in the bar above; the <a>home page</a> lists them all.":
+  "Todas las demos de este tema, de cada curso y módulo, con todas sus hojas de trabajo. Abierta desde aquí, una demo recorre este tema con sus enlaces de anterior y siguiente. Los demás temas de Física médica y más están en la barra de arriba; la <a>página de inicio</a> los enlista todos.",
+"Chemistry and biology demos":
+  "Demos de química y biología",
+"Also under <a>Fluids</a> · <a>Heat and thermodynamics</a>":
+  "También en <a>Fluidos</a> · <a>Calor y termodinámica</a>",
+"Also under <a>Chemistry and biology</a>":
+  "También en <a>Química y biología</a>",
+"Also under <a>Heat and thermodynamics</a> · <a>Chemistry and biology</a>":
+  "También en <a>Calor y termodinámica</a> · <a>Química y biología</a>",
+"Also under <a>Fluids</a> · <a>Chemistry and biology</a>":
+  "También en <a>Fluidos</a> · <a>Química y biología</a>",
+"Math for physics · Virtual Physics Demos":
+  "Matemáticas para física · Demos virtuales de física",
+"Math for physics":
+  "Matemáticas para física",
+"Type any function and see its derivatives and integrals, its Taylor polynomials, the slope field of a differential equation, a vector field with its work and curl, or a point moving along a curve, and watch how a computer solves the equations of motion step by step. Then statistics for the lab: describe a data set, roll and draw for probability, sample a population and watch the central limit theorem, build confidence intervals, test hypotheses, and fit a line or compare groups.":
+  "Escribe cualquier función y mira sus derivadas e integrales, sus polinomios de Taylor, el campo de pendientes de una ecuación diferencial, un campo vectorial con su trabajo y su rotacional, o un punto que se mueve a lo largo de una curva, y observa cómo una computadora resuelve paso a paso las ecuaciones de movimiento. Luego, estadística para el laboratorio: describe un conjunto de datos, lanza y saca para estudiar probabilidad, toma muestras de una población y observa el teorema del límite central, construye intervalos de confianza, haz pruebas de hipótesis, y ajusta una recta o compara grupos.",
+"<span>OpenStax Vol {#} · Ch. {#}–{#}, {#}–{#}, {#}, {#} · Vol {#} · Ch. {#}, {#}–{#} · Vol {#} · Ch. {#}, {#}</span>":
+  "<span>OpenStax Vol. {#} · Cap. {#}–{#}, {#}–{#}, {#}, {#} · Vol. {#} · Cap. {#}, {#}–{#} · Vol. {#} · Cap. {#}, {#}</span>",
+"Math for physics demos":
+  "Demos de matemáticas para física",
+"<a>Open demo</a> <a>Worksheet: Describing a Data Set: Center, Spread and One Bad Timing</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Cómo describir un conjunto de datos: centro, dispersión y una medición mala</a>",
+"<a>Open demo</a> <a>Worksheet: Dice and Cards: Predict, Simulate, Compare</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Dados y cartas: predice, simula, compara</a>",
+"<a>Open demo</a>":
+  "<a>Abrir demo</a>",
+"<a>Open demo</a> <a>Worksheet {#}: How You Sample Matters</a> <a>Worksheet {#}: The Central Limit Theorem</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Importa cómo muestreas</a> <a>Hoja de trabajo {#}: El teorema del límite central</a>",
+"<a>Open demo</a> <a>Worksheet: What {#} % Confident Means</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Qué significa tener {#} % de confianza</a>",
+"<a>Open demo</a> <a>Worksheet: Type I Errors, Type II Errors and Power</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Errores tipo I, errores tipo II y potencia</a>",
+"<a>Open demo</a> <a>Worksheet: Chi-Square Tests: A Loaded Die, Decay Counts and a Table</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Pruebas de chi cuadrada: un dado cargado, conteos de decaimiento y una tabla</a>",
+"<a>Open demo</a> <a>Worksheet: Fitting a Line and Judging the Fit</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Ajustar una recta y juzgar el ajuste</a>",
+"<a>Open demo</a> <a>Worksheet: One Way ANOVA: Gaps, Spreads and False Alarms</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: ANOVA de un factor: brechas, dispersiones y falsas alarmas</a>",
+"Also under <a>Radiation in medicine</a>":
+  "También en <a>Radiación en medicina</a>",
 "<span>Terminal Velocity →</span>":
   "<span>Velocidad terminal →</span>",
 "<a>Open demo</a> <a>Worksheet: Support Forces and Cable Tension<span>{#} min · algebra</span></a> <a>Notes</a>":
@@ -7686,8 +7894,6 @@ VDI18N.add('es', 'site', {
   "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo: Proyectiles y resistencia del aire<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "Type any function and see its derivatives and its integral graphed with it, and watch how a computer solves the equations of motion step by step.":
   "Escribe cualquier función y ve sus derivadas y su integral graficadas con ella, y observa cómo una computadora resuelve las ecuaciones de movimiento paso a paso.",
-"<span><strong>{#}</strong> worksheet</span>":
-  "<span><strong>{#}</strong> hoja de trabajo</span>",
 "<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet {#}: Measuring a Half Life<span>{#} min · algebra</span></a> <a>Worksheet {#}: Parent and Daughter<span>{#} min · algebra</span></a> <a>Worksheet {#}: Alpha and Beta Decay<span>{#} min · algebra</span></a> <a>Worksheet {#}: A Technetium Generator (Medical Physics)<span>{#} min · calculus</span></a> <a>Notes</a>":
   "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo {#}: Medir una vida media<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Núcleo padre y núcleo hijo<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Decaimiento alfa y beta<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Un generador de tecnecio (Física médica)<span>{#} min · cálculo</span></a> <a>Notas</a>",
 "<span>Holography →</span>":

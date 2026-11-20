@@ -1274,199 +1274,6 @@
      ]
     },
     {
-     "demo": "function-families",
-     "title": "Families of Functions",
-     "desc": "Turn a point around the unit circle and watch it draw sine and cosine with the angle as arc length; stretch and shift any typed function and see what each number does; reflect a graph in y = x to make its inverse, with the slope turning into 1/slope. Phasors, simple harmonic motion and exponential decay with its half life are the same moves.",
-     "tags": [
-      "unit circle",
-      "radian",
-      "trigonometric functions",
-      "transformations of functions",
-      "inverse function",
-      "exponential function",
-      "logarithm",
-      "phasor",
-      "simple harmonic motion",
-      "half life",
-      "calculus"
-     ]
-    },
-    {
-     "demo": "limits",
-     "title": "Limits",
-     "desc": "Zoom into a point and watch a function settle, or not: one sided limits, holes, jumps, blow ups and oscillation. Pick an ε band and see the largest δ that fits it, computed rather than guessed. Limits at infinity and asymptotes, sin x / x, and L'Hôpital's rule with f/g beside f′/g′; average velocity closing in on instantaneous velocity and the small angle limit of a pendulum.",
-     "tags": [
-      "limit",
-      "one sided limit",
-      "continuity",
-      "epsilon delta",
-      "asymptote",
-      "limit at infinity",
-      "L'Hôpital's rule",
-      "squeeze theorem",
-      "instantaneous velocity",
-      "small angle approximation",
-      "calculus"
-     ]
-    },
-    {
-     "demo": "derivatives",
-     "title": "Functions and Their Derivatives",
-     "desc": "Type or paste any function and see it graphed with its first, second and third derivatives and its integral, updating as you type; slide a point along the curve to see the tangent slope.",
-     "tags": [
-      "derivative",
-      "second derivative",
-      "integral",
-      "tangent line",
-      "calculus"
-     ]
-    },
-    {
-     "demo": "integrals",
-     "title": "Riemann Sums and Integrals",
-     "desc": "Fill the area under any typed function with left, right, midpoint, trapezoid or Simpson pieces, raise n and watch the sum close in on the exact integral, read each rule's order from its error on log axes, and follow the area as it builds up: work, impulse, charge, displacement and improper integrals.",
-     "tags": [
-      "integral",
-      "Riemann sum",
-      "trapezoid rule",
-      "Simpson's rule",
-      "numerical integration",
-      "area between curves",
-      "improper integral",
-      "fundamental theorem of calculus",
-      "calculus"
-     ]
-    },
-    {
-     "demo": "numerical-methods",
-     "title": "Numerical Methods for Motion",
-     "desc": "Run Euler, symplectic Euler, Verlet and RK4 side by side on a spring, a pendulum and an orbit, against the exact motion; watch the energy drift, and plot the error against the time step to find each method's order.",
-     "tags": [
-      "numerical integration",
-      "Euler method",
-      "Runge–Kutta",
-      "Verlet",
-      "energy conservation",
-      "phase portrait"
-     ]
-    },
-    {
-     "demo": "curves-and-motion",
-     "title": "Curves and Motion",
-     "desc": "Type a path as x(t) and y(t), a polar curve r(θ) or a curve in space and watch a point move along it: velocity and acceleration, the acceleration split into tangential and normal parts, T and N, the osculating circle and curvature, arc length and swept area. Cycloid, projectile, circular motion, a proton's helix, and orbits as conics from a focus and a directrix with Kepler's equal areas.",
-     "tags": [
-      "parametric equations",
-      "polar coordinates",
-      "curvature",
-      "arc length",
-      "tangential and normal acceleration",
-      "conic sections",
-      "Kepler's second law"
-     ]
-    },
-    {
-     "demo": "slope-fields",
-     "title": "Slope Fields and Euler's Method",
-     "desc": "Type a differential equation dy/dt = f(t, y) and see its slope field; click to start solution curves, step along them with Euler's method against the accurate solution, and read the equilibria and their stability from the phase line. Newton's cooling, decay, RC circuits, falling with drag, logistic growth and two mysteries to solve.",
-     "tags": [
-      "differential equations",
-      "slope field",
-      "Euler method",
-      "phase line",
-      "Newton's law of cooling",
-      "terminal velocity",
-      "logistic growth"
-     ]
-    },
-    {
-     "demo": "taylor",
-     "title": "Taylor Polynomials and Series",
-     "desc": "Type any function and add the terms of its Taylor polynomial about any center: watch it hug the curve, see where it stays within 1% and the Lagrange error bound, and find the radius of convergence from the poles and branch points in the complex plane. Physics setups: the small angle pendulum, the binomial approximation, relativistic kinetic energy, gravity above Earth and the dipole field. Build new series by substitution, differentiation and integration.",
-     "tags": [
-      "Taylor series",
-      "Maclaurin series",
-      "radius of convergence",
-      "Lagrange remainder",
-      "small angle approximation",
-      "binomial approximation"
-     ]
-    },
-    {
-     "demo": "vector-fields",
-     "title": "Vector Fields, Work and Curl",
-     "desc": "Type a 2D field and see its arrows and flowing tracers; add up the work along a path, test path independence, find the potential of a conservative field, measure curl with a paddle wheel and divergence with a small box, and check Green's theorem around a loop.",
-     "tags": [
-      "vector field",
-      "line integral",
-      "work",
-      "conservative force",
-      "potential",
-      "curl",
-      "divergence",
-      "Green's theorem",
-      "Ampère's law",
-      "calculus"
-     ]
-    },
-    {
-     "demo": "rates-and-optimization",
-     "title": "Related Rates and Optimization",
-     "desc": "One quantity drives a whole scene: a ladder slides down a wall, a cone fills with water, a shadow grows as you walk from a lamp, with every rate shown and the chain rule checked against the motion. Then find the best box, field and can, where the derivative is zero, and the physics: the lifeguard's fastest path is Snell's law (Fermat's principle), and the longest throw is at 45° on level ground and lower from a height.",
-     "tags": [
-      "related rates",
-      "chain rule",
-      "optimization",
-      "Fermat's principle",
-      "Snell's law",
-      "projectile range"
-     ]
-    },
-    {
-     "demo": "hypothesis-tests",
-     "title": "Hypothesis Tests",
-     "desc": "Test a claim in the book's four steps: hypotheses, the null distribution with your statistic and the shaded p value, and a decision with a conclusion in words. One mean (z or t), one proportion, two means (σ known, or Welch's unpooled t), two proportions and matched pairs, set in the lab: is this g 9.81, did the new photogate change the period? Run a thousand studies to count Type I and Type II errors and draw the power curve.",
-     "tags": [
-      "hypothesis test",
-      "p value",
-      "Type I error",
-      "Type II error",
-      "power",
-      "t test",
-      "z test",
-      "proportion",
-      "matched pairs",
-      "Welch"
-     ]
-    },
-    {
-     "demo": "anova",
-     "title": "One Way ANOVA",
-     "desc": "Three to five groups as dot plots: drag each group's mean and spread and see the mean squares between and within groups as two squares, the F ratio and its p value. Run many studies with every mean equal and watch the F distribution fill in, false alarms and all, and test whether two variances are equal.",
-     "tags": [
-      "ANOVA",
-      "F distribution",
-      "F ratio",
-      "variance",
-      "between groups",
-      "within groups",
-      "test of two variances"
-     ]
-    },
-    {
-     "demo": "regression",
-     "title": "Linear Regression and Correlation",
-     "desc": "Drag the points of a scatter plot and watch the least squares line and its residual squares follow; try to beat it with your own line. r, r², s, the slope and intercept with their uncertainties read in context, the t test and critical value for r beside a shuffle test, prediction against extrapolation, and outliers that pull the line. Book data and simulated spring, pendulum and Ohm's law labs.",
-     "tags": [
-      "regression",
-      "least squares",
-      "correlation",
-      "residuals",
-      "outliers",
-      "permutation test",
-      "statistics"
-     ]
-    },
-    {
      "demo": "surface-tension",
      "title": "Surface Tension and Capillarity",
      "desc": "Watch water climb thin glass tubes and mercury sink, find the pressure inside drops and bubbles and let a small bubble empty into a big one, rest a steel needle and a water strider on water, and pull a soap film on a sliding wire.",
@@ -1476,188 +1283,6 @@
       "contact angle",
       "bubble pressure",
       "meniscus"
-     ]
-    },
-    {
-     "demo": "multiple-integrals",
-     "title": "Multiple Integrals",
-     "desc": "Boxes under a surface turning into a double integral as the grid refines; slices in either order over a region you type, with the reversed bounds checked; polar wedges and the Gaussian integral √π; triple integrals filled with rectangular, cylindrical or spherical cells; the mass, center of mass and moment of inertia of a rod, plate, disk, sphere or cone (½MR², ⅖MR², ⅓ML² checked); and a grid stretched by a change of variables and its Jacobian.",
-     "tags": [
-      "double integral",
-      "triple integral",
-      "iterated integral",
-      "polar coordinates",
-      "spherical coordinates",
-      "Jacobian",
-      "center of mass",
-      "moment of inertia",
-      "calculus"
-     ]
-    },
-    {
-     "demo": "series",
-     "title": "Sequences and Series",
-     "desc": "Type the terms of any series and add them one at a time: terms as bars, partial sums as a running total. Geometric sums of a bouncing ball's distance and time, the harmonic series passing every bound, the integral test as rectangles under a curve, comparison, the ratio and root tests, the alternating series bound, and sequences with their limits.",
-     "tags": [
-      "infinite series",
-      "partial sums",
-      "geometric series",
-      "harmonic series",
-      "integral test",
-      "comparison test",
-      "ratio test",
-      "alternating series",
-      "sequences",
-      "Madelung constant",
-      "calculus"
-     ]
-    },
-    {
-     "demo": "solids-of-revolution",
-     "title": "Solids of Revolution",
-     "desc": "Spin the region under any typed curve about an axis and slice the solid into disks, washers or cylindrical shells with an n slider, in 3D or flat: the sum of the slices closes in on the integral. Cross sections standing on a base (squares, semicircles, triangles), arc length as a chain of segments, surface area as frustum bands, the moment of inertia of a cone, (3/10)MR², and a sphere, (2/5)MR², and the volume of a vase and of water in a bowl.",
-     "tags": [
-      "volume",
-      "disk method",
-      "washer method",
-      "shell method",
-      "cross sections",
-      "arc length",
-      "surface area",
-      "moment of inertia",
-      "solids of revolution",
-      "calculus"
-     ]
-    },
-    {
-     "demo": "surfaces-and-gradients",
-     "title": "Surfaces and Gradients",
-     "desc": "Type z = f(x, y) and see the surface beside its contour map: partial derivatives as slopes of slices, the tangent plane, the directional derivative and the gradient pointing uphill across the level curves, peaks, pits and saddles by the second derivative test, Lagrange multipliers on a constraint, and limits along different paths. E = −∇V for two charges, a potential energy surface with a rolling ball, the ideal gas P(V, T).",
-     "tags": [
-      "partial derivatives",
-      "gradient",
-      "directional derivative",
-      "tangent plane",
-      "level curves",
-      "critical points",
-      "second derivative test",
-      "Lagrange multipliers",
-      "potential",
-      "calculus"
-     ]
-    },
-    {
-     "demo": "space-3d",
-     "title": "Vectors and Surfaces in Space",
-     "desc": "A space you can turn: vectors by their x, y and z components with their sum, dot product and angle, and cross product with the right hand rule and its area; a line and a plane and where they meet; the quadric surfaces with their traces; a point in rectangular, cylindrical and spherical coordinates with its coordinate surfaces. Torque r × F, the magnetic force qv × B, work F · d and the potential of a point charge.",
-     "tags": [
-      "vectors",
-      "dot product",
-      "cross product",
-      "right hand rule",
-      "lines and planes",
-      "quadric surfaces",
-      "traces",
-      "cylindrical coordinates",
-      "spherical coordinates",
-      "torque",
-      "calculus"
-     ]
-    },
-    {
-     "demo": "data-explorer",
-     "title": "Data Explorer",
-     "desc": "One data set shown every way the statistics book draws it, all at once: frequency table with relative and cumulative relative frequency, stemplot, dot plot, histogram with a draggable start and bin width, box plot and time series. Drag a point and watch the mean and median, quartiles and percentiles, IQR and the outlier fences, s and skew respond. Simulated lab readings (pendulum timings, lap times, decay counts) and data sets from OpenStax Introductory Statistics, or your own.",
-     "tags": [
-      "descriptive statistics",
-      "histogram",
-      "stemplot",
-      "box plot",
-      "frequency table",
-      "quartiles",
-      "percentiles",
-      "outliers",
-      "standard deviation",
-      "skewness",
-      "statistics"
-     ]
-    },
-    {
-     "demo": "distribution-explorer",
-     "title": "Distribution Explorer",
-     "desc": "Ten probability distributions from the statistics book with sliders: binomial, geometric, hypergeometric, Poisson, uniform, exponential, normal, t, chi square and F. Shade P(a < X < b) and read it with the calculator command the book would use, find z scores and percentiles, and draw random values to watch a histogram fill against the curve. Compare t with the normal as df grows, and the binomial with its normal and Poisson approximations.",
-     "tags": [
-      "probability distribution",
-      "binomial",
-      "Poisson",
-      "normal distribution",
-      "z score",
-      "percentile",
-      "Student t",
-      "chi square",
-      "F distribution",
-      "exponential distribution",
-      "statistics"
-     ]
-    },
-    {
-     "demo": "sampling-lab",
-     "title": "Sampling Lab",
-     "desc": "A lecture hall of 400 simulated students, every one shown. Sample them five ways (simple random, stratified, cluster, systematic, convenience) and see who gets picked and how biased and spread each method's estimates are; compare a self selected study with a randomized one and find the lurking variable; then draw thousands of samples and watch the means and sums pile up into a normal curve with spread σ/√n: the central limit theorem.",
-     "tags": [
-      "statistics",
-      "sampling methods",
-      "bias",
-      "lurking variable",
-      "randomized experiment",
-      "central limit theorem",
-      "standard error"
-     ]
-    },
-    {
-     "demo": "confidence-intervals",
-     "title": "Confidence Intervals",
-     "desc": "Draw sample after sample and stack their intervals against the true value: z with σ known, z with s, t, a proportion and plus four. Count how many of 100 catch the truth at 90, 95 and 99 %, see z with s fail at small n, and watch the width shrink as 1/√n. A pendulum timed by hand, heights, decay times and photons through a polarizer, all simulated.",
-     "tags": [
-      "statistics",
-      "confidence interval",
-      "t distribution",
-      "proportion",
-      "plus four",
-      "error bound",
-      "standard error"
-     ]
-    },
-    {
-     "demo": "chance-lab",
-     "title": "Chance Lab: Dice, Cards and Candies",
-     "desc": "Roll dice, deal cards with or without putting them back, and draw candies from a cup. Pick two events and watch every trial land in a Venn diagram, a tree diagram and a contingency table; check the addition and multiplication rules and independence; and watch relative frequencies settle toward probabilities and averages toward expected values.",
-     "tags": [
-      "probability",
-      "conditional probability",
-      "independent events",
-      "Venn diagram",
-      "tree diagram",
-      "contingency table",
-      "expected value",
-      "law of large numbers",
-      "binomial distribution",
-      "hypergeometric distribution"
-     ]
-    },
-    {
-     "demo": "chi-square-tests",
-     "title": "Chi-Square Tests",
-     "desc": "Observed against expected counts with each cell's (O − E)²/E drawn: a loaded die, Mendel's peas, Geiger counts against a Poisson distribution, tables of two variables, and the spread of stopwatch timings. Simulate data sets where the hypothesis is true and watch their chi square values fill a histogram under the curve.",
-     "tags": [
-      "chi square test",
-      "goodness of fit",
-      "test of independence",
-      "test for homogeneity",
-      "single variance",
-      "degrees of freedom",
-      "Poisson distribution",
-      "p value"
      ]
     }
    ]
@@ -2410,6 +2035,387 @@
       "Strehl ratio",
       "seeing",
       "adaptive optics"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "mathematics",
+   "title": "Mathematics",
+   "demos": [
+    {
+     "demo": "function-families",
+     "title": "Families of Functions",
+     "desc": "Turn a point around the unit circle and watch it draw sine and cosine with the angle as arc length; stretch and shift any typed function and see what each number does; reflect a graph in y = x to make its inverse, with the slope turning into 1/slope. Phasors, simple harmonic motion and exponential decay with its half life are the same moves.",
+     "tags": [
+      "unit circle",
+      "radian",
+      "trigonometric functions",
+      "transformations of functions",
+      "inverse function",
+      "exponential function",
+      "logarithm",
+      "phasor",
+      "simple harmonic motion",
+      "half life",
+      "calculus"
+     ]
+    },
+    {
+     "demo": "limits",
+     "title": "Limits",
+     "desc": "Zoom into a point and watch a function settle, or not: one sided limits, holes, jumps, blow ups and oscillation. Pick an ε band and see the largest δ that fits it, computed rather than guessed. Limits at infinity and asymptotes, sin x / x, and L'Hôpital's rule with f/g beside f′/g′; average velocity closing in on instantaneous velocity and the small angle limit of a pendulum.",
+     "tags": [
+      "limit",
+      "one sided limit",
+      "continuity",
+      "epsilon delta",
+      "asymptote",
+      "limit at infinity",
+      "L'Hôpital's rule",
+      "squeeze theorem",
+      "instantaneous velocity",
+      "small angle approximation",
+      "calculus"
+     ]
+    },
+    {
+     "demo": "derivatives",
+     "title": "Functions and Their Derivatives",
+     "desc": "Type or paste any function and see it graphed with its first, second and third derivatives and its integral, updating as you type; slide a point along the curve to see the tangent slope.",
+     "tags": [
+      "derivative",
+      "second derivative",
+      "integral",
+      "tangent line",
+      "calculus"
+     ]
+    },
+    {
+     "demo": "rates-and-optimization",
+     "title": "Related Rates and Optimization",
+     "desc": "One quantity drives a whole scene: a ladder slides down a wall, a cone fills with water, a shadow grows as you walk from a lamp, with every rate shown and the chain rule checked against the motion. Then find the best box, field and can, where the derivative is zero, and the physics: the lifeguard's fastest path is Snell's law (Fermat's principle), and the longest throw is at 45° on level ground and lower from a height.",
+     "tags": [
+      "related rates",
+      "chain rule",
+      "optimization",
+      "Fermat's principle",
+      "Snell's law",
+      "projectile range"
+     ]
+    },
+    {
+     "demo": "integrals",
+     "title": "Riemann Sums and Integrals",
+     "desc": "Fill the area under any typed function with left, right, midpoint, trapezoid or Simpson pieces, raise n and watch the sum close in on the exact integral, read each rule's order from its error on log axes, and follow the area as it builds up: work, impulse, charge, displacement and improper integrals.",
+     "tags": [
+      "integral",
+      "Riemann sum",
+      "trapezoid rule",
+      "Simpson's rule",
+      "numerical integration",
+      "area between curves",
+      "improper integral",
+      "fundamental theorem of calculus",
+      "calculus"
+     ]
+    },
+    {
+     "demo": "solids-of-revolution",
+     "title": "Solids of Revolution",
+     "desc": "Spin the region under any typed curve about an axis and slice the solid into disks, washers or cylindrical shells with an n slider, in 3D or flat: the sum of the slices closes in on the integral. Cross sections standing on a base (squares, semicircles, triangles), arc length as a chain of segments, surface area as frustum bands, the moment of inertia of a cone, (3/10)MR², and a sphere, (2/5)MR², and the volume of a vase and of water in a bowl.",
+     "tags": [
+      "volume",
+      "disk method",
+      "washer method",
+      "shell method",
+      "cross sections",
+      "arc length",
+      "surface area",
+      "moment of inertia",
+      "solids of revolution",
+      "calculus"
+     ]
+    },
+    {
+     "demo": "series",
+     "title": "Sequences and Series",
+     "desc": "Type the terms of any series and add them one at a time: terms as bars, partial sums as a running total. Geometric sums of a bouncing ball's distance and time, the harmonic series passing every bound, the integral test as rectangles under a curve, comparison, the ratio and root tests, the alternating series bound, and sequences with their limits.",
+     "tags": [
+      "infinite series",
+      "partial sums",
+      "geometric series",
+      "harmonic series",
+      "integral test",
+      "comparison test",
+      "ratio test",
+      "alternating series",
+      "sequences",
+      "Madelung constant",
+      "calculus"
+     ]
+    },
+    {
+     "demo": "taylor",
+     "title": "Taylor Polynomials and Series",
+     "desc": "Type any function and add the terms of its Taylor polynomial about any center: watch it hug the curve, see where it stays within 1% and the Lagrange error bound, and find the radius of convergence from the poles and branch points in the complex plane. Physics setups: the small angle pendulum, the binomial approximation, relativistic kinetic energy, gravity above Earth and the dipole field. Build new series by substitution, differentiation and integration.",
+     "tags": [
+      "Taylor series",
+      "Maclaurin series",
+      "radius of convergence",
+      "Lagrange remainder",
+      "small angle approximation",
+      "binomial approximation"
+     ]
+    },
+    {
+     "demo": "slope-fields",
+     "title": "Slope Fields and Euler's Method",
+     "desc": "Type a differential equation dy/dt = f(t, y) and see its slope field; click to start solution curves, step along them with Euler's method against the accurate solution, and read the equilibria and their stability from the phase line. Newton's cooling, decay, RC circuits, falling with drag, logistic growth and two mysteries to solve.",
+     "tags": [
+      "differential equations",
+      "slope field",
+      "Euler method",
+      "phase line",
+      "Newton's law of cooling",
+      "terminal velocity",
+      "logistic growth"
+     ]
+    },
+    {
+     "demo": "numerical-methods",
+     "title": "Numerical Methods for Motion",
+     "desc": "Run Euler, symplectic Euler, Verlet and RK4 side by side on a spring, a pendulum and an orbit, against the exact motion; watch the energy drift, and plot the error against the time step to find each method's order.",
+     "tags": [
+      "numerical integration",
+      "Euler method",
+      "Runge–Kutta",
+      "Verlet",
+      "energy conservation",
+      "phase portrait"
+     ]
+    },
+    {
+     "demo": "curves-and-motion",
+     "title": "Curves and Motion",
+     "desc": "Type a path as x(t) and y(t), a polar curve r(θ) or a curve in space and watch a point move along it: velocity and acceleration, the acceleration split into tangential and normal parts, T and N, the osculating circle and curvature, arc length and swept area. Cycloid, projectile, circular motion, a proton's helix, and orbits as conics from a focus and a directrix with Kepler's equal areas.",
+     "tags": [
+      "parametric equations",
+      "polar coordinates",
+      "curvature",
+      "arc length",
+      "tangential and normal acceleration",
+      "conic sections",
+      "Kepler's second law"
+     ]
+    },
+    {
+     "demo": "space-3d",
+     "title": "Vectors and Surfaces in Space",
+     "desc": "A space you can turn: vectors by their x, y and z components with their sum, dot product and angle, and cross product with the right hand rule and its area; a line and a plane and where they meet; the quadric surfaces with their traces; a point in rectangular, cylindrical and spherical coordinates with its coordinate surfaces. Torque r × F, the magnetic force qv × B, work F · d and the potential of a point charge.",
+     "tags": [
+      "vectors",
+      "dot product",
+      "cross product",
+      "right hand rule",
+      "lines and planes",
+      "quadric surfaces",
+      "traces",
+      "cylindrical coordinates",
+      "spherical coordinates",
+      "torque",
+      "calculus"
+     ]
+    },
+    {
+     "demo": "surfaces-and-gradients",
+     "title": "Surfaces and Gradients",
+     "desc": "Type z = f(x, y) and see the surface beside its contour map: partial derivatives as slopes of slices, the tangent plane, the directional derivative and the gradient pointing uphill across the level curves, peaks, pits and saddles by the second derivative test, Lagrange multipliers on a constraint, and limits along different paths. E = −∇V for two charges, a potential energy surface with a rolling ball, the ideal gas P(V, T).",
+     "tags": [
+      "partial derivatives",
+      "gradient",
+      "directional derivative",
+      "tangent plane",
+      "level curves",
+      "critical points",
+      "second derivative test",
+      "Lagrange multipliers",
+      "potential",
+      "calculus"
+     ]
+    },
+    {
+     "demo": "multiple-integrals",
+     "title": "Multiple Integrals",
+     "desc": "Boxes under a surface turning into a double integral as the grid refines; slices in either order over a region you type, with the reversed bounds checked; polar wedges and the Gaussian integral √π; triple integrals filled with rectangular, cylindrical or spherical cells; the mass, center of mass and moment of inertia of a rod, plate, disk, sphere or cone (½MR², ⅖MR², ⅓ML² checked); and a grid stretched by a change of variables and its Jacobian.",
+     "tags": [
+      "double integral",
+      "triple integral",
+      "iterated integral",
+      "polar coordinates",
+      "spherical coordinates",
+      "Jacobian",
+      "center of mass",
+      "moment of inertia",
+      "calculus"
+     ]
+    },
+    {
+     "demo": "vector-fields",
+     "title": "Vector Fields, Work and Curl",
+     "desc": "Type a 2D field and see its arrows and flowing tracers; add up the work along a path, test path independence, find the potential of a conservative field, measure curl with a paddle wheel and divergence with a small box, and check Green's theorem around a loop.",
+     "tags": [
+      "vector field",
+      "line integral",
+      "work",
+      "conservative force",
+      "potential",
+      "curl",
+      "divergence",
+      "Green's theorem",
+      "Ampère's law",
+      "calculus"
+     ]
+    },
+    {
+     "demo": "data-explorer",
+     "title": "Data Explorer",
+     "desc": "One data set shown every way the statistics book draws it, all at once: frequency table with relative and cumulative relative frequency, stemplot, dot plot, histogram with a draggable start and bin width, box plot and time series. Drag a point and watch the mean and median, quartiles and percentiles, IQR and the outlier fences, s and skew respond. Simulated lab readings (pendulum timings, lap times, decay counts) and data sets from OpenStax Introductory Statistics, or your own.",
+     "tags": [
+      "descriptive statistics",
+      "histogram",
+      "stemplot",
+      "box plot",
+      "frequency table",
+      "quartiles",
+      "percentiles",
+      "outliers",
+      "standard deviation",
+      "skewness",
+      "statistics"
+     ]
+    },
+    {
+     "demo": "chance-lab",
+     "title": "Chance Lab: Dice, Cards and Candies",
+     "desc": "Roll dice, deal cards with or without putting them back, and draw candies from a cup. Pick two events and watch every trial land in a Venn diagram, a tree diagram and a contingency table; check the addition and multiplication rules and independence; and watch relative frequencies settle toward probabilities and averages toward expected values.",
+     "tags": [
+      "probability",
+      "conditional probability",
+      "independent events",
+      "Venn diagram",
+      "tree diagram",
+      "contingency table",
+      "expected value",
+      "law of large numbers",
+      "binomial distribution",
+      "hypergeometric distribution"
+     ]
+    },
+    {
+     "demo": "distribution-explorer",
+     "title": "Distribution Explorer",
+     "desc": "Ten probability distributions from the statistics book with sliders: binomial, geometric, hypergeometric, Poisson, uniform, exponential, normal, t, chi square and F. Shade P(a < X < b) and read it with the calculator command the book would use, find z scores and percentiles, and draw random values to watch a histogram fill against the curve. Compare t with the normal as df grows, and the binomial with its normal and Poisson approximations.",
+     "tags": [
+      "probability distribution",
+      "binomial",
+      "Poisson",
+      "normal distribution",
+      "z score",
+      "percentile",
+      "Student t",
+      "chi square",
+      "F distribution",
+      "exponential distribution",
+      "statistics"
+     ]
+    },
+    {
+     "demo": "sampling-lab",
+     "title": "Sampling Lab",
+     "desc": "A lecture hall of 400 simulated students, every one shown. Sample them five ways (simple random, stratified, cluster, systematic, convenience) and see who gets picked and how biased and spread each method's estimates are; compare a self selected study with a randomized one and find the lurking variable; then draw thousands of samples and watch the means and sums pile up into a normal curve with spread σ/√n: the central limit theorem.",
+     "tags": [
+      "statistics",
+      "sampling methods",
+      "bias",
+      "lurking variable",
+      "randomized experiment",
+      "central limit theorem",
+      "standard error"
+     ]
+    },
+    {
+     "demo": "confidence-intervals",
+     "title": "Confidence Intervals",
+     "desc": "Draw sample after sample and stack their intervals against the true value: z with σ known, z with s, t, a proportion and plus four. Count how many of 100 catch the truth at 90, 95 and 99 %, see z with s fail at small n, and watch the width shrink as 1/√n. A pendulum timed by hand, heights, decay times and photons through a polarizer, all simulated.",
+     "tags": [
+      "statistics",
+      "confidence interval",
+      "t distribution",
+      "proportion",
+      "plus four",
+      "error bound",
+      "standard error"
+     ]
+    },
+    {
+     "demo": "hypothesis-tests",
+     "title": "Hypothesis Tests",
+     "desc": "Test a claim in the book's four steps: hypotheses, the null distribution with your statistic and the shaded p value, and a decision with a conclusion in words. One mean (z or t), one proportion, two means (σ known, or Welch's unpooled t), two proportions and matched pairs, set in the lab: is this g 9.81, did the new photogate change the period? Run a thousand studies to count Type I and Type II errors and draw the power curve.",
+     "tags": [
+      "hypothesis test",
+      "p value",
+      "Type I error",
+      "Type II error",
+      "power",
+      "t test",
+      "z test",
+      "proportion",
+      "matched pairs",
+      "Welch"
+     ]
+    },
+    {
+     "demo": "chi-square-tests",
+     "title": "Chi-Square Tests",
+     "desc": "Observed against expected counts with each cell's (O − E)²/E drawn: a loaded die, Mendel's peas, Geiger counts against a Poisson distribution, tables of two variables, and the spread of stopwatch timings. Simulate data sets where the hypothesis is true and watch their chi square values fill a histogram under the curve.",
+     "tags": [
+      "chi square test",
+      "goodness of fit",
+      "test of independence",
+      "test for homogeneity",
+      "single variance",
+      "degrees of freedom",
+      "Poisson distribution",
+      "p value"
+     ]
+    },
+    {
+     "demo": "regression",
+     "title": "Linear Regression and Correlation",
+     "desc": "Drag the points of a scatter plot and watch the least squares line and its residual squares follow; try to beat it with your own line. r, r², s, the slope and intercept with their uncertainties read in context, the t test and critical value for r beside a shuffle test, prediction against extrapolation, and outliers that pull the line. Book data and simulated spring, pendulum and Ohm's law labs.",
+     "tags": [
+      "regression",
+      "least squares",
+      "correlation",
+      "residuals",
+      "outliers",
+      "permutation test",
+      "statistics"
+     ]
+    },
+    {
+     "demo": "anova",
+     "title": "One Way ANOVA",
+     "desc": "Three to five groups as dot plots: drag each group's mean and spread and see the mean squares between and within groups as two squares, the F ratio and its p value. Run many studies with every mean equal and watch the F distribution fill in, false alarms and all, and test whether two variances are equal.",
+     "tags": [
+      "ANOVA",
+      "F distribution",
+      "F ratio",
+      "variance",
+      "between groups",
+      "within groups",
+      "test of two variances"
      ]
     }
    ]
