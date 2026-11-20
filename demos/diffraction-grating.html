@@ -1770,7 +1770,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     /* the dark fringe number goes in only when jaw B sits on a dark fringe (the meter reads below 0.001) */
     return Object.assign(base, { a_um: S.aw.toFixed(1), m: mt != null && mt < 1e-3 && Number.isFinite(mIn) ? String(mIn) : '' }, tail, { I_rel: mt == null ? '' : sig4(mt) });
   };
-  window.__dg = { S, physics: () => PH, handles: () => handles(), scale: () => s, setAperture, setAw, setJaw, setL, setMode, applyPreset, update: () => { dirty = true; layout(); schedule(); updateRail(); }, frameTime: (rebuild) => { const t0 = performance.now(); for (let i = 0; i < 20; i++) { if (rebuild) dirty = true; draw(0.016); } return (performance.now() - t0) / 20; } };
+  window.__dg = { S, refLam, physics: () => PH, handles: () => handles(), scale: () => s, setAperture, setAw, setJaw, setL, setMode, applyPreset, update: () => { dirty = true; layout(); schedule(); updateRail(); }, frameTime: (rebuild) => { const t0 = performance.now(); for (let i = 0; i < 20; i++) { if (rebuild) dirty = true; draw(0.016); } return (performance.now() - t0) / 20; } };
 
   // ---------- sizing ----------
   function resize() {

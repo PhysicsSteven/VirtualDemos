@@ -227,9 +227,9 @@ async function runDemo(browser, cmp, base, d) {
         await setVal(c.key, true); await page.waitForTimeout(150); await probe(c.key + ' chosen');
       }
     }
-    /* every stage, panel and preset button once */
+    /* every stage, panel and preset button once (not the Setups fold's Show fewer: folding would hide the chips still to press) */
     const btns = await page.evaluate((skip) => [...document.querySelectorAll('main button, .stage button, .panel button, .chips button, button.chip, [role=tab]')]
-      .filter((b) => b.offsetParent !== null && !b.disabled && !b.closest('header, nav, dialog, .vd-prefs') && !new RegExp(skip, 'i').test(b.textContent + ' ' + (b.title || '') + ' ' + b.id))
+      .filter((b) => b.offsetParent !== null && !b.disabled && !b.closest('header, nav, dialog, .vd-prefs, .vd-setups-tog') && !new RegExp(skip, 'i').test(b.textContent + ' ' + (b.title || '') + ' ' + b.id))
       .map((b, i) => { b.setAttribute('data-breakit', i); return [i, b.textContent.trim().slice(0, 30)]; }), SKIP_BTN.source);
     for (const [i, label] of btns.slice(0, 60)) {
       const b = await page.$('[data-breakit="' + i + '"]'); if (!b || !(await b.isVisible().catch(() => false))) continue;

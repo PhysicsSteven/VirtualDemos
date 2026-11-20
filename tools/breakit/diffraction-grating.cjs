@@ -6,7 +6,8 @@
    650 nm, third order only for green and blue in the RGB preset). Single slit: dark fringes a sin(theta) = m lambda. */
 const pre = `const D = window.__dg; if (!D) return true;
   const S = D.S, DEG = Math.PI / 180, rd = (id) => document.getElementById(id).textContent.replace(/\\u2212/g, '-');
-  const lam = () => { const b = document.querySelector('#refChips [aria-pressed=true]'); return b ? parseFloat(b.textContent) : NaN; };
+  /* the table's wavelength exactly (D.refLam); the chip label is rounded, which near grazing orders moves y by more than its last digit (2026-11-20) */
+  const lam = () => { if (D.refLam && !S.unknown) return D.refLam(); const b = document.querySelector('#refChips [aria-pressed=true]'); return b ? parseFloat(b.textContent) : NaN; };
 `;
 module.exports = {
   checks: [
