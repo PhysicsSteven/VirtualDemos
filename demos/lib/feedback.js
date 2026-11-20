@@ -14,10 +14,10 @@
      page, lang, device: the entry numbers of the three questions filled in for the student, from the form's prefilled link
      (in the form's ⋮ menu, Get prefilled link; each answer shows up in the link as entry.<number>=<answer>). */
   var FORM = {
-    url: '',
-    page: '',
-    lang: '',
-    device: ''
+    url: 'https://docs.google.com/forms/d/e/1FAIpQLSdzgNa75QuVqcC-QLBxC1VP07eZFhYD1yHrwFWJLW8S6i1xWw/viewform',
+    page: 'entry.2028407234',
+    lang: 'entry.2020102465',
+    device: 'entry.717513599'
   };
 
   if (window.VDFeedback) return;
