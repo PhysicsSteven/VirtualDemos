@@ -184,8 +184,8 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "De lado",
 "Seen from outside the sphere, so the constellations look mirror reversed. Drag to turn.":
   "Vista desde fuera de la esfera, así que las constelaciones se ven invertidas como en un espejo. Arrastra para girar.",
-"The sky seen from the ground. Click a star, the Sun or the Moon to select it. Drag sideways to turn, the wheel to zoom; arrow keys turn and plus and minus zoom when the picture has the focus.":
-  "El cielo visto desde el suelo. Haz clic en una estrella, el Sol o la Luna para seleccionarlo. Arrastra hacia los lados para girar, usa la rueda para acercar; las flechas giran y más y menos acercan cuando la imagen tiene el foco.",
+"The sky seen from the ground. Click a star, the Sun or the Moon to select it. Drag to look around (two fingers on a phone), the wheel or a pinch to zoom; arrow keys turn and plus and minus zoom when the picture has the focus.":
+  "El cielo visto desde el suelo. Haz clic en una estrella, el Sol o la Luna para seleccionarlo. Arrastra para mirar alrededor (con dos dedos en un teléfono), usa la rueda o pellizca para acercar; las flechas giran y más y menos acercan cuando la imagen tiene el foco.",
 "The sky seen from the ground, looking toward the horizon.":
   "El cielo visto desde el suelo, mirando hacia el horizonte.",
 "Facing S, centered {#}° up, {#}° across.":
@@ -252,6 +252,8 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "<a>Hoja de trabajo {#}: El cielo y la esfera celeste (Astro {#})</a>",
 "<a>Worksheet {#}: Constellations in 3D (Astro {#})</a>":
   "<a>Hoja de trabajo {#}: Constelaciones en 3D (Astro {#})</a>",
+"<span>Show fewer</span>":
+  "<span>Ver menos</span>",
 "A winter night at Ruston":
   "Una noche de invierno en Ruston",
 "On the equator":
@@ -582,8 +584,6 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "Círculo de precesión del polo",
 "Daylight hides the stars":
   "La luz del día oculta las estrellas",
-"Alt (°)":
-  "Alt (°)",
 "<span>Blind: hide the highest and lowest altitudes, rising and setting, the pole's altitude, and the star distances</span>":
   "<span>A ciegas: ocultar las alturas máxima y mínima, la salida y la puesta, la altura del polo y las distancias de las estrellas</span>",
 "altitude h: sin h = sin φ sin δ + cos φ cos δ cos H, H = LST − α":
@@ -594,6 +594,12 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "Las direcciones se calculan como vectores. La Tierra gira según el ángulo de rotación terrestre de las Convenciones del IERS ({#}), medido desde el Origen Intermedio Celeste, que la demo lleva junto con el polo en movimiento; el polo y la eclíptica se mueven según la precesión de largo plazo de Vondrák, Capitaine y Wallace ({#}), válida para {#} {#} años antes y después de {#}. Se deja fuera la nutación (hasta {#}″), y también la aberración de la luz de las estrellas (hasta {#}″; la posición del Sol sí la incluye) y la refracción, que en el cielo real eleva lo que está en el horizonte cerca de medio grado: aquí el Sol se pone cuando su centro llega al horizonte. Las posiciones de las estrellas son las posiciones J2000 del catálogo desplazadas según sus movimientos propios (sin velocidad radial). El Sol se calcula según Meeus cap. {#} (cerca de {#}°), la Luna según Meeus cap. {#} (cerca de {#}″), vistos desde tu lugar en la Tierra, lo cual importa para los eclipses. Los eclipses comparan los dos discos vistos desde tu lugar (solares) o la Luna con la sombra de la Tierra, con sus radios tomados del Explanatory Supplement ({#}) (lunares); la Luna se toma como una esfera lisa, así que los tiempos de contacto coinciden con las predicciones de la NASA con una diferencia de cerca de un minuto: la totalidad en Dallas el {#} de abril de {#} va de {#}:{#}:{#} a {#}:{#}:{#} UT aquí y de {#}:{#}:{#} a {#}:{#}:{#} UT en las tablas de la NASA. Ambos son ajustes hechos para fechas dentro de unos pocos miles de años de {#}, así que lejos de hoy son aproximados; la precesión y las estrellas no dependen de ellos. Las horas son la hora estándar del huso horario más cercano a tu longitud (longitud/{#}, redondeada), sin horario de verano; ΔT = TT − UT según Espenak y Meeus ({#}), con una diferencia de cerca de {#} s respecto al valor medido hoy y una estimación en el pasado y el futuro lejanos. Las fechas usan el calendario gregoriano extendido hacia atrás en el tiempo, con el año {#} para el {#} a. C. Las imágenes: la vista del horizonte es una proyección estereográfica (conserva las formas, los tamaños crecen hacia los bordes), todo el cielo es un mapa azimutal equidistante con el cenit en el centro, y la carta estelar grafica la ascensión recta contra la declinación de la fecha. Los puntos de las estrellas crecen con el brillo; el Sol y la Luna se dibujan más grandes que en la realidad, salvo en el recuadro del eclipse, que está a escala.",
 "Stars: the Yale Bright Star Catalogue, 5th revised edition (Hoffleit and Warren {#}; CDS catalog V/{#}), every star to visual magnitude {#} ({#} stars): J2000 positions, magnitudes, colors and proper motions. Star names from the IAU Working Group on Star Names. Constellation boundaries: the IAU boundaries (Delporte {#}) as tabulated by Roman ({#}; CDS catalog VI/{#}), used to name the constellation of any point. The figures joining the stars are the usual simple outlines, drawn for this demo.":
   "Estrellas: el Yale Bright Star Catalogue, 5.ª edición revisada (Hoffleit y Warren {#}; catálogo CDS V/{#}), todas las estrellas hasta magnitud visual {#} ({#} estrellas): posiciones J2000, magnitudes, colores y movimientos propios. Nombres de estrellas del Grupo de Trabajo de la UAI sobre Nombres de Estrellas. Límites de las constelaciones: los límites de la UAI (Delporte {#}) tabulados por Roman ({#}; catálogo CDS VI/{#}), usados para nombrar la constelación de cualquier punto. Las figuras que unen las estrellas son los contornos simples habituales, dibujados para esta demo.",
+"Alt (°)":
+  "Alt (°)",
+"<span>Feedback</span>":
+  "<span>Comentarios</span>",
+"<a><span>Reasons for Seasons</span> <span>→</span></a>":
+  "<a><span>Las razones de las estaciones</span> <span>→</span></a>",
 "{con}: the {#} stars of the figure lie from {#} to {#} light years away. They only look like a group because they are in nearly the same direction from us.":
   "{con}: las {#} estrellas de la figura están a entre {#} y {#} años luz. Solo parecen un grupo porque están casi en la misma dirección vistas desde aquí.",
 "Distances are from parallaxes measured by the Hipparcos satellite; the farther a star, the smaller its parallax, so the farthest distances here are the least certain. M is the absolute magnitude, how bright the star would look from {#} parsecs ({#} light years), with dust left out.":
@@ -898,6 +904,10 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "altura −{#}°, azimut {#}° <small>ESE</small>",
 "The sky at the same clock time every evening, one day each second, starting two days after the new Moon of January {#}, {#}. The Moon moves about {#}° east among the stars each day, waxes to full in about two weeks and comes back to the same stars after {#} days. Its path stays within {#}° of the ecliptic and crosses it at two nodes.":
   "El cielo a la misma hora del reloj cada tarde, un día por segundo, empezando dos días después de la luna nueva del {#} de enero de {#}. La Luna se mueve cerca de {#}° hacia el este entre las estrellas cada día, crece hasta llena en unas dos semanas y vuelve a las mismas estrellas después de {#} días. Su camino se mantiene a menos de {#}° de la eclíptica y la cruza en dos nodos.",
+"The selected object is The Moon.":
+  "El objeto seleccionado es la Luna.",
+"It is in the constellation Capricornus.":
+  "Está en la constelación Capricornio.",
 "Apr {#}, {#}, {#}:{#} <small>UTC−{#}</small>":
   "{#} abr {#}, {#}:{#} <small>UTC−{#}</small>",
 "Partial solar eclipse from here: {#}% of the Sun’s width covered":
@@ -1012,12 +1022,12 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "Mintaka · {#} a. l.",
 "λ Ori · {#} ly":
   "λ Ori · {#} a. l.",
+"The stars of the constellation Orion placed at their distances from the Sun.":
+  "Las estrellas de la constelación Orión colocadas a sus distancias del Sol.",
 "The selected object is Rigel.":
   "El objeto seleccionado es Rigel.",
 "It is in the constellation Orion.":
   "Está en la constelación Orión.",
-"The stars of the constellation Orion placed at their distances from the Sun.":
-  "Las estrellas de la constelación Orión colocadas a sus distancias del Sol.",
 "Schedar <small>α Cas</small>":
   "Schedar <small>α Cas</small>",
 "Schedar there":
@@ -1236,12 +1246,12 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "Albireo · {#} a. l.",
 "η Cyg · {#} ly":
   "η Cyg · {#} a. l.",
+"The stars of the constellation Cygnus placed at their distances from the Sun.":
+  "Las estrellas de la constelación Cisne colocadas a sus distancias del Sol.",
 "The selected object is Deneb.":
   "El objeto seleccionado es Deneb.",
 "It is in the constellation Cygnus.":
   "Está en la constelación Cisne.",
-"The stars of the constellation Cygnus placed at their distances from the Sun.":
-  "Las estrellas de la constelación Cisne colocadas a sus distancias del Sol.",
 "Aldebaran <small>α Tau</small>":
   "Aldebarán <small>α Tau</small>",
 "Aldebaran there":
@@ -1476,12 +1486,12 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "β Boo · {#} a. l.",
 "ρ Boo · {#} ly":
   "ρ Boo · {#} a. l.",
-"The stars of the constellation Boötes placed at their distances from the Sun.":
-  "Las estrellas de la constelación Boyero colocadas a sus distancias del Sol.",
 "The selected object is Arcturus.":
   "El objeto seleccionado es Arcturus.",
 "It is in the constellation Boötes.":
   "Está en la constelación Boyero.",
+"The stars of the constellation Boötes placed at their distances from the Sun.":
+  "Las estrellas de la constelación Boyero colocadas a sus distancias del Sol.",
 "Altair <small>α Aql</small>":
   "Altair <small>α Aql</small>",
 "Altair there":
@@ -1636,12 +1646,12 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "α Cnc · {#} a. l.",
 "γ Cnc · {#} ly":
   "γ Cnc · {#} a. l.",
+"The stars of the constellation Cancer placed at their distances from the Sun.":
+  "Las estrellas de la constelación Cáncer colocadas a sus distancias del Sol.",
 "The selected object is β Cnc.":
   "El objeto seleccionado es β Cnc.",
 "It is in the constellation Cancer.":
   "Está en la constelación Cáncer.",
-"The stars of the constellation Cancer placed at their distances from the Sun.":
-  "Las estrellas de la constelación Cáncer colocadas a sus distancias del Sol.",
 "Procyon <small>α CMi</small>":
   "Proción <small>α CMi</small>",
 "Procyon there":
@@ -1656,12 +1666,12 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "Proción · {#} a. l.",
 "β CMi · {#} ly":
   "β CMi · {#} a. l.",
-"The stars of the constellation Canis Minor placed at their distances from the Sun.":
-  "Las estrellas de la constelación Can Menor colocadas a sus distancias del Sol.",
 "The selected object is Procyon.":
   "El objeto seleccionado es Procyon.",
 "It is in the constellation Canis Minor.":
   "Está en la constelación Can Menor.",
+"The stars of the constellation Canis Minor placed at their distances from the Sun.":
+  "Las estrellas de la constelación Can Menor colocadas a sus distancias del Sol.",
 "Deneb Algedi <small>δ Cap</small>":
   "Deneb Algedi <small>δ Cap</small>",
 "Deneb Algedi there":
@@ -1706,8 +1716,6 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "Las estrellas de la constelación Capricornio colocadas a sus distancias del Sol.",
 "The selected object is Deneb Algedi.":
   "El objeto seleccionado es Deneb Algedi.",
-"It is in the constellation Capricornus.":
-  "Está en la constelación Capricornio.",
 "Rigil Kentaurus <small>α¹ Cen</small>":
   "Rigil Kentaurus <small>α¹ Cen</small>",
 "Rigil Kentaurus there":
@@ -1836,12 +1844,12 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "θ Dra · {#} a. l.",
 "ν² Dra · {#} ly":
   "ν² Dra · {#} a. l.",
+"The stars of the constellation Draco placed at their distances from the Sun.":
+  "Las estrellas de la constelación Dragón colocadas a sus distancias del Sol.",
 "The selected object is Eltanin.":
   "El objeto seleccionado es Eltanin.",
 "It is in the constellation Draco.":
   "Está en la constelación Dragón.",
-"The stars of the constellation Draco placed at their distances from the Sun.":
-  "Las estrellas de la constelación Dragón colocadas a sus distancias del Sol.",
 "Zubeneschamali <small>β Lib</small>":
   "Zubeneschamali <small>β Lib</small>",
 "Zubeneschamali there":
@@ -1864,12 +1872,12 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "σ Lib · {#} a. l.",
 "γ Lib · {#} ly":
   "γ Lib · {#} a. l.",
-"The stars of the constellation Libra placed at their distances from the Sun.":
-  "Las estrellas de la constelación Libra colocadas a sus distancias del Sol.",
 "The selected object is Zubeneschamali.":
   "El objeto seleccionado es Zubeneschamali.",
 "It is in the constellation Libra.":
   "Está en la constelación Libra.",
+"The stars of the constellation Libra placed at their distances from the Sun.":
+  "Las estrellas de la constelación Libra colocadas a sus distancias del Sol.",
 "Rasalhague <small>α Oph</small>":
   "Rasalhague <small>α Oph</small>",
 "Rasalhague there":
@@ -2054,12 +2062,12 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "γ Vir · {#} a. l.",
 "η Vir · {#} ly":
   "η Vir · {#} a. l.",
+"The stars of the constellation Virgo placed at their distances from the Sun.":
+  "Las estrellas de la constelación Virgo colocadas a sus distancias del Sol.",
 "The selected object is Spica.":
   "El objeto seleccionado es Spica.",
 "It is in the constellation Virgo.":
   "Está en la constelación Virgo.",
-"The stars of the constellation Virgo placed at their distances from the Sun.":
-  "Las estrellas de la constelación Virgo colocadas a sus distancias del Sol.",
 "The observer is in Dallas, Texas.":
   "El observador está en Dallas, Texas.",
 "altitude −{#}°, azimuth {#}° <small>NW</small>":
@@ -2088,8 +2096,6 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "El observador está en {#}° N, {#}° O.",
 "Waxing gibbous, {#}% lit":
   "Gibosa creciente, {#}% iluminada",
-"The selected object is The Moon.":
-  "El objeto seleccionado es la Luna.",
 "South celestial pole there":
   "Polo sur celeste allá",
 "altitude +{#}°, azimuth {#}° <small>S</small>":
@@ -3294,6 +3300,12 @@ VDI18N.add('es', 'demo/celestial-sphere', {
   "β Vir allá",
 "The selected object is β Vir.":
   "El objeto seleccionado es β Vir.",
+"Use two fingers to slide the chart":
+  "Usa dos dedos para deslizar la carta",
+"Use two fingers to look around":
+  "Usa dos dedos para mirar alrededor",
+"The sky seen from the ground. Click a star, the Sun or the Moon to select it. Drag sideways to turn, the wheel to zoom; arrow keys turn and plus and minus zoom when the picture has the focus.":
+  "El cielo visto desde el suelo. Haz clic en una estrella, el Sol o la Luna para seleccionarlo. Arrastra hacia los lados para girar, usa la rueda para acercar; las flechas giran y más y menos acercan cuando la imagen tiene el foco.",
 "Describe the picture":
   "Describir la imagen",
 "Skip to the picture":

@@ -136,7 +136,7 @@
           <p class="pnote" id="outNote"></p>
         </div>
         <div class="pane sky" id="paneSky">
-          <canvas id="skyCan" tabindex="0" role="img" aria-label="The sky seen from the ground. Click a star, the Sun or the Moon to select it. Drag sideways to turn, the wheel to zoom; arrow keys turn and plus and minus zoom when the picture has the focus."></canvas>
+          <canvas id="skyCan" tabindex="0" role="img" aria-label="The sky seen from the ground. Click a star, the Sun or the Moon to select it. Drag to look around (two fingers on a phone), the wheel or a pinch to zoom; arrow keys turn and plus and minus zoom when the picture has the focus."></canvas>
           <div class="pbar">
             <span class="pt">From the ground</span>
             <div class="seg" role="group" aria-label="Sky view" id="skySeg">
@@ -1021,13 +1021,29 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     fs.value = id; dirty = true; readouts(true);
   }
   let down = null;
-  skyCan.addEventListener('pointerdown', (e) => { if (e.pointerType === 'touch' && !e.isPrimary) return; down = { x: e.clientX, y: e.clientY, f: S.face, t: S.tilt, c: S.chartOff, moved: false }; if (e.pointerType !== 'touch') skyCan.setPointerCapture(e.pointerId); });
+  skyCan.addEventListener('pointerdown', (e) => { if (e.pointerType === 'touch' && !e.isPrimary) return; down = { id: e.pointerId, x: e.clientX, y: e.clientY, f: S.face, t: S.tilt, c: S.chartOff, moved: false }; if (e.pointerType !== 'touch') skyCan.setPointerCapture(e.pointerId); });
   skyCan.addEventListener('pointermove', (e) => {
-    if (!down || e.pointerType === 'touch') return; const dx = e.clientX - down.x, dy = e.clientY - down.y; if (Math.hypot(dx, dy) > 4) down.moved = true;
+    if (!down || e.pointerId !== down.id) return; const dx = e.clientX - down.x, dy = e.clientY - down.y; if (Math.hypot(dx, dy) > 4) down.moved = true;
     if (down.moved && S.view === 'horizon') { const k = S.fov / SW; S.face = wrap(down.f - dx * k, 360); S.tilt = Math.max(5, Math.min(80, down.t + dy * k)); markFace(); dirty = true; }
     if (down.moved && S.view === 'chart') { const Pj = skyProj(); if (Pj.HS < 12) { S.chartOff = wrap(down.c + dx / (15 * Pj.kd) + 12, 24) - 12; dirty = true; } }
   });
   skyCan.addEventListener('pointerup', (e) => { if (down && !down.moved) { const r = skyCan.getBoundingClientRect(); select(pickSky(e.clientX - r.left, e.clientY - r.top)); } down = null; });
+  skyCan.addEventListener('pointercancel', () => { down = null; });
+  /* Touch (phone pass rule): one finger scrolls the page and two fingers look around, their midpoint dragging like the mouse
+     (VD.twoFinger); a pinch zooms the horizon view. In the fullscreen view there is no page to scroll, so one finger looks
+     around there. Taps still pick a star. */
+  VD.twoFinger(skyCan, {
+    grab: () => !!(VD.fullscreen.isOn && VD.fullscreen.isOn()) && S.view !== 'dome',
+    get hint() { if (S.view === 'dome') return false; if (!window.VDI18N) return S.view === 'chart' ? 'Use two fingers to slide the chart' : 'Use two fingers to look around'; return S.view === 'chart' ? VDI18N.t('Use two fingers to slide the chart') : VDI18N.t('Use two fingers to look around'); },
+  });
+  let pinch = null;
+  const span = (e) => Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
+  skyCan.addEventListener('touchstart', (e) => { pinch = e.touches.length === 2 ? { d: span(e), fov: S.fov } : null; }, { passive: true });
+  skyCan.addEventListener('touchmove', (e) => {
+    if (!pinch || e.touches.length !== 2 || S.view !== 'horizon') return; if (e.cancelable) e.preventDefault();
+    const d = span(e); if (d > 20) { S.fov = Math.max(30, Math.min(160, pinch.fov * pinch.d / d)); markFace(); dirty = true; }
+  }, { passive: false });
+  skyCan.addEventListener('touchend', (e) => { if (e.touches.length < 2) pinch = null; });
   skyCan.addEventListener('wheel', (e) => { if (S.view !== 'horizon') return; e.preventDefault(); S.fov = Math.max(30, Math.min(160, S.fov * Math.exp(e.deltaY * 0.001))); dirty = true; }, { passive: false });
   skyCan.addEventListener('keydown', (e) => {
     if (S.view !== 'horizon') return;
