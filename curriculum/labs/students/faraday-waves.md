@@ -22,7 +22,7 @@ Textbook: OpenStax *University Physics*, Vol. 1, §§15.6, 15.7 and 16.1 to 16.6
 - The dish rides on the driver as one rigid load. In the dish's frame gravity becomes $$g(1 + \Gamma\cos 2\pi f t)$$, so each surface wave of wavenumber $$k$$ obeys a damped Mathieu equation, $$\ddot a + 2\alpha\dot a + \left[\omega_0^2 + \Gamma g k\tanh(kd)\cos 2\pi f t\right]a = 0,$$ with $$\omega_0^2 = (gk + \sigma k^3/\rho)\tanh(kd)$$. The demo integrates it over one drive period (fourth order Runge–Kutta) and finds whether the wave grows from the Floquet multipliers. The onset $$\Gamma_c$$ is the least Γ at which any wave grows.
 - Damping: the bulk viscous rate $$2\nu k^2$$ plus the boundary layer on the dish floor, $$k\sqrt{\nu\omega/2}/\sinh 2kd$$. The side walls, the meniscus and any film on the surface are left out; they all add damping, so measured onsets in water are often several times the demo's.
 - Which pattern forms is a nonlinear question the linear model cannot answer. The demo follows a rule taken from experiments (Binks and van de Water 1997; Kudrolli and Gollub 1996; Chen and Viñals 1999), given in Background. The height of the pattern is a picture, not a calculation, and droplets thrown off well above onset are not modeled.
-- Liquids: water at 20 °C, 998.2 kg/m³, 1.002 mPa·s (CRC Handbook), $$\sigma$$ = 72.74 mN/m (IAPWS); silicone oils at 25 °C (Dow XIAMETER PMX-200 data sheet): 10 cSt, 935 kg/m³, 20.1 mN/m; 100 cSt, 965 kg/m³, 20.9 mN/m. The readings are simulated: model results, not measurements.
+- Liquids: water at 20 °C, 998.2 kg/m³, 1.002 mPa·s (CRC Handbook), $$\sigma$$ = 72.8 mN/m (OpenStax College Physics 2e, Table 11.3); silicone oils at 25 °C (Dow XIAMETER PMX-200 data sheet): 10 cSt, 935 kg/m³, 20.1 mN/m; 100 cSt, 965 kg/m³, 20.9 mN/m. The readings are simulated: model results, not measurements.
 
 </details>
 
@@ -59,7 +59,7 @@ A shallow layer adds a second loss, the drag of the dish floor on the moving liq
 ## Before the lab
 
 1. The dish is shaken up and down 40 times a second. Before you open the demo, predict how many times a second a point on the rippled surface rises and falls: 80, 40 or 20. Give your reason.
-2. For water ($$\rho$$ = 998.2 kg/m³, $$\sigma$$ = 72.74 mN/m), at what wavelength do the two terms of $$g + (\sigma/\rho)k^2$$ equal each other? Are the ripples in a dish shaken at 40 Hz (wavelength about 12 mm) held flat more by gravity or by surface tension?
+2. For water ($$\rho$$ = 998.2 kg/m³, $$\sigma$$ = 72.8 mN/m), at what wavelength do the two terms of $$g + (\sigma/\rho)k^2$$ equal each other? Are the ripples in a dish shaken at 40 Hz (wavelength about 12 mm) held flat more by gravity or by surface tension?
 3. Silicone oil of 100 cSt has a kinematic viscosity about 100 times that of water. At the same wavelength, how does its damping rate $$\alpha = 2\nu k^2$$ compare with water's, and what do you expect that to do to the onset?
 
 ## Procedure
@@ -86,10 +86,10 @@ Parts A, B, C and D each get their own copy of this table. Work out the last thr
 ## Analysis
 
 1. From part A, between which two values of Γ does the onset lie? Does the demo's Onset Γ_c fall between them? What is the surface frequency compared with the drive frequency?
-2. Fill in $$k$$, $$\omega^2/k$$ and $$k^2$$ for part B. Graph $$\omega^2/k$$ (vertical) against $$k^2$$ (horizontal) and fit a straight line. From the intercept find $$g$$, and from the slope find $$\sigma$$ (take $$\rho$$ = 998.2 kg/m³), in mN/m. Compare them with 9.81 m/s² and 72.74 mN/m.
+2. Fill in $$k$$, $$\omega^2/k$$ and $$k^2$$ for part B. Graph $$\omega^2/k$$ (vertical) against $$k^2$$ (horizontal) and fit a straight line. From the intercept find $$g$$, and from the slope find $$\sigma$$ (take $$\rho$$ = 998.2 kg/m³), in mN/m. Compare them with 9.81 m/s² and 72.8 mN/m.
 3. From part C, how many times higher is the onset in water 1.0 mm deep than 20.0 mm deep? For the 20.0 mm water reading, work out $$\alpha = 2\nu k^2$$ from its wavelength ($$\nu$$ = 1.004 × 10⁻⁶ m²/s), then the weak damping onset $$\Gamma_c \approx (4\alpha/\omega_0)(1 + \sigma k^2/\rho g)$$ with $$\omega_0 = \pi f$$, and compare it with the Onset column.
 4. Still in part C, compare the onsets of the two oils with water's. Work out the weak damping estimate for the 100 cSt oil ($$\nu$$ = 100 × 10⁻⁶ m²/s, $$\rho$$ = 965 kg/m³, $$\sigma$$ = 20.9 mN/m) and its $$\alpha/\omega_0$$. Why is the estimate further from the demo's onset here than for water?
-5. For each part D reading, find the capillary share $$s = \sigma k^2/(\rho g + \sigma k^2)$$ from its wavelength (water: $$\rho$$ = 998.2 kg/m³, $$\sigma$$ = 72.74 mN/m; 10 cSt oil: 935 kg/m³, 20.1 mN/m; 100 cSt oil: 965 kg/m³, 20.9 mN/m). Does the rule in Background predict the pattern you saw? For the stripes, read $$\alpha/\omega_0$$ from the **Damping and pattern** readout.
+5. For each part D reading, find the capillary share $$s = \sigma k^2/(\rho g + \sigma k^2)$$ from its wavelength (water: $$\rho$$ = 998.2 kg/m³, $$\sigma$$ = 72.8 mN/m; 10 cSt oil: 935 kg/m³, 20.1 mN/m; 100 cSt oil: 965 kg/m³, 20.9 mN/m). Does the rule in Background predict the pattern you saw? For the stripes, read $$\alpha/\omega_0$$ from the **Damping and pattern** readout.
 
 ## Uncertainty
 

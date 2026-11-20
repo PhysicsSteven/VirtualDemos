@@ -31,10 +31,10 @@ function channel(f, d, edges) {
   return { T, z: demodRow(T, 5, 6), k: 2 * Math.PI / lam, lam };
 }
 
-group('dispersion: ω² = (gk + σk³/ρ) tanh(kd) solved to 1e-12; λ(10 Hz, 10 mm) = 23.60 mm; c has its minimum 0.231 m/s near 13.5 Hz in deep water', () => {
+group('dispersion: ω² = (gk + σk³/ρ) tanh(kd) solved to 1e-12; λ(10 Hz, 10 mm) = 23.61 mm; c has its minimum 0.231 m/s near 13.5 Hz in deep water', () => {
   for (const [f, d] of [[6, 0.012], [10, 0.01], [20, 0.001], [13.5, 0.05]]) { const k = c.kOf(f, d), w2 = (2 * Math.PI * f) ** 2;
     near((c.PH.g * k + c.PH.sigma / c.PH.rho * k ** 3) * Math.tanh(k * d), w2, 1e-12, `relation at ${f} Hz, ${d} m`); }
-  near(c.lambdaOf(10, 0.01), 0.023602, 1e-4, 'λ at 10 Hz, 10 mm');
+  near(c.lambdaOf(10, 0.01), 0.023605, 1e-4, 'λ at 10 Hz, 10 mm');
   let best = 1, fb = 0; for (let f = 6; f <= 25; f += 0.05) { const s = c.speedOf(f, 0.05); if (s < best) { best = s; fb = f; } }
   near(best, Math.pow(4 * c.PH.g * c.PH.sigma / c.PH.rho, 0.25), 2e-3, 'minimum speed (4gσ/ρ)^(1/4)'); assert(fb > 13 && fb < 14, `minimum at ${fb} Hz`);
   /* long waves on shallow water go at √(gd) */
@@ -179,9 +179,9 @@ function demodCells(T, cells, periods) {
   while (T.t < t0 + periods / T.f) { c.step(T); const tt = T.t; cells.forEach(([i, j], m) => { const v = T.h[(j + 1) * T.W + i + 1]; re[m] += v * Math.cos(w * tt); im[m] -= v * Math.sin(w * tt); }); }
   return cells.map((_, m) => [re[m], im[m]]);
 }
-group('channel: cutoff frequencies put k = nπ/w into the dispersion relation; k_x = √(k² − (nπ/w)²); 20 mm, 10 mm deep: 6.51, 11.61, 17.61 Hz', () => {
+group('channel: cutoff frequencies put k = nπ/w into the dispersion relation; k_x = √(k² − (nπ/w)²); 20 mm, 10 mm deep: 6.51, 11.61, 17.62 Hz', () => {
   const d = 0.01, w = 0.02; for (const n of [1, 2, 3]) near(c.kOf(c.channelCutoff(n, w, d), d), n * Math.PI / w, 1e-9, `cutoff ${n}`);
-  near(c.channelCutoff(1, w, d), 6.5085, 1e-4); near(c.channelCutoff(2, w, d), 11.6101, 1e-4); near(c.channelCutoff(3, w, d), 17.6128, 1e-4);
+  near(c.channelCutoff(1, w, d), 6.5089, 1e-4); near(c.channelCutoff(2, w, d), 11.6121, 1e-4); near(c.channelCutoff(3, w, d), 17.6173, 1e-4);
   const m = c.channelModes(9, d, w, 3), k = c.kOf(9, d); assert(m[0].travels && m[1].travels && !m[2].travels && !m[3].travels);
   near(m[1].kx ** 2 + (Math.PI / w) ** 2, k * k, 1e-12, 'kx'); near(m[2].kappa ** 2, (2 * Math.PI / w) ** 2 - k * k, 1e-12, 'kappa'); near(Math.sin(m[1].th * Math.PI / 180), Math.PI / (w * k), 1e-12, 'bounce angle');
 });

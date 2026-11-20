@@ -11,9 +11,9 @@ const pre = `const R = window.__rt; if (!R) return true;
 `;
 module.exports = {
   checks: [
-    { name: "dispersion relation: ω² = (g k + σ k³/ρ) tanh(k d) for the shown λ (g 9.81, σ 72.74 mN/m, ρ 998.2)", fn: `(() => { ${pre}
+    { name: "dispersion relation: ω² = (g k + σ k³/ρ) tanh(k d) for the shown λ (g 9.81, σ 72.8 mN/m, ρ 998.2)", fn: `(() => { ${pre}
       for (const d of [S.deep, S.plate]) { if (!(d > 0)) continue; const l = R.lam(d) * 1e-3, k = 2 * Math.PI / l, w = 2 * Math.PI * S.f;
-        const rhs = (9.81 * k + 0.07274 / 998.2 * k ** 3) * Math.tanh(k * d * 1e-3); if (!isFinite(l) || !near(w * w, rhs, 1e-9)) return 'f = ' + S.f + ' Hz, d = ' + d + ' mm: ω² = ' + w * w + ' but the dispersion relation gives ' + rhs; }
+        const rhs = (9.81 * k + 0.0728 / 998.2 * k ** 3) * Math.tanh(k * d * 1e-3); if (!isFinite(l) || !near(w * w, rhs, 1e-9)) return 'f = ' + S.f + ' Hz, d = ' + d + ' mm: ω² = ' + w * w + ' but the dispersion relation gives ' + rhs; }
       if (S.plate < S.deep && !(R.lam(S.plate) < R.lam(S.deep))) return 'shallower water should have the shorter wavelength';
       return true; })()` },
     { name: "readouts: f, period, λ, c = fλ, line length and angle equal the state", fn: `(() => { ${pre}
@@ -44,7 +44,7 @@ module.exports = {
       for (const s of [0, 0.3 * d, 0.7 * d, d]) { const o = R.orbitAt(S.f, d, s, A); if (!near(o.b / o.a, Math.tanh(o.k * (d - s)), 1e-9) && !(o.a === 0)) return 'b/a at s = ' + s + ' is ' + o.b / o.a + ', tanh k(d-s) = ' + Math.tanh(o.k * (d - s)); }
       const o0 = R.orbitAt(S.f, d, 0, A);
       if (!near(o0.b, A, 1e-9)) return 'surface half height ' + o0.b + ' is not A';
-      const P = R.PRESETS, lamOf = (f, dd) => 2 * Math.PI / (function (f, dd) { const w2 = (2 * Math.PI * f) ** 2; let k = w2 / 9.81; for (let i = 0; i < 100; i++) { const th = Math.tanh(k * dd), F = (9.81 * k + 0.07274 / 998.2 * k ** 3) * th - w2, dF = (9.81 + 3 * 0.07274 / 998.2 * k * k) * th + (9.81 * k + 0.07274 / 998.2 * k ** 3) * dd * (1 - th * th); k -= F / dF; } return k; })(f, dd);
+      const P = R.PRESETS, lamOf = (f, dd) => 2 * Math.PI / (function (f, dd) { const w2 = (2 * Math.PI * f) ** 2; let k = w2 / 9.81; for (let i = 0; i < 100; i++) { const th = Math.tanh(k * dd), F = (9.81 * k + 0.0728 / 998.2 * k ** 3) * th - w2, dF = (9.81 + 3 * 0.0728 / 998.2 * k * k) * th + (9.81 * k + 0.0728 / 998.2 * k ** 3) * dd * (1 - th * th); k -= F / dF; } return k; })(f, dd);
       const sd = P.sideDeep, ss = P.sideShallow; if (sd.f !== 16 || sd.deep !== 12 || ss.f !== 6 || ss.deep !== 3) return 'side presets changed';
       if (!(sd.deep * MM > lamOf(16, 12 * MM) / 2)) return 'sideDeep is not deep water (d > λ/2)';
       const r = ss.deep * MM / lamOf(6, 3 * MM); if (Math.abs(r - 0.1) > 0.02) return 'sideShallow d/λ = ' + r + ', its hint says a tenth of a wavelength';
