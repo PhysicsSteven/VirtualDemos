@@ -2733,5 +2733,17 @@ VDI18N.add('es', 'common', {
 "Show all {#}":
   "Ver las {#}",
 "Show fewer":
-  "Ver menos"
+  "Ver menos",
+"Controls":
+  "Controles",
+"Exit":
+  "Salir",
+"Hide":
+  "Ocultar",
+"Show or hide the controls panel":
+  "Mostrar u ocultar el panel de controles",
+"Drag to move the panel":
+  "Arrastra para mover el panel",
+"Hide the controls panel":
+  "Ocultar el panel de controles"
 });

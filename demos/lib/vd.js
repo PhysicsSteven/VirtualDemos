@@ -752,20 +752,105 @@
     requestAnimationFrame(function () { shareSnap(); if (m) { shareApply(m[1]); setTimeout(function () { shareApply(m[1]); }, 800); } });   /* again, for a demo that loads its data or builds a view later */
   }
 
-  /* Fullscreen: VD.fullscreen(btn) toggles the whole page in and out of full screen (Esc also leaves). The button is
-     removed where the browser cannot do it (iPhone Safari). Each demo resizes itself on the resize that follows. */
+  /* Fullscreen (Steve 2026-11-20: "having some of the data taking elements overlay, but having the demo scale"):
+     VD.fullscreen(btn) switches the demo into a full screen view. The picture (.bench's stages) fills the screen, the page
+     header and the size grip go, and the rail (controls, readings, plots, data tables) floats over the picture as a panel
+     that drags by its bar and hides with Controls; Esc or the corner button leaves. Uses the browser's full screen where it
+     can, and where it cannot (iPhone Safari) the same view just fills the window. Each demo resizes itself on the resize
+     events sent after the switch. A page with no .bench keeps the plain whole page full screen. */
   VD.fullscreen = function (btn) {
-    var d = document, el = d.documentElement;
-    if (!(d.fullscreenEnabled || d.webkitFullscreenEnabled)) { btn.remove(); return null; }
+    var d = document, root = d.documentElement, api = !!(d.fullscreenEnabled || d.webkitFullscreenEnabled);
+    var bench = d.querySelector('.bench'), rail = bench && bench.querySelector(':scope > .rail');
     var cur = function () { return d.fullscreenElement || d.webkitFullscreenElement; };
-    var sync = function () { btn.setAttribute('aria-pressed', String(!!cur())); };
-    function toggle() {
-      try {
-        if (cur()) (d.exitFullscreen || d.webkitExitFullscreen).call(d);
-        else { var p = (el.requestFullscreen || el.webkitRequestFullscreen).call(el); if (p && p.catch) p.catch(function () {}); }
-      } catch (_) {}
+    var t = function (x) { return window.VDI18N ? VDI18N.t(x) : x; };
+    var on = false, dock = null, bar = null, pos = null;
+    if (!bench) {
+      if (!api) { btn.remove(); return null; }
+      var plain = function () { try { if (cur()) (d.exitFullscreen || d.webkitExitFullscreen).call(d); else { var p0 = (root.requestFullscreen || root.webkitRequestFullscreen).call(root); if (p0 && p0.catch) p0.catch(function () {}); } } catch (_) {} };
+      var sync0 = function () { btn.setAttribute('aria-pressed', String(!!cur())); };
+      btn.addEventListener('click', plain); d.addEventListener('fullscreenchange', sync0); d.addEventListener('webkitfullscreenchange', sync0);
+      return plain;
     }
-    btn.addEventListener('click', toggle); d.addEventListener('fullscreenchange', sync); d.addEventListener('webkitfullscreenchange', sync);
+    function stages() { return [].filter.call(bench.querySelectorAll(':scope > .stage'), function (s) { return s.getClientRects().length; }); }
+    function fit() {   /* a stage whose rows need more than the screen keeps their height, and the view scrolls (one pass, no observer) */
+      stages().forEach(function (s) { s.style.removeProperty('--vd-fs-min'); if (on && s.scrollHeight > s.clientHeight + 2) s.style.setProperty('--vd-fs-min', s.scrollHeight + 'px'); });   /* a custom property: VD.fitStage owns the stage's min-height */
+    }
+    function nudge() {   /* demos size their canvases on resize; some read the size a frame later */
+      var fire = function () { window.dispatchEvent(new Event('resize')); };
+      requestAnimationFrame(function () { fire(); requestAnimationFrame(fire); }); setTimeout(function () { fire(); requestAnimationFrame(fit); }, 250); setTimeout(fit, 1000); setTimeout(fit, 2500);
+    }
+    function mkBtn(cls, text, title) { var b = d.createElement('button'); b.type = 'button'; b.className = cls; b.textContent = text; if (title) b.title = title; return b; }
+    function build() {
+      if (dock) return;
+      dock = d.createElement('div'); dock.className = 'vd-fs-dock'; dock.setAttribute('data-vd-noshare', '');
+      var ctl = mkBtn('vd-fs-ctl', t('Controls'), t('Show or hide the controls panel')); ctl.setAttribute('aria-pressed', 'true');
+      var ex = mkBtn('vd-fs-exit', '✕ ' + t('Exit'), t('Leave fullscreen') + ' (Esc)'); ex.setAttribute('aria-label', t('Leave fullscreen'));
+      ctl.addEventListener('click', function () { setHidden(!rail.classList.contains('vd-fs-hide')); });
+      ex.addEventListener('click', leave);
+      var h1 = d.querySelector('h1'), ttl = d.createElement('span'); ttl.className = 'vd-fs-title'; ttl.textContent = h1 ? h1.textContent : d.title;
+      dock.append(ttl, ctl, ex); bench.appendChild(dock);
+      if (rail) {
+        bar = d.createElement('div'); bar.className = 'vd-fs-bar'; bar.setAttribute('data-vd-noshare', '');
+        var g = d.createElement('span'); g.className = 'vd-fs-grip'; g.textContent = t('Controls'); g.title = t('Drag to move the panel');
+        var hide = mkBtn('vd-fs-hidebtn', t('Hide'), t('Hide the controls panel'));
+        hide.addEventListener('click', function () { setHidden(true); ctl.focus(); });
+        bar.append(g, hide); rail.insertBefore(bar, rail.firstChild);
+        g.addEventListener('pointerdown', function (e) {
+          if (e.button) return; e.preventDefault();
+          var r = rail.getBoundingClientRect(), ox = e.clientX - r.left, oy = e.clientY - r.top;
+          function mv(ev) { place(ev.clientX - ox, ev.clientY - oy); }
+          function up() { d.removeEventListener('pointermove', mv); d.removeEventListener('pointerup', up); d.removeEventListener('pointercancel', up); }
+          d.addEventListener('pointermove', mv); d.addEventListener('pointerup', up); d.addEventListener('pointercancel', up);
+        });
+      } else ctl.hidden = true;
+    }
+    function place(x, y) {   /* keep the panel's bar on screen */
+      var r = rail.getBoundingClientRect(), W = window.innerWidth, H = window.innerHeight;
+      x = Math.max(0, Math.min(W - Math.min(r.width, 120), x)); y = Math.max(0, Math.min(H - 40, y));
+      pos = [x, y]; rail.style.left = x + 'px'; rail.style.top = y + 'px'; rail.style.right = 'auto'; rail.style.bottom = 'auto';
+    }
+    function setHidden(h) {
+      if (!rail) return; rail.classList.toggle('vd-fs-hide', h);
+      dock.querySelector('.vd-fs-ctl').setAttribute('aria-pressed', String(!h));
+    }
+    var inerted = [];
+    function others() {   /* everything on the page outside the view, kept out of Tab order and screen readers while it is on */
+      var out = [], n = bench;
+      for (; n && n !== d.body; n = n.parentElement) [].forEach.call(n.parentElement.children, function (c) {
+        if (c !== n && !c.inert && !/^(SCRIPT|STYLE|LINK|DIALOG)$/.test(c.tagName)) out.push(c); });
+      return out;
+    }
+    function enter() {
+      if (on) return; on = true; build();
+      inerted = others(); inerted.forEach(function (c) { c.inert = true; });
+      root.classList.add('vd-fs'); btn.setAttribute('aria-pressed', 'true');
+      if (rail) setHidden(window.innerWidth <= 820 || window.innerHeight <= 520);   /* a phone opens on the picture; Controls brings the panel up */
+      if (rail && pos) place(pos[0], pos[1]);
+      if (api) { try { var p = (root.requestFullscreen || root.webkitRequestFullscreen).call(root); if (p && p.catch) p.catch(function () {}); } catch (_) {} }
+      nudge();
+    }
+    function leave() {
+      if (!on) return; on = false;
+      inerted.forEach(function (c) { c.inert = false; }); inerted = [];
+      root.classList.remove('vd-fs'); btn.setAttribute('aria-pressed', 'false');
+      if (rail) { ['left', 'top', 'right', 'bottom'].forEach(function (k) { rail.style[k] = ''; }); rail.classList.remove('vd-fs-hide'); }
+      fit();
+      /* a demo that sizes its canvas from the pane the canvas sits in would keep the full screen width (the canvas holds the
+         pane open): let the pictures shrink with their panes for a moment (a percentage max width frees a pane from its canvas), then size them again */
+      root.classList.add('vd-fs-leaving'); requestAnimationFrame(function () { window.dispatchEvent(new Event('resize'));
+        requestAnimationFrame(function () { root.classList.remove('vd-fs-leaving'); window.dispatchEvent(new Event('resize')); }); });
+      if (cur()) { try { (d.exitFullscreen || d.webkitExitFullscreen).call(d); } catch (_) {} }
+      nudge();
+    }
+    function toggle() { if (on) leave(); else enter(); }
+    function sync() { if (!cur() && on) leave(); }   /* the browser's own Esc */
+    d.addEventListener('fullscreenchange', sync); d.addEventListener('webkitfullscreenchange', sync);
+    d.addEventListener('keydown', function (e) {   /* Esc where the browser has no full screen of its own */
+      if (e.key === 'Escape' && on && !cur() && !d.querySelector('dialog[open], .vd-qr-big, .vd-typein, .vd-typefloat')) leave();
+    });
+    window.addEventListener('resize', function () { if (on && rail && pos) place(pos[0], pos[1]); });
+    btn.addEventListener('click', toggle);
+    VD.fullscreen.toggle = toggle; VD.fullscreen.isOn = function () { return on; };
     return toggle;
   };
 
@@ -780,7 +865,8 @@
   var PLAY = '[data-vd-key~="play"], #play, #playBtn, #stream, #acq, #run, #go, #pause, #motor, #launch, #drop, #fire';
   var RESET = '[data-vd-key~="reset"], #reset, #restart, #restartBtn, #again';
   function firstShown(sel) { var all = document.querySelectorAll(sel); for (var i = 0; i < all.length; i++) if (!all[i].disabled && shown(all[i])) return all[i]; return null; }
-  VD.keyTarget = function (k) { return k === 'space' ? firstShown(PLAY) : k === 'r' ? firstShown(RESET) || firstShown('#vdReset') : k === 'p' ? firstShown('#proj') : k === 'f' ? firstShown('#vdFull') : null; };
+  function head(sel) { return firstShown(sel) || (VD.fullscreen.isOn && VD.fullscreen.isOn() ? document.querySelector(sel) : null); }   /* the header is inert in the fullscreen view */
+  VD.keyTarget = function (k) { return k === 'space' ? firstShown(PLAY) : k === 'r' ? firstShown(RESET) || head('#vdReset') : k === 'p' ? head('#proj') : k === 'f' ? (VD.fullscreen.toggle && head('#vdFull') ? { click: VD.fullscreen.toggle } : firstShown('#vdFull')) : null; };
   function keys(e) {
     if (e.defaultPrevented || e.ctrlKey || e.metaKey || e.altKey || e.isComposing) return;
     var k = e.key === ' ' ? 'space' : e.key && e.key.length === 1 ? e.key.toLowerCase() : '';
@@ -792,7 +878,7 @@
     if (document.querySelector('.vd-qr-big, .vd-typein, .vd-typefloat, dialog[open]')) return;
     if (k === 'space' && (/^(BUTTON|A|SUMMARY)$/.test(tag) || tag === 'INPUT' && t.type !== 'range')) return;
     if (e.repeat) { if (k === 'space') e.preventDefault(); return; }
-    var b = k === '?' ? firstShown('#vdHelp') : VD.keyTarget(k); if (!b) return;
+    var b = k === '?' ? head('#vdHelp') : VD.keyTarget(k); if (!b) return;
     e.preventDefault(); b.click();
   }
 

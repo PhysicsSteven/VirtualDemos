@@ -1366,5 +1366,11 @@ VDI18N.add('en', 'common', [
 "Is something on this worksheet or its demo confusing, or not working?",
 "Tell us in a short form",
 "Show all {#}",
-"Show fewer"
+"Show fewer",
+"Controls",
+"Exit",
+"Hide",
+"Show or hide the controls panel",
+"Drag to move the panel",
+"Hide the controls panel"
 ]);
