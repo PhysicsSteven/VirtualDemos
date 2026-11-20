@@ -632,8 +632,8 @@ table.rows button:hover { color: var(--pos); }
   const ivHeight = (Pv) => Pv * MMHG / (RHO_IV * G);
   // The cuff (Korotkoff sounds): the arterial pressure under the cuff swings between dia and sys once a beat. The cuff is let down
   // steadily from c0 at k mmHg/s, c(t) = c0 − kt, and the heart beats at t0 + nT. A beat is heard when the pulse can just push the
-  // artery open, dia < c < sys. The first beat heard gives the systolic reading and the last the diastolic one; each can be low by
-  // up to kT, the fall of the cuff between beats.
+  // artery open, dia < c < sys. The first beat heard gives the systolic reading and the last the diastolic one; the first can be
+  // low and the last high by up to kT, the fall of the cuff between beats.
   function cuffBeats(sys, dia, c0, k, T, t0, tEnd) {
     const out = [];
     for (let n = 0; ; n++) { const t = t0 + n * T; if (t > tEnd + 1e-12) break; const c = c0 - k * t; if (c < 0) break; out.push({ t, c, heard: c < sys && c > dia }); }
