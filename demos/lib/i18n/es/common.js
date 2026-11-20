@@ -2719,5 +2719,15 @@ VDI18N.add('es', 'common', {
 "Newton's cannon: raise or lower the mountain (Shift for 100 km)":
   "Cañón de Newton: sube o baja la montaña (Shift para 100 km)",
 "Newton's cannon: fire":
-  "Cañón de Newton: disparar"
+  "Cañón de Newton: disparar",
+"Feedback":
+  "Comentarios",
+"Feedback (opens a form in a new tab)":
+  "Comentarios (abre un formulario en otra pestaña)",
+"Tell us what was confusing or what did not work on this page (opens a short form)":
+  "Cuéntanos qué fue confuso o qué no funcionó en esta página (abre un formulario corto)",
+"Is something on this worksheet or its demo confusing, or not working?":
+  "¿Algo de esta hoja de trabajo o de su demo es confuso o no funciona?",
+"Tell us in a short form":
+  "Cuéntanos en un formulario corto"
 });

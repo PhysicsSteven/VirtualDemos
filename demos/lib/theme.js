@@ -238,3 +238,12 @@
   if (window.VDI18N || !me || !me.src || document.readyState !== 'loading') return;
   document.write('<script src="' + me.src.replace(/theme\.js(\?.*)?$/, 'i18n.js') + '"><\/script>');
 })();
+
+/* Student feedback (demos/lib/feedback.js, Steve 2026-11-20): a Feedback button on demos and student worksheets that opens Steve's
+   Google Form. Loaded only on those pages; it shows nothing until the form's address is filled in at the top of that file. */
+(function () {
+  var me = document.currentScript;
+  if (window.VDFeedback || !me || !me.src) return;
+  if (!/\/demos\/[\w-]+\.html$|\/curriculum\/labs\/students\/[\w-]+(\.html)?\/?$/.test(location.pathname)) return;
+  var s = document.createElement('script'); s.src = me.src.replace(/theme\.js(\?.*)?$/, 'feedback.js'); s.async = true; document.head.appendChild(s);
+})();

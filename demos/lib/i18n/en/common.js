@@ -1359,5 +1359,10 @@ VDI18N.add('en', 'common', [
 "Newton's cannon: lower or raise the launch speed by 0.1 km/s (Shift for 1 km/s)",
 "Newton's cannon: raise or lower the launch angle (Shift for 5 degrees)",
 "Newton's cannon: raise or lower the mountain (Shift for 100 km)",
-"Newton's cannon: fire"
+"Newton's cannon: fire",
+"Feedback",
+"Feedback (opens a form in a new tab)",
+"Tell us what was confusing or what did not work on this page (opens a short form)",
+"Is something on this worksheet or its demo confusing, or not working?",
+"Tell us in a short form"
 ]);
