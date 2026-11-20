@@ -612,7 +612,9 @@
      "demos": [
       "hypothesis-tests"
      ],
-     "worksheets": []
+     "worksheets": [
+      "g-statistics"
+     ]
     },
     {
      "sec": "10.2",
@@ -673,7 +675,10 @@
       "galton-board",
       "quantum-coin"
      ],
-     "worksheets": []
+     "worksheets": [
+      "ws-chi-square",
+      "counting-statistics"
+     ]
     },
     {
      "sec": "11.3",
@@ -681,7 +686,9 @@
      "demos": [
       "chi-square-tests"
      ],
-     "worksheets": []
+     "worksheets": [
+      "ws-chi-square"
+     ]
     },
     {
      "sec": "11.4",
@@ -861,7 +868,9 @@
      "demos": [
       "anova"
      ],
-     "worksheets": []
+     "worksheets": [
+      "one-way-anova"
+     ]
     },
     {
      "sec": "13.5",
