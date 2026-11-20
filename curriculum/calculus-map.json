@@ -19,7 +19,9 @@
       {
        "sec": "1.1",
        "title": "Review of Functions",
-       "demos": []
+       "demos": [
+        "function-families"
+       ]
       },
       {
        "sec": "1.2",
@@ -166,7 +168,9 @@
       {
        "sec": "3.8",
        "title": "Implicit Differentiation",
-       "demos": []
+       "demos": [
+        "rates-and-optimization"
+       ]
       },
       {
        "sec": "3.9",
