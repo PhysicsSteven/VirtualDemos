@@ -9,7 +9,7 @@ const { readDemo, readLib } = require('./demo_source.cjs');
 const ctx = {};
 vm.runInNewContext(readLib('vdmath.js'), ctx, { timeout: 5000 });
 const core = readDemo('surfaces-and-gradients').match(/\/\/ ==CORE START==([\s\S]*?)\/\/ ==CORE END==/)[1];
-vm.runInNewContext(core + '\nglobalThis.c = { sgRead, sgNumber, sgAt, sgDu, sgPlane, sgKind, sgCritical, sgMarch, sgChains, sgLevels, sgProject, sgLambda, sgLagrange, sgConstrained, sgPath, sgRoll, sgEnergy };', ctx, { timeout: 20000 });
+vm.runInNewContext(core + '\nglobalThis.c = { sgRead, sgNumber, sgAt, sgDu, sgPlane, sgKind, sgCritical, sgMarch, sgChains, sgLevels, sgProject, sgLambda, sgLagrange, sgConstrained, sgPath, sgRoll, sgEnergy, sgPathRead, sgChain };', ctx, { timeout: 20000 });
 const c = ctx.c, M = ctx.VDMATH, PI = Math.PI;
 let n = 0;
 function group(name, f) { f(); n++; console.log('PASS', name); }
@@ -110,5 +110,42 @@ group('a particle in U = (x² − 1)² + y²: energy kept without drag, settles 
   const E = c.sgEnergy(s, st); near(E.U + E.K, E0.U + E0.K, 1e-9, 'energy');
   st = [-0.12, 0.9, 0, 0]; for (let i = 0; i < 60000; i++) st = c.sgRoll(s, st, 1e-3, 0.3);
   near(st[0], -1, 1e-3, 'settles at x = −1'); near(st[1], 0, 1e-3, 'y = 0');
+});
+group('the chain rule along a path: f_x x′ + f_y y′ against the derivative of the composite and the centered difference', () => {
+  /* closed forms: x² + y² on the unit circle is constant; xy on (t, t²) is t³ */
+  const ci = c.sgChain(c.sgRead('x^2 + y^2'), c.sgPathRead('cos t', 'sin t'), 0.7, 1e-4); near(ci.dzdt, 0, 1e-14, 'circle'); near(ci.tx, -ci.ty, 1e-14, 'terms cancel');
+  const cu = c.sgChain(c.sgRead('x y'), c.sgPathRead('t', 't^2'), 1.5, 1e-4); near(cu.dzdt, 3 * 1.5 * 1.5, 1e-14, 't³'); near(cu.tx, 1.5 * 1.5, 1e-14); near(cu.ty, 2 * 1.5 * 1.5, 1e-14);
+  near(cu.diff, 6.75, 1e-8, 'centered difference'); near(cu.diff - cu.dzdt, 1e-8, 5e-11, 'error h² z‴/6 = 1e-8');
+  /* any typed pair: the chain rule equals the exact derivative of f(x(t), y(t)) built by substitution */
+  for (const [f, xs, ys] of [['x^2 y + sin(x y)', 'cos(2t)', 't^3 - t'], ['e^(-(x^2 + y^2)/2)', '1 + t', 'ln(2 + t)']]) {
+    const s = c.sgRead(f), r = c.sgPathRead(xs, ys), z = M.subst(M.subst(s.tree.f, 'x', r.tree.x), 'y', r.tree.y), dz = M.compile(M.derivative(z, 't'), ['t']);
+    for (const t of [0.3, 1.1]) { const q = c.sgChain(s, r, t, 1e-5); near(q.dzdt, dz(t), 1e-12, f); near(q.diff, q.dzdt, 1e-8, f + ' difference'); }
+  }
+  assert.throws(() => c.sgPathRead('x + t', 't'));
+});
+
+group('chain rule setups: the numbers in the hints', () => {
+  const r4 = (x) => +x.toPrecision(4), KQ = r4(8.9875517862e9 * 1e-9 * 100), RG = r4(8.314462618);
+  /* the hiker on a 1.2 km circle around the 400 m summit, t in minutes */
+  const hill = c.sgRead('400e^(-(x^2 + y^2)/2) + 250e^(-((x - 2)^2 + (y - 1.5)^2))'), hr = c.sgPathRead('1.2cos(t/20)', '1.2sin(t/20)'), H = 1e-4 * 40 * PI;
+  let q = c.sgChain(hill, hr, 0, H); assert.strictEqual(r4(q.z), 208.6); assert.strictEqual(r4(q.dzdt), 2.501); assert.strictEqual(q.tx, 0);
+  near(Math.hypot(hr.dx(0), hr.dy(0)) * 1000, 60, 1e-12, '60 m/min');
+  /* the 400 m summit alone adds nothing on the circle (one of its level curves) */
+  const top = c.sgRead('400e^(-(x^2 + y^2)/2)'); for (const t of [3, 50, 101]) near(c.sgChain(top, hr, t, H).dzdt, 0, 1e-12, 'level curve');
+  let best = [-1e9, 0], hi = [-1e9, 0];
+  for (let i = 0; i <= 40000; i++) { const t = 40 * PI * i / 40000, p = c.sgChain(hill, hr, t, H); if (p.dzdt > best[0]) best = [p.dzdt, t]; if (p.z > hi[0]) hi = [p.z, t]; }
+  assert.strictEqual(r4(best[0]), 3.356); assert.strictEqual(r4(best[1]), 4.822); assert.strictEqual(r4(hi[0]), 240.8); assert.strictEqual(+hi[1].toPrecision(3), 12.9);
+  near(c.sgChain(hill, hr, hi[1], H).dzdt, 0, 2e-3, 'top of the walk');
+  /* the gas heated and expanding, t in minutes */
+  const gas = c.sgRead(`${RG}y/x`), gr = c.sgPathRead('20 + 0.2t', '300 + 1.5t');
+  q = c.sgChain(gas, gr, 0, 0.01); assert.strictEqual(r4(q.tx), -1.247); assert.strictEqual(r4(q.ty), 0.6236); assert.strictEqual(r4(q.dzdt), -0.6236); assert.strictEqual(r4(q.z), 124.7);
+  assert.strictEqual(r4(gas.f(gr.x(100), gr.y(100))), 93.53);
+  /* a test charge at 0.5 cm/µs along y = 0.8 cm past the dipole, t in µs: dV/dt = −E · v */
+  const dip = c.sgRead(`${KQ}/sqrt((x - 1)^2 + y^2) - ${KQ}/sqrt((x + 1)^2 + y^2)`), dr = c.sgPathRead('-3 + 0.5t', '0.8');
+  q = c.sgChain(dip, dr, 0, 12e-4); assert.strictEqual(r4(q.dzdt), -63.44);
+  q = c.sgChain(dip, dr, 6, 12e-4); near(q.z, 0, 1e-12); assert.strictEqual(r4(q.dzdt), 428.0);
+  near(q.dzdt, 2 * KQ / Math.pow(1.64, 1.5) * 0.5, 1e-12, '−E · v with E = −2kq/r³ at the midpoint');
+  let lo = [1e9, 0]; for (let i = 0; i <= 120000; i++) { const t = 12 * i / 120000, v = dip.f(dr.x(t), dr.y(t)); if (v < lo[0]) lo = [v, t]; }
+  assert.strictEqual(r4(lo[0]), -714.9); assert.strictEqual(r4(lo[1]), 3.806);
 });
 console.log(`${n} groups passed`);

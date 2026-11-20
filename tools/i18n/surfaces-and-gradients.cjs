@@ -2,7 +2,7 @@
 module.exports = async (page, grab) => {
   await require('./explore.cjs')(page, grab, { press: ['#play'] });
   await page.waitForTimeout(600); await grab(page);
-  for (const k of ['hill', 'gas', 'dipole', 'well', 'twoq', 'peaks', 'monkey', 'fence', 'hoop', 'lim1', 'lim2', 'lim3']) {
+  for (const k of ['hill', 'gas', 'dipole', 'well', 'twoq', 'peaks', 'monkey', 'fence', 'hoop', 'lim1', 'lim2', 'lim3', 'hike', 'gasheat', 'charge']) {
     await page.evaluate((k) => window.__sg.applyPreset(k), k).catch(() => {});
     await page.waitForTimeout(250); await grab(page);
     await page.evaluate(() => document.getElementById('play').click()).catch(() => {}); await page.waitForTimeout(500); await grab(page);
@@ -14,6 +14,7 @@ module.exports = async (page, grab) => {
   for (const v of ['x y', 'x +', 'x + z', 'sin(x))', 'sin(x,y)', 'sqrt', '#', '']) {
     await page.evaluate((v) => { const e = document.getElementById('fIn'); e.value = v; e.dispatchEvent(new Event('input')); }, v).catch(() => {}); await page.waitForTimeout(150); await grab(page);
   }
+  for (const v of ['t +', 'x + t']) { await page.evaluate((v) => { window.__sg.applyPreset('hike'); const e = document.getElementById('xtIn'); e.value = v; e.dispatchEvent(new Event('input')); }, v).catch(() => {}); await page.waitForTimeout(150); await grab(page); }
   await page.evaluate(() => { window.__sg.applyPreset('fence'); const e = document.getElementById('cIn'); e.value = 'q'; e.dispatchEvent(new Event('input')); }).catch(() => {}); await page.waitForTimeout(150); await grab(page);
   await page.evaluate(() => { const e = document.getElementById('cIn'); e.value = '40'; e.dispatchEvent(new Event('input')); }).catch(() => {}); await page.waitForTimeout(200); await grab(page);
 };

@@ -12,6 +12,8 @@ VDI18N.add('es', 'demo/surfaces-and-gradients', {
   "El punto sobre la restricción",
 "The point approached":
   "El punto al que te acercas",
+"The point moving along r(t)":
+  "El punto que se mueve a lo largo de r(t)",
 "Play moves the point along x, so the slice y = b sweeps across.":
   "Play mueve el punto a lo largo de x, así que el corte y = b recorre la superficie.",
 "Drag the tip of u on the map, or press Play to turn it.":
@@ -22,6 +24,8 @@ VDI18N.add('es', 'demo/surfaces-and-gradients', {
   "El punto se queda sobre g = c. Arrástralo a lo largo de la curva, o presiona Play para deslizarlo.",
 "Play sends a point in along each path. Drag the point to approach another one.":
   "Play manda un punto hacia adentro por cada camino. Arrastra el punto para acercarte a otro.",
+"Play walks the point along the path. Drag t, or drag the point along the path.":
+  "Play hace avanzar el punto por el camino. Arrastra t, o arrastra el punto a lo largo del camino.",
 "Point":
   "Punto",
 "angle α of u (degrees)":
@@ -44,10 +48,10 @@ VDI18N.add('es', 'demo/surfaces-and-gradients', {
   "Superficies y gradientes",
 "<a>Math for physics</a>":
   "<a>Matemáticas para física</a>",
-"<span><a><span>←</span> <span>Vector Fields, Work and Curl</span></a></span>":
-  "<span><a><span>←</span> <span>Campos vectoriales, trabajo y rotacional</span></a></span>",
-"Type a function z = f(x, y) and see it as a surface beside its contour map. Cut it with planes to read the partial derivatives as slopes, lay a tangent plane on it, turn a direction arrow to read the directional derivative, and see the gradient point straight uphill, across the level curves. Find peaks, pits and saddles with the second derivative test, slide along a constraint until it touches a level curve (Lagrange multipliers), and approach a point along different paths. Derivatives are exact.":
-  "Escribe una función z = f(x, y) y mírala como una superficie junto a su mapa de contorno. Córtala con planos para leer las derivadas parciales como pendientes, coloca un plano tangente sobre ella, gira una flecha de dirección para leer la derivada direccional y ve cómo el gradiente apunta directo cuesta arriba, a través de las curvas de nivel. Encuentra cimas, hondonadas y puntos silla con el criterio de la segunda derivada, deslízate por una restricción hasta que toque una curva de nivel (multiplicadores de Lagrange) y acércate a un punto por distintos caminos. Las derivadas son exactas.",
+"<a><span>←</span> <span>Solids of Revolution</span></a><a><span>Vectors and Surfaces in Space</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Sólidos de revolución</span></a><a><span>Vectores y superficies en el espacio</span> <span>→</span></a>",
+"Type a function z = f(x, y) and see it as a surface beside its contour map. Cut it with planes to read the partial derivatives as slopes, lay a tangent plane on it, turn a direction arrow to read the directional derivative, and see the gradient point straight uphill, across the level curves. Find peaks, pits and saddles with the second derivative test, slide along a constraint until it touches a level curve (Lagrange multipliers), approach a point along different paths, and walk a point along a path to see the chain rule. Derivatives are exact.":
+  "Escribe una función z = f(x, y) y mírala como una superficie junto a su mapa de contorno. Córtala con planos para leer las derivadas parciales como pendientes, coloca un plano tangente sobre ella, gira una flecha de dirección para leer la derivada direccional y ve cómo el gradiente apunta directo cuesta arriba, a través de las curvas de nivel. Encuentra cimas, hondonadas y puntos silla con el criterio de la segunda derivada, deslízate por una restricción hasta que toque una curva de nivel (multiplicadores de Lagrange), acércate a un punto por distintos caminos y haz avanzar un punto por un camino para ver la regla de la cadena. Las derivadas son exactas.",
 "Put the point, the arrow and the ball back where this setup started":
   "Regresa el punto, la flecha y la bola a donde empezó esta configuración",
 "What to explore":
@@ -62,6 +66,8 @@ VDI18N.add('es', 'demo/surfaces-and-gradients', {
   "Restricción",
 "Limits":
   "Límites",
+"Chain rule":
+  "Regla de la cadena",
 "The surface z = f(x, y). Drag to turn; drag the point to move it.":
   "La superficie z = f(x, y). Arrastra para girarla; arrastra el punto para moverlo.",
 "The contour map of f, with the point and the arrows of the chosen tool. Arrow keys move the point; plus and minus zoom; Space plays or pauses.":
@@ -82,6 +88,8 @@ VDI18N.add('es', 'demo/surfaces-and-gradients', {
   "Arrastre sobre la bola, b",
 "<span></span>Slope m of the line in":
   "<span></span>Pendiente m de la recta de entrada",
+"<span></span>Time t along the path":
+  "<span></span>Tiempo t a lo largo del camino",
 "What to show":
   "Qué mostrar",
 "<span>Show</span>":
@@ -132,6 +140,14 @@ VDI18N.add('es', 'demo/surfaces-and-gradients', {
   "x²y/(x⁴ + y²): todas las rectas coinciden, y aun así no hay límite",
 "sin(x² + y²)/(x² + y²): a limit that exists":
   "sin(x² + y²)/(x² + y²): un límite que sí existe",
+"The chain rule":
+  "La regla de la cadena",
+"A hiker circling the hill: rate of climb":
+  "Una excursionista que rodea la colina: rapidez de ascenso",
+"A gas heated as it expands: dP/dt":
+  "Un gas que se calienta mientras se expande: dP/dt",
+"A charge carried past a dipole: dV/dt = −E · v":
+  "Una carga que pasa junto a un dipolo: dV/dt = −E · v",
 "A hill {#} m high with a lower summit to the northeast, x east and y north in kilometers, h in meters. The gradient points straight uphill, across the level curves, and its size is the steepest slope in meters of rise per kilometer. Press Play to turn the direction arrow u: the slope along u, ∇h · u, is largest along ∇h, zero along the level curve, and most negative straight downhill.":
   "Una colina de {#} m de alto con una cima más baja al noreste, x hacia el este y y hacia el norte en kilómetros, h en metros. El gradiente apunta directo cuesta arriba, a través de las curvas de nivel, y su tamaño es la pendiente máxima en metros de subida por kilómetro. Presiona Play para girar la flecha de dirección u: la pendiente a lo largo de u, ∇h · u, es máxima a lo largo de ∇h, cero a lo largo de la curva de nivel y más negativa directo cuesta abajo.",
 "At the point":
@@ -140,8 +156,8 @@ VDI18N.add('es', 'demo/surfaces-and-gradients', {
   "D_uh = ∇h · u",
 "Formulas":
   "Fórmulas",
-"<span>Blind: hide the second derivative test, λ and the values along the paths, to predict them first</span>":
-  "<span>A ciegas: oculta el criterio de la segunda derivada, λ y los valores a lo largo de los caminos, para predecirlos primero</span>",
+"<span>Blind: hide the second derivative test, λ, the values along the paths and dz/dt by the chain rule, to predict them first</span>":
+  "<span>A ciegas: oculta el criterio de la segunda derivada, λ, los valores a lo largo de los caminos y dz/dt por la regla de la cadena, para predecirlos primero</span>",
 "What you can type":
   "Qué puedes escribir",
 "Use":
@@ -162,12 +178,16 @@ VDI18N.add('es', 'demo/surfaces-and-gradients', {
   "D = f<sub>xx</sub>f<sub>yy</sub> − f<sub>xy</sub>², en ∇f = {#}: D > {#} y f<sub>xx</sub> > {#} una hondonada (mínimo), D > {#} y f<sub>xx</sub> &lt; {#} una cima (máximo), D &lt; {#} un punto silla, D = {#} el criterio no dice nada",
 "∇f = λ∇g and g(x, y) = c at a constrained extreme":
   "∇f = λ∇g y g(x, y) = c en un extremo con restricción",
+"z(t) = f(x(t), y(t)): dz/dt = ∂f/∂x · dx/dt + ∂f/∂y · dy/dt = ∇f · r′(t)":
+  "z(t) = f(x(t), y(t)): dz/dt = ∂f/∂x · dx/dt + ∂f/∂y · dy/dt = ∇f · r′(t)",
 "The boxes are read by a small parser written for this site (nothing you type is run as code). Every partial derivative shown is the exact formula from the rules of calculus, evaluated at the point, so the slopes, the gradient, the Hessian and D are exact. Critical points are found by Newton's method from a grid of starting points over the square the surface shows, and constrained extremes by Newton's method on ∇f = λ∇g, g = c, both to about twelve significant figures; a point outside that square is not searched for.":
   "Las casillas las lee un pequeño intérprete escrito para este sitio (nada de lo que escribes se ejecuta como código). Cada derivada parcial que se muestra es la fórmula exacta según las reglas del cálculo, evaluada en el punto, así que las pendientes, el gradiente, la hessiana y D son exactos. Los puntos críticos se encuentran con el método de Newton desde una cuadrícula de puntos iniciales en el cuadrado que muestra la superficie, y los extremos con restricción con el método de Newton sobre ∇f = λ∇g, g = c, ambos con unas doce cifras significativas; no se buscan puntos fuera de ese cuadrado.",
 "The ball moves in the xy plane with acceleration a = −∇U/m − b v, m = {#} kg, U the typed function in joules, stepped by fourth order Runge Kutta. It is a particle in a potential energy U(x, y), not a ball rolling on a real hill (which would also spin and feel the slope's steepness).":
   "La bola se mueve en el plano xy con aceleración a = −∇U/m − b v, m = {#} kg, U la función escrita en joules, avanzada con Runge Kutta de cuarto orden. Es una partícula en una energía potencial U(x, y), no una bola que rueda sobre una colina real (que además giraría y sentiría lo empinado de la pendiente).",
 "Charges: kq = {#} V·cm for q = {#} nC, from the CODATA {#} Coulomb constant, rounded to four figures in the box; lengths in centimeters, so E comes out in V/cm ({#} V/m). The ideal gas uses R = {#} J/(mol·K) (the exact SI value, rounded to four figures in the box) for n = {#} mol, V in liters, so P is in kPa.":
   "Cargas: kq = {#} V·cm para q = {#} nC, con la constante de Coulomb de CODATA {#}, redondeada a cuatro cifras en la casilla; longitudes en centímetros, así que E sale en V/cm ({#} V/m). El gas ideal usa R = {#} J/(mol·K) (el valor exacto del SI, redondeado a cuatro cifras en la casilla) para n = {#} mol, V en litros, así que P está en kPa.",
+"Chain rule: x′(t) and y′(t) are exact derivatives of the typed path, so the chain rule value is exact. The rate from the values along the path is the centered difference [z(t + Δt) − z(t − Δt)]/({#}Δt) with Δt = {#}⁻⁴ of the time range, which differs from dz/dt by about (Δt)²z‴/{#}; the readout shows the two side by side.":
+  "Regla de la cadena: x′(t) y y′(t) son derivadas exactas del camino escrito, así que el valor por la regla de la cadena es exacto. La rapidez a partir de los valores a lo largo del camino es la diferencia centrada [z(t + Δt) − z(t − Δt)]/({#}Δt) con Δt = {#}⁻⁴ del intervalo de tiempo, que difiere de dz/dt en aproximadamente (Δt)²z‴/{#}; las lecturas muestran las dos lado a lado.",
 "The surface is drawn on a {#} by {#} grid and cut off where it leaves the box; contours on the map are traced on a finer grid. A limit is read from the values at a distance of {#}⁻⁶ of the view from the point.":
   "La superficie se dibuja en una cuadrícula de {#} por {#} y se corta donde sale de la caja; los contornos del mapa se trazan en una cuadrícula más fina. Un límite se lee de los valores a una distancia de {#}⁻⁶ de la vista desde el punto.",
 "The contour map of f(x, y) =":
@@ -260,14 +280,40 @@ VDI18N.add('es', 'demo/surfaces-and-gradients', {
   "<span></span>a lo largo de y = mx (m = {#})",
 "<span></span>along y = x²":
   "<span></span>a lo largo de y = x²",
-"The pressure of {#} mol of ideal gas, P = nRT/V = {#}T/V kPa, with x the volume V in liters and y the temperature T in kelvins. Cut the surface at constant T and the slope is ∂P/∂V = −nRT/V², negative (squeeze it and the pressure rises); cut at constant V and it is ∂P/∂T = nR/V, the slope of a gas thermometer. The level curves are isobars, straight lines through the origin. Play moves the point along V.":
-  "La presión de {#} mol de gas ideal, P = nRT/V = {#}T/V kPa, con x el volumen V en litros y y la temperatura T en kelvin. Corta la superficie a T constante y la pendiente es ∂P/∂V = −nRT/V², negativa (comprime el gas y la presión sube); corta a V constante y es ∂P/∂T = nR/V, la pendiente de un termómetro de gas. Las curvas de nivel son isobaras, rectas que pasan por el origen. Play mueve el punto a lo largo de V.",
-"Point V":
-  "Punto V",
+"A hiker walks a circle of radius {#} km around the {#} m summit of the hill, counterclockwise at {#} m per minute: x = {#} cos(t/{#}), y = {#} sin(t/{#}) km, t in minutes. Her rate of climb is dh/dt = ∂h/∂x · dx/dt + ∂h/∂y · dy/dt = ∇h · r′, in meters per minute. At t = {#} she is at ({#}, {#}) heading north, {#} m up and climbing at {#} m/min. The circle is a level curve of the big summit, so all the climbing and descending comes from the lower summit to the northeast: her fastest climb is {#} m/min at t = {#} min, and her highest point, {#} m near t = {#} min, is where dh/dt = {#} and the path just touches a level curve.":
+  "Una excursionista camina por un círculo de radio {#} km alrededor de la cima de {#} m de la colina, en sentido antihorario a {#} m por minuto: x = {#} cos(t/{#}), y = {#} sin(t/{#}) km, t en minutos. Su rapidez de ascenso es dh/dt = ∂h/∂x · dx/dt + ∂h/∂y · dy/dt = ∇h · r′, en metros por minuto. En t = {#} está en ({#}, {#}) rumbo al norte, a {#} m de altura y subiendo a {#} m/min. El círculo es una curva de nivel de la cima grande, así que todo lo que sube y baja viene de la cima más baja al noreste: su ascenso más rápido es de {#} m/min en t = {#} min, y su punto más alto, {#} m cerca de t = {#} min, está donde dh/dt = {#} y el camino apenas toca una curva de nivel.",
+"{#} s on screen = {r}":
+  "{#} s en pantalla = {r}",
+"{#} s on screen = {#} min":
+  "{#} s en pantalla = {#} min",
+"time t":
+  "tiempo t",
+"time t (min)":
+  "tiempo t (min)",
+"By the chain rule":
+  "Por la regla de la cadena",
+"From the values along the path, [{z}(t + Δt) − {z}(t − Δt)]/({#}Δt), Δt = {h}":
+  "A partir de los valores a lo largo del camino, [{z}(t + Δt) − {z}(t − Δt)]/({#}Δt), Δt = {h}",
+"Chain rule minus difference":
+  "Regla de la cadena menos diferencia",
+"dz/dt = ∇f · r′: the slope of the surface in the direction of travel times the speed, zero where the path runs along a level curve.":
+  "dz/dt = ∇f · r′: la pendiente de la superficie en la dirección del recorrido por la rapidez, cero donde el camino va a lo largo de una curva de nivel.",
+"r′(t) = (dx/dt, dy/dt)":
+  "r′(t) = (dx/dt, dy/dt)",
+"∂h/∂x · dx/dt":
+  "∂h/∂x · dx/dt",
+"∂h/∂y · dy/dt":
+  "∂h/∂y · dy/dt",
+"From the values along the path, [h(t + Δt) − h(t − Δt)]/({#}Δt), Δt = {#} min":
+  "A partir de los valores a lo largo del camino, [h(t + Δt) − h(t − Δt)]/({#}Δt), Δt = {#} min",
 "The point is at ({#}, {#}), where f is {#}.":
   "El punto está en ({#}, {#}), donde f vale {#}.",
 "The gradient there is (-{#}, {#}).":
   "Ahí el gradiente es (-{#}, {#}).",
+"The pressure of {#} mol of ideal gas, P = nRT/V = {#}T/V kPa, with x the volume V in liters and y the temperature T in kelvins. Cut the surface at constant T and the slope is ∂P/∂V = −nRT/V², negative (squeeze it and the pressure rises); cut at constant V and it is ∂P/∂T = nR/V, the slope of a gas thermometer. The level curves are isobars, straight lines through the origin. Play moves the point along V.":
+  "La presión de {#} mol de gas ideal, P = nRT/V = {#}T/V kPa, con x el volumen V en litros y y la temperatura T en kelvin. Corta la superficie a T constante y la pendiente es ∂P/∂V = −nRT/V², negativa (comprime el gas y la presión sube); corta a V constante y es ∂P/∂T = nR/V, la pendiente de un termómetro de gas. Las curvas de nivel son isobaras, rectas que pasan por el origen. Play mueve el punto a lo largo de V.",
+"Point V":
+  "Punto V",
 "Arrows of E = −∇V":
   "Flechas de E = −∇V",
 "The potential of +{#} nC at ({#}, {#}) and −{#} nC at (−{#}, {#}), in volts, x and y in centimeters. The electric field is E = −∇V: it points straight downhill on this surface, from the positive charge toward the negative, across the equipotentials. The surface is cut off near each charge, where V grows without limit. Turn u with Play: the slope of V along u is −E · u.":
@@ -314,20 +360,44 @@ VDI18N.add('es', 'demo/surfaces-and-gradients', {
   "<span>mínimo</span>",
 "U (J) along g = c":
   "U (J) a lo largo de g = c",
-"The point is at ({#}, -{#}), where f is -{#}.":
-  "El punto está en ({#}, -{#}), donde f vale -{#}.",
 "f = x²y/(x⁴ + y²) goes to {#} along every straight line into the origin, but along the parabola y = x² it is ½ everywhere. Checking all the lines is not enough: one curved path that disagrees shows the limit does not exist.":
   "f = x²y/(x⁴ + y²) tiende a {#} a lo largo de toda recta hacia el origen, pero a lo largo de la parábola y = x² vale ½ en todas partes. Revisar todas las rectas no basta: un solo camino curvo que no coincide muestra que el límite no existe.",
 "f = sin(r²)/r² with r² = x² + y² depends only on the distance from the origin, and sin(u)/u → {#} as u → {#}, so every path in gives {#}: here the limit exists and is {#}, although f is not defined at the origin itself. Agreement along the paths shown is not a proof; the dependence on r alone is.":
   "f = sin(r²)/r² con r² = x² + y² depende solo de la distancia al origen, y sin(u)/u → {#} cuando u → {#}, así que todo camino hacia adentro da {#}: aquí el límite existe y vale {#}, aunque f no está definida en el origen mismo. Que coincidan los caminos mostrados no es una prueba; que dependa solo de r sí lo es.",
 "Every path shown gives the same value. That agrees with a limit, but checking some paths can never prove one exists.":
   "Todos los caminos mostrados dan el mismo valor. Eso es compatible con un límite, pero revisar algunos caminos nunca puede probar que existe.",
-"sin(x^{#} + y^{#})/(x^{#} + y^{#})":
-  "sin(x^{#} + y^{#})/(x^{#} + y^{#})",
-"The point is at ({#}, {#}), where f is —.":
-  "El punto está en ({#}, {#}), donde f vale —.",
-"The gradient there is (—, —).":
-  "Ahí el gradiente es (—, —).",
+"{#} mol of ideal gas, P = {#}T/V kPa, heated while it expands: V = {#} + {#}t liters and T = {#} + {#}t kelvins, t in minutes. The chain rule splits the rate of change of pressure in two: dP/dt = ∂P/∂V · dV/dt + ∂P/∂T · dT/dt. Expanding lowers P and heating raises it. At t = {#} the two terms are −{#} and +{#} kPa/min, so P falls at {#} kPa/min; the expansion wins all the way, and P drops from {#} kPa to {#} kPa at t = {#} min.":
+  "{#} mol de gas ideal, P = {#}T/V kPa, que se calienta mientras se expande: V = {#} + {#}t litros y T = {#} + {#}t kelvins, t en minutos. La regla de la cadena divide en dos la rapidez de cambio de la presión: dP/dt = ∂P/∂V · dV/dt + ∂P/∂T · dT/dt. Expandirse baja P y calentarse la sube. En t = {#} los dos términos son −{#} y +{#} kPa/min, así que P baja a {#} kPa/min; la expansión gana todo el tiempo, y P baja de {#} kPa a {#} kPa en t = {#} min.",
+"Each term is a partial derivative times how fast its variable changes; their sum is the total rate.":
+  "Cada término es una derivada parcial por qué tan rápido cambia su variable; su suma es la rapidez total.",
+"r′(t) = (dV/dt, dT/dt)":
+  "r′(t) = (dV/dt, dT/dt)",
+"∂P/∂V · dV/dt":
+  "∂P/∂V · dV/dt",
+"∂P/∂T · dT/dt":
+  "∂P/∂T · dT/dt",
+"From the values along the path, [P(t + Δt) − P(t − Δt)]/({#}Δt), Δt = {#} min":
+  "A partir de los valores a lo largo del camino, [P(t + Δt) − P(t − Δt)]/({#}Δt), Δt = {#} min",
+"A small test charge of +{#} nC is carried at a steady {#} cm/µs ({#} km/s) along the line y = {#} cm, past +{#} nC at ({#}, {#}) and −{#} nC at (−{#}, {#}), t in microseconds. The potential it feels changes at dV/dt = ∇V · v = −E · v, and q(−dV/dt) = qE · v is the power the field delivers to it. At t = {#} (x = −{#} cm) V falls at {#} V/µs, so the field pushes the charge along with {#} mW. At the midpoint, t = {#} µs, V = {#} but it rises at {#} V/µs: the field pushes back, and whatever carries the charge supplies {#} mW. V is lowest, −{#} V, at t = {#} µs, where dV/dt = {#}: the path runs along an equipotential there, at right angles to E.":
+  "Una pequeña carga de prueba de +{#} nC se lleva a {#} cm/µs constantes ({#} km/s) a lo largo de la recta y = {#} cm, junto a +{#} nC en ({#}, {#}) y −{#} nC en (−{#}, {#}), t en microsegundos. El potencial que siente cambia a dV/dt = ∇V · v = −E · v, y q(−dV/dt) = qE · v es la potencia que el campo le entrega. En t = {#} (x = −{#} cm) V baja a {#} V/µs, así que el campo empuja la carga hacia adelante con {#} mW. En el punto medio, t = {#} µs, V = {#} pero sube a {#} V/µs: el campo la empuja hacia atrás, y lo que lleva la carga aporta {#} mW. V es mínimo, −{#} V, en t = {#} µs, donde dV/dt = {#}: ahí el camino va a lo largo de una equipotencial, en ángulo recto con E.",
+"{#} s on screen = {#} µs":
+  "{#} s en pantalla = {#} µs",
+"time t (µs)":
+  "tiempo t (µs)",
+"Power from E on +{#} nC, qE · v":
+  "Potencia de E sobre +{#} nC, qE · v",
+"∂V/∂x · dx/dt":
+  "∂V/∂x · dx/dt",
+"∂V/∂y · dy/dt":
+  "∂V/∂y · dy/dt",
+"From the values along the path, [V(t + Δt) − V(t − Δt)]/({#}Δt), Δt = {#} µs":
+  "A partir de los valores a lo largo del camino, [V(t + Δt) − V(t − Δt)]/({#}Δt), Δt = {#} µs",
+"E · v = −dV/dt":
+  "E · v = −dV/dt",
+"{#}/sqrt((x - {#})^{#} + y^{#}) - {#}/sqrt((x + {#})^{#} + y^{#})":
+  "{#}/sqrt((x - {#})^{#} + y^{#}) - {#}/sqrt((x + {#})^{#} + y^{#})",
+"The point is at (-{#}, {#}), where f is -{#}.":
+  "El punto está en (-{#}, {#}), donde f vale -{#}.",
 "Move the point on the contour map (Shift for bigger steps)":
   "Mueve el punto en el mapa de contorno (Shift para pasos más grandes)",
 "on the map":
@@ -336,22 +406,26 @@ VDI18N.add('es', 'demo/surfaces-and-gradients', {
   "Zoom hacia adentro o afuera respecto al centro (o usa la rueda sobre el mapa)",
 "Turn the surface":
   "Gira la superficie",
-"D_uf = ∇f · u":
-  "D_uf = ∇f · u",
 "{#} critical points in view.":
   "{#} puntos críticos en la vista.",
-"{#}/sqrt((x - {#})^{#} + y^{#}) - {#}/sqrt((x + {#})^{#} + y^{#})":
-  "{#}/sqrt((x - {#})^{#} + y^{#}) - {#}/sqrt((x + {#})^{#} + y^{#})",
+"The point is at ({#}, {#}), where f is —.":
+  "El punto está en ({#}, {#}), donde f vale —.",
+"The gradient there is (—, —).":
+  "Ahí el gradiente es (—, —).",
 "The gradient there is ({#}, -{#}).":
   "Ahí el gradiente es ({#}, -{#}).",
 "The point is at (-{#}, {#}), where f is {#}.":
   "El punto está en (-{#}, {#}), donde f vale {#}.",
 "{#}/sqrt((x - {#})^{#} + y^{#}) + {#}/sqrt((x + {#})^{#} + y^{#})":
   "{#}/sqrt((x - {#})^{#} + y^{#}) + {#}/sqrt((x + {#})^{#} + y^{#})",
+"The point is at ({#}, -{#}), where f is -{#}.":
+  "El punto está en ({#}, -{#}), donde f vale -{#}.",
 "The gradient there is (-{#}, -{#}).":
   "Ahí el gradiente es (-{#}, -{#}).",
 "The point is at ({#}, {#}), where f is -{#}.":
   "El punto está en ({#}, {#}), donde f vale -{#}.",
+"sin(x^{#} + y^{#})/(x^{#} + y^{#})":
+  "sin(x^{#} + y^{#})/(x^{#} + y^{#})",
 "time t (s)":
   "tiempo t (s)",
 "energy":
@@ -386,6 +460,8 @@ VDI18N.add('es', 'demo/surfaces-and-gradients', {
   "∇f = λ∇g aquí con λ = {#}: la restricción toca una curva de nivel de f, y f es máximo a lo largo de la restricción.",
 "Decide from the picture whether every path gives the same value.":
   "Decide con la imagen si todos los caminos dan el mismo valor.",
+"Multiply each partial derivative by how fast its variable changes and add; then turn Blind off to check.":
+  "Multiplica cada derivada parcial por qué tan rápido cambia su variable y suma; luego desactiva A ciegas para comprobar.",
 "D_uP = ∇P · u":
   "D_uP = ∇P · u",
 "x and y have different units here, so a direction in the xy plane has no meaning: use the Slopes tool.":
@@ -436,6 +512,18 @@ VDI18N.add('es', 'demo/surfaces-and-gradients', {
   "Escribe una fórmula en la casilla.",
 "<span>Type a formula in the box.</span>":
   "<span>Escribe una fórmula en la casilla.</span>",
+"{#} s on screen = {#}":
+  "{#} s en pantalla = {#}",
+"∂f/∂x · dx/dt":
+  "∂f/∂x · dx/dt",
+"∂f/∂y · dy/dt":
+  "∂f/∂y · dy/dt",
+"From the values along the path, [f(t + Δt) − f(t − Δt)]/({#}Δt), Δt = {#}":
+  "A partir de los valores a lo largo del camino, [f(t + Δt) − f(t − Δt)]/({#}Δt), Δt = {#}",
+"“{n}” is not a name I know here. Use t, and functions like sin, ln, sqrt.":
+  "“{n}” no es un nombre que conozca aquí. Usa t, y funciones como sin, ln, sqrt.",
+"<span>“x” is not a name I know here. Use t, and functions like sin, ln, sqrt.</span>":
+  "<span>“x” no es un nombre que conozca aquí. Usa t, y funciones como sin, ln, sqrt.</span>",
 "c needs a number.":
   "c necesita un número.",
 "<span>c needs a number.</span>":
@@ -448,6 +536,8 @@ VDI18N.add('es', 'demo/surfaces-and-gradients', {
   "“{n}” está fuera de lugar.",
 "{n} needs something to act on, like {n}(x).":
   "{n} necesita algo sobre qué actuar, como {n}(x).",
+"1 s on screen = {r}":
+  "1 s en pantalla = {r}",
 "{r} × real time":
   "{r} × tiempo real",
 "too long to show":
@@ -461,5 +551,19 @@ VDI18N.add('es', 'demo/surfaces-and-gradients', {
 "∇f is not zero here, so this is not a critical point: the test applies only where ∇f = 0.":
   "∇f no es cero aquí, así que este no es un punto crítico: el criterio solo se aplica donde ∇f = 0.",
 "∇f and ∇g are parallel here.":
-  "∇f y ∇g son paralelos aquí."
+  "∇f y ∇g son paralelos aquí.",
+"From the values along the path, [{z}(t + Δt) − {z}(t − Δt)]/(2Δt), Δt = {h}":
+  "A partir de los valores a lo largo del camino, [{z}(t + Δt) − {z}(t − Δt)]/(2Δt), Δt = {h}",
+"Power from E on +1 nC, qE · v":
+  "Potencia de E sobre +1 nC, qE · v",
+"The path is not defined at this time t; the point stays where it last was.":
+  "El camino no está definido en este tiempo t; el punto se queda donde estaba.",
+"<span><a><span>←</span> <span>Vector Fields, Work and Curl</span></a></span>":
+  "<span><a><span>←</span> <span>Campos vectoriales, trabajo y rotacional</span></a></span>",
+"Type a function z = f(x, y) and see it as a surface beside its contour map. Cut it with planes to read the partial derivatives as slopes, lay a tangent plane on it, turn a direction arrow to read the directional derivative, and see the gradient point straight uphill, across the level curves. Find peaks, pits and saddles with the second derivative test, slide along a constraint until it touches a level curve (Lagrange multipliers), and approach a point along different paths. Derivatives are exact.":
+  "Escribe una función z = f(x, y) y mírala como una superficie junto a su mapa de contorno. Córtala con planos para leer las derivadas parciales como pendientes, coloca un plano tangente sobre ella, gira una flecha de dirección para leer la derivada direccional y ve cómo el gradiente apunta directo cuesta arriba, a través de las curvas de nivel. Encuentra cimas, hondonadas y puntos silla con el criterio de la segunda derivada, deslízate por una restricción hasta que toque una curva de nivel (multiplicadores de Lagrange) y acércate a un punto por distintos caminos. Las derivadas son exactas.",
+"<span>Blind: hide the second derivative test, λ and the values along the paths, to predict them first</span>":
+  "<span>A ciegas: oculta el criterio de la segunda derivada, λ y los valores a lo largo de los caminos, para predecirlos primero</span>",
+"D_uf = ∇f · u":
+  "D_uf = ∇f · u"
 });

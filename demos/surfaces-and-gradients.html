@@ -28,6 +28,9 @@
 .fbar .frow[hidden] { display: none; }
 .fbar label.fl { font-family: var(--font-mono); font-weight: 600; font-size: 1rem; color: var(--sg-grad); white-space: nowrap; }
 .fbar label.fl.g { color: var(--sg-g); }
+.fbar label.fl.t { color: var(--sg-path5); }
+.fbar .pair { flex: 1 1 15em; min-width: 0; display: flex; align-items: center; gap: 6px 10px; }
+.fbar .pair input[type="text"] { flex: 1 1 6em; }
 .fbar input[type="text"] { flex: 1 1 220px; min-width: 0; font-family: var(--font-mono); font-size: 1.02rem; padding: 6px 10px; color: var(--ink); background: var(--canvas);
   border: 2px solid var(--line2, var(--line)); border-radius: 8px; }
 .fbar input[type="text"].short { flex: 0 1 6em; width: 6em; }
@@ -54,7 +57,7 @@
 .shelf-card .sl { flex: 1 1 100%; min-width: 0; }
 .sw { display: inline-block; width: 22px; height: 0; border-top: 3px solid; vertical-align: middle; margin-right: 6px; }
 .sw.grad { border-color: var(--sg-grad); } .sw.u { border-color: var(--sg-u); } .sw.sx { border-color: var(--sg-sx); } .sw.sy { border-color: var(--sg-sy); }
-.sw.level { border-color: var(--sg-level); } .sw.g { border-color: var(--sg-g); } .sw.field { border-color: var(--muted); border-top-width: 2px; }
+.sw.path { border-color: var(--sg-path5); } .sw.level { border-color: var(--sg-level); } .sw.g { border-color: var(--sg-g); } .sw.field { border-color: var(--muted); border-top-width: 2px; }
 dl.formulas { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 6px 10px; margin: 0; }
 dl.formulas dt { font-family: var(--font-mono); font-weight: 600; white-space: nowrap; color: var(--sg-grad); }
 dl.formulas dd { margin: 0; font-family: var(--font-mono); font-size: 0.86rem; overflow-wrap: anywhere; }
@@ -78,7 +81,7 @@ dl.formulas dd { margin: 0; font-family: var(--font-mono); font-size: 0.86rem; o
   <header class="bar">
     <div>
       <h1>Surfaces and Gradients</h1>
-      <p>Type a function z = f(x, y) and see it as a surface beside its contour map. Cut it with planes to read the partial derivatives as slopes, lay a tangent plane on it, turn a direction arrow to read the directional derivative, and see the gradient point straight uphill, across the level curves. Find peaks, pits and saddles with the second derivative test, slide along a constraint until it touches a level curve (Lagrange multipliers), and approach a point along different paths. Derivatives are exact.</p>
+      <p>Type a function z = f(x, y) and see it as a surface beside its contour map. Cut it with planes to read the partial derivatives as slopes, lay a tangent plane on it, turn a direction arrow to read the directional derivative, and see the gradient point straight uphill, across the level curves. Find peaks, pits and saddles with the second derivative test, slide along a constraint until it touches a level curve (Lagrange multipliers), approach a point along different paths, and walk a point along a path to see the chain rule. Derivatives are exact.</p>
     </div>
     <div class="bar-right">
       <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
@@ -100,12 +103,13 @@ dl.formulas dd { margin: 0; font-family: var(--font-mono); font-size: 0.86rem; o
           <option value="2">× 2</option>
         </select>
         <span class="mono" id="tclock" style="font-size:0.84rem"></span>
-        <div class="seg" role="group" aria-label="What to explore" id="toolSeg"><button type="button" data-tool="slopes" aria-pressed="false">Slopes</button><button type="button" data-tool="grad" aria-pressed="true">Gradient</button><button type="button" data-tool="crit" aria-pressed="false">Peaks and saddles</button><button type="button" data-tool="lagr" aria-pressed="false">Constraint</button><button type="button" data-tool="limit" aria-pressed="false">Limits</button></div>
+        <div class="seg" role="group" aria-label="What to explore" id="toolSeg"><button type="button" data-tool="slopes" aria-pressed="false">Slopes</button><button type="button" data-tool="grad" aria-pressed="true">Gradient</button><button type="button" data-tool="crit" aria-pressed="false">Peaks and saddles</button><button type="button" data-tool="lagr" aria-pressed="false">Constraint</button><button type="button" data-tool="limit" aria-pressed="false">Limits</button><button type="button" data-tool="chain" aria-pressed="false">Chain rule</button></div>
         <div class="seg" role="group" aria-label="Perspective" id="dimSeg"><button type="button" data-dim="3d" aria-pressed="true">3D</button><button type="button" data-dim="flat" aria-pressed="false">Flat</button></div>
       </div>
       <div class="fbar" id="fbar">
         <div class="frow"><label class="fl" for="fIn" id="lbF" translate="no">f(x, y) =</label><input type="text" id="fIn" translate="no" spellcheck="false" autocomplete="off" autocapitalize="off" autocorrect="off" aria-describedby="fStatus"></div>
         <div class="frow" id="rowG" hidden><label class="fl g" for="gIn" translate="no">g(x, y) =</label><input type="text" id="gIn" translate="no" spellcheck="false" autocomplete="off" autocapitalize="off" autocorrect="off" aria-describedby="fStatus"><label class="fl g" for="cIn" translate="no">= c =</label><input type="text" class="short" id="cIn" translate="no" spellcheck="false" autocomplete="off" aria-describedby="fStatus"></div>
+        <div class="frow" id="rowR" hidden><span class="pair"><label class="fl t" for="xtIn" translate="no">x(t) =</label><input type="text" id="xtIn" translate="no" spellcheck="false" autocomplete="off" autocapitalize="off" autocorrect="off" aria-describedby="fStatus"></span><span class="pair"><label class="fl t" for="ytIn" translate="no">y(t) =</label><input type="text" id="ytIn" translate="no" spellcheck="false" autocomplete="off" autocapitalize="off" autocorrect="off" aria-describedby="fStatus"></span></div>
         <div class="status" id="fStatus" role="status" aria-live="polite"></div>
       </div>
       <div class="panes" id="panes">
@@ -124,6 +128,7 @@ dl.formulas dd { margin: 0; font-family: var(--font-mono); font-size: 0.86rem; o
           <label class="check" id="lbSlices"><input type="checkbox" id="showSlices" checked><span><span class="sw sx"></span><span class="sw sy"></span>Slices x = a and y = b</span></label>
           <div class="row" id="rowDamp"><div class="sl"><div class="slider-head"><label for="damp">Drag on the ball, b</label><output id="oDamp" for="damp"></output></div><input type="range" id="damp" min="0" max="2" step="0.05" value="0.3"></div></div>
           <div class="row" id="rowM"><div class="sl"><div class="slider-head"><label for="mSl"><span class="sw" style="border-color:var(--sg-path5)"></span>Slope m of the line in</label><output id="oM" for="mSl"></output></div><input type="range" id="mSl" min="-3" max="3" step="0.1" value="2"></div></div>
+          <div class="row" id="rowT" hidden><div class="sl"><div class="slider-head"><label for="tSl"><span class="sw path"></span>Time t along the path</label><output id="oT" for="tSl"></output></div><input type="range" id="tSl" min="0" max="1000" step="1" value="0"></div></div>
           <span class="hint" id="toolNote"></span>
         </div>
         <div class="shelf-card" role="group" aria-label="What to show">
@@ -161,6 +166,10 @@ dl.formulas dd { margin: 0; font-family: var(--font-mono); font-size: 0.86rem; o
           <button type="button" data-p="lim1" aria-pressed="false">xy/(x² + y²): no limit at the origin</button>
           <button type="button" data-p="lim2" aria-pressed="false">x²y/(x⁴ + y²): every line agrees, still no limit</button>
           <button type="button" data-p="lim3" aria-pressed="false">sin(x² + y²)/(x² + y²): a limit that exists</button>
+          <p class="setlab">The chain rule</p>
+          <button type="button" data-p="hike" aria-pressed="false">A hiker circling the hill: rate of climb</button>
+          <button type="button" data-p="gasheat" aria-pressed="false">A gas heated as it expands: dP/dt</button>
+          <button type="button" data-p="charge" aria-pressed="false">A charge carried past a dipole: dV/dt = −E · v</button>
         </div>
         <details class="more" open><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
@@ -176,7 +185,7 @@ dl.formulas dd { margin: 0; font-family: var(--font-mono); font-size: 0.86rem; o
       </section>
       <section>
         <details class="fold"><summary>Lab</summary><div class="foldbody">
-        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the second derivative test, λ and the values along the paths, to predict them first</span></label>
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the second derivative test, λ, the values along the paths and dz/dt by the chain rule, to predict them first</span></label>
         <details class="more"><summary>What you can type</summary>
           <ul class="typing">
             <li>Use <code>x</code> and <code>y</code>. <code>+ − * / ^</code> and parentheses; <code>2x</code>, <code>xy</code> and <code>x(y+1)</code> multiply.</li>
@@ -188,9 +197,11 @@ dl.formulas dd { margin: 0; font-family: var(--font-mono); font-size: 0.86rem; o
           <p class="formula">∇f = (∂f/∂x, ∂f/∂y), D<sub>u</sub>f = ∇f · u = |∇f| cos θ, tangent plane z = f(a, b) + f<sub>x</sub>(x − a) + f<sub>y</sub>(y − b)</p>
           <p class="formula">D = f<sub>xx</sub>f<sub>yy</sub> − f<sub>xy</sub>², at ∇f = 0: D &gt; 0 and f<sub>xx</sub> &gt; 0 a pit (minimum), D &gt; 0 and f<sub>xx</sub> &lt; 0 a peak (maximum), D &lt; 0 a saddle, D = 0 the test says nothing</p>
           <p class="formula">∇f = λ∇g and g(x, y) = c at a constrained extreme</p>
+          <p class="formula">z(t) = f(x(t), y(t)): dz/dt = ∂f/∂x · dx/dt + ∂f/∂y · dy/dt = ∇f · r′(t)</p>
           <p class="hint">The boxes are read by a small parser written for this site (nothing you type is run as code). Every partial derivative shown is the exact formula from the rules of calculus, evaluated at the point, so the slopes, the gradient, the Hessian and D are exact. Critical points are found by Newton's method from a grid of starting points over the square the surface shows, and constrained extremes by Newton's method on ∇f = λ∇g, g = c, both to about twelve significant figures; a point outside that square is not searched for.</p>
           <p class="hint">The ball moves in the xy plane with acceleration a = −∇U/m − b v, m = 1 kg, U the typed function in joules, stepped by fourth order Runge Kutta. It is a particle in a potential energy U(x, y), not a ball rolling on a real hill (which would also spin and feel the slope's steepness).</p>
           <p class="hint">Charges: kq = 898.8 V·cm for q = 1 nC, from the CODATA 2022 Coulomb constant, rounded to four figures in the box; lengths in centimeters, so E comes out in V/cm (100 V/m). The ideal gas uses R = 8.314 J/(mol·K) (the exact SI value, rounded to four figures in the box) for n = 1 mol, V in liters, so P is in kPa.</p>
+          <p class="hint">Chain rule: x′(t) and y′(t) are exact derivatives of the typed path, so the chain rule value is exact. The rate from the values along the path is the centered difference [z(t + Δt) − z(t − Δt)]/(2Δt) with Δt = 10⁻⁴ of the time range, which differs from dz/dt by about (Δt)²z‴/6; the readout shows the two side by side.</p>
           <p class="hint">The surface is drawn on a 72 by 72 grid and cut off where it leaves the box; contours on the map are traced on a finer grid. A limit is read from the values at a distance of 10⁻⁶ of the view from the point.</p>
         </details>
         </div></details>
@@ -208,7 +219,8 @@ dl.formulas dd { margin: 0; font-family: var(--font-mono); font-size: 0.86rem; o
      derivative at a point, the gradient and the Hessian determinant D = fxx fyy − fxy²; sgKind applies the second derivative test.
      sgCritical finds the points where ∇f = 0 by Newton's method from a grid of starts; sgLagrange solves ∇f = λ∇g, g = c by Newton's
      method in (x, y, λ). sgMarch traces a level curve by marching squares and sgChains joins its pieces into curves. sgRoll steps a
-     particle of unit mass in the potential f with drag b by fourth order Runge Kutta. */
+     particle of unit mass in the potential f with drag b by fourth order Runge Kutta. sgPathRead reads a path (x(t), y(t)) and
+     sgChain gives dz/dt along it by the chain rule, term by term, beside a centered difference of the values along the path. */
   const SG_V = ['x', 'y'];
   function sgSurface(node) {
     const D = VDMATH.derivative, fx = D(node, 'x'), fy = D(node, 'y'), fxx = D(fx, 'x'), fxy = D(fx, 'y'), fyy = D(fy, 'y');
@@ -392,6 +404,21 @@ dl.formulas dd { margin: 0; font-family: var(--font-mono); font-size: 0.86rem; o
     return st.map((v, i) => v + dt * (k1[i] + 2 * k2[i] + 2 * k3[i] + k4[i]) / 6);
   }
   const sgEnergy = (s, st) => ({ U: s.f(st[0], st[1]), K: 0.5 * (st[2] * st[2] + st[3] * st[3]) });
+  /* a path r(t) = (x(t), y(t)) typed in two boxes, read with the variable t: x, y and their exact derivatives x′, y′, compiled */
+  const SG_T = ['t'];
+  function sgPathRead(xs, ys) {
+    const nx = typeof xs === 'string' ? VDMATH.parse(xs, { vars: SG_T }).node : xs, ny = typeof ys === 'string' ? VDMATH.parse(ys, { vars: SG_T }).node : ys;
+    const tree = { x: nx, y: ny, dx: VDMATH.derivative(nx, 't'), dy: VDMATH.derivative(ny, 't') }, r = { tree, txt: {} };
+    for (const k of Object.keys(tree)) { r[k] = VDMATH.compile(tree[k], SG_T); r.txt[k] = VDMATH.text(tree[k]); }
+    return r;
+  }
+  /* the chain rule along r at time t: dz/dt = f_x x′ + f_y y′ = ∇f · r′, each term kept, and the same rate from values of f along
+     the path alone, the centered difference [f(r(t + h)) − f(r(t − h))]/(2h), which differs from it by about h² (d³z/dt³)/6 */
+  function sgChain(s, r, t, h) {
+    const x = r.x(t), y = r.y(t), dx = r.dx(t), dy = r.dy(t), fx = s.fx(x, y), fy = s.fy(x, y), tx = fx * dx, ty = fy * dy;
+    const zp = s.f(r.x(t + h), r.y(t + h)), zm = s.f(r.x(t - h), r.y(t - h));
+    return { t, x, y, dx, dy, z: s.f(x, y), fx, fy, tx, ty, dzdt: tx + ty, h, diff: (zp - zm) / (2 * h) };
+  }
   // ==CORE END==
   if (typeof document === 'undefined') return;
 
@@ -426,13 +453,19 @@ dl.formulas dd { margin: 0; font-family: var(--font-mono); font-size: 0.86rem; o
       hint: 'f = x²y/(x⁴ + y²) goes to 0 along every straight line into the origin, but along the parabola y = x² it is ½ everywhere. Checking all the lines is not enough: one curved path that disagrees shows the limit does not exist.' },
     lim3: { tool: 'limit', f: 'sin(x^2 + y^2)/(x^2 + y^2)', P: [0, 0], view: { cx: 0, cy: 0, h: 2.2 }, zr: [-0.3, 1.1], m: 2, units: null,
       hint: 'f = sin(r²)/r² with r² = x² + y² depends only on the distance from the origin, and sin(u)/u → 1 as u → 0, so every path in gives 1: here the limit exists and is 1, although f is not defined at the origin itself. Agreement along the paths shown is not a proof; the dependence on r alone is.' },
+    hike: { tool: 'chain', f: '400e^(-(x^2 + y^2)/2) + 250e^(-((x - 2)^2 + (y - 1.5)^2))', path: ['1.2cos(t/20)', '1.2sin(t/20)'], T: [0, 40 * Math.PI], t: 0, rate: 6, tu: 'min', view: { cx: 0.5, cy: 0.4, h: 3 }, units: { x: 'km', y: 'km', z: 'm' }, names: { z: 'h' },
+      hint: 'A hiker walks a circle of radius 1.2 km around the 400 m summit of the hill, counterclockwise at 60 m per minute: x = 1.2 cos(t/20), y = 1.2 sin(t/20) km, t in minutes. Her rate of climb is dh/dt = ∂h/∂x · dx/dt + ∂h/∂y · dy/dt = ∇h · r′, in meters per minute. At t = 0 she is at (1.2, 0) heading north, 208.6 m up and climbing at 2.501 m/min. The circle is a level curve of the big summit, so all the climbing and descending comes from the lower summit to the northeast: her fastest climb is 3.356 m/min at t = 4.822 min, and her highest point, 240.8 m near t = 12.9 min, is where dh/dt = 0 and the path just touches a level curve.' },
+    gasheat: { tool: 'chain', f: `${RG}y/x`, path: ['20 + 0.2t', '300 + 1.5t'], T: [0, 100], t: 0, rate: 5, tu: 'min', view: { cx: 30, cy: 375, hx: 15, hy: 100 }, units: { x: 'L', y: 'K', z: 'kPa' }, names: { x: 'V', y: 'T', z: 'P' }, free: true,
+      hint: `1 mol of ideal gas, P = ${RG}T/V kPa, heated while it expands: V = 20 + 0.2t liters and T = 300 + 1.5t kelvins, t in minutes. The chain rule splits the rate of change of pressure in two: dP/dt = ∂P/∂V · dV/dt + ∂P/∂T · dT/dt. Expanding lowers P and heating raises it. At t = 0 the two terms are −1.247 and +0.6236 kPa/min, so P falls at 0.6236 kPa/min; the expansion wins all the way, and P drops from 124.7 kPa to 93.53 kPa at t = 100 min.` },
+    charge: { tool: 'chain', f: `${KQ}/sqrt((x - 1)^2 + y^2) - ${KQ}/sqrt((x + 1)^2 + y^2)`, path: ['-3 + 0.5t', '0.8'], T: [0, 12], t: 0, rate: 0.6, tu: 'µs', view: { cx: 0, cy: 0, h: 3 }, zr: [-4000, 4000], units: { x: 'cm', y: 'cm', z: 'V' }, names: { z: 'V' }, signed: true, field: true, power: true,
+      hint: 'A small test charge of +1 nC is carried at a steady 0.5 cm/µs (5 km/s) along the line y = 0.8 cm, past +1 nC at (1, 0) and −1 nC at (−1, 0), t in microseconds. The potential it feels changes at dV/dt = ∇V · v = −E · v, and q(−dV/dt) = qE · v is the power the field delivers to it. At t = 0 (x = −3 cm) V falls at 63.44 V/µs, so the field pushes the charge along with 63.44 mW. At the midpoint, t = 6 µs, V = 0 but it rises at 428.0 V/µs: the field pushes back, and whatever carries the charge supplies 428.0 mW. V is lowest, −714.9 V, at t = 3.806 µs, where dV/dt = 0: the path runs along an equipotential there, at right angles to E.' },
   };
-  const TOOL_FIRST = { slopes: 'gas', grad: 'hill', crit: 'well', lagr: 'fence', limit: 'lim1' };
+  const TOOL_FIRST = { slopes: 'gas', grad: 'hill', crit: 'well', lagr: 'fence', limit: 'lim1', chain: 'hike' };
   const PATHS = [{ k: 'xaxis', name: 'along the x axis', col: 'sx' }, { k: 'yaxis', name: 'along the y axis', col: 'sy' }, { k: 'diag', name: 'along y = x', col: 'u' }, { k: 'line', name: 'along y = mx', col: 'path5' }, { k: 'parab', name: 'along y = x²', col: 'g' }];
   const N3 = 72;
 
   const S = { preset: 'hill', tool: 'grad', s: null, g: null, c: 0, P: [0, 0], alpha: 0, view: { cx: 0, cy: 0, hx: 1, hy: 1 }, free: false, units: null, names: null, zr: null, zr0: null,
-    signed: false, run: false, blind: false, srcKey: '', crit: [], scales: null, ball: null, curves: [], cext: [], lagrU: 0, lim: 1, o: { th: -Math.PI / 2 + 0.55, ph: 1.0, zoom: 1 }, sweep: 1, t: 0 };
+    signed: false, run: false, blind: false, r: null, tc: 0, tr: [0, 1], rate: 1, tu: '', tau: 1, power: false, chainKey: '', srcKey: '', crit: [], scales: null, ball: null, curves: [], cext: [], lagrU: 0, lim: 1, o: { th: -Math.PI / 2 + 0.55, ph: 1.0, zoom: 1 }, sweep: 1, t: 0 };
   const map = $('map'), ctx = map.getContext('2d'), gcan = $('graph'), gtx = gcan.getContext('2d');
   let W = 0, H = 0, GW = 0, GH = 0, dpr = 1, TK = null, need = true, heat = null;
   const proj = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.35 : 1);
@@ -486,14 +519,15 @@ dl.formulas dd { margin: 0; font-family: var(--font-mono); font-size: 0.86rem; o
     const st = $('fStatus'); st.innerHTML = ''; st.classList.toggle('bad', !!bad);
     for (const [t, no] of [[box && S.s ? VDI18N.t('Still showing the last surface.') + ' ' : '', false], [box ? `${box}: ` : '', true], [msg, false]]) { if (!t) continue; const sp = document.createElement('span'); if (no) sp.setAttribute('translate', 'no'); sp.textContent = t; st.appendChild(sp); }
   }
-  function readBox(id, name) {
-    const el = $(id), r = VDMATH.parseLive(el.value, { vars: SG_V });
+  function readBox(id, name, vars) {
+    const el = $(id), r = VDMATH.parseLive(el.value, { vars: vars || SG_V });
+    if (vars && !r.empty && !r.node && r.error.code === 'name') { el.classList.add('bad'); say(VDI18N.t('“{n}” is not a name I know here. Use t, and functions like sin, ln, sqrt.', { n: r.error.name2 }), true, name); return null; }
     if (r.empty) { el.classList.add('bad'); say(VDI18N.t('Type a formula in the box.'), true, name); return null; }
     if (!r.node) { el.classList.add('bad'); say((MSG[r.error.code] || MSG.end)(r.error), true, name); return null; }
     el.classList.remove('bad'); return r;
   }
   function read(force) {
-    const lagr = S.tool === 'lagr', key = $('fIn').value + '|' + (lagr ? $('gIn').value + '|' + $('cIn').value : '');
+    const lagr = S.tool === 'lagr', chain = S.tool === 'chain', key = $('fIn').value + '|' + (lagr ? $('gIn').value + '|' + $('cIn').value : '') + (chain ? '|' + $('xtIn').value + '|' + $('ytIn').value : '');
     if (!force && key === S.srcKey && S.s) return false;
     S.srcKey = key;
     const r = readBox('fIn', 'f'); if (!r) return false;
@@ -504,9 +538,15 @@ dl.formulas dd { margin: 0; font-family: var(--font-mono); font-size: 0.86rem; o
       if (!isFinite(c)) { $('cIn').classList.add('bad'); say(VDI18N.t('c needs a number.'), true, 'c'); return false; }
       g = sgSurface(q.node); partial = partial || q.partial;
     }
-    S.s = sgSurface(r.node); S.g = g; S.c = c;
+    let path = null;
+    if (chain) {
+      const qx = readBox('xtIn', 'x(t)', SG_T); if (!qx) return false;
+      const qy = readBox('ytIn', 'y(t)', SG_T); if (!qy) return false;
+      path = sgPathRead(qx.node, qy.node); partial = partial || qx.partial || qy.partial;
+    }
+    S.s = sgSurface(r.node); S.g = g; S.c = c; S.r = path;
     say(partial ? VDI18N.t('Drawing what is finished so far, while you type.') : '', false);
-    surfaceChanged(); formulas();
+    surfaceChanged(); formulas(); if (chain) atT(S.tc);
     return true;
   }
 
@@ -548,7 +588,31 @@ dl.formulas dd { margin: 0; font-family: var(--font-mono); font-size: 0.86rem; o
       if (S.tool === 'lagr' && S.g) traceConstraint();
       critList();
     }
+    if (S.tool === 'chain' && S.r) pathScale();
     need = true; lastRead = '';
+  }
+  /* ---------- the chain rule: the point at time t on the path r(t) ---------- */
+  const tStep = () => 1e-4 * (S.tr[1] - S.tr[0]);
+  function atT(t) {
+    S.tc = Math.max(S.tr[0], Math.min(S.tr[1], t));
+    if (!S.r) return;
+    const x = S.r.x(S.tc), y = S.r.y(S.tc);
+    if (isFinite(x) && isFinite(y)) S.P = [Math.max(-1e6, Math.min(1e6, x)), Math.max(-1e6, Math.min(1e6, y))];
+  }
+  /* τ: the time the velocity arrow covers, so the fastest velocity along the path is drawn about a fifth of the view long */
+  function pathScale() {
+    let m = 0; const v = S.view;
+    for (let i = 0; i <= 200; i++) { const t = S.tr[0] + (S.tr[1] - S.tr[0]) * i / 200, a = Math.hypot(S.r.dx(t) / v.hx, S.r.dy(t) / v.hy); if (isFinite(a)) m = Math.max(m, a); }
+    S.tau = m > 0 ? 0.4 / m : 0;
+  }
+  /* the time on the path nearest the map point (x, y), measured in view units */
+  function nearestT(x, y) {
+    const v = S.view, n = 1200; let best = Infinity, tb = S.tc;
+    for (let i = 0; i <= n; i++) { const t = S.tr[0] + (S.tr[1] - S.tr[0]) * i / n, d = Math.hypot((S.r.x(t) - x) / v.hx, (S.r.y(t) - y) / v.hy); if (d < best) { best = d; tb = t; } }
+    return tb;
+  }
+  function samplePath(n) {
+    const out = []; for (let i = 0; i <= n; i++) { const t = S.tr[0] + (S.tr[1] - S.tr[0]) * i / n; out.push([S.r.x(t), S.r.y(t), t]); } return out;
   }
   /* the curves g = c over a little more than the map, and the constrained extremes on them */
   function traceConstraint() {
@@ -651,7 +715,7 @@ dl.formulas dd { margin: 0; font-family: var(--font-mono); font-size: 0.86rem; o
       const b = box3(), wx = b[1] - b[0], wy = b[3] - b[2], bb = [b[0] - 0.6 * wx, b[1] + 0.6 * wx, b[2] - 0.6 * wy, b[3] + 0.6 * wy];
       for (const cv of levelCurve(j.f, bb, 180)) polyline(c, cv.map((q) => toPx(q[0], q[1])), TK.level, 2.4 * p);
     }
-    ({ slopes: drawSlopes, grad: drawGrad, crit: drawCrit, lagr: drawLagr, limit: drawLimit })[S.tool](c, p, j, P);
+    ({ slopes: drawSlopes, grad: drawGrad, crit: drawCrit, lagr: drawLagr, limit: drawLimit, chain: drawChain })[S.tool](c, p, j, P);
     /* the point */
     if (S.tool !== 'limit' || true) { c.fillStyle = TK.p; c.strokeStyle = TK.canvas; c.lineWidth = 2; c.beginPath(); c.arc(P[0], P[1], 6 * p, 0, 7); c.fill(); c.stroke(); }
     legend(c, p);
@@ -753,10 +817,25 @@ dl.formulas dd { margin: 0; font-family: var(--font-mono); font-size: 0.86rem; o
     }
     c.strokeStyle = TK.p; c.lineWidth = 2 * p; c.fillStyle = TK.canvas; c.beginPath(); c.arc(P[0], P[1], 9 * p, 0, 7); c.stroke();
   }
+  /* the chain rule: the path, the velocity r′(t) drawn over the time τ, and ∇f at the point (E as well for a potential) */
+  function drawChain(c, p, j, P) {
+    if (!S.r) return;
+    polyline(c, samplePath(400).map((q) => toPx(q[0], q[1])), TK.path5, 3 * p);
+    const s0 = toPx(S.r.x(S.tr[0]), S.r.y(S.tr[0])); if (s0.every(isFinite)) { c.fillStyle = TK.path5; c.beginPath(); c.arc(s0[0], s0[1], 4 * p, 0, 7); c.fill(); }
+    if (sameXY() && isFinite(j.grad)) {
+      const k = gScale(), cap = 0.4 * Math.min(W, H), gl = Math.min(cap, j.grad * k), gs = j.grad > 0 ? gl / j.grad : 0, G = [P[0] + j.fx * gs, P[1] - j.fy * gs];
+      arrow(c, P, G, TK.grad, 2.6 * p, `∇${NM().z}`);
+      if (S.field) arrow(c, P, [2 * P[0] - G[0], 2 * P[1] - G[1]], TK.grad, 2 * p, 'E', [6 * p, 4 * p]);
+    }
+    const dx = S.r.dx(S.tc), dy = S.r.dy(S.tc);
+    if (isFinite(dx) && isFinite(dy)) arrow(c, P, toPx(S.P[0] + dx * S.tau, S.P[1] + dy * S.tau), TK.g, 3 * p, 'r′');
+    pace(c, p);
+  }
   function pace(c, p) {
-    if (S.tool !== 'crit') return;
-    const r = +$('speed').value, t = r === 1 ? VDI18N.t('real time') : VDI18N.t('{r} × real time', { r: fmt(r, 3) });
-    c.font = `${11 * p}px ${TK.mono}`; c.fillStyle = TK.muted; c.textAlign = 'center'; c.textBaseline = 'bottom'; label(c, t, W / 2, H - 20 * p);
+    if (S.tool !== 'crit' && S.tool !== 'chain') return;
+    const r = +$('speed').value, t = S.tool === 'chain' ? VDI18N.t('1 s on screen = {r}', { r: `${fmt(S.rate * r, 3)}${un(S.tu)}` }) : r === 1 ? VDI18N.t('real time') : VDI18N.t('{r} × real time', { r: fmt(r, 3) });
+    c.font = `${11 * p}px ${TK.mono}`; c.fillStyle = TK.muted; c.textAlign = 'center';
+    if (S.tool === 'chain') { c.textBaseline = 'top'; label(c, t, W / 2, 8 * p); } else { c.textBaseline = 'bottom'; label(c, t, W / 2, H - 20 * p); }
   }
 
   /* ---------- the graph under the pictures ---------- */
@@ -815,6 +894,13 @@ dl.formulas dd { margin: 0; font-family: var(--font-mono); font-size: 0.86rem; o
       if (!S.blind) for (const q of S.cext) { const n = nearestOnCurves(q.x, q.y); if (n.ci === S.lagr.ci) dot(A, cv.s[n.si], q.f, q.kind === 'max' ? TK.max : TK.min, 5); }
       dot(A, S.lagr.s, j.f, TK.p); A.unclip(); return;
     }
+    if (S.tool === 'chain' && S.r) {
+      const pts = samplePath(300), ts = pts.map((q) => q[2]), zs = pts.map((q) => S.s.f(q[0], q[1])), q = sgChain(S.s, S.r, S.tc, tStep());
+      const A = plotBox(L, T, w, h, S.tr, range(zs), `${VDI18N.t('time t')}${S.tu ? ` (${S.tu})` : ''}`, `${nm.z}(t) = ${nm.z}(${nm.x}(t), ${nm.y}(t))${u.z ? ` (${u.z})` : ''}`);
+      A.clip(); gline(A, ts, zs, TK.path5, 2.5 * p);
+      if (!S.blind && isFinite(q.dzdt) && isFinite(q.z)) { const d = 0.12 * (S.tr[1] - S.tr[0]); gline(A, [S.tc - d, S.tc + d], [q.z - d * q.dzdt, q.z + d * q.dzdt], TK.g, 2 * p, [6 * p, 4 * p]); }
+      dot(A, S.tc, q.z, TK.p); A.unclip(); return;
+    }
     if (S.tool === 'limit') {
       const paths = limitPaths(), R = S.view.hx, A0 = [], all = [];
       for (const pa of paths) { const xs = [], ys = []; for (let i = 1; i <= 160; i++) { const t = pa.R * i / 160, q = pa.f(t); xs.push(Math.hypot(q[0] - S.P[0], q[1] - S.P[1])); ys.push(S.s.f(q[0], q[1])); } A0.push([pa, xs, ys]); all.push(...ys); }
@@ -831,6 +917,7 @@ dl.formulas dd { margin: 0; font-family: var(--font-mono); font-size: 0.86rem; o
     const row = (n, t) => `<dt>${n}</dt><dd>${t.length > 400 ? VDI18N.t('too long to show') : esc(t)}</dd>`;
     let h = row('f', s.txt.f) + row('∂f/∂x', s.txt.fx) + row('∂f/∂y', s.txt.fy) + row('∂²f/∂x²', s.txt.fxx) + row('∂²f/∂y²', s.txt.fyy) + row('∂²f/∂x∂y', s.txt.fxy);
     if (S.tool === 'lagr' && S.g) h += row('g', S.g.txt.f) + row('∂g/∂x', S.g.txt.fx) + row('∂g/∂y', S.g.txt.fy);
+    if (S.tool === 'chain' && S.r) h += row('x(t)', S.r.txt.x) + row('y(t)', S.r.txt.y) + row('x′(t)', S.r.txt.dx) + row('y′(t)', S.r.txt.dy);
     dl.innerHTML = h;
   }
   const KIND = () => ({ max: VDI18N.t('a peak (local maximum)'), min: VDI18N.t('a pit (local minimum)'), saddle: VDI18N.t('a saddle'), flat: VDI18N.t('the test says nothing (D = 0)'), none: '—' });
@@ -890,6 +977,20 @@ dl.formulas dd { margin: 0; font-family: var(--font-mono); font-size: 0.86rem; o
       const ys = vals.map((q) => q[1]).filter(isFinite), spread = Math.max(...ys) - Math.min(...ys), big = Math.max(1e-300, ...ys.map(Math.abs));
       v = hide ? VDI18N.t('Decide from the picture whether every path gives the same value.') : spread > 1e-4 * Math.max(1, big) ? VDI18N.t('Two paths give different values, so the limit at the point does not exist.') : VDI18N.t('Every path shown gives the same value. That agrees with a limit, but checking some paths can never prove one exists.');
       h += dd(VDI18N.t('f at the point itself'), isFinite(j.f) ? fmt(j.f, 4) : VDI18N.t('undefined'));
+    } else if (S.tool === 'chain' && S.r) {
+      const q = sgChain(S.s, S.r, S.tc, tStep()), tu = S.tu, zt = ratio(u.z, tu), xt = ratio(u.x, tu), yt = ratio(u.y, tu), tt = un(tu);
+      h += dd(VDI18N.t('Time t'), `${fmt(q.t, 4)}${tt}`);
+      h += dd(`r′(t) = (d${nm.x}/dt, d${nm.y}/dt)`, sameXY() ? `(${fmt(q.dx, 4)}, ${fmt(q.dy, 4)})${un(xt)}` : `${fmt(q.dx, 4)}${un(xt)}, ${fmt(q.dy, 4)}${un(yt)}`);
+      h += dd(`∂${nm.z}/∂${nm.x}, ∂${nm.z}/∂${nm.y}`, `${fmt(q.fx, 4)}${un(ratio(u.z, u.x))}, ${fmt(q.fy, 4)}${un(ratio(u.z, u.y))}`);
+      h += dd(`∂${nm.z}/∂${nm.x} · d${nm.x}/dt`, H_(`${fmt(q.tx, 4)}${un(zt)}`)) + dd(`∂${nm.z}/∂${nm.y} · d${nm.y}/dt`, H_(`${fmt(q.ty, 4)}${un(zt)}`));
+      h += `<div class="wide"><dt>${VDI18N.t('By the chain rule')}</dt><dd translate="no">d${nm.z}/dt = ${H_(`${fmt(q.dzdt, 5)}${un(zt)}`)}</dd></div>`;
+      h += `<div class="wide"><dt>${VDI18N.t('From the values along the path, [{z}(t + Δt) − {z}(t − Δt)]/(2Δt), Δt = {h}', { z: nm.z, h: `${fmt(q.h, 2)}${tt}` })}</dt><dd translate="no">${H_(`${fmt(q.diff, 5)}${un(zt)}`)}</dd></div>`;
+      h += dd(VDI18N.t('Chain rule minus difference'), H_(`${fmt(q.dzdt - q.diff, 2)}${un(zt)}`));
+      if (S.power) h += dd(`E · v = −d${nm.z}/dt`, H_(`${fmt(-q.dzdt, 4)}${un(zt)}`)) + dd(VDI18N.t('Power from E on +1 nC, qE · v'), H_(`${fmt(-q.dzdt * 1e-9 * 1e6 * 1e3, 4)} mW`));
+      v = !(isFinite(q.x) && isFinite(q.y)) ? VDI18N.t('The path is not defined at this time t; the point stays where it last was.')
+        : hide ? VDI18N.t('Multiply each partial derivative by how fast its variable changes and add; then turn Blind off to check.')
+        : sameXY() ? VDI18N.t('dz/dt = ∇f · r′: the slope of the surface in the direction of travel times the speed, zero where the path runs along a level curve.')
+          : VDI18N.t('Each term is a partial derivative times how fast its variable changes; their sum is the total rate.');
     }
     $('out').innerHTML = h; $('verdict').textContent = v;
   }
@@ -900,9 +1001,9 @@ dl.formulas dd { margin: 0; font-family: var(--font-mono); font-size: 0.86rem; o
   function showTool(t) {
     S.tool = t;
     for (const b of document.querySelectorAll('#toolSeg button')) b.setAttribute('aria-pressed', String(b.dataset.tool === t));
-    $('rowG').hidden = t !== 'lagr'; $('rowAlpha').hidden = t !== 'grad'; $('lbPlane').hidden = $('lbSlices').hidden = t !== 'slopes'; $('rowDamp').hidden = t !== 'crit'; $('rowM').hidden = t !== 'limit';
-    $('toolTitle').textContent = { slopes: VDI18N.t('The point and the slices'), grad: VDI18N.t('The point and the direction u'), crit: VDI18N.t('The point and the ball'), lagr: VDI18N.t('The point on the constraint'), limit: VDI18N.t('The point approached') }[t];
-    $('toolNote').textContent = { slopes: VDI18N.t('Play moves the point along x, so the slice y = b sweeps across.'), grad: VDI18N.t('Drag the tip of u on the map, or press Play to turn it.'), crit: VDI18N.t('Play releases a ball at the point; it moves under F = −∇f.'), lagr: VDI18N.t('The point stays on g = c. Drag it along the curve, or press Play to slide.'), limit: VDI18N.t('Play sends a point in along each path. Drag the point to approach another one.') }[t];
+    $('rowG').hidden = t !== 'lagr'; $('rowAlpha').hidden = t !== 'grad'; $('lbPlane').hidden = $('lbSlices').hidden = t !== 'slopes'; $('rowDamp').hidden = t !== 'crit'; $('rowM').hidden = t !== 'limit'; $('rowR').hidden = $('rowT').hidden = t !== 'chain';
+    $('toolTitle').textContent = { slopes: VDI18N.t('The point and the slices'), grad: VDI18N.t('The point and the direction u'), crit: VDI18N.t('The point and the ball'), lagr: VDI18N.t('The point on the constraint'), limit: VDI18N.t('The point approached'), chain: VDI18N.t('The point moving along r(t)') }[t];
+    $('toolNote').textContent = { slopes: VDI18N.t('Play moves the point along x, so the slice y = b sweeps across.'), grad: VDI18N.t('Drag the tip of u on the map, or press Play to turn it.'), crit: VDI18N.t('Play releases a ball at the point; it moves under F = −∇f.'), lagr: VDI18N.t('The point stays on g = c. Drag it along the curve, or press Play to slide.'), limit: VDI18N.t('Play sends a point in along each path. Drag the point to approach another one.'), chain: VDI18N.t('Play walks the point along the path. Drag t, or drag the point along the path.') }[t];
     $('lbPa').textContent = `${VDI18N.t('Point')} ${NM().x}`; $('lbPb').textContent = NM().y;
     critList(); formulas();
   }
@@ -912,8 +1013,10 @@ dl.formulas dd { margin: 0; font-family: var(--font-mono); font-size: 0.86rem; o
     S.units = c.units || null; S.names = c.names || null; S.free = !!c.free; S.signed = !!c.signed; S.field = !!c.field; S.zr0 = c.zr || null;
     S.view = c.free ? { cx: c.view.cx, cy: c.view.cy, hx: c.view.hx, hy: c.view.hy } : { cx: c.view.cx, cy: c.view.cy, hx: c.view.h, hy: c.view.h };
     S.home = Object.assign({}, S.view);
-    S.P = c.P.slice(); S.P0 = c.P.slice(); S.alpha = (c.alpha || 0) * Math.PI / 180; $('alpha').value = c.alpha || 0;
+    S.P = (c.P || [0, 0]).slice(); S.P0 = S.P.slice(); S.alpha = (c.alpha || 0) * Math.PI / 180; $('alpha').value = c.alpha || 0;
     if (c.damp != null) $('damp').value = c.damp; if (c.m != null) $('mSl').value = c.m;
+    if (c.path) { $('xtIn').value = c.path[0]; $('ytIn').value = c.path[1]; S.tr = c.T.slice(); S.tc = c.t; S.rate = c.rate; S.tu = c.tu; }
+    S.power = !!c.power;
     const sh = c.show || {}; $('showField').checked = !!sh.field; $('showPlane').checked = true; $('showSlices').checked = true;
     $('nameField').textContent = S.field ? VDI18N.t('Arrows of E = −∇V') : VDI18N.t('Arrows of −∇f (downhill)');
     $('presetHint').textContent = c.hint; pressPreset(k);
@@ -924,7 +1027,7 @@ dl.formulas dd { margin: 0; font-family: var(--font-mono); font-size: 0.86rem; o
   }
   function custom() {
     if (S.preset === 'custom') return;
-    S.preset = 'custom'; pressPreset(''); S.units = null; S.names = null; S.field = false; S.zr0 = null; S.signed = false;
+    S.preset = 'custom'; pressPreset(''); S.units = null; S.names = null; S.field = false; S.zr0 = null; S.signed = false; S.power = false; S.tu = '';
     if (S.free) { S.free = false; const h = Math.max(S.view.hx, S.view.hy); S.view = { cx: S.view.cx, cy: S.view.cy, hx: h, hy: h }; }
     $('nameField').textContent = VDI18N.t('Arrows of −∇f (downhill)');
     $('presetHint').textContent = VDI18N.t('Your own function. Every setup above can be edited in the box too. There are no units until you choose a setup.');
@@ -934,20 +1037,22 @@ dl.formulas dd { margin: 0; font-family: var(--font-mono); font-size: 0.86rem; o
     if (document.activeElement !== $('pa')) $('pa').value = +S.P[0].toPrecision(6);
     if (document.activeElement !== $('pb')) $('pb').value = +S.P[1].toPrecision(6);
     $('oAlpha').textContent = `${Math.round(S.alpha * 180 / Math.PI) % 360}°`; $('oDamp').textContent = `${(+$('damp').value).toFixed(2)} /s`; $('oM').textContent = (+$('mSl').value).toFixed(1);
+    if (S.tool === 'chain') { $('tSl').value = Math.round(1000 * (S.tc - S.tr[0]) / (S.tr[1] - S.tr[0])); $('oT').textContent = `${fmt(S.tc, 4)}${un(S.tu)}`; }
   }
   function pointChanged() { S.J = null; syncInputs(); need = true; lastRead = ''; g3point = true; }
   for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
   for (const b of document.querySelectorAll('#toolSeg button')) b.addEventListener('click', () => {
     const t = b.dataset.tool; if (t === S.tool) return;
     if (t === 'lagr' && !$('gIn').value.trim()) { applyPreset(TOOL_FIRST[t]); return; }
-    if (t === 'lagr' || t === 'limit') { applyPreset(TOOL_FIRST[t]); return; }
+    if (t === 'lagr' || t === 'limit' || t === 'chain') { applyPreset(TOOL_FIRST[t]); return; }
     setRun(false); S.ball = null; S.trail = []; showTool(t); critKey = ''; read(true); need = true; lastRead = '';
   });
-  for (const id of ['fIn', 'gIn', 'cIn']) $(id).addEventListener('input', () => { custom(); setRun(false); if (read()) { if (S.tool === 'lagr') snapToCurve(); } need = true; lastRead = ''; });
-  for (const id of ['pa', 'pb']) $(id).addEventListener('input', () => { const a = +$('pa').value, b = +$('pb').value; if (!isFinite(a) || !isFinite(b) || $('pa').value === '' || $('pb').value === '') return; S.P = [Math.max(-1e6, Math.min(1e6, a)), Math.max(-1e6, Math.min(1e6, b))]; if (S.tool === 'lagr') snapToCurve(); S.ball = null; pointChanged(); });
+  for (const id of ['fIn', 'gIn', 'cIn', 'xtIn', 'ytIn']) $(id).addEventListener('input', () => { custom(); setRun(false); if (read()) { if (S.tool === 'lagr') snapToCurve(); } need = true; lastRead = ''; });
+  for (const id of ['pa', 'pb']) $(id).addEventListener('input', () => { const a = +$('pa').value, b = +$('pb').value; if (!isFinite(a) || !isFinite(b) || $('pa').value === '' || $('pb').value === '') return; S.P = [Math.max(-1e6, Math.min(1e6, a)), Math.max(-1e6, Math.min(1e6, b))]; if (S.tool === 'lagr') snapToCurve(); if (S.tool === 'chain' && S.r) atT(nearestT(S.P[0], S.P[1])); S.ball = null; pointChanged(); });
   $('alpha').addEventListener('input', () => { S.alpha = +$('alpha').value * Math.PI / 180; pointChanged(); });
   $('damp').addEventListener('input', () => { syncInputs(); });
   $('mSl').addEventListener('input', () => { pointChanged(); });
+  $('tSl').addEventListener('input', () => { setRun(false); atT(S.tr[0] + (S.tr[1] - S.tr[0]) * +$('tSl').value / 1000); pointChanged(); });
   for (const id of ['showLevels', 'showShade', 'showField', 'showLevelP', 'showPlane', 'showSlices']) $(id).addEventListener('change', () => { need = true; g3point = true; });
   $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; critList(); need = true; lastRead = ''; g3point = true; });
   $('zin').addEventListener('click', () => zoom(1 / 1.5));
@@ -959,13 +1064,14 @@ dl.formulas dd { margin: 0; font-family: var(--font-mono); font-size: 0.86rem; o
     if (!S.run && S.tool === 'limit' && S.lim <= 0.0011) S.lim = 1;
     setRun(!S.run);
   });
-  $('reset').addEventListener('click', () => { setRun(false); const c = PRESETS[S.preset]; if (c) { S.P = c.P.slice(); S.alpha = (c.alpha || 0) * Math.PI / 180; $('alpha').value = c.alpha || 0; } S.ball = null; S.trail = []; S.lim = 1; S.t = 0; if (S.tool === 'lagr') snapToCurve(); pointChanged(); });
+  $('reset').addEventListener('click', () => { setRun(false); const c = PRESETS[S.preset]; if (c) { S.P = (c.P || S.P).slice(); S.alpha = (c.alpha || 0) * Math.PI / 180; $('alpha').value = c.alpha || 0; } S.ball = null; S.trail = []; S.lim = 1; S.t = 0; if (S.tool === 'lagr') snapToCurve(); if (S.tool === 'chain') atT(c && c.path ? c.t : S.tr[0]); pointChanged(); });
   $('speed').addEventListener('change', () => { need = true; });
   function startBall() { S.ball = [S.P[0], S.P[1], 0, 0]; S.trail = [[S.P[0], S.P[1]]]; S.t = 0; const e = sgEnergy(S.s, S.ball); S.hist = [[0, e.U, e.K]]; }
 
   /* ---------- the map: drag the point (or the tip of u), pan elsewhere, wheel and pinch zoom about the center ---------- */
   const ptrs = new Map(); let drag = null;
   function movePoint(x, y) {
+    if (S.tool === 'chain' && S.r) { atT(nearestT(x, y)); S.ball = null; S.trail = []; pointChanged(); return; }
     if (S.tool === 'lagr' && S.curves.length) { const n = nearestOnCurves(x, y); if (n.ci >= 0) { S.lagr = { ci: n.ci, s: S.curves[n.ci].s[n.si] }; S.P = sgProject(S.g, S.c, x, y); const q = S.curves[n.ci].pts[n.si]; if (!S.P.every(isFinite) || Math.hypot(S.P[0] - q[0], S.P[1] - q[1]) > 0.05 * S.view.hx) S.P = q.slice(); } }
     else S.P = [x, y];
     S.ball = null; S.trail = []; pointChanged();
@@ -1001,7 +1107,8 @@ dl.formulas dd { margin: 0; font-family: var(--font-mono); font-size: 0.86rem; o
   map.addEventListener('wheel', (e) => { e.preventDefault(); const d = e.deltaY * (e.deltaMode === 1 ? 33 : e.deltaMode === 2 ? 400 : 1); zoom(Math.exp(Math.max(-100, Math.min(100, d)) * 0.0018)); }, { passive: false });
   map.addEventListener('keydown', (e) => {
     const st = S.view.hx * (e.shiftKey ? 0.1 : 0.01), d = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, 1], ArrowDown: [0, -1] }[e.key];
-    if (d) { setRun(false); movePoint(S.P[0] + d[0] * st, S.P[1] + d[1] * st * (S.free ? S.view.hy / S.view.hx : 1)); e.preventDefault(); }
+    if (d && S.tool === 'chain' && S.r) { setRun(false); atT(S.tc + (d[0] + d[1]) * (S.tr[1] - S.tr[0]) * (e.shiftKey ? 0.02 : 0.002)); pointChanged(); e.preventDefault(); }
+    else if (d) { setRun(false); movePoint(S.P[0] + d[0] * st, S.P[1] + d[1] * st * (S.free ? S.view.hy / S.view.hx : 1)); e.preventDefault(); }
     else if (e.key === '+' || e.key === '=') { zoom(1 / 1.5); e.preventDefault(); }
     else if (e.key === '-' || e.key === '_') { zoom(1.5); e.preventDefault(); }
     else if (e.key === ' ') { $('play').click(); e.preventDefault(); }
@@ -1139,6 +1246,17 @@ dl.formulas dd { margin: 0; font-family: var(--font-mono); font-size: 0.86rem; o
     } else if (S.tool === 'limit') {
       for (const pa of limitPaths()) { const pts = []; for (let i = 1; i <= 120; i++) { const q = pa.f(pa.R * i / 120); if (inBox(q)) pts.push(lift(q)); } tube(pts, TK[pa.col], 0.008); const q = pa.f(pa.R * S.lim); if (inBox(q)) ball3(lift(q), TK[pa.col], 0.03); }
       tube([w3(S.P[0], S.P[1], S.zr[0]), w3(S.P[0], S.P[1], S.zr[1])], TK.p, 0.003);
+    } else if (S.tool === 'chain' && S.r) {
+      /* the path on the surface and on the floor, r′ on the floor, ∇f, and the tangent (x′, y′, dz/dt) on the surface, each over τ */
+      const seg = []; let cur = [];
+      samplePath(240).forEach((q) => { if (q.every(isFinite) && inBox(q)) cur.push(q); else if (cur.length) { seg.push(cur); cur = []; } }); if (cur.length) seg.push(cur);
+      for (const sg of seg) if (sg.length > 1) { tube(sg.map(lift), TK.path5, 0.009); tube(sg.map((q) => w3(q[0], q[1], S.zr[0])), TK.path5, 0.005); }
+      const q = sgChain(S.s, S.r, S.tc, tStep()), tau = S.tau;
+      if (inBox(S.P) && isFinite(q.dx) && isFinite(q.dy)) {
+        arrow3(P0, w3(q.x + q.dx * tau, q.y + q.dy * tau, S.zr[0]), TK.g, 0.012, true);
+        if (sameXY() && j.grad > 0) { const k = Math.min(0.4 / Math.max(1e-300, S.scales.g75), 0.9 / j.grad); arrow3(P0, [P0[0] + j.fx * k, P0[1] + j.fy * k, P0[2]], TK.grad, 0.012, true); }
+        if (!S.blind && isFinite(q.dzdt) && isFinite(q.z)) arrow3(Pf, w3(q.x + q.dx * tau, q.y + q.dy * tau, q.z + q.dzdt * tau), TK.g, 0.01, true);
+      }
     }
   }
   function render3() {
@@ -1167,6 +1285,7 @@ dl.formulas dd { margin: 0; font-family: var(--font-mono); font-size: 0.86rem; o
       const cv = S.curves[S.lagr.ci]; S.lagr.s += sp * dt * Math.max(S.view.hx, S.view.hy) / 4;
       if (!cv.closed && S.lagr.s >= cv.len) S.lagr.s = 0; S.P = atArc(cv, S.lagr.s);
     } else if (S.tool === 'limit') { S.lim = Math.max(0.001, S.lim * Math.exp(-0.9 * sp * dt)); if (S.lim <= 0.001) setRun(false); }
+    else if (S.tool === 'chain' && S.r) { let t = S.tc + S.rate * sp * dt; if (t > S.tr[1]) t = S.tr[0] + (t - S.tr[1]); atT(t); }
     S.J = null; syncInputs(); lastRead = ''; g3point = true;
   }
   function frame(now) {
@@ -1175,11 +1294,11 @@ dl.formulas dd { margin: 0; font-family: var(--font-mono); font-size: 0.86rem; o
     if (need && S.s) {
       need = false; draw(); graph();
       if (use3()) render3();
-      const k = `${S.P},${S.alpha},${S.blind},${S.srcKey},${S.tool},${S.t},${$('mSl').value}`; if (k !== lastRead) { lastRead = k; readouts(); clock(); }
+      const k = `${S.P},${S.alpha},${S.blind},${S.srcKey},${S.tool},${S.t},${$('mSl').value},${S.tc}`; if (k !== lastRead) { lastRead = k; readouts(); clock(); }
     }
     requestAnimationFrame(frame);
   }
-  function clock() { $('tclock').textContent = S.tool === 'crit' && S.ball ? `t = ${fmt(S.t, 3)} s` : S.tool === 'grad' ? `α = ${Math.round(S.alpha * 180 / Math.PI) % 360}°` : ''; }
+  function clock() { $('tclock').textContent = S.tool === 'crit' && S.ball ? `t = ${fmt(S.t, 3)} s` : S.tool === 'grad' ? `α = ${Math.round(S.alpha * 180 / Math.PI) % 360}°` : S.tool === 'chain' ? `t = ${fmt(S.tc, 3)}${un(S.tu)}` : ''; }
   function resize() {
     dpr = window.devicePixelRatio || 1;
     const r = $('paneMap').getBoundingClientRect(); W = r.width; H = r.height; map.width = Math.round(W * dpr); map.height = Math.round(H * dpr);
@@ -1193,8 +1312,8 @@ dl.formulas dd { margin: 0; font-family: var(--font-mono); font-size: 0.86rem; o
   if (window.VD && VD.panel) VD.panel({ play: '#play', reset: '#reset', speed: '#speed', clock: '#tclock' });
   /* Copy link carries the function typed in the box */
   if (window.VD && VD.share && VD.share.picture) VD.share.picture('f', {
-    get: () => (S.preset === 'custom' ? VD.share.pack({ t: S.tool, f: $('fIn').value, g: $('gIn').value, c: $('cIn').value, a: S.P[0], b: S.P[1] }) : ''),
-    set: (s) => { const o = s && VD.share.unpack(s); if (!o || !TOOL_FIRST[o.t]) return; applyPreset(TOOL_FIRST[o.t]); $('fIn').value = o.f || ''; $('gIn').value = o.g || ''; $('cIn').value = o.c || '0'; $('fIn').dispatchEvent(new Event('input')); if (isFinite(o.a) && isFinite(o.b)) { S.P = [+o.a, +o.b]; if (S.tool === 'lagr') snapToCurve(); pointChanged(); } },
+    get: () => (S.preset === 'custom' ? VD.share.pack({ t: S.tool, f: $('fIn').value, g: $('gIn').value, c: $('cIn').value, a: S.P[0], b: S.P[1], xt: $('xtIn').value, yt: $('ytIn').value }) : ''),
+    set: (s) => { const o = s && VD.share.unpack(s); if (!o || !TOOL_FIRST[o.t]) return; applyPreset(TOOL_FIRST[o.t]); $('fIn').value = o.f || ''; $('gIn').value = o.g || ''; $('cIn').value = o.c || '0'; if (o.t === 'chain') { $('xtIn').value = o.xt || 't'; $('ytIn').value = o.yt || '0'; } $('fIn').dispatchEvent(new Event('input')); if (isFinite(o.a) && isFinite(o.b)) { S.P = [+o.a, +o.b]; if (S.tool === 'lagr') snapToCurve(); if (S.tool === 'chain' && S.r) atT(nearestT(S.P[0], S.P[1])); pointChanged(); } },
   });
   if (window.VD && VD.describe) VD.describe(map, () => {
     if (!S.s) return [];
@@ -1209,7 +1328,7 @@ dl.formulas dd { margin: 0; font-family: var(--font-mono); font-size: 0.86rem; o
   applyPreset('hill');
   view3 = VD3K.view({ seg: '#dimSeg', start: '3d', init: init3, status: (m) => say(m, false), change: () => view3sync() });
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
-  window.__sg = { S, applyPreset, sgAt, sgPath, sgDu, sgCritical, sgConstrained, sgLagrange, sgLambda, sgRead, read, setRun, zoom, box3, readouts, draw: () => { need = true; } };
+  window.__sg = { S, applyPreset, sgAt, sgPath, sgPathRead, sgChain, atT, sgDu, sgCritical, sgConstrained, sgLagrange, sgLambda, sgRead, read, setRun, zoom, box3, readouts, draw: () => { need = true; } };
   requestAnimationFrame(frame);
 })();
 </script>

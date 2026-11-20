@@ -1,6 +1,6 @@
 /* Known values for the break-it test (tools/breakit.cjs). Whatever the view, zoom or theme, computed fresh from the page's own
    code: x³ − 3x + y³ − 3y has a pit at (1, 1) with f = −4 and D = 36, a peak at (−1, −1) and two saddles; xy on x + y = 4 is
-   largest at (2, 2) with λ = 2; xy/(x² + y²) is m/(1 + m²) along y = mx; and the readout of f at the point matches f. */
+   largest at (2, 2) with λ = 2; xy/(x² + y²) is m/(1 + m²) along y = mx; xy along (t, t²) has dz/dt = 3t² by the chain rule; and the readout of f at the point matches f. */
 module.exports = {
   checks: [
     { name: 'critical points and Lagrange multipliers stay exact', fn: `(() => {
@@ -12,6 +12,8 @@ module.exports = {
       if (!r || Math.abs(r.x - 2) > 1e-10 || Math.abs(r.lam - 2) > 1e-10) bad.push('fence ' + JSON.stringify(r));
       const q = D.sgRead('x y/(x^2 + y^2)'), p = D.sgPath('line', 0, 0, 2)(1e-6);
       if (Math.abs(q.f(p[0], p[1]) - 0.4) > 1e-12) bad.push('limit ' + q.f(p[0], p[1]));
+      const ch = D.sgChain(D.sgRead('x y'), D.sgPathRead('t', 't^2'), 1.5, 1e-4);
+      if (Math.abs(ch.dzdt - 6.75) > 1e-12 || Math.abs(ch.tx - 2.25) > 1e-12) bad.push('chain ' + JSON.stringify(ch));
       return bad.length ? bad.join('; ') : true;
     })()` },
     { name: 'readout of f matches f at the point', fn: `(() => {

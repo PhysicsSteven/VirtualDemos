@@ -11,10 +11,11 @@ time: 15 to 40 minutes
 - Where ∇f = 0 the second derivative test sorts the point by D = f_xx f_yy − f_xy²: a pit, a peak, a saddle, or no verdict when D = 0.
 - On a constraint g(x, y) = c, f is largest or smallest where the constraint just touches a level curve of f, so ∇f = λ∇g. The multiplier has a meaning: how fast the best value changes with c, or a constraint force.
 - A limit in two variables must be the same along every path. Two paths that disagree prove it does not exist; any number of paths that agree prove nothing.
+- Along a path r(t), the chain rule gives dz/dt = ∂f/∂x · dx/dt + ∂f/∂y · dy/dt = ∇f · r′: each variable's rate times how much f cares about it. In physics, the rate a moving charge's potential changes is dV/dt = −E · v.
 
 ## Before class
 
-Nothing to install. The surface needs WebGL; without it (or with Flat pressed) the contour map takes the whole picture and every tool still works. Projector mode thickens the lines. Blind (Lab fold) hides the second derivative test, λ and the values along the limit paths, so students predict first. Every setup's function is typed in the box and can be edited.
+Nothing to install. The surface needs WebGL; without it (or with Flat pressed) the contour map takes the whole picture and every tool still works. Projector mode thickens the lines. Blind (Lab fold) hides the second derivative test, λ, the values along the limit paths and dz/dt by the chain rule, so students predict first. Every setup's function is typed in the box and can be edited.
 
 ## Running it in class
 
@@ -25,6 +26,7 @@ Nothing to install. The surface needs WebGL; without it (or with Flat pressed) t
 5. **Where a ball rolls.** Press Where a ball rolls and Play. The ball swings across a pit and settles; with drag 0 its total energy U + K stays constant on the graph. Try starting it right on the saddle.
 6. **A constraint.** Press The most area for 8 m of fence and Play: the point slides along x + y = 4 until ∇A lines up with ∇g at the square (Q4). Then A bead on a hoop: λ∇g is the push of the hoop.
 7. **Limits.** Press xy/(x² + y²) and drag m. Then x²y/(x⁴ + y²): every line gives 0 but the parabola gives ½ (Q5).
+8. **The chain rule.** Press A hiker circling the hill and Play: the hiker walks a 1.2 km circle at 60 m/min, and the readouts split her rate of climb into ∂h/∂x · dx/dt and ∂h/∂y · dy/dt, beside the same rate from the heights along the path. It is zero where the path touches a level curve. Then A gas heated as it expands (two terms of opposite sign) and A charge carried past a dipole, where dV/dt = −E · v and q times −dV/dt is the power the field delivers (Q6).
 
 ## Questions
 
@@ -38,11 +40,14 @@ Nothing to install. The surface needs WebGL; without it (or with Flat pressed) t
 
 **Q5.** Along every straight line y = mx into the origin, f = x²y/(x⁴ + y²) goes to 0. Does the limit at the origin exist? Explain with a path.
 
+**Q6.** A charge of +1 nC moves at 0.5 cm/µs along y = 0.8 cm past the dipole. Use dV/dt = ∇V · v to explain how V can be zero at the midpoint while it changes quickly there, and say whether the field speeds the charge up or slows it down at that moment.
+
 ## Common misconceptions
 
 - **"The gradient is a vector pointing up the surface."** ∇f lives in the xy plane (the map), pointing in the direction to walk to climb fastest; its size is the slope, not a length on the surface.
 - **"∇f = 0 means a maximum or a minimum."** It can be a saddle (the pass between two pits, the midpoint of two equal charges), or the test can fail (the monkey saddle).
 - **"If the limit along every line is the same, the limit exists."** x²y/(x⁴ + y²) agrees along every line and still has no limit: the parabola y = x² gives ½.
+- **"dz/dt is ∂f/∂x plus ∂f/∂y."** Each partial derivative must be multiplied by how fast its own variable changes; a hiker standing still has dz/dt = 0 on the steepest slope.
 - **"Lagrange's λ is just a number to eliminate."** It is how fast the best value changes with the constraint (the fence: 2 m² more area per meter), and in mechanics it gives the constraint force (the hoop's push).
 
 ## How the demo works
@@ -51,4 +56,5 @@ Nothing to install. The surface needs WebGL; without it (or with Flat pressed) t
 - Critical points are found by Newton's method from a grid of starting points over the square the surface shows; constrained extremes by Newton's method on ∇f = λ∇g, g = c, from the highest and lowest points along the traced constraint. Both reach about twelve significant figures. A point outside the square is not searched for.
 - Level curves are traced by marching squares on a grid. The surface is drawn on a 72 by 72 grid and cut off where it leaves its box, which the charges' 1/r spikes always do.
 - The ball is a particle of mass 1 kg with acceleration −∇U − bv, stepped by fourth order Runge Kutta: a particle in a potential, not a real ball rolling on a hill.
+- The chain rule value uses the exact derivatives x′(t) and y′(t) of the typed path. The rate from the values along the path is a centered difference with a step of 10⁻⁴ of the time range, so the two agree to about (Δt)²z‴/6.
 - The values along limit paths are read at a distance of 10⁻⁶ of the view from the point. These are computed values: the same settings always give the same digits.
