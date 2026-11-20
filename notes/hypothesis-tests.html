@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="../demos/lib/theme.js"></script>
+<title>Hypothesis Tests: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+@media screen { :root[data-theme="dark"] {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; overflow-wrap: break-word; }   /* a long file name breaks instead of pushing a phone sideways */
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+<link rel="stylesheet" id="vd-paper" href="../demos/lib/paper.css">
+</head>
+<body class="notes">
+<header class="top" aria-label="Site"><a class="brand" href="../index.html"><svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><ellipse cx="16" cy="16" rx="13" ry="6" fill="none" stroke="currentColor" stroke-width="1.8" transform="rotate(-30 16 16)"/><ellipse cx="16" cy="16" rx="13" ry="6" fill="none" stroke="currentColor" stroke-width="1.8" transform="rotate(30 16 16)"/><circle cx="16" cy="16" r="2.6" fill="currentColor"/></svg>Virtual Physics Demos</a><nav class="tabs" aria-label="Library"><a class="tab" href="../index.html#topics">Demos</a><a class="tab" href="../openstax.html">OpenStax</a><a class="tab" href="index.html" aria-current="page">Notes</a></nav><span class="hfind"></span><span data-vd-theme></span><a class="courses" href="../courses.html"><b>For a class</b> Courses</a></header>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Hypothesis Tests</h1><ul class="meta"><li><a href="../demos/hypothesis-tests.html">Open the demo</a></li><li>Statistics (OpenStax Introductory Statistics 2e 9.1 to 9.6 and 10.1 to 10.5) and physics labs that compare a measured value with a known one or two instruments with each other</li><li>15 to 40 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>A test follows four steps: the hypotheses (H₀ names a value, Hₐ says which way it might be wrong), the distribution of the statistic when H₀ is true, the p value, and a decision with a conclusion in words.</li>
+<li>The p value is the area of the null distribution at and beyond the sample's statistic, in the direction Hₐ points. It is not the chance that H₀ is true.</li>
+<li>Reject H₀ when p &lt; α. Even when H₀ is true, a test at α = 0.05 rejects it in about 5 % of studies: Type I errors. When H₀ is false, the share of studies that reject it is the power, 1 − β; the rest are Type II errors.</li>
+<li>Power grows with the size of the effect, the sample size and α, and shrinks with the spread. A study that fails to reject has not shown H₀ is true.</li>
+<li>Which test depends on the data: z when σ is known, t with s when it is not, a proportion test for counts of successes, two sample tests (with Welch's df when the spreads differ), and matched pairs when each unit is measured twice.</li>
+</ul>
+<h2>Before class</h2>
+<p>Nothing to install. Eight setups, each a lab question: <strong>Pendulum g: is it 9.81? (t test)</strong>, <strong>Drop timer, σ known: is g low? (z test)</strong>, <strong>Detector efficiency: above 80 %? (one proportion)</strong>, <strong>A die: are sixes one in six? (one proportion)</strong>, <strong>Two photogates, σ known: same period? (two means, z)</strong>, <strong>Two stopwatch timers: same period? (two means, Welch t)</strong>, <strong>Two detectors: same efficiency? (two proportions)</strong> and <strong>New photogate: did it change the period? (matched pairs)</strong>. The test card sets the tail (Left tailed, Two tailed, Right tailed) and α (0.10, 0.05, 0.01); the study card sets the Sample size n (and the Second sample size n₂), the Spread σ and New draw. The truth card holds the True value the simulation uses (the test never sees it), Make H₀ true, and Simulate the power curve. Play runs the number of Studies chosen (100, 1,000 or 10,000) and tallies how often the test rejects. Blind, in the Lab fold, hides the p value, the decision and the power curve. All data are simulated and seeded: Draw 1 is the same on every computer. The Handout and worksheet link opens the errors and power worksheet.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>One study.</strong> Open on <strong>Pendulum g: is it 9.81? (t test)</strong>. Walk through the four steps on the page and read the p value (Q1).</li>
+<li><strong>A thousand studies with H₀ true.</strong> Press Play and count the rejections; switch α (Q1).</li>
+<li><strong>One tail.</strong> <strong>Drop timer, σ known: is g low? (z test)</strong>: the truth is 9.79 m/s², so H₀ is false. Read the p value left tailed and two tailed, then press Play and compare the tally with the theory power (Q2).</li>
+<li><strong>Proportions.</strong> <strong>Detector efficiency: above 80 %? (one proportion)</strong> and <strong>A die: are sixes one in six? (one proportion)</strong> (Q3).</li>
+<li><strong>Missing a real effect.</strong> <strong>Two photogates, σ known: same period? (two means, z)</strong>: raise Sample size n and Second sample size n₂ until the power reaches 0.80 (Q4).</li>
+<li><strong>Unequal spreads and pairs.</strong> <strong>Two stopwatch timers: same period? (two means, Welch t)</strong>, <strong>Two detectors: same efficiency? (two proportions)</strong>, then <strong>New photogate: did it change the period? (matched pairs)</strong> (Q5, Q6).</li>
+<li><strong>The power curve.</strong> On any setup press Simulate the power curve and compare the dots with the theory curve (Q7).</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> Ten pendulum timings give g with a spread the test does not know. Write H₀ and Hₐ for "is this pendulum's mean g 9.81 m/s²?". Draw 1 gives t = 0.600 with df = 9 and p = 0.5635: what is the decision, and the conclusion in words? The truth is 9.81, so H₀ is true: press Play for 1,000 studies. About how many should reject at α = 0.05? (Draw 1 gives 51.) Switch α to 0.10 and 0.01 with the same studies: why can a smaller α only reject fewer?</p></div>
+
+<div class="q"><p><strong>Q2.</strong> A drop timer has a known σ = 0.03 m/s², eight drops, and air drag could only make g low. Why is this a left tailed z test? Draw 1 gives z = −1.921. Find the p value left tailed (0.0274) and say what changes if the student had used a two tailed test (p = 0.0547). With the truth at 9.79 m/s², the theory power at α = 0.05 is 0.595: what share of 1,000 studies should reject, and what do we call the others?</p></div>
+
+<div class="q"><p><strong>Q3.</strong> The detector setup sends 150 particles; Draw 1 detects 132. Find p′, check np₀ and nq₀ for p₀ = 0.80, and find z (the demo gives 2.449 and p = 0.0072, right tailed). For the die, 18 sixes in 120 rolls give z = −0.490 and p = 0.6242: does the die look unfair? Why is the Type I error rate of a proportion test only close to α, not exactly α?</p></div>
+
+<div class="q"><p><strong>Q4.</strong> Two photogates time one pendulum ten times each, σ = 2.0 ms known for each. Gate 1 truly reads 1.5 ms long, yet Draw 1 gives z = 1.760 and p = 0.0784. Which error is that? The theory power is 0.389. Raise Sample size n and Second sample size n₂ together: at what n does the power first reach 0.80? (The demo gives 28 for each gate.)</p></div>
+
+<div class="q"><p><strong>Q5.</strong> Two students time one pendulum 12 and 8 times with spreads 0.08 s and 0.15 s. Why does the book not pool their variances here? Draw 1 gives t = 2.110 with Welch's df = 8.30 and p = 0.0666. Why is the df not a whole number? For the two detectors, Draw 1 gives z = 1.784 and p = 0.0744: what is the pooled proportion for?</p></div>
+
+<div class="q"><p><strong>Q6.</strong> Ten pendulums of very different lengths are each timed with the old and the new photogate. Why test the ten differences new − old (a one sample t test) instead of comparing the two sets of ten periods? Draw 1 gives t = 0.826, df = 9, p = 0.4301, although the new gate truly reads 2.0 ms long. How many pendulums give a power of 0.80? (The demo gives 20.)</p></div>
+
+<div class="q"><p><strong>Q7.</strong> Press Make H₀ true on any setup, then Simulate the power curve. Where does the curve cross the true value of H₀, and why is it α there? Why are the dots for the proportion and Welch setups allowed to sit a little off the theory curve?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"The p value is the chance that H₀ is true."</strong> It is the chance of a result at least this extreme if H₀ is true.</li>
+<li><strong>"Not rejecting H₀ proves it."</strong> The two photogates differ by 1.5 ms and the test misses it most of the time at n = 10: absence of evidence is not evidence of absence.</li>
+<li><strong>"A significant result is an important one."</strong> With a big enough sample, a tiny and useless difference becomes significant.</li>
+<li><strong>"α = 0.05 means 5 % of my conclusions are wrong."</strong> It is the rate of false alarms among studies where H₀ is true; the share of wrong conclusions depends also on how often H₀ is false and on the power.</li>
+<li><strong>"Choose the tail after seeing the data."</strong> The tail comes from the question, before the data: switching a two tailed test to one tail after the fact halves the p value dishonestly.</li>
+</ul>
+<h2>How the demo works</h2>
+<ul>
+<li>Every study is simulated from the True value and spread on the sliders (normal data, or successes with the true probability), with seeded random numbers; Play runs studies from its own seeded stream, so the same settings give the same tally.</li>
+<li>The statistics follow the book through the shared library (demos/lib/vdstats.js): z = (x̄ − μ₀)/(σ/√n); t = (x̄ − μ₀)/(s/√n) with df = n − 1; one proportion z = (p′ − p₀)/√(p₀q₀/n), the normal approximation; two means with σ known; the unpooled t with Welch's df; two proportions with the pooled proportion; matched pairs as a one sample t test on the differences.</li>
+<li>The theory power curve is exact for the z tests and uses the noncentral t (by numerical integration) for the one sample and matched pairs t tests. For proportions it uses the normal approximation, and for Welch's test it treats the statistic as a t with the df the true spreads give, so the simulated dots can sit a little off the curve.</li>
+<li>A simulated share f from N studies has a standard error √(f(1 − f)/N).</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>. © 2026 Steven Anderson. All rights reserved; see the <a href="../LICENSE.html">terms of use</a>.</footer>
+</main>
+</body>
+</html>

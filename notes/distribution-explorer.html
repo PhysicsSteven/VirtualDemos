@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="../demos/lib/theme.js"></script>
+<title>Distribution Explorer: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+@media screen { :root[data-theme="dark"] {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; overflow-wrap: break-word; }   /* a long file name breaks instead of pushing a phone sideways */
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+<link rel="stylesheet" id="vd-paper" href="../demos/lib/paper.css">
+</head>
+<body class="notes">
+<header class="top" aria-label="Site"><a class="brand" href="../index.html"><svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><ellipse cx="16" cy="16" rx="13" ry="6" fill="none" stroke="currentColor" stroke-width="1.8" transform="rotate(-30 16 16)"/><ellipse cx="16" cy="16" rx="13" ry="6" fill="none" stroke="currentColor" stroke-width="1.8" transform="rotate(30 16 16)"/><circle cx="16" cy="16" r="2.6" fill="currentColor"/></svg>Virtual Physics Demos</a><nav class="tabs" aria-label="Library"><a class="tab" href="../index.html#topics">Demos</a><a class="tab" href="../openstax.html">OpenStax</a><a class="tab" href="index.html" aria-current="page">Notes</a></nav><span class="hfind"></span><span data-vd-theme></span><a class="courses" href="../courses.html"><b>For a class</b> Courses</a></header>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Distribution Explorer</h1><ul class="meta"><li><a href="../demos/distribution-explorer.html">Open the demo</a></li><li>Statistics (OpenStax Introductory Statistics 2e 4.1, 4.3 to 4.6, 5.1 to 5.3, 6.1, 6.2, 8.2, 11.1, 13.2 and 13.3) and physics labs that model counts, waiting times, timings and meter resolution</li><li>15 to 40 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>A probability is an area under a density curve (continuous) or a sum of bars (discrete). For a discrete distribution the ends count: P(X ≤ 12) includes 12. For a continuous one a single value has probability zero.</li>
+<li>A percentile is the value with a given area to its left: the inverse of the cumulative distribution. A z score is a value measured in standard deviations from the mean.</li>
+<li>Each distribution has a story: the binomial counts successes in n independent tries, the hypergeometric draws without replacement, the geometric waits for the first success, the Poisson counts rare independent events, the exponential is the wait between them, the uniform spreads evenly, and the normal piles up around a mean.</li>
+<li>Approximations have limits: the normal approximates the binomial when np and nq are both at least 5 (with the continuity correction), the Poisson approximates it when p is small, and t approaches the normal as df grows.</li>
+<li>Random draws from a distribution fill a histogram that takes the shape of its curve.</li>
+</ul>
+<h2>Before class</h2>
+<p>Nothing to install. Ten families on the switch: Binomial, Geometric, Hypergeometric, Poisson, Uniform, Exponential, Normal, Student t, Chi square and F, each with its sliders. The event is Between a and b, Left of b or Right of a, with a = and b = (or drag the edges); the calculator command the book would use is shown. Area to the left finds the percentile. Comparison boxes (for example Normal approximation, N(np, √(npq)) and Poisson with μ = np for a binomial, Standard normal N(0, 1) for t) draw a second curve. Play draws random values at 10/s, 100/s or 1,000/s into a histogram; Seed sets the draws. Setups come in three groups: From the book (ten examples), Compare (<strong>t closes in on the normal as df grows</strong>, <strong>Binomial against normal and Poisson</strong>, <strong>The empirical rule: within 2σ</strong>) and In the lab (<strong>Decay counts in 10 s: Poisson</strong>, <strong>Waiting time between decays: exponential</strong>, <strong>Hand timed pendulum: normal</strong>, <strong>Rounding error of a meter: uniform</strong>). Blind, in the Lab fold, hides the probability and the percentile.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>An area.</strong> Open on <strong>Exam scores N(63, 5): P(X &gt; 65) (6.2)</strong>, Blind on. Ask for a guess, then show it; press Play to draw students (Q1).</li>
+<li><strong>Discrete counts.</strong> <strong>Binomial B(20, 0.41): P(X ≤ 12) (4.3)</strong> and <strong>Hypergeometric: more than 4 men (4.5)</strong> with the binomial comparison on (Q2).</li>
+<li><strong>Big means look normal.</strong> <strong>Poisson P(147): P(X ≤ 160) (4.6)</strong> with the normal comparison (Q3).</li>
+<li><strong>t and the normal.</strong> <strong>t with df = 14: invT(0.975, 14) (8.2)</strong>, then <strong>t closes in on the normal as df grows</strong>: drag df (Q4).</li>
+<li><strong>Which approximation?</strong> <strong>Binomial against normal and Poisson</strong> (Q5).</li>
+<li><strong>The lab models.</strong> <strong>Decay counts in 10 s: Poisson</strong> and <strong>Waiting time between decays: exponential</strong> (Q6), then <strong>Hand timed pendulum: normal</strong>, <strong>The empirical rule: within 2σ</strong> and <strong>Rounding error of a meter: uniform</strong> (Q7, Q8).</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> Final exam scores are N(63, 5). Find the z score of 65 and P(X &gt; 65); the book writes normalcdf(65, 1E99, 63, 5) = 0.3446. Press Play: why does the histogram match the curve better and better? About what share of the drawn students should score above 65?</p></div>
+
+<div class="q"><p><strong>Q2.</strong> 41 % of adult workers have a high school diploma but no further education; pick 20. Find the mean of X ~ B(20, 0.41) and P(X ≤ 12) = 0.9738. A committee of 7 is chosen from 18 women and 15 men: why is the number of men hypergeometric, not binomial? The demo gives P(X ≥ 5) = 0.1301; drawing with replacement would give 0.1589. Why does drawing without replacement make five or more men less likely?</p></div>
+
+<div class="q"><p><strong>Q3.</strong> An email user gets 147 emails a day on average. P(X ≤ 160) = 0.8666 for the Poisson; the normal with mean 147 and SD √147, with the continuity correction, gives 0.8672. Why is the normal so close here, and what is the continuity correction for?</p></div>
+
+<div class="q"><p><strong>Q4.</strong> For a 95 % interval with n = 15, invT(0.975, 14) = 2.145, against 1.96 for the normal. Why is t bigger? With df = 1, P(t &gt; 2) = 0.1476 against 0.0228 for the normal. Drag df to 5, 10 and 30: the demo gives 0.0510, 0.0367 and 0.0273. When is it fair to use the normal instead of t?</p></div>
+
+<div class="q"><p><strong>Q5.</strong> For B(50, 0.1), P(3 ≤ X ≤ 7) = 0.7661. The normal approximation with the continuity correction gives 0.7614 and the Poisson with μ = np = 5 gives 0.7420. Which is closer here? Check the rule of thumb np ≥ 5 and nq ≥ 5. Move p down toward 0.02 and up toward 0.5: which approximation wins where?</p></div>
+
+<div class="q"><p><strong>Q6.</strong> A weak source gives 3.2 counts in 10 s on average. Find P(X ≥ 6) (0.1054): would a count of 6 be a sign that something is wrong? The wait between decays is exponential with m = 0.32 per second. Show that P(wait &gt; 10 s) = e^(−3.2) = 0.0408, and explain why it equals the chance of zero counts in 10 s.</p></div>
+
+<div class="q"><p><strong>Q7.</strong> Hand timings of a 2.000 s period scatter normally with σ = 0.06 s. What is the chance a single timing lands within 0.1 s of the truth (0.9044)? Within one σ? Compare with the empirical rule: P(−2 &lt; Z &lt; 2) = 0.9545, and about 68 % and 99.7 % within one and three σ.</p></div>
+
+<div class="q"><p><strong>Q8.</strong> A meter that shows one decimal place hides an error spread evenly from −0.05 to 0.05 of the last unit. Show that the standard deviation is 0.1/√12 = 0.0289, and find the chance the error is less than 0.02 in size. Why is 0.0289, not 0.05, the standard uncertainty of a reading?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"P(X &lt; 12) and P(X ≤ 12) are the same."</strong> Only for a continuous variable. For a count they differ by P(X = 12).</li>
+<li><strong>"The density is the probability."</strong> For a continuous variable the height is a density; only areas are probabilities, and a density can be above 1.</li>
+<li><strong>"Every bell shaped histogram is normal."</strong> The Poisson with mean 147 and t with large df look normal, but each has its own formula and its own tails.</li>
+<li><strong>"The normal approximation always works for a binomial."</strong> It needs np and nq both large enough; with p near 0 the binomial is skewed.</li>
+<li><strong>"The exponential wait gets shorter the longer you have waited."</strong> It has no memory: having waited 5 s changes nothing.</li>
+</ul>
+<h2>How the demo works</h2>
+<ul>
+<li>Every probability comes from the cumulative distribution functions in the shared library (demos/lib/vdstats.js): exact sums for the discrete families, and the error function, the incomplete beta function and the incomplete gamma function for the continuous ones, good to about ten significant figures. The command shown is the one the book writes for a TI-83 or TI-84, with 1E99 for an open end.</li>
+<li>Percentiles are invNorm and invT, or bisection on the cumulative distribution for the other continuous families; for a discrete one, the smallest x whose cumulative probability reaches the area.</li>
+<li>Draws are seeded and simulated from the definitions: successes counted trial by trial for the binomial and hypergeometric, the Poisson by multiplying uniform numbers (or by inversion for a large mean), and so on. The histogram is scaled so its bars have the same area as the curve.</li>
+<li>The normal approximation to a discrete distribution uses the continuity correction: P(a ≤ X ≤ b) is the normal area from a − 0.5 to b + 0.5.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>. © 2026 Steven Anderson. All rights reserved; see the <a href="../LICENSE.html">terms of use</a>.</footer>
+</main>
+</body>
+</html>

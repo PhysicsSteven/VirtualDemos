@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="../demos/lib/theme.js"></script>
+<title>One Way ANOVA: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+@media screen { :root[data-theme="dark"] {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; overflow-wrap: break-word; }   /* a long file name breaks instead of pushing a phone sideways */
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+<link rel="stylesheet" id="vd-paper" href="../demos/lib/paper.css">
+</head>
+<body class="notes">
+<header class="top" aria-label="Site"><a class="brand" href="../index.html"><svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><ellipse cx="16" cy="16" rx="13" ry="6" fill="none" stroke="currentColor" stroke-width="1.8" transform="rotate(-30 16 16)"/><ellipse cx="16" cy="16" rx="13" ry="6" fill="none" stroke="currentColor" stroke-width="1.8" transform="rotate(30 16 16)"/><circle cx="16" cy="16" r="2.6" fill="currentColor"/></svg>Virtual Physics Demos</a><nav class="tabs" aria-label="Library"><a class="tab" href="../index.html#topics">Demos</a><a class="tab" href="../openstax.html">OpenStax</a><a class="tab" href="index.html" aria-current="page">Notes</a></nav><span class="hfind"></span><span data-vd-theme></span><a class="courses" href="../courses.html"><b>For a class</b> Courses</a></header>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>One Way ANOVA</h1><ul class="meta"><li><a href="../demos/anova.html">Open the demo</a></li><li>Statistics (OpenStax Introductory Statistics 2e 13.1 to 13.5) and physics labs that compare several groups or instruments (lab groups measuring g, batches of resistors, timing methods)</li><li>15 to 30 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>ANOVA asks whether several group means are all equal (H₀) or not all equal (Hₐ). It answers by comparing two variances: how far the group means sit from the grand mean (the mean square between groups) against how far the points sit from their own group's mean (the mean square within groups).</li>
+<li>F = MS_between/MS_within. When H₀ is true both estimate the same σ², so F is near 1; a large F says the means differ more than the scatter can explain. The p value is the area to the right of F under F(k − 1, N − k).</li>
+<li>For equally spaced means with equal groups, F grows as the square of the gap and as n, and falls as the square of the spread.</li>
+<li>Even with every mean equal, a test at α = 0.05 gives a false alarm in about 5 % of studies.</li>
+<li>The F test of two variances (13.4) compares spreads, not means: F = s₁²/s₂². It assumes normal data and is sensitive to that.</li>
+</ul>
+<h2>Before class</h2>
+<p>Nothing to install. Two modes: <strong>One way ANOVA</strong> and <strong>Two variances</strong>. In One way ANOVA, The groups sets k (3, 4 or 5) and Points per group n; Gap between means and Spread s within groups set the picture, or drag each group's mean and spread in the picture. In Two variances, Spread s₂ of group 2 joins them and the tail is σ₁² &lt; σ₂², σ₁² ≠ σ₂² or σ₁² &gt; σ₂². α is 0.10, 0.05 or 0.01. Each group is rescaled to have exactly the mean and standard deviation set, so F does not depend on the draw; New draw changes only the shapes. Play runs the number of Studies chosen (100, 1,000 or 10,000) with every mean equal and builds the histogram of F. All data are simulated. Blind, in the Lab fold, hides F, the p value and the decision. The Handout and worksheet link opens the one way ANOVA worksheet.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Two squares.</strong> Open on <strong>Three ways to time a pendulum</strong>. Point out the two squares, whose areas are the two mean squares. Ask whether the means differ before showing F (Q1).</li>
+<li><strong>Drag a mean.</strong> Drag one group's mean away, then shrink the spread: watch F (Q1).</li>
+<li><strong>More groups.</strong> <strong>Four lab groups measure g</strong> and <strong>Five batches of 100 Ω resistors</strong> (Q2).</li>
+<li><strong>Small groups.</strong> <strong>Three fertilizers and plant growth</strong> (Q3).</li>
+<li><strong>False alarms.</strong> <strong>All means equal: false alarms</strong>, then Play (Q4).</li>
+<li>Switch modes to <strong>Two variances.</strong> <strong>Two variances: is the new thermometer steadier?</strong> and <strong>Two variances: two stopwatch timers</strong> (Q5, Q6).</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> Three timing methods, eight timings each, means 4 ms apart and a spread of 6 ms within each. Show that MS_within = 36 ms² and MS_between = 128 ms², so F = 3.556, with df 2 and 21. The demo gives p = 0.0468. With equal gaps d and three groups, why is F = nd²/s²? About what gap puts p at exactly 0.05? (The demo gives 3.95 ms.)</p></div>
+
+<div class="q"><p><strong>Q2.</strong> Four lab groups find g six times each, with a gap of 0.03 m/s² and a spread of 0.05 m/s²: F = 3.600, df 3 and 20, p = 0.0315. Five batches of ten resistors, gap 0.4 Ω and spread 0.8 Ω: F = 6.25, df 4 and 45, p = 0.0004. Find the degrees of freedom yourself. Does a significant F tell you which group is off?</p></div>
+
+<div class="q"><p><strong>Q3.</strong> Five plants with each of three fertilizers, a gap of 3 cm and a spread of 4 cm, give F = 2.81 with df 2 and 12 and p = 0.0996. The critical F at α = 0.05 is 3.885. What would you need to change to make a real difference show up?</p></div>
+
+<div class="q"><p><strong>Q4.</strong> In All means equal: false alarms the three sample means are equal, so F = 0. Press Play: each study draws new groups whose population means are all equal. What share of the F values should land beyond the critical value at α = 0.05? The mean of F(2, 21) is 21/19 = 1.105: why is it near 1?</p></div>
+
+<div class="q"><p><strong>Q5.</strong> An old and a new thermometer each read a 20 °C bath ten times, with spreads of 0.2 °C and 0.1 °C. Find F = s₁²/s₂² and its df. The test is right tailed: why? The demo gives p = 0.0255. Is the new thermometer steadier?</p></div>
+
+<div class="q"><p><strong>Q6.</strong> Two students time a pendulum twelve times each, with spreads 0.08 s and 0.15 s. Find F (0.284) and its df. The two tailed p value is 0.0480 and the lower critical value 0.288. What do you conclude, and what does it mean for a two sample t test on their periods?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"ANOVA compares variances, so it tests whether the spreads differ."</strong> One way ANOVA tests means; it uses two estimates of the same variance to do it.</li>
+<li><strong>"A significant F says every mean differs."</strong> It says not all are equal. Which ones differ needs another look.</li>
+<li><strong>"Running a t test on every pair is the same."</strong> With many pairs, the chance of at least one false alarm grows well past α; ANOVA asks once.</li>
+<li><strong>"F near 1 means the means are equal."</strong> It means the data give no evidence they differ; small groups can hide a real difference.</li>
+<li><strong>"The F test of two variances is safe for any data."</strong> It leans on normal data much more than the t test does.</li>
+</ul>
+<h2>How the demo works</h2>
+<ul>
+<li>Each group's points are a seeded draw of n standard normal numbers, rescaled so the sample mean and sample standard deviation are exactly the values set. Dragging a mean slides the whole group; dragging a spread stretches it about its mean.</li>
+<li>One way ANOVA (13.1 to 13.3): SS_between = Σ nⱼ(x̄ⱼ − x̄)² with df k − 1; SS_within = Σ (nⱼ − 1)sⱼ² with df N − k; MS = SS/df and F = MS_between/MS_within. The p value is the area of F(k − 1, N − k) to the right of F, from the shared library (demos/lib/vdstats.js).</li>
+<li>Two variances (13.4): F = s₁²/s₂² with df n₁ − 1 and n₂ − 1.</li>
+<li>Play draws studies from normal populations that share one mean and one σ, so every F above the critical value is a Type I error.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>. © 2026 Steven Anderson. All rights reserved; see the <a href="../LICENSE.html">terms of use</a>.</footer>
+</main>
+</body>
+</html>

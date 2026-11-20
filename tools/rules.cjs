@@ -275,6 +275,7 @@ const CONST_TEXT_ALLOW = {  /* 'file number': reason */
   'curriculum/labs/students/intro-scale.md 8.317': 'minutes of light travel time, not the gas constant',
   'notes/src/sun-surface.md 1874': 'the first year of the Greenwich sunspot record, not the deuteron rest energy',
   'curriculum/labs/students/sunspot-cycle.md 1874': 'the first year of the Greenwich sunspot record, not the deuteron rest energy',
+  'notes/src/sampling-lab.md 22.97': 'the simulated mean pocket change in cents (Sampling Lab, draw set 1), not the sodium 23 mass VDC.mNa23u',
 };
 const SUPER = { '⁰': '0', '¹': '1', '²': '2', '³': '3', '⁴': '4', '⁵': '5', '⁶': '6', '⁷': '7', '⁸': '8', '⁹': '9', '⁻': '-', '−': '-' };
 rule('constants-text', 'Constants written in worksheets, notes and demo text match demos/lib/constants.js, rounded or cut to the figures shown '
