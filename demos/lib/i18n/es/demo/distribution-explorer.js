@@ -32,8 +32,8 @@ VDI18N.add('es', 'demo/distribution-explorer', {
   "Explorador de distribuciones",
 "<a>Math for physics</a>":
   "<a>Matemáticas para física</a>",
-"<span><a><span>←</span> <span>Data Explorer</span></a></span>":
-  "<span><a><span>←</span> <span>Explorador de datos</span></a></span>",
+"<a><span>←</span> <span>Chance Lab: Dice, Cards and Candies</span></a><a><span>Sampling Lab</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Laboratorio de azar: dados, cartas y dulces</span></a><a><span>Laboratorio de muestreo</span> <span>→</span></a>",
 "Ten probability distributions with sliders: shade P(a < X < b) and read it, with the calculator command the book would use; find z scores and percentiles; then draw random values and watch the histogram fill against the curve. Compare t with the normal as df grows, and the binomial with its normal and Poisson approximations.":
   "Diez distribuciones de probabilidad con controles deslizantes: sombrea P(a < X < b) y léela, con el comando de calculadora que usaría el libro; encuentra puntuaciones z y percentiles; luego genera valores al azar y mira cómo el histograma se llena contra la curva. Compara la t con la normal conforme crecen los grados de libertad, y la binomial con sus aproximaciones normal y de Poisson.",
 "Clear the draws and start the random numbers again from the seed":
@@ -256,8 +256,8 @@ VDI18N.add('es', 'demo/distribution-explorer', {
   "{l}: el mismo evento tiene probabilidad {p}",
 "Standard normal N({#}, {#}): the same event has probability {#}":
   "Normal estándar N({#}, {#}): el mismo evento tiene probabilidad {#}",
-"B({#}, {#}) against the normal with the same mean and SD (with the continuity correction) and the Poisson with μ = np = {#}. For small p the Poisson is the better match; move p toward {#} and the normal catches up. The rule of thumb: the normal works when np and nq are both at least {#}.":
-  "B({#}, {#}) contra la normal con la misma media y DE (con la corrección por continuidad) y la Poisson con μ = np = {#}. Para p pequeña la Poisson se ajusta mejor; mueve p hacia {#} y la normal la alcanza. La regla práctica: la normal funciona cuando np y nq son ambos al menos {#}.",
+"B({#}, {#}) against the normal with the same mean and SD (with the continuity correction) and the Poisson with μ = np = {#}. For small p the Poisson is the better match bar by bar (its bars are off by at most {#}, the normal’s by up to {#}), although for the shaded {#} to {#} the normal’s errors happen to cancel and its area comes closer; move p toward {#} and the normal catches up everywhere. The rule of thumb: the normal works when np and nq are both at least {#}.":
+  "B({#}, {#}) contra la normal con la misma media y DE (con la corrección por continuidad) y la Poisson con μ = np = {#}. Para p pequeña la Poisson se ajusta mejor barra por barra (sus barras se desvían a lo más {#}, las de la normal hasta {#}), aunque en el intervalo sombreado de {#} a {#} los errores de la normal se compensan y su área queda más cerca; mueve p hacia {#} y la normal la alcanza en todas partes. La regla práctica: la normal funciona cuando np y nq son ambos al menos {#}.",
 "(continuity correction)":
   "(corrección por continuidad)",
 "Normal approximation, N(np, √(npq)): the same event has probability {#} (continuity correction). Poisson with μ = np: the same event has probability {#}":
@@ -398,6 +398,10 @@ VDI18N.add('es', 'demo/distribution-explorer', {
   "<span>oculto: predícelo</span>",
 "The value with area {#} to its left: x = −{#}":
   "El valor con área {#} a su izquierda: x = −{#}",
+"<span><a><span>←</span> <span>Data Explorer</span></a></span>":
+  "<span><a><span>←</span> <span>Explorador de datos</span></a></span>",
+"B({#}, {#}) against the normal with the same mean and SD (with the continuity correction) and the Poisson with μ = np = {#}. For small p the Poisson is the better match; move p toward {#} and the normal catches up. The rule of thumb: the normal works when np and nq are both at least {#}.":
+  "B({#}, {#}) contra la normal con la misma media y DE (con la corrección por continuidad) y la Poisson con μ = np = {#}. Para p pequeña la Poisson se ajusta mejor; mueve p hacia {#} y la normal la alcanza. La regla práctica: la normal funciona cuando np y nq son ambos al menos {#}.",
 "P(−{#} < X < {#}) = {#}, from ({#} − −{#})·{#}/({#} − −{#}).":
   "P(−{#} < X < {#}) = {#}, de ({#} − −{#})·{#}/({#} − −{#})."
 });
