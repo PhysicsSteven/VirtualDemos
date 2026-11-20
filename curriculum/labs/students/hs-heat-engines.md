@@ -1,7 +1,7 @@
 # Heat Engines and Refrigerators
 Student worksheet · High school Physics and College Physics 2e
 
-Textbook: OpenStax *Physics* (high school), §§12.2 and 12.4, and OpenStax *College Physics 2e*, §§15.1–15.4. Access for free at https://openstax.org/details/books/physics and https://openstax.org/details/books/college-physics-2e.
+Textbook: OpenStax *Physics* (high school), §§12.2 and 12.4, and OpenStax *College Physics 2e*, §§15.1–15.5. Access for free at https://openstax.org/details/books/physics and https://openstax.org/details/books/college-physics-2e.
 
 [Open the virtual apparatus](https://physicssteven.github.io/VirtualDemos/demos/heat-engines.html?ws=hs-heat-engines)
 

@@ -422,11 +422,11 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
     <p class="eyebrow"><b>Radiation physics and proton therapy</b></p>
     <h1>Medical Physics</h1>
     <p class="lede">For the junior and senior medical physics track, beside the radiation physics class and ahead of the seniors’ lab at the proton therapy center: sources and decay, photon interactions, charged particles in matter, dosimetry, radiobiology, shielding, proton therapy and imaging. Calculus throughout; the upper level worksheets read cited data tables and carry uncertainties, and the other worksheets on each card work as warm ups.</p>
-    <ul class="facts"><li><span><strong>9</strong> units</span></li><li><span><strong>19</strong> demos and labs</span></li><li><span><strong>37</strong> worksheets</span></li></ul>
+    <ul class="facts"><li><span><strong>10</strong> units</span></li><li><span><strong>22</strong> demos and labs</span></li><li><span><strong>40</strong> worksheets</span></li></ul>
   </div>
 </header>
 <nav class="tools" aria-label="Sections">
-  <div class="wrap"><ul class="jump"><li><a href="#sources">1 · Sources</a></li><li><a href="#photons">2 · Photons</a></li><li><a href="#charged">3 · Charged particles</a></li><li><a href="#dosimetry">4 · Dosimetry</a></li><li><a href="#radiobiology">5 · Radiobiology</a></li><li><a href="#shielding">6 · Shielding</a></li><li><a href="#proton-therapy">7 · Protons</a></li><li><a href="#linac">8 · Linac beams</a></li><li><a href="#imaging">9 · Imaging</a></li></ul></div>
+  <div class="wrap"><ul class="jump"><li><a href="#sources">1 · Sources</a></li><li><a href="#photons">2 · Photons</a></li><li><a href="#charged">3 · Charged particles</a></li><li><a href="#dosimetry">4 · Dosimetry</a></li><li><a href="#radiobiology">5 · Radiobiology</a></li><li><a href="#shielding">6 · Shielding</a></li><li><a href="#proton-therapy">7 · Protons</a></li><li><a href="#linac">8 · Linac beams</a></li><li><a href="#imaging">9 · Imaging</a></li><li><a href="#body">10 · The body</a></li></ul></div>
 </nav>
 <main class="wrap">
   <p class="how">Units follow the radiation physics topics, from sources to imaging. A demo can appear in more than one unit: it has one card, in the first unit that uses it, and later units link to it. Cards marked Coming are demos being built for this module. Looking for one subject? Every demo is also under <a href="index.html#topics">All demos by topic</a>.</p>
@@ -675,6 +675,41 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
           <h3><a href="demos/ct-reconstruction.html?course=medical-physics">CT Image Reconstruction</a></h3>
           <p>Turn a CT scanner around a phantom and watch its projections fill a sinogram, then rebuild the image by backprojection: simple backprojection blurs every point as 1/r, and the ramp filter undoes it. See what too few views, a missing range of angles, coarse detector bins and fewer photons do to streaks, sharpness and noise.</p>
           <p class="links"><a class="go" href="demos/ct-reconstruction.html?course=medical-physics">Open demo</a> <a href="curriculum/labs/students/mp-ct-reconstruction.html" title="Before this: X-ray attenuation and CT numbers; projections of an image; counting statistics">Worksheet: CT Image Reconstruction: From Projections to an Image (Medical Physics)<span class="wsm">75 min · algebra</span></a> <a href="notes/ct-reconstruction.html">Notes</a></p>
+        </div>
+      </li>
+    </ul>
+  </section>
+  <section class="unit" id="body" aria-labelledby="body-h">
+    
+    <h2 id="body-h">10 · Physics of the body</h2>
+    <p class="meta"></p>
+    <p class="unote">Beside the radiation topics: nerve impulses and the ECG, hearing and the audiogram, and diffusion and osmosis across cell membranes.</p>
+    <ul class="list">
+      <li class="item">
+        <a class="pic" href="demos/nerve-signals.html?course=medical-physics" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/nerve-signals-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/nerve-signals-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
+        <div class="body">
+          <p class="kind"><span class="role role-demo">Demo</span></p>
+          <h3><a href="demos/nerve-signals.html?course=medical-physics">Nerve Signals and the ECG</a></h3>
+          <p>An axon as a leaky cable: find the threshold, time an action potential between two electrodes, and see myelin make it jump from node to node, so its speed grows with the diameter instead of its square root. Then watch the heart's turning dipole draw ECG leads I, II and III.</p>
+          <p class="links"><a class="go" href="demos/nerve-signals.html?course=medical-physics">Open demo</a> <a href="demos/nerve-signals.html?start=1&course=medical-physics">Start here<span class="wsm">5 min</span></a> <a href="curriculum/labs/students/nerve-signals.html">Worksheet: Nerve Signals and the ECG: Conduction Speed and the Heart&#x27;s Axis</a> <a href="notes/nerve-signals.html">Notes</a></p>
+        </div>
+      </li>
+      <li class="item">
+        <a class="pic" href="demos/hearing.html?course=medical-physics" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/hearing-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/hearing-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
+        <div class="body">
+          <p class="kind"><span class="role role-demo">Demo</span></p>
+          <h3><a href="demos/hearing.html?course=medical-physics">Hearing and the Ear</a></h3>
+          <p>Take your own audiogram with headphones, compare phons with decibels on the ISO 226 equal loudness contours, follow a tone to its place on the uncoiled cochlea, and see the 4 kHz notch that noise leaves behind.</p>
+          <p class="links"><a class="go" href="demos/hearing.html?course=medical-physics">Open demo</a> <a href="demos/hearing.html?start=1&course=medical-physics">Start here<span class="wsm">5 min</span></a> <a href="curriculum/labs/students/hearing.html">Worksheet: Hearing: Decibels, Phons and the Cochlea</a> <a href="notes/hearing.html">Notes</a></p>
+        </div>
+      </li>
+      <li class="item">
+        <a class="pic" href="demos/osmosis.html?course=medical-physics" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/osmosis-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/osmosis-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
+        <div class="body">
+          <p class="kind"><span class="role role-demo">Demo</span></p>
+          <h3><a href="demos/osmosis.html?course=medical-physics">Diffusion and Osmosis</a></h3>
+          <p>Watch molecules spread as the square root of time and leak through a still layer, then let water cross a membrane: osmotic pressure lifts a column in a U tube, swells a red blood cell until it bursts, and moves fluid out of a capillary and back in.</p>
+          <p class="links"><a class="go" href="demos/osmosis.html?course=medical-physics">Open demo</a> <a href="demos/osmosis.html?start=1&course=medical-physics">Start here<span class="wsm">5 min</span></a> <a href="curriculum/labs/students/osmosis.html">Worksheet: Diffusion and Osmosis: Random Walks, Osmotic Pressure and Red Cells (warm up)</a> <a href="notes/osmosis.html">Notes</a></p>
         </div>
       </li>
     </ul>

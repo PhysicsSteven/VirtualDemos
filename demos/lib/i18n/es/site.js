@@ -1,7 +1,7 @@
 /* site in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'site', {
-"Terminal Velocity":
-  "Velocidad terminal",
+"Dosimetry: Kerma, Equilibrium and the Ion Chamber":
+  "Dosimetría: kerma, equilibrio y la cámara de ionización",
 "See the recent changes to the site":
   "Ve los cambios recientes del sitio",
 "What’s new":
@@ -26,8 +26,8 @@ VDI18N.add('es', 'site', {
   "<span>Celular, laptop o proyector</span>",
 "<a><span>Teaching notes</span></a>":
   "<a><span>Notas para la enseñanza</span></a>",
-"<span>Terminal Velocity →</span>":
-  "<span>Velocidad terminal →</span>",
+"<span>Dosimetry: Kerma, Equilibrium and the Ion Chamber →</span>":
+  "<span>Dosimetría: kerma, equilibrio y la cámara de ionización →</span>",
 "Teaching with the site":
   "Enseñar con el sitio",
 "Projector mode and a QR code on every demo, so students follow on their phones":
@@ -152,6 +152,8 @@ VDI18N.add('es', 'site', {
   "Elevador: peso aparente",
 "Ride an elevator standing on a scale. It reads more or less than your weight only while the elevator speeds up or slows down, and zero if the cable snaps.":
   "Viaja en un elevador parado sobre una báscula. Marca más o menos que tu peso solo mientras el elevador acelera o frena, y cero si el cable se rompe.",
+"Terminal Velocity":
+  "Velocidad terminal",
 "Jump with the textbook's skydiver and watch the drag grow until it matches the weight. Switch between spread eagle and head first, open the parachute, jump from {#} km where the air is thin, or drop stacks of coffee filters, and measure the terminal speed.":
   "Salta con el paracaidista del libro de texto y observa cómo crece el arrastre hasta igualar el peso. Cambia entre la posición extendida y de cabeza, abre el paracaídas, salta desde {#} km donde el aire es tenue o deja caer pilas de filtros de café, y mide la rapidez terminal.",
 "Granular Flow: Sorting and Landslides":
@@ -832,8 +834,6 @@ VDI18N.add('es', 'site', {
   "Partículas cargadas en la materia",
 "Send protons, alpha particles or carbon ions into water, through bone, lung, plastic or metal first. Watch the tracks slow, scatter and stop, build the Bragg peak from them, and compare the Bethe stopping power and CSDA range with NIST PSTAR.":
   "Manda protones, partículas alfa o iones de carbono al agua, pasando primero por hueso, pulmón, plástico o metal. Observa cómo las trazas se frenan, se dispersan y se detienen, construye con ellas el pico de Bragg y compara el poder de frenado de Bethe y el alcance CSDA con NIST PSTAR.",
-"Dosimetry: Kerma, Equilibrium and the Ion Chamber":
-  "Dosimetría: kerma, equilibrio y la cámara de ionización",
 "Watch collision kerma and absorbed dose part in the buildup and run together past it, with Monte Carlo histories; collect the ions in a Farmer chamber against its voltage; and calibrate a proton beam step by step as TRS-{#} does it: temperature and pressure, polarity, recombination and k_Q.":
   "Observa cómo el kerma de colisión y la dosis absorbida se separan en la región de acumulación y van juntos después, con historias Monte Carlo; recoge los iones en una cámara Farmer en función de su voltaje; y calibra un haz de protones paso a paso como lo hace el TRS-{#}: temperatura y presión, polaridad, recombinación y k_Q.",
 "Radiobiology: Cell Survival and Fractionation":
@@ -1448,8 +1448,8 @@ VDI18N.add('es', 'site', {
   "<a>Abrir demo</a> <a>Hoja de trabajo: Tensión en una cadena colgante<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Static Equilibrium</a>":
   "<a>Equilibrio estático</a>",
-"<a>Open demo</a> <a>Worksheet: Support Forces and Cable Tension<span>{#} min · algebra</span></a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Fuerzas de soporte y tensión en cables<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Support Forces and Cable Tension<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Fuerzas de soporte y tensión en cables<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Stress and Strain</a>":
   "<a>Esfuerzo y deformación</a>",
 "<span>{#}:{#}</span> Stress, Strain, and Elastic Modulus":
@@ -2682,8 +2682,8 @@ VDI18N.add('es', 'site', {
   "<a>Estados de la materia</a>",
 "<span>{#}:{#}</span> Phase Changes":
   "<span>{#}:{#}</span> Cambios de fase",
-"<a>Open demo</a> <a>Worksheet {#}: Heating Curve and Latent Heat<span>{#} min · algebra</span></a> <a>Worksheet {#}: Bonds, Temperature and Latent Heat<span>{#} min · algebra</span></a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Curva de calentamiento y calor latente<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Enlaces, temperatura y calor latente<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet {#}: Heating Curve and Latent Heat<span>{#} min · algebra</span></a> <a>Worksheet {#}: Bonds, Temperature and Latent Heat<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo {#}: Curva de calentamiento y calor latente<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Enlaces, temperatura y calor latente<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Superfluid Helium</a>":
   "<a>Helio superfluido</a>",
 "The kinetic theory of gases":
@@ -2788,8 +2788,8 @@ VDI18N.add('es', 'site', {
   "<span>{#}:{#}</span> Ondas sonoras",
 "<span>{#}:{#}</span> Speed of Sound":
   "<span>{#}:{#}</span> Rapidez del sonido",
-"<a>Open demo</a> <a>Worksheet: Speed of Sound by Time of Flight<span>{#} min · algebra</span></a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Hoja de trabajo: Rapidez del sonido por tiempo de vuelo<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Speed of Sound by Time of Flight<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Rapidez del sonido por tiempo de vuelo<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>From Rhythm to Pitch</a>":
   "<a>Del ritmo a la altura</a>",
 "<span>{#}:{#}</span> Sources of Musical Sound":
@@ -2822,6 +2822,8 @@ VDI18N.add('es', 'site', {
   "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo {#}: Tiempo de reverberación<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Cámara anecoica<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Hearing and the Ear</a>":
   "<a>La audición y el oído</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Hearing: Decibels, Phons and the Cochlea</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Audición: decibeles, fones y la cóclea</a> <a>Notas</a>",
 "<a>Timbre and Harmonics</a>":
   "<a>Timbre y armónicos</a>",
 "<a>Open demo</a> <a>Worksheet {#}: Timbre and Harmonics<span>{#} min · algebra</span></a> <a>Worksheet {#}: Sampling and Aliasing<span>{#} min · algebra</span></a> <a>Notes</a>":
@@ -2866,6 +2868,8 @@ VDI18N.add('es', 'site', {
   "<a>{#} · Haces de linac</a>",
 "<a>{#} · Imaging</a>":
   "<a>{#} · Imagenología</a>",
+"<a>{#} · The body</a>":
+  "<a>{#} · El cuerpo</a>",
 "Units follow the radiation physics topics, from sources to imaging. A demo can appear in more than one unit: it has one card, in the first unit that uses it, and later units link to it. Cards marked Coming are demos being built for this module. Looking for one subject? Every demo is also under <a>All demos by topic</a>.":
   "Las unidades siguen los temas de física de radiaciones, de las fuentes a la imagenología. Una demo puede aparecer en más de una unidad: tiene una sola tarjeta, en la primera unidad que la usa, y las unidades posteriores la enlazan. Las tarjetas marcadas como Próximamente son demos que se están construyendo para este módulo. ¿Buscas un solo tema? Cada demo también está en <a>Todas las demos por tema</a>.",
 "{#} · Sources and decay":
@@ -2972,6 +2976,18 @@ VDI18N.add('es', 'site', {
   "<a>Reconstrucción de imágenes de TC</a>",
 "<a>Open demo</a> <a>Worksheet: CT Image Reconstruction: From Projections to an Image (Medical Physics)<span>{#} min · algebra</span></a> <a>Notes</a>":
   "<a>Abrir demo</a> <a>Hoja de trabajo: Reconstrucción de imágenes de TC: de las proyecciones a una imagen (Física médica)<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"{#} · Physics of the body":
+  "{#} · Física del cuerpo",
+"Beside the radiation topics: nerve impulses and the ECG, hearing and the audiogram, and diffusion and osmosis across cell membranes.":
+  "Junto a los temas de radiación: los impulsos nerviosos y el ECG, la audición y el audiograma, y la difusión y la ósmosis a través de las membranas celulares.",
+"<a>Nerve Signals and the ECG</a>":
+  "<a>Señales nerviosas y el ECG</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Nerve Signals and the ECG: Conduction Speed and the Heart's Axis</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Señales nerviosas y el ECG: rapidez de conducción y eje del corazón</a> <a>Notas</a>",
+"<a>Diffusion and Osmosis</a>":
+  "<a>Difusión y ósmosis</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Diffusion and Osmosis: Random Walks, Osmotic Pressure and Red Cells (warm up)</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Difusión y ósmosis: caminatas aleatorias, presión osmótica y glóbulos rojos (calentamiento)</a> <a>Notas</a>",
 "OpenStax University Physics · Virtual Physics Demos":
   "OpenStax Física universitaria · Demos virtuales de física",
 "<b>By textbook section</b>":
@@ -4716,6 +4732,10 @@ VDI18N.add('es', 'site', {
   "<span>{#}</span><span>Colisiones inelásticas en una dimensión</span>",
 "<span>{#}</span><span>Collisions of Point Masses in Two Dimensions</span>":
   "<span>{#}</span><span>Colisiones de masas puntuales en dos dimensiones</span>",
+"<span>{#}</span><span>Introduction to Rocket Propulsion</span>":
+  "<span>{#}</span><span>Introducción a la propulsión de cohetes</span>",
+"<a>Rocket Propulsion</a> · <a>Worksheet: The Rocket Equation</a>":
+  "<a>Propulsión de cohetes</a> · <a>Hoja de trabajo: La ecuación del cohete</a>",
 "<span>Chapter {#}</span> Statics and Torque <span>{#} sections · {#} demos</span>":
   "<span>Capítulo {#}</span> Estática y torca <span>{#} secciones · {#} demos</span>",
 "<span>{#}</span><span>The First Condition for Equilibrium</span>":
@@ -4788,8 +4808,10 @@ VDI18N.add('es', 'site', {
   "<span>{#}</span><span>Presión manométrica, presión absoluta y medición de la presión</span>",
 "<span>{#}</span><span>Archimedes’ Principle</span>":
   "<span>{#}</span><span>Principio de Arquímedes</span>",
-"<span>{#}</span><span>Cohesion and Adhesion in Liquids: Surface Tension and Capillary Action</span><span><a>Surface Tension and Capillarity</a></span>":
-  "<span>{#}</span><span>Cohesión y adhesión en los líquidos: tensión superficial y acción capilar</span><span><a>Tensión superficial y capilaridad</a></span>",
+"<span>{#}</span><span>Cohesion and Adhesion in Liquids: Surface Tension and Capillary Action</span>":
+  "<span>{#}</span><span>Cohesión y adhesión en los líquidos: tensión superficial y acción capilar</span>",
+"<a>Surface Tension and Capillarity</a> · <a>Worksheet: Surface Tension and Capillary Rise</a>":
+  "<a>Tensión superficial y capilaridad</a> · <a>Hoja de trabajo: Tensión superficial y ascenso capilar</a>",
 "<span>{#}</span><span>Pressures in the Body</span>":
   "<span>{#}</span><span>Presiones en el cuerpo</span>",
 "<a>Fluids: Pressure, Buoyancy and Flow</a> · <a>Surface Tension and Capillarity</a>":
@@ -4816,8 +4838,8 @@ VDI18N.add('es', 'site', {
   "<a>Viscosímetro de esfera que cae</a> · <a>Velocidad terminal</a> · <a>Hoja de trabajo: Viscosidad</a>",
 "<span>{#}</span><span>Molecular Transport Phenomena: Diffusion, Osmosis, and Related Processes</span>":
   "<span>{#}</span><span>Fenómenos de transporte molecular: difusión, ósmosis y procesos relacionados</span>",
-"<a>Gas in a Box</a> · <a>Diffusion and Osmosis</a> · <a>Worksheet: Diffusion and Graham's Law</a>":
-  "<a>Gas en una caja</a> · <a>Difusión y ósmosis</a> · <a>Hoja de trabajo: Difusión y la ley de Graham</a>",
+"<a>Gas in a Box</a> · <a>Diffusion and Osmosis</a> · <a>Worksheet: Diffusion and Osmosis: Random Walks, Osmotic Pressure and Red Cells</a> · <a>Worksheet: Diffusion and Graham's Law</a>":
+  "<a>Gas en una caja</a> · <a>Difusión y ósmosis</a> · <a>Hoja de trabajo: Difusión y ósmosis: caminatas aleatorias, presión osmótica y glóbulos rojos</a> · <a>Hoja de trabajo: Difusión y ley de Graham</a>",
 "<span>Chapter {#}</span> Temperature, Kinetic Theory, and the Gas Laws <span>{#} sections · {#} demos</span>":
   "<span>Capítulo {#}</span> Temperatura, teoría cinética y leyes de los gases <span>{#} secciones · {#} demos</span>",
 "<span>{#}</span><span>Temperature</span>":
@@ -4880,10 +4902,12 @@ VDI18N.add('es', 'site', {
   "<span>{#}</span><span>La primera ley de la termodinámica y algunos procesos simples</span>",
 "<a>Heat Engine Cycles</a> · <a>Heat Capacities of Gases</a> · <a>Worksheet: Heat Engines and Refrigerators</a> · <a>Worksheet: Heat Engine Cycles</a> · <a>Worksheet: Heat Capacities of Gases</a>":
   "<a>Ciclos de máquinas térmicas</a> · <a>Capacidades térmicas de los gases</a> · <a>Hoja de trabajo: Máquinas térmicas y refrigeradores</a> · <a>Hoja de trabajo: Ciclos de máquinas térmicas</a> · <a>Hoja de trabajo: Capacidades caloríficas de los gases</a>",
-"<span>{#}</span><span>Carnot’s Perfect Heat Engine: The Second Law of Thermodynamics Restated</span>":
-  "<span>{#}</span><span>La máquina térmica perfecta de Carnot: la segunda ley de la termodinámica reformulada</span>",
+"<span>{#}</span><span>Introduction to the Second Law of Thermodynamics: Heat Engines and Their Efficiency</span>":
+  "<span>{#}</span><span>Introducción a la segunda ley de la termodinámica: máquinas térmicas y su eficiencia</span>",
 "<a>Heat Engine Cycles</a> · <a>Entropy and the Second Law</a> · <a>Worksheet: Heat Engines and Refrigerators</a> · <a>Worksheet: Heat Engine Cycles</a> · <a>Worksheet: Testing the Second Law</a>":
   "<a>Ciclos de máquinas térmicas</a> · <a>Entropía y la segunda ley</a> · <a>Hoja de trabajo: Máquinas térmicas y refrigeradores</a> · <a>Hoja de trabajo: Ciclos de máquinas térmicas</a> · <a>Hoja de trabajo: Poner a prueba la segunda ley</a>",
+"<span>{#}</span><span>Carnot’s Perfect Heat Engine: The Second Law of Thermodynamics Restated</span>":
+  "<span>{#}</span><span>La máquina térmica perfecta de Carnot: la segunda ley de la termodinámica reformulada</span>",
 "<span>{#}</span><span>Applications of Thermodynamics: Heat Pumps and Refrigerators</span>":
   "<span>{#}</span><span>Aplicaciones de la termodinámica: bombas de calor y refrigeradores</span>",
 "<span>{#}</span><span>Entropy and the Second Law of Thermodynamics: Disorder and the Unavailability of Energy</span>":
@@ -4960,8 +4984,8 @@ VDI18N.add('es', 'site', {
   "<a>Resonadores</a> · <a>Ondas estacionarias</a> · <a>Timbre y armónicos</a> · <a>Hoja de trabajo: Rapidez del sonido</a> · <a>Hoja de trabajo: Timbre y armónicos</a>",
 "<span>{#}</span><span>Hearing</span>":
   "<span>{#}</span><span>La audición</span>",
-"<a>Hearing and the Ear</a> · <a>Sound Intensity and Decibels</a> · <a>Timbre and Harmonics</a>":
-  "<a>La audición y el oído</a> · <a>Intensidad del sonido y decibeles</a> · <a>Timbre y armónicos</a>",
+"<a>Hearing and the Ear</a> · <a>Sound Intensity and Decibels</a> · <a>Timbre and Harmonics</a> · <a>Worksheet: Hearing: Decibels, Phons and the Cochlea</a>":
+  "<a>La audición y el oído</a> · <a>Intensidad del sonido y decibeles</a> · <a>Timbre y armónicos</a> · <a>Hoja de trabajo: Audición: decibeles, fones y la cóclea</a>",
 "<span>{#}</span><span>Ultrasound</span>":
   "<span>{#}</span><span>Ultrasonido</span>",
 "<a>Ultrasound: Echoes and Blood Flow</a> · <a>Worksheet: Ultrasound Echoes and Doppler Flow</a>":
@@ -5048,8 +5072,10 @@ VDI18N.add('es', 'site', {
   "<span>{#}</span><span>Peligros eléctricos y el cuerpo humano</span>",
 "<a>Household Wiring and Electrical Safety</a> · <a>Worksheet: Household Wiring and Electrical Safety</a>":
   "<a>Instalación eléctrica doméstica y seguridad eléctrica</a> · <a>Hoja de trabajo: Instalación eléctrica doméstica y seguridad eléctrica</a>",
-"<span>{#}</span><span>Nerve Conduction–Electrocardiograms</span><span><a>Nerve Signals and the ECG</a></span>":
-  "<span>{#}</span><span>Conducción nerviosa y electrocardiogramas</span><span><a>Señales nerviosas y el ECG</a></span>",
+"<span>{#}</span><span>Nerve Conduction–Electrocardiograms</span>":
+  "<span>{#}</span><span>Conducción nerviosa y electrocardiogramas</span>",
+"<a>Nerve Signals and the ECG</a> · <a>Worksheet: Nerve Signals and the ECG: Conduction Speed and the Heart's Axis</a>":
+  "<a>Señales nerviosas y el ECG</a> · <a>Hoja de trabajo: Señales nerviosas y el ECG: rapidez de conducción y eje del corazón</a>",
 "<span>Chapter {#}</span> Circuits and DC Instruments <span>{#} sections · {#} demo</span>":
   "<span>Capítulo {#}</span> Circuitos e instrumentos de corriente directa <span>{#} secciones · {#} demo</span>",
 "<span>{#}</span><span>Resistors in Series and Parallel</span>":
@@ -5452,12 +5478,6 @@ VDI18N.add('es', 'site', {
   "<a>Superconductores y el efecto Meissner</a> · <a>Levitación superconductora y anclaje de flujo</a> · <a>Resistividad de un alambre</a> · <a>Hoja de trabajo: El efecto Meissner y el campo crítico</a>",
 "<span>{#}</span><span>Some Questions We Know to Ask<span>no activity yet</span></span><span></span>":
   "<span>{#}</span><span>Algunas preguntas que sabemos hacer<span>sin actividad todavía</span></span><span></span>",
-"<span>{#}</span><span>Atomic Masses<span>no activity yet</span></span><span></span>":
-  "<span>{#}</span><span>Masas atómicas<span>sin actividad todavía</span></span><span></span>",
-"<span>{#}</span><span>Selected Radioactive Isotopes<span>no activity yet</span></span><span></span>":
-  "<span>{#}</span><span>Isótopos radiactivos seleccionados<span>sin actividad todavía</span></span><span></span>",
-"<span>{#}</span><span>Useful Information<span>no activity yet</span></span><span></span>":
-  "<span>{#}</span><span>Información útil<span>sin actividad todavía</span></span><span></span>",
 "OpenStax Physics (high school) · Virtual Physics Demos":
   "OpenStax Física (preparatoria) · Demos virtuales de física",
 "OpenStax Physics (high school)":
@@ -5612,8 +5632,8 @@ VDI18N.add('es', 'site', {
   "<a>Ondas estacionarias</a> · <a>Tanque de ondas</a> · <a>Interferencia de dos bocinas</a> · <a>Hoja de trabajo: Ondas estacionarias en una cuerda</a> · <a>Hoja de trabajo: Interferencia de dos bocinas</a>",
 "<a>Sound Waves and the Speed of Sound</a> · <a>Resonators</a> · <a>Worksheet: Speed of Sound by Time of Flight</a> · <a>Worksheet: Speed of Sound</a>":
   "<a>Ondas sonoras y la rapidez del sonido</a> · <a>Resonadores</a> · <a>Hoja de trabajo: Rapidez del sonido por tiempo de vuelo</a> · <a>Hoja de trabajo: Rapidez del sonido</a>",
-"<a>Sound Intensity and Decibels</a> · <a>Hearing and the Ear</a> · <a>Worksheet: Sound Intensity and Decibels</a>":
-  "<a>Intensidad del sonido y decibeles</a> · <a>La audición y el oído</a> · <a>Hoja de trabajo: Intensidad del sonido y decibeles</a>",
+"<a>Sound Intensity and Decibels</a> · <a>Hearing and the Ear</a> · <a>Worksheet: Sound Intensity and Decibels</a> · <a>Worksheet: Hearing: Decibels, Phons and the Cochlea</a>":
+  "<a>Intensidad del sonido y decibeles</a> · <a>La audición y el oído</a> · <a>Hoja de trabajo: Intensidad del sonido y decibeles</a> · <a>Hoja de trabajo: Audición: decibeles, fones y la cóclea</a>",
 "<span>{#}</span><span>Sound Interference and Resonance</span>":
   "<span>{#}</span><span>Interferencia y resonancia del sonido</span>",
 "<a>Two Speaker Interference</a> · <a>Resonators</a> · <a>Standing Waves</a> · <a>Linear Density of a String</a> · <a>Worksheet: Two Speaker Interference</a> · <a>Worksheet: Speed of Sound</a> · <a>Worksheet: Standing Waves on a String</a>":
@@ -5730,8 +5750,6 @@ VDI18N.add('es', 'site', {
   "<span>{#}</span><span>Quarks</span><span><a>Partículas, quarks y leyes de conservación</a></span>",
 "<span>{#}</span><span>The Unification of Forces<span>no activity yet</span></span><span></span>":
   "<span>{#}</span><span>La unificación de las fuerzas<span>sin actividad todavía</span></span><span></span>",
-"<span>{#}</span><span>Reference Tables<span>no activity yet</span></span><span></span>":
-  "<span>{#}</span><span>Tablas de referencia<span>sin actividad todavía</span></span><span></span>",
 "OpenStax Calculus · Virtual Physics Demos":
   "OpenStax Cálculo · Demos virtuales de física",
 "OpenStax Calculus":
@@ -6464,10 +6482,6 @@ VDI18N.add('es', 'site', {
   "Pruebas de chi cuadrada (notas por venir)",
 "<a>Belousov–Zhabotinsky Reaction</a>":
   "<a>Reacción de Belousov–Zhabotinsky</a>",
-"<a>Diffusion and Osmosis</a>":
-  "<a>Difusión y ósmosis</a>",
-"<a>Nerve Signals and the ECG</a>":
-  "<a>Señales nerviosas y el ECG</a>",
 "Waves and sound":
   "Ondas y sonido",
 "Optics":
@@ -6626,14 +6640,22 @@ VDI18N.add('es', 'site', {
   "Demos de química y biología",
 "In <a>Medical Physics</a>":
   "En <a>Física médica</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet: Nerve Signals and the ECG: Conduction Speed and the Heart's Axis</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo: Señales nerviosas y el ECG: rapidez de conducción y eje del corazón</a> <a>Notas</a>",
 "In <a>Acoustics</a> · <a>Medical Physics</a>":
   "En <a>Acústica</a> · <a>Física médica</a>",
 "Also under <a>Sound and acoustics</a>":
   "También en <a>Sonido y acústica</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet: Hearing: Decibels, Phons and the Cochlea</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo: Audición: decibeles, fones y la cóclea</a> <a>Notas</a>",
 "Also under <a>Fluids</a>":
   "También en <a>Fluidos</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet: Surface Tension and Capillary Rise</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo: Tensión superficial y ascenso capilar</a> <a>Notas</a>",
 "Also under <a>Fluids</a> · <a>Heat and thermodynamics</a>":
   "También en <a>Fluidos</a> · <a>Calor y termodinámica</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet: Diffusion and Osmosis: Random Walks, Osmotic Pressure and Red Cells</a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo: Difusión y ósmosis: caminatas aleatorias, presión osmótica y glóbulos rojos</a> <a>Notas</a>",
 "Circuits · Virtual Physics Demos":
   "Circuitos · Demos virtuales de física",
 "Resistance, DC and RC circuits, household wiring, transformers.":
@@ -6708,6 +6730,8 @@ VDI18N.add('es', 'site', {
   "Demos de equilibrio y materiales",
 "<b>Before the worksheet:</b> Force balance; torque about a point; free body diagrams; trigonometry":
   "<b>Antes de la hoja de trabajo:</b> Equilibrio de fuerzas; torca respecto a un punto; diagramas de cuerpo libre; trigonometría",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet: Support Forces and Cable Tension<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo: Fuerzas de soporte y tensión en cables<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<b>Before the worksheets:</b> {#}. Stress, strain and Young's modulus; Hooke's law; fitting a line to data · {#}. Stress and strain; Young's modulus; pressure; fitting a line":
   "<b>Antes de las hojas de trabajo:</b> {#}. Esfuerzo, deformación y módulo de Young; ley de Hooke; ajustar una recta a datos · {#}. Esfuerzo y deformación; módulo de Young; presión; ajustar una línea",
 "<b>Before the worksheet:</b> Static equilibrium; free body diagrams; tension and components of force; reading a slope":
@@ -6892,6 +6916,8 @@ VDI18N.add('es', 'site', {
   "Demos de calor y termodinámica",
 "<b>Before the worksheets:</b> {#}. Specific heat; latent heat; phase changes; fitting a line · {#}. Temperature and kinetic energy; heat and phase changes; first law; reading a slope":
   "<b>Antes de las hojas de trabajo:</b> {#}. Calor específico; calor latente; cambios de fase; ajuste de una recta · {#}. Temperatura y energía cinética; calor y cambios de fase; primera ley; pendiente de una gráfica",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet {#}: Heating Curve and Latent Heat<span>{#} min · algebra</span></a> <a>Worksheet {#}: Bonds, Temperature and Latent Heat<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo {#}: Curva de calentamiento y calor latente<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Enlaces, temperatura y calor latente<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<b>Before the worksheets:</b> {#}. Heat and specific heat; conservation of energy; temperature versus heat · {#}. Ideal gas law; Kelvin and Celsius scales; fitting a line and extrapolating · {#}. Temperature and thermal expansion coefficients; fractional change; reading a slope from a graph · {#}. Conduction of heat; thermal resistance of layers; reading a slope · {#}. Heat transfer by convection and radiation; exponential decay; natural logarithms; time constant":
   "<b>Antes de las hojas de trabajo:</b> {#}. Calor y calor específico; conservación de la energía; temperatura frente a calor · {#}. Ley del gas ideal; escalas Kelvin y Celsius; ajustar una recta y extrapolar · {#}. Temperatura y coeficientes de dilatación térmica; cambio fraccional; leer una pendiente en una gráfica · {#}. Conducción de calor; resistencia térmica de capas; leer una pendiente · {#}. Transferencia de calor por convección y radiación; decaimiento exponencial; logaritmos naturales; constante de tiempo",
 "<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet {#}: Thermal Equilibrium<span>{#} min · algebra</span></a> <a>Worksheet {#}: Gas Thermometer and Absolute Zero<span>{#} min · algebra</span></a> <a>Worksheet {#}: Thermal Expansion<span>{#} min · algebra</span></a> <a>Worksheet {#}: Heat Conduction Through Layers<span>{#} min · algebra</span></a> <a>Worksheet {#}: Cooling by Convection and Radiation<span>{#} min · algebra</span></a> <a>Notes</a>":
@@ -7358,6 +7384,8 @@ VDI18N.add('es', 'site', {
   "Demos de sonido y acústica",
 "<b>Before the worksheet:</b> Wave speed and wavelength; pressure and displacement; ideal gas; fitting a line":
   "<b>Antes de la hoja de trabajo:</b> Rapidez y longitud de onda; presión y desplazamiento; gas ideal; ajustar una línea",
+"<a>Open demo</a> <a>Start here<span>{#} min · explore {#} min</span></a> <a>Worksheet: Speed of Sound by Time of Flight<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min · explora {#} min</span></a> <a>Hoja de trabajo: Rapidez del sonido por tiempo de vuelo<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<b>Before the worksheet:</b> Standing waves, nodes and antinodes; wave speed and wavelength; speed of sound in gases":
   "<b>Antes de la hoja de trabajo:</b> Ondas estacionarias, nodos y antinodos; velocidad y longitud de onda; velocidad del sonido en gases",
 "<b>Before the worksheet:</b> Intensity and the inverse square law; decibels; logarithms":
@@ -7460,6 +7488,32 @@ VDI18N.add('es', 'site', {
   "{n} demos tienen una actividad así.",
 "No demo has that combination. A Start here needs no math; try Any.":
   "Ninguna demo tiene esa combinación. Un Empieza aquí no necesita matemáticas; prueba Cualquiera.",
+"<span>Terminal Velocity →</span>":
+  "<span>Velocidad terminal →</span>",
+"<a>Open demo</a> <a>Worksheet: Support Forces and Cable Tension<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Fuerzas de soporte y tensión en cables<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet {#}: Heating Curve and Latent Heat<span>{#} min · algebra</span></a> <a>Worksheet {#}: Bonds, Temperature and Latent Heat<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo {#}: Curva de calentamiento y calor latente<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Enlaces, temperatura y calor latente<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<a>Open demo</a> <a>Worksheet: Speed of Sound by Time of Flight<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Rapidez del sonido por tiempo de vuelo<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<span>{#}</span><span>Cohesion and Adhesion in Liquids: Surface Tension and Capillary Action</span><span><a>Surface Tension and Capillarity</a></span>":
+  "<span>{#}</span><span>Cohesión y adhesión en los líquidos: tensión superficial y acción capilar</span><span><a>Tensión superficial y capilaridad</a></span>",
+"<a>Gas in a Box</a> · <a>Diffusion and Osmosis</a> · <a>Worksheet: Diffusion and Graham's Law</a>":
+  "<a>Gas en una caja</a> · <a>Difusión y ósmosis</a> · <a>Hoja de trabajo: Difusión y la ley de Graham</a>",
+"<a>Hearing and the Ear</a> · <a>Sound Intensity and Decibels</a> · <a>Timbre and Harmonics</a>":
+  "<a>La audición y el oído</a> · <a>Intensidad del sonido y decibeles</a> · <a>Timbre y armónicos</a>",
+"<span>{#}</span><span>Nerve Conduction–Electrocardiograms</span><span><a>Nerve Signals and the ECG</a></span>":
+  "<span>{#}</span><span>Conducción nerviosa y electrocardiogramas</span><span><a>Señales nerviosas y el ECG</a></span>",
+"<span>{#}</span><span>Atomic Masses<span>no activity yet</span></span><span></span>":
+  "<span>{#}</span><span>Masas atómicas<span>sin actividad todavía</span></span><span></span>",
+"<span>{#}</span><span>Selected Radioactive Isotopes<span>no activity yet</span></span><span></span>":
+  "<span>{#}</span><span>Isótopos radiactivos seleccionados<span>sin actividad todavía</span></span><span></span>",
+"<span>{#}</span><span>Useful Information<span>no activity yet</span></span><span></span>":
+  "<span>{#}</span><span>Información útil<span>sin actividad todavía</span></span><span></span>",
+"<a>Sound Intensity and Decibels</a> · <a>Hearing and the Ear</a> · <a>Worksheet: Sound Intensity and Decibels</a>":
+  "<a>Intensidad del sonido y decibeles</a> · <a>La audición y el oído</a> · <a>Hoja de trabajo: Intensidad del sonido y decibeles</a>",
+"<span>{#}</span><span>Reference Tables<span>no activity yet</span></span><span></span>":
+  "<span>{#}</span><span>Tablas de referencia<span>sin actividad todavía</span></span><span></span>",
 "<span>Gas in a Box →</span>":
   "<span>Gas en una caja →</span>",
 "Measure g with a pendulum and judge what the data can tell you: time it by hand or with a photogate, one swing or many, repeat, read the length to the right place or the wrong one, and release from small or big angles. Random scatter, resolution, bias, propagation, fits and residuals, with every instrument error simulated and labeled.":
