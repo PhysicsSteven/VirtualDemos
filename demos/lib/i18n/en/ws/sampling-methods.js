@@ -56,7 +56,7 @@ VDI18N.add('en', 'ws/sampling-methods', [
 "Population mean μ (¢), row {#}",
 "Bias, mean of x̄’s − μ (¢), row {#}",
 "Spread, s of the x̄’s (¢), row {#}",
-"Table {#}. The review video study, {#} runs of each design.",
+"Table {#}. The review video study, about {#} runs of each design (the single first run of the self selected study counts too).",
 "<span>B</span>Design",
 "<span>C</span>True effect (points)",
 "<span>D</span>Runs",

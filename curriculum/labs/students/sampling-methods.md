@@ -71,7 +71,7 @@ Table 1. 100 samples of 20 students by each method, from Coins in pockets (draw 
 | | | | | | | |
 | | | | | | | |
 
-Table 2. The review video study, 100 runs of each design.
+Table 2. The review video study, about 100 runs of each design (the single first run of the self selected study counts too).
 
 | Reading | Design | True effect (points) | Runs | Mean difference (points) | Spread, s of the differences (points) | Mean study hours, watched (h) | Mean study hours, did not (h) |
 |---|---|---|---|---|---|---|---|

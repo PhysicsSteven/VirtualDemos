@@ -112,8 +112,8 @@ VDI18N.add('es', 'ws/sampling-methods', {
   "Sesgo, media de las x̄ − μ (¢), fila {#}",
 "Spread, s of the x̄’s (¢), row {#}":
   "Dispersión, s de las x̄ (¢), fila {#}",
-"Table {#}. The review video study, {#} runs of each design.":
-  "Tabla {#}. El estudio de los videos de repaso, {#} corridas de cada diseño.",
+"Table {#}. The review video study, about {#} runs of each design (the single first run of the self selected study counts too).":
+  "Tabla {#}. El estudio de los videos de repaso, unas {#} corridas de cada diseño (la primera corrida sola del estudio autoseleccionado también cuenta).",
 "<span>B</span>Design":
   "<span>B</span>Diseño",
 "<span>C</span>True effect (points)":
@@ -165,5 +165,7 @@ VDI18N.add('es', 'ws/sampling-methods', {
 "Before the lab answers, Tables {#} and {#}, your descriptions from part A, and your answers to the Analysis and Questions. Say that the data are simulated by the demo, not measured.":
   "Las respuestas de Antes del laboratorio, las Tablas {#} y {#}, tus descripciones de la parte A y tus respuestas al Análisis y a las Preguntas. Indica que los datos son simulados por la demo, no medidos.",
 "Sampling Lab":
-  "Laboratorio de muestreo"
+  "Laboratorio de muestreo",
+"Table {#}. The review video study, {#} runs of each design.":
+  "Tabla {#}. El estudio de los videos de repaso, {#} corridas de cada diseño."
 });
