@@ -158,6 +158,14 @@ rule('harvest', 'Every demo has its English strings harvested (demos/lib/i18n/en
   + 'A redirect page needs none.', 'demos/*.html', () => DEMOS.filter((d) => !fs.existsSync(path.join(ROOT, 'demos/lib/i18n/en/demo', d + '.js'))
     && !/http-equiv="refresh"/.test(read('demos/' + d + '.html'))).map((d) => ['demos/' + d + '.html', 0, '', 'no harvest: tools/i18n.cjs harvest ' + d]));
 
+/* two calculus worksheets shipped 2026-11-19 with no catalog and so no Spanish; the demo rule above never saw them */
+rule('harvest-ws', 'Every worksheet has its English strings harvested (demos/lib/i18n/en/ws/<slug>.js) and a Spanish catalog '
+  + '(demos/lib/i18n/es/ws/<slug>.js).', 'curriculum/labs/students/*.md', () => fs.readdirSync(path.join(ROOT, 'curriculum/labs/students'))
+    .filter((f) => f.endsWith('.md')).map((f) => f.slice(0, -3))
+    .flatMap((s) => ['en', 'es'].filter((l) => !fs.existsSync(path.join(ROOT, 'demos/lib/i18n', l, 'ws', s + '.js')))
+      .map((l) => ['curriculum/labs/students/' + s + '.md', 0, '', l === 'en' ? 'no harvest: tools/i18n.cjs harvest --site $VD_SITE ws/' + s
+        : 'no Spanish: tools/i18n.cjs todo es ws/' + s])));
+
 rule('shortcuts-list', 'Every demo that handles keys in its own code has a list in demos/lib/shortcuts.js (the ? dialog, vd.js VD.help; '
   + 'an empty list when it has no keys beyond the shared ones), and every list names a demo that exists.', 'demos/*.html, demos/lib/shortcuts.js', () => {
   const src = read('demos/lib/shortcuts.js'), box = {}; new Function('window', src)(box);
