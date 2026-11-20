@@ -248,9 +248,9 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
 .item .pic { display: block; border-bottom: 1px solid var(--line); }
 .item .thumb { border-bottom: 0; }
 .item .body { padding: 12px 14px 14px; gap: 5px; }
-.item h3 { margin: 0; font-size: 1.08rem; line-height: 1.25; }
-.item h3 a { text-decoration: none; }
-.item h3 a:hover { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
+.item h3, .item h4 { margin: 0; font-size: 1.08rem; line-height: 1.25; }
+.item h3 a, .item h4 a { text-decoration: none; }
+.item h3 a:hover, .item h4 a:hover { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
 .item p { margin: 0; color: var(--muted); font-size: 0.9rem; text-wrap: pretty; }
 .kind { display: flex; flex-wrap: wrap; gap: 6px; }
 .role, .flag { font-family: var(--font-mono); font-size: 0.68rem; font-weight: 600; letter-spacing: 0.03em; text-transform: uppercase; border-radius: 5px; padding: 1px 6px; }
@@ -262,6 +262,35 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
 .links { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: auto !important; padding-top: 8px; font-size: 0.88rem; }
 .links a { color: var(--accent); font-weight: 700; text-underline-offset: 3px; min-height: 28px; display: inline-flex; align-items: center; }
 .links a.go { color: var(--canvas); background: var(--accent); border-radius: 7px; padding: 4px 12px; text-decoration: none; min-height: 36px; }
+/* a course week (Astro 2203, Steve 2026-11-20): the Required part first and alone, then a closed Supplementary part */
+.links a.go2 { border: 1.5px solid var(--accent); border-radius: 7px; padding: 4px 12px; text-decoration: none; min-height: 36px; }
+.links a.go2 .wsm { color: var(--muted); }
+.req-part { margin: 6px 0 0; padding: 12px 14px 14px; border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 12px; background: color-mix(in srgb, var(--accent) 5%, transparent); }
+.req-part > h3, .supp > summary h3 { margin: 0; font-family: var(--font-mono); font-size: 0.8rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+.req-part > h3 { margin-bottom: 10px; color: var(--accent); }
+.req-list { grid-template-columns: minmax(0, 680px); }
+.req-list .item { grid-template-columns: minmax(0, 240px) minmax(0, 1fr); }
+.req-list .item .pic { border-bottom: 0; border-right: 1px solid var(--line); }
+.req-list .item .pic img { height: 100%; object-fit: cover; }
+.noreq { margin: 0; color: var(--muted); }
+.noreq a { color: var(--accent); font-weight: 700; }
+.supp { margin: 16px 0 0; border: 1px dashed var(--line); border-radius: 12px; }
+.supp > summary { cursor: pointer; list-style: none; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; min-height: 48px; padding: 8px 14px; color: var(--muted); }
+.supp > summary::-webkit-details-marker { display: none; }
+.supp > summary::before { content: "+"; display: inline-grid; place-items: center; width: 22px; height: 22px; border: 1px solid currentColor; border-radius: 50%; font: 700 0.95rem/1 var(--font-mono); }
+.supp[open] > summary::before { content: "\2212"; }
+.supp > summary:hover, .supp > summary:focus-visible { color: var(--ink); }
+.supp-sub { font-size: 0.88rem; }
+.supp[open] { padding-bottom: 14px; }
+.supp > .unote, .supp > .list { margin-left: 14px; margin-right: 14px; }
+.supp > .unote { margin-top: 2px; font-size: 0.92rem; }
+.supp > .unote-h { margin: 4px 14px 0; font-weight: 700; font-size: 0.92rem; }
+@media (max-width: 560px) {
+  .req-list .item { grid-template-columns: 1fr; }
+  .req-list .item .pic { border-right: 0; border-bottom: 1px solid var(--line); }
+  .supp > .unote, .supp > .unote-h, .supp > .list { margin-left: 10px; margin-right: 10px; }
+}
+@media print { .supp > .list, .supp > .unote, .supp > .unote-h { display: grid; } }
 .links a .req { margin-right: 6px; padding: 1px 7px; border: 1px solid currentColor; border-radius: 999px; font-size: 0.72rem; letter-spacing: 0.04em; text-transform: uppercase; }
 .also { grid-column: 1 / -1; color: var(--muted); font-size: 0.92rem; padding: 4px 2px; }
 .also a { font-weight: 700; }

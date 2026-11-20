@@ -426,23 +426,98 @@ def unit_dates(cid, u):
     return out
 
 
-def card(name, demo, unit_secs, cards, notes, cid=None, required=None):
-    """required: the handout this unit requires (a course week, unit 'required'): listed first and marked Required."""
+def week_section(u, us, ukeys, names, fresh, seen, activity_names, activities, demos, cards, notes, cid, first_unit):
+    """One week of a course laid out by weeks (Astro 2203). Steve 2026-11-20: students see only what is required first, in its
+    own part; everything else sits in a separate Supplementary part that stays closed until opened, so a week never overwhelms.
+    Required: the demo with the week's required worksheet (unit 'required'), as one card with Open demo and the worksheet.
+    Supplementary: the class days, the other demo cards and worksheets, that demo's other links, and demos carded in other weeks."""
+    req = u.get('required')
+    rdemo = next((n for n in names if req in course_handouts(cid, demos[n])), None) if req else None
+    if req and rdemo:
+        rbody = f'''    <ul class="list req-list">
+{card(rdemo, demos[rdemo], ukeys, cards, notes, cid, req, hl=4, only=req)}
+    </ul>'''
+    elif req:
+        rbody = f'''    <p class="noreq"><a href="curriculum/labs/students/{req}.html">{esc(course_label(cid, req))}</a></p>'''
+    else:
+        rbody = '    <p class="noreq">Nothing to hand in this week.</p>'
+    items, n_demos, n_sheets = [], 0, 0
+    lab, sh = ACT.labels(), ACT.start_here()
+    if rdemo:   # the required demo's other links: Start here, its other worksheets, Notes
+        more = []
+        if rdemo in sh:
+            more.append(f'<a href="{ACT.start_href(rdemo, sh[rdemo], "course=" + cid)}">Start here</a> <span class="where">(5 min)</span>')
+        hs = course_handouts(cid, demos[rdemo])
+        for i, h in enumerate(hs, 1):
+            if h != req:
+                more.append(f'<a href="curriculum/labs/students/{h}.html">{esc(course_label(cid, h, i if len(hs) > 1 else None))}</a>')
+                n_sheets += 1
+        if rdemo in notes:
+            more.append(f'<a href="notes/{rdemo}.html">Notes</a>')
+        if more:
+            items.append(f'      <li class="also">More with {esc(cards[rdemo]["title"])}: ' + ' · '.join(more) + '</li>')
+    for n in fresh:
+        if n != rdemo:
+            items.append(card(n, demos[n], ukeys, cards, notes, cid, None, hl=4))
+            n_demos += 1
+            n_sheets += len(course_handouts(cid, demos[n]))
+    for a in activity_names:
+        items.append(activity_card(activities[a], ukeys, cid, h=4))
+        n_sheets += 1
+    seen = [n for n in seen if n != rdemo]
+    if seen:
+        def sheets(n):
+            hs = [h for h in course_handouts(cid, demos[n]) if h in u.get('worksheets', [])]
+            return ''.join(f' with <a href="curriculum/labs/students/{h}.html">{esc(course_label(cid, h))}</a>' for h in hs)
+        links = ' · '.join(f'<a href="demos/{n}.html?course={cid}">{esc(cards[n]["title"])}</a>{sheets(n)} '
+                           f'<span class="where">(card under <a href="#{first_unit[n]["id"]}">{esc(first_unit[n].get("short", first_unit[n]["title"]))}</a>)</span>'
+                           for n in seen)
+        items.append(f'      <li class="also">Also used this week: {links}</li>')
+        n_demos += len(seen)
+        n_sheets += sum(1 for n in seen for h in course_handouts(cid, demos[n]) if h in u.get('worksheets', []))
+    plural = lambda k, w: f'{k} {w}{"" if k == 1 else "s"}'
+    count = ' and '.join(x for x in [plural(n_demos, 'demo') if n_demos else '', plural(n_sheets, 'worksheet') if n_sheets else ''] if x)
+    note = f'\n    <p class="unote-h">This week’s lessons</p>\n    <p class="unote">{esc(u["note"])}</p>' if u.get('note') else ''
+    supp = f'''
+  <details class="supp">
+    <summary><h3 id="{u['id']}-s">Supplementary</h3><span class="supp-sub">{count + ", not handed in" if count else "Not handed in"}</span></summary>{note}
+    <ul class="list">
+{chr(10).join(items)}
+    </ul>
+  </details>''' if items or note else ''
+    return f'''  <section class="unit week" id="{u['id']}" aria-labelledby="{u['id']}-h">
+    <h2 id="{u['id']}-h">{esc(u['title'])}</h2>
+    <p class="meta">{f'<span>{esc(u["dates"])}</span>' if u.get('dates') else ''}</p>
+  <div class="req-part">
+    <h3 id="{u['id']}-r">Required</h3>
+{rbody}
+  </div>{supp}
+  </section>'''
+
+
+def card(name, demo, unit_secs, cards, notes, cid=None, required=None, hl=3, only=None):
+    """required: the handout this unit requires (a course week, unit 'required'): listed first and marked Required.
+    hl: the title's heading level (4 inside a week's Required and Supplementary parts). only: the week's required handout alone,
+    with Open demo and no other links (the Required part of a week, Steve 2026-11-20)."""
     c = cards[name]
     q = f'?course={cid}' if cid else ''   # the demo shows this course's worksheets and steps through this course (nav.js)
     secs = sorted([s for s in demo['sections'] if (s['vol'], s['sec']) in unit_secs], key=sec_key)
     chips = ''.join(f'<li><span class="sec">{s["vol"]}:{s["sec"]}</span> {esc(s["title"])}</li>' for s in secs)
     links = [f'<a class="go" href="demos/{name}.html{q}">Open demo</a>']
     lab, sh = ACT.labels(), ACT.start_here()
-    if name in sh:   # Start here, 5 min (2026-11-16)
+    if only:
+        meta = f'<span class="wsm">{ACT.sheet_meta(only, lab.get(only))}</span>' if lab.get(only) else ''
+        tip = f' title="Before this: {esc(lab[only]["needs"])}"' if lab.get(only) else ''
+        links.append(f'<a class="go2" href="curriculum/labs/students/{only}.html"{tip}>{esc(course_label(cid, only))}{meta}</a>')
+    if name in sh and not only:   # Start here, 5 min (2026-11-16)
         links.append(f'<a href="{ACT.start_href(name, sh[name], "course=" + cid if cid else "")}">Start here<span class="wsm">5 min</span></a>')
-    hs = course_handouts(cid, demo)
+    hs = [] if only else course_handouts(cid, demo)
     for i, h in sorted(enumerate(hs, 1), key=lambda x: x[1] != required):
         tag = '<strong class="req">Required</strong> ' if h == required else ''
         meta = f'<span class="wsm">{ACT.sheet_meta(h, lab.get(h))}</span>' if lab.get(h) else ''
         tip = f' title="Before this: {esc(lab[h]["needs"])}"' if lab.get(h) else ''
         links.append(f'<a href="curriculum/labs/students/{h}.html"{tip}>{tag}{esc(course_label(cid, h, i if len(hs) > 1 else None))}{meta}</a>')
-    if name in notes:
+    if name in notes and not only:
         links.append(f'<a href="notes/{name}.html">Notes</a>')
     role = 'Lab' if demo['role'] == 'lab' else 'Demo'
     flag = DEMO_NOTE.get(demo['status'])
@@ -450,14 +525,14 @@ def card(name, demo, unit_secs, cards, notes, cid=None, required=None):
         <a class="pic" href="demos/{name}.html{q}" tabindex="-1" aria-hidden="true">{thumb(name, '')}</a>
         <div class="body">
           <p class="kind"><span class="role role-{demo['role']}">{role}</span>{f'<span class="flag">{flag}</span>' if flag else ''}</p>
-          <h3><a href="demos/{name}.html{q}">{esc(c['title'])}</a></h3>
+          <h{hl}><a href="demos/{name}.html{q}">{esc(c['title'])}</a></h{hl}>
           <p>{c['desc']}</p>{f'{chr(10)}          <ul class="secs" aria-label="Textbook sections">{chips}</ul>' if chips else ''}
           <p class="links">{' '.join(links)}</p>
         </div>
       </li>'''
 
 
-def activity_card(activity, unit_secs, cid=None):
+def activity_card(activity, unit_secs, cid=None, h=3):
     """Standalone worksheet or reading (GPT's renderer patch, 2026-10-22): no demo or thumbnail."""
     secs = sorted([s for s in activity['sections'] if (s['vol'], s['sec']) in unit_secs], key=sec_key)
     chips = ''.join(f'<li><span class="sec">{s["vol"]}:{s["sec"]}</span> {esc(s["title"])}</li>' for s in secs)
@@ -467,7 +542,7 @@ def activity_card(activity, unit_secs, cid=None):
     return f'''      <li class="item">
         <div class="body" style="grid-column: 1 / -1">
           <p class="kind"><span class="role">{role}</span></p>
-          <h3><a href="{esc(href)}">{esc(activity['title'])}</a></h3>
+          <h{h}><a href="{esc(href)}">{esc(activity['title'])}</a></h{h}>
           <p>{esc(activity['description'])}</p>
           {f'<ul class="secs" aria-label="Textbook sections">{chips}</ul>' if chips else ''}
           <p class="links"><a class="go" href="{esc(href)}">{esc(label)}</a></p>
@@ -489,6 +564,7 @@ def course_page(course, m, cards, notes):
     on_cards = {h for u in course['units'] for x in u['sections'] for d in secs[(x['vol'], x['sec'])]['demos']
                 if d in demos and cid in demos[d]['course'] and d in cards for h in demos[d].get('handouts', [])}
     sched = [u for u in course['units'] if u.get('schedule')]
+    weekly = any(u.get('dates') for u in course['units'])   # a course laid out by weeks: Required, then a closed Supplementary part
     for u in [u for u in course['units'] if not u.get('schedule')]:
         us = [secs[(x['vol'], x['sec'])] for x in u['sections']]
         ukeys = {(s['vol'], s['sec']) for s in us}
@@ -534,6 +610,9 @@ def course_page(course, m, cards, notes):
       <summary>Sections without a full activity <span class="n">{len(gaps)}</span></summary>
       <ul>{rows}</ul>
     </details>'''
+        if weekly and u.get('dates') and not u.get('review'):
+            units.append(week_section(u, us, ukeys, names, fresh, seen, activity_names, activities, demos, cards, notes, cid, first_unit))
+            continue
         units.append(f'''  <section class="unit{" optional" if opt else ""}" id="{u['id']}" aria-labelledby="{u['id']}-h">
     {'<p class="optnote">Optional, after the required sequence</p>' if opt else ''}
     <h2 id="{u['id']}-h">{esc(u['title'])}</h2>
@@ -568,9 +647,10 @@ def course_page(course, m, cards, notes):
                'worksheets, then the introductory ' + ' and '.join(f'<a href="{x}.html">{esc(TITLE[x])}</a>' for x in inc) + ' worksheets. '
                'Section numbers are volume:section in OpenStax University Physics.')
     if any(u.get('required') for u in course['units']):   # a course laid out by weeks (Astro 2203, 2026-10-26)
-        how = ('Units follow the weeks of the course, with each test where it falls. Each week\u2019s required worksheet is marked Required and '
-               'comes first; it is the one you hand in. The other demos and worksheets are supplementary. A demo can appear in more than one '
-               'week: it has one card, in the week that needs it most, and other weeks link to it.')
+        how = ('Units follow the weeks of the course, with each test where it falls. Each week opens with what is required: the demo and the '
+               'worksheet you hand in. Everything else for the week, including the lessons, sits below it under Supplementary, closed until you '
+               'open it; nothing there is handed in. A demo can appear in more than one week: it has one card, in the week that needs it most, '
+               'and other weeks link to it.')
     if cid in SAME_AS:
         t = next(x['title'] for x in m['courses'] if x['id'] == SAME_AS[cid])
         how = ('Units follow the lectures, one per set of lecture notes, then the rest of the course in the order of the syllabus. Each card lists the '
@@ -1114,9 +1194,9 @@ COURSE_CSS = '''
 .item .pic { display: block; border-bottom: 1px solid var(--line); }
 .item .thumb { border-bottom: 0; }
 .item .body { padding: 12px 14px 14px; gap: 5px; }
-.item h3 { margin: 0; font-size: 1.08rem; line-height: 1.25; }
-.item h3 a { text-decoration: none; }
-.item h3 a:hover { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
+.item h3, .item h4 { margin: 0; font-size: 1.08rem; line-height: 1.25; }
+.item h3 a, .item h4 a { text-decoration: none; }
+.item h3 a:hover, .item h4 a:hover { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
 .item p { margin: 0; color: var(--muted); font-size: 0.9rem; text-wrap: pretty; }
 .kind { display: flex; flex-wrap: wrap; gap: 6px; }
 .role, .flag { font-family: var(--font-mono); font-size: 0.68rem; font-weight: 600; letter-spacing: 0.03em; text-transform: uppercase; border-radius: 5px; padding: 1px 6px; }
@@ -1128,6 +1208,35 @@ COURSE_CSS = '''
 .links { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: auto !important; padding-top: 8px; font-size: 0.88rem; }
 .links a { color: var(--accent); font-weight: 700; text-underline-offset: 3px; min-height: 28px; display: inline-flex; align-items: center; }
 .links a.go { color: var(--canvas); background: var(--accent); border-radius: 7px; padding: 4px 12px; text-decoration: none; min-height: 36px; }
+/* a course week (Astro 2203, Steve 2026-11-20): the Required part first and alone, then a closed Supplementary part */
+.links a.go2 { border: 1.5px solid var(--accent); border-radius: 7px; padding: 4px 12px; text-decoration: none; min-height: 36px; }
+.links a.go2 .wsm { color: var(--muted); }
+.req-part { margin: 6px 0 0; padding: 12px 14px 14px; border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 12px; background: color-mix(in srgb, var(--accent) 5%, transparent); }
+.req-part > h3, .supp > summary h3 { margin: 0; font-family: var(--font-mono); font-size: 0.8rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+.req-part > h3 { margin-bottom: 10px; color: var(--accent); }
+.req-list { grid-template-columns: minmax(0, 680px); }
+.req-list .item { grid-template-columns: minmax(0, 240px) minmax(0, 1fr); }
+.req-list .item .pic { border-bottom: 0; border-right: 1px solid var(--line); }
+.req-list .item .pic img { height: 100%; object-fit: cover; }
+.noreq { margin: 0; color: var(--muted); }
+.noreq a { color: var(--accent); font-weight: 700; }
+.supp { margin: 16px 0 0; border: 1px dashed var(--line); border-radius: 12px; }
+.supp > summary { cursor: pointer; list-style: none; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; min-height: 48px; padding: 8px 14px; color: var(--muted); }
+.supp > summary::-webkit-details-marker { display: none; }
+.supp > summary::before { content: "+"; display: inline-grid; place-items: center; width: 22px; height: 22px; border: 1px solid currentColor; border-radius: 50%; font: 700 0.95rem/1 var(--font-mono); }
+.supp[open] > summary::before { content: "\\2212"; }
+.supp > summary:hover, .supp > summary:focus-visible { color: var(--ink); }
+.supp-sub { font-size: 0.88rem; }
+.supp[open] { padding-bottom: 14px; }
+.supp > .unote, .supp > .list { margin-left: 14px; margin-right: 14px; }
+.supp > .unote { margin-top: 2px; font-size: 0.92rem; }
+.supp > .unote-h { margin: 4px 14px 0; font-weight: 700; font-size: 0.92rem; }
+@media (max-width: 560px) {
+  .req-list .item { grid-template-columns: 1fr; }
+  .req-list .item .pic { border-right: 0; border-bottom: 1px solid var(--line); }
+  .supp > .unote, .supp > .unote-h, .supp > .list { margin-left: 10px; margin-right: 10px; }
+}
+@media print { .supp > .list, .supp > .unote, .supp > .unote-h { display: grid; } }
 .links a .req { margin-right: 6px; padding: 1px 7px; border: 1px solid currentColor; border-radius: 999px; font-size: 0.72rem; letter-spacing: 0.04em; text-transform: uppercase; }
 .also { grid-column: 1 / -1; color: var(--muted); font-size: 0.92rem; padding: 4px 2px; }
 .also a { font-weight: 700; }

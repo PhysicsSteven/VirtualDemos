@@ -2302,7 +2302,6 @@
             "life-in-the-universe"
           ],
           "dates": "Jan 6 to 11, after Test 1",
-          "required": "intro-planet-temperatures",
           "note": "Day 1, forming stars and planets: the clues, collapse and spin, the frost line and building planets. Day 2, planet temperatures: the no greenhouse temperature, habitable zones, and Venus against the formula.",
           "aliases": [
             "formation"
@@ -2423,13 +2422,10 @@
             "comets"
           ],
           "dates": "Feb 17 to 19",
-          "required": "intro-resonances",
+          "required": "comet-tails",
           "note": "Day 5, the ice giants: a planet on its side, Neptune found with a pencil, and Triton. Day 6, Pluto, the Kuiper belt and comets: what a planet is, Pluto and Neptune, comets and their tails, where comets come from, and meteor showers.",
           "aliases": [
             "uranus-neptune-kuiper"
-          ],
-          "cards": [
-            "resonances"
           ]
         },
         {

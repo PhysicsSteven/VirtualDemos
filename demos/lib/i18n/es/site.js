@@ -1,7 +1,7 @@
 /* site in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'site', {
-"Thin Film Interference":
-  "Interferencia en películas delgadas",
+"Impulse and Momentum":
+  "Impulso y momento",
 "See the recent changes to the site":
   "Ve los cambios recientes del sitio",
 "What’s new":
@@ -26,8 +26,6 @@ VDI18N.add('es', 'site', {
   "<span>Celular, laptop o proyector</span>",
 "<a><span>Teaching notes</span></a>":
   "<a><span>Notas para la enseñanza</span></a>",
-"<span>Thin Film Interference →</span>":
-  "<span>Interferencia en películas delgadas →</span>",
 "Teaching with the site":
   "Enseñar con el sitio",
 "Projector mode and a QR code on every demo, so students follow on their phones":
@@ -180,8 +178,6 @@ VDI18N.add('es', 'site', {
   "Fuentes de energía",
 "How much uranium, gas, coal, food, battery, falling water or wind it takes to supply a given amount of energy: energy per kilogram across eight powers of ten.":
   "Cuánto uranio, gas, carbón, comida, batería, agua que cae o viento se necesita para suministrar una cantidad dada de energía: energía por kilogramo a lo largo de ocho potencias de diez.",
-"Impulse and Momentum":
-  "Impulso y momento",
 "Bounce a cart off a force sensor and show that the area under the force against time graph equals its change of momentum. Soft and stiff bumpers give the same impulse with very different forces.":
   "Haz rebotar un carrito contra un sensor de fuerza y muestra que el área bajo la gráfica de fuerza contra tiempo es igual a su cambio de momento. Las defensas suaves y las rígidas dan el mismo impulso con fuerzas muy distintas.",
 "Collisions and Momentum":
@@ -550,6 +546,8 @@ VDI18N.add('es', 'site', {
   "Doble rendija, una partícula a la vez",
 "Fire photons, electrons or buckyballs through two slits one at a time. Single dots pile up into fringes, and a which slit detector washes them out.":
   "Dispara fotones, electrones o buckybolas a través de dos rendijas, uno a la vez. Los puntos individuales se acumulan en franjas, y un detector de rendija las borra.",
+"Thin Film Interference":
+  "Interferencia en películas delgadas",
 "See why soap bubbles and oil slicks are colored: two reflections from a thin film add or cancel, computed exactly with the reflected color of white light, plus the black film, air wedge fringes, Newton's rings and anti reflection coatings.":
   "Ve por qué las burbujas de jabón y las manchas de aceite tienen colores: dos reflexiones en una película delgada se suman o se cancelan, calculadas exactamente con el color reflejado de la luz blanca, además de la película negra, las franjas de una cuña de aire, los anillos de Newton y los recubrimientos antirreflejantes.",
 "Michelson Interferometer":
@@ -2510,18 +2508,28 @@ VDI18N.add('es', 'site', {
   "<a>Semana {#}</a>",
 "<a>Test {#}</a>":
   "<a>Examen {#}</a>",
-"Units follow the weeks of the course, with each test where it falls. Each week’s required worksheet is marked Required and comes first; it is the one you hand in. The other demos and worksheets are supplementary. A demo can appear in more than one week: it has one card, in the week that needs it most, and other weeks link to it. Every demo here is also on the <a>Astronomy</a> page, with the other astronomy demos. Looking for one subject? Every demo is also under <a>All demos by topic</a>.":
-  "Las unidades siguen las semanas del curso, con cada examen donde corresponde. La hoja de trabajo obligatoria de cada semana está marcada como Obligatoria y va primero; es la que entregas. Las demás demos y hojas de trabajo son complementarias. Una demo puede aparecer en más de una semana: tiene una sola tarjeta, en la semana que más la necesita, y las otras semanas la enlazan. Cada demo de aquí también está en la página de <a>Astronomía</a>, con las demás demos de astronomía. ¿Buscas un solo tema? Cada demo también está en <a>Todas las demos por tema</a>.",
+"Units follow the weeks of the course, with each test where it falls. Each week opens with what is required: the demo and the worksheet you hand in. Everything else for the week, including the lessons, sits below it under Supplementary, closed until you open it; nothing there is handed in. A demo can appear in more than one week: it has one card, in the week that needs it most, and other weeks link to it. Every demo here is also on the <a>Astronomy</a> page, with the other astronomy demos. Looking for one subject? Every demo is also under <a>All demos by topic</a>.":
+  "Las unidades siguen las semanas del curso, con cada examen donde cae. Cada semana empieza con lo obligatorio: la demo y la hoja de trabajo que entregas. Todo lo demás de la semana, incluidas las clases, está debajo en Complementario, cerrado hasta que lo abras; nada de eso se entrega. Una demo puede aparecer en más de una semana: tiene una tarjeta, en la semana que más la necesita, y las otras semanas la enlazan. Cada demo de aquí también está en la página de <a>Astronomía</a>, con las demás demos de astronomía. ¿Buscas un solo tema? Cada demo también está en <a>Todas las demos por tema</a>.",
 "Week {#} · Unit {#}, Days {#} and {#}: The sky, the Sun and the Moon":
   "Semana {#} · Unidad {#}, días {#} y {#}: El cielo, el Sol y la Luna",
-"<span>Dec {#} to {#}</span><span>Required: <a>Worksheet: The Sky and the Celestial Sphere</a></span>":
-  "<span>{#} al {#} de dic.</span><span>Obligatoria: <a>Hoja de trabajo: El cielo y la esfera celeste</a></span>",
+"<span>Dec {#} to {#}</span>":
+  "<span>{#} al {#} de dic.</span>",
+"Required":
+  "Obligatorio",
+"<a>Open demo</a> <a>Worksheet: The Sky and the Celestial Sphere<span>{#} min · algebra</span></a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: El cielo y la esfera celeste<span>{#} min · álgebra</span></a>",
+"Supplementary":
+  "Complementario",
+"<span>{#} demos and {#} worksheets, not handed in</span>":
+  "<span>{#} demos y {#} hojas de trabajo, no se entregan</span>",
+"This week’s lessons":
+  "Las clases de esta semana",
 "Day {#}, the sky and the celestial sphere: powers of ten, light as a ruler, a scale model of the solar system, the celestial sphere and circumpolar stars. Day {#}, the Sun and the Moon: seasons from the tilt, the noon Sun through the year, the phases of the Moon, angular size and eclipses.":
   "Día {#}, el cielo y la esfera celeste: potencias de diez, la luz como regla, un modelo a escala del sistema solar, la esfera celeste y las estrellas circumpolares. Día {#}, el Sol y la Luna: las estaciones por la inclinación, el Sol del mediodía a lo largo del año, las fases de la Luna, el tamaño angular y los eclipses.",
+"More with The Sky and the Celestial Sphere: <a>Start here</a> <span>({#} min)</span> · <a>Worksheet {#}: Constellations in 3D</a> · <a>Notes</a>":
+  "Más con El cielo y la esfera celeste: <a>Empieza aquí</a> <span>({#} min)</span> · <a>Hoja de trabajo {#}: Constelaciones en 3D</a> · <a>Notas</a>",
 "<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: How Big Is the Solar System?<span>{#} min · algebra</span></a> <a>Notes</a>":
   "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: ¿Qué tan grande es el sistema solar?<span>{#} min · álgebra</span></a> <a>Notas</a>",
-"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a><strong>Required</strong> Worksheet {#}: The Sky and the Celestial Sphere<span>{#} min · algebra</span></a> <a>Worksheet {#}: Constellations in 3D<span>{#} min · algebra</span></a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a><strong>Obligatoria</strong> Hoja de trabajo {#}: El cielo y la esfera celeste<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Constelaciones en 3D<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet {#}: Why We Have Seasons<span>{#} min · algebra</span></a> <a>Worksheet {#}: Sidereal Days, Solar Days and Sundials<span>{#} min · algebra</span></a> <a>Notes</a>":
   "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo {#}: Por qué tenemos estaciones<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Días sidéreos, días solares y relojes de sol<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Phases of the Moon and Eclipse Seasons<span>{#} min · algebra</span></a> <a>Notes</a>":
@@ -2538,30 +2546,32 @@ VDI18N.add('es', 'site', {
   "<a>Hoja de trabajo: Leer el cielo con Stellarium</a>",
 "Week {#} · Unit {#}, Days {#} to {#}: From Greek models to Newton’s gravity":
   "Semana {#} · Unidad {#}, días {#} a {#}: De los modelos griegos a la gravedad de Newton",
-"<span>Dec {#} to {#}</span><span>Required: <a>Worksheet: Kepler's Laws from Earth to Pluto</a></span>":
-  "<span>{#} al {#} de dic.</span><span>Obligatoria: <a>Hoja de trabajo: Las leyes de Kepler de la Tierra a Plutón</a></span>",
+"<a>Open demo</a> <a>Worksheet: Kepler's Laws from Earth to Pluto<span>{#} min · algebra</span></a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Las leyes de Kepler de la Tierra a Plutón<span>{#} min · álgebra</span></a>",
 "Day {#}, Greek models to Copernicus: what the Greeks knew, retrograde motion and Ptolemy, and judging models. Day {#}, Galileo, Tycho and Kepler: the telescope and Kepler’s three laws. Day {#}, Newton: universal gravitation, surface gravity, orbits as falling, and weighing planets.":
   "Día {#}, de los modelos griegos a Copérnico: lo que sabían los griegos, el movimiento retrógrado y Ptolomeo, y cómo juzgar modelos. Día {#}, Galileo, Tycho y Kepler: el telescopio y las tres leyes de Kepler. Día {#}, Newton: la gravitación universal, la gravedad en la superficie, las órbitas como caída libre y cómo pesar planetas.",
+"More with Kepler's Laws: <a>Start here</a> <span>({#} min)</span> · <a>Notes</a>":
+  "Más con Leyes de Kepler: <a>Empieza aquí</a> <span>({#} min)</span> · <a>Notas</a>",
 "<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet {#}: Retrograde Motion and Synodic Periods<span>{#} min · algebra</span></a> <a>Worksheet {#}: Venus and the World Models<span>{#} min · algebra</span></a> <a>Notes</a>":
   "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo {#}: Movimiento retrógrado y periodos sinódicos<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Venus y los modelos del mundo<span>{#} min · álgebra</span></a> <a>Notas</a>",
-"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a><strong>Required</strong> Worksheet: Kepler's Laws from Earth to Pluto<span>{#} min · algebra</span></a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a><strong>Obligatoria</strong> Hoja de trabajo: Las leyes de Kepler de la Tierra a Plutón<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Gravity from the Ground to Orbit<span>{#} min · algebra</span></a> <a>Notes</a>":
   "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: La gravedad del suelo a la órbita<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "Week {#} · Unit {#}, Days {#} to {#}: Telescopes, light and spectra":
   "Semana {#} · Unidad {#}, días {#} a {#}: Telescopios, luz y espectros",
-"<span>Dec {#} to Jan {#}, with the Christmas break inside</span><span>Required: <a>Worksheet: Building a Telescope</a></span>":
-  "<span>{#} de dic. al {#} de ene., con las vacaciones de Navidad en medio</span><span>Obligatoria: <a>Hoja de trabajo: Construir un telescopio</a></span>",
+"<span>Dec {#} to Jan {#}, with the Christmas break inside</span>":
+  "<span>{#} de dic. al {#} de ene., con las vacaciones de Navidad en medio</span>",
+"<a>Open demo</a> <a>Worksheet: Building a Telescope<span>{#} min · algebra</span></a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Construir un telescopio<span>{#} min · álgebra</span></a>",
 "Day {#}, telescopes: how a telescope works, light gathering power, resolution, aberrations and the air. Day {#}, light: waves, photons, blackbodies, inverse square brightness and the windows in the air. Day {#}, spectra: three kinds of spectra, why atoms make lines, and the Doppler shift.":
   "Día {#}, telescopios: cómo funciona un telescopio, el poder colector de luz, la resolución, las aberraciones y el aire. Día {#}, la luz: ondas, fotones, cuerpos negros, el brillo con el inverso del cuadrado y las ventanas del aire. Día {#}, espectros: tres tipos de espectros, por qué los átomos producen líneas y el corrimiento Doppler.",
+"More with Build a Microscope or Telescope: <a>Start here</a> <span>({#} min)</span> · <a>Notes</a>":
+  "Más con Construye un microscopio o un telescopio: <a>Empieza aquí</a> <span>({#} min)</span> · <a>Notas</a>",
 "<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Lenses, Mirrors and Color<span>{#} min · algebra</span></a> <a>Notes</a>":
   "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Lentes, espejos y color<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Seeing Fine Detail<span>{#} min · algebra</span></a> <a>Notes</a>":
   "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Ver detalles finos<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet {#}: Fixing a Blurry Telescope<span>{#} min · algebra</span></a> <a>Worksheet {#}: Seeing and Adaptive Optics<span>{#} min · algebra</span></a> <a>Notes</a>":
   "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo {#}: Cómo arreglar un telescopio borroso<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Seeing y óptica adaptativa<span>{#} min · álgebra</span></a> <a>Notas</a>",
-"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a><strong>Required</strong> Worksheet: Building a Telescope<span>{#} min · algebra</span></a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a><strong>Obligatoria</strong> Hoja de trabajo: Construir un telescopio<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: The Electromagnetic Spectrum<span>{#} min · algebra</span></a> <a>Notes</a>":
   "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: El espectro electromagnético<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Star Colors and Temperatures<span>{#} min · algebra</span></a> <a>Notes</a>":
@@ -2576,46 +2586,54 @@ VDI18N.add('es', 'site', {
   "Repasa las unidades <a>Semana {#} · Unidad {#}, días {#} y {#}: El cielo, el Sol y la Luna</a> · <a>Semana {#} · Unidad {#}, días {#} a {#}: De los modelos griegos a la gravedad de Newton</a> · <a>Semana {#} · Unidad {#}, días {#} a {#}: Telescopios, luz y espectros</a>. Sus demos: <a>Unidades, escalas y estimaciones</a> · <a>El cielo y la esfera celeste</a> · <a>Las razones de las estaciones</a> · <a>Fases de la Luna</a> · <a>Precesión del giroscopio</a> · <a>Movimiento retrógrado y modelos del mundo</a> · <a>Leyes de Kepler</a> · <a>Gravedad cerca de la Tierra</a> · <a>Banco óptico</a> · <a>Aberturas circulares y resolución</a> · <a>Aberraciones de telescopios</a> · <a>Construye un microscopio o un telescopio</a> · <a>Ondas electromagnéticas</a> · <a>Radiación de cuerpo negro</a> · <a>Explorador de espectros</a> · <a>Efecto Doppler y ondas de choque</a>",
 "Week {#} · Unit {#}, Days {#} and {#}: Forming planets, their temperatures and habitable zones":
   "Semana {#} · Unidad {#}, días {#} y {#}: La formación de los planetas, sus temperaturas y las zonas habitables",
-"<span>Jan {#} to {#}, after Test {#}</span><span>Required: <a>Worksheet: Planet Temperatures and Habitable Zones</a></span>":
-  "<span>{#} al {#} de ene., después del examen {#}</span><span>Obligatoria: <a>Hoja de trabajo: Temperaturas planetarias y zonas habitables</a></span>",
+"<span>Jan {#} to {#}, after Test {#}</span>":
+  "<span>{#} al {#} de ene., después del examen {#}</span>",
+"Nothing to hand in this week.":
+  "Esta semana no hay nada que entregar.",
 "Day {#}, forming stars and planets: the clues, collapse and spin, the frost line and building planets. Day {#}, planet temperatures: the no greenhouse temperature, habitable zones, and Venus against the formula.":
   "Día {#}, la formación de estrellas y planetas: las pistas, el colapso y el giro, la línea de congelación y cómo se construyen los planetas. Día {#}, temperaturas planetarias: la temperatura sin efecto invernadero, las zonas habitables y Venus frente a la fórmula.",
 "<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Building a Solar System<span>{#} min · algebra</span></a> <a>Notes</a>":
   "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Construir un sistema solar<span>{#} min · álgebra</span></a> <a>Notas</a>",
-"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a><strong>Required</strong> Worksheet: Planet Temperatures and Habitable Zones<span>{#} min · algebra</span></a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a><strong>Obligatoria</strong> Hoja de trabajo: Temperaturas planetarias y zonas habitables<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Planet Temperatures and Habitable Zones<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Temperaturas planetarias y zonas habitables<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "Week {#} · Unit {#}, Days {#} to {#}: The Moon, craters and the Earth":
   "Semana {#} · Unidad {#}, días {#} a {#}: La Luna, los cráteres y la Tierra",
-"<span>Jan {#} to {#}</span><span>Required: <a>Worksheet: Craters and the Ages of the Moon's Surface</a></span>":
-  "<span>{#} al {#} de ene.</span><span>Obligatoria: <a>Hoja de trabajo: Los cráteres y las edades de la superficie de la Luna</a></span>",
+"<span>Jan {#} to {#}</span>":
+  "<span>{#} al {#} de ene.</span>",
+"<a>Open demo</a> <a>Worksheet: Craters and the Ages of the Moon's Surface<span>{#} min · algebra</span></a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Los cráteres y las edades de la superficie de la Luna<span>{#} min · álgebra</span></a>",
 "Day {#}, the Moon: two kinds of terrain, where the Moon came from, tides and tidal locking. Day {#}, craters and impacts: making a crater, impact energy, crater counting and radioactive clocks. Day {#}, the Earth: its layers and how we know, differentiation, plate tectonics, the magnetic field and keeping an atmosphere.":
   "Día {#}, la Luna: dos tipos de terreno, de dónde vino la Luna, las mareas y el acoplamiento de marea. Día {#}, cráteres e impactos: cómo se forma un cráter, la energía del impacto, el conteo de cráteres y los relojes radiactivos. Día {#}, la Tierra: sus capas y cómo lo sabemos, la diferenciación, la tectónica de placas, el campo magnético y cómo conservar una atmósfera.",
+"More with Craters, Cooling and Surface Ages: <a>Start here</a> <span>({#} min)</span> · <a>Worksheet {#}: Dating the Surface of Mars</a> · <a>Notes</a>":
+  "Más con Cráteres, enfriamiento y edades de superficies: <a>Empieza aquí</a> <span>({#} min)</span> · <a>Hoja de trabajo {#}: Fechar la superficie de Marte</a> · <a>Notas</a>",
 "<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Tides: Two Bulges, the Moon and the Sun<span>{#} min · algebra</span></a> <a>Notes</a>":
   "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Mareas: dos abultamientos, la Luna y el Sol<span>{#} min · álgebra</span></a> <a>Notas</a>",
-"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a><strong>Required</strong> Worksheet {#}: Craters and the Ages of the Moon's Surface<span>{#} min · algebra</span></a> <a>Worksheet {#}: Dating the Surface of Mars<span>{#} min · algebra</span></a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a><strong>Obligatoria</strong> Hoja de trabajo {#}: Los cráteres y las edades de la superficie de la Luna<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Fechar la superficie de Marte<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Why Small, Hot Planets Lose Their Air<span>{#} min · algebra</span></a> <a>Notes</a>":
   "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Por qué los planetas pequeños y calientes pierden su aire<span>{#} min · álgebra</span></a> <a>Notas</a>",
-"Also used in this unit: <a>Inside a Planet</a> <span>(card under <a>Week {#} · Unit {#}, Days {#} and {#}: Mercury, Venus and Mars through the telescope</a>)</span>":
-  "También se usa en esta unidad: <a>El interior de un planeta</a> <span>(tarjeta en <a>Semana {#} · Unidad {#}, días {#} y {#}: Mercurio, Venus y Marte a través del telescopio</a>)</span>",
+"Also used this week: <a>Inside a Planet</a> <span>(card under <a>Week {#}</a>)</span>":
+  "También se usa esta semana: <a>El interior de un planeta</a> <span>(tarjeta en <a>Semana {#}</a>)</span>",
 "Week {#} · Unit {#}, Days {#} and {#}: Mercury, Venus and Mars through the telescope":
   "Semana {#} · Unidad {#}, días {#} y {#}: Mercurio, Venus y Marte a través del telescopio",
-"<span>Jan {#} to {#}</span><span>Required: <a>Worksheet: Inside a Planet</a></span>":
-  "<span>{#} al {#} de ene.</span><span>Obligatoria: <a>Hoja de trabajo: El interior de un planeta</a></span>",
+"<a>Open demo</a> <a>Worksheet: Inside a Planet<span>{#} min · algebra</span></a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: El interior de un planeta<span>{#} min · álgebra</span></a>",
+"<span>{#} demos, not handed in</span>":
+  "<span>{#} demos, no se entregan</span>",
 "Day {#}, Mercury and Venus: Mercury’s spin, seeing Venus, its surface and air, and the runaway greenhouse. Day {#}, Mars through the telescope: how Mars looks from here, its seasons and polar caps, standing on Mars and talking to rovers.":
   "Día {#}, Mercurio y Venus: el giro de Mercurio, cómo vemos a Venus, su superficie y su aire, y el efecto invernadero desbocado. Día {#}, Marte a través del telescopio: cómo se ve Marte desde aquí, sus estaciones y casquetes polares, estar de pie en Marte y hablar con los rovers.",
-"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a><strong>Required</strong> Worksheet: Inside a Planet<span>{#} min · algebra</span></a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a><strong>Obligatoria</strong> Hoja de trabajo: El interior de un planeta<span>{#} min · álgebra</span></a> <a>Notas</a>",
-"Also used in this unit: <a>Planet Temperatures and Habitable Zones</a> <span>(card under <a>Week {#} · Unit {#}, Days {#} and {#}: Forming planets, their temperatures and habitable zones</a>)</span> · <a>Gas in a Box</a> <span>(card under <a>Week {#} · Unit {#}, Days {#} to {#}: The Moon, craters and the Earth</a>)</span> · <a>Reasons for Seasons</a> <span>(card under <a>Week {#} · Unit {#}, Days {#} and {#}: The sky, the Sun and the Moon</a>)</span> · <a>Kepler's Laws</a> <span>(card under <a>Week {#} · Unit {#}, Days {#} to {#}: From Greek models to Newton’s gravity</a>)</span>":
-  "También se usa en esta unidad: <a>Temperaturas planetarias y zonas habitables</a> <span>(tarjeta en <a>Semana {#} · Unidad {#}, días {#} y {#}: La formación de los planetas, sus temperaturas y las zonas habitables</a>)</span> · <a>Gas en una caja</a> <span>(tarjeta en <a>Semana {#} · Unidad {#}, días {#} a {#}: La Luna, los cráteres y la Tierra</a>)</span> · <a>Las razones de las estaciones</a> <span>(tarjeta en <a>Semana {#} · Unidad {#}, días {#} y {#}: El cielo, el Sol y la Luna</a>)</span> · <a>Leyes de Kepler</a> <span>(tarjeta en <a>Semana {#} · Unidad {#}, días {#} a {#}: De los modelos griegos a la gravedad de Newton</a>)</span>",
+"More with Inside a Planet: <a>Start here</a> <span>({#} min)</span> · <a>Notes</a>":
+  "Más con El interior de un planeta: <a>Empieza aquí</a> <span>({#} min)</span> · <a>Notas</a>",
+"Also used this week: <a>Planet Temperatures and Habitable Zones</a> <span>(card under <a>Week {#}</a>)</span> · <a>Gas in a Box</a> <span>(card under <a>Week {#}</a>)</span> · <a>Reasons for Seasons</a> <span>(card under <a>Week {#}</a>)</span> · <a>Kepler's Laws</a> <span>(card under <a>Week {#}</a>)</span>":
+  "También se usa esta semana: <a>Temperaturas planetarias y zonas habitables</a> <span>(tarjeta en <a>Semana {#}</a>)</span> · <a>Gas en una caja</a> <span>(tarjeta en <a>Semana {#}</a>)</span> · <a>Las razones de las estaciones</a> <span>(tarjeta en <a>Semana {#}</a>)</span> · <a>Leyes de Kepler</a> <span>(tarjeta en <a>Semana {#}</a>)</span>",
 "Week {#} · Unit {#}, Day {#}: Martian geology, water and moons":
   "Semana {#} · Unidad {#}, día {#}: Geología, agua y lunas de Marte",
-"<span>Jan {#} to Feb {#}, a review week ending with Test {#}</span><span>No required worksheet</span>":
-  "<span>{#} de ene. al {#} de feb., una semana de repaso que termina con el examen {#}</span><span>Sin hoja de trabajo obligatoria</span>",
+"<span>Jan {#} to Feb {#}, a review week ending with Test {#}</span>":
+  "<span>{#} de ene. al {#} de feb., una semana de repaso que termina con el examen {#}</span>",
+"<span>{#} demos and {#} worksheet, not handed in</span>":
+  "<span>{#} demos y {#} hoja de trabajo, no se entregan</span>",
 "Day {#}, Mars: volcanoes and canyons, water then and now, where the air went, Phobos and Deimos, and Venus, Earth and Mars as three siblings. Then review for Test {#}.":
   "Día {#}, Marte: volcanes y cañones, el agua antes y ahora, a dónde se fue el aire, Fobos y Deimos, y Venus, la Tierra y Marte como tres hermanos. Luego, repaso para el examen {#}.",
-"Also used in this unit: <a>Craters, Cooling and Surface Ages</a> with <a>Worksheet: Dating the Surface of Mars</a> <span>(card under <a>Week {#} · Unit {#}, Days {#} to {#}: The Moon, craters and the Earth</a>)</span> · <a>Inside a Planet</a> <span>(card under <a>Week {#} · Unit {#}, Days {#} and {#}: Mercury, Venus and Mars through the telescope</a>)</span> · <a>Kepler's Laws</a> <span>(card under <a>Week {#} · Unit {#}, Days {#} to {#}: From Greek models to Newton’s gravity</a>)</span>":
-  "También se usa en esta unidad: <a>Cráteres, enfriamiento y edades de superficies</a> con <a>Hoja de trabajo: Fechar la superficie de Marte</a> <span>(tarjeta en <a>Semana {#} · Unidad {#}, días {#} a {#}: La Luna, los cráteres y la Tierra</a>)</span> · <a>El interior de un planeta</a> <span>(tarjeta en <a>Semana {#} · Unidad {#}, días {#} y {#}: Mercurio, Venus y Marte a través del telescopio</a>)</span> · <a>Leyes de Kepler</a> <span>(tarjeta en <a>Semana {#} · Unidad {#}, días {#} a {#}: De los modelos griegos a la gravedad de Newton</a>)</span>",
+"Also used this week: <a>Craters, Cooling and Surface Ages</a> with <a>Worksheet: Dating the Surface of Mars</a> <span>(card under <a>Week {#}</a>)</span> · <a>Inside a Planet</a> <span>(card under <a>Week {#}</a>)</span> · <a>Kepler's Laws</a> <span>(card under <a>Week {#}</a>)</span>":
+  "También se usa esta semana: <a>Cráteres, enfriamiento y edades de superficies</a> con <a>Hoja de trabajo: Fechar la superficie de Marte</a> <span>(tarjeta en <a>Semana {#}</a>)</span> · <a>El interior de un planeta</a> <span>(tarjeta en <a>Semana {#}</a>)</span> · <a>Leyes de Kepler</a> <span>(tarjeta en <a>Semana {#}</a>)</span>",
 "Test {#} · Unit {#}: Forming planets, the Earth and Moon, and the terrestrial planets":
   "Examen {#} · Unidad {#}: La formación de los planetas, la Tierra y la Luna, y los planetas terrestres",
 "<span>Test review</span><span>Wed Feb {#}</span>":
@@ -2624,38 +2642,44 @@ VDI18N.add('es', 'site', {
   "Repasa las unidades <a>Semana {#} · Unidad {#}, días {#} y {#}: La formación de los planetas, sus temperaturas y las zonas habitables</a> · <a>Semana {#} · Unidad {#}, días {#} a {#}: La Luna, los cráteres y la Tierra</a> · <a>Semana {#} · Unidad {#}, días {#} y {#}: Mercurio, Venus y Marte a través del telescopio</a> · <a>Semana {#} · Unidad {#}, día {#}: Geología, agua y lunas de Marte</a>. Sus demos: <a>Construir un sistema solar</a> · <a>Rotación y torca</a> · <a>Temperaturas planetarias y zonas habitables</a> · <a>La vida en el universo</a> · <a>El interior de un planeta</a> · <a>Mareas</a> · <a>Cráteres, enfriamiento y edades de superficies</a> · <a>Decaimiento radiactivo</a> · <a>Fluidos: presión, flotación y flujo</a> · <a>Gas en una caja</a> · <a>Las razones de las estaciones</a> · <a>Leyes de Kepler</a>",
 "Week {#} · Unit {#}, Days {#} to {#}: Asteroids, Jupiter, the Galilean moons and Saturn":
   "Semana {#} · Unidad {#}, días {#} a {#}: Asteroides, Júpiter, las lunas galileanas y Saturno",
-"<span>Feb {#} to {#}, with Mardi Gras inside</span><span>Required: <a>Worksheet: Giant Planets, Rings and Moons</a></span>":
-  "<span>{#} al {#} de feb., con Mardi Gras en medio</span><span>Obligatoria: <a>Hoja de trabajo: Planetas gigantes, anillos y lunas</a></span>",
+"<span>Feb {#} to {#}, with Mardi Gras inside</span>":
+  "<span>{#} al {#} de feb., con Mardi Gras en medio</span>",
+"<a>Open demo</a> <a>Worksheet: Giant Planets, Rings and Moons<span>{#} min · algebra</span></a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Planetas gigantes, anillos y lunas<span>{#} min · álgebra</span></a>",
 "Day {#}, the asteroid belt: Kirkwood gaps, what asteroids are made of, meteorites, and impacts. Day {#}, Jupiter: size, spin and density, weather, its interior, weighing it with a moon, and its magnetic field. Day {#}, the Galilean moons: a mini solar system, tidal heating and Europa’s ocean. Day {#}, Saturn: the planet, what rings are and why they sit where they do, Titan and Enceladus.":
   "Día {#}, el cinturón de asteroides: los huecos de Kirkwood, de qué están hechos los asteroides, los meteoritos y los impactos. Día {#}, Júpiter: tamaño, giro y densidad, el clima, su interior, cómo pesarlo con una luna y su campo magnético. Día {#}, las lunas galileanas: un sistema solar en miniatura, el calentamiento por mareas y el océano de Europa. Día {#}, Saturno: el planeta, qué son los anillos y por qué están donde están, Titán y Encélado.",
+"More with Giant Planets, Rings and Moons: <a>Start here</a> <span>({#} min)</span> · <a>Notes</a>":
+  "Más con Planetas gigantes, anillos y lunas: <a>Empieza aquí</a> <span>({#} min)</span> · <a>Notas</a>",
 "<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Lagrange Points: Trojan Asteroids and Parking Spots in Space<span>{#} min · algebra</span></a> <a>Notes</a>":
   "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Puntos de Lagrange: asteroides troyanos y estacionamientos en el espacio<span>{#} min · álgebra</span></a> <a>Notas</a>",
-"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a><strong>Required</strong> Worksheet: Giant Planets, Rings and Moons<span>{#} min · algebra</span></a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a><strong>Obligatoria</strong> Hoja de trabajo: Planetas gigantes, anillos y lunas<span>{#} min · álgebra</span></a> <a>Notas</a>",
-"Also used in this unit: <a>Kepler's Laws</a> <span>(card under <a>Week {#} · Unit {#}, Days {#} to {#}: From Greek models to Newton’s gravity</a>)</span> · <a>Orbital Resonances</a> <span>(card under <a>Week {#} · Unit {#}, Days {#} and {#}: Uranus, Neptune, Pluto and comets</a>)</span> · <a>Craters, Cooling and Surface Ages</a> <span>(card under <a>Week {#} · Unit {#}, Days {#} to {#}: The Moon, craters and the Earth</a>)</span> · <a>Tides</a> <span>(card under <a>Week {#} · Unit {#}, Days {#} to {#}: The Moon, craters and the Earth</a>)</span>":
-  "También se usa en esta unidad: <a>Leyes de Kepler</a> <span>(tarjeta en <a>Semana {#} · Unidad {#}, días {#} a {#}: De los modelos griegos a la gravedad de Newton</a>)</span> · <a>Resonancias orbitales</a> <span>(tarjeta en <a>Semana {#} · Unidad {#}, días {#} y {#}: Urano, Neptuno, Plutón y los cometas</a>)</span> · <a>Cráteres, enfriamiento y edades de superficies</a> <span>(tarjeta en <a>Semana {#} · Unidad {#}, días {#} a {#}: La Luna, los cráteres y la Tierra</a>)</span> · <a>Mareas</a> <span>(tarjeta en <a>Semana {#} · Unidad {#}, días {#} a {#}: La Luna, los cráteres y la Tierra</a>)</span>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Orbital Resonances<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Resonancias orbitales<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"Also used this week: <a>Kepler's Laws</a> <span>(card under <a>Week {#}</a>)</span> · <a>Craters, Cooling and Surface Ages</a> <span>(card under <a>Week {#}</a>)</span> · <a>Tides</a> <span>(card under <a>Week {#}</a>)</span>":
+  "También se usa esta semana: <a>Leyes de Kepler</a> <span>(tarjeta en <a>Semana {#}</a>)</span> · <a>Cráteres, enfriamiento y edades de superficies</a> <span>(tarjeta en <a>Semana {#}</a>)</span> · <a>Mareas</a> <span>(tarjeta en <a>Semana {#}</a>)</span>",
 "Week {#} · Unit {#}, Days {#} and {#}: Uranus, Neptune, Pluto and comets":
   "Semana {#} · Unidad {#}, días {#} y {#}: Urano, Neptuno, Plutón y los cometas",
-"<span>Feb {#} to {#}</span><span>Required: <a>Worksheet: Orbital Resonances</a></span>":
-  "<span>{#} al {#} de feb.</span><span>Obligatoria: <a>Hoja de trabajo: Resonancias orbitales</a></span>",
+"<span>Feb {#} to {#}</span>":
+  "<span>{#} al {#} de feb.</span>",
+"<a>Open demo</a> <a>Worksheet: Comet Tails, Comet Orbits and Meteor Showers<span>{#} min · algebra</span></a>":
+  "<a>Abrir demo</a> <a>Hoja de trabajo: Colas de cometas, órbitas de cometas y lluvias de meteoros<span>{#} min · álgebra</span></a>",
 "Day {#}, the ice giants: a planet on its side, Neptune found with a pencil, and Triton. Day {#}, Pluto, the Kuiper belt and comets: what a planet is, Pluto and Neptune, comets and their tails, where comets come from, and meteor showers.":
   "Día {#}, los gigantes de hielo: un planeta acostado, Neptuno encontrado con un lápiz, y Tritón. Día {#}, Plutón, el cinturón de Kuiper y los cometas: qué es un planeta, Plutón y Neptuno, los cometas y sus colas, de dónde vienen los cometas y las lluvias de meteoros.",
-"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a><strong>Required</strong> Worksheet: Orbital Resonances<span>{#} min · algebra</span></a> <a>Notes</a>":
-  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a><strong>Obligatoria</strong> Hoja de trabajo: Resonancias orbitales<span>{#} min · álgebra</span></a> <a>Notas</a>",
-"Also used in this unit: <a>Planet Temperatures and Habitable Zones</a> <span>(card under <a>Week {#} · Unit {#}, Days {#} and {#}: Forming planets, their temperatures and habitable zones</a>)</span> · <a>Reasons for Seasons</a> <span>(card under <a>Week {#} · Unit {#}, Days {#} and {#}: The sky, the Sun and the Moon</a>)</span> · <a>Kepler's Laws</a> <span>(card under <a>Week {#} · Unit {#}, Days {#} to {#}: From Greek models to Newton’s gravity</a>)</span>":
-  "También se usa en esta unidad: <a>Temperaturas planetarias y zonas habitables</a> <span>(tarjeta en <a>Semana {#} · Unidad {#}, días {#} y {#}: La formación de los planetas, sus temperaturas y las zonas habitables</a>)</span> · <a>Las razones de las estaciones</a> <span>(tarjeta en <a>Semana {#} · Unidad {#}, días {#} y {#}: El cielo, el Sol y la Luna</a>)</span> · <a>Leyes de Kepler</a> <span>(tarjeta en <a>Semana {#} · Unidad {#}, días {#} a {#}: De los modelos griegos a la gravedad de Newton</a>)</span>",
+"More with Comets and Meteor Showers: <a>Start here</a> <span>({#} min)</span> · <a>Notes</a>":
+  "Más con Cometas y lluvias de meteoros: <a>Empieza aquí</a> <span>({#} min)</span> · <a>Notas</a>",
+"Also used this week: <a>Planet Temperatures and Habitable Zones</a> <span>(card under <a>Week {#}</a>)</span> · <a>Reasons for Seasons</a> <span>(card under <a>Week {#}</a>)</span> · <a>Kepler's Laws</a> <span>(card under <a>Week {#}</a>)</span> · <a>Orbital Resonances</a> <span>(card under <a>Week {#}</a>)</span>":
+  "También se usa esta semana: <a>Temperaturas planetarias y zonas habitables</a> <span>(tarjeta en <a>Semana {#}</a>)</span> · <a>Las razones de las estaciones</a> <span>(tarjeta en <a>Semana {#}</a>)</span> · <a>Leyes de Kepler</a> <span>(tarjeta en <a>Semana {#}</a>)</span> · <a>Resonancias orbitales</a> <span>(tarjeta en <a>Semana {#}</a>)</span>",
 "Week {#} · Unit {#}, Days {#} and {#}: Binary stars and planets around other stars":
   "Semana {#} · Unidad {#}, días {#} y {#}: Estrellas binarias y planetas alrededor de otras estrellas",
-"<span>Feb {#} to {#}, a review week ending with Test {#}</span><span>No required worksheet</span>":
-  "<span>{#} al {#} de feb., una semana de repaso que termina con el examen {#}</span><span>Sin hoja de trabajo obligatoria</span>",
+"<span>Feb {#} to {#}, a review week ending with Test {#}</span>":
+  "<span>{#} al {#} de feb., una semana de repaso que termina con el examen {#}</span>",
 "Day {#}, distances and the wobble: parallax, binary stars, the center of mass and the wobble method. Day {#}, transits: reading a transit, the planet zoo, taking a picture, and where to look for life. Then review for Test {#}.":
   "Día {#}, distancias y el bamboleo: el paralaje, las estrellas binarias, el centro de masa y el método del bamboleo. Día {#}, tránsitos: cómo leer un tránsito, el zoológico de planetas, tomar una foto y dónde buscar vida. Luego, repaso para el examen {#}.",
 "<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet: Parallax: Measuring the Distance to a Star<span>{#} min · algebra</span></a> <a>Notes</a>":
   "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo: Paralaje: medir la distancia a una estrella<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a>Worksheet {#}: Finding Planets Around Other Stars<span>{#} min · algebra</span></a> <a>Worksheet {#}: Weighing Binary Stars<span>{#} min · algebra</span></a> <a>Notes</a>":
   "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a>Hoja de trabajo {#}: Encontrar planetas alrededor de otras estrellas<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Cómo pesar estrellas binarias<span>{#} min · álgebra</span></a> <a>Notas</a>",
-"Also used in this unit: <a>Kepler's Laws</a> <span>(card under <a>Week {#} · Unit {#}, Days {#} to {#}: From Greek models to Newton’s gravity</a>)</span> · <a>Doppler Effect and Shock Waves</a> <span>(card under <a>Week {#} · Unit {#}, Days {#} to {#}: Telescopes, light and spectra</a>)</span> · <a>Circular Apertures and Resolution</a> <span>(card under <a>Week {#} · Unit {#}, Days {#} to {#}: Telescopes, light and spectra</a>)</span> · <a>Life in the Universe</a> <span>(card under <a>Week {#} · Unit {#}, Days {#} and {#}: Forming planets, their temperatures and habitable zones</a>)</span>":
-  "También se usa en esta unidad: <a>Leyes de Kepler</a> <span>(tarjeta en <a>Semana {#} · Unidad {#}, días {#} a {#}: De los modelos griegos a la gravedad de Newton</a>)</span> · <a>Efecto Doppler y ondas de choque</a> <span>(tarjeta en <a>Semana {#} · Unidad {#}, días {#} a {#}: Telescopios, luz y espectros</a>)</span> · <a>Aberturas circulares y resolución</a> <span>(tarjeta en <a>Semana {#} · Unidad {#}, días {#} a {#}: Telescopios, luz y espectros</a>)</span> · <a>La vida en el universo</a> <span>(tarjeta en <a>Semana {#} · Unidad {#}, días {#} y {#}: La formación de los planetas, sus temperaturas y las zonas habitables</a>)</span>",
+"Also used this week: <a>Kepler's Laws</a> <span>(card under <a>Week {#}</a>)</span> · <a>Doppler Effect and Shock Waves</a> <span>(card under <a>Week {#}</a>)</span> · <a>Circular Apertures and Resolution</a> <span>(card under <a>Week {#}</a>)</span> · <a>Life in the Universe</a> <span>(card under <a>Week {#}</a>)</span>":
+  "También se usa esta semana: <a>Leyes de Kepler</a> <span>(tarjeta en <a>Semana {#}</a>)</span> · <a>Efecto Doppler y ondas de choque</a> <span>(tarjeta en <a>Semana {#}</a>)</span> · <a>Aberturas circulares y resolución</a> <span>(tarjeta en <a>Semana {#}</a>)</span> · <a>La vida en el universo</a> <span>(tarjeta en <a>Semana {#}</a>)</span>",
 "Test {#} · Unit {#}: Asteroids, the outer planets, comets and exoplanets":
   "Examen {#} · Unidad {#}: Asteroides, los planetas exteriores, los cometas y los exoplanetas",
 "<span>Test review</span><span>Fri Feb {#}</span>":
@@ -7576,6 +7600,66 @@ VDI18N.add('es', 'site', {
   "{n} demos tienen una actividad así.",
 "No demo has that combination. A Start here needs no math; try Any.":
   "Ninguna demo tiene esa combinación. Un Empieza aquí no necesita matemáticas; prueba Cualquiera.",
+"<span>Terminal Velocity →</span>":
+  "<span>Velocidad terminal →</span>",
+"<span>{#} more demos and {#} worksheets, not handed in</span>":
+  "<span>{#} demos más y {#} hojas de trabajo, no se entregan</span>",
+"<span>{#} more demos, not handed in</span>":
+  "<span>{#} demos más, no se entregan</span>",
+"<span>{#} more demos and {#} worksheet, not handed in</span>":
+  "<span>{#} demos más y {#} hoja de trabajo, no se entregan</span>",
+"<span>Thin Film Interference →</span>":
+  "<span>Interferencia en películas delgadas →</span>",
+"Units follow the weeks of the course, with each test where it falls. Each week’s required worksheet is marked Required and comes first; it is the one you hand in. The other demos and worksheets are supplementary. A demo can appear in more than one week: it has one card, in the week that needs it most, and other weeks link to it. Every demo here is also on the <a>Astronomy</a> page, with the other astronomy demos. Looking for one subject? Every demo is also under <a>All demos by topic</a>.":
+  "Las unidades siguen las semanas del curso, con cada examen donde corresponde. La hoja de trabajo obligatoria de cada semana está marcada como Obligatoria y va primero; es la que entregas. Las demás demos y hojas de trabajo son complementarias. Una demo puede aparecer en más de una semana: tiene una sola tarjeta, en la semana que más la necesita, y las otras semanas la enlazan. Cada demo de aquí también está en la página de <a>Astronomía</a>, con las demás demos de astronomía. ¿Buscas un solo tema? Cada demo también está en <a>Todas las demos por tema</a>.",
+"<span>Dec {#} to {#}</span><span>Required: <a>Worksheet: The Sky and the Celestial Sphere</a></span>":
+  "<span>{#} al {#} de dic.</span><span>Obligatoria: <a>Hoja de trabajo: El cielo y la esfera celeste</a></span>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a><strong>Required</strong> Worksheet {#}: The Sky and the Celestial Sphere<span>{#} min · algebra</span></a> <a>Worksheet {#}: Constellations in 3D<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a><strong>Obligatoria</strong> Hoja de trabajo {#}: El cielo y la esfera celeste<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Constelaciones en 3D<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<span>Dec {#} to {#}</span><span>Required: <a>Worksheet: Kepler's Laws from Earth to Pluto</a></span>":
+  "<span>{#} al {#} de dic.</span><span>Obligatoria: <a>Hoja de trabajo: Las leyes de Kepler de la Tierra a Plutón</a></span>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a><strong>Required</strong> Worksheet: Kepler's Laws from Earth to Pluto<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a><strong>Obligatoria</strong> Hoja de trabajo: Las leyes de Kepler de la Tierra a Plutón<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<span>Dec {#} to Jan {#}, with the Christmas break inside</span><span>Required: <a>Worksheet: Building a Telescope</a></span>":
+  "<span>{#} de dic. al {#} de ene., con las vacaciones de Navidad en medio</span><span>Obligatoria: <a>Hoja de trabajo: Construir un telescopio</a></span>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a><strong>Required</strong> Worksheet: Building a Telescope<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a><strong>Obligatoria</strong> Hoja de trabajo: Construir un telescopio<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<span>Jan {#} to {#}, after Test {#}</span><span>Required: <a>Worksheet: Planet Temperatures and Habitable Zones</a></span>":
+  "<span>{#} al {#} de ene., después del examen {#}</span><span>Obligatoria: <a>Hoja de trabajo: Temperaturas planetarias y zonas habitables</a></span>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a><strong>Required</strong> Worksheet: Planet Temperatures and Habitable Zones<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a><strong>Obligatoria</strong> Hoja de trabajo: Temperaturas planetarias y zonas habitables<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"<span>Jan {#} to {#}</span><span>Required: <a>Worksheet: Craters and the Ages of the Moon's Surface</a></span>":
+  "<span>{#} al {#} de ene.</span><span>Obligatoria: <a>Hoja de trabajo: Los cráteres y las edades de la superficie de la Luna</a></span>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a><strong>Required</strong> Worksheet {#}: Craters and the Ages of the Moon's Surface<span>{#} min · algebra</span></a> <a>Worksheet {#}: Dating the Surface of Mars<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a><strong>Obligatoria</strong> Hoja de trabajo {#}: Los cráteres y las edades de la superficie de la Luna<span>{#} min · álgebra</span></a> <a>Hoja de trabajo {#}: Fechar la superficie de Marte<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"Also used in this unit: <a>Inside a Planet</a> <span>(card under <a>Week {#} · Unit {#}, Days {#} and {#}: Mercury, Venus and Mars through the telescope</a>)</span>":
+  "También se usa en esta unidad: <a>El interior de un planeta</a> <span>(tarjeta en <a>Semana {#} · Unidad {#}, días {#} y {#}: Mercurio, Venus y Marte a través del telescopio</a>)</span>",
+"<span>Jan {#} to {#}</span><span>Required: <a>Worksheet: Inside a Planet</a></span>":
+  "<span>{#} al {#} de ene.</span><span>Obligatoria: <a>Hoja de trabajo: El interior de un planeta</a></span>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a><strong>Required</strong> Worksheet: Inside a Planet<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a><strong>Obligatoria</strong> Hoja de trabajo: El interior de un planeta<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"Also used in this unit: <a>Planet Temperatures and Habitable Zones</a> <span>(card under <a>Week {#} · Unit {#}, Days {#} and {#}: Forming planets, their temperatures and habitable zones</a>)</span> · <a>Gas in a Box</a> <span>(card under <a>Week {#} · Unit {#}, Days {#} to {#}: The Moon, craters and the Earth</a>)</span> · <a>Reasons for Seasons</a> <span>(card under <a>Week {#} · Unit {#}, Days {#} and {#}: The sky, the Sun and the Moon</a>)</span> · <a>Kepler's Laws</a> <span>(card under <a>Week {#} · Unit {#}, Days {#} to {#}: From Greek models to Newton’s gravity</a>)</span>":
+  "También se usa en esta unidad: <a>Temperaturas planetarias y zonas habitables</a> <span>(tarjeta en <a>Semana {#} · Unidad {#}, días {#} y {#}: La formación de los planetas, sus temperaturas y las zonas habitables</a>)</span> · <a>Gas en una caja</a> <span>(tarjeta en <a>Semana {#} · Unidad {#}, días {#} a {#}: La Luna, los cráteres y la Tierra</a>)</span> · <a>Las razones de las estaciones</a> <span>(tarjeta en <a>Semana {#} · Unidad {#}, días {#} y {#}: El cielo, el Sol y la Luna</a>)</span> · <a>Leyes de Kepler</a> <span>(tarjeta en <a>Semana {#} · Unidad {#}, días {#} a {#}: De los modelos griegos a la gravedad de Newton</a>)</span>",
+"<span>Jan {#} to Feb {#}, a review week ending with Test {#}</span><span>No required worksheet</span>":
+  "<span>{#} de ene. al {#} de feb., una semana de repaso que termina con el examen {#}</span><span>Sin hoja de trabajo obligatoria</span>",
+"Also used in this unit: <a>Craters, Cooling and Surface Ages</a> with <a>Worksheet: Dating the Surface of Mars</a> <span>(card under <a>Week {#} · Unit {#}, Days {#} to {#}: The Moon, craters and the Earth</a>)</span> · <a>Inside a Planet</a> <span>(card under <a>Week {#} · Unit {#}, Days {#} and {#}: Mercury, Venus and Mars through the telescope</a>)</span> · <a>Kepler's Laws</a> <span>(card under <a>Week {#} · Unit {#}, Days {#} to {#}: From Greek models to Newton’s gravity</a>)</span>":
+  "También se usa en esta unidad: <a>Cráteres, enfriamiento y edades de superficies</a> con <a>Hoja de trabajo: Fechar la superficie de Marte</a> <span>(tarjeta en <a>Semana {#} · Unidad {#}, días {#} a {#}: La Luna, los cráteres y la Tierra</a>)</span> · <a>El interior de un planeta</a> <span>(tarjeta en <a>Semana {#} · Unidad {#}, días {#} y {#}: Mercurio, Venus y Marte a través del telescopio</a>)</span> · <a>Leyes de Kepler</a> <span>(tarjeta en <a>Semana {#} · Unidad {#}, días {#} a {#}: De los modelos griegos a la gravedad de Newton</a>)</span>",
+"<span>Feb {#} to {#}, with Mardi Gras inside</span><span>Required: <a>Worksheet: Giant Planets, Rings and Moons</a></span>":
+  "<span>{#} al {#} de feb., con Mardi Gras en medio</span><span>Obligatoria: <a>Hoja de trabajo: Planetas gigantes, anillos y lunas</a></span>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a><strong>Required</strong> Worksheet: Giant Planets, Rings and Moons<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a><strong>Obligatoria</strong> Hoja de trabajo: Planetas gigantes, anillos y lunas<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"Also used in this unit: <a>Kepler's Laws</a> <span>(card under <a>Week {#} · Unit {#}, Days {#} to {#}: From Greek models to Newton’s gravity</a>)</span> · <a>Orbital Resonances</a> <span>(card under <a>Week {#} · Unit {#}, Days {#} and {#}: Uranus, Neptune, Pluto and comets</a>)</span> · <a>Craters, Cooling and Surface Ages</a> <span>(card under <a>Week {#} · Unit {#}, Days {#} to {#}: The Moon, craters and the Earth</a>)</span> · <a>Tides</a> <span>(card under <a>Week {#} · Unit {#}, Days {#} to {#}: The Moon, craters and the Earth</a>)</span>":
+  "También se usa en esta unidad: <a>Leyes de Kepler</a> <span>(tarjeta en <a>Semana {#} · Unidad {#}, días {#} a {#}: De los modelos griegos a la gravedad de Newton</a>)</span> · <a>Resonancias orbitales</a> <span>(tarjeta en <a>Semana {#} · Unidad {#}, días {#} y {#}: Urano, Neptuno, Plutón y los cometas</a>)</span> · <a>Cráteres, enfriamiento y edades de superficies</a> <span>(tarjeta en <a>Semana {#} · Unidad {#}, días {#} a {#}: La Luna, los cráteres y la Tierra</a>)</span> · <a>Mareas</a> <span>(tarjeta en <a>Semana {#} · Unidad {#}, días {#} a {#}: La Luna, los cráteres y la Tierra</a>)</span>",
+"<span>Feb {#} to {#}</span><span>Required: <a>Worksheet: Orbital Resonances</a></span>":
+  "<span>{#} al {#} de feb.</span><span>Obligatoria: <a>Hoja de trabajo: Resonancias orbitales</a></span>",
+"<a>Open demo</a> <a>Start here<span>{#} min</span></a> <a><strong>Required</strong> Worksheet: Orbital Resonances<span>{#} min · algebra</span></a> <a>Notes</a>":
+  "<a>Abrir demo</a> <a>Empieza aquí<span>{#} min</span></a> <a><strong>Obligatoria</strong> Hoja de trabajo: Resonancias orbitales<span>{#} min · álgebra</span></a> <a>Notas</a>",
+"Also used in this unit: <a>Planet Temperatures and Habitable Zones</a> <span>(card under <a>Week {#} · Unit {#}, Days {#} and {#}: Forming planets, their temperatures and habitable zones</a>)</span> · <a>Reasons for Seasons</a> <span>(card under <a>Week {#} · Unit {#}, Days {#} and {#}: The sky, the Sun and the Moon</a>)</span> · <a>Kepler's Laws</a> <span>(card under <a>Week {#} · Unit {#}, Days {#} to {#}: From Greek models to Newton’s gravity</a>)</span>":
+  "También se usa en esta unidad: <a>Temperaturas planetarias y zonas habitables</a> <span>(tarjeta en <a>Semana {#} · Unidad {#}, días {#} y {#}: La formación de los planetas, sus temperaturas y las zonas habitables</a>)</span> · <a>Las razones de las estaciones</a> <span>(tarjeta en <a>Semana {#} · Unidad {#}, días {#} y {#}: El cielo, el Sol y la Luna</a>)</span> · <a>Leyes de Kepler</a> <span>(tarjeta en <a>Semana {#} · Unidad {#}, días {#} a {#}: De los modelos griegos a la gravedad de Newton</a>)</span>",
+"<span>Feb {#} to {#}, a review week ending with Test {#}</span><span>No required worksheet</span>":
+  "<span>{#} al {#} de feb., una semana de repaso que termina con el examen {#}</span><span>Sin hoja de trabajo obligatoria</span>",
+"Also used in this unit: <a>Kepler's Laws</a> <span>(card under <a>Week {#} · Unit {#}, Days {#} to {#}: From Greek models to Newton’s gravity</a>)</span> · <a>Doppler Effect and Shock Waves</a> <span>(card under <a>Week {#} · Unit {#}, Days {#} to {#}: Telescopes, light and spectra</a>)</span> · <a>Circular Apertures and Resolution</a> <span>(card under <a>Week {#} · Unit {#}, Days {#} to {#}: Telescopes, light and spectra</a>)</span> · <a>Life in the Universe</a> <span>(card under <a>Week {#} · Unit {#}, Days {#} and {#}: Forming planets, their temperatures and habitable zones</a>)</span>":
+  "También se usa en esta unidad: <a>Leyes de Kepler</a> <span>(tarjeta en <a>Semana {#} · Unidad {#}, días {#} a {#}: De los modelos griegos a la gravedad de Newton</a>)</span> · <a>Efecto Doppler y ondas de choque</a> <span>(tarjeta en <a>Semana {#} · Unidad {#}, días {#} a {#}: Telescopios, luz y espectros</a>)</span> · <a>Aberturas circulares y resolución</a> <span>(tarjeta en <a>Semana {#} · Unidad {#}, días {#} a {#}: Telescopios, luz y espectros</a>)</span> · <a>La vida en el universo</a> <span>(tarjeta en <a>Semana {#} · Unidad {#}, días {#} y {#}: La formación de los planetas, sus temperaturas y las zonas habitables</a>)</span>",
 "<span>Dosimetry: Kerma, Equilibrium and the Ion Chamber →</span>":
   "<span>Dosimetría: kerma, equilibrio y la cámara de ionización →</span>",
 "<a>Medical physics and beyond <span>{#}</span></a>":
@@ -7696,8 +7780,6 @@ VDI18N.add('es', 'site', {
   "<a>Abrir demo</a> <a>Hoja de trabajo: ANOVA de un factor: brechas, dispersiones y falsas alarmas</a>",
 "Also under <a>Radiation in medicine</a>":
   "También en <a>Radiación en medicina</a>",
-"<span>Terminal Velocity →</span>":
-  "<span>Velocidad terminal →</span>",
 "<a>Open demo</a> <a>Worksheet: Support Forces and Cable Tension<span>{#} min · algebra</span></a> <a>Notes</a>":
   "<a>Abrir demo</a> <a>Hoja de trabajo: Fuerzas de soporte y tensión en cables<span>{#} min · álgebra</span></a> <a>Notas</a>",
 "<a>Open demo</a> <a>Worksheet {#}: Heating Curve and Latent Heat<span>{#} min · algebra</span></a> <a>Worksheet {#}: Bonds, Temperature and Latent Heat<span>{#} min · algebra</span></a> <a>Notes</a>":
