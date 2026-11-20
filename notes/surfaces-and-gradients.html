@@ -74,9 +74,10 @@ footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line);
 <li>Where ∇f = 0 the second derivative test sorts the point by D = f_xx f_yy − f_xy²: a pit, a peak, a saddle, or no verdict when D = 0.</li>
 <li>On a constraint g(x, y) = c, f is largest or smallest where the constraint just touches a level curve of f, so ∇f = λ∇g. The multiplier has a meaning: how fast the best value changes with c, or a constraint force.</li>
 <li>A limit in two variables must be the same along every path. Two paths that disagree prove it does not exist; any number of paths that agree prove nothing.</li>
+<li>Along a path r(t), the chain rule gives dz/dt = ∂f/∂x · dx/dt + ∂f/∂y · dy/dt = ∇f · r′: each variable's rate times how much f cares about it. In physics, the rate a moving charge's potential changes is dV/dt = −E · v.</li>
 </ul>
 <h2>Before class</h2>
-<p>Nothing to install. The surface needs WebGL; without it (or with Flat pressed) the contour map takes the whole picture and every tool still works. Projector mode thickens the lines. Blind (Lab fold) hides the second derivative test, λ and the values along the limit paths, so students predict first. Every setup's function is typed in the box and can be edited.</p>
+<p>Nothing to install. The surface needs WebGL; without it (or with Flat pressed) the contour map takes the whole picture and every tool still works. Projector mode thickens the lines. Blind (Lab fold) hides the second derivative test, λ, the values along the limit paths and dz/dt by the chain rule, so students predict first. Every setup's function is typed in the box and can be edited.</p>
 <h2>Running it in class</h2>
 <ol>
 <li><strong>A hill.</strong> Open on A hill and its contour map. Turn the surface and compare it with the map: close contours are steep ground. Press Play to turn the direction arrow u and watch the graph of D_u h: it is a cosine, largest along ∇h, zero along the level curve (Q1).</li>
@@ -86,6 +87,7 @@ footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line);
 <li><strong>Where a ball rolls.</strong> Press Where a ball rolls and Play. The ball swings across a pit and settles; with drag 0 its total energy U + K stays constant on the graph. Try starting it right on the saddle.</li>
 <li><strong>A constraint.</strong> Press The most area for 8 m of fence and Play: the point slides along x + y = 4 until ∇A lines up with ∇g at the square (Q4). Then A bead on a hoop: λ∇g is the push of the hoop.</li>
 <li><strong>Limits.</strong> Press xy/(x² + y²) and drag m. Then x²y/(x⁴ + y²): every line gives 0 but the parabola gives ½ (Q5).</li>
+<li><strong>The chain rule.</strong> Press A hiker circling the hill and Play: the hiker walks a 1.2 km circle at 60 m/min, and the readouts split her rate of climb into ∂h/∂x · dx/dt and ∂h/∂y · dy/dt, beside the same rate from the heights along the path. It is zero where the path touches a level curve. Then A gas heated as it expands (two terms of opposite sign) and A charge carried past a dipole, where dV/dt = −E · v and q times −dV/dt is the power the field delivers (Q6).</li>
 </ol>
 <h2>Questions</h2>
 <div class="q"><p><strong>Q1.</strong> On the hill at the point (−1, −0.8) km, the slope along u is largest when u points one way and zero for two directions. Which directions, and how are they related to the level curve through the point?</p></div>
@@ -97,11 +99,14 @@ footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line);
 <div class="q"><p><strong>Q4.</strong> A rectangle has 8 m of fence around it. Use ∇A = λ∇g with A = xy and g = x + y = 4 to find the best rectangle and λ. What does λ = 2 m tell you?</p></div>
 
 <div class="q"><p><strong>Q5.</strong> Along every straight line y = mx into the origin, f = x²y/(x⁴ + y²) goes to 0. Does the limit at the origin exist? Explain with a path.</p></div>
+
+<div class="q"><p><strong>Q6.</strong> A charge of +1 nC moves at 0.5 cm/µs along y = 0.8 cm past the dipole. Use dV/dt = ∇V · v to explain how V can be zero at the midpoint while it changes quickly there, and say whether the field speeds the charge up or slows it down at that moment.</p></div>
 <h2>Common misconceptions</h2>
 <ul>
 <li><strong>"The gradient is a vector pointing up the surface."</strong> ∇f lives in the xy plane (the map), pointing in the direction to walk to climb fastest; its size is the slope, not a length on the surface.</li>
 <li><strong>"∇f = 0 means a maximum or a minimum."</strong> It can be a saddle (the pass between two pits, the midpoint of two equal charges), or the test can fail (the monkey saddle).</li>
 <li><strong>"If the limit along every line is the same, the limit exists."</strong> x²y/(x⁴ + y²) agrees along every line and still has no limit: the parabola y = x² gives ½.</li>
+<li><strong>"dz/dt is ∂f/∂x plus ∂f/∂y."</strong> Each partial derivative must be multiplied by how fast its own variable changes; a hiker standing still has dz/dt = 0 on the steepest slope.</li>
 <li><strong>"Lagrange's λ is just a number to eliminate."</strong> It is how fast the best value changes with the constraint (the fence: 2 m² more area per meter), and in mechanics it gives the constraint force (the hoop's push).</li>
 </ul>
 <h2>How the demo works</h2>
@@ -110,6 +115,7 @@ footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line);
 <li>Critical points are found by Newton's method from a grid of starting points over the square the surface shows; constrained extremes by Newton's method on ∇f = λ∇g, g = c, from the highest and lowest points along the traced constraint. Both reach about twelve significant figures. A point outside the square is not searched for.</li>
 <li>Level curves are traced by marching squares on a grid. The surface is drawn on a 72 by 72 grid and cut off where it leaves its box, which the charges' 1/r spikes always do.</li>
 <li>The ball is a particle of mass 1 kg with acceleration −∇U − bv, stepped by fourth order Runge Kutta: a particle in a potential, not a real ball rolling on a hill.</li>
+<li>The chain rule value uses the exact derivatives x′(t) and y′(t) of the typed path. The rate from the values along the path is a centered difference with a step of 10⁻⁴ of the time range, so the two agree to about (Δt)²z‴/6.</li>
 <li>The values along limit paths are read at a distance of 10⁻⁶ of the view from the point. These are computed values: the same settings always give the same digits.</li>
 </ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>. © 2026 Steven Anderson. All rights reserved; see the <a href="../LICENSE.html">terms of use</a>.</footer>
 </main>

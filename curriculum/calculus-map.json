@@ -1001,7 +1001,9 @@
       {
        "sec": "4.5",
        "title": "The Chain Rule",
-       "demos": []
+       "demos": [
+        "surfaces-and-gradients"
+       ]
       },
       {
        "sec": "4.6",
