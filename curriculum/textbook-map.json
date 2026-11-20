@@ -2630,6 +2630,19 @@
           "worksheets": [
             "mp-ct-reconstruction"
           ]
+        },
+        {
+          "id": "body",
+          "title": "10 · Physics of the body",
+          "short": "10 · The body",
+          "requirement": "required",
+          "sections": [],
+          "demos": [
+            "nerve-signals",
+            "hearing",
+            "osmosis"
+          ],
+          "note": "Beside the radiation topics: nerve impulses and the ECG, hearing and the audiogram, and diffusion and osmosis across cell membranes."
         }
       ]
     }
@@ -12967,7 +12980,7 @@
     {
       "demo": "osmosis",
       "course": [
-        "later"
+        "medical-physics"
       ],
       "sections": [],
       "role": "demo",
