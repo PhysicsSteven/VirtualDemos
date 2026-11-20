@@ -5,11 +5,14 @@ const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('n
 const root=path.resolve(__dirname,'../..'),map=JSON.parse(fs.readFileSync(path.join(root,'curriculum/textbook-map.json'),'utf8'));
 const demos=map.demos.filter(d=>d.course.includes('physics-1')),labs=demos.filter(d=>d.role==='lab');
 const expected=['Goal','Background','Before the lab','Safety','Procedure','Data','Analysis','Uncertainty','Questions','What to hand in'];
+/* intro sheets close with Uncertainty after Questions, outside the 75 minutes (Steve 2026-11-20, docs/handouts.md); sheets about uncertainty itself keep it before Questions */
+const closing=['Goal','Background','Before the lab','Safety','Procedure','Data','Analysis','Questions','Uncertainty','What to hand in'];
 let labels=0;
 for(const d of labs){
  assert(d.handouts?.length,`${d.demo}: no handout mapped`);
  for(const h of d.handouts){const text=fs.readFileSync(path.join(root,'curriculum/labs/students',h+'.md'),'utf8');
-  assert.deepEqual([...text.matchAll(/^## (.+)$/gm)].map(m=>m[1]).filter(x=>x!=='With calculus' /* closing section for calculus courses (Steve 2026-11-19) */),expected,h);
+  {const heads=[...text.matchAll(/^## (.+)$/gm)].map(m=>m[1]).filter(x=>x!=='With calculus' /* closing section for calculus courses (Steve 2026-11-19) */);
+   assert.deepEqual(heads,heads.indexOf('Uncertainty')>heads.indexOf('Questions')?closing:expected,h);}
   assert((text.match(/^\|---/gm)||[]).length>=1,`${h}: a data table`);
   for(const [head,lo,hi] of [['Before the lab',1,6],['Questions',1,8]] /* at least one each: the 75 minute cuts (Steve 2026-11-16) leave some sheets with one */){const part=text.split('## '+head+'\n')[1].split('\n## ')[0],n=(part.match(/^\d+\./gm)||[]).length;assert(n>=lo&&n<=hi,`${h}: ${head}`);}
   assert(!/^# .*Instructor Guide/m.test(text),`${h}: private guide heading in student file`);
