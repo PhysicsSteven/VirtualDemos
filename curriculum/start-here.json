@@ -2843,6 +2843,259 @@
      "see_es": "0.50 m en los dos: en un periodo, 0.50 s, la onda avanza vT, así que λ = v/f = 1.0/2.0 = 0.50 m, como marca <b>Longitud de onda λ = v/f</b>. A 2.0 m/s la longitud de onda se duplica a 1.00 m con la misma frecuencia de la mano."
     }
    ]
+  },
+  "regression": {
+   "q": "If r is close to 1, does a straight line describe the data well?",
+   "q_es": "Si r está cerca de 1, ¿una recta describe bien los datos?",
+   "setup": "set=px~1990!nShuf~1000!seed~1!labBlind~0!g%3Apresets~cpi",
+   "do": "The book's Consumer Price Index from 1915 to 1999. Read <b>r</b> and <b>Is r significant?</b>, then look at the residual plot under the scatter plot, <b>Residuals y − ŷ</b>: do the points scatter at random about zero?",
+   "do_es": "El índice de precios al consumidor del libro, de 1915 a 1999. Lee <b>r</b> y <b>¿Es r significativa?</b>, luego mira la gráfica de residuos debajo del diagrama de dispersión, <b>Residuos y − ŷ</b>: ¿los puntos se dispersan al azar alrededor de cero?",
+   "see": "r = 0.8694, far above the critical value r* = 0.532, and p < 0.0001: the linear relationship is significant. Yet the residuals make a U, above zero at both ends and below it in the middle. Prices grew along a curve, so the line runs too high in the middle years and too low at the ends. A large r says there is a trend, not that the trend is a line: always look at the residual plot.",
+   "see_es": "r = 0.8694, muy por encima del valor crítico r* = 0.532, y p < 0.0001: la relación lineal es significativa. Aun así, los residuos forman una U, arriba de cero en los dos extremos y abajo en medio. Los precios crecieron siguiendo una curva, así que la recta queda demasiado alta en los años de en medio y demasiado baja en los extremos. Una r grande dice que hay una tendencia, no que la tendencia sea una recta: siempre mira la gráfica de residuos.",
+   "explore": [
+    {
+     "setup": "set=px~0.11!nShuf~1000!seed~18!labBlind~0!g%3Apresets~mass",
+     "do": "<b>Pendulum: period against bob mass</b> (simulated) with <b>Draw</b> set to 18. The period does not depend on the mass, so any slope is timing error. Read <b>r</b>, <b>p value, t test (two sided)</b> and <b>Is r significant?</b>, then press <b>Play</b> for the shuffle test.",
+     "do_es": "<b>Péndulo: periodo contra masa de la lenteja</b> (simulado) con <b>Sorteo</b> en 18. El periodo no depende de la masa, así que cualquier pendiente es error de medición del tiempo. Lee <b>r</b>, <b>valor p, prueba t (bilateral)</b> y <b>¿Es r significativa?</b>, luego presiona <b>Iniciar</b> para la prueba de barajado.",
+     "see": "r = −0.6500 and p = 0.0419: significant at the 5 % level, although the mass does nothing. The shuffle test gives 0.0520 after 1,000 shuffles. The p value is not the chance that there is no relationship: it is how often chance alone gives an r this large, and here chance did. Of draws 1 to 30, only draw 18 is significant.",
+     "see_es": "r = −0.6500 y p = 0.0419: significativa al nivel de 5 %, aunque la masa no hace nada. La prueba de barajado da 0.0520 después de 1,000 barajados. El valor p no es la probabilidad de que no haya relación: es qué tan seguido el puro azar da una r así de grande, y aquí el azar lo logró. De los sorteos 1 a 30, solo el 18 es significativo."
+    },
+    {
+     "setup": "set=px~2020!nShuf~1000!seed~1!labBlind~0!g%3Apresets~swim",
+     "do": "<b>Olympic 100 m freestyle times</b>: the winning time falls from 82.2 s in 1912 to 52.7 s in 2016. Read <b>Prediction ŷ at x = 2020</b>, then type 2300 in the Predict box, <b>x =</b>.",
+     "do_es": "<b>Tiempos olímpicos de 100 m libre</b>: el tiempo ganador baja de 82.2 s en 1912 a 52.7 s en 2016. Lee <b>Predicción ŷ en x = 2020</b>, luego escribe 2300 en el cuadro Predecir, <b>x =</b>.",
+     "see": "48.07 s for 2020, and −23.92 s for 2300, a time below zero. Both lie outside the data (1912 to 2016), so both are extrapolations. The times level off, so no straight line holds far beyond the data, even with r = −0.9455.",
+     "see_es": "48.07 s para 2020 y −23.92 s para 2300, un tiempo menor que cero. Los dos quedan fuera de los datos (1912 a 2016), así que los dos son extrapolaciones. Los tiempos se nivelan, así que ninguna recta vale lejos de los datos, aun con r = −0.9455."
+    },
+    {
+     "setup": "",
+     "do": "<b>Third exam and final exam</b>: your violet line starts flat at the mean final score. Drag its round handles, or the line itself, to make <b>Sum of squares, your line</b> as small as you can, and compare it with <b>Sum of squares, least squares</b>.",
+     "do_es": "<b>Tercer examen y examen final</b>: tu recta violeta empieza horizontal en la calificación final media. Arrastra sus manijas redondas, o la recta misma, para hacer <b>Suma de cuadrados, tu recta</b> lo más pequeña que puedas, y compárala con <b>Suma de cuadrados, mínimos cuadrados</b>.",
+     "see": "Your flat line starts at 4326.7, which is Σ(y − ȳ)². No line gets below 2424.3, the least squares sum: that is what least squares means. r² = 1 − 2424.3/4326.7 = 0.4397 is the share of the spread in final scores that the line explains.",
+     "see_es": "Tu recta horizontal empieza en 4326.7, que es Σ(y − ȳ)². Ninguna recta baja de 2424.3, la suma de mínimos cuadrados: eso es lo que significa mínimos cuadrados. r² = 1 − 2424.3/4326.7 = 0.4397 es la parte de la dispersión de las calificaciones finales que explica la recta."
+    }
+   ]
+  },
+  "hypothesis-tests": {
+   "q": "A test rejects H₀ with p < 0.05. Does that mean there is less than a 5 % chance that H₀ is true?",
+   "q_es": "Una prueba rechaza H₀ con p < 0.05. ¿Eso significa que hay menos de 5 % de probabilidad de que H₀ sea verdadera?",
+   "setup": "",
+   "do": "The simulation knows the truth: this pendulum setup really measures g = 9.81 m/s² on average, so H₀ is true. Press <b>Play</b> to run 1,000 studies of ten timings each, and when it stops read <b>Rejected H₀</b>.",
+   "do_es": "La simulación conoce la verdad: este péndulo de verdad mide g = 9.81 m/s² en promedio, así que H₀ es verdadera. Presiona <b>Iniciar</b> para hacer 1,000 estudios de diez mediciones cada uno y, cuando se detenga, lee <b>H₀ rechazada</b>.",
+   "see": "51 of the 1,000 studies reject H₀, a fraction of 0.051, close to α = 0.05. Each of those 51 had p < 0.05, yet H₀ was true every time. The p value is worked out assuming H₀ is true: it says how surprising the data would be, not the chance that H₀ is true. At α = 0.05 about 1 study in 20 rejects a true H₀, a Type I error.",
+   "see_es": "51 de los 1,000 estudios rechazan H₀, una fracción de 0.051, cerca de α = 0.05. Cada uno de esos 51 tuvo p < 0.05, y aun así H₀ era verdadera todas las veces. El valor p se calcula suponiendo que H₀ es verdadera: dice qué tan sorprendentes serían los datos, no la probabilidad de que H₀ sea verdadera. Con α = 0.05, más o menos 1 estudio de cada 20 rechaza una H₀ verdadera, un error de tipo I.",
+   "explore": [
+    {
+     "setup": "set=countSel~1000!sN~8!sSig~0.03!sTruth~9.79!labBlind~0!g%3AtailSeg~left!g%3Apresets~drag",
+     "do": "<b>Drop timer, σ known: is g low? (z test)</b>: air drag makes this timer read 9.79 m/s² on average, so H₀: μ = 9.81 m/s² is false. Each study is 8 drops. Press <b>Play</b> and read <b>Rejected H₀</b>.",
+     "do_es": "<b>Cronómetro de caída, σ conocida: ¿g sale bajo? (prueba z)</b>: el arrastre del aire hace que este cronómetro marque 9.79 m/s² en promedio, así que H₀: μ = 9.81 m/s² es falsa. Cada estudio son 8 caídas. Presiona <b>Iniciar</b> y lee <b>H₀ rechazada</b>.",
+     "see": "591 of 1,000 studies reject H₀, close to <b>Theory power at this truth</b>, 0.595. The other 409 fail to reject a false H₀: Type II errors. Not rejecting H₀ does not show that H₀ is true; with 8 drops the test often misses an effect of 0.02 m/s².",
+     "see_es": "591 de 1,000 estudios rechazan H₀, cerca de <b>Potencia teórica con este valor verdadero</b>, 0.595. Los otros 409 no rechazan una H₀ falsa: errores de tipo II. No rechazar H₀ no demuestra que H₀ sea verdadera; con 8 caídas la prueba muchas veces no detecta un efecto de 0.02 m/s²."
+    },
+    {
+     "setup": "set=countSel~1000!sN~32!sSig~0.03!sTruth~9.79!labBlind~0!g%3AtailSeg~left!g%3Apresets~drag",
+     "do": "The same drop timer with <b>Sample size n</b> = 32, four times as many drops. Predict the fraction rejected, then press <b>Play</b>.",
+     "do_es": "El mismo cronómetro de caída con <b>Tamaño de muestra n</b> = 32, cuatro veces más caídas. Predice la fracción rechazada, luego presiona <b>Iniciar</b>.",
+     "see": "979 of 1,000 reject H₀ (theory power 0.983). Four times the drops halves the standard error, so the same 0.02 m/s² effect is now 3.77 standard errors, not 1.89, and the test rarely misses it.",
+     "see_es": "979 de 1,000 rechazan H₀ (potencia teórica 0.983). Cuatro veces más caídas reducen el error estándar a la mitad, así que el mismo efecto de 0.02 m/s² ahora es de 3.77 errores estándar, no 1.89, y la prueba casi nunca lo pasa por alto."
+    }
+   ]
+  },
+  "anova": {
+   "q": "Two studies find the same 4 ms gaps between the means of three ways to time a pendulum. Must they reach the same conclusion?",
+   "q_es": "Dos estudios encuentran la misma separación de 4 ms entre las medias de tres formas de medir el tiempo de un péndulo. ¿Deben llegar a la misma conclusión?",
+   "setup": "",
+   "do": "Eight timings for each method, means 4 ms apart, spread 6 ms within each group. Read <b>F</b> and the <b>p value</b>. Then set <b>Spread s within groups</b> to 12 ms and read them again.",
+   "do_es": "Ocho mediciones con cada método, medias separadas 4 ms, dispersión de 6 ms dentro de cada grupo. Lee <b>F</b> y el <b>Valor p</b>. Luego pon <b>Dispersión s dentro de los grupos</b> en 12 ms y vuelve a leerlos.",
+   "see": "With s = 6 ms, F = 3.556 and p = 0.0468: reject H₀. With s = 12 ms the same means give F = 0.8889 and p = 0.4260: not significant. F compares the spread between the group means with the spread within the groups, so the same gap can be convincing or not. Here F = nd²/s², so doubling s cuts F by four.",
+   "see_es": "Con s = 6 ms, F = 3.556 y p = 0.0468: se rechaza H₀. Con s = 12 ms las mismas medias dan F = 0.8889 y p = 0.4260: no es significativa. F compara la dispersión entre las medias de los grupos con la dispersión dentro de los grupos, así que la misma separación puede convencer o no. Aquí F = nd²/s², así que duplicar s divide F entre cuatro.",
+   "explore": [
+    {
+     "setup": "set=countSel~1000!sN~8!sGap~0!sSpr~6!labBlind~0!g%3Apresets~equal",
+     "do": "<b>All means equal: false alarms</b>: every study draws three groups from populations with the same mean. Press <b>Play</b> to run 1,000 studies and read <b>False alarms</b>.",
+     "do_es": "<b>Todas las medias iguales: falsas alarmas</b>: cada estudio toma tres grupos de poblaciones con la misma media. Presiona <b>Iniciar</b> para hacer 1,000 estudios y lee <b>Falsas alarmas</b>.",
+     "see": "52 of 1,000 (0.052), close to α = 0.05. Even when every population mean is equal, random samples give group means that differ, and about 1 study in 20 has an F above the critical value.",
+     "see_es": "52 de 1,000 (0.052), cerca de α = 0.05. Aun cuando todas las medias de las poblaciones son iguales, las muestras al azar dan medias de grupo distintas, y más o menos 1 estudio de cada 20 tiene una F por encima del valor crítico."
+    },
+    {
+     "setup": "set=countSel~1000!sN~5!sGap~3!sSpr~4!labBlind~0!g%3Apresets~plants",
+     "do": "<b>Three fertilizers and plant growth</b>: five plants a fertilizer, means 3 cm apart, spread 4 cm. Read <b>F</b> and the <b>p value</b>, then set <b>Points per group n</b> to 10.",
+     "do_es": "<b>Tres fertilizantes y el crecimiento de plantas</b>: cinco plantas por fertilizante, medias separadas 3 cm, dispersión de 4 cm. Lee <b>F</b> y el <b>Valor p</b>, luego pon <b>Puntos por grupo n</b> en 10.",
+     "see": "With 5 plants, F = 2.812 and p = 0.0996: not significant. With 10, F = 5.625 and p = 0.0091. The gap and the spread did not change, only the amount of data: not significant does not mean no difference.",
+     "see_es": "Con 5 plantas, F = 2.812 y p = 0.0996: no es significativa. Con 10, F = 5.625 y p = 0.0091. La separación y la dispersión no cambiaron, solo la cantidad de datos: no significativa no quiere decir que no haya diferencia."
+    },
+    {
+     "setup": "set=countSel~1000!sN~10!sSpr~0.2!sSpr2~0.1!labBlind~0!g%3AmodeSeg~var2!g%3Apresets~thermo",
+     "do": "<b>Two variances: is the new thermometer steadier?</b> Ten readings each: the old thermometer scatters with s = 0.2 °C, the new one with 0.1 °C. Predict F, then read it.",
+     "do_es": "<b>Dos varianzas: ¿es más estable el termómetro nuevo?</b> Diez lecturas de cada uno: el termómetro viejo se dispersa con s = 0.2 °C, el nuevo con 0.1 °C. Predice F y luego léela.",
+     "see": "F = 4, not 2: the test compares variances, s₁²/s₂² = 0.04/0.01. With df = 9 and 9, p = 0.0255, so at α = 0.05 the new thermometer is steadier.",
+     "see_es": "F = 4, no 2: la prueba compara varianzas, s₁²/s₂² = 0.04/0.01. Con gl = 9 y 9, p = 0.0255, así que con α = 0.05 el termómetro nuevo es más estable."
+    }
+   ]
+  },
+  "data-explorer": {
+   "q": "One of 13 homes sold for $5,500,000. Had it sold for $700,000 instead, which would move more, the mean or the median?",
+   "q_es": "Una de 13 casas se vendió en $5,500,000. Si se hubiera vendido en $700,000, ¿qué se movería más, la media o la mediana?",
+   "setup": "set=binW~500000!binS~0!modBox~0!selI~1!kIn~90!labBlind~0!g%3Apresets~homes",
+   "do": "The book's home prices. Read <b>Mean x̄</b> and <b>Median</b>. Under Selected point, press <b>Largest</b>, type 700000 in <b>Value</b>, and read them again.",
+   "do_es": "Los precios de casas del libro. Lee <b>Media x̄</b> y <b>Mediana</b>. En Punto seleccionado, presiona <b>Máximo</b>, escribe 700000 en <b>Valor</b> y vuelve a leerlas.",
+   "see": "The mean falls from $865,015 to $495,785, while the median stays at $488,800. The mean adds up every value, so one extreme price drags it; the median only needs the middle home. The standard deviation falls even more, from $1,415,283 to $259,513, and the home is no longer an outlier. For skewed data like prices, the median is the better center.",
+   "see_es": "La media baja de $865,015 a $495,785, mientras que la mediana se queda en $488,800. La media suma todos los valores, así que un precio extremo la arrastra; la mediana solo necesita la casa de en medio. La desviación estándar baja todavía más, de $1,415,283 a $259,513, y la casa ya no es un valor atípico. Para datos sesgados como los precios, la mediana es la mejor medida de centro.",
+   "explore": [
+    {
+     "setup": "set=binW~10!binS~32.5!modBox~0!selI~1!kIn~90!labBlind~0!g%3AftSeg~class!g%3Apresets~dean",
+     "do": "<b>Exam scores (2.1)</b>: a few low scores trail off to the left. Predict whether the mean is above or below the median, then read <b>Mean x̄</b>, <b>Median</b> and <b>Skew</b>. Then press <b>Smallest</b> and type 0 in <b>Value</b>.",
+     "do_es": "<b>Calificaciones de examen (2.1)</b>: unas pocas calificaciones bajas se extienden hacia la izquierda. Predice si la media queda arriba o abajo de la mediana, luego lee <b>Media x̄</b>, <b>Mediana</b> y <b>Sesgo</b>. Después presiona <b>Mínimo</b> y escribe 0 en <b>Valor</b>.",
+     "see": "The mean, 73.52, is just above the median, 73, although the skew is −0.415. The mean is pulled toward the tail only as a rule of thumb, not a law. With the 33 changed to 0 the tail is longer: the mean drops to 72.45, below the median, and the skew is −1.346.",
+     "see_es": "La media, 73.52, queda apenas arriba de la mediana, 73, aunque el sesgo es −0.415. Que la cola jale a la media es solo una regla práctica, no una ley. Al cambiar el 33 por 0 la cola es más larga: la media baja a 72.45, abajo de la mediana, y el sesgo es −1.346."
+    },
+    {
+     "setup": "set=binW~1!binS~85.95!modBox~0!selI~1!kIn~90!labBlind~0!g%3AftSeg~class!g%3Apresets~laps",
+     "do": "<b>Lap times of a tiring runner</b>, 20 laps in the order run (simulated). Look at the histogram: can you tell the runner is tiring? Then look at the <b>Time series</b> graph below it.",
+     "do_es": "<b>Tiempos por vuelta de un corredor que se cansa</b>, 20 vueltas en el orden en que se corrieron (simulados). Mira el histograma: ¿puedes saber si el corredor se cansa? Luego mira la gráfica de <b>Serie de tiempo</b> de abajo.",
+     "see": "The histogram is one heap from 87.5 s to 96.3 s, roughly symmetric (skew 0.050), and says nothing about tiring. The time series climbs: the first eight laps are between 87.5 s and 89.7 s, the last five all above 93 s, since the simulation adds 0.35 s a lap. Only the time series keeps the order the data were taken in.",
+     "see_es": "El histograma es un solo montículo de 87.5 s a 96.3 s, más o menos simétrico (sesgo 0.050), y no dice nada del cansancio. La serie de tiempo sube: las primeras ocho vueltas están entre 87.5 s y 89.7 s, las últimas cinco todas arriba de 93 s, porque la simulación agrega 0.35 s por vuelta. Solo la serie de tiempo conserva el orden en que se tomaron los datos."
+    }
+   ]
+  },
+  "distribution-explorer": {
+   "q": "A Geiger counter clicks every 3.125 s on average. What share of the waits between clicks are shorter than that average?",
+   "q_es": "Un contador Geiger hace clic cada 3.125 s en promedio. ¿Qué parte de las esperas entre clics es más corta que ese promedio?",
+   "setup": "set=seed~1!p_m~0.32!p_mn~0.32!aIn~10!bIn~3.125!kIn~0.9!cmp1~0!labBlind~0!p%3Aq~eyJmIjoiZXhwb25lbnRpYWwiLCJxIjp7Im0iOjAuMzJ9LCJ0IjoibGVmdCIsImEiOjEwLCJiIjozLjEyNX0!g%3AfamSeg~exponential!g%3AtailSeg~left",
+   "do": "The waiting time between decays at 0.32 decays a second, an exponential distribution, shaded <b>Left of b</b> with b = 3.125 s, the mean wait. Predict the share, then read <b>P(X < 3.13)</b>. Press <b>Play</b> to draw waits, pick <b>1,000/s</b>, and watch the histogram fill.",
+   "do_es": "El tiempo de espera entre decaimientos con 0.32 decaimientos por segundo, una distribución exponencial, sombreada <b>A la izquierda de b</b> con b = 3.125 s, la espera media. Predice la parte, luego lee <b>P(X < 3.13)</b>. Presiona <b>Iniciar</b> para tomar esperas, elige <b>1,000/s</b> y mira cómo se llena el histograma.",
+   "see": "0.6321, which is 1 − e<sup>−1</sup>: almost two waits in three are shorter than the mean, and the tallest bar is at the shortest waits. The exponential is skewed right, and a few long waits pull the mean up. The mean is not the middle, and not the most likely value either.",
+   "see_es": "0.6321, que es 1 − e<sup>−1</sup>: casi dos de cada tres esperas son más cortas que la media, y la barra más alta está en las esperas más cortas. La exponencial está sesgada a la derecha, y unas pocas esperas largas jalan la media hacia arriba. La media no es el valor de en medio, ni tampoco el más probable.",
+   "explore": [
+    {
+     "setup": "set=seed~1!p_mu~3.2!p_mun~3.2!aIn~6!bIn~12!kIn~0.9!cmp1~0!labBlind~0!g%3AfamSeg~poisson!g%3Apresets~counts",
+     "do": "<b>Decay counts in 10 s: Poisson</b>: a weak source averages 3.2 counts in 10 s. You count 6. Is the counter faulty? Read <b>P(X ≥ 6)</b>.",
+     "do_es": "<b>Conteos de decaimiento en 10 s: Poisson</b>: una fuente débil da en promedio 3.2 conteos en 10 s. Tú cuentas 6. ¿Está fallando el contador? Lee <b>P(X ≥ 6)</b>.",
+     "see": "0.1054: about one count in ten is 6 or more from chance alone. Counts scatter with σ = √μ = 1.7889, so 6 is only 1.6σ above the mean.",
+     "see_es": "0.1054: más o menos uno de cada diez conteos es 6 o más por puro azar. Los conteos se dispersan con σ = √μ = 1.7889, así que 6 está apenas 1.6σ arriba de la media."
+    },
+    {
+     "setup": "set=seed~1!p_df~1!p_dfn~1!aIn~2!bIn~5!kIn~0.9!cmp1~1!labBlind~0!g%3AfamSeg~t!g%3Apresets~tGrows",
+     "do": "<b>t closes in on the normal as df grows</b>: Student's t with df = 1 against the standard normal (dashed). Read <b>P(X > 2)</b>, then raise <b>df</b> to 30.",
+     "do_es": "<b>La t se acerca a la normal conforme crecen los gl</b>: la t de Student con gl = 1 contra la normal estándar (punteada). Lee <b>P(X > 2)</b>, luego sube <b>gl</b> a 30.",
+     "see": "With df = 1, P(t > 2) = 0.1476, against 0.0228 for the normal: t has much fatter tails. At df = 30 it is 0.0273, close to the normal. Small samples need t, with its wider critical values, because s is itself uncertain.",
+     "see_es": "Con gl = 1, P(t > 2) = 0.1476, contra 0.0228 para la normal: la t tiene colas mucho más gruesas. Con gl = 30 es 0.0273, cerca de la normal. Las muestras pequeñas necesitan la t, con sus valores críticos más anchos, porque s también es incierta."
+    }
+   ]
+  },
+  "sampling-lab": {
+   "q": "When you take bigger samples, does the spread of the population get smaller?",
+   "q_es": "Cuando tomas muestras más grandes, ¿se hace más pequeña la dispersión de la población?",
+   "setup": "set=popSel~react!nIn~5!labBlind~0!seedIn~1!g%3AviewSeg~clt!g%3Apresets~cltReact",
+   "do": "Means of 5 skewed reaction times. Press <b>Draw 10,000</b> and read <b>Spread, s of the x̄'s</b> and <b>Population σ</b>. Then set <b>Sample size n</b> to 20, press <b>Draw 10,000</b> again and read them again.",
+   "do_es": "Medias de 5 tiempos de reacción sesgados. Presiona <b>Tomar 10,000</b> y lee <b>Dispersión, s de las x̄</b> y <b>σ de la población</b>. Luego pon <b>Tamaño de muestra n</b> en 20, presiona <b>Tomar 10,000</b> otra vez y vuelve a leerlas.",
+   "see": "At n = 5 the means spread with s = 42.00 ms; at n = 20, 20.81 ms, half as much, as σ/√n predicts (42.25 ms and 21.12 ms). The population σ stays 94.5 ms: bigger samples make the sample mean more precise, not the people less variable. The histogram of means also turns more normal, its skew falling from 0.833 to 0.382.",
+   "see_es": "Con n = 5 las medias se dispersan con s = 42.00 ms; con n = 20, 20.81 ms, la mitad, como predice σ/√n (42.25 ms y 21.12 ms). La σ de la población se queda en 94.5 ms: las muestras más grandes hacen más precisa la media de la muestra, no a las personas menos variables. El histograma de las medias también se vuelve más normal, y su sesgo baja de 0.833 a 0.382.",
+   "explore": [
+    {
+     "setup": "set=effect~0!showLurk~0!labBlind~0!seedIn~1!g%3AviewSeg~experiment!g%3Apresets~self",
+     "do": "<b>Self selected: who chooses the videos?</b> The review videos do nothing here (true effect 0), but students choose whether to watch. Press <b>Run the study</b> once and compare the mean scores, then tick <b>Show study hours</b>.",
+     "do_es": "<b>Autoseleccionado: ¿quién elige los videos?</b> Los videos de repaso aquí no hacen nada (efecto real 0), pero los estudiantes eligen si los ven. Presiona <b>Realizar el estudio</b> una vez y compara las calificaciones medias, luego marca <b>Mostrar horas de estudio</b>.",
+     "see": "Watchers average 76.38, the others 59.46: 16.92 points better, from videos that do nothing. Watchers studied 9.20 h, the others 3.37 h. Study hours drive both the choice and the score, a lurking variable: an association alone does not show a cause.",
+     "see_es": "Los que vieron promedian 76.38 y los demás 59.46: 16.92 puntos más, con videos que no hacen nada. Los que vieron estudiaron 9.20 h y los demás 3.37 h. Las horas de estudio influyen tanto en la elección como en la calificación, una variable oculta: una asociación por sí sola no demuestra una causa."
+    },
+    {
+     "setup": "set=effect~0!showLurk~0!labBlind~0!seedIn~1!g%3AviewSeg~experiment!g%3AdesignSeg~random!g%3Apresets~random",
+     "do": "<b>Randomized: a coin decides</b>: the same students, but a coin decides who watches. Press <b>Run the study</b>, then <b>Run it 100 times</b>.",
+     "do_es": "<b>Aleatorizado: decide una moneda</b>: los mismos estudiantes, pero una moneda decide quién los ve. Presiona <b>Realizar el estudio</b>, luego <b>Realizarlo 100 veces</b>.",
+     "see": "The first study's difference is 1.41 points, and the study hours are 5.74 h and 5.75 h: the coin balanced them. Over the 101 studies the <b>Mean difference</b> is −0.18 points, at the true effect of 0. Random assignment is what lets an experiment show a cause.",
+     "see_es": "La diferencia del primer estudio es de 1.41 puntos, y las horas de estudio son 5.74 h y 5.75 h: la moneda las equilibró. En los 101 estudios la <b>Diferencia media</b> es −0.18 puntos, en el efecto real de 0. La asignación al azar es lo que permite que un experimento muestre una causa."
+    },
+    {
+     "setup": "set=popSel~coins!labBlind~0!seedIn~1!g%3AmethSeg~conv!g%3Apresets~conv",
+     "do": "<b>Convenience: the ones by the door</b>: each sample is 20 of the 50 students nearest the door. Press <b>Draw 100</b> and compare <b>Mean of the x̄'s</b> with <b>Population mean μ</b>.",
+     "do_es": "<b>Por conveniencia: los que están junto a la puerta</b>: cada muestra son 20 de los 50 estudiantes más cerca de la puerta. Presiona <b>Tomar 100</b> y compara <b>Media de las x̄</b> con <b>Media de la población μ</b>.",
+     "see": "The means average 49.9 ¢ against μ = 23.0 ¢, a bias of 26.9 ¢, and they cluster tightly (s = 4.8 ¢). More samples only make the wrong answer look surer: a biased method stays biased.",
+     "see_es": "Las medias promedian 49.9 ¢ contra μ = 23.0 ¢, un sesgo de 26.9 ¢, y se agrupan muy juntas (s = 4.8 ¢). Más muestras solo hacen que la respuesta equivocada parezca más segura: un método sesgado sigue sesgado."
+    }
+   ]
+  },
+  "confidence-intervals": {
+   "q": "A 95 % confidence interval for a pendulum's period: does it hold 95 % of the timings?",
+   "q_es": "Un intervalo de confianza de 95 % para el periodo de un péndulo: ¿contiene el 95 % de las mediciones?",
+   "setup": "",
+   "do": "Each sample is 10 hand timings (simulated, σ = 0.080 s). Press <b>Draw one</b>: the timings are the dots at the top, and the interval is the bar under them. Count the dots inside <b>This interval</b>. Then press <b>Draw 100</b> and read <b>Caught the truth</b>.",
+   "do_es": "Cada muestra son 10 mediciones a mano (simuladas, σ = 0.080 s). Presiona <b>Tomar uno</b>: las mediciones son los puntos de arriba, y el intervalo es la barra debajo de ellos. Cuenta los puntos dentro de <b>Este intervalo</b>. Luego presiona <b>Tomar 100</b> y lee <b>Atraparon el valor real</b>.",
+   "see": "The interval is (1.9335, 2.0326) s, and only 4 of the 10 timings fall inside it, one right at its edge. The interval estimates the mean, not single timings: its half width, 0.0496 s, is 1.96σ/√n, much narrower than the spread of the timings. The 95 % is about the method: 97 of the 101 intervals caught the true mean, 2.0061 s.",
+   "see_es": "El intervalo es (1.9335, 2.0326) s, y solo 4 de las 10 mediciones caen dentro, una justo en la orilla. El intervalo estima la media, no mediciones sueltas: su semiancho, 0.0496 s, es 1.96σ/√n, mucho más angosto que la dispersión de las mediciones. El 95 % se refiere al método: 97 de los 101 intervalos atraparon la media real, 2.0061 s.",
+   "explore": [
+    {
+     "setup": "set=popSel~pendulum!nIn~10!clIn~99!labBlind~0!seedIn~1!g%3AclSeg~99!g%3Apresets~levels",
+     "do": "<b>90, 95 or 99 %: the same samples</b>. Press <b>Draw 100</b> and read <b>Caught the truth</b> and <b>Mean width</b>, then switch the confidence level to 95 and to 90.",
+     "do_es": "<b>90, 95 o 99 %: las mismas muestras</b>. Presiona <b>Tomar 100</b> y lee <b>Atraparon el valor real</b> y <b>Ancho medio</b>, luego cambia el nivel de confianza a 95 y a 90.",
+     "see": "At 99 %, 99 of the 100 intervals catch μ, with a mean width of 0.1303 s; at 95 %, 96 with 0.0992 s; at 90 %, 91 with 0.0832 s. The samples stay the same; only z changes. More confidence costs width.",
+     "see_es": "Con 99 %, 99 de los 100 intervalos atrapan μ, con un ancho medio de 0.1303 s; con 95 %, 96 con 0.0992 s; con 90 %, 91 con 0.0832 s. Las muestras son las mismas; solo cambia z. Más confianza cuesta ancho."
+    },
+    {
+     "setup": "set=popSel~pendulum!nIn~4!compare~1!clIn~95!labBlind~0!seedIn~1!g%3AkindSeg~t!g%3Apresets~tsmall",
+     "do": "<b>n = 4: t against z with s</b>: only 4 timings, σ unknown. The thick intervals use t, the thin ones z with s. Press <b>Draw 1,000</b> and compare <b>Caught the truth</b> with <b>z with s caught</b>.",
+     "do_es": "<b>n = 4: t contra z con s</b>: solo 4 mediciones, σ desconocida. Los intervalos gruesos usan t, los delgados z con s. Presiona <b>Tomar 1,000</b> y compara <b>Atraparon el valor real</b> con <b>z con s atrapó</b>.",
+     "see": "t catches 951 of 1,000 (95.1 %), z with s only 853 (85.3 %). With 4 timings s is often well below σ, so the z interval is too narrow; t with 3 degrees of freedom uses 3.182 in place of 1.96 to make up for it.",
+     "see_es": "t atrapa 951 de 1,000 (95.1 %), z con s solo 853 (85.3 %). Con 4 mediciones, s muchas veces queda muy por debajo de σ, así que el intervalo z es demasiado angosto; t con 3 grados de libertad usa 3.182 en lugar de 1.96 para compensarlo."
+    },
+    {
+     "setup": "set=popSel~polar!angle~72!nIn~15!clIn~95!labBlind~0!seedIn~1!g%3AkindSeg~prop!g%3Apresets~plus4",
+     "do": "<b>A rare event, n = 15: plus four</b>: photons through a polarizer at 72°, where only p = 0.0955 pass, 15 a sample. Press <b>Draw 1,000</b> and read <b>Caught the truth</b>, then switch the interval to <b>Plus four</b>.",
+     "do_es": "<b>Un evento raro, n = 15: más cuatro</b>: fotones a través de un polarizador a 72°, donde solo pasa p = 0.0955, 15 por muestra. Presiona <b>Tomar 1,000</b> y lee <b>Atraparon el valor real</b>, luego cambia el intervalo a <b>Más cuatro</b>.",
+     "see": "The normal approximation catches only 733 of 1,000 (73.3 %): many samples have no photons at all and give an interval of zero width. Plus four adds two successes and two failures and catches 954 (95.4 %) of the same samples.",
+     "see_es": "La aproximación normal atrapa solo 733 de 1,000 (73.3 %): muchas muestras no tienen ningún fotón y dan un intervalo de ancho cero. Más cuatro agrega dos éxitos y dos fracasos y atrapa 954 (95.4 %) de las mismas muestras."
+    }
+   ]
+  },
+  "chance-lab": {
+   "q": "The first die just came up six. Is a six on the second die now less likely?",
+   "q_es": "El primer dado acaba de caer en seis. ¿Ahora es menos probable un seis en el segundo dado?",
+   "setup": "set=speed~2!nDice~2!bet~6!evA~m1!evB~m2!labBlind~0",
+   "do": "Two dice, <b>Your number</b> 6. <b>Event A</b>: the first die matches your number; <b>Event B</b>: the second die matches it. Press <b>Run 10,000</b> and read the contingency table: in the trials where the first die was a six, how often was the second one a six too?",
+   "do_es": "Dos dados, <b>Tu número</b> 6. <b>Evento A</b>: el primer dado coincide con tu número; <b>Evento B</b>: el segundo dado coincide. Presiona <b>Hacer 10,000</b> y lee la tabla de contingencia: en los ensayos donde el primer dado fue seis, ¿qué tan seguido el segundo también fue seis?",
+   "see": "After a six on the first die, the second showed a six 267 times in 1,688, 0.1582; after any other number, 1,370 times in 8,312, 0.1648. Both are near P(B | A) = P(B) = 1/6 = 0.1667: the dice are independent and have no memory. Thinking a six is used up, or that one is due after a long wait, is the gambler's fallacy.",
+   "see_es": "Después de un seis en el primer dado, el segundo dio seis 267 veces de 1,688, 0.1582; después de cualquier otro número, 1,370 veces de 8,312, 0.1648. Los dos están cerca de P(B | A) = P(B) = 1/6 = 0.1667: los dados son independientes y no tienen memoria. Creer que un seis se gasta, o que ya toca uno después de una espera larga, es la falacia del jugador.",
+   "explore": [
+    {
+     "setup": "set=speed~2!nCards~1!repl~1!evA~h1!evB~f1!labBlind~0!g%3AkindSeg~cards!g%3Apresets~oneCard",
+     "do": "<b>One card: hearts and face cards</b>: A, a heart; B, a face card (J, Q or K). They share three cards. Is B independent of A? Read the rules table, then switch <b>Event B</b> to <b>The first card is a diamond</b>.",
+     "do_es": "<b>Una carta: corazones y figuras</b>: A, un corazón; B, una figura (J, Q o K). Comparten tres cartas. ¿B es independiente de A? Lee la tabla de reglas, luego cambia <b>Evento B</b> a <b>La primera carta es de diamantes</b>.",
+     "see": "P(B | A) = 3/13 = P(B) = 12/52: knowing the card is a heart does not change the chance it is a face card, so the events are independent although they overlap. A diamond is never a heart: P(A and B) = 0, mutually exclusive, and P(B | A) = 0, not 1/4, so those events are not independent at all.",
+     "see_es": "P(B | A) = 3/13 = P(B) = 12/52: saber que la carta es de corazones no cambia la probabilidad de que sea una figura, así que los eventos son independientes aunque se traslapan. Un diamante nunca es corazón: P(A y B) = 0, mutuamente excluyentes, y P(B | A) = 0, no 1/4, así que esos eventos no son nada independientes."
+    },
+    {
+     "setup": "set=speed~2!nCards~10!repl~0!xSel~diam!labBlind~0!g%3AkindSeg~cards!g%3AtabSeg~rv!g%3Apresets~cardsWO",
+     "do": "<b>Ten cards without replacement</b>: X is the number of diamonds in ten cards dealt and not put back. Read <b>Expected value μ</b> and <b>Standard deviation σ</b>, then pick <b>Ten cards with replacement</b> and compare.",
+     "do_es": "<b>Diez cartas sin reemplazo</b>: X es el número de diamantes en diez cartas repartidas sin regresarlas. Lee <b>Valor esperado μ</b> y <b>Desviación estándar σ</b>, luego elige <b>Diez cartas con reemplazo</b> y compara.",
+     "see": "μ = 2.5000 both ways, but σ = 1.2426 without replacement against 1.3693 with it. Without replacement each diamond dealt makes the next one less likely, 12/51 in place of 13/52, so the counts vary less: hypergeometric, not binomial.",
+     "see_es": "μ = 2.5000 en los dos casos, pero σ = 1.2426 sin reemplazo contra 1.3693 con reemplazo. Sin reemplazo, cada diamante repartido hace menos probable el siguiente, 12/51 en lugar de 13/52, así que los conteos varían menos: hipergeométrica, no binomial."
+    }
+   ]
+  },
+  "chi-square-tests": {
+   "q": "A die is loaded so that a six comes up a quarter of the time. Will a chi square test of 60 rolls catch it?",
+   "q_es": "Un dado está cargado para que el seis salga una cuarta parte de las veces. ¿Una prueba ji cuadrada de 60 tiros lo detectará?",
+   "setup": "",
+   "do": "Read the table of observed and expected counts, <b>Chi square χ²</b> and the <b>p value</b>. Then set <b>Rolls</b> to 600 and read them again.",
+   "do_es": "Lee la tabla de conteos observados y esperados, <b>Ji cuadrada χ²</b> y el <b>Valor p</b>. Luego pon <b>Tiros</b> en 600 y vuelve a leerlos.",
+   "see": "With 60 rolls there are 16 sixes against 10 expected: χ² = 5.2000 and p = 0.3920, so do not reject H₀. With 600 rolls, 163 sixes against 100: χ² = 51.5600 and p = 6.6 × 10⁻¹⁰. The die was loaded all along. Not rejecting H₀ does not show the die is fair, only that 60 rolls are too few to tell.",
+   "see_es": "Con 60 tiros hay 16 seises contra 10 esperados: χ² = 5.2000 y p = 0.3920, así que no se rechaza H₀. Con 600 tiros, 163 seises contra 100: χ² = 51.5600 y p = 6.6 × 10⁻¹⁰. El dado estuvo cargado todo el tiempo. No rechazar H₀ no demuestra que el dado sea justo, solo que 60 tiros son muy pocos para saberlo.",
+   "explore": [
+    {
+     "setup": "set=speed~20!rolls~600!p6~0.2!alpha~0.05!labBlind~0",
+     "do": "A die only slightly loaded: <b>Chance of a six</b> 0.20, against 1/6 = 0.1667 for a fair die, rolled 600 times. Read χ² and the <b>p value</b>, then set <b>Rolls</b> to 60.",
+     "do_es": "Un dado apenas cargado: <b>Probabilidad de un seis</b> 0.20, contra 1/6 = 0.1667 para un dado justo, con 600 tiros. Lee χ² y el <b>Valor p</b>, luego pon <b>Tiros</b> en 60.",
+     "see": "At 600 rolls, 133 sixes against 100: χ² = 16.4800 and p = 0.0056, significant. At 60 rolls, 11 sixes against 10: χ² = 0.4000 and p = 0.9953. With enough rolls even a small loading is significant: a small p says the die is not fair, not that it is badly loaded.",
+     "see_es": "Con 600 tiros, 133 seises contra 100: χ² = 16.4800 y p = 0.0056, significativa. Con 60 tiros, 11 seises contra 10: χ² = 0.4000 y p = 0.9953. Con suficientes tiros, hasta una carga pequeña es significativa: una p pequeña dice que el dado no es justo, no que esté muy cargado."
+    },
+    {
+     "setup": "set=speed~20!nInt~200!rate~25!dead~0.02!alpha~0.05!labBlind~0!g%3Apresets~dead",
+     "do": "<b>A counter with dead time (simulated)</b>: 25 arrivals a second, counted in 200 intervals of 1 s, and the counter is blind for 20 ms after each count. Read <b>Mean count per interval</b>, χ² and the <b>p value</b>, then set <b>Dead time</b> to none.",
+     "do_es": "<b>Un contador con tiempo muerto (simulado)</b>: 25 llegadas por segundo, contadas en 200 intervalos de 1 s, y el contador queda ciego 20 ms después de cada conteo. Lee <b>Conteo medio por intervalo</b>, χ² y el <b>Valor p</b>, luego pon <b>Tiempo muerto</b> en ninguno.",
+     "see": "With dead time the counter records 16.815 counts a second, missing about a third, and the counts are too even for a Poisson distribution: χ² = 38.4457 with df = 13, p = 0.0002. With none it records 25.230, and χ² = 15.8613 with df = 16, p = 0.4627: Poisson fits.",
+     "see_es": "Con tiempo muerto el contador registra 16.815 conteos por segundo, pierde más o menos un tercio, y los conteos son demasiado parejos para una distribución de Poisson: χ² = 38.4457 con gl = 13, p = 0.0002. Sin tiempo muerto registra 25.230, y χ² = 15.8613 con gl = 16, p = 0.4627: Poisson se ajusta."
+    }
+   ]
   }
  }
 }
