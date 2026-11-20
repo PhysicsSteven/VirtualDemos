@@ -1305,7 +1305,7 @@ table.rows td input { width: 7ch; font: inherit; font-family: var(--font-mono); 
     g.sun.position.set(-20, -30, top + 50); g.sun.target.position.set(0, 0, top * 0.3);
     g.r.render(g.scene, g.cam);
   }
-  const NO3D = 'This browser could not open the 3D view, so the flat view is shown.';
+  const NO3D = window.VDI18N ? VDI18N.t('This browser could not open the 3D view, so the flat view is shown.') : 'This browser could not open the 3D view, so the flat view is shown.';
   function setDim(d) {
     if (d === '3d' && !G3.ok) {
       if (!G3.loading && window.VD3) { G3.loading = true; VD3.load((ok) => { G3.loading = false; G3.ok = ok && init3D(); if (!G3.ok) capStatus(NO3D); setDim(G3.ok ? '3d' : 'flat'); }); }

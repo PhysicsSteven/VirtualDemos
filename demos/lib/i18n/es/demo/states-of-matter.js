@@ -1,5 +1,7 @@
 /* demo/states-of-matter in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/states-of-matter', {
+"This browser could not open the 3D view, so the flat view is shown.":
+  "Este navegador no pudo abrir la vista 3D, así que se muestra la vista plana.",
 "{#} argon atoms · a slice {#} nm thick in front, the rest faint · the sample repeats sideways":
   "{#} átomos de argón · una rebanada de {#} nm de grosor al frente, el resto tenue · la muestra se repite hacia los lados",
 "heater in the floor · heating · piston at {#} atm":
@@ -366,6 +368,18 @@ VDI18N.add('es', 'demo/states-of-matter', {
   "El piso quita calor a {#} kJ por mol por nanosegundo.",
 "{#} g of ice at −{#} °C in an open beaker on a {#} W hot plate, all standing on a balance (tared, so it reads the sample only). Record the temperature and the balance reading as the ice warms, melts, the water warms, and then boils away.":
   "{#} g de hielo a −{#} °C en un vaso abierto sobre una parrilla de {#} W, todo sobre una balanza (tarada, así que solo lee la muestra). Registra la temperatura y la lectura de la balanza mientras el hielo se calienta, se funde, el agua se calienta, y luego se evapora al hervir.",
+"A beaker with {#} g of water on a hot plate, standing on a balance.":
+  "Un vaso con {#} g de agua sobre una parrilla, apoyado en una balanza.",
+"The hot plate gives {#} W.":
+  "La parrilla da {#} W.",
+"Temperature −{#} °C.":
+  "Temperatura −{#} °C.",
+"The balance reads {#} g.":
+  "La balanza marca {#} g.",
+"Heat supplied {#} kJ.":
+  "Calor suministrado {#} kJ.",
+"The ice is warming.":
+  "El hielo se está calentando.",
 "Ethanol, {#} g each · {#} W hot plates · room at {#} atm":
   "Etanol, {#} g cada uno · parrillas de {#} W · habitación a {#} atm",
 "{#} g of ethanol at {#} °C on the same hot plate. It boils at {#} °C, and its latent heat of vaporization is {#} kJ/kg, less than half of water's {#} kJ/kg, so it boils away much sooner.":
@@ -386,12 +400,6 @@ VDI18N.add('es', 'demo/states-of-matter', {
   "tapado",
 "A beaker with {#} g of ethanol on a hot plate, standing on a balance.":
   "Un vaso con {#} g de etanol sobre una parrilla, colocado sobre una balanza.",
-"The hot plate gives {#} W.":
-  "La parrilla da {#} W.",
-"The balance reads {#} g.":
-  "La balanza marca {#} g.",
-"Heat supplied {#} kJ.":
-  "Calor suministrado {#} kJ.",
 "The liquid is warming.":
   "El líquido se calienta.",
 "at {#} kPa; holds not to scale":
@@ -408,12 +416,6 @@ VDI18N.add('es', 'demo/states-of-matter', {
   "Una olla abierta con agua.",
 "The vapor pressure of the water is {#} kPa; outside {#} kPa.":
   "La presión de vapor del agua es {#} kPa; afuera, {#} kPa.",
-"A beaker with {#} g of water on a hot plate, standing on a balance.":
-  "Un vaso con {#} g de agua sobre una parrilla, apoyado en una balanza.",
-"Temperature −{#} °C.":
-  "Temperatura −{#} °C.",
-"The ice is warming.":
-  "El hielo se está calentando.",
 "liquid warms":
   "el líquido se calienta",
 "sublimes −{#} °C":

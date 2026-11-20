@@ -33,6 +33,7 @@
 @media (min-width: 821px) { .bench > .stage { align-self: start; min-height: max(680px, 100%); } }
 @media (max-width: 820px) { .scene { min-height: 0; height: 460px; flex: none; } .setup-card { position: static; width: auto; margin: 8px; max-height: none; } }
 @media (max-width: 420px) { .scene { height: 420px; } }
+@media (max-width: 480px) { #sceneSeg { flex-wrap: wrap; max-width: 100%; } }   /* the four experiment names do not fit on one line at 360 px */
 </style>
 <link rel="stylesheet" id="vd-look" href="lib/look.css">
 <script id="vd-gear" src="lib/gear.js"></script>
@@ -708,7 +709,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   VD.tools({ el: can, strip: '#strip', stage: '#scene', time: () => (S.scene === 'diff' ? S.t : null) });
   if (window.VD && VD.describe) VD.describe(can, () => {
-    if (S.scene === 'diff') return [`${MOLNAME[S.D.mol]}, simulated molecules ${S.D.d === 'drop' ? 'spreading from a line' : 'diffusing through a layer'}.`, { t: `Time ${sig(S.t, 3)} s.`, live: false }];
+    if (S.scene === 'diff') { const tr = (x) => (window.VDI18N ? VDI18N.t(x) : x);   /* translated in pieces: six molecules times two starts */
+      return [tr(MOLNAME[S.D.mol]) + ', ' + (S.D.d === 'drop' ? (window.VDI18N ? VDI18N.t('simulated molecules spreading from a line.') : 'simulated molecules spreading from a line.')
+        : (window.VDI18N ? VDI18N.t('simulated molecules diffusing through a layer.') : 'simulated molecules diffusing through a layer.')), { t: `Time ${sig(S.t, 3)} s.`, live: false }]; }
     if (S.scene === 'utube') return [`A U tube: the right side stands ${f(200 * S.U.x, 1)} cm above the left.`];
     if (S.scene === 'cell') return [`Red cells in ${f(S.C.salt, 2)}% saline, volume ${sig(S.C.V, 3)} cubic micrometers.`].concat(S.C.burst >= 1 ? [window.VDI18N ? VDI18N.t('The cell has burst.') : 'The cell has burst.'] : []);
     return ['A capillary: fluid leaves at the arterial end and returns at the venous end.'];
