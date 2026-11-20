@@ -53,7 +53,7 @@ Nothing to install. The Setups list has five data sets from the book (Third exam
 
 ## How the demo works
 
-- Every number comes from the shared statistics library (demos/lib/vdstats.js): the least squares slope and intercept, r, r², s = √(SSE/(n − 2)), the standard errors of the slope and intercept, and the t test t = r√(n − 2)/√(1 − r²) with df = n − 2. The 95 % critical value of r is t*/√(t*² + df); it matches the book's table to the three decimals printed there, except at df = 11, where the table prints 0.555 and the exact value is 0.553.
+- Every number comes from the shared statistics library (demos/lib/vdstats.js): the least squares slope and intercept, r, r², s = √(SSE/(n − 2)), the standard errors of the slope and intercept, and the t test t = r√(n − 2)/√(1 − r²) with df = n − 2. The 95 % critical value of r is t\*/√(t\*² + df); it matches the book's table to the three decimals printed there, except at df = 11, where the table prints 0.555 and the exact value is 0.553.
 - Outliers follow the book's rule (12.6): a residual of at least 2s. The dashed lines are ŷ ± 2s.
 - The shuffle test is not in the book: it keeps the x values, shuffles the y values among them, and counts the share of shuffles with |r| at least the real |r|. Shuffles and simulated data are seeded, so the same Draw gives the same numbers on every computer.
 - The simulated labs add normal errors to the ideal law: k = 25.0 N/m, g = 9.81 m/s², R = 47.0 Ω, and pendulum timing errors of 0.010 s. They are labeled simulated.
