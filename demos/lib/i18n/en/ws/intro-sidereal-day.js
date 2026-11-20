@@ -58,9 +58,10 @@ VDI18N.add('en', 'ws/intro-sidereal-day', [
 "Venus spins backward. Is its solar day longer or shorter than its sidereal day of {#} days? Use the picture to explain why spinning backward makes the solar day shorter.",
 "In Part {#}, on which of your dates is the sundial furthest ahead of the clock, and on which is it furthest behind? By how many minutes?",
 "In Part {#}, using the Solar day − {#} h column, on which date was the solar day longest, and on which was it shortest? How far is the longest solar day from {#} hours, in seconds?",
-"The demo computes the days from the planets’ measured rotation and orbit periods, so a repeated reading gives the same numbers. The top view is not to scale. Your solar day in Analysis {#} comes from dividing two readings. If the time readout were rounded to the nearest hour, how far off could Earth’s solar day be after one solar day? After ten solar days? Why does counting many days give a better answer?",
 "In your Earth reading from Part {#}, the Sidereal day is the time Earth takes to face the same star again, and the Time is one solar day by the clock. How much sooner does Earth face the same star again than it faces the Sun? Use that difference to say when the star in Before the lab {#} rises after {#} nights, and how close your answer there was. Explain why the constellations seen at {#} pm change through the year.",
 "Old clocks were set by sundials. Explain why a town that set its clock by its sundial on {#} February would find its clock about half an hour off from the sundial on {#} November.",
-"Prelab answers, the table copies, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.",
+"For courses that treat measurement uncertainty. This section is not counted in the {#} minutes; do it when your instructor assigns it.",
+"The demo computes the days from the planets’ measured rotation and orbit periods, so a repeated reading gives the same numbers. The top view is not to scale. Your solar day in Analysis {#} comes from dividing two readings. If the time readout were rounded to the nearest hour, how far off could Earth’s solar day be after one solar day? After ten solar days? Why does counting many days give a better answer?",
+"Prelab answers, the table copies, the answers to the analysis section and to the questions (and to Uncertainty, if assigned). Identify simulated data.",
 "Reasons for Seasons"
 ]);

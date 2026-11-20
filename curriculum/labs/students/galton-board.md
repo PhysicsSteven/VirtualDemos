@@ -94,15 +94,18 @@ Table 2. Counts in each bin, 12 fair rows, 1600 balls.
 4. For the chance series, plot the sample mean (vertical) against p (horizontal), and s² (vertical) against np(1 − p) (horizontal). Find the slope of each and compare with the binomial.
 5. Using the bins in Table 2, find the fraction of the balls within one standard deviation (1.73) of the mean. Compare with the binomial (bins 5, 6 and 7) and with the 68% of a normal curve.
 
-## Uncertainty
-
-The sample mean of N balls has a standard error of about $$s/\sqrt{N}$$. Find it for your 400 and 6400 ball readings, and decide whether each sample mean agrees with 6 within two standard errors.
-
 ## Questions
 
 1. After five balls in a row have gone into the right half, is the next ball more likely to go left? Explain.
 2. Your 4 row and 16 row readings in Table 1 settle Before the lab 4: by what factor did s grow when the rows went up four times? Explain that factor from the independence of the bounces (what adds from one row to the next, the deviations or their squares?). Then check Label bins by net steps (random walk) on the card and use the same reasoning to say how much farther a molecule diffusing for four times as long gets.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The sample mean of N balls has a standard error of about $$s/\sqrt{N}$$. Find it for your 400 and 6400 ball readings, and decide whether each sample mean agrees with 6 within two standard errors. Give the fit uncertainty of each slope in Analysis 3 and 4, and say whether the slope agrees with the binomial value within it.
+
 ## What to hand in
 
-Prelab answers, the tables with their graphs, your slopes compared with the binomial, the standard errors, and answers to the questions. Identify simulated data.
+Prelab answers, the tables with their graphs, your slopes compared with the binomial, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

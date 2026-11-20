@@ -95,16 +95,21 @@ Look at the two "fast" rows of Table 2 side by side. The reactions were made fas
 3. The 3.0 M☉ star has three times the Sun's fuel. From Table 1, how many times shorter is its life than the Sun's? Use its luminosity to explain why.
 4. The Sun is 4.6 billion years old. Using its lifetime from Table 1, what fraction of its hydrogen burning life has it used so far?
 
-## Uncertainty
-
-The 10 % in the lifetime formula is a round rule: how much of a star's mass is fused before it leaves the main sequence depends on the star and on how much its core gas mixes with the gas around it. If a star fused 12 % instead of 10 %, by what factor would every lifetime in Table 1 change, and would the slope in Analysis 1 change too?
-
 ## Questions
 
 1. Choose **Light's long walk** and press **The Sun, 0.5 mm steps**. Read the time the light takes to random walk out of the Sun (**Time, R²/(ℓc)**), and compare it with the 8.3 minutes it then takes to cross to Earth. Why does the trip out of the Sun take so much longer than the trip to Earth, when the Sun's radius is about 215 times smaller than the distance to Earth?
 2. Heavy stars have more fuel, yet they die young. Explain this in one or two sentences, using the idea of fuel and burn rate.
 3. Go back to your answer to Before the lab 4. Compare it with the "Fusion runs fast" rows of Table 2: did the core settle hotter or cooler than it started, and bigger or smaller? Explain in your own words how the extra energy changed the core, and why the faster reactions ended up making no more energy than before. Why does this make the Sun a steady star?
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The 10 % in the lifetime formula is a round rule: how much of a star's mass is fused before it leaves the main sequence depends on the star and on how much its core gas mixes with the gas around it. If a star fused 12 % instead of 10 %, by what factor would every lifetime in Table 1 change, and would the slope in Analysis 1 change too?
+
+Give the slope and intercept of your Analysis 1 fit with their standard errors, and say whether the intercept is zero within its uncertainty.
+
 ## What to hand in
 
-Prelab answers, both tables with the M/L column filled, the graph with its fit, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data: every reading in this lab comes from the demo's model.
+Prelab answers, both tables with the M/L column filled, the graph with its fit, the answers to the analysis section and to the questions (and to Uncertainty, if assigned). Identify simulated data: every reading in this lab comes from the demo's model.

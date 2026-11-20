@@ -67,15 +67,18 @@ Fill the last three columns yourself. For each spot, write loud or quiet, work o
 2. For Part 2, find $$\lambda$$ at each frequency from the slope of $$\Delta r$$ against $$n$$ for its quiet spots, then $$v = f\lambda$$ at each. Find the mean speed of sound and compare it with $$v = 331.3\ \mathrm{m/s}\,\sqrt{1 + t_{\rm C}/273.15}$$.
 3. For Part 3, find the mystery wavelength from the slope of $$\Delta r$$ against $$n$$, and the frequency from it.
 
-## Uncertainty
-
-The level changes slowly near a loud spot and very quickly near a quiet one, so quiet spots can be located much more precisely; that is why the analysis uses them. The tape reads distances to 1 mm, but the arrow keys move the microphone 5 cm a press, so a spot found with them is located to about ±2.5 cm in $$y$$; a careful drag places it more finely. On a real setup add reflections from the floor, walls and people (which add their own interference), the size of the speakers and microphone, the speakers' directionality, air temperature and wind.
-
 ## Questions
 
 1. Why do the quiet lines curve away from the center line as you move farther from the speakers?
 2. At the end of Part 1 you switched speaker 2 off at a quiet spot. Was your answer to Before the lab 4 right? Compare the two levels there, and explain the change from the pressures the two speakers send to that spot.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The level changes slowly near a loud spot and very quickly near a quiet one, so quiet spots can be located much more precisely; that is why the analysis uses them. The tape reads distances to 1 mm, but the arrow keys move the microphone 5 cm a press, so a spot found with them is located to about ±2.5 cm in $$y$$; a careful drag places it more finely. On a real setup add reflections from the floor, walls and people (which add their own interference), the size of the speakers and microphone, the speakers' directionality, air temperature and wind. Give $$\lambda$$, $$v$$ and the mystery frequency with uncertainties, and say whether each agrees with its expected value within them.
+
 ## What to hand in
 
-Prelab answers, a Data table copy for each part and frequency, the graphs of $$\Delta r$$ against $$n$$ with fits, your values of $$\lambda$$, $$v$$ and the mystery frequency with uncertainties, and answers to the questions. Identify simulated data.
+Prelab answers, a Data table copy for each part and frequency, the graphs of $$\Delta r$$ against $$n$$ with fits, your values of $$\lambda$$, $$v$$ and the mystery frequency, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

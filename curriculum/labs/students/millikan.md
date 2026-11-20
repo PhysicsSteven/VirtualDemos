@@ -114,12 +114,8 @@ The $$q$$ column is the size of each charge, without its sign.
 
 1. Drop 1 by hand. From its times, find $$v_f = (1.00\ \text{mm})/t_f$$ and $$v_E = (1.00\ \text{mm})/t_E$$. Find $$r_0$$, then the slip correction and $$r$$ in two passes as the Background shows. Find $$E = V/d$$ with $$d = 7.60$$ mm, and then $$q$$. Show each step with its units. By what percentage do your $$r$$ and $$q$$ differ from the table's?
 2. Find $$n$$ for every drop: divide each $$q$$ by the smallest $$q$$ in your table and round to the nearest whole number (doubling first if the ratios fall near halves, as the Background explains). Fill in the $$n$$ column and then $$q/n$$. List the ratios before rounding: how far is the worst one from a whole number?
-3. Your value of $$e$$: the average of the $$q/n$$ column, with its standard error (the standard deviation divided by the square root of the number of drops). How many standard errors is it from the accepted value $$e = 1.602176634\times10^{-19}$$ C (exact, by the definition of the SI)? By what percentage does it differ?
-4. Graph $$q$$ (vertical) against $$n$$ (horizontal) with a straight line fit. What is the slope, with its uncertainty, and what is the intercept? Is the intercept zero within its uncertainty, as it must be if every charge is $$ne$$? Compare the slope with your answer to Analysis 3.
-
-## Uncertainty
-
-Each time carries the Brownian jiggle of the drop. Estimate how far a drop of radius 0.5 µm wanders by Brownian motion in 25 s (about $$\sqrt{2Dt}$$, with $$D = 2.7\times10^{-11}$$ m²/s for this drop), and what percentage of the 1.00 mm timing distance that is. How does that compare with the scatter of your $$q/n$$ values? Which drops would you time more often to improve your $$e$$, and why?
+3. Your value of $$e$$: the average of the $$q/n$$ column. By what percentage does it differ from the accepted value $$e = 1.602176634\times10^{-19}$$ C (exact, by the definition of the SI)?
+4. Graph $$q$$ (vertical) against $$n$$ (horizontal) with a straight line fit. What are the slope and the intercept? Is the intercept near zero, as it must be if every charge is $$ne$$? Compare the slope with your answer to Analysis 3.
 
 ## Questions
 
@@ -128,6 +124,13 @@ Each time carries the Brownian jiggle of the drop. Estimate how far a drop of ra
 3. Tick **Work out r and q with plain Stokes drag (no slip correction)** in Lab and read drop 1's $$q$$ again. By what percentage does it change? Would the charges of all your drops still bunch at whole numbers of one value? Would that value be $$e$$?
 4. Does your data show that charge is quantized? Could all your charges also be whole numbers of $$e/2$$ or $$e/3$$? What would you need to rule that out (think of the ionizing source, which changes a drop's charge by a small amount at a time)?
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+Each time carries the Brownian jiggle of the drop. Estimate how far a drop of radius 0.5 µm wanders by Brownian motion in 25 s (about $$\sqrt{2Dt}$$, with $$D = 2.7\times10^{-11}$$ m²/s for this drop), and what percentage of the 1.00 mm timing distance that is. How does that compare with the scatter of your $$q/n$$ values? Which drops would you time more often to improve your $$e$$, and why? Give your value of $$e$$ with its standard error (the standard deviation of the $$q/n$$ values divided by the square root of the number of drops), and say how many standard errors it is from the accepted value $$e = 1.602176634\times10^{-19}$$ C. For the fit in Analysis 4, give the slope with its uncertainty, and say whether the intercept is zero within its uncertainty.
+
 ## What to hand in
 
-Your answers to Before the lab, the Data table with its graph and fit, Analysis 1 worked by hand with units, your value of $$e$$ with its uncertainty, and answers to the Uncertainty and Questions sections. Say that your data came from the simulated apparatus.
+Your answers to Before the lab, the Data table with its graph and fit, Analysis 1 worked by hand with units, your value of $$e$$, and answers to the questions (and to Uncertainty, if assigned). Say that your data came from the simulated apparatus.

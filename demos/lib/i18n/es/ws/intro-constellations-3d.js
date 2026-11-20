@@ -94,8 +94,6 @@ VDI18N.add('es', 'ws/intro-constellations-3d', {
   "En Casiopea, Caph y γ Cas se ven casi igual de brillantes. ¿Cuántas veces más lejos está γ Cas? ¿Cuántas veces más luz visible emite?",
 "Describe what Orion looks like from the side. Would the figure of Orion look the same to someone living near a star {#} ly from Earth in a different direction?":
   "Describe cómo se ve Orión de lado. ¿La figura de Orión se vería igual para alguien que viviera cerca de una estrella a {#} a. l. de la Tierra en otra dirección?",
-"A star’s distance is {#} divided by its parallax: a parallax of {#} milliarcsecond (mas) means {#} parsecs, or {#} ly. Alnilam’s parallax is about {#} mas. If that measurement could be off by {#} mas either way, what range of distances in light years could Alnilam have? How would that change its absolute magnitude and its visible light output? Why are the distances of the Big Dipper stars much more certain?":
-  "La distancia de una estrella es {#} dividido entre su paralaje: un paralaje de {#} milisegundo de arco (mas) significa {#} pársecs, o {#} a. l. El paralaje de Alnilam es de unos {#} mas. Si esa medición pudiera desviarse {#} mas en cualquier sentido, ¿qué intervalo de distancias en años luz podría tener Alnilam? ¿Cómo cambiaría eso su magnitud absoluta y la luz visible que emite? ¿Por qué las distancias de las estrellas del Gran Cucharón son mucho más seguras?",
 "Explain in your own words why the stars of a constellation are not a real group in space, even though they look like one.":
   "Explica con tus propias palabras por qué las estrellas de una constelación no son un grupo real en el espacio, aunque lo parezcan.",
 "The nearest star to the Sun, Proxima Centauri, is {#} ly away. Would the Big Dipper look very different from there? Use your distances to explain.":
@@ -106,8 +104,12 @@ VDI18N.add('es', 'ws/intro-constellations-3d', {
   "El polvo entre las estrellas atenúa un poco las estrellas lejanas, y la demo lo deja fuera. ¿Incluirlo haría más brillantes o más tenues las magnitudes absolutas de las estrellas más lejanas?",
 "Find Rigel and Bellatrix in your Part {#} rows. Which is farther, how do their Visible light values compare, and is that what you guessed in Before the lab {#}? Using the Background’s idea of absolute magnitude, explain why a star that looks brighter is not necessarily closer.":
   "Halla Rigel y Bellatrix en tus filas de la Parte {#}. ¿Cuál está más lejos, cómo se comparan sus valores de Luz visible y es lo que supusiste en Antes del laboratorio {#}? Usando la idea de magnitud absoluta del Fondo, explica por qué una estrella que se ve más brillante no necesariamente está más cerca.",
-"Prelab answers, the side view sketch of Orion, the table, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.":
-  "Respuestas previas al laboratorio, el dibujo de la vista de lado de Orión, la tabla, las respuestas de las secciones de análisis e incertidumbre, y las respuestas a las preguntas. Identifica los datos simulados.",
+"For courses that treat measurement uncertainty. This section is not counted in the {#} minutes; do it when your instructor assigns it.":
+  "Para cursos que tratan la incertidumbre de medición. Esta sección no cuenta dentro de los {#} minutos; hazla cuando tu profesor la asigne.",
+"A star’s distance is {#} divided by its parallax: a parallax of {#} milliarcsecond (mas) means {#} parsecs, or {#} ly. Alnilam’s parallax is about {#} mas. If that measurement could be off by {#} mas either way, what range of distances in light years could Alnilam have? How would that change its absolute magnitude and its visible light output? Why are the distances of the Big Dipper stars much more certain?":
+  "La distancia de una estrella es {#} dividido entre su paralaje: un paralaje de {#} milisegundo de arco (mas) significa {#} pársecs, o {#} a. l. El paralaje de Alnilam es de unos {#} mas. Si esa medición pudiera desviarse {#} mas en cualquier sentido, ¿qué intervalo de distancias en años luz podría tener Alnilam? ¿Cómo cambiaría eso su magnitud absoluta y la luz visible que emite? ¿Por qué las distancias de las estrellas del Gran Cucharón son mucho más seguras?",
+"Prelab answers, the side view sketch of Orion, the table, the answers to the analysis section and to the questions (and to Uncertainty, if assigned). Identify simulated data.":
+  "Respuestas previas al laboratorio, el dibujo de la vista de lado de Orión, la tabla, las respuestas de la sección de análisis y las respuestas a las preguntas (y de Incertidumbre, si se asigna). Identifica los datos simulados.",
 "Visible light output of the star":
   "Luz visible que emite la estrella",
 "Visible light output of the Sun":

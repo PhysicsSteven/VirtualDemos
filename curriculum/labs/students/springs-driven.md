@@ -65,14 +65,17 @@ $$\omega_0 = \sqrt{k/m}$$. Work out the last two columns from the settings, for 
 
 1. Plot the steady amplitude against $$\omega$$ on a sketch or graph. Compare the measured amplitude with the predicted one at the three readings you worked out, the frequency of the largest amplitude with $$\omega_0$$, and the height and width of the peak with $$F_0/(b\omega_0)$$ and $$b/m$$.
 
-## Uncertainty
-
-The readout stores each amplitude to the 0.0001 m (0.01 cm) the demo displays, and the settings $$m$$, $$k$$, $$b$$ and $$F_0$$ are exact, so a predicted amplitude should match your reading to that rounding once the start up transient has died away (its time constant is $$2m/b = 3.2$$ s). A reading taken too soon is off by what is left of the transient; say which of your readings you trust least. The peak height and width rest on a few readings near $$\omega_0$$, where the amplitude changes fastest with $$\omega$$, so say how the 0.05 rad/s steps of the slider limit them. A real oscillator adds noise, a drive that is not exactly sinusoidal, and a damping force that is not exactly proportional to the speed.
-
 ## Questions
 
 1. Set your Data table readings at 3.00 and 9.00 rad/s side by side: how do the steady amplitudes compare, and was your answer to Before the lab 2 right? Why does the driven amplitude approach $$F_0/k$$ at low drive frequency and fall toward zero at high frequency? What limits the amplitude at resonance?
 2. Give one example where resonance is useful and one where it must be avoided.
+
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The readout stores each amplitude to the 0.0001 m (0.01 cm) the demo displays, and the settings $$m$$, $$k$$, $$b$$ and $$F_0$$ are exact, so a predicted amplitude should match your reading to that rounding once the start up transient has died away (its time constant is $$2m/b = 3.2$$ s). A reading taken too soon is off by what is left of the transient; say which of your readings you trust least. The peak height and width rest on a few readings near $$\omega_0$$, where the amplitude changes fastest with $$\omega$$, so say how the 0.05 rad/s steps of the slider limit them. A real oscillator adds noise, a drive that is not exactly sinusoidal, and a damping force that is not exactly proportional to the speed.
 
 ## With calculus
 
@@ -84,4 +87,4 @@ For courses that use calculus. This section is not counted in the 75 minutes; do
 
 ## What to hand in
 
-Prelab answers, the Data table, the sketch or graph of $$A$$ against $$\omega$$, the comparison of the peak with the prediction, and answers to the questions (and to With calculus, if assigned). Identify simulated data.
+Prelab answers, the Data table, the sketch or graph of $$A$$ against $$\omega$$, the comparison of the peak with the prediction, and answers to the questions (and to Uncertainty and With calculus, if assigned). Identify simulated data.

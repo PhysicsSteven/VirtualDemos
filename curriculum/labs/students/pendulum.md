@@ -85,16 +85,21 @@ Record planet, drag setting and the number of oscillations timed. Keep length, m
 4. Plot $$T$$ against $$\theta_0$$. Compare with the small angle prediction and calculate the fractional period increase at each angle. Decide what angle range satisfies a stated tolerance, such as 1%.
 5. Compare rod and bob periods. Explain the result using moment of inertia and gravitational torque rather than total mass alone.
 
-## Uncertainty
-
-The virtual photogate rounds period to 0.001 s; length and angle are prescribed model settings, not random readings. On a real bench include length measurement, pivot location, bob size, timing and release angle uncertainty. Since $$T^2$$ is plotted, its uncertainty is approximately $$2T$$ times the period uncertainty. Propagate fit slope uncertainty to $$g$$, but also include finite amplitude, drag and length zero effects. Repeated identical simulated runs do not create independent noise. With drag on, amplitude changes during timing, so the conservative fixed amplitude curve is no longer an exact comparison.
-
 ## Questions
 
 1. Your Mass check gives the periods of the 0.10 kg and 1.00 kg bobs. Did the heavier bob swing more slowly, more quickly or at the same rate, and was your answer to Before the lab 4 right? Use the tangential equation in the Background to explain why the bob mass cancels: what grows with the mass, and what grows with it in the same proportion?
 2. Why is a turning point to bottom time not a full period?
 3. Why does a uniform rod differ from a point bob with the same total mass and nominal length?
 4. Why is the fixed length model unsuitable for a string bob released from rest above horizontal?
+
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The virtual photogate rounds period to 0.001 s; length and angle are prescribed model settings, not random readings. On a real bench include length measurement, pivot location, bob size, timing and release angle uncertainty. Since $$T^2$$ is plotted, its uncertainty is approximately $$2T$$ times the period uncertainty. Propagate fit slope uncertainty to $$g$$, but also include finite amplitude, drag and length zero effects. Repeated identical simulated runs do not create independent noise. With drag on, amplitude changes during timing, so the conservative fixed amplitude curve is no longer an exact comparison.
+
+Give the slope and intercept of your length fit with their standard errors, and say whether the intercept is zero within its uncertainty. Report $$g$$ with its uncertainty, compare the size of the amplitude correction with that uncertainty, and say whether the corrected $$g$$ agrees with the demo's value within about two standard errors.
 
 ## With calculus
 
@@ -105,4 +110,4 @@ For courses that use calculus. This section is not counted in the 75 minutes; do
 
 ## What to hand in
 
-Prelab answers, settings and separate data/CSV files, length fit with residuals, $$g$$ and uncertainty with an amplitude bias estimate, mass and amplitude comparisons, rod interpretation, and answers to the questions (and to With calculus, if assigned). Identify simulated data.
+Prelab answers, settings and separate data/CSV files, length fit with residuals, $$g$$ with an amplitude bias estimate, mass and amplitude comparisons, rod interpretation, and answers to the questions (and to Uncertainty and With calculus, if assigned). Identify simulated data.

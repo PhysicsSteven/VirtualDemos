@@ -70,10 +70,6 @@ No hazards in the virtual lab. A real fast wheel stores a lot of energy: keep fi
 5. At 3000 rpm with d = 0.10 m, how many times does the wheel spin during one turn around the post? (The wheel spins 3000 times per minute, which is 50 times per second.)
 6. Earth spins once a day and precesses once in 25,772 years. About how many times does Earth spin during one turn of its axis? Which spins "faster compared with its precession," Earth or the demo's wheel?
 
-## Uncertainty
-
-The gate times each turn to 0.01 s, and the model has no friction, so a repeated reading gives the same time. A real gyroscope has friction at the pivot and in the axle bearing, so its spin slowly runs down. Using your results, would a real gyroscope's turns around the post get faster or slower as it runs down? Explain.
-
 ## Questions
 
 1. Today Polaris is the North Star. Will it still be the North Star when the pyramids are as old again as they are now (about 4,800 years from now)? Explain using precession.
@@ -82,6 +78,13 @@ The gate times each turn to 0.01 s, and the model has no friction, so a repeated
 4. If Earth spun more slowly, but the Sun and Moon pulled on its bulge with the same torque, would its precession be faster or slower? Use what you found with the wheel.
 5. What did the far end of the axle do in your 3000 rpm run, and how long did one turn around the post take? Did it go the way you expected in Before the lab 4? Using the Precession paragraph of the Background, explain why the torque from the wheel's weight swings the axle sideways around the post instead of tipping the far end down.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The gate times each turn to 0.01 s, and the model has no friction, so a repeated reading gives the same time. A real gyroscope has friction at the pivot and in the axle bearing, so its spin slowly runs down. Using your results, would a real gyroscope's turns around the post get faster or slower as it runs down? Explain.
+
 ## What to hand in
 
-Prelab answers, the two table copies with the graph, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.
+Prelab answers, the two table copies with the graph, the answers to the analysis section and to the questions (and to Uncertainty, if assigned). Identify simulated data.

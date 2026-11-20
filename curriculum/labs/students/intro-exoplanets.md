@@ -93,14 +93,17 @@ No hazards in the virtual lab.
 6. Mystery planet, water: estimate the star's luminosity and the starlight the planet gets compared with Earth (step 5). Is the planet inside the habitable zone, too close or too far? Estimate its temperature with no greenhouse.
 7. Now reveal the planet. Compare your radius, mass, orbit and density with the true values.
 
-## Uncertainty
-
-Each mystery reading is scattered by the noise the demo states. For the transit depth and for $$K$$, look at how far your readings spread on either side of their average. Averaging several readings shrinks the scatter: the average of 4 readings scatters half as much as one reading. Which of your results, radius or mass, do you think is less certain, and why? Since the density uses the radius cubed, what does a 5% error in the radius do to the density?
-
 ## Questions
 
 1. Go back to your answer to Before the lab 3. From your Part 1 and Part 2 readings, give the Hot Jupiter's brightness drop, star velocity and period next to those of Earth and Sun. Which planet would a search find first, and why? Use the Background's two signals to explain what the planets found so far can and cannot tell us about how common planets like Earth are.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+Each mystery reading is scattered by the noise the demo states. For the transit depth and for $$K$$, look at how far your readings spread on either side of their average. Averaging several readings shrinks the scatter: the average of 4 readings scatters half as much as one reading. Which of your results, radius or mass, do you think is less certain, and why? Since the density uses the radius cubed, what does a 5% error in the radius do to the density?
+
 ## What to hand in
 
-Prelab answers, the three copies of the Data table, the mystery planet's radius, mass, orbit, density and habitable zone check with the comparison to the revealed values, the answers to the analysis and uncertainty sections, and the answer to the question. Identify simulated data.
+Prelab answers, the three copies of the Data table, the mystery planet's radius, mass, orbit, density and habitable zone check with the comparison to the revealed values, the answers to the analysis section and the question (and to Uncertainty, if assigned). Identify simulated data.

@@ -124,14 +124,18 @@ VDI18N.add('es', 'ws/seasons', {
   "Todavía en el solsticio de junio, ¿en qué latitudes el Sol nunca se pone, y en cuáles nunca sale? Relaciona esas latitudes con \\(\\varepsilon\\).",
 "Graph \\(Q\\) (vertical) against latitude (across) at the June solstice. Where is the daily insolation largest?":
   "Grafica \\(Q\\) (vertical) en función de la latitud (horizontal) en el solsticio de junio. ¿Dónde es mayor la insolación diaria?",
-"The readouts come from exact formulas, so there is no scatter: repeat a reading and you get the same numbers. The uncertainty is in the model and in the date. Near an equinox, by how much does the declination change from one day to the next? Near a solstice? Which of your readings would change most if your date were one day off?":
-  "Las lecturas vienen de fórmulas exactas, así que no hay dispersión: repite una lectura y obtienes los mismos números. La incertidumbre está en el modelo y en la fecha. Cerca de un equinoccio, ¿cuánto cambia la declinación de un día al siguiente? ¿Y cerca de un solsticio? ¿Cuáles de tus lecturas cambiarían más si tu fecha estuviera desfasada un día?",
 "The longest day at Ruston is in June, but the warmest weather is usually in July and August. The demo shows sunlight, not temperature. What does the delay tell you about how the oceans and land store heat?":
   "El día más largo en Ruston es en junio, pero el clima más cálido suele ser en julio y agosto. La demo muestra la luz del Sol, no la temperatura. ¿Qué te dice el retraso sobre cómo almacenan calor los océanos y la tierra?",
 "Which of the three places in Before the lab {#} came out on top in your June solstice readings, and what was \\(Q\\) at each? Use the day length and the noon altitude at each place, and the \\(S\\cos\\theta\\) of the Background, to explain the order.":
   "¿Cuál de los tres lugares de Antes del laboratorio {#} quedó en primer lugar en tus lecturas del solsticio de junio, y cuánto fue \\(Q\\) en cada uno? Usa la duración del día y la altura al mediodía en cada lugar, y la \\(S\\cos\\theta\\) de Fondo, para explicar el orden.",
-"Prelab answers, the table copies with their graphs and fits, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.":
-  "Respuestas del prelaboratorio, las copias de la tabla con sus gráficas y ajustes, las respuestas a las secciones de análisis e incertidumbre, y las respuestas a las preguntas. Identifica los datos simulados.",
+"For courses that treat measurement uncertainty. This section is not counted in the {#} minutes; do it when your instructor assigns it.":
+  "Para cursos que tratan la incertidumbre de medición. Esta sección no cuenta dentro de los {#} minutos; hazla cuando tu profesor la asigne.",
+"The readouts come from exact formulas, so there is no scatter: repeat a reading and you get the same numbers. The uncertainty is in the model and in the date. Near an equinox, by how much does the declination change from one day to the next? Near a solstice? Which of your readings would change most if your date were one day off?":
+  "Las lecturas vienen de fórmulas exactas, así que no hay dispersión: repite una lectura y obtienes los mismos números. La incertidumbre está en el modelo y en la fecha. Cerca de un equinoccio, ¿cuánto cambia la declinación de un día al siguiente? ¿Y cerca de un solsticio? ¿Cuáles de tus lecturas cambiarían más si tu fecha estuviera desfasada un día?",
+"Give the slope and intercept of your graph of \\(Q\\) against \\((1\\ \\text{AU}/r)^2\\) with their standard errors, and say whether \\(S_0\\) agrees with {#} W/m² within its uncertainty.":
+  "Da la pendiente y la ordenada al origen de tu gráfica de \\(Q\\) en función de \\((1\\ \\text{AU}/r)^2\\) con sus errores estándar, y di si \\(S_0\\) concuerda con {#} W/m² dentro de su incertidumbre.",
+"Prelab answers, the table copies with their graphs and fits, the answers to the analysis section and to the questions (and to Uncertainty, if assigned). Identify simulated data.":
+  "Respuestas del prelaboratorio, las copias de la tabla con sus gráficas y ajustes, las respuestas de la sección de análisis y de las preguntas (y de Incertidumbre, si se asigna). Identifica los datos simulados.",
 "Area":
   "Área",
 "Electric field (the flux analogy)":

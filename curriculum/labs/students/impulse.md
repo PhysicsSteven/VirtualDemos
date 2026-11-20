@@ -77,17 +77,22 @@ Save every force file, its settings and how you found the area. Contact time is 
 2. Compare $$-A$$ with $$m(v_{\rm after}-v_{\rm before})$$, including signs, units and a fractional residual based on $$\lvert\Delta p\rvert$$.
 3. Compare stiff and soft pulse widths and peaks at matched velocities. Explain why equal areas need not mean equal peak forces.
 4. For clay, calculate initial and final kinetic energies and compare energy loss with impulse. Explain why these are different quantities.
-5. Quantify sample rate effects and discuss baseline, rounding and unresolved peak errors.
-
-## Uncertainty
-
-The virtual force readings round to 0.01 N and velocities to 0.001 m/s, without added random noise. Force CSV times round to 0.00001 s. On a real bench include sensor zero, calibration, mass, velocity measurement and sample spacing. A constant force zero error adds an area proportional to the length of the time window you add over, so document the baseline window. Use sampling comparisons to see how sensitive the area is to the sampling; repeated identical simulated files do not reduce uncertainty.
+5. Quantify sample rate effects and discuss baseline and unresolved peak errors.
 
 ## Questions
 
 1. Did the soft spring change the impulse, as Before the lab 4 asked? Give the areas, peak forces and contact times for runs 1 and 2, and use $$J_{\rm cart} = m(v_{\rm after} - v_{\rm before})$$ to explain why padding can reduce the peak force while leaving the impulse nearly unchanged.
 2. Can an inelastic collision conserve momentum while losing kinetic energy?
 3. Why does a higher sample rate not remove a force calibration error?
+
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The virtual force readings round to 0.01 N and velocities to 0.001 m/s, without added random noise. Force CSV times round to 0.00001 s. On a real bench include sensor zero, calibration, mass, velocity measurement and sample spacing. A constant force zero error adds an area proportional to the length of the time window you add over, so document the baseline window. Use sampling comparisons to see how sensitive the area is to the sampling; repeated identical simulated files do not reduce uncertainty.
+
+Discuss how the rounding of the force readings affects your areas, and give the size of that effect for the stiff spring pulse.
 
 ## With calculus
 
@@ -99,4 +104,4 @@ For courses that use calculus. This section is not counted in the 75 minutes; do
 
 ## What to hand in
 
-Prelab answers, settings and force CSVs, labeled pulse plots, reproducible area sums, signed impulse/momentum comparisons, bumper and sampling comparisons, kinetic energy analysis, uncertainty and question answers (and With calculus answers, if assigned). Identify simulated data.
+Prelab answers, settings and force CSVs, labeled pulse plots, reproducible area sums, signed impulse/momentum comparisons, bumper and sampling comparisons, kinetic energy analysis, and answers to the questions (and to Uncertainty and With calculus, if assigned). Identify simulated data.

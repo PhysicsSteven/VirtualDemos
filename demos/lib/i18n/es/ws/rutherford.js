@@ -96,14 +96,12 @@ VDI18N.add('es', 'ws/rutherford', {
   "ln sin(θ/{#}), fila {#}",
 "ln(N/ΔΩ), row {#}":
   "ln(N/ΔΩ), fila {#}",
-"For gold, fill the N/ΔΩ, ln sin(θ/{#}) and ln(N/ΔΩ) columns and graph \\(\\ln(N/\\Delta\\Omega)\\) (vertical) against \\(\\ln\\sin(\\theta/2)\\) (horizontal), leaving out bins with fewer than {#} counts. Give the slope with its uncertainty and compare with −{#}.":
-  "Para el oro, llena las columnas N/ΔΩ, ln sin(θ/{#}) y ln(N/ΔΩ) y grafica \\(\\ln(N/\\Delta\\Omega)\\) (vertical) en función de \\(\\ln\\sin(\\theta/2)\\) (horizontal), omitiendo los intervalos con menos de {#} conteos. Da la pendiente con su incertidumbre y compárala con −{#}.",
+"For gold, fill the N/ΔΩ, ln sin(θ/{#}) and ln(N/ΔΩ) columns and graph \\(\\ln(N/\\Delta\\Omega)\\) (vertical) against \\(\\ln\\sin(\\theta/2)\\) (horizontal), leaving out bins with fewer than {#} counts. Give the slope and compare with −{#}.":
+  "Para el oro, llena las columnas N/ΔΩ, ln sin(θ/{#}) y ln(N/ΔΩ) y grafica \\(\\ln(N/\\Delta\\Omega)\\) (vertical) en función de \\(\\ln\\sin(\\theta/2)\\) (horizontal), omitiendo los intervalos con menos de {#} conteos. Da la pendiente y compárala con −{#}.",
 "From the intercept find \\(D\\) for gold, then \\(Z\\). Compare with {#}.":
   "A partir de la ordenada al origen encuentra \\(D\\) para el oro, y luego \\(Z\\). Compara con {#}.",
 "What did the plum pudding atom give? Would Geiger and Marsden have seen any alphas turned back?":
   "¿Qué dio el átomo de pudín de pasas? ¿Habrían visto Geiger y Marsden alguna alfa regresar?",
-"The count in a bin fluctuates by about \\(\\sqrt{N}\\), so \\(\\ln N\\) is uncertain by about \\(1/\\sqrt{N}\\). Find that uncertainty for your bins near {#}°, {#}° and {#}°, and compare with the residuals of your fits. Where do the residuals scatter most, and why? How does the counting statistics limit your value of \\(Z\\)?":
-  "El conteo en un intervalo fluctúa en unos \\(\\sqrt{N}\\), así que \\(\\ln N\\) tiene una incertidumbre de unos \\(1/\\sqrt{N}\\). Encuentra esa incertidumbre para tus intervalos cerca de {#}°, {#}° y {#}°, y compárala con los residuos de tus ajustes. ¿Dónde se dispersan más los residuos, y por qué? ¿Cómo limita la estadística de conteo tu valor de \\(Z\\)?",
 "Why do so few alphas turn through large angles, when every one of them passes a nucleus?":
   "¿Por qué tan pocas alfas se desvían ángulos grandes, si cada una de ellas pasa junto a un núcleo?",
 "How did your choice in Before the lab {#} compare with the two deflections you read at {#} fm? Explain the change from \\(\\tan(\\theta/2) = D/2b\\) and what sets \\(D\\). Then use the same reasoning to say why Rutherford’s formula depends on \\(Z^2\\) and \\(1/K^2\\).":
@@ -112,8 +110,12 @@ VDI18N.add('es', 'ws/rutherford', {
   "Para el aluminio a {#} MeV, las alfas con parámetros de impacto pequeños llegan al núcleo. ¿Cómo diferirían los conteos reales a ángulos grandes de la fórmula de Rutherford, y qué les dijo esto a los físicos sobre el tamaño de los núcleos?",
 "How does this experiment support the planetary picture of the atom that Bohr’s model starts from, and what problem does that picture raise?":
   "¿Cómo apoya este experimento la imagen planetaria del átomo de la que parte el modelo de Bohr, y qué problema plantea esa imagen?",
-"Prelab answers, the table copy with its graph and fit, the slope, \\(D\\) and \\(Z\\) with uncertainties, the plum pudding and aluminum notes, and answers to the questions. Identify simulated data.":
-  "Respuestas previas al laboratorio, la copia de la tabla con su gráfica y ajuste, la pendiente, \\(D\\) y \\(Z\\) con incertidumbres, las notas del pudín de pasas y del aluminio, y las respuestas a las preguntas. Identifica los datos simulados.",
+"For courses that treat measurement uncertainty. This section is not counted in the {#} minutes; do it when your instructor assigns it.":
+  "Para cursos que tratan la incertidumbre de medición. Esta sección no cuenta dentro de los {#} minutos; hazla cuando tu profesor la asigne.",
+"The count in a bin fluctuates by about \\(\\sqrt{N}\\), so \\(\\ln N\\) is uncertain by about \\(1/\\sqrt{N}\\). Find that uncertainty for your bins near {#}°, {#}° and {#}°, and compare with the residuals of your fits. Where do the residuals scatter most, and why? How does the counting statistics limit your value of \\(Z\\)? Give the slope of your fit in Analysis {#}, \\(D\\) and \\(Z\\) with their uncertainties, and say whether the slope is within one standard error of −{#}.":
+  "El conteo en un intervalo fluctúa en unos \\(\\sqrt{N}\\), así que \\(\\ln N\\) tiene una incertidumbre de unos \\(1/\\sqrt{N}\\). Encuentra esa incertidumbre para tus intervalos cerca de {#}°, {#}° y {#}°, y compárala con los residuos de tus ajustes. ¿Dónde se dispersan más los residuos, y por qué? ¿Cómo limita la estadística de conteo tu valor de \\(Z\\)? Da la pendiente de tu ajuste del Análisis {#}, \\(D\\) y \\(Z\\) con sus incertidumbres, y di si la pendiente está a menos de un error estándar de −{#}.",
+"Prelab answers, the table copy with its graph and fit, the slope, \\(D\\) and \\(Z\\), the plum pudding and aluminum notes, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.":
+  "Respuestas previas al laboratorio, la copia de la tabla con su gráfica y ajuste, la pendiente, \\(D\\) y \\(Z\\), las notas del pudín de pasas y del aluminio, y las respuestas a las preguntas (y de Incertidumbre, si se asigna). Identifica los datos simulados.",
 "Head on distance of closest approach":
   "Distancia de máximo acercamiento de frente",
 "Kinetic energy of the alpha":

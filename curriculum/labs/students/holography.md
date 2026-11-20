@@ -74,15 +74,18 @@ $$\lambda_1$$ is the wavelength the hologram was recorded with and $$\theta$$ th
 2. Graph $$\sin\theta_\mathrm{im}$$ against $$\lambda_2$$ for Part 2. From the slope find the fringe spacing $$d$$ recorded on the plate, and compare it with $$\lambda_1/\sin 25°$$. What should the intercept be?
 3. Graph the image distance $$z$$ against $$1/\lambda_2$$ for Part 3 (leave out the real image). Compare the slope with $$-z_0\lambda_1$$. The simple rule assumes the image beam leaves straight on; it actually leaves at $$\sin\alpha = \sin\theta_r(1 - \lambda_2/\lambda_1)$$, and ray tracing in the plane of the slice puts the image at $$z_0(\lambda_1/\lambda_2)\cos^3\alpha$$. Find $$\alpha$$ for 450 nm and say whether this explains the point farthest from your line.
 
-## Uncertainty
-
-The cursors read to 0.01 μm, but placing them on the peak of a bright fringe is less certain; estimate how far off a cursor could be and what that does to $$d$$ when you span about ten fringes. The detector's slit is 0.05° wide, so its reading is largest over a small range of angles; use half that range as the uncertainty of $$\theta_\mathrm{im}$$. For the image distance, say how far you could move the focus before the brightest point visibly dimmed.
-
 ## Questions
 
 1. Why does making a hologram need a laser, when an ordinary photograph does not?
 2. In Part 3 at 633 nm, where did the image form when the plate was lit along the reference beam, and where when it was lit from the other side of the normal? Where had Before the lab 4 put it? Use the waves that leave the developed plate to explain where each image forms, and how its distance from the plate compares with the point's.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The cursors read to 0.01 μm, but placing them on the peak of a bright fringe is less certain; estimate how far off a cursor could be and what that does to $$d$$ when you span about ten fringes. The detector's slit is 0.05° wide, so its reading is largest over a small range of angles; use half that range as the uncertainty of $$\theta_\mathrm{im}$$. For the image distance, say how far you could move the focus before the brightest point visibly dimmed. Give the wavelength from Part 1 and the fringe spacing from Part 2 with uncertainties from the standard errors of the slopes. Is the Part 1 intercept zero, and does the Part 2 intercept agree with its expected value, within their uncertainties? Give the Part 3 slope and intercept with their standard errors.
+
 ## What to hand in
 
-Prelab answers, the table copies with their graphs and fits, the wavelength and fringe spacing found from your slopes with uncertainties and comparisons, the image distances and the real image, and answers to the questions. Identify simulated data.
+Prelab answers, the table copies with their graphs and fits, the wavelength and fringe spacing found from your slopes and their comparisons, the image distances and the real image, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

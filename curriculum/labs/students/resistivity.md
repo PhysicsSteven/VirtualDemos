@@ -101,15 +101,20 @@ Copy this table for each scan. Record real meter ranges/resolutions and diameter
 5. From the Current and drift table, show that $$v_d$$ is proportional to $$I$$ at one gauge and that it agrees with $$I/(neA)$$. Compare each count with the expected count, as a percentage.
 6. Use the 1.00 A count in the 0.405 mm wire to estimate the number of electrons per second passing through the whole cross section, and compare it with $$I/e$$.
 
-## Uncertainty
-
-The virtual voltmeter records four significant figures; current is the set value recorded to three significant figures. Length adjusts in 0.005 m steps and temperature in 5 °C steps. Those prescribed settings are exact within the model; adjustment steps are not independent random errors. On a real bench, use tool resolution, calibration and diameter variation. Area uncertainty is approximately twice the fractional diameter uncertainty. Propagate voltage/current uncertainty into $$R$$ and include slope and diameter uncertainty in $$\rho$$. For $$\alpha$$, the fitted slope and $$R_{20}$$ are correlated; a fit error alone does not include temperature calibration or model error. Do not invent scatter by repeatedly recording the same simulated state.
-
 ## Questions
 
 1. Electrons drift at well under a millimeter per second, yet a lamp lights the moment its switch closes. Why?
 2. In your Current and drift table, which wire's electrons drifted faster at 1.00 A, and did that match Before the lab 4? Use $$I = nqAv_d$$ to explain the result, and say what the thinner wire's larger resistance has to do with it. Show that $$v_d$$ is proportional to $$1/d^2$$ at one current.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The virtual voltmeter records four significant figures; current is the set value recorded to three significant figures. Length adjusts in 0.005 m steps and temperature in 5 °C steps. Those prescribed settings are exact within the model; adjustment steps are not independent random errors. On a real bench, use tool resolution, calibration and diameter variation. Area uncertainty is approximately twice the fractional diameter uncertainty. Propagate voltage/current uncertainty into $$R$$ and include slope and diameter uncertainty in $$\rho$$. For $$\alpha$$, the fitted slope and $$R_{20}$$ are correlated; a fit error alone does not include temperature calibration or model error. Do not invent scatter by repeatedly recording the same simulated state.
+
+Give each fitted slope, each intercept, the resistivity and the temperature coefficient with its uncertainty, and say whether each length fit intercept is zero within its standard error.
+
 ## What to hand in
 
-Prelab answers, settings and data/CSV files, both length fits and the temperature fit with residuals, resistivity and temperature coefficient with uncertainty, the diameter/current comparisons, the Current and drift table, and answers to the questions. Identify simulated data.
+Prelab answers, settings and data/CSV files, both length fits and the temperature fit with residuals, resistivity and temperature coefficient, the diameter/current comparisons, the Current and drift table, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

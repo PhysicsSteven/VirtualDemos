@@ -78,15 +78,18 @@ The time unit is in the Setup column. Work out $$R_D/R_P = \lambda_D N_D/(\lambd
 4. For the tellurium chain (second copy), graph $$R_D/R_P$$ (vertical) against $$t$$ (horizontal). Where does it settle, and how long does it take? Compare with Before the lab question 2.
 5. After the ratio settles, graph $$\ln N_D$$ (vertical) against $$t$$ (horizontal) for those tellurium rows. What half life does its slope give, and whose half life is it?
 
-## Uncertainty
-
-The counts are random. Estimate the uncertainty of your peak time from the spread of $$N_D$$ near the peak (about $$\sqrt{N_D}$$), and of the settled activity ratio from the scatter of its last few values.
-
 ## Questions
 
 1. Hospitals get technetium 99m (6.0 h) from a "generator" of molybdenum 99 (66 h). Use transient equilibrium to explain how the generator works.
 2. Radon 222 (3.8 d) comes from radium 226 (1600 yr). What is the ratio of their activities in an old rock, and why?
 3. Read the daughter count at 48 h in your tellurium copy and set it beside your guess in Before the lab 5. The iodine 132 has been through about 21 of its half lives by then, so why is any of it left, and why that many? Use $$dN_D/dt = \lambda_P N_P - \lambda_D N_D$$ and the half life of the tellurium.
+
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The counts are random. Estimate the uncertainty of your peak time from the spread of $$N_D$$ near the peak (about $$\sqrt{N_D}$$), and of the settled activity ratio from the scatter of its last few values.
 
 ## With calculus
 
@@ -98,4 +101,4 @@ For courses that use calculus. This section is not counted in the 75 minutes; do
 
 ## What to hand in
 
-Prelab answers, both table copies with their graphs, the peak time and settled ratio with uncertainties, and answers to the questions (and to With calculus, if assigned). Identify simulated data.
+Prelab answers, both table copies with their graphs, the peak time and settled ratio, and answers to the questions (and to Uncertainty and With calculus, if assigned). Identify simulated data.

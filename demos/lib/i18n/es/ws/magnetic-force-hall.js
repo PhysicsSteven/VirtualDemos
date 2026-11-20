@@ -82,14 +82,16 @@ VDI18N.add('es', 'ws/magnetic-force-hall', {
   "Grafica \\(V_H\\) contra \\(B_z\\) con signo, tomando hacia fuera de la página como positivo. Usa la dirección de la corriente y la polaridad del medidor para deducir el signo de la pendiente antes de identificar los portadores.",
 "Infer \\(n\\) from the slope magnitude \\(I/(n\\lvert q\\rvert t)\\), taking \\(\\lvert q\\rvert = e\\). Check the current and thickness scalings and reveal the sample labels afterward.":
   "Deduce \\(n\\) a partir de la magnitud de la pendiente \\(I/(n\\lvert q\\rvert t)\\), tomando \\(\\lvert q\\rvert = e\\). Comprueba cómo escala con la corriente y el espesor, y después revela las etiquetas de las muestras.",
-"Estimate the uncertainty in \\(V_H\\) from the digits the Hall voltage now readout shows, and in \\(B\\) and \\(I\\) from the steps of their sliders. Read the voltage only after the build up has finished. Record that the data are simulated.":
-  "Estima la incertidumbre de \\(V_H\\) a partir de los dígitos que muestra la lectura Voltaje Hall ahora, y la de \\(B\\) e \\(I\\) a partir de los pasos de sus controles. Lee el voltaje solo después de que haya terminado la acumulación. Anota que los datos son simulados.",
 "Why can Hall voltage reveal carrier sign when an ordinary resistance measurement cannot?":
   "¿Por qué el voltaje Hall puede revelar el signo de los portadores cuando una medición ordinaria de resistencia no puede?",
 "Once the sample labels are revealed (Analysis {#}), how does copper’s Hall voltage at {#} mA and {#} T compare with germanium’s, and does that bear out Before the lab {#}? Use the balance of the electric and magnetic forces on the drifting carriers to explain the size of copper’s Hall voltage.":
   "Una vez reveladas las etiquetas de las muestras (el Análisis {#}), ¿cómo se compara el voltaje Hall del cobre a {#} mA y {#} T con el del germanio, y confirma eso Antes del laboratorio {#}? Usa el equilibrio de las fuerzas eléctrica y magnética sobre los portadores en deriva para explicar el tamaño del voltaje Hall del cobre.",
-"Prelab answers, Hall data and polarity sketch, the graph, inferred \\(n\\) with uncertainty, scaling checks and answers to the questions.":
-  "Respuestas previas al laboratorio, datos Hall y esquema de la polaridad, la gráfica, \\(n\\) deducida con su incertidumbre, comprobaciones de escala y respuestas a las preguntas.",
+"For courses that treat measurement uncertainty. This section is not counted in the {#} minutes; do it when your instructor assigns it.":
+  "Para cursos que tratan la incertidumbre de medición. Esta sección no cuenta dentro de los {#} minutos; hazla cuando tu profesor la asigne.",
+"Estimate the uncertainty in \\(V_H\\) from the digits the Hall voltage now readout shows, and in \\(B\\) and \\(I\\) from the steps of their sliders. Read the voltage only after the build up has finished. Record that the data are simulated. Give the slope of your graph of \\(V_H\\) against \\(B_z\\) and the inferred \\(n\\) with their uncertainties.":
+  "Estima la incertidumbre de \\(V_H\\) a partir de los dígitos que muestra la lectura Voltaje Hall ahora, y la de \\(B\\) e \\(I\\) a partir de los pasos de sus controles. Lee el voltaje solo después de que haya terminado la acumulación. Anota que los datos son simulados. Da la pendiente de tu gráfica de \\(V_H\\) en función de \\(B_z\\) y la \\(n\\) deducida con sus incertidumbres.",
+"Prelab answers, Hall data and polarity sketch, the graph, inferred \\(n\\), scaling checks and answers to the questions (and to Uncertainty, if assigned).":
+  "Respuestas previas al laboratorio, datos Hall y esquema de la polaridad, la gráfica, \\(n\\) deducida, comprobaciones de escala y respuestas a las preguntas (y de Incertidumbre, si se asigna).",
 "Field component out of the page":
   "Componente del campo hacia fuera de la página",
 "Magnetic force":

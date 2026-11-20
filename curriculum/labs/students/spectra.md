@@ -86,16 +86,21 @@ Fill in 2πr/λ from your radius and wavelength.
 5. From Table 2, show that r grows as $$n^2$$, v falls as $$1/n$$, and the angular momentum is $$n\hbar$$ on the allowed orbits. How many wavelengths fit around each allowed orbit, and what happens at n = 2.50?
 6. Which of the six atom models gave off light at hydrogen's lines under the Lyman β lamp? Which under white light? What did the plum pudding and the classical orbit give instead, and why?
 
-## Uncertainty
-
-NIST gives the wavelengths to 0.001 nm or better. Compare that with the spread of the fine structure components of the red line. Which limits your value of $$R_\mathrm{H}$$? Compare with the residuals of your fit.
-
 ## Questions
 
 1. The Rydberg constant for an infinitely heavy nucleus is $$R_\infty = 1.097\,373 \times 10^7$$ m⁻¹. Why is $$R_\mathrm{H}$$ smaller? How would the lines of deuterium differ, and how was deuterium discovered from this?
 2. The Bohr model gets the hydrogen spectrum right. What does it get wrong (§8.1)?
 3. Before the lab 4 asked what hydrogen gives off after taking in a Lyman β photon. Which of hydrogen's lines did the Bohr, de Broglie and Schrödinger atoms give off under that lamp? Use the energy levels to explain how ultraviolet light going in can bring red light out, and why what comes out is still only hydrogen's lines. Why, then, does a hot gas give separate lines rather than a continuous rainbow, as a hot solid does?
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+NIST gives the wavelengths to 0.001 nm or better. Compare that with the spread of the fine structure components of the red line. Which limits your value of $$R_\mathrm{H}$$? Compare with the residuals of your fit.
+
+Give $$R_\mathrm{H}$$ from the slope and from the intercept with their standard errors, and say whether the two values agree within those errors.
+
 ## What to hand in
 
-Prelab answers, the table copies with their graph and fit, $$R_\mathrm{H}$$ from the slope and the intercept with uncertainties, the ionization energy, the transition of the infrared line, the He II comparison, Table 2, the atom models you watched, and answers to the questions. Say that the wavelengths come from the NIST tables in the demo.
+Prelab answers, the table copies with their graph and fit, $$R_\mathrm{H}$$ from the slope and the intercept, the ionization energy, the transition of the infrared line, the He II comparison, Table 2, the atom models you watched, and answers to the questions (and to Uncertainty, if assigned). Say that the wavelengths come from the NIST tables in the demo.

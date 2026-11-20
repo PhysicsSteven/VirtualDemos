@@ -97,15 +97,18 @@ No hazards in the virtual lab.
 5. At 10 M☉/yr onto $$10^8$$ M☉, by what factor is L over the Eddington limit? Divide L by $$1.26\times10^{31}$$ W to find the smallest black hole that could shine this brightly, and check it against your Part 3 reading at $$3\times10^8$$ M☉: is that black hole still over its limit, as it should be?
 6. For the 17° jet reading, divide the distance across the sky by the time between arrivals and compare with the apparent speed. Which angle in your table gives the biggest apparent speed?
 
-## Uncertainty
-
-Nobody can see η directly: it ranges from about 6% for a black hole that does not spin to 42% for one that spins as fast as possible. If a quasar gives out $$5.7\times10^{38}$$ W, how much gas a year must it swallow at 6% and at 42%?
-
 ## Questions
 
 1. In your jet table, what is the apparent speed at 90°, with the blob moving straight across the sky? Why does the illusion need a jet pointed nearly at us?
 2. Look back at your guess in Before the lab 3 and at the 17° reading. Did the blob seem to cross the sky faster than light? Explain, from the time between the arrivals of its light, how that can happen while the blob itself moves slower than light.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+Nobody can see η directly: it ranges from about 6% for a black hole that does not spin to 42% for one that spins as fast as possible. If a quasar gives out $$5.7\times10^{38}$$ W, how much gas a year must it swallow at 6% and at 42%?
+
 ## What to hand in
 
-Prelab answers, the three Data tables with the graph, Analysis 1 to 6 with your work, the uncertainty answer and the answers to the questions. Identify simulated data: every reading in this lab is simulated.
+Prelab answers, the three Data tables with the graph, Analysis 1 to 6 with your work, and the answers to the questions (and to Uncertainty, if assigned). Identify simulated data: every reading in this lab is simulated.

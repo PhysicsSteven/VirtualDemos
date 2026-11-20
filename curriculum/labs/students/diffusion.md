@@ -93,15 +93,18 @@ No hazards in the virtual lab.
 3. For Light and heavy, find $$D$$ for each gas (enter them in another copy of the Diffusion coefficients table) and their ratio. Compare the ratio with $$\sqrt{m_\mathrm{B}/m_\mathrm{A}}$$.
 4. For the two hole runs, fill in the last column ($$N_\mathrm{A}$$ = 200) and graph it (vertical) against $$t$$ (horizontal). Compare each slope with your prediction in Before the lab 4, then find the ratio of the two slopes and compare it with Graham's law.
 
-## Uncertainty
-
-Each count and each mean square displacement averages over a hundred or two molecules, so a run is noisy, and the points of one run are not independent of each other: the standard error a fit reports is too small. In Two gases mix, A and B are the same gas, so the difference between their two values of $$D$$ in one run is a fair measure of the uncertainty of one value. Use the same relative uncertainty for each slope of the two hole runs, whose counts are as noisy as those of Two gases mix.
-
 ## Questions
 
 1. In Hot meets cold, both sides have the same number of molecules, so the hot side starts at the higher pressure. Describe what you saw happen to the counts and to the temperature on each side.
 2. How did Light and heavy treat your choice in Before the lab 3? Explain the ratio you found in Analysis 3 by thinking about which molecules a helium molecule and an argon molecule each collide with. Why are the two hole runs a different situation?
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+Each count and each mean square displacement averages over a hundred or two molecules, so a run is noisy, and the points of one run are not independent of each other: the standard error a fit reports is too small. In Two gases mix, A and B are the same gas, so the difference between their two values of $$D$$ in one run is a fair measure of the uncertainty of one value. Use the same relative uncertainty for each slope of the two hole runs, whose counts are as noisy as those of Two gases mix. Give each fitted slope with its standard error and each diffusion coefficient and slope ratio with its uncertainty, and say whether each comparison with a prediction agrees within that uncertainty.
+
 ## What to hand in
 
-Prelab answers, the table copies with their graphs and fits, your diffusion coefficients and slope ratios with uncertainties and comparisons, and the answers to the questions. Identify simulated data.
+Prelab answers, the table copies with their graphs and fits, your diffusion coefficients and slope ratios and their comparisons, and the answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

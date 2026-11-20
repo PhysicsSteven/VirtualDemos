@@ -126,12 +126,14 @@ VDI18N.add('es', 'ws/hr-diagram', {
   "Con las edades, encuentra cuánto tiempo pasa el Sol en cada fase antes de volverse enana blanca, y qué fracción de ese tiempo es la secuencia principal. Explica por qué la mayoría de las estrellas que vemos están en la secuencia principal.",
 "For the two white dwarf readings, what happens to the radius as the white dwarf fades? Use them to show that \\(L \\propto T^4\\) along its track.":
   "Para las dos lecturas de enana blanca, ¿qué le pasa al radio conforme la enana blanca se apaga? Úsalas para mostrar que \\(L \\propto T^4\\) a lo largo de su trayectoria.",
-"The single star readings are exact values of the model, but the model itself is approximate: the fits describe typical stars, and the later phases are schematic. Report each slope with its standard error.":
-  "Las lecturas de una sola estrella son valores exactos del modelo, pero el modelo en sí es aproximado: los ajustes describen estrellas típicas, y las fases tardías son esquemáticas. Reporta cada pendiente con su error estándar.",
 "Back to the first part of Before the lab {#}. In your main sequence table, how long did the {#} \\(M_\\odot\\) star live compared with the {#} \\(M_\\odot\\) star, and how much more luminous was it? Explain the difference with fuel over the rate of using it. Then choose Massive star: how long does a {#} \\(M_\\odot\\) star live, compared with the Sun, and how does its life end?":
   "Vuelve a la primera parte de Antes del laboratorio {#}. En tu tabla de la secuencia principal, ¿cuánto vivió la estrella de {#} \\(M_\\odot\\) comparada con la de {#} \\(M_\\odot\\), y cuánto más luminosa era? Explica la diferencia con el combustible entre la rapidez con que se usa. Luego elige Estrella masiva: ¿cuánto vive una estrella de {#} \\(M_\\odot\\), comparada con el Sol, y cómo termina su vida?",
-"Prelab answers, the table copies with their graphs and fits, the exponents \\(a\\) and the lifetime power, the Sun’s largest radius and the share of its life on the main sequence, and answers to the questions. Identify simulated data.":
-  "Respuestas del prelaboratorio, las copias de la tabla con sus gráficas y ajustes, los exponentes \\(a\\) y la potencia del tiempo de vida, el radio máximo del Sol y la fracción de su vida en la secuencia principal, y las respuestas a las preguntas. Identifica los datos simulados.",
+"For courses that treat measurement uncertainty. This section is not counted in the {#} minutes; do it when your instructor assigns it.":
+  "Para cursos que tratan la incertidumbre de medición. Esta sección no cuenta dentro de los {#} minutos; hazla cuando tu profesor la asigne.",
+"The single star readings are exact values of the model, but the model itself is approximate: the fits describe typical stars, and the later phases are schematic. Report each slope with its standard error.":
+  "Las lecturas de una sola estrella son valores exactos del modelo, pero el modelo en sí es aproximado: los ajustes describen estrellas típicas, y las fases tardías son esquemáticas. Reporta cada pendiente con su error estándar.",
+"Prelab answers, the table copies with their graphs and fits, the exponents \\(a\\) and the lifetime power, the Sun’s largest radius and the share of its life on the main sequence, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.":
+  "Respuestas del prelaboratorio, las copias de la tabla con sus gráficas y ajustes, los exponentes \\(a\\) y la potencia del tiempo de vida, el radio máximo del Sol y la fracción de su vida en la secuencia principal, y las respuestas a las preguntas (y de Incertidumbre, si se asigna). Identifica los datos simulados.",
 "Luminosity":
   "Luminosidad",
 "Solar luminosity, the unit of luminosity":

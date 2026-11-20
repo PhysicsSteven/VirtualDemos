@@ -25,6 +25,20 @@ the result the sheet takes as given, and use the student's own data with a numer
 minutes. worksheet.js gives it answer boxes (ids `with-calculus-N`) and leaves it out of Your progress until the student starts
 it. Keys answer it like any other section. A sheet that needed calculus in its main body (Faraday, Impulse) moved that part here.
 
+## Uncertainty on intro worksheets (Steve 2026-11-20)
+
+Steve: intro students need no uncertainty discussion, or it is labeled as not required for them. On every intro worksheet
+(Astro 2203, the astronomy, Physics I and II, Thermodynamics, Acoustics, intro Modern Physics, College Physics and high school
+sheets) all uncertainty work lives in the h2 "Uncertainty", placed after Questions (before With calculus), opening with the same
+note on every sheet: "For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when
+your instructor assigns it." with `{: .ws-assigned}` under it. worksheet.js counts a section carrying that class in Your
+progress only once the student starts it. The required part asks for no uncertainty: no "with its uncertainty" or standard
+errors in Before the lab, Procedure, Analysis, Questions or What to hand in, which ends its answers clause with "(and to
+Uncertainty, if assigned)". Comparing a result with a known value, residuals and judging a fit stay in the required part. Upper
+level sheets (Modern Physics, Medical Physics) and the sheets about uncertainty itself (Measurement Uncertainty, Statistics for
+physics, the calculus sheets on numerical error) keep Uncertainty required, in its old place. A new intro worksheet follows the
+same pattern.
+
 ## Self checks (checks.js)
 
 `curriculum/labs/checks.js` lists, per worksheet, the answer boxes whose number follows from the student's own data table and

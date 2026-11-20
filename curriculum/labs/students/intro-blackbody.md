@@ -69,10 +69,6 @@ No hazards in the virtual lab.
 5. List your three stars with their colors and spectral classes. Which of them peaks in visible light, and which outside it? Where is each one's peak: ultraviolet (shorter than 380 nm), visible (380 to 750 nm) or infrared (longer than 750 nm)?
 6. The Sun's peak is in the green part of the spectrum, yet the Sun looks white from space. Use its visible share and the shape of its curve to explain why the Sun does not look green.
 
-## Uncertainty
-
-The demo computes an ideal blackbody, so a repeated reading gives exactly the same numbers. Real stars have dark absorption lines, and the light from their surface is not quite a blackbody's. Would a star's measured color still give a good estimate of its temperature? Explain briefly.
-
 ## Questions
 
 1. Betelgeuse is cooler than the Sun, so each square meter gives off less light, yet Betelgeuse is about 90,000 times more luminous than the Sun. It is 760 times wider than the Sun. The luminosity compared with the Sun is (radius ratio)² × (temperature ratio)⁴. Use the Betelgeuse and Sun temperatures from your Part 1 table to check the 90,000.
@@ -81,6 +77,13 @@ The demo computes an ideal blackbody, so a repeated reading gives exactly the sa
 4. Astronomers measure the temperatures of stars without ever touching them. Describe how, using what you learned here.
 5. Which star's curve was higher at 700 nm, and does that match your answer to Before the lab 4? Using Wien's law and the Stefan and Boltzmann law from the Background, explain how the hotter star can give off more red light than the red star from each square meter and still look blue white.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The demo computes an ideal blackbody, so a repeated reading gives exactly the same numbers. Real stars have dark absorption lines, and the light from their surface is not quite a blackbody's. Would a star's measured color still give a good estimate of its temperature? Explain briefly.
+
 ## What to hand in
 
-Prelab answers, the two table copies, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.
+Prelab answers, the two table copies, the answers to the analysis section and to the questions (and to Uncertainty, if assigned). Identify simulated data.

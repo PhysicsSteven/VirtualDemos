@@ -87,14 +87,17 @@ Press **Export to worksheet** to send these three readings to a third copy of th
 5. In the same table copy, compare the Real Earth at sea level values at 0° and 90° with your model's effective g at those latitudes. What does the uniform sphere leave out, and which way does it push g at the poles?
 6. For Mars, compare the surface value with the value about one planet radius up, and compare the ratio with $$(R/r)^2$$. How much does its rotation change its surface g?
 
-## Uncertainty
-
-The readouts are rounded to 0.0001 m/s²; heights and latitudes are exact settings of the model, so the scatter about your fits comes only from rounding. Use the standard error of each slope for the uncertainty in GM and $$\omega$$. The straight line in Analysis 4 drops a term smaller than 0.00002 m/s²; say whether your residuals can show it. The bigger question is the model: compare it with the WGS 84 values and say which effect limits how well a uniform turning sphere describes the real Earth.
-
 ## Questions
 
 1. A plumb line points straight at Earth's center only at the equator and the poles. Why does it tilt everywhere else?
 2. Your **Space station, about 400 km** and **Sea level** rows give Gravity alone GM/r² at the two places. Write both, and say how they bear on your answer to Before the lab 3. Use $$g = GM/r^2$$ to explain the size of gravity at the station's height compared with the surface, and then say why the crew float even though gravity pulls on them.
+
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The readouts are rounded to 0.0001 m/s²; heights and latitudes are exact settings of the model, so the scatter about your fits comes only from rounding. Use the standard error of each slope for the uncertainty in GM and $$\omega$$, and give GM, $$\omega$$ and the time Earth takes to turn once with their uncertainties. In Analysis 1, say whether the intercept is zero within its uncertainty, and in Analysis 4, whether 23 h 56 min is inside the uncertainty of your time. The straight line in Analysis 4 drops a term smaller than 0.00002 m/s²; say whether your residuals can show it. The bigger question is the model: compare it with the WGS 84 values and say which effect limits how well a uniform turning sphere describes the real Earth.
 
 ## With calculus
 
@@ -106,4 +109,4 @@ For courses that use calculus. This section is not counted in the 75 minutes; do
 
 ## What to hand in
 
-Prelab answers, the three table copies with their graphs and fits, GM and $$\omega$$ with uncertainties and comparisons, the near surface line check, the Mars comparison and answers to the questions (and to With calculus, if assigned). Identify simulated data.
+Prelab answers, the three table copies with their graphs and fits, GM and $$\omega$$ with comparisons, the near surface line check, the Mars comparison and answers to the questions (and to Uncertainty and With calculus, if assigned). Identify simulated data.

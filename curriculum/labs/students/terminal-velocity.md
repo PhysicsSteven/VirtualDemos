@@ -110,14 +110,17 @@ Open the **Lab** fold and tick **Blind: hide predictions and answers** before yo
 3. For Part 3, graph $$v^2$$ against $$n$$. Explain why it should be a straight line through the origin, and say by what factor four filters land faster than one. From the slope, $$2m_1g/(\rho CA)$$, find $$C$$ for a filter, with $$A = \pi(0.0755\text{ m})^2$$.
 4. For Part 4, give the highest speed and the altitude where it came (altitude = 10,000 m − $$y$$). Use the densities in the Background to find $$v_T$$ at that altitude, and compare. Explain why the speed then falls.
 
-## Uncertainty
-
-The speed and the acceleration are read to 0.01 m/s and 0.01 m/s², so near terminal speed $$a$$ is only a few hundredths of a m/s² and $$D = m(g - a)$$ is known to about 1 N in 830 N. The model leaves out what makes real measurements hard: a real skydiver's area and shape change as the body moves, the air has winds and gusts, the coffee filters sway and tilt, and the air carried along with a light body adds to its inertia. The drag coefficient itself depends a little on the speed; for coffee filters the drag has been measured to go as $$v^{1.93}$$ rather than $$v^2$$.
-
 ## Questions
 
 1. J. B. S. Haldane wrote that a mouse dropped down a mine shaft walks away. If an animal is scaled down by 10 in every length, by what factor does its terminal speed change?
 2. From your Part 2 readings, compare the 30 s speed with the head first terminal speed you found in Before the lab 2, then give $$v$$ and $$a$$ at 30, 32 and 40 s, and say how $$y$$ changed from 30 to 40 s. Which of the three outcomes in Before the lab 3 does that show, and is it the one you chose? After the change to spread eagle, what sign does $$a$$ have, and what does that say about $$D$$ and $$mg$$? Use $$D = \tfrac12\rho CAv^2$$ to explain why the skydiver slows down but does not move upward, and what speed the fall settles toward.
+
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The speed and the acceleration are read to 0.01 m/s and 0.01 m/s², so near terminal speed $$a$$ is only a few hundredths of a m/s² and $$D = m(g - a)$$ is known to about 1 N in 830 N. The model leaves out what makes real measurements hard: a real skydiver's area and shape change as the body moves, the air has winds and gusts, the coffee filters sway and tilt, and the air carried along with a light body adds to its inertia. The drag coefficient itself depends a little on the speed; for coffee filters the drag has been measured to go as $$v^{1.93}$$ rather than $$v^2$$. Give the slope and intercept of the fits in Analysis 2 and 3 with their standard errors, and say whether each intercept is zero within its uncertainty.
 
 ## With calculus
 
@@ -129,4 +132,4 @@ For courses that use calculus. This section is not counted in the 75 minutes; do
 
 ## What to hand in
 
-Answers to Before the lab, the Data tables, the graphs with their slopes, your values of $$v_T$$, $$CA$$ and $$C$$ with the comparisons asked for, and answers to the questions (and to With calculus, if assigned). Identify simulated data.
+Answers to Before the lab, the Data tables, the graphs with their slopes, your values of $$v_T$$, $$CA$$ and $$C$$ with the comparisons asked for, and answers to the questions (and to Uncertainty and With calculus, if assigned). Identify simulated data.

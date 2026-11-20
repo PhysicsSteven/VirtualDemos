@@ -73,15 +73,18 @@ Part 1 goes in the first copy of the table and Part 2 in the second and third. F
 3. Part 2: plot $$I_C$$ (A2) against $$I_B$$ (A1) for the first series, where $$V_{CE}$$ stays above 1 V, and give $$\beta$$ from the slope of the straight line.
 4. Complete the A2/A1 column in both copies. Where does $$I_C/I_B$$ stop being constant? What is $$V_{CE}$$ there, and what limits $$I_C$$ beyond that point? Compare with your answer to prelab question 3.
 
-## Uncertainty
-
-Use the standard errors of the fits for $$n$$ and $$\beta$$. The readings have three significant figures: how large is the rounding of the diode voltage compared with the 0.1 V spread of your Part 1 readings per decade of current? Explain why the readings at 470 Ω, 220 Ω and 100 Ω are left out of the Part 1 fit.
-
 ## Questions
 
 1. Why does a transistor used as a switch run in saturation rather than in the active region?
 2. What did doubling β do to A2 at 470 kΩ and at 22 kΩ, and is that what you said in Before the lab 4? Explain, from what sets the collector current in each region of operation, why each reading responded as it did.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+Report $$n$$, $$I_s$$ and $$\beta$$ with the standard errors of the fits. The readings have three significant figures: how large is the rounding of the diode voltage compared with the 0.1 V spread of your Part 1 readings per decade of current? Explain why the readings at 470 Ω, 220 Ω and 100 Ω are left out of the Part 1 fit.
+
 ## What to hand in
 
-Prelab answers, both data tables with their graphs, $$n$$ and $$I_s$$ with uncertainties, $$\beta$$ with its uncertainty, the A2/A1 column, and answers to the questions. Identify simulated data.
+Prelab answers, both data tables with their graphs, $$n$$ and $$I_s$$, $$\beta$$, the A2/A1 column, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

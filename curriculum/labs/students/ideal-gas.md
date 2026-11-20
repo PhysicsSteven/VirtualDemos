@@ -70,16 +70,21 @@ The Data table's Pressure, Area and rms speed columns are the demo's P measured,
 3. For the second run (pressure and number), compare each measured pressure with $$NkT/A$$. When is the difference largest, and why?
 4. Plot the rms speed squared against $$T$$. From the slope find the mass of an argon atom and compare it with $$6.63\times10^{-26}$$ kg.
 
-## Uncertainty
-
-The pressure is an average over about a second, so it scatters from reading to reading, more for few atoms. Record five readings at one setting a few seconds apart, find their mean and standard deviation, and use that as the uncertainty of a single pressure.
-
 ## Questions
 
 1. Why do the atoms' speeds spread out even when they all start with the same speed?
 2. Near absolute zero the atoms are slow but still moving. Do they still push on the walls?
 3. Why does pushing the piston in quickly heat the gas?
 4. Your first run has two temperatures four times apart, 50 K and 200 K, like 300 K and 1200 K in Before the lab 2. By what factor did the rms speed change between them, and was that your answer? Explain the factor from what the temperature of this gas measures.
+
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The pressure is an average over about a second, so it scatters from reading to reading, more for few atoms. Record five readings at one setting a few seconds apart, find their mean and standard deviation, and use that as the uncertainty of a single pressure.
+
+Report $$k$$ and the mass of the atom with the standard errors of their fits, and say whether each intercept is zero within its standard error and whether each result agrees with the accepted value within its standard error.
 
 ## With calculus
 
@@ -90,4 +95,4 @@ For courses that use calculus. This section is not counted in the 75 minutes; do
 
 ## What to hand in
 
-Prelab answers, the table copies with their graphs and fits, your values of $$k$$ and the atom's mass with uncertainties and comparisons, and answers to the questions (and to With calculus, if assigned). Identify simulated data.
+Prelab answers, the table copies with their graphs and fits, your values of $$k$$ and the atom's mass with comparisons, and answers to the questions (and to Uncertainty and With calculus, if assigned). Identify simulated data.

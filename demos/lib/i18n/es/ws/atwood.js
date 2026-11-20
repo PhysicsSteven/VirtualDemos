@@ -84,16 +84,14 @@ VDI18N.add('es', 'ws/atwood', {
   "m g (N), fila {#}",
 "m_2 g (N), row {#}":
   "m_2 g (N), fila {#}",
-"Plot a against x for Table {#}, with a free intercept. Report g from the slope with its standard error, and the intercept with its standard error. Do the runs at {#} kg and {#} kg fall on the same line? What does that tell you about the total mass?":
-  "Grafica a en función de x para la Tabla {#}, con ordenada al origen libre. Informa g a partir de la pendiente con su error estándar, y la ordenada al origen con su error estándar. ¿Caen los recorridos de {#} kg y {#} kg sobre la misma recta? ¿Qué te dice eso sobre la masa total?",
-"Plot {#}/a against m + m₂ for Table {#}. From the Background, {#}/a = (m + m₂ + I/r²)/((m₂ − m) g) when f = {#}. Find g from the slope and the pulley’s I/r² from the intercept. Is the intercept zero within its uncertainty?":
-  "Grafica {#}/a en función de m + m₂ para la Tabla {#}. Según el Fundamento, {#}/a = (m + m₂ + I/r²)/((m₂ − m) g) cuando f = {#}. Encuentra g a partir de la pendiente y el I/r² de la polea a partir de la ordenada al origen. ¿Es cero la ordenada al origen dentro de su incertidumbre?",
+"Plot a against x for Table {#}, with a free intercept. Report g from the slope, and the intercept. Do the runs at {#} kg and {#} kg fall on the same line? What does that tell you about the total mass?":
+  "Grafica a en función de x para la Tabla {#}, con ordenada al origen libre. Informa g a partir de la pendiente, y la ordenada al origen. ¿Caen los recorridos de {#} kg y {#} kg sobre la misma recta? ¿Qué te dice eso sobre la masa total?",
+"Plot {#}/a against m + m₂ for Table {#}. From the Background, {#}/a = (m + m₂ + I/r²)/((m₂ − m) g) when f = {#}. Find g from the slope and the pulley’s I/r² from the intercept. Is the intercept zero?":
+  "Grafica {#}/a en función de m + m₂ para la Tabla {#}. Según el Fundamento, {#}/a = (m + m₂ + I/r²)/((m₂ − m) g) cuando f = {#}. Encuentra g a partir de la pendiente y el I/r² de la polea a partir de la ordenada al origen. ¿Es cero la ordenada al origen?",
 "Compare each tension in Table {#} with the prediction. Explain why T lies between mg and m₂g.":
   "Compara cada tensión de la Tabla {#} con la predicción. Explica por qué T queda entre mg y m₂g.",
-"Compare your two values of g with {#} m/s². Which part gives the smaller uncertainty, and why?":
-  "Compara tus dos valores de g con {#} m/s². ¿Qué parte da la menor incertidumbre, y por qué?",
-"The timer rounds to {#} s and the run is {#} m. Since \\(a = 2d/t^2\\), the fractional uncertainty in a is twice the fractional uncertainty in t, so the fast runs (large x) are the least precise. Find that fraction for your fastest and slowest runs and compare it with the scatter about your fit. Repeating an unchanged run in the simulation gives the same time, so the scatter here comes only from rounding; on a real bench, the reaction time of a hand timer would dominate.":
-  "El cronómetro redondea a {#} s y el recorrido es de {#} m. Como \\(a = 2d/t^2\\), la incertidumbre fraccional de a es el doble de la incertidumbre fraccional de t, así que los recorridos rápidos (x grande) son los menos precisos. Encuentra esa fracción para tus recorridos más rápido y más lento y compárala con la dispersión alrededor de tu ajuste. Repetir sin cambios un recorrido en la simulación da el mismo tiempo, así que aquí la dispersión viene solo del redondeo; en una mesa real dominaría el tiempo de reacción de un cronómetro manual.",
+"Compare your two values of g with {#} m/s². Do they agree?":
+  "Compara tus dos valores de g con {#} m/s². ¿Coinciden?",
 "Why does an Atwood’s machine measure g more easily than timing a mass dropped freely over the same {#} m?":
   "¿Por qué una máquina de Atwood mide g más fácilmente que medir el tiempo de una masa que cae libremente los mismos {#} m?",
 "A real pulley has I/r² = {#} kg. How much would that change a for {#} and {#} kg, and which of your graphs would show it?":
@@ -102,8 +100,14 @@ VDI18N.add('es', 'ws/atwood', {
   "Se agrega una fricción en el eje f = {#} N a una polea ideal. ¿Qué gráfica lo mostraría, y como qué?",
 "Before the lab {#} doubled both masses. How did the times and accelerations of those two runs compare, and was that what you expected? Use \\(a = (m_2 - m)g/(m + m_2)\\) to explain it: what happens to the unbalanced weight \\((m_2 - m)g\\) and to the total mass when both masses double? With m₂ much larger than m, what does a approach? With m₂ = m?":
   "Antes del laboratorio {#} duplicaba ambas masas. ¿Cómo se compararon los tiempos y las aceleraciones de esas dos corridas, y fue lo que esperabas? Usa \\(a = (m_2 - m)g/(m + m_2)\\) para explicarlo: ¿qué pasa con el peso no equilibrado \\((m_2 - m)g\\) y con la masa total cuando ambas masas se duplican? Con m₂ mucho mayor que m, ¿a qué valor se acerca a? ¿Y con m₂ = m?",
-"Prelab answers, the three tables and the CSV, both graphs with fits and residuals, your two values of g with uncertainty, I/r² from Part {#}, the tension comparison and answers to the questions. Identify simulated data.":
-  "Respuestas del prelaboratorio, las tres tablas y el CSV, ambas gráficas con ajustes y residuos, tus dos valores de g con incertidumbre, I/r² de la Parte {#}, la comparación de tensiones y las respuestas a las preguntas. Identifica los datos simulados.",
+"For courses that treat measurement uncertainty. This section is not counted in the {#} minutes; do it when your instructor assigns it.":
+  "Para cursos que tratan la incertidumbre de medición. Esta sección no cuenta dentro de los {#} minutos; hazla cuando tu profesor la asigne.",
+"The timer rounds to {#} s and the run is {#} m. Since \\(a = 2d/t^2\\), the fractional uncertainty in a is twice the fractional uncertainty in t, so the fast runs (large x) are the least precise. Find that fraction for your fastest and slowest runs and compare it with the scatter about your fit. Repeating an unchanged run in the simulation gives the same time, so the scatter here comes only from rounding; on a real bench, the reaction time of a hand timer would dominate.":
+  "El cronómetro redondea a {#} s y el recorrido es de {#} m. Como \\(a = 2d/t^2\\), la incertidumbre fraccional de a es el doble de la incertidumbre fraccional de t, así que los recorridos rápidos (x grande) son los menos precisos. Encuentra esa fracción para tus recorridos más rápido y más lento y compárala con la dispersión alrededor de tu ajuste. Repetir sin cambios un recorrido en la simulación da el mismo tiempo, así que aquí la dispersión viene solo del redondeo; en una mesa real dominaría el tiempo de reacción de un cronómetro manual.",
+"Report g from the Part {#} slope with its standard error, and the intercept with its standard error. For Part {#}, say whether the intercept is zero within its uncertainty. Then compare your two values of g with {#} m/s²: which part gives the smaller uncertainty, and why?":
+  "Informa g a partir de la pendiente de la Parte {#} con su error estándar, y la ordenada al origen con su error estándar. Para la Parte {#}, di si la ordenada al origen es cero dentro de su incertidumbre. Luego compara tus dos valores de g con {#} m/s²: ¿qué parte da la menor incertidumbre, y por qué?",
+"Prelab answers, the three tables and the CSV, both graphs with fits and residuals, your two values of g, I/r² from Part {#}, the tension comparison and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.":
+  "Respuestas del prelaboratorio, las tres tablas y el CSV, ambas gráficas con ajustes y residuos, tus dos valores de g, I/r² de la Parte {#}, la comparación de tensiones y las respuestas a las preguntas (y de Incertidumbre, si se asigna). Identifica los datos simulados.",
 "Moment of inertia of the pulley":
   "Momento de inercia de la polea",
 "Tension in the string":

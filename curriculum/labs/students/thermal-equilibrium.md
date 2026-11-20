@@ -75,15 +75,20 @@ Record each body's material, mass and starting temperature, and the bar's materi
 4. Find $$\tau$$ for the longer bar the same way. By what factor did it change, and why?
 5. From the mystery runs, find the mystery metal's specific heat, $$c = m_w c_w (T_f - T_{w0}) / [\,m\,(T_0 - T_f)\,]$$, and name the metal from Table 1.3.
 
-## Uncertainty
-
-The thermometers read to 0.01 °C. As the two temperatures close in, $$T_A - T_B$$ becomes small, so its relative uncertainty grows; say which readings you left out of the fit in Analysis 3 and why. For the mystery metal, propagate the 0.01 °C reading uncertainty through the formula for $$c$$. In a real lab, heat lost to the container and the air would make your $$c$$ come out wrong; say in which direction.
-
 ## Questions
 
 1. A thermometer is put in a cup of coffee. Why must you wait before reading it, and what is the thermometer in equilibrium with when you do?
 2. Look back at your guess in Before the lab 1 and at the final temperature of your Hot metal, cool water run. Which body's temperature changed more? Explain why from $$mc$$ for each body and the heat each gave or took, and use the same idea to say why coastal towns have milder temperature swings than inland towns.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The thermometers read to 0.01 °C. As the two temperatures close in, $$T_A - T_B$$ becomes small, so its relative uncertainty grows; say which readings you left out of the fit in Analysis 3 and why. For the mystery metal, propagate the 0.01 °C reading uncertainty through the formula for $$c$$. In a real lab, heat lost to the container and the air would make your $$c$$ come out wrong; say in which direction.
+
+Give each fitted slope and each time constant from Analysis 3 and 4 with its uncertainty. Say whether the heat the aluminum lost and the heat the water gained in Analysis 2 agree within the 0.01 °C reading uncertainty.
+
 ## What to hand in
 
-Prelab answers, the settings for each run, the table copies with their graphs and fits, the final temperatures, time constants and mystery specific heat with uncertainties and comparisons, and answers to the questions. Identify simulated data.
+Prelab answers, the settings for each run, the table copies with their graphs and fits, the final temperatures, time constants and mystery specific heat with comparisons, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

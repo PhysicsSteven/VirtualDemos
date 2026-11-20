@@ -98,8 +98,6 @@ VDI18N.add('es', 'ws/intro-telescope', {
   "Usando tus datos, ¿cuántas veces más luz reúne el objetivo de {#} cm que el de {#} cm? Compáralo con tu respuesta en Antes del laboratorio {#}.",
 "The Hubble Space Telescope’s mirror is {#} m ({#} cm) across and each Keck telescope’s is {#} m ({#} cm). Using (D ÷ {#} cm)², how many times more light than your dark adapted eye does each collect from a star?":
   "El espejo del Telescopio Espacial Hubble mide {#} m ({#} cm) de diámetro y el de cada telescopio Keck {#} m ({#} cm). Usando (D ÷ {#} cm)², ¿cuántas veces más luz que tu ojo adaptado a la oscuridad recoge cada uno de una estrella?",
-"The demo traces ideal lenses, so a repeated reading gives exactly the same numbers. Name two things a real telescope has that the demo leaves out (think about the lenses, the light and the air above the telescope), and say for each whether it would make the view sharper or blurrier.":
-  "La demo traza lentes ideales, así que una lectura repetida da exactamente los mismos números. Nombra dos cosas que tiene un telescopio real y que la demo deja fuera (piensa en las lentes, la luz y el aire sobre el telescopio), y di para cada una si haría la vista más nítida o más borrosa.",
 "What did Light from a star do across your three Part {#} readings, at magnifications {#}, {#} and {#}, and what did it do in Part {#}, where only the diameter changed? How did your guess about the star in Before the lab {#} hold up? Explain what sets how bright a star looks through a telescope, and use it to say why amateur astronomers say the diameter of a telescope matters more than its magnification.":
   "¿Qué hizo la Luz de una estrella en tus tres lecturas de la Parte {#}, con aumentos de {#}, {#} y {#}, y qué hizo en la Parte {#}, donde solo cambió el diámetro? ¿Cómo resultó tu conjetura sobre la estrella en Antes del laboratorio {#}? Explica qué determina qué tan brillante se ve una estrella a través de un telescopio, y úsalo para decir por qué los astrónomos aficionados dicen que el diámetro de un telescopio importa más que su aumento.",
 "You can make a telescope magnify as much as you like by using a shorter eyepiece. What happens to the exit pupil, and to the image brightness readout, as the magnification goes up?":
@@ -108,8 +106,12 @@ VDI18N.add('es', 'ws/intro-telescope', {
   "A través del telescopio la Luna se ve más grande pero no más brillante que a simple vista, mientras que una estrella se ve muchas veces más brillante. ¿Qué diferencia entre una estrella y la Luna explica esto?",
 "Why do astronomers build telescopes with bigger and bigger mirrors, when the stars they look at would stay points at any magnification?":
   "¿Por qué los astrónomos construyen telescopios con espejos cada vez más grandes, si las estrellas que observan seguirían siendo puntos con cualquier aumento?",
-"Prelab answers, the two table copies, the graph, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.":
-  "Respuestas previas al laboratorio, las dos copias de la tabla, la gráfica, las respuestas de las secciones de análisis e incertidumbre, y las respuestas a las preguntas. Identifica los datos simulados.",
+"For courses that treat measurement uncertainty. This section is not counted in the {#} minutes; do it when your instructor assigns it.":
+  "Para cursos que tratan la incertidumbre de medición. Esta sección no cuenta dentro de los {#} minutos; hazla cuando tu profesor la asigne.",
+"The demo traces ideal lenses, so a repeated reading gives exactly the same numbers. Name two things a real telescope has that the demo leaves out (think about the lenses, the light and the air above the telescope), and say for each whether it would make the view sharper or blurrier.":
+  "La demo traza lentes ideales, así que una lectura repetida da exactamente los mismos números. Nombra dos cosas que tiene un telescopio real y que la demo deja fuera (piensa en las lentes, la luz y el aire sobre el telescopio), y di para cada una si haría la vista más nítida o más borrosa.",
+"Prelab answers, the two table copies, the graph, the answers to the analysis section and to the questions (and to Uncertainty, if assigned). Identify simulated data.":
+  "Respuestas previas al laboratorio, las dos copias de la tabla, la gráfica, las respuestas de la sección de análisis y de las preguntas (y de Incertidumbre, si se asigna). Identifica los datos simulados.",
 "Diameter of the objective":
   "Diámetro del objetivo",
 "Focal length of the objective, the large front lens":

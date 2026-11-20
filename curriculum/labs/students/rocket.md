@@ -81,14 +81,19 @@ Keep each part in its own copy of the table, labeled with the part.
 3. Part 3: plot the speed at cutoff against the burn time and fit a line. Compare the slope with $$-g$$ and the intercept with $$u\ln(m_0/m_\text{dry})$$.
 4. Part 4: how long did the rocket sit on the pad? Calculate when the thrust first exceeds the weight and compare. Use the rocket equation from the moment of lift off, $$v = u\ln(m_1/m_\text{dry}) - g(t_b - t_0)$$ with $$m_1$$ the mass at lift off, to predict the speed at cutoff and compare with your reading. How much speed did the fuel burned on the pad cost?
 
-## Uncertainty
-
-The virtual flight computer logs exact values from the model (the demo rounds them to six significant figures), so there is no measurement scatter: a fit with residuals at the rounding level confirms the model, it does not test it. On a real rocket the exhaust speed is not constant (it depends on the outside pressure), the burn rate varies, and air drag and the change of $$g$$ with height both matter. Name the largest of these for a launch from the ground and say which way it would shift your Part 3 points.
-
 ## Questions
 
 1. In Part 3, the thrust is larger at the higher burn rates. Is the speed gained per kilogram of fuel larger too? Explain.
 2. In Part 2, what speeds at cutoff did the 50 and 500 kg/s burns reach, and how long did each burn last? Were you right in Before the lab 5? Use the momentum argument in the Background to explain how the burn rate affects the final speed in deep space.
+
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The virtual flight computer logs exact values from the model (the demo rounds them to six significant figures), so there is no measurement scatter: a fit with residuals at the rounding level confirms the model, it does not test it. On a real rocket the exhaust speed is not constant (it depends on the outside pressure), the burn rate varies, and air drag and the change of $$g$$ with height both matter. Name the largest of these for a launch from the ground and say which way it would shift your Part 3 points.
+
+Give the slope and intercept of each fit with their standard errors, and say whether the Part 1 slope agrees with $$u$$ and the intercept with zero within them.
 
 ## With calculus
 
@@ -100,4 +105,4 @@ For courses that use calculus. This section is not counted in the 75 minutes; do
 
 ## What to hand in
 
-Prelab answers, the data tables (four parts), the fits with their residuals for Parts 1 and 3 compared with $$u$$, $$-g$$ and $$u\ln(m_0/m_\text{dry})$$, your Part 2 and Part 4 analyses, and answers to the questions (and to With calculus, if assigned). Identify simulated data.
+Prelab answers, the data tables (four parts), the fits with their residuals for Parts 1 and 3 compared with $$u$$, $$-g$$ and $$u\ln(m_0/m_\text{dry})$$, your Part 2 and Part 4 analyses, and answers to the questions (and to Uncertainty and With calculus, if assigned). Identify simulated data.

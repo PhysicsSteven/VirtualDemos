@@ -75,17 +75,22 @@ Fill in $$\sin\theta = y/\sqrt{y^2 + L^2}$$ and, for the known lasers, $$m\lambd
 ## Analysis
 
 1. For Part 1, graph $$\sin\theta$$ (vertical) against $$m\lambda$$ (horizontal). Find the slope and intercept. The slope is $$1/d$$: find $$d$$ and the number of lines per mm, and compare with the grating's label.
-2. For Part 2, find the unknown wavelength from each reading with $$\lambda = d\sin\theta/m$$, using your $$d$$ from Analysis 1. Average them and give an uncertainty. Then use Compute and check. Which laser was it?
+2. For Part 2, find the unknown wavelength from each reading with $$\lambda = d\sin\theta/m$$, using your $$d$$ from Analysis 1. Average them. Then use Compute and check. Which laser was it?
 3. For Part 3, find the wavelength of each hydrogen line. Compare them with the Balmer formula, $$1/\lambda = R_H(1/4 - 1/n^2)$$ with $$R_H = 1.097 \times 10^7\ \mathrm{m^{-1}}$$, for $$n$$ = 3, 4, 5 and 6.
-
-## Uncertainty
-
-The caliper reads to 1 mm and you place each jaw by eye on a spot a few millimeters wide. Estimate the uncertainty in $$y$$ and propagate it to $$\sin\theta$$ and to $$\lambda$$. Is the relative uncertainty in $$\lambda$$ smaller in first or in second order? A real grating's line count is known only to its manufacturer's tolerance, and a wall that is not square to the beam shifts the spots on one side outward; say how each would affect your results.
 
 ## Questions
 
 1. In Part 1, which laser's first order was farther out, the He-Ne or the violet, and did Before the lab 3 call it? Explain it with the path difference $$d\sin\theta$$ between neighboring slits.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The caliper reads to 1 mm and you place each jaw by eye on a spot a few millimeters wide. Estimate the uncertainty in $$y$$ and propagate it to $$\sin\theta$$ and to $$\lambda$$. Is the relative uncertainty in $$\lambda$$ smaller in first or in second order? A real grating's line count is known only to its manufacturer's tolerance, and a wall that is not square to the beam shifts the spots on one side outward; say how each would affect your results.
+
+Give the unknown wavelength from Analysis 2 with its uncertainty, using the standard error of your readings.
+
 ## What to hand in
 
-Prelab answers, a Data table copy for each part with the Part 1 graph and fit, your grating spacing, the unknown wavelength with its uncertainty, the hydrogen wavelengths compared with the Balmer formula, and answers to the questions. Identify simulated data.
+Prelab answers, a Data table copy for each part with the Part 1 graph and fit, your grating spacing, the unknown wavelength, the hydrogen wavelengths compared with the Balmer formula, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

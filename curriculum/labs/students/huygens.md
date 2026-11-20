@@ -78,15 +78,18 @@ Before each part, predict what you will see. Then measure.
 4. For Part 4, compare the angle of reflection with the angle of incidence, and explain the law of reflection from the wavelets.
 5. For Part 5, graph $$\sin\theta$$ of the first dark direction (vertical) against 1/(Opening in wavelengths), which is $$\lambda/a$$ (horizontal). What is the slope? Why is there no dark direction for the 0.8 wavelength opening?
 
-## Uncertainty
-
-The model is exact, and the angles are given to 0.01°, so the scatter is negligible; the angle of incidence is set in whole degrees. The indices are those of Table 1.1 at 589 nm; real indices change with the wavelength (dispersion), with temperature and, for gases, with pressure. The opening model is two dimensional (a slit, not a round hole) and the first dark direction is the far field result.
-
 ## Questions
 
 1. A beam of light crosses a thick glass plate at an angle and leaves it parallel to its original direction. Why?
 2. In Part 5, how did the first dark direction change between 12 and 1.5 wavelengths, and did it go the way you said in Before the lab 5? Explain it with the wavelets from the opening. Why does light through a doorway not spread noticeably while sound does?
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The model is exact, and the angles are given to 0.01°, so the scatter is negligible; the angle of incidence is set in whole degrees. The indices are those of Table 1.1 at 589 nm; real indices change with the wavelength (dispersion), with temperature and, for gases, with pressure. The opening model is two dimensional (a slit, not a round hole) and the first dark direction is the far field result.
+
 ## What to hand in
 
-Prelab answers, a Data table copy for each part, the graphs and fits, your values of $$c$$ and the index of crown glass, the critical angle, and answers to the questions. Identify simulated data.
+Prelab answers, a Data table copy for each part, the graphs and fits, your values of $$c$$ and the index of crown glass, the critical angle, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

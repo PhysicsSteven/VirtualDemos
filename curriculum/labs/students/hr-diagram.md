@@ -74,14 +74,18 @@ No hazards in the virtual lab.
 3. For the Sun's life, find $$R$$ from $$L$$ and $$T$$ for the four readings and compare with the radius the demo shows. How large does the Sun become, compared with Earth's orbit?
 4. From the ages, find how long the Sun spends in each phase before it becomes a white dwarf, and what share of that time is the main sequence. Explain why most stars we see are on the main sequence.
 5. For the two white dwarf readings, what happens to the radius as the white dwarf fades? Use them to show that $$L \propto T^4$$ along its track.
-## Uncertainty
-
-The single star readings are exact values of the model, but the model itself is approximate: the fits describe typical stars, and the later phases are schematic. Report each slope with its standard error.
 
 ## Questions
 
 1. Back to the first part of Before the lab 2. In your main sequence table, how long did the 1.9 $$M_\odot$$ star live compared with the 1 $$M_\odot$$ star, and how much more luminous was it? Explain the difference with fuel over the rate of using it. Then choose Massive star: how long does a 15 $$M_\odot$$ star live, compared with the Sun, and how does its life end?
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The single star readings are exact values of the model, but the model itself is approximate: the fits describe typical stars, and the later phases are schematic. Report each slope with its standard error.
+
 ## What to hand in
 
-Prelab answers, the table copies with their graphs and fits, the exponents $$a$$ and the lifetime power, the Sun's largest radius and the share of its life on the main sequence, and answers to the questions. Identify simulated data.
+Prelab answers, the table copies with their graphs and fits, the exponents $$a$$ and the lifetime power, the Sun's largest radius and the share of its life on the main sequence, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

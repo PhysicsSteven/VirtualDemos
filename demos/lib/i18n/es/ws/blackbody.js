@@ -86,8 +86,6 @@ VDI18N.add('es', 'ws/blackbody', {
   "Lee las longitudes de onda del pico de la piel humana y del fondo cósmico en la segunda copia de la tabla, y nombra la parte del espectro en la que está cada una.",
 "Use the Stefan and Boltzmann law to find the power given off by {#} m² of skin at {#} K. Why is the net loss from a person in a room much smaller?":
   "Usa la ley de Stefan y Boltzmann para encontrar la potencia emitida por {#} m² de piel a {#} K. ¿Por qué la pérdida neta de una persona en una habitación es mucho menor?",
-"The readings are taken from the curve to five significant figures, so the uncertainty here is from rounding only. Real stars are not perfect blackbodies; say how absorption lines in a star’s atmosphere would affect a temperature found from its peak wavelength.":
-  "Las lecturas se toman de la curva con cinco cifras significativas, así que aquí la incertidumbre se debe solo al redondeo. Las estrellas reales no son cuerpos negros perfectos; di cómo afectarían las líneas de absorción de la atmósfera de una estrella a una temperatura encontrada a partir de la longitud de onda de su pico.",
 "Why does a heated piece of metal glow red first, then orange, then white?":
   "¿Por qué un trozo de metal calentado brilla primero rojo, luego naranja y luego blanco?",
 "Why are there no green stars?":
@@ -98,6 +96,12 @@ VDI18N.add('es', 'ws/blackbody', {
   "La física clásica predecía la curva de Rayleigh y Jeans. ¿Qué falló a longitudes de onda cortas, y cómo lo resolvió Planck?",
 "Set your three visible shares beside the ranking you made in Before the lab {#}. Use each peak wavelength and the shape of Planck’s curve to explain why the shares fall in the order they do, and say in which part of the spectrum the rest of each object’s power goes.":
   "Compara tus tres fracciones visibles con el orden que hiciste en Antes del laboratorio {#}. Usa la longitud de onda del pico de cada uno y la forma de la curva de Planck para explicar por qué las fracciones quedan en ese orden, e indica a qué parte del espectro va el resto de la potencia de cada objeto.",
+"For courses that treat measurement uncertainty. This section is not counted in the {#} minutes; do it when your instructor assigns it.":
+  "Para cursos que tratan la incertidumbre de medición. Esta sección no cuenta dentro de los {#} minutos; hazla cuando tu profesor la asigne.",
+"The readings are taken from the curve to five significant figures, so the uncertainty here is from rounding only. Real stars are not perfect blackbodies; say how absorption lines in a star’s atmosphere would affect a temperature found from its peak wavelength.":
+  "Las lecturas se toman de la curva con cinco cifras significativas, así que aquí la incertidumbre se debe solo al redondeo. Las estrellas reales no son cuerpos negros perfectos; di cómo afectarían las líneas de absorción de la atmósfera de una estrella a una temperatura encontrada a partir de la longitud de onda de su pico.",
+"Give the slope and intercept of each graph with their standard errors. Say whether the intercept of the \\(\\lambda_\\mathrm{max}\\) graph is zero within its uncertainty, and whether your \\(\\sigma\\) agrees with \\(5.670\\times10^{-8}\\) W/(m²·K⁴) within its uncertainty.":
+  "Da la pendiente y la ordenada al origen de cada gráfica con sus errores estándar. Di si la ordenada al origen de la gráfica de \\(\\lambda_\\mathrm{max}\\) es cero dentro de su incertidumbre, y si tu \\(\\sigma\\) coincide con \\(5.670\\times10^{-8}\\) W/(m²·K⁴) dentro de su incertidumbre.",
 "For courses that use calculus. This section is not counted in the {#} minutes; do it when your instructor assigns it.":
   "Para cursos que usan cálculo. Esta sección no cuenta dentro de los {#} minutos; hazla cuando tu profesor la asigne.",
 "Derive Wien’s law from Planck’s law. Set \\(dB_\\lambda/d\\lambda = 0\\), write \\(x = hc/\\lambda kT\\), and show that the peak satisfies \\(x = 5\\left(1 - e^{-x}\\right)\\). Solve it by starting at \\(x = 5\\) and putting each answer back into the right side until it stops changing, then find \\(b = hc/(xk)\\) and compare with your \\(b\\) from Analysis {#}.":
@@ -106,8 +110,8 @@ VDI18N.add('es', 'ws/blackbody', {
   "El flujo por unidad de área es \\(F = \\pi\\int_0^\\infty B_\\lambda\\,d\\lambda\\) (el \\(\\pi\\) viene de sumar todas las direcciones). Cambia la variable a \\(x = hc/\\lambda kT\\) y demuestra que \\(F = \\sigma T^4\\) con \\(\\sigma = \\dfrac{2\\pi^5k^4}{15h^3c^2}\\), usando \\(\\int_0^\\infty \\frac{x^3\\,dx}{e^x - 1} = \\frac{\\pi^4}{15}\\). Calcula \\(\\sigma\\) y compárala con tu valor del Análisis {#}.",
 "From \\(F = \\sigma T^4\\), \\(dF/dT = 4F/T\\). From your {#} K and {#} K rows, estimate \\(dF/dT\\) at {#} K (their difference in \\(F\\) over {#} K) and compare it with \\(4F/T\\) from your {#} K row. Show that for \\(T^4\\) this difference estimate is exactly \\(4T^3 + 4T\\,h^2\\), where \\(h\\) = {#} K is the half spacing, and use it to explain the gap.":
   "De \\(F = \\sigma T^4\\), \\(dF/dT = 4F/T\\). Con tus filas de {#} K y {#} K, estima \\(dF/dT\\) en {#} K (su diferencia en \\(F\\) entre {#} K) y compárala con \\(4F/T\\) de tu fila de {#} K. Demuestra que para \\(T^4\\) esta estimación por diferencias es exactamente \\(4T^3 + 4T\\,h^2\\), donde \\(h\\) = {#} K es la mitad del espaciamiento, y úsalo para explicar la diferencia.",
-"Prelab answers, the table copies with their graphs and fits, your values of \\(b\\) and \\(\\sigma\\) with comparisons, and answers to the questions (and to With calculus, if assigned). Identify simulated data.":
-  "Respuestas del prelaboratorio, las copias de las tablas con sus gráficas y ajustes, tus valores de \\(b\\) y \\(\\sigma\\) con comparaciones, y las respuestas a las preguntas (y a Con cálculo, si se asignó). Identifica los datos simulados.",
+"Prelab answers, the table copies with their graphs and fits, your values of \\(b\\) and \\(\\sigma\\) with comparisons, and answers to the questions (and to Uncertainty and With calculus, if assigned). Identify simulated data.":
+  "Respuestas del prelaboratorio, las copias de las tablas con sus gráficas y ajustes, tus valores de \\(b\\) y \\(\\sigma\\) con comparaciones, y las respuestas a las preguntas (y de Incertidumbre y Con cálculo, si se asignan). Identifica los datos simulados.",
 "Planck's spectral radiance per unit wavelength":
   "Radiancia espectral de Planck por unidad de longitud de onda",
 "Flux: power radiated per square meter of surface":

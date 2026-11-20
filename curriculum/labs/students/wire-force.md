@@ -83,10 +83,6 @@ Note that all scans used the same Mystery magnet (it was never switched off) and
 3. For the angle scan, graph $$F_{\rm bal}$$ (vertical) against $$\sin\theta$$ (horizontal) at fixed $$I$$ and $$L$$ and fit a straight line. Infer $$B$$ from the slope magnitude and compare with the current scans. Explain why near zero angles make individual $$B$$ estimates unreliable.
 4. Use the loop force diagram to explain torque, equilibrium and the role of current direction. Keep wire angle and loop normal angle distinct.
 
-## Uncertainty
-
-The virtual balance rounds to 0.01 g. Current, length and angle are prescribed settings, adjustable in steps of 0.1 A, 0.5 cm and 5°. Their step sizes describe available settings, not random scatter. On a real bench, include calibration, zero drift, field nonuniformity and uncertainty in the length actually inside the field. In $$B = \lvert k\rvert/(L\sin\theta)$$, angle sensitivity grows as $$\cot\theta$$; use radians when propagating angle uncertainty. Near 90° the leading angle effect is second order. Repeat identical virtual states only to check consistency, not to create statistical precision.
-
 ## Questions
 
 1. Why can reversing current make the magnet heavier instead of lighter?
@@ -94,6 +90,13 @@ The virtual balance rounds to 0.01 g. Current, length and angle are prescribed s
 3. Does zero net magnetic force on a loop imply zero torque?
 4. How did the balance readings $$\Delta m$$ at 0° and at 90° in your angle scan compare, and which answer to Before the lab 4 do they support? Use $$\mathbf F = I\mathbf L\times\mathbf B$$ to explain why the force depends on the angle this way, and why a measurement with the wire parallel to the field cannot give $$B$$.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The virtual balance rounds to 0.01 g. Current, length and angle are prescribed settings, adjustable in steps of 0.1 A, 0.5 cm and 5°. Their step sizes describe available settings, not random scatter. On a real bench, include calibration, zero drift, field nonuniformity and uncertainty in the length actually inside the field. In $$B = \lvert k\rvert/(L\sin\theta)$$, angle sensitivity grows as $$\cot\theta$$; use radians when propagating angle uncertainty. Near 90° the leading angle effect is second order. Repeat identical virtual states only to check consistency, not to create statistical precision. Give $$B$$ from each fit with its uncertainty, using the standard errors of the slopes, and say whether the fitted intercepts are zero within their standard errors.
+
 ## What to hand in
 
-Prelab answers, settings and CSV files, both current fits and the angle fit with residuals, field estimates with uncertainty, sign and length scaling checks, the loop force sketch, and answers to the questions. Identify simulated data.
+Prelab answers, settings and CSV files, both current fits and the angle fit with residuals, field estimates, sign and length scaling checks, the loop force sketch, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

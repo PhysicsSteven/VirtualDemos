@@ -55,11 +55,12 @@ VDI18N.add('en', 'ws/intro-moon', [
 "Which of your new and full moons could have an eclipse (the Eclipse column says an eclipse is possible)? What were the Sun’s distance from the node and the Moon’s height β at those moments?",
 "What is the largest size of β in your eclipse series (ignore its sign)? Compare it with the tilt of the Moon’s orbit.",
 "How many days pass from the first eclipse season in your data to the next one? Use the Time from start of the first row in each season whose Eclipse column says an eclipse is possible. About how many months (of {#} days) is that?",
-"The demo’s readings are exact for its model, so a repeated reading gives the same numbers. The model leaves things out: the real Moon’s orbit is an ellipse, so a real new moon can come several hours earlier or later than in the model, and real rise and set times change with your latitude and the time of year. Which of your results would you trust most for the real Moon, and which least? Explain.",
 "Some people think the phases are caused by Earth’s shadow falling on the Moon. Your readings at {#} and {#} days are crescents: what do their Elongation and Illuminated columns show, and where does that put the Moon compared with your sketch in Before the lab {#}? Use the elongations to explain why the shadow idea cannot be true, and say what does make the crescent.",
 "A friend says they saw a full moon high in the sky at noon. Could they be right? Use your rise and set times.",
 "Why is there not a solar eclipse at every new moon and a lunar eclipse at every full moon?",
 "According to NASA’s eclipse list (eclipse.gsfc.nasa.gov), the eclipses of {#} are an annular solar eclipse on February {#}, a faint (penumbral) lunar eclipse on February {#}, penumbral lunar eclipses on July {#} and August {#}, and a total solar eclipse on August {#}. Group them into eclipse seasons. How far apart are the seasons, and does that agree with your answer to Analysis {#}?",
-"Prelab answers, the two table copies, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.",
+"For courses that treat measurement uncertainty. This section is not counted in the {#} minutes; do it when your instructor assigns it.",
+"The demo’s readings are exact for its model, so a repeated reading gives the same numbers. The model leaves things out: the real Moon’s orbit is an ellipse, so a real new moon can come several hours earlier or later than in the model, and real rise and set times change with your latitude and the time of year. Which of your results would you trust most for the real Moon, and which least? Explain.",
+"Prelab answers, the two table copies, the answers to the analysis section and to the questions (and to Uncertainty, if assigned). Identify simulated data.",
 "Moon Phases"
 ]);

@@ -99,10 +99,6 @@ Last, press the setup **Sunset: the Sun through air** and write down the readout
 4. From Table 2, which stars make the cloud glow as an emission nebula, and which leave it a reflection nebula? Compare the ionized radius of the O star with that of the B star: how many times bigger is it? What changed when you heated the B star to 25,000 K?
 5. For the cloud moving away at 50 km/s in Table 3, use $$v \approx c\,(f_0 - f_m)/f_0$$ with the shift you recorded to find its speed, and compare with 50 km/s. How many flips each second does all the Milky Way's hydrogen give?
 
-## Uncertainty
-
-The conversion from gas to dimming, $$2.21\times10^{21}$$ atoms per cm² for each magnitude, is measured to about 4%. For **Dust lets through 1/100** ($$A_V = 5$$ mag), how many magnitudes is 4% of the dimming? Each magnitude changes the light by a factor of 2.512; by about what factor could the light let through be off?
-
 ## Questions
 
 1. In Part 1 you wrote down the shares of blue and of visible light that get through the air at sunset. Compare them. Why is the setting Sun orange, and why is the sky blue?
@@ -110,6 +106,13 @@ The conversion from gas to dimming, $$2.21\times10^{21}$$ atoms per cm² for eac
 3. In **Warm gas behind thick dust**, what share of the starlight gets through, and how much of the 21 cm radio line? Why do astronomers map the hydrogen of the whole Galaxy, even its far side, in the 21 cm line instead of in visible light? How many flips did you count for one atom in Part 3, and why does the Galaxy still glow steadily?
 4. Look back at your prediction in Before the lab 4. Where were the Hβ and Hα lines without dust and through it in Part 1? Explain why dust makes a star look redder without moving its lines, and how that lets astronomers tell a reddened star from one that is moving away.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+For your Analysis 1 fit, report the intercept with its uncertainty and say whether it is zero within that uncertainty. The conversion from gas to dimming, $$2.21\times10^{21}$$ atoms per cm² for each magnitude, is measured to about 4%. For **Dust lets through 1/100** ($$A_V = 5$$ mag), how many magnitudes is 4% of the dimming? Each magnitude changes the light by a factor of 2.512; by about what factor could the light let through be off?
+
 ## What to hand in
 
-Answers to Before the lab, the three tables with the graph and its slope, the line positions and readouts you wrote down in Parts 1 and 3, your flip count, and your answers to Analysis, Uncertainty and Questions. Identify simulated data: every reading in this lab is simulated.
+Answers to Before the lab, the three tables with the graph and its slope, the line positions and readouts you wrote down in Parts 1 and 3, your flip count, and your answers to Analysis and Questions (and to Uncertainty, if assigned). Identify simulated data: every reading in this lab is simulated.

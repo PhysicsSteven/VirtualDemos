@@ -48,7 +48,7 @@ No hazards in the virtual lab.
 
 **Part 2. A crown glass lens.** Click the lens and choose Crown glass; its focal length stays 20 cm at 589 nm. Look at the "on the screen" picture again and note the colors from the middle out, as in Part 1; write the colors for both lenses in your answer to Question 4. Record a reading, export it to the worksheet, then press Clear.
 
-**Part 3. A mirror.** Choose Mirror in white light: a concave mirror with a radius of curvature of 40 cm. In the "close up of the focus" picture, watch where the colors cross, and whether the outer rays cross at the same place as the inner ones (for the Uncertainty section). Record a reading and export it to the worksheet.
+**Part 3. A mirror.** Choose Mirror in white light: a concave mirror with a radius of curvature of 40 cm. In the "close up of the focus" picture, watch where the colors cross. Record a reading and export it to the worksheet.
 
 ## Data
 
@@ -66,10 +66,6 @@ No hazards in the virtual lab.
 4. What is the spread for the mirror? Compare its focal length with your answer to Before the lab 2.
 5. The spread grows in proportion to the focal length. A refracting telescope with a crown glass lens of focal length 20 m (2000 cm) would have a spread how many centimeters long? Use your percent from Analysis 3.
 
-## Uncertainty
-
-The demo's lens is a thin lens with the glass makers' measured indices, and its mirror is a perfect sphere. Real lenses and spherical mirrors also blur the focus because rays far from the center do not cross at quite the same place as rays near it (spherical aberration). In the "close up of the focus" picture for the mirror, do the outer rays cross at exactly the same place as the inner ones? Say how this would affect a star's image.
-
 ## Questions
 
 1. Give two reasons why every large telescope built in the last century is a reflector. (Think about color, about how a big lens must be held only at its edge while a mirror can be supported from behind, and about how much glass the light has to pass through.)
@@ -77,6 +73,13 @@ The demo's lens is a thin lens with the glass makers' measured indices, and its 
 3. The largest refracting telescope ever used for research has a lens about 1 m across, while today's largest telescopes have mirrors about 10 m across. Using what you learned about light gathering, how many times more light does a 10 m mirror collect than a 1 m lens?
 4. Which color was on the outside of the spot for each lens, and is it the one you chose in Before the lab 4? Why is that color on the outside? (Hint: the screen is at the focus for yellow light; ask which colors have already crossed.) Why is the colored edge wider for flint glass than for crown glass?
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The demo's lens is a thin lens with the glass makers' measured indices, and its mirror is a perfect sphere. Real lenses and spherical mirrors also blur the focus because rays far from the center do not cross at quite the same place as rays near it (spherical aberration). In the "close up of the focus" picture for the mirror, do the outer rays cross at exactly the same place as the inner ones? Say how this would affect a star's image. In Part 3, look at the "close up of the focus" picture and note whether the outer rays cross at the same place as the inner ones.
+
 ## What to hand in
 
-Prelab answers, the three table copies, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.
+Prelab answers, the three table copies, the answers to the analysis section and to the questions (and to Uncertainty, if assigned). Identify simulated data.

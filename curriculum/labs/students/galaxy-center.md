@@ -97,15 +97,18 @@ Look at the row for 80,000 ly. Its speed v sits beside the Ghost speed, the 132 
 4. In the same row, work out $$M = a^3/P^2$$ from the a and P columns and compare it with the Mass inside the orbit column.
 5. Graph the mass inside the orbit (vertical) against the distance r (horizontal). Is it close to a straight line? How many times more mass is inside 80,000 ly than inside 40,000 ly?
 
-## Uncertainty
-
-The measured speeds scatter by a few km/s around the curve the demo uses. The mass goes as $$v^2$$, so a 2% error in v gives about a 4% error in M. A wrong luminosity for the RR Lyrae stars moves every cluster by the same factor. Which of these two would have mattered more to Shapley, and why?
-
 ## Questions
 
 1. Choose **Herschel's fog** under Shapley's clusters and read its hint. Why did counting stars in every direction along the Milky Way put Herschel near the middle, and why did Shapley's clusters escape the same trap?
 2. Go back to your guess in Before the lab 3 and to the 80,000 ly row. How fast does the star really move, and how far is that from the Ghost speed? Your answer to Analysis 5 says the mass keeps growing as you go out. If the mass really sat near the center, how would the speeds and masses in your table look instead? What does the real table say about mass we cannot see?
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The measured speeds scatter by a few km/s around the curve the demo uses. The mass goes as $$v^2$$, so a 2% error in v gives about a 4% error in M. A wrong luminosity for the RR Lyrae stars moves every cluster by the same factor. Which of these two would have mattered more to Shapley, and why?
+
 ## What to hand in
 
-Prelab answers, both Data tables with your graph, Analysis 1 to 5 with the numbers you worked out, the uncertainty answer and the answers to the questions. Identify simulated data: the cluster positions and brightnesses are real catalog data; the orbits are a model built on a measured rotation curve.
+Prelab answers, both Data tables with your graph, Analysis 1 to 5 with the numbers you worked out and the answers to the questions (and to Uncertainty, if assigned). Identify simulated data: the cluster positions and brightnesses are real catalog data; the orbits are a model built on a measured rotation curve.

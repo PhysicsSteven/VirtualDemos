@@ -184,18 +184,16 @@ VDI18N.add('es', 'ws/nerve-signals', {
   "Eje a partir de I y aVF (°), fila {#}",
 "Axis set (°), row {#}":
   "Eje fijado (°), fila {#}",
-"Graph \\(\\Delta x\\) (vertical) against \\(\\Delta t\\) (horizontal) for the myelinated axon of Part {#}, with a straight line fit. What is the slope, with its uncertainty, in m/s? Is the intercept zero within its uncertainty? Do the same for the bare axon of Part {#}. How many times faster is the myelinated impulse? Compare with your prediction in Before the lab {#}.":
-  "Grafica \\(\\Delta x\\) (vertical) contra \\(\\Delta t\\) (horizontal) para el axón mielinizado de la Parte {#}, con un ajuste de recta. ¿Cuál es la pendiente, con su incertidumbre, en m/s? ¿Es la ordenada al origen cero dentro de su incertidumbre? Haz lo mismo para el axón desnudo de la Parte {#}. ¿Cuántas veces más rápido es el impulso mielinizado? Compara con tu predicción en Antes del laboratorio {#}.",
-"For the bare axons of Part {#}, fill in the \\(v^2\\) column. Graph \\(v^2\\) against \\(d\\) with a straight line fit. Give the slope and intercept with their uncertainties. Is the intercept zero within its uncertainty, as it must be if \\(v_\\text{bare} \\propto \\sqrt{d}\\)? Use your fit to predict the speed of the squid’s bare giant axon, {#} µm across.":
-  "Para los axones desnudos de la Parte {#}, llena la columna \\(v^2\\). Grafica \\(v^2\\) contra \\(d\\) con un ajuste de recta. Da la pendiente y la ordenada al origen con sus incertidumbres. ¿Es la ordenada al origen cero dentro de su incertidumbre, como debe serlo si \\(v_\\text{bare} \\propto \\sqrt{d}\\)? Usa tu ajuste para predecir la rapidez del axón gigante desnudo del calamar, de {#} µm de diámetro.",
-"For the myelinated axons of Part {#}, graph \\(v\\) against \\(d\\) with a straight line fit. Give the slope (in m/s per µm) and the intercept with their uncertainties. Is the intercept zero within its uncertainty? Compare the ratio \\(v(20\\ \\mu\\text{m})/v(5\\ \\mu\\text{m})\\) for each kind of axon with your answers to Before the lab {#}.":
-  "Para los axones mielinizados de la Parte {#}, grafica \\(v\\) contra \\(d\\) con un ajuste de recta. Da la pendiente (en m/s por µm) y la ordenada al origen con sus incertidumbres. ¿Es la ordenada al origen cero dentro de su incertidumbre? Compara el cociente \\(v(20\\ \\mu\\text{m})/v(5\\ \\mu\\text{m})\\) para cada tipo de axón con tus respuestas de Antes del laboratorio {#}.",
+"Graph \\(\\Delta x\\) (vertical) against \\(\\Delta t\\) (horizontal) for the myelinated axon of Part {#}, with a straight line fit. What is the slope, in m/s? Is the intercept close to zero? Do the same for the bare axon of Part {#}. How many times faster is the myelinated impulse? Compare with your prediction in Before the lab {#}.":
+  "Grafica \\(\\Delta x\\) (vertical) contra \\(\\Delta t\\) (horizontal) para el axón mielinizado de la Parte {#}, con un ajuste de recta. ¿Cuál es la pendiente, en m/s? ¿Está la ordenada al origen cerca de cero? Haz lo mismo para el axón desnudo de la Parte {#}. ¿Cuántas veces más rápido es el impulso mielinizado? Compara con tu predicción en Antes del laboratorio {#}.",
+"For the bare axons of Part {#}, fill in the \\(v^2\\) column. Graph \\(v^2\\) against \\(d\\) with a straight line fit. Give the slope and intercept. Is the intercept close to zero, as it must be if \\(v_\\text{bare} \\propto \\sqrt{d}\\)? Use your fit to predict the speed of the squid’s bare giant axon, {#} µm across.":
+  "Para los axones desnudos de la Parte {#}, llena la columna \\(v^2\\). Grafica \\(v^2\\) contra \\(d\\) con un ajuste de recta. Da la pendiente y la ordenada al origen. ¿Está la ordenada al origen cerca de cero, como debe ser si \\(v_\\text{bare} \\propto \\sqrt{d}\\)? Usa tu ajuste para predecir la rapidez del axón gigante desnudo del calamar, de {#} µm de diámetro.",
+"For the myelinated axons of Part {#}, graph \\(v\\) against \\(d\\) with a straight line fit. Give the slope (in m/s per µm) and the intercept. Is the intercept close to zero? Compare the ratio \\(v(20\\ \\mu\\text{m})/v(5\\ \\mu\\text{m})\\) for each kind of axon with your answers to Before the lab {#}.":
+  "Para los axones mielinizados de la Parte {#}, grafica \\(v\\) contra \\(d\\) con un ajuste de recta. Da la pendiente (en m/s por µm) y la ordenada al origen. ¿Está la ordenada al origen cerca de cero? Compara el cociente \\(v(20\\ \\mu\\text{m})/v(5\\ \\mu\\text{m})\\) para cada tipo de axón con tus respuestas de Antes del laboratorio {#}.",
 "With your fits from Analysis {#} and {#}, how thick would a bare axon have to be to match the speed of a myelinated axon {#} µm across? How many times thicker is that?":
   "Con tus ajustes de Análisis {#} y {#}, ¿qué tan grueso tendría que ser un axón desnudo para igualar la rapidez de un axón mielinizado de {#} µm de diámetro? ¿Cuántas veces más grueso es?",
 "For each row of the ECG table, work out the axis from lead I and aVF with the formula in the Background and fill in that column. By how many degrees does each differ from the axis set? Which setups show left or right axis deviation, and which leads have a net negative QRS in each?":
   "Para cada fila de la tabla de ECG, calcula el eje a partir de la derivación I y aVF con la fórmula del Contexto y llena esa columna. ¿Por cuántos grados difiere cada uno del eje fijado? ¿Qué configuraciones muestran desviación del eje a la izquierda o a la derecha, y qué derivaciones tienen un QRS neto negativo en cada una?",
-"The demo times the impulse where the voltage at an electrode rises through {#} mV, between time steps of {#} ms (bare) or {#} ms (myelinated). The myelinated impulse jumps from node to node, so its arrival at an electrode depends a little on where in an internode the electrode sits (read the <strong>Internode length</strong> in the Readouts). Compare the scatter of your myelinated and bare points about their lines in Analysis {#} (look at the residuals). Which effect sets the uncertainty of each slope? Would wider electrode gaps help?":
-  "La demostración mide el tiempo del impulso donde el voltaje en un electrodo sube a través de {#} mV, entre pasos de tiempo de {#} ms (desnudo) o {#} ms (mielinizado). El impulso mielinizado salta de nodo en nodo, así que su llegada a un electrodo depende un poco de en qué parte de un internodo está el electrodo (lee la <strong>Longitud del internodo</strong> en las Lecturas en pantalla). Compara la dispersión de tus puntos mielinizados y desnudos respecto a sus rectas en Análisis {#} (mira los residuos). ¿Qué efecto fija la incertidumbre de cada pendiente? ¿Ayudarían separaciones de electrodos más grandes?",
 "Part {#}: which impulse reached B first, and what speeds did you read? How many times faster was the myelinated one, and how does that compare with your prediction and with your answer to Analysis {#}? Explain why wrapping an axon in an insulator makes the impulse faster.":
   "Parte {#}: ¿qué impulso llegó primero a B, y qué rapideces leíste? ¿Cuántas veces más rápido fue el mielinizado, y cómo se compara con tu predicción y con tu respuesta de Análisis {#}? Explica por qué envolver un axón en un aislante hace más rápido el impulso.",
 "Press the setup <strong>Squid giant axon</strong> (Blind still on) and press <strong>Play</strong>. Read its speed. Compare it with your prediction from Analysis {#} and with the {#} m/s that Hodgkin and Huxley computed from their model and the {#} m/s they measured. Why does a squid need such a thick axon, and why are all the model’s speeds lower than those of human nerve fibers?":
@@ -206,8 +204,44 @@ VDI18N.add('es', 'ws/nerve-signals', {
   "Parte {#}: da las tres derivaciones que copiaste en un instante. ¿Es la derivación II igual a la derivación I más la derivación III? ¿Por qué debe cumplirse en cada instante?",
 "Switch back to <strong>Axon</strong> and press the setup <strong>Myelin lost</strong>, in which internodes {#} to {#} have lost their myelin. Press <strong>Play</strong>. What happens to the impulse there? Which disease does this model, and why does a patient lose sensation or movement?":
   "Regresa a <strong>Axón</strong> y presiona la configuración <strong>Mielina perdida</strong>, en la que los internodos {#} a {#} perdieron su mielina. Presiona <strong>Iniciar</strong>. ¿Qué le pasa al impulso ahí? ¿Qué enfermedad modela esto, y por qué un paciente pierde sensibilidad o movimiento?",
-"Your answers to Before the lab, the four copies of the Data table with their graphs and fits, the ECG table, your answers to Analysis, Uncertainty and Questions. Say that your data came from the simulated apparatus.":
-  "Tus respuestas de Antes del laboratorio, las cuatro copias de la tabla de Datos con sus gráficas y ajustes, la tabla de ECG, y tus respuestas de Análisis, Incertidumbre y Preguntas. Di que tus datos vienen del aparato simulado.",
+"For courses that treat measurement uncertainty. This section is not counted in the {#} minutes; do it when your instructor assigns it.":
+  "Para cursos que tratan la incertidumbre de medición. Esta sección no cuenta dentro de los {#} minutos; hazla cuando tu profesor la asigne.",
+"The demo times the impulse where the voltage at an electrode rises through {#} mV, between time steps of {#} ms (bare) or {#} ms (myelinated). The myelinated impulse jumps from node to node, so its arrival at an electrode depends a little on where in an internode the electrode sits (read the <strong>Internode length</strong> in the Readouts). Compare the scatter of your myelinated and bare points about their lines in Analysis {#} (look at the residuals). Which effect sets the uncertainty of each slope? Would wider electrode gaps help?":
+  "La demostración mide el tiempo del impulso donde el voltaje en un electrodo sube a través de {#} mV, entre pasos de tiempo de {#} ms (desnudo) o {#} ms (mielinizado). El impulso mielinizado salta de nodo en nodo, así que su llegada a un electrodo depende un poco de en qué parte de un internodo está el electrodo (lee la <strong>Longitud del internodo</strong> en las Lecturas en pantalla). Compara la dispersión de tus puntos mielinizados y desnudos respecto a sus rectas en Análisis {#} (mira los residuos). ¿Qué efecto fija la incertidumbre de cada pendiente? ¿Ayudarían separaciones de electrodos más grandes?",
+"For each straight line fit in Analysis {#} to {#}, give the slope and the intercept with their uncertainties, and say whether each intercept is zero within its uncertainty.":
+  "Para cada ajuste de recta de los Análisis {#} a {#}, da la pendiente y la ordenada al origen con sus incertidumbres, y di si cada ordenada al origen es cero dentro de su incertidumbre.",
+"Your answers to Before the lab, the four copies of the Data table with their graphs and fits, the ECG table, and your answers to Analysis and Questions (and to Uncertainty, if assigned). Say that your data came from the simulated apparatus.":
+  "Tus respuestas de Antes del laboratorio, las cuatro copias de la tabla de Datos con sus gráficas y ajustes, la tabla de ECG, y tus respuestas de Análisis y Preguntas (y de Incertidumbre, si se asigna). Di que tus datos vienen del aparato simulado.",
+"Nernst potential of one kind of ion: the voltage of the inside relative to the outside at which it stops leaking":
+  "Potencial de Nernst de un tipo de ion: el voltaje del interior respecto al exterior al cual deja de fugarse",
+"Nernst potential of potassium":
+  "Potencial de Nernst del potasio",
+"Temperature in kelvins":
+  "Temperatura en kelvin",
+"Concentration of the ion inside the cell":
+  "Concentración del ion dentro de la célula",
+"Concentration of the ion outside the cell":
+  "Concentración del ion fuera de la célula",
+"Diameter of the axon (without its myelin)":
+  "Diámetro del axón (sin su mielina)",
+"Horizontal component of the heart's dipole, toward the patient's left (equal to lead I)":
+  "Componente horizontal del dipolo del corazón, hacia la izquierda del paciente (igual a la derivación I)",
+"Vertical component of the heart's dipole, toward the feet":
+  "Componente vertical del dipolo del corazón, hacia los pies",
+"Time; Δt is the delay from electrode A to electrode B":
+  "Tiempo; Δt es el retraso del electrodo A al electrodo B",
+"Mean QRS axis: the dipole's average direction during the QRS, from the patient's left toward the feet":
+  "Eje QRS medio: la dirección promedio del dipolo durante el QRS, de la izquierda del paciente hacia los pies",
+"Speed of the impulse along the axon":
+  "Rapidez del impulso a lo largo del axón",
+"Speed of the impulse on a bare axon":
+  "Rapidez del impulso en un axón desnudo",
+"Speed of the impulse on a myelinated axon":
+  "Rapidez del impulso en un axón mielinizado",
+"Position along the axon; Δx is the gap from electrode A to electrode B":
+  "Posición a lo largo del axón; Δx es la separación del electrodo A al electrodo B",
+"Charge of the ion in units of e: +{#} for K⁺ and Na⁺, −{#} for Cl⁻":
+  "Carga del ion en unidades de e: +{#} para K⁺ y Na⁺, −{#} para Cl⁻",
 "Nerve Signals and the ECG":
   "Señales nerviosas y el ECG"
 });

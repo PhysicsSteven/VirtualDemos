@@ -82,15 +82,20 @@ Open Lab and tick Blind for the orbit scan and the ground clock at rest scan, so
 4. For the GPS orbit, how far would a position drift in one day if the clocks were not corrected? Scale your run to exactly one day and compare it with the net gain per day.
 5. For the 22.5 m tower, find the fractional rate difference and compare it with $$gh/c^2$$, which Pound and Rebka measured in 1959 in a 22.5 m tower at Harvard. For the taller towers, why is the speed part not zero?
 
-## Uncertainty
-
-The gains are recorded to six significant figures and the radii are exact settings, so the scatter about your fits is only rounding; use the standard error of each slope. The straight lines in the Background drop terms of order $$(GM/Rc^2)^2$$, about 5 × 10⁻¹⁹, far below what the readouts show. The real GPS system has to allow for what the model leaves out: say which of Earth's flattening, the satellites' slightly eccentric orbits, or the Sun and Moon you expect to matter, and why.
-
 ## Questions
 
 1. GPS satellite clocks are built to tick at 10.22999999543 MHz on the ground so that in orbit they tick at 10.23 MHz as seen from Earth. Find the fractional offset and compare it with the net fractional rate difference from your GPS reading.
 2. In your orbit scan, what were the Gravity part, Speed part and Net gain for the space station and for GPS? Does each clock gain or lose, as you said in Before the lab 4? Using the two parts of each reading, explain why.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The gains are recorded to six significant figures and the radii are exact settings, so the scatter about your fits is only rounding; use the standard error of each slope. The straight lines in the Background drop terms of order $$(GM/Rc^2)^2$$, about 5 × 10⁻¹⁹, far below what the readouts show. The real GPS system has to allow for what the model leaves out: say which of Earth's flattening, the satellites' slightly eccentric orbits, or the Sun and Moon you expect to matter, and why.
+
+Give $$GM/c^2$$ from your fit with its uncertainty, using the standard error of the slope.
+
 ## What to hand in
 
-Prelab answers, the three table copies with their graphs and fits, $$GM/c^2$$ with its uncertainty, the radius where the effects cancel, the one day drift, the tower comparison and answers to the questions. Identify simulated data.
+Prelab answers, the three table copies with their graphs and fits, $$GM/c^2$$, the radius where the effects cancel, the one day drift, the tower comparison and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

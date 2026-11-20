@@ -79,16 +79,19 @@ No hazards in the virtual lab.
 4. Earth is 1.2742 × 10⁷ m across and Neptune's orbit is 9.0 × 10¹² m across. How many powers of ten (how many times wider by a factor of 10) do you zoom out to go from Earth to Neptune's orbit?
 5. The nearest star, Proxima Centauri, is 4.25 ly away. How many au is that? How many times farther is it than Neptune?
 
-## Uncertainty
-
-The average distances in the labels come from the orbits, so they are exact for the model. Real distances change because the orbits are ellipses, not circles. Mars is 1.38 au from the Sun at its closest and 1.67 au at its farthest. How many minutes does the light travel time to Mars change between those two points? Is that a large change compared with your table value?
-
 ## Questions
 
 1. Make a scale model in your head. If the Sun (1.39 million km across) were a grapefruit 14 cm across, how far away would Earth be, and how big would Earth be? How far away would Neptune be? Proxima Centauri?
 2. A radio command to a rover on Mars takes several minutes to arrive. Why can't the rover be driven like a remote control car from Earth?
 3. Divide your Voyager 1 distance in the Data table by Proxima Centauri's distance in au from Analysis 5. What fraction of the way has Voyager 1 gone, and how does that compare with your pick in Before the lab 4? What does it tell you about how far apart the stars are compared with the planets? Use it to explain why astronomers use au inside the solar system and light years for the stars, instead of kilometers for everything.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The average distances in the labels come from the orbits, so they are exact for the model. Real distances change because the orbits are ellipses, not circles. Mars is 1.38 au from the Sun at its closest and 1.67 au at its farthest. How many minutes does the light travel time to Mars change between those two points? Is that a large change compared with your table value?
+
 ## What to hand in
 
-Prelab answers, the completed Data table with its graph, the answers to the analysis and uncertainty sections, and answers to the questions.
+Prelab answers, the completed Data table with its graph, the answers to the analysis section and to the questions (and to Uncertainty, if assigned).

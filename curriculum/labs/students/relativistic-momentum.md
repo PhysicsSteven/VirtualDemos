@@ -74,15 +74,18 @@ Fill in the $$\gamma$$ and $$\gamma v$$ columns yourself from the speed.
 3. Graph $$\gamma$$ (vertical) against $$x$$ (horizontal) for the electron. From the slope find the electron's rest energy $$mc^2$$ in MeV and compare with 0.511 MeV.
 4. Do the same (Analysis 2 and 3) for the proton. Which needs more time to reach 0.9c in the same field, the electron or the proton, and why?
 
-## Uncertainty
-
-The speed is given to six decimal places. Find how much an error of 0.000001c in $$v$$ changes $$\gamma$$ at $$v = 0.986$$c, and say which of your points limit the precision of the slopes.
-
 ## Questions
 
 1. The force stays the same all the way, yet the acceleration $$dv/dt$$ falls towards zero. Where does the work done by the force go?
 2. In the same field, how does the momentum of the proton after 100 ns compare with the momentum of the electron after 100 ns? How do their speeds compare?
 3. From your electron readings at 0, 5.0 and 10.0 ns, find the gain in speed and the gain in $$\gamma v$$ in each 5 ns, and set them beside your answers to Before the lab 5. Someone explains the result by saying the electron's mass grows as it speeds up, so the same force moves it less. Why is that wrong, and what does the textbook say instead (§5.8)? Explain the two gains from $$F = dp/dt$$.
+
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The speed is given to six decimal places. Find how much an error of 0.000001c in $$v$$ changes $$\gamma$$ at $$v = 0.986$$c, and say which of your points limit the precision of the slopes. Give the electron's mass and rest energy and the proton's rest energy with uncertainties from the standard errors of the slopes, and say whether each agrees with the accepted value within them.
 
 ## With calculus
 
@@ -94,4 +97,4 @@ For courses that use calculus. This section is not counted in the 75 minutes; do
 
 ## What to hand in
 
-Prelab answers, the table copies with their graphs and fits, the electron's mass and rest energy and the proton's rest energy with uncertainty, and answers to the questions (and to With calculus, if assigned). Identify simulated data.
+Prelab answers, the table copies with their graphs and fits, the electron's mass and rest energy and the proton's rest energy, and answers to the questions (and to Uncertainty and With calculus, if assigned). Identify simulated data.

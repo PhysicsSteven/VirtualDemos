@@ -77,19 +77,22 @@ For each part, write in that copy's notes where the plunger was when the heaps f
 
 ## Analysis
 
-1. For Part 1, graph $$x$$ against $$j$$. The slope is the heap spacing $$d$$. Find $$v_{\text{gas}} = 2df$$ with its uncertainty, and compare it with $$\sqrt{\gamma RT/M}$$ for air.
+1. For Part 1, graph $$x$$ against $$j$$. The slope is the heap spacing $$d$$. Find $$v_{\text{gas}} = 2df$$, and compare it with $$\sqrt{\gamma RT/M}$$ for air.
 2. Find $$v_{\text{rod}}$$ for steel from $$2Lf/n$$ and compare it with $$\sqrt{E/\rho}$$.
 3. From Part 2, find $$v$$ in helium and then $$\gamma$$ for helium, using $$M = 4.003$$ g/mol. Is it close to the monatomic value 5/3?
 4. From Part 3, find the speed of sound in the unknown rod by both methods. Which materials, if any, does it match?
-
-## Uncertainty
-
-In the simulation the heap positions are read to 1 mm and the counter to 1 Hz, and the model has no noise, so the scatter of the points about the line comes only from reading the heap centers. Using six heaps in a fit gives $$d$$ more precisely than any one pair. On a real tube add the width of the heaps, the fine ridges within them, end effects near the disc and plunger, the temperature of the gas and the rod's own temperature, and the counter or tuning fork calibration.
 
 ## Questions
 
 1. Put your Part 1 and Part 2 counter readings and heap spacings beside your choices in Before the lab 2. Explain what you saw from where the frequency comes from and what sets the wavelength in the gas. Use the same reasoning to say what would happen to the heap spacing if the air were warmed from 20 °C to 40 °C.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+In the simulation the heap positions are read to 1 mm and the counter to 1 Hz, and the model has no noise, so the scatter of the points about the line comes only from reading the heap centers. Using six heaps in a fit gives $$d$$ more precisely than any one pair. Give $$v_{\text{gas}}$$ in Analysis 1 with its uncertainty, give $$v_{\text{gas}}$$ in helium and $$\gamma$$ with theirs, and say whether $$\gamma$$ agrees with 5/3 within its uncertainty. On a real tube add the width of the heaps, the fine ridges within them, end effects near the disc and plunger, the temperature of the gas and the rod's own temperature, and the counter or tuning fork calibration.
+
 ## What to hand in
 
-Prelab answers, a Data table copy for each part, the fit of $$x$$ against $$j$$ for each part, your values of $$v_{\text{gas}}$$, $$v_{\text{rod}}$$ and $$\gamma$$ with uncertainties, the unknown rod analysis, and answers to the questions. Identify simulated data.
+Prelab answers, a Data table copy for each part, the fit of $$x$$ against $$j$$ for each part, your values of $$v_{\text{gas}}$$, $$v_{\text{rod}}$$ and $$\gamma$$, the unknown rod analysis, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

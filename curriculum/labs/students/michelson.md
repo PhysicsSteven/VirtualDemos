@@ -83,15 +83,18 @@ Mirror displacement is the micrometer reading minus the reading where you zeroed
 1. For Parts 1 and 2, graph $$N$$ against $$\Delta d$$ for both lasers on one graph, as two series, and fit a straight line to each. From each slope find $$\lambda$$ and compare the red laser's with 632.8 nm. What color is the mystery laser? Why is the slope a better measure than the intercept, and why need the line not pass through the origin?
 2. For Part 3, graph $$N$$ against $$P$$. Is it a straight line? Why can it miss the origin by up to one fringe? From the slope, find $$n - 1$$ of air at 101.3 kPa and 20 °C, and compare it with your prediction from Before the lab question 2. Compare also with $$n - 1$$ from the total count when the cell filled to room pressure.
 
-## Uncertainty
-
-The counter counts whole fringes, and you stop at the first reading where it changes, so each micrometer reading is uncertain by about one 0.1 μm step. Estimate the uncertainty of $$\lambda$$ from a single reading at 200 fringes and compare it with the uncertainty of the slope from the fit. In Part 3, the gauge reads to 0.1 kPa; how does that compare with the change in pressure for one fringe? Which matters more for $$n - 1$$: the pressure readings or the count?
-
 ## Questions
 
 1. LIGO detects gravitational waves with Michelson interferometers whose arms are 4 km long. A passing wave changes the arm lengths by about $$10^{-18}$$ m. What fraction of a fringe is that for light of 1064 nm, and why does LIGO not count fringes?
 2. Where did white light give fringes in Part 4, and is that what you said in Before the lab 4? Use $$2d = m\lambda$$ for each color in white light to explain the difference from the laser, and use your count of colored fringes to estimate how close to equal the arms must be. What is the compensator plate for, and why does it matter for white light but not for a laser?
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+Report the slope and intercept of each fit, the two wavelengths and $$n - 1$$ with their uncertainties, and say whether your red wavelength agrees with 632.8 nm within its uncertainty. Give the total count from the filled cell with its uncertainty and the resulting $$n - 1$$ with its uncertainty, and say how it compares in precision with the fit. The counter counts whole fringes, and you stop at the first reading where it changes, so each micrometer reading is uncertain by about one 0.1 μm step. Estimate the uncertainty of $$\lambda$$ from a single reading at 200 fringes and compare it with the uncertainty of the slope from the fit. In Part 3, the gauge reads to 0.1 kPa; how does that compare with the change in pressure for one fringe? Which matters more for $$n - 1$$: the pressure readings or the count?
+
 ## What to hand in
 
-Prelab answers, the table copies with their graphs and fits, the wavelengths and $$n - 1$$ with uncertainties and comparisons, the Part 4 reading and description, and answers to the questions. Identify simulated data.
+Prelab answers, the table copies with their graphs and fits, the wavelengths and $$n - 1$$ with comparisons, the Part 4 reading and description, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

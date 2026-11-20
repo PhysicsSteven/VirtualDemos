@@ -88,14 +88,19 @@ Use a separate copy for each run. Write $$\varepsilon$$, $$R$$, $$C$$ and the sw
 6. In the flash run, calculate the stored energy and initial discharge power from the voltage just before the switch. Do not assume the capacitor has reached the full battery voltage.
 7. Using one of your readings, show that the battery's rise equals the drop across the resistor plus the step across the capacitor, $$\varepsilon = IR + V_C$$, and describe how the Potential view shows this at the start, at $$t = \tau$$ and near the end of charging.
 
-## Uncertainty
-
-Use the spacing between nearby time samples to estimate uncertainty in the 63.2% crossing. Include voltage rounding and resistor uncertainty where available. Use actual timestamps from the exported data. Do not add random scatter to a deterministic trace; describe the resolution with which you read it.
-
 ## Questions
 
 1. Did the 20 V run bear out your answer to Before the lab 4? Use $$\varepsilon = IR + Q/C$$ to explain what doubling ε does to every voltage and current at each instant, and what it does to the time constant. Why, then, does a larger resistor change the charging time but not the final stored energy?
 2. In the Capacitors and Dielectrics demo, the Sparks in air setup charges two spheres through a 100 GΩ resistor until the air breaks down at $$V_c$$, which empties them, and then the charging starts again. Use $$V_C = \varepsilon(1 - e^{-t/RC})$$ to show that the sparks repeat every $$T = RC\ln\big(\varepsilon/(\varepsilon - V_c)\big)$$. What happens when $$\varepsilon < V_c$$?
+
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+Use the spacing between nearby time samples to estimate uncertainty in the 63.2% crossing. Include voltage rounding and resistor uncertainty where available. Use actual timestamps from the exported data. Do not add random scatter to a deterministic trace; describe the resolution with which you read it.
+
+Give each fitted $$\tau$$ and your value of $$C$$ with their uncertainties, using the standard errors of the slopes, and say whether $$C$$ agrees with the component value within its uncertainty.
 
 ## With calculus
 
@@ -107,4 +112,4 @@ For courses that use calculus. This section is not counted in the 75 minutes; do
 
 ## What to hand in
 
-Prelab answers, settings and data, CSV if available, the charging and discharge fits, the graph of $$\tau$$ against $$R$$, capacitance with uncertainty, the energy check, and answers to the questions (and to With calculus, if assigned). Identify simulated data.
+Prelab answers, settings and data, CSV if available, the charging and discharge fits, the graph of $$\tau$$ against $$R$$, capacitance, the energy check, and answers to the questions (and to Uncertainty and With calculus, if assigned). Identify simulated data.

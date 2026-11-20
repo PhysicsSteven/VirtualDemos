@@ -72,8 +72,8 @@ VDI18N.add('es', 'ws/ruchardt', {
   "Periodo T (s), fila {#}",
 "T^{#} (s²), row {#}":
   "T^{#} (s²), fila {#}",
-"Fit \\(T^2\\) against \\(V\\) for each gas. Is the intercept zero within its uncertainty?":
-  "Ajusta \\(T^2\\) contra \\(V\\) para cada gas. ¿Es la ordenada al origen cero dentro de su incertidumbre?",
+"Fit \\(T^2\\) against \\(V\\) for each gas. Is the intercept close to zero?":
+  "Ajusta \\(T^2\\) contra \\(V\\) para cada gas. ¿Está la ordenada al origen cerca de cero?",
 "From each slope find \\(\\gamma = 4\\pi^2 m/(P A^2\\,\\text{slope})\\). Remember to convert liters to cubic meters.":
   "A partir de cada pendiente encuentra \\(\\gamma = 4\\pi^2 m/(P A^2\\,\\text{slope})\\). Recuerda convertir litros a metros cúbicos.",
 "Compare your \\(\\gamma\\) for air with {#}, and for argon with \\(5/3\\).":
@@ -82,22 +82,24 @@ VDI18N.add('es', 'ws/ruchardt', {
   "A partir de tu \\(\\gamma\\) para cada gas encuentra \\(C_V = R/(\\gamma - 1)\\) y compara con la Tabla {#}.",
 "Compare your \\(\\gamma\\) for air with \\(7/5\\), the value for a diatomic gas. Air is mostly nitrogen and oxygen; should they agree?":
   "Compara tu \\(\\gamma\\) para el aire con \\(7/5\\), el valor de un gas diatómico. El aire es sobre todo nitrógeno y oxígeno; ¿deberían coincidir?",
-"The photogate times each swing to a tenth of a millisecond, and the model’s only departure from the formula is its slow damping. Estimate how much the damping changes the period of a {#} L flask, and compare it with your fit’s uncertainty. In a real apparatus the ball rubs on the tube and some gas leaks past it; say how each would affect the period and your \\(\\gamma\\).":
-  "La fotocompuerta mide cada oscilación con precisión de una décima de milisegundo, y la única desviación del modelo respecto a la fórmula es su amortiguamiento lento. Estima cuánto cambia el amortiguamiento el periodo de un matraz de {#} L, y compáralo con la incertidumbre de tu ajuste. En un aparato real la esfera roza con el tubo y algo de gas se escapa por un lado; di cómo afectaría cada cosa al periodo y a tu \\(\\gamma\\).",
 "What would happen to the period if the ball were twice as heavy?":
   "¿Qué le pasaría al periodo si la esfera fuera el doble de pesada?",
 "In {#} Rüchardt timed only a few swings with a stopwatch. Why does a larger flask make the measurement easier?":
   "En {#} Rüchardt cronometró solo unas cuantas oscilaciones con un cronómetro de mano. ¿Por qué un matraz más grande facilita la medición?",
 "Set your {#} L periods for dry air and argon beside your answer to Before the lab {#}. Why does the period depend on \\(\\gamma\\), a property of the gas’s heat capacities, when no heat flows, and why is argon’s \\(\\gamma\\) different from air’s?":
   "Pon tus periodos de {#} L para aire seco y argón junto a tu respuesta de Antes del laboratorio {#}. ¿Por qué el periodo depende de \\(\\gamma\\), una propiedad de las capacidades caloríficas del gas, si no fluye calor, y por qué la \\(\\gamma\\) del argón es distinta de la del aire?",
+"For courses that treat measurement uncertainty. This section is not counted in the {#} minutes; do it when your instructor assigns it.":
+  "Para cursos que tratan la incertidumbre de medición. Esta sección no cuenta dentro de los {#} minutos; hazla cuando tu profesor la asigne.",
+"Report each fit’s intercept and each \\(\\gamma\\) with its uncertainty, and say whether each intercept is zero within its uncertainty. The photogate times each swing to a tenth of a millisecond, and the model’s only departure from the formula is its slow damping. Estimate how much the damping changes the period of a {#} L flask, and compare it with your fit’s uncertainty. In a real apparatus the ball rubs on the tube and some gas leaks past it; say how each would affect the period and your \\(\\gamma\\).":
+  "Reporta la ordenada al origen de cada ajuste y cada \\(\\gamma\\) con su incertidumbre, y di si cada ordenada al origen es cero dentro de su incertidumbre. La fotocompuerta mide cada oscilación con precisión de una décima de milisegundo, y la única desviación del modelo respecto a la fórmula es su amortiguamiento lento. Estima cuánto cambia el amortiguamiento el periodo de un matraz de {#} L, y compáralo con la incertidumbre de tu ajuste. En un aparato real la esfera roza con el tubo y algo de gas se escapa por un lado; di cómo afectaría cada cosa al periodo y a tu \\(\\gamma\\).",
 "For courses that use calculus. This section is not counted in the {#} minutes; do it when your instructor assigns it.":
   "Para cursos que usan cálculo. Esta sección no cuenta dentro de los {#} minutos; hazla cuando tu profesor la asigne.",
 "Differentiate \\(PV^\\gamma = \\text{constant}\\) to show that \\(dP/dV = -\\gamma P/V\\), which gives the Background’s \\(\\Delta P\\) for a small squeeze. Then, with \\(x\\) the ball’s displacement downward from rest, write Newton’s second law as \\(m\\,\\frac{d^2x}{dt^2} = -\\frac{\\gamma P A^2}{V}\\,x\\), explaining the sign, and show by substituting that \\(x = x_0\\cos\\omega t\\) solves it when \\(\\omega^2 = \\gamma PA^2/mV\\).":
   "Deriva \\(PV^\\gamma = \\text{constant}\\) para demostrar que \\(dP/dV = -\\gamma P/V\\), lo cual da el \\(\\Delta P\\) de los Antecedentes para una compresión pequeña. Luego, con \\(x\\) el desplazamiento de la bola hacia abajo desde el reposo, escribe la segunda ley de Newton como \\(m\\,\\frac{d^2x}{dt^2} = -\\frac{\\gamma P A^2}{V}\\,x\\), explicando el signo, y demuestra por sustitución que \\(x = x_0\\cos\\omega t\\) la resuelve cuando \\(\\omega^2 = \\gamma PA^2/mV\\).",
 "The demo’s swing dies away as \\(x = x_0 e^{-t/\\tau}\\cos\\omega_d t\\), with \\(\\tau\\) = {#} s. Substitute this into \\(\\frac{d^2x}{dt^2} + \\frac{2}{\\tau}\\frac{dx}{dt} + \\omega^2 x = 0\\) and show that it is a solution when \\(\\omega_d^2 = \\omega^2 - 1/\\tau^2\\). For the {#} L flask of dry air (\\(\\gamma = 1015/721\\), and \\(P\\) and \\(A\\) from Before the lab {#}), work out the undamped period \\(2\\pi/\\omega\\) and the damped period \\(2\\pi/\\omega_d\\) to five significant figures. Which one does your {#} L reading match?":
   "La oscilación de la demo se amortigua como \\(x = x_0 e^{-t/\\tau}\\cos\\omega_d t\\), con \\(\\tau\\) = {#} s. Sustituye esto en \\(\\frac{d^2x}{dt^2} + \\frac{2}{\\tau}\\frac{dx}{dt} + \\omega^2 x = 0\\) y demuestra que es una solución cuando \\(\\omega_d^2 = \\omega^2 - 1/\\tau^2\\). Para el matraz de {#} L de aire seco (\\(\\gamma = 1015/721\\), y \\(P\\) y \\(A\\) de Antes del laboratorio {#}), calcula el periodo sin amortiguamiento \\(2\\pi/\\omega\\) y el periodo amortiguado \\(2\\pi/\\omega_d\\) con cinco cifras significativas. ¿Con cuál coincide tu lectura de {#} L?",
-"Prelab answers, the table copies with their graphs and fits, \\(\\gamma\\) and \\(C_V\\) for each gas with uncertainties and comparisons, and answers to the questions (and to With calculus, if assigned). Identify simulated data.":
-  "Respuestas del prelaboratorio, las copias de las tablas con sus gráficas y ajustes, \\(\\gamma\\) y \\(C_V\\) de cada gas con incertidumbres y comparaciones, y las respuestas a las preguntas (y a Con cálculo, si se asignó). Identifica los datos simulados.",
+"Prelab answers, the table copies with their graphs and fits, \\(\\gamma\\) and \\(C_V\\) for each gas with comparisons, and answers to the questions (and to Uncertainty and With calculus, if assigned). Identify simulated data.":
+  "Respuestas del prelaboratorio, las copias de las tablas con sus gráficas y ajustes, \\(\\gamma\\) y \\(C_V\\) de cada gas con comparaciones, y las respuestas a las preguntas (y de Incertidumbre y Con cálculo, si se asignan). Identifica los datos simulados.",
 "Cross section of the tube":
   "Sección transversal del tubo",
 "Molar heat capacity at constant pressure":

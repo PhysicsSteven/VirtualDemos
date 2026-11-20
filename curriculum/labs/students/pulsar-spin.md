@@ -97,10 +97,6 @@ No hazards in the virtual lab.
 4. Reading 7 is a core half as big, turning twice as fast. Find its shrink factor and its spin period by hand, and check them against the table.
 5. From Table 3, by how many seconds does the Crab pulsar's period grow in one year? (Multiply $$\dot P$$ by the seconds in a year.) How many Suns' worth of power does it lose?
 
-## Uncertainty
-
-The demo, like the pulsar catalog, assumes a neutron star of radius 10 km. Measured radii are closer to 12 km. Its moment of inertia, which sets the energy lost, goes as the radius squared for the same mass. By how many percent would the Crab's energy loss go up if its radius were 12 km instead of 10?
-
 ## Questions
 
 1. Press **Heaviest neutron star known** in **Collapse** and set **Collapse so far** to 100. What are its mass, radius and density? About $$3\ M_\odot$$ is thought to be the most a neutron star can hold. What happens to a core heavier than that?
@@ -108,6 +104,13 @@ The demo, like the pulsar catalog, assumes a neutron star of radius 10 km. Measu
 3. The Crab Nebula still glows brightly about a thousand years after its supernova. Use Table 3 to explain where the energy comes from.
 4. Look back at your prediction in Before the lab 4. How many pulses each turn did the three setups in Part 2 give, and what changed when you moved the line of sight in the last reading? Explain why one neutron star can be seen as a pulsar from one place and not at all from another, and say whether every neutron star is a pulsar to us.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The demo, like the pulsar catalog, assumes a neutron star of radius 10 km. Measured radii are closer to 12 km. Its moment of inertia, which sets the energy lost, goes as the radius squared for the same mass. By how many percent would the Crab's energy loss go up if its radius were 12 km instead of 10?
+
 ## What to hand in
 
-Answers to Before the lab, the three tables, the pulse counts you wrote down in Part 2, and your answers to Analysis, Uncertainty and Questions. Identify simulated data: every reading in this lab comes from the demo's model, and the pulsar periods and slowing rates in Part 3 are real measurements from the ATNF Pulsar Catalogue.
+Answers to Before the lab, the three tables, the pulse counts you wrote down in Part 2, and your answers to Analysis and Questions (and to Uncertainty, if assigned). Identify simulated data: every reading in this lab comes from the demo's model, and the pulsar periods and slowing rates in Part 3 are real measurements from the ATNF Pulsar Catalogue.

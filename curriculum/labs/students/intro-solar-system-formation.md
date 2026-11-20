@@ -85,16 +85,19 @@ The demo opens on The whole story. Watch it once to see where each part fits, th
 7. In the third table, compare the largest rocky body in the minimum mass disk with Earth (1 Earth mass) and Mars (0.107 Earth masses): which is it closer to? In the model the rocky bodies stop growing at this size; what must have happened later to make a planet as big as Earth?
 8. In which disk did giant planets form? Why did Gas gone early make none, even though its disk had as much solid material as the three times heavier disk?
 
-## Uncertainty
-
-Each stage of the demo is a model, and a repeated run gives the same numbers, so the uncertainty comes from what the models leave out. Pick one stage and one thing its model leaves out (it is listed under The model and its formulas in the demo's Lab section). Say whether including it would make the number you measured in that stage bigger or smaller, and why.
-
 ## Questions
 
 1. Read the Frost line (AU) column of your Part 2 readings for today's Sun and for the bright young Sun. Where did the brighter Sun put the frost line, and how does that sit with your answer to Before the lab 3? The Sun's gravity was the same in both: what sets where water ice can be solid? Then use the frost line to explain why Mercury, Venus, Earth and Mars are small and rocky while Jupiter, Saturn, Uranus and Neptune are large and rich in ice and gas.
 2. The asteroid belt lies near the frost line. Asteroids in its inner part are mostly dry rock, while many in its outer part contain water bound in clay minerals. How does that fit the model?
 3. Astronomers have found many young stars surrounded by flat disks of gas and dust. How does this support the story told in this lab?
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+Each stage of the demo is a model, and a repeated run gives the same numbers, so the uncertainty comes from what the models leave out. Pick one stage and one thing its model leaves out (it is listed under The model and its formulas in the demo's Lab section). Say whether including it would make the number you measured in that stage bigger or smaller, and why.
+
 ## What to hand in
 
-Prelab answers, the three data tables, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.
+Prelab answers, the three data tables, the answers to the analysis section and to the questions (and to Uncertainty, if assigned). Identify simulated data.

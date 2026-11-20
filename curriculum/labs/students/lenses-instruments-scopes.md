@@ -79,15 +79,18 @@ Before each part, predict what you will see. Then measure.
 2. For Part 2, compare each traced $$M$$ with $$m_{\text{obj}} \times (25\ \mathrm{cm})/f_{\text{eye}}$$. Find the tube length $$L$$ (the lens separation minus $$f_{\text{obj}}$$ and $$f_{\text{eye}}$$) for each row and compare $$M$$ with $$-L\,(25\ \mathrm{cm})/(f_{\text{obj}} f_{\text{eye}})$$. Why is the image inverted?
 3. For Part 3, compare each traced $$M$$ with $$-f_{\text{obj}}/f_{\text{eye}}$$. What sets the magnification, and why must the lenses be $$f_{\text{obj}} + f_{\text{eye}}$$ apart?
 
-## Uncertainty
-
-The model has no noise, and its lenses are ideal thin lenses, so the traced image distances agree with the thin lens equation to the 0.01 cm they are given to. Your own uncertainty is in where you put the object and the lenses. The demo calls the rays leaving an eyepiece parallel when their slopes agree to within 0.002, which sets how well a microscope or telescope must be adjusted. Real lenses have thickness, spherical aberration and dispersion (color fringes), and a real eye's near point varies from person to person.
-
 ## Questions
 
 1. A telescope for looking at the Moon has $$f_{\text{obj}} = 1.0$$ m. Which eyepiece gives 50×, and how long is the telescope?
 2. In Before the lab 3 you decided what a smaller objective does to a telescope's magnification. What did M traced and the rays show with the 2 cm objective? Use where the beam's rays meet behind the objective to explain what sets the magnification, and say what a larger objective does give a telescope.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The model has no noise, and its lenses are ideal thin lenses, so the traced image distances agree with the thin lens equation to the 0.01 cm they are given to. Your own uncertainty is in where you put the object and the lenses. The demo calls the rays leaving an eyepiece parallel when their slopes agree to within 0.002, which sets how well a microscope or telescope must be adjusted. Real lenses have thickness, spherical aberration and dispersion (color fringes), and a real eye's near point varies from person to person.
+
 ## What to hand in
 
-Prelab answers, a Data table copy for each part, the magnification comparisons and answers to the questions. Identify simulated data.
+Prelab answers, a Data table copy for each part, the magnification comparisons and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

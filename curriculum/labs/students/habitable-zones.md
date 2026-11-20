@@ -107,15 +107,20 @@ With the star of 2 solar masses on screen, compare the bar for the star's life o
 5. From Part 3, how many billion years from now does Earth leave the Sun's habitable zone? (The Sun is 4.57 billion years old today.) Is the Sun's reading at 10 billion years still on your line from Analysis 2?
 6. In Table 2, how many times bigger is $$N$$ when the years transmitting, $$L$$, are 1,000 times more? How many times smaller is the spacing? Show that the spacing changes by $$\sqrt{1{,}000}$$.
 
-## Uncertainty
-
-Each civilization in the simulated Galaxy is born at a random time, so the number transmitting at the end of a run scatters around $$N$$ by roughly $$\sqrt{N}$$. For each row of Table 2, is your Transmitting now value within $$\sqrt{N}$$ of $$N$$? The factors themselves are far less certain: if $$f_i$$ could be anything from 0.001 to 0.1, by how many times could $$N$$ change?
-
 ## Questions
 
 1. Your Proxima b reading says whether it is in Proxima Centauri's habitable zone. Give two reasons a planet that close to a red dwarf could still be a hard place for life.
 2. Look again at your pick in Before the lab 5. Use your Table 1 readings for the stars of 2 and 0.8 solar masses (their zones and lifetimes) and what you saw on the time line to say whether your pick holds up, and explain why a brighter star is not a better home for complex life.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+Each civilization in the simulated Galaxy is born at a random time, so the number transmitting at the end of a run scatters around $$N$$ by roughly $$\sqrt{N}$$. For each row of Table 2, is your Transmitting now value within $$\sqrt{N}$$ of $$N$$? The factors themselves are far less certain: if $$f_i$$ could be anything from 0.001 to 0.1, by how many times could $$N$$ change?
+
+For the Analysis 2 fit, give the slope and the intercept with their standard errors, and say whether the intercept is zero within its error.
+
 ## What to hand in
 
-Prelab answers, the completed tables and the graph, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data: the star rules and measured values are cited in the demo, but the Galaxy and its civilizations are simulated.
+Prelab answers, the completed tables and the graph, the answers to the analysis section and to the questions (and to Uncertainty, if assigned). Identify simulated data: the star rules and measured values are cited in the demo, but the Galaxy and its civilizations are simulated.

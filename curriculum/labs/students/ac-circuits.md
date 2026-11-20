@@ -82,15 +82,18 @@ Add rows for every frequency. Keep the two resistance sweeps separate. With the 
 
    $$P=I_{\rm rms}^2R=V_{\rm rms}I_{\rm rms}\cos\phi.$$
 
-## Uncertainty
-
-Use the frequency intervals that bracket the peak and half power crossings. Include current rounding and the uncertainty in source voltage when inferring $$R$$. Carry the crossing uncertainty into bandwidth, then into $$L$$ and $$C$$. State the frequencies you typed near the peak. A narrow peak needs finer frequency steps than a broad one.
-
 ## Questions
 
 1. Why is the current greatest at resonance? Answer with $$\lvert Z\rvert$$. Then look at where the peak sat in your 22 Ω and 100 Ω sweeps, and at your answer to Before the lab 4: how does changing $$R$$ change the peak's height, its width and its place, and why?
 2. Why do the positive rms magnitudes of the three component voltages not simply add to the source voltage?
 3. Why does an ideal capacitor or inductor dissipate no average power?
+
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+Use the frequency intervals that bracket the peak and half power crossings. Include current rounding and the uncertainty in source voltage when inferring $$R$$. Carry the crossing uncertainty into bandwidth, then into $$L$$ and $$C$$. State the frequencies you typed near the peak. A narrow peak needs finer frequency steps than a broad one.
 
 ## With calculus
 
@@ -102,4 +105,4 @@ For courses that use calculus. This section is not counted in the 75 minutes; do
 
 ## What to hand in
 
-Prelab answers, the data table, current and phase graphs, inferred $$R$$, $$L$$ and $$C$$ with uncertainty, the $$Q$$ comparison, power calculations, and answers to the questions (and to With calculus, if assigned). Identify simulated data.
+Prelab answers, the data table, current and phase graphs, inferred $$R$$, $$L$$ and $$C$$, the $$Q$$ comparison, power calculations, and answers to the questions (and to Uncertainty and With calculus, if assigned). Identify simulated data.

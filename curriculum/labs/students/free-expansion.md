@@ -76,10 +76,6 @@ Record N and the Time counted meter for each copy of the table. Fill in the last
 4. For 100 molecules, compare your predicted shares at $$n$$ = 40, 45, 50, 55 and 60 with the measured shares. How does the spread of the counts compare with N?
 5. Find the entropy change $$Nk\ln 2$$ for each run, and for one mole.
 
-## Uncertainty
-
-The shares come from a run of finite length, so they scatter about the predicted values. Press Four molecules, Remove the partition and Play, and record a reading when Time since opened passes 200 s. Compare its scatter about the predicted shares with that of your 2000 s run; how does it change? Then watch a stretch of 300 s at 10× (30 s of your time), count roughly how many separate times all four molecules gathered on the left, and use that count $$k$$ to estimate the relative uncertainty $$1/\sqrt{k}$$ of the share of time all four were on the left. How would the uncertainty change over the whole 2000 s?
-
 ## Questions
 
 1. With four molecules the gas often gathers on the left by itself. Is the free expansion of four molecules irreversible?
@@ -87,6 +83,15 @@ The shares come from a run of finite length, so they scatter about the predicted
 3. A real gas has about $$10^{22}$$ molecules in a liter. Estimate how often all of them would be found in one half.
 4. Why does the gas's temperature stay the same in a free expansion, even though its entropy rises?
 5. Find the row $$n$$ = 50 of your hundred molecule run and hold its share of time up against your guess in Before the lab 5. Explain why the share comes out as it does, using the number of ways $$\binom{N}{n}$$ for the counts near 50 and the spread you found in Analysis 4, and say what "evenly spread" can mean for a gas of a hundred molecules.
+
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The shares come from a run of finite length, so they scatter about the predicted values. Press Four molecules, Remove the partition and Play, and record a reading when Time since opened passes 200 s. Compare its scatter about the predicted shares with that of your 2000 s run; how does it change? Then watch a stretch of 300 s at 10× (30 s of your time), count roughly how many separate times all four molecules gathered on the left, and use that count $$k$$ to estimate the relative uncertainty $$1/\sqrt{k}$$ of the share of time all four were on the left. How would the uncertainty change over the whole 2000 s?
+
+Give the slope and intercept of each graph from Analysis 2 with their standard errors, and say whether each slope agrees with 1 and each intercept with 0 within them.
 
 ## With calculus
 
@@ -97,4 +102,4 @@ For courses that use calculus. This section is not counted in the 75 minutes; do
 
 ## What to hand in
 
-Prelab answers, the table copies with their graphs, the comparisons with the predicted shares, the entropy changes, and answers to the questions (and to With calculus, if assigned). Identify simulated data.
+Prelab answers, the table copies with their graphs, the comparisons with the predicted shares, the entropy changes, and answers to the questions (and to Uncertainty and With calculus, if assigned). Identify simulated data.

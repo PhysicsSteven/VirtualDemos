@@ -79,15 +79,18 @@ Export fills the first five columns; you fill in the last three in Analysis 1. R
 3. Graph $$\lambda_2$$ (vertical) against $$1/\sqrt{V}$$ (horizontal) for Part 1. Is it a straight line through the origin? From the slope, $$h/\sqrt{2me}$$, find Planck's constant (convert the slope to m V$$^{1/2}$$ first). Your points are far from the origin, so the slope of a line with a free intercept is sensitive to small reading errors: also find $$h = \lambda_2\sqrt{2meV}$$ for each row and take the mean. Compare both with the accepted $$h = 6.626 \times 10^{-34}$$ J s.
 4. Describe your Part 2 observations. What do they show about the particles that make the rings?
 
-## Uncertainty
-
-Each ring is a band about 1.5 mm wide, so placing a mark on its middle is uncertain by a few tenths of a millimeter, and the ruler reads to 0.5 mm. Estimate the uncertainty of one diameter, and compare it with the scatter of your points about the line. What uncertainty does that give one wavelength? Give $$h$$ with uncertainties, from the standard error of the slope and from the spread of the row by row values (standard deviation divided by $$\sqrt{n}$$); which is smaller, and why? Does the accepted value lie within your uncertainty?
-
 ## Questions
 
 1. The spacing between the graphite sheets is 0.335 nm, yet no ring for it appears. Why? (Try the Why only two rings setup.)
 2. How did $$D_1$$ and $$D_2$$ change from 2.50 to 5.00 kV in Part 1, and was that your answer to Before the lab 3? Account for the change, and its factor, with de Broglie's relation and Bragg's law.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+Each ring is a band about 1.5 mm wide, so placing a mark on its middle is uncertain by a few tenths of a millimeter, and the ruler reads to 0.5 mm. Estimate the uncertainty of one diameter, and compare it with the scatter of your points about the line. What uncertainty does that give one wavelength? Give $$h$$ with uncertainties, from the standard error of the slope and from the spread of the row by row values (standard deviation divided by $$\sqrt{n}$$); which is smaller, and why? Does the accepted value lie within your uncertainty?
+
 ## What to hand in
 
-Prelab answers, the tube seed, the table with its wavelengths, the comparison with $$h/p$$, the graph and fit, Planck's constant with uncertainties and comparisons, the magnet observations, and answers to the questions. Identify simulated data.
+Prelab answers, the tube seed, the table with its wavelengths, the comparison with $$h/p$$, the graph and fit, Planck's constant and comparisons, the magnet observations, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

@@ -86,15 +86,18 @@ No hazards in the virtual lab.
 4. Graph the Balmer peak temperature (vertical) against log₁₀ $$P_e$$ (across) from the second table and fit a straight line. By how much does the peak move for a tenfold change in pressure?
 5. Giant stars have thin atmospheres with low pressure; dwarf stars have dense ones. In which kind of star would Balmer lines peak at a lower temperature? Explain with your Part 2 results.
 
-## Uncertainty
-
-The model makes several approximations, stated in the demo: only the ground level counts in the partition function, the electron pressure stays fixed while T changes, and the line strength is taken to follow the share on n = 2. Pick one and explain how it could move the peak temperature, and in which direction if you can tell.
-
 ## Questions
 
 1. Which explanation did you pick in Before the lab 1? Set your Part 1 readings for The Sun and the A star side by side ($$N_2/N_1$$, $$N_{II}/N_I$$ and the share on n = 2) and say which explanation they support, and why. Before the Saha equation (1920), astronomers thought that the strength of a star's lines told its composition; Cecilia Payne used it in 1925 to show that stars are mostly hydrogen. How does this worksheet show that weak hydrogen lines do not mean little hydrogen?
 2. Ionized helium lines appear only in the hottest stars, O stars. Helium's ionization energies (24.6 eV and 54.4 eV) are larger than hydrogen's. Explain why that puts helium's lines at higher temperatures.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The model makes several approximations, stated in the demo: only the ground level counts in the partition function, the electron pressure stays fixed while T changes, and the line strength is taken to follow the share on n = 2. Pick one and explain how it could move the peak temperature, and in which direction if you can tell. Give the slope of your fit in Analysis 4 with its uncertainty.
+
 ## What to hand in
 
-Prelab answers, the data tables, the graphs with the fit, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.
+Prelab answers, the data tables, the graphs with the fit, the answers to the analysis section and to the questions (and to Uncertainty, if assigned). Identify simulated data.

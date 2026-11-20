@@ -75,15 +75,18 @@ Fill in the natural log of each neutron count in the last three columns.
 4. At the critical radius, compare the share of neutrons that leaked with $$1 - 1/\bar\nu$$ from Before the lab question 2. For ²³⁹Pu the sphere model's $$\bar\nu$$ is 3.09.
 5. A full calculation (MCNP6, quoted by M. B. Chadwick, 2021) gives bare critical masses of 46 kg for ²³⁵U and 10.2 kg for ²³⁹Pu. Like the demo, it takes ²³⁹Pu at 19.6 g/cm³; handbook α plutonium is 19.86 g/cm³, which would lower every plutonium critical mass here by about 3%, since the critical mass scales as 1/ρ². Compare your values and suggest which simplifications of the model matter.
 
-## Uncertainty
-
-Use the uncertainty in $$k$$ near the crossing and the slope $$dk/dR$$ of your graph to estimate the uncertainty in $$R_c$$, and from it the uncertainty in $$M_c$$ (note that $$M \propto R^3$$).
-
 ## Questions
 
 1. Surrounding the sphere with a material that reflects neutrons lowers the critical mass. Why?
 2. How many of your five runs with 10 neutrons at $$k = 1.00$$ died out, and how does that compare with your answer to Before the lab 4? Explain why a chain with k = 1 so often dies when it starts small, even though on average each neutron is replaced by exactly one, and why that does not happen with $$10^{20}$$ neutrons.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+Use the uncertainty in $$k$$ near the crossing and the slope $$dk/dR$$ of your graph to estimate the uncertainty in $$R_c$$, and from it the uncertainty in $$M_c$$ (note that $$M \propto R^3$$).
+
 ## What to hand in
 
-Prelab answers, both tables, the graphs of $$\ln N$$ against generation and of $$k$$ against $$R$$, your critical radii and masses with uncertainties, and answers to the questions. Identify simulated data.
+Prelab answers, both tables, the graphs of $$\ln N$$ against generation and of $$k$$ against $$R$$, your critical radii and masses, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

@@ -90,14 +90,17 @@ Make one copy of this table for each of Parts 1 to 3.
 4. Graph $$R$$ (vertical) against $$L/W$$ (horizontal) for the Resistance table. Report the slope and intercept and compare the slope with $$R_s$$. Do strips with different $$L$$ and $$W$$ but the same $$L/W$$ have the same resistance?
 5. From Part 3, find $$R = V/I$$ from each reading's current and then $$R/R_s$$, the resistance in squares, for each layout, and rank them. Explain why the narrow neck raises the resistance above the 1.344 squares of the two bars, and why the slot raises the two dots' resistance.
 
-## Uncertainty
-
-The readings are simulated and noise free. The potential is reported to 1 mV and the field and current to four significant figures; an equipotential point found to $$\pm 0.02$$ V is located to about 0.2 to 0.4 mm where the field is 50 to 100 V/m. The sheet is a grid of 0.25 cm squares, so round electrodes and cut edges are made of squares and the map within a square or two of them is not that of a smooth shape. On a real board, include the voltmeter's resolution, the probe's contact area, and nonuniform paper: commercial conducting paper varies by several percent in $$R_s$$ across a sheet.
-
 ## Questions
 
 1. Why must the voltmeter on a real field mapping board draw almost no current?
 2. A silver painted region is nearly at one potential. Why? Compare the battery current of your Two dots and Silver ring readings with your answer to Before the lab 4: how does the ring change the current in the sheet around it, and the resistance between the electrodes?
+
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+For the fits of $$V$$ against $$x$$ and $$R$$ against $$L/W$$, report the slope and intercept with their standard errors. The readings are simulated and noise free. The potential is reported to 1 mV and the field and current to four significant figures; an equipotential point found to $$\pm 0.02$$ V is located to about 0.2 to 0.4 mm where the field is 50 to 100 V/m. The sheet is a grid of 0.25 cm squares, so round electrodes and cut edges are made of squares and the map within a square or two of them is not that of a smooth shape. On a real board, include the voltmeter's resolution, the probe's contact area, and nonuniform paper: commercial conducting paper varies by several percent in $$R_s$$ across a sheet.
 
 ## With calculus
 
@@ -108,4 +111,4 @@ For courses that use calculus. This section is not counted in the 75 minutes; do
 
 ## What to hand in
 
-Prelab answers, the three Data tables and the Resistance table (or the saved worksheet), the $$V$$ against $$x$$ and $$R$$ against $$L/W$$ graphs with their fits, the equipotential sketch for the two dots, the comparisons asked for in the Analysis, and answers to the questions (and to With calculus, if assigned). Identify simulated data.
+Prelab answers, the three Data tables and the Resistance table (or the saved worksheet), the $$V$$ against $$x$$ and $$R$$ against $$L/W$$ graphs with their fits, the equipotential sketch for the two dots, the comparisons asked for in the Analysis, and answers to the questions (and to Uncertainty and With calculus, if assigned). Identify simulated data.

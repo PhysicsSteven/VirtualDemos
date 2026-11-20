@@ -49,9 +49,10 @@ VDI18N.add('en', 'ws/hs-projectiles', [
 "For Part {#}, compare the five flight times with each other and with \\(T = \\sqrt{2h/g}\\) for \\(h\\) = {#} m. Then make a graph of the range \\(R\\) (vertical) against the launch speed \\(v_0\\) (horizontal). What does its slope mean?",
 "For Part {#}, make a graph of \\(R\\) (vertical) against \\(\\theta\\) (horizontal), and draw a smooth curve through the points. At which angle is the range longest? Which pairs of angles give the same range?",
 "Work out \\(R = v_0^2 \\sin 2\\theta / g\\) for each angle in Part {#} and compare with your measured ranges.",
-"The demo gives positions and ranges to {#} cm and times to {#} s, so a slope from several points is good to about three significant figures. A difference between your \\(g\\) and {#} m/s² smaller than that rounding is not a real difference. With air resistance on, the results would change: a real ball would fall short of these ranges.",
 "Look back at your guess in Before the lab {#}. What flight times did the shots at {#} m/s and {#} m/s have? Use the separate sideways and up and down motions to explain the result: what does the sideways speed change, and what does it not change?",
 "A soccer player can kick at {#}° or at {#}° and get the same range. Which kick stays in the air longer? Use your Part {#} shots (the Shots list gives T) or the formulas to explain why a goalkeeper might prefer one of them.",
-"Prelab answers, the three copies of the Data table with the last two columns filled in for Part {#}, the flight times from Part {#}, the four graphs, and answers to the questions. Identify simulated data.",
+"For courses that treat measurement uncertainty. This section is not counted in the {#} minutes; do it when your instructor assigns it.",
+"The demo gives positions and ranges to {#} cm and times to {#} s, so a slope from several points is good to about three significant figures. A difference between your \\(g\\) and {#} m/s² smaller than that rounding is not a real difference. Give the slope in Analysis {#} and your \\(g\\) with their uncertainties, and say whether your \\(g\\) agrees with {#} m/s² within them. With air resistance on, the results would change: a real ball would fall short of these ranges.",
+"Prelab answers, the three copies of the Data table with the last two columns filled in for Part {#}, the flight times from Part {#}, the four graphs, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.",
 "Projectile Range"
 ]);

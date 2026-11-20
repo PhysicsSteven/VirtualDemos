@@ -98,14 +98,17 @@ Keep the harmonic and tension scans separate and record how each peak was identi
 2. Plot $$f_1^2$$ (vertical) against $$T$$ (horizontal) for the tension check. Use the slope to infer $$\mu$$ and compare with the selected string density.
 3. Plot $$f_{\rm beat}$$ (vertical) against $$f_1$$ (horizontal) for the mystery tone. Fit a straight line to the points below the slowest beats and another to the points above. What slopes do you expect, and what do you get? Find $$f_2$$ where the two lines meet. Then reveal $$f_2$$ and compare.
 
-## Uncertainty
-
-Record the smallest available frequency adjustment and how sharply the peak can be located. String length, tension and density are prescribed values in the simulation, not independent noisy measurements. For real apparatus, include uncertainties in vibrating length, hanging mass, pulley friction and peak identification. Do not assign statistical errors from repeated identical simulation states. For beats, the quiet moments can be read from the time axis to about 0.02 s, so the time between the first and last is uncertain by about 0.03 s; carry that into $$f_{\rm beat}$$.
-
 ## Questions
 
 1. Harmonic $$n$$ has wavelength $$2L/n$$, so each frequency in your harmonic scan gives a wave speed $$v = 2Lf_n/n$$. Work out the four speeds. How do they compare, and what does that say about your answer to Before the lab 4? Use $$v = \sqrt{T/\mu}$$ to explain what sets the speed of a wave on a string, and say where a higher harmonic's higher frequency comes from.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+Report the slope and intercept of your Analysis 1 fit with their uncertainties, and say whether the intercept is zero within its uncertainty and whether your wave speed agrees with $$\sqrt{T/\mu}$$ within the frequency step. Record the smallest available frequency adjustment and how sharply the peak can be located. String length, tension and density are prescribed values in the simulation, not independent noisy measurements. For real apparatus, include uncertainties in vibrating length, hanging mass, pulley friction and peak identification. Do not assign statistical errors from repeated identical simulation states. For beats, the quiet moments can be read from the time axis to about 0.02 s, so the time between the first and last is uncertain by about 0.03 s; carry that into $$f_{\rm beat}$$.
+
 ## What to hand in
 
-Prelab answers, a completed data table, two labeled plots and fits, inferred wave speed and density, the Beats table with its plot and your value of $$f_2$$, uncertainty discussion and answers to the questions. Label simulated measurements as simulated.
+Prelab answers, a completed data table, two labeled plots and fits, inferred wave speed and density, the Beats table with its plot and your value of $$f_2$$, and answers to the questions (and to Uncertainty, if assigned). Label simulated measurements as simulated.

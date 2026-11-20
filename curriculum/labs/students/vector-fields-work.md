@@ -115,16 +115,19 @@ Table 2. Around closed loops, counterclockwise. The circulation is in joules for
 5. Show that f = 1/r, with $$r = \sqrt{x^2 + y^2}$$, is a potential of the point mass force $$\vec F = -(x,\ y)/r^3$$ (in units where GMm = 1). Use it to predict the work from (3, 0) to (1, 0), and compare with both paths you read in step E.
 6. Use the curl readouts from step E to say which force passed the curl test. Does that agree with your answer to Analysis 1?
 
-## Uncertainty
-
-The demo's numbers are not measurements: the same settings give the same digits every time. The derivatives are exact formulas and the line integrals are accurate to about nine significant figures, so a difference between two paths in the third or fourth figure would be real, not rounding. Say how close the gravity values in Table 1 are to each other, and whether that settles which force is conservative.
-
 ## Questions
 
 1. Compare the wire's two circulations in Table 2 with your prediction in Before the lab 4. The curl of B is zero everywhere the field is defined, yet one loop gives 2π. Explain why Green's theorem does not apply to that loop, and how the result is Ampère's law, $$\oint \vec B\cdot d\vec r = \mu_0 I$$.
 2. Friction does negative work around any closed loop, yet it cannot be drawn as a vector field F(x, y). Why not, and why does that alone keep friction from having a potential energy?
 3. A student claims the swirl force has a potential energy U(x, y). Use one number from Table 2 to show that no such U can exist.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The demo's numbers are not measurements: the same settings give the same digits every time. The derivatives are exact formulas and the line integrals are accurate to about nine significant figures, so a difference between two paths in the third or fourth figure would be real, not rounding. Say how close the gravity values in Table 1 are to each other, and whether that settles which force is conservative.
+
 ## What to hand in
 
-Before the lab answers, the two data tables, the readings you wrote down in step E, and your answers to the Analysis and Questions. Say that the data are computed by the demo, not measured.
+Before the lab answers, the two data tables, the readings you wrote down in step E, and your answers to the Analysis and Questions (and to Uncertainty, if assigned). Say that the data are computed by the demo, not measured.

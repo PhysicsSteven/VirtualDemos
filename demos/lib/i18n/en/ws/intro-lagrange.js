@@ -50,11 +50,12 @@ VDI18N.add('en', 'ws/intro-lagrange', [
 "Change the Trojans’ L4 wobble period into years: one Jupiter period is {#} years. Could anyone watch a Trojan asteroid go once around its wobble in a lifetime?",
 "From Part {#}, between which two mass ratios does L4 stop being a place where objects stay? Turn that into words: how many times heavier must the big body be than the smaller one? Are the Sun–Jupiter and Earth–Moon pairs on the safe side?",
 "From Part {#}, what happens to the L1 and L2 distances as the smaller body gets heavier? Explain why in words.",
-"The demo computes the Lagrange points exactly for its model, so the readings repeat. Name two ways the real Sun, Earth and Moon differ from the model, and say which spacecraft or asteroid each would affect.",
 "From Part {#}, describe how the Trojan asteroids move compared with L4 and L5, and what happened to the asteroids near L1. Which points are good places for asteroids to collect over billions of years, and why?",
 "Earth has a known Trojan asteroid, {#} TK7, at its L4. Why is it much harder to find Trojans of Earth than of Jupiter? (Think about where in our sky Earth’s L4 and L5 always are.)",
 "The Lucy spacecraft, launched in {#}, will visit several of Jupiter’s Trojans. Why do astronomers think these asteroids could be leftovers from the time the planets formed?",
 "In your Sun–Earth reading from Part {#}, the L1 distance from the smaller body is how far L1 is from Earth, in Sun to Earth separations. The Sun’s and Earth’s pulls are equal and opposite {#} separations (about {#} km) from Earth. Which of the three places in Before the lab {#} is L1? Using Keeping pace in the Background, explain why an object that keeps pace with Earth at L1 cannot be where the two pulls cancel.",
-"Prelab answers, the two copies of the Data table with the notes from Part {#}, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.",
+"For courses that treat measurement uncertainty. This section is not counted in the {#} minutes; do it when your instructor assigns it.",
+"The demo computes the Lagrange points exactly for its model, so the readings repeat. Name two ways the real Sun, Earth and Moon differ from the model, and say which spacecraft or asteroid each would affect.",
+"Prelab answers, the two copies of the Data table with the notes from Part {#}, the answers to the analysis section and to the questions (and to Uncertainty, if assigned). Identify simulated data.",
 "Lagrange Points"
 ]);

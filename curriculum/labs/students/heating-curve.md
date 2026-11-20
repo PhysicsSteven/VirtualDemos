@@ -81,15 +81,18 @@ Record the substance, sample mass, heater power and starting temperature for eac
 5. Compare all four values for water, and the ethanol boiling point and latent heat, with the textbook's Tables 1.3 and 1.4, as percentage differences.
 6. Use your second run to check that the time melting lasts and the time boiling lasts are each in proportion to $$m/P$$.
 
-## Uncertainty
-
-The timer reads to 1 s, the thermometer to 0.1 °C and the balance to 0.1 g; the model has no noise, so the residuals of your fits show only rounding. A stage's start and end are known only to within your spacing between readings, which limits the time in Analysis 3. In a real experiment heat lost to the beaker and the room makes every measured specific and latent heat come out too large; say which way each would move.
-
 ## Questions
 
 1. While the open beaker boils away, what does the covered beaker's balance read, and why? What does this say about where the mass of the open beaker went?
 2. How long did each of the four stages of your first run last? Line them up against your order in Before the lab 2, and use $$Q = mc\,\Delta T$$ and $$Q = mL$$ to explain the order you measured. Then say why a burn from steam at 100 °C does more harm than one from the same mass of water at 100 °C.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The timer reads to 1 s, the thermometer to 0.1 °C and the balance to 0.1 g; the model has no noise, so the residuals of your fits show only rounding. A stage's start and end are known only to within your spacing between readings, which limits the time in Analysis 3. Give each fitted slope with its standard error and each specific heat and latent heat with its uncertainty. In a real experiment heat lost to the beaker and the room makes every measured specific and latent heat come out too large; say which way each would move.
+
 ## What to hand in
 
-Prelab answers, the run settings, the table copies (four for water, one for ethanol) with their graphs and fits, the four measured values for water and the ethanol values with uncertainties and comparisons, and answers to the questions. Identify simulated data.
+Prelab answers, the run settings, the table copies (four for water, one for ethanol) with their graphs and fits, the four measured values for water and the ethanol values, the comparisons, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

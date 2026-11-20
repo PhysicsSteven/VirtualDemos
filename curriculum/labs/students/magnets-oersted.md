@@ -82,16 +82,19 @@ Fill in the last column yourself for Part 3.
 4. For Part 3, fill in the $$1/h$$ column (in 1/m) and graph $$\tan\theta$$ against $$1/h$$. Is it a straight line? What does that say about how the wire's field depends on distance?
 5. For Part 4, compare your predictions with the angles you read. Then turn Predict first off and check.
 
-## Uncertainty
-
-The model has no noise, so Parts 1 to 3 are exact model values (the angle to 0.1°). In Part 4 the compass is read to about 5°, which gives the uncertainty in your angle; work out how large it is in $$\tan\theta$$ at each angle. In a real experiment the wire is not infinitely long, Earth's field varies from place to place and has a vertical part, and nearby iron and other currents disturb the needle.
-
 ## Questions
 
 1. Oersted's needle turned when the wire ran north and south over it, but hardly moved when the wire ran east and west. Why?
 2. A compass is placed next to a wire carrying alternating current at 60 Hz. Why does the needle not move?
 3. Look again at the cut magnet in Part 1: its readings, the pole letters on the halves and the compass needles around them. How do they square with what you said in Before the lab 5? Explain why the half behaves as it does, and why cutting a magnet never gives a lone north pole.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The model has no noise, so Parts 1 to 3 are exact model values (the angle to 0.1°). In Part 4 the compass is read to about 5°, which gives the uncertainty in your angle; work out how large it is in $$\tan\theta$$ at each angle. Give the slope and intercept of each fit in Analysis 3 and 4 with their standard errors, and say whether each intercept is zero within its uncertainty. In a real experiment the wire is not infinitely long, Earth's field varies from place to place and has a vertical part, and nearby iron and other currents disturb the needle.
+
 ## What to hand in
 
-Prelab answers, a Data table copy for each part, the graphs and fits, your value of $$\mu_0$$, your predictions for Part 4, and answers to the questions. Identify simulated data.
+Prelab answers, a Data table copy for each part, the graphs and fits, your value of $$\mu_0$$, your predictions for Part 4, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

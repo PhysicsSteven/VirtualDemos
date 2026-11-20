@@ -102,17 +102,20 @@ Record which one moves for every reading.
 
 1. Plot $$f/f_0$$ against speed for source and observer scans on separate axes or clearly labeled series.
 2. Calculate predicted shifts from the equations and list the residuals (observed minus predicted) in a column next to the readings.
-3. Plot $$1/\sin\theta$$ against $$M$$ for your Mach cone runs. What line do you expect? Fit a line and compare its slope with that prediction (is the intercept zero within its uncertainty?).
-
-## Uncertainty
-
-Record the precision of displayed speed and frequency. The virtual model is deterministic, so repeated identical settings do not establish statistical uncertainty. Real measurements also depend on microphone timing, alignment, air temperature, wind and the changing line of sight. For the Mach cone, an uncertainty of 0.01 s in $$t_b$$ moves $$d$$ by $$v_s \times 0.01$$ s, up to about 9 m at Mach 2.5; carry that into $$\theta$$.
+3. Plot $$1/\sin\theta$$ against $$M$$ for your Mach cone runs. What line do you expect? Fit a line and compare its slope with that prediction and its intercept with zero.
 
 ## Questions
 
 1. In your runs the boom time hardly changes from Mach 1.2 to Mach 2.5, although the source is twice as fast. Explain why, using the distance flown before the boom.
 2. At 0.50 of the speed of sound your table has a moving source reading and a moving observer reading. Was Before the lab 1 right about which shift is larger? The two recorded speeds differ a little, so also work out what the observer formula gives at the source's speed. Then explain the result from what each kind of motion does to the crests traveling through the air.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+For the fit of $$1/\sin\theta$$ against $$M$$, report the slope and intercept with their uncertainties and say whether the intercept is zero within its uncertainty. Record the precision of displayed speed and frequency. The virtual model is deterministic, so repeated identical settings do not establish statistical uncertainty. Real measurements also depend on microphone timing, alignment, air temperature, wind and the changing line of sight. For the Mach cone, an uncertainty of 0.01 s in $$t_b$$ moves $$d$$ by $$v_s \times 0.01$$ s, up to about 9 m at Mach 2.5; carry that into $$\theta$$.
+
 ## What to hand in
 
-Prelab answers, a completed data table, a plot of the frequency ratio, the residual column, the Mach cone table and plot, and answers to the questions. Identify simulated data.
+Prelab answers, a completed data table, a plot of the frequency ratio, the residual column, the Mach cone table and plot, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

@@ -83,15 +83,20 @@ No hazards in the virtual lab.
 6. Still at the June solstice, at which latitudes does the Sun never set, and at which does it never rise? Relate those latitudes to $$\varepsilon$$.
 7. Graph $$Q$$ (vertical) against latitude (across) at the June solstice. Where is the daily insolation largest?
 
-## Uncertainty
-
-The readouts come from exact formulas, so there is no scatter: repeat a reading and you get the same numbers. The uncertainty is in the model and in the date. Near an equinox, by how much does the declination change from one day to the next? Near a solstice? Which of your readings would change most if your date were one day off?
-
 ## Questions
 
 1. The longest day at Ruston is in June, but the warmest weather is usually in July and August. The demo shows sunlight, not temperature. What does the delay tell you about how the oceans and land store heat?
 2. Which of the three places in Before the lab 4 came out on top in your June solstice readings, and what was $$Q$$ at each? Use the day length and the noon altitude at each place, and the $$S\cos\theta$$ of the Background, to explain the order.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The readouts come from exact formulas, so there is no scatter: repeat a reading and you get the same numbers. The uncertainty is in the model and in the date. Near an equinox, by how much does the declination change from one day to the next? Near a solstice? Which of your readings would change most if your date were one day off?
+
+Give the slope and intercept of your graph of $$Q$$ against $$(1\ \text{AU}/r)^2$$ with their standard errors, and say whether $$S_0$$ agrees with 1361 W/m² within its uncertainty.
+
 ## What to hand in
 
-Prelab answers, the table copies with their graphs and fits, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.
+Prelab answers, the table copies with their graphs and fits, the answers to the analysis section and to the questions (and to Uncertainty, if assigned). Identify simulated data.

@@ -88,14 +88,19 @@ Before each part, predict what you will see. Then measure.
 5. For Part 5, graph $$1/d_i$$ against $$1/d_o$$ for the five rows. Show that the equation for a refracting surface predicts a slope of $$-n_1/n_2$$ and an intercept of $$(n_2 - n_1)/(n_2 R)$$, and compare with your fit. Where must the object be for the image to be at infinity?
 6. For Part 6, compare $$d_i/d_o$$ with $$-n_2/n_1$$ for each row. Why does a swimming pool look shallower than it is?
 
-## Uncertainty
-
-The model has no noise, but the image distance depends on which rays are used: the demo traces exact rays, and rays far from the axis cross at a different place from rays near it. With the object 0.5 cm tall and a narrow fan, the traced image of a mirror is within about 1% of the mirror equation, and that of the refracting surface within a few percent, more near a focal point, where the image moves fast; with tall objects, wide fans or large apertures it is not, and that difference is real physics (spherical aberration), not error. Distances are given to 0.01 cm. A real mirror or lens surface is also not a perfect sphere, and a real image is blurred by diffraction.
-
 ## Questions
 
 1. In Part 2, where was the image (Image distance d<sub>i</sub> (traced)) with the object at 34, 24, 18 and 15 cm, and how does that compare with your guess in Before the lab 5? Use the mirror equation to say where the image of a very distant object would be, and to explain how the image moves as the object comes in toward the focal point.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The model has no noise, but the image distance depends on which rays are used: the demo traces exact rays, and rays far from the axis cross at a different place from rays near it. With the object 0.5 cm tall and a narrow fan, the traced image of a mirror is within about 1% of the mirror equation, and that of the refracting surface within a few percent, more near a focal point, where the image moves fast; with tall objects, wide fans or large apertures it is not, and that difference is real physics (spherical aberration), not error. Distances are given to 0.01 cm. A real mirror or lens surface is also not a perfect sphere, and a real image is blurred by diffraction.
+
+Give the slopes and intercepts of your fits in Parts 2 and 5 with their standard errors.
+
 ## What to hand in
 
-Prelab answers, a Data table copy for each part, the graphs and fits, your values of $$f$$, and answers to the questions. Identify simulated data.
+Prelab answers, a Data table copy for each part, the graphs and fits, your values of $$f$$, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

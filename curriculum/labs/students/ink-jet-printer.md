@@ -77,15 +77,18 @@ The demo opens on the Van de Graaff generator: press Ink jet printer under Machi
 3. For Part 3, use your Part 1 line to find each unknown charge from its height, and the number of electrons it corresponds to. Then turn Blind off and check.
 4. The Rayleigh limit for a 60 μm water drop is about 3.3 pC. How close do the printer's charges come to it?
 
-## Uncertainty
-
-The model has no noise; in Parts 1 and 2 the heights are worked out exactly and shown to 1 μm. In Part 3 the height is read from the scale beside the paper, to about 0.05 mm, which sets the uncertainty in the charge you find. In a real printer, air drag slows the drops and depends on the drops ahead of them, the charge of each drop depends on its neighbors, and the plates' field fringes beyond their ends; printers correct for all of these with calibrated charge tables.
-
 ## Questions
 
 1. A printer makes a character by giving successive drops different charges. Why must the charge on each drop be controlled to better than about one percent?
 2. Which of the three paths in Before the lab 5 do the two heights of the 0.15 pC drop fit? Explain from the forces on the drop after it leaves the plates why it lands where it does, and check the ratio of the two heights with $$L = 10.0$$ mm and $$D = 15.0$$ mm.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The model has no noise; in Parts 1 and 2 the heights are worked out exactly and shown to 1 μm. In Part 3 the height is read from the scale beside the paper, to about 0.05 mm, which sets the uncertainty in the charge you find. In a real printer, air drag slows the drops and depends on the drops ahead of them, the charge of each drop depends on its neighbors, and the plates' field fringes beyond their ends; printers correct for all of these with calibrated charge tables. Give each unknown charge in Analysis 3 with its uncertainty from the scale reading, and say whether the revealed value lies within it.
+
 ## What to hand in
 
-Prelab answers, a Data table copy for each part, the graphs and fits, the unknown charges with uncertainties, and answers to the questions. Identify simulated data.
+Prelab answers, a Data table copy for each part, the graphs and fits, the unknown charges, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

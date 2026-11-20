@@ -80,13 +80,17 @@ Use a separate copy for each scan. Fill in the last column yourself for the two 
 3. Plot $$C$$ (vertical) against inserted fraction (horizontal). Infer $$\kappa$$ from the fully filled and empty values. Do not use $$C = \kappa C_0$$ if an air gap remains beside the slab thickness.
 4. Compare stored energy in connected and isolated scans. Use the battery work $$V\Delta Q$$ to explain the energy change in the connected case.
 5. Test the series/parallel formulas and sum the component energies. The mixed arrangement has $$C_1$$ in series with the parallel pair $$C_2$$ and $$C_3$$.
-## Uncertainty
-
-Include plate area and gap resolution in the capacitance comparison. A small gap error can dominate $$C$$. For real plates, fringing and misalignment can shift the slope. The virtual model is ideal; captured rounding and setting resolution are not random instrumental noise. State which values you measured and which you calculated.
 
 ## Questions
 
 1. Which capacitor in your series network had the largest voltage, and was that your answer to Before the lab 4? Use $$Q = CV$$ and the charge on each capacitor to explain why.
+
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+Include plate area and gap resolution in the capacitance comparison. A small gap error can dominate $$C$$. For real plates, fringing and misalignment can shift the slope. The virtual model is ideal; captured rounding and setting resolution are not random instrumental noise. State which values you measured and which you calculated. Give the inferred $$\epsilon_0$$ and $$\kappa$$ with their uncertainty.
 
 ## With calculus
 
@@ -98,4 +102,4 @@ For courses that use calculus. This section is not counted in the 75 minutes; do
 
 ## What to hand in
 
-Prelab answers, settings and CSV, the geometry/dielectric graphs, inferred $$\epsilon_0$$ and $$\kappa$$ with uncertainty, network calculations, energy interpretation, and the answer to the question (and to With calculus, if assigned). Identify simulated data.
+Prelab answers, settings and CSV, the geometry/dielectric graphs, inferred $$\epsilon_0$$ and $$\kappa$$, network calculations, energy interpretation, and the answer to the question (and to Uncertainty and With calculus, if assigned). Identify simulated data.

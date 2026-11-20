@@ -120,14 +120,18 @@ VDI18N.add('es', 'ws/kepler-orbits', {
   "Para la órbita excéntrica, comprueba \\(r_p v_p = r_a v_a\\).",
 "Compare fitted slopes at the two central masses. Explain why escape trajectories do not belong on this period plot.":
   "Compara las pendientes ajustadas con las dos masas centrales. Explica por qué las trayectorias de escape no pertenecen a esta gráfica de periodos.",
-"Use ruler placement and time crossing resolution. The fractional errors in \\(a^3\\) and \\(T^2\\) are approximately \\(3\\,\\delta a/a\\) and \\(2\\,\\delta T/T\\). Eccentric orbits make major axis placement and timing near periapsis harder. Do not use the star to planet separation as a substitute for \\(a\\), and do not count several revolutions as one.":
-  "Usa la resolución de la colocación de la regla y del cruce para medir el tiempo. Los errores fraccionarios en \\(a^3\\) y \\(T^2\\) son aproximadamente \\(3\\,\\delta a/a\\) y \\(2\\,\\delta T/T\\). Las órbitas excéntricas hacen más difícil colocar el eje mayor y medir el tiempo cerca del periastro. No uses la separación entre la estrella y el planeta como sustituto de \\(a\\), y no cuentes varias revoluciones como una.",
 "Why can an ellipse have the same period as a circle with the same \\(a\\)?":
   "¿Por qué una elipse puede tener el mismo periodo que un círculo con la misma \\(a\\)?",
 "At Mercury’s nearest and farthest points, what did <strong>Distance now r</strong> and <strong>Speed now</strong> read (from your table notes)? How do the two speeds compare with your guess in Before the lab {#}, factor included? Use the equal swept areas to explain the ratio of the two speeds, and \\(E = \\frac12mv^2 - GMm/r\\) to explain why the planet speeds up near the star without gaining total mechanical energy.":
   "En los puntos más cercano y más lejano de Mercurio, ¿qué indicaron <strong>Distancia actual r</strong> y <strong>Rapidez actual</strong> (según las notas de tu tabla)? ¿Cómo se comparan las dos rapideces con tu conjetura en Antes del laboratorio {#}, factor incluido? Usa las áreas barridas iguales para explicar el cociente de las dos rapideces, y \\(E = \\frac12mv^2 - GMm/r\\) para explicar por qué el planeta acelera cerca de la estrella sin ganar energía mecánica total.",
-"Prelab answers, settings and CSV, both third law fits, inferred masses with uncertainty, the eccentric orbit comparison and answers to the questions. Identify simulated data.":
-  "Respuestas del prelaboratorio, ajustes y CSV, ambos ajustes de la tercera ley, las masas deducidas con su incertidumbre, la comparación de la órbita excéntrica y las respuestas a las preguntas. Identifica los datos simulados.",
+"For courses that treat measurement uncertainty. This section is not counted in the {#} minutes; do it when your instructor assigns it.":
+  "Para cursos que tratan la incertidumbre de medición. Esta sección no cuenta dentro de los {#} minutos; hazla cuando tu profesor la asigne.",
+"Use ruler placement and time crossing resolution. The fractional errors in \\(a^3\\) and \\(T^2\\) are approximately \\(3\\,\\delta a/a\\) and \\(2\\,\\delta T/T\\). Eccentric orbits make major axis placement and timing near periapsis harder. Do not use the star to planet separation as a substitute for \\(a\\), and do not count several revolutions as one.":
+  "Usa la resolución de la colocación de la regla y del cruce para medir el tiempo. Los errores fraccionarios en \\(a^3\\) y \\(T^2\\) son aproximadamente \\(3\\,\\delta a/a\\) y \\(2\\,\\delta T/T\\). Las órbitas excéntricas hacen más difícil colocar el eje mayor y medir el tiempo cerca del periastro. No uses la separación entre la estrella y el planeta como sustituto de \\(a\\), y no cuentes varias revoluciones como una.",
+"Give each fitted slope and inferred mass with its standard error, and say whether the intercept is zero within its uncertainty.":
+  "Da cada pendiente ajustada y cada masa deducida con su error estándar, y di si la ordenada al origen es cero dentro de su incertidumbre.",
+"Prelab answers, settings and CSV, both third law fits, inferred masses, the eccentric orbit comparison and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.":
+  "Respuestas del prelaboratorio, ajustes y CSV, ambos ajustes de la tercera ley, las masas deducidas, la comparación de la órbita excéntrica y las respuestas a las preguntas (y de Incertidumbre, si se asigna). Identifica los datos simulados.",
 "Orbital energy":
   "Energía orbital",
 "Mass of the star":

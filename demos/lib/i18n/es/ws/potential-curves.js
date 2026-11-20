@@ -88,22 +88,24 @@ VDI18N.add('es', 'ws/potential-curves', {
   "Calcula \\(v = \\sqrt{2(E-U)/m}\\) en tres posiciones permitidas. En los puntos de retorno, discute la aceleración además de la rapidez.",
 "Classify equilibria from the local curve shape. Compare turning point patterns below and above a double well barrier.":
   "Clasifica los equilibrios a partir de la forma local de la curva. Compara los patrones de puntos de retorno por debajo y por encima de la barrera de un pozo doble.",
-"State the spacing used to estimate a slope. Small spacing can amplify rounding, while large spacing smooths local curvature. Treat this as interpretation of a model curve, not independent validation of a real potential.":
-  "Indica el espaciado que usaste para estimar una pendiente. Un espaciado pequeño puede amplificar el redondeo, mientras que uno grande suaviza la curvatura local. Trata esto como la interpretación de una curva del modelo, no como una validación independiente de un potencial real.",
 "What force did you read at the Spring’s turning point, and at what \\(x\\)? Does it agree with your answer to Before the lab {#}? Use \\(F_x = -dU/dx\\) to explain whether acceleration must vanish when speed is zero, and say where on the curve the force does vanish.":
   "¿Qué fuerza leíste en el punto de retorno del Resorte, y en qué \\(x\\)? ¿Concuerda con tu respuesta a Antes del laboratorio {#}? Usa \\(F_x = -dU/dx\\) para explicar si la aceleración debe anularse cuando la rapidez es cero, y di en qué punto de la curva sí se anula la fuerza.",
 "Why is a local maximum of \\(U\\) unstable?":
   "¿Por qué un máximo local de \\(U\\) es inestable?",
 "Can the same total energy allow two disconnected regions of motion?":
   "¿Puede una misma energía total permitir dos regiones de movimiento separadas?",
+"For courses that treat measurement uncertainty. This section is not counted in the {#} minutes; do it when your instructor assigns it.":
+  "Para cursos que tratan la incertidumbre de medición. Esta sección no cuenta dentro de los {#} minutos; hazla cuando tu profesor la asigne.",
+"State the spacing used to estimate a slope. Small spacing can amplify rounding, while large spacing smooths local curvature. Treat this as interpretation of a model curve, not independent validation of a real potential.":
+  "Indica el espaciado que usaste para estimar una pendiente. Un espaciado pequeño puede amplificar el redondeo, mientras que uno grande suaviza la curvatura local. Trata esto como la interpretación de una curva del modelo, no como una validación independiente de un potencial real.",
 "For courses that use calculus. This section is not counted in the {#} minutes; do it when your instructor assigns it.":
   "Para cursos que usan cálculo. Esta sección no cuenta dentro de los {#} minutos; hazla cuando tu profesor la asigne.",
 "On the Spring, energy conservation gives \\(v = dx/dt = \\sqrt{2(E - U)/m}\\) with \\(U = \\tfrac12kx^2\\). Write \\(E = \\tfrac12kA^2\\), separate the variables and integrate from \\(x = 0\\) to the turning point \\(x = A\\) (use \\(\\int dx/\\sqrt{A^2 - x^2} = \\arcsin(x/A)\\)) to get the time for a quarter cycle. Show that the period is \\(2\\pi\\sqrt{m/k}\\) whatever \\(E\\) is, and compare it with the readout <strong>Timed in the simulation</strong> (under Period) at your energies.":
   "En el Resorte, la conservación de la energía da \\(v = dx/dt = \\sqrt{2(E - U)/m}\\) con \\(U = \\tfrac12kx^2\\). Escribe \\(E = \\tfrac12kA^2\\), separa las variables e integra desde \\(x = 0\\) hasta el punto de retorno \\(x = A\\) (usa \\(\\int dx/\\sqrt{A^2 - x^2} = \\arcsin(x/A)\\)) para obtener el tiempo de un cuarto de ciclo. Demuestra que el periodo es \\(2\\pi\\sqrt{m/k}\\) sea cual sea \\(E\\), y compáralo con la lectura <strong>Medido en la simulación</strong> (en Periodo) para tus energías.",
 "The Double well is \\(U = U_0[(x/a)^2 - 1]^2\\) with \\(U_0 = 1\\) J and \\(a = 0.8\\) m. Differentiate it to get \\(F_x\\), and compare with the force readouts at your Double well Data table positions. Find every equilibrium from \\(dU/dx = 0\\) and classify each by the sign of \\(d^2U/dx^2\\). Small oscillations about a stable one have \\(\\omega_0 = \\sqrt{U''/m}\\): compare \\(2\\pi/\\omega_0\\) with the readout <strong>Small oscillations {#}π/ω₀</strong>.":
   "El Pozo doble es \\(U = U_0[(x/a)^2 - 1]^2\\) con \\(U_0 = 1\\) J y \\(a = 0.8\\) m. Derívala para obtener \\(F_x\\), y compárala con las lecturas de fuerza en las posiciones de tu tabla de Datos del Pozo doble. Halla todos los equilibrios con \\(dU/dx = 0\\) y clasifica cada uno por el signo de \\(d^2U/dx^2\\). Las oscilaciones pequeñas alrededor de uno estable tienen \\(\\omega_0 = \\sqrt{U''/m}\\): compara \\(2\\pi/\\omega_0\\) con la lectura <strong>Oscilaciones pequeñas {#}π/ω₀</strong>.",
-"Predicted sketches, the comparison table, slope/speed calculations and answers to the questions (and to With calculus, if assigned). Identify the activity as a simulation comparison.":
-  "Bosquejos de predicción, la tabla de comparación, los cálculos de pendientes y rapideces y las respuestas a las preguntas (y a Con cálculo, si se asignó). Identifica la actividad como una comparación con una simulación.",
+"Predicted sketches, the comparison table, slope/speed calculations and answers to the questions (and to Uncertainty and With calculus, if assigned). Identify the activity as a simulation comparison.":
+  "Bosquejos de predicción, la tabla de comparación, los cálculos de pendientes y rapideces y las respuestas a las preguntas (y de Incertidumbre y Con cálculo, si se asignan). Identifica la actividad como una comparación con una simulación.",
 "Total energy":
   "Energía total",
 "Force along x":

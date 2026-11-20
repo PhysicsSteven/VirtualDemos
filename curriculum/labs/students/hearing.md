@@ -73,7 +73,7 @@ The link at the top opens the demo in **Cochlea**. Readings from each part go to
 
 **Part 2: loudness against level.** Press **Loudness** above the picture to switch modes. In the Tone on the chart card, set **Frequency f** to 1,000 Hz and **Sound level β** to 50 dB (click a slider and use the arrow keys to set it exactly). Press Record reading. Do the same at 60, 70, 80 and 90 dB. Press Export to worksheet, then Clear: these fill Table 2. Now set Frequency f to 100 Hz and record at 50, 60, 70, 80 and 90 dB again. Press Export to worksheet, then Clear: these go to a second copy of Table 2. Look at the 100 Hz reading at 60 dB: this is the check of your prediction in Before the lab 3. (With headphones on, **Play 1 kHz, then this tone** plays a 1 kHz tone that should sound just as loud, then this one.) Fill in the Intensity column of both copies.
 
-**Part 3: matching loudness.** Press **OpenStax example (c): 200 Hz at 60 dB** under Setups and write down its **Loudness level**. Then set Frequency f to 8,000 Hz and move Sound level β until the Loudness level is as close as it gets to the 200 Hz tone's. Write down that β. For the Uncertainty section, also write down the two settings of β whose loudness levels lie just below and just above the 200 Hz tone's, with their loudness levels. Last, press **Most sensitive: 3 to 4 kHz** and write down the **Threshold of hearing at f**; then set Frequency f to 100 Hz and write down the threshold there too.
+**Part 3: matching loudness.** Press **OpenStax example (c): 200 Hz at 60 dB** under Setups and write down its **Loudness level**. Then set Frequency f to 8,000 Hz and move Sound level β until the Loudness level is as close as it gets to the 200 Hz tone's. Write down that β. Last, press **Most sensitive: 3 to 4 kHz** and write down the **Threshold of hearing at f**; then set Frequency f to 100 Hz and write down the threshold there too.
 
 **Part 4: audiograms.** Press **Your audiogram** above the picture. Open **Lab** (below the Readings) and tick **Blind**, so the Band readout stays hidden until you have worked it out. Press **Normal hearing** under Setups and copy the hearing level at each frequency (the Readouts list Right · 250 Hz to Right · 8 kHz; the left ear is the same) into Table 3. Do the same for **Noise damage: the 4 kHz notch** and **Hearing loss with age**. Don't use Your own test.
 
@@ -114,16 +114,12 @@ The link at the top opens the demo in **Cochlea**. Readings from each part go to
 
 ## Analysis
 
-1. Graph the place of the peak (vertical) against $$\log_{10} f$$ (horizontal) for Table 1, with a straight line fit. What are the slope, with its uncertainty, and the intercept? The slope is the distance the peak moves when the frequency grows ten times: how far does it move for one octave (multiply by $$\log_{10} 2 = 0.301$$)? If the 0.88 in Greenwood's map were left out, the slope would be $$-35\ \text{mm}/2.1 = -16.7$$ mm: is your slope a little smaller or larger in size, and why?
+1. Graph the place of the peak (vertical) against $$\log_{10} f$$ (horizontal) for Table 1, with a straight line fit. What are the slope and the intercept? The slope is the distance the peak moves when the frequency grows ten times: how far does it move for one octave (multiply by $$\log_{10} 2 = 0.301$$)? If the 0.88 in Greenwood's map were left out, the slope would be $$-35\ \text{mm}/2.1 = -16.7$$ mm: is your slope a little smaller or larger in size, and why?
 2. Use your line from Analysis 1 to predict the place of the peak at 500 Hz, 250 Hz and 125 Hz, and compare with the places you wrote down in Part 1. Where does the line fail, and which way? Explain with Greenwood's map what happens to the place of low tones.
 3. For the 1 kHz copy of Table 2, graph the loudness level (vertical) against the sound level $$\beta$$ (horizontal) with a straight line fit. What are the slope and the intercept, and why must they come out that way? From your loudness column, how many times louder is 70 dB than 60 dB, and how many times the intensity is it?
 4. Make the same graph and fit for the 100 Hz copy. What is the slope? How many phons does the 100 Hz tone gain for each 10 dB, and how far below the 1 kHz tone's loudness level is it at 50 dB and at 90 dB? The 100 Hz reading at 80 dB is OpenStax's example (a): the book reads 75 phons from older curves (Robinson and Dadson, 1956). By how many phons do they differ?
 5. Part 3: what sound level at 8 kHz sounds as loud as 200 Hz at 60 dB? How many times the intensity of one tone is the other's? From the two thresholds you wrote down, how many times the intensity of a just audible 3.5 kHz tone does a 100 Hz tone need to be heard at all?
 6. For each audiogram in Table 3, work out the average hearing level at 0.5, 1, 2 and 4 kHz and the band it falls in. Then untick Blind and compare with the Band readout. Graph the noise damage audiogram (vertical) against frequency (horizontal): at which frequency is it worst, and does its band tell you how bad that is? At which frequency is the age audiogram worst?
-
-## Uncertainty
-
-Sound level β moves in whole decibels, so your match in Part 3 is good only to the nearest decibel. From the two settings of β whose loudness levels lie on either side of the 200 Hz tone's, find by linear interpolation the β (to 0.1 dB) that gives exactly the 200 Hz tone's loudness level. How far is it from your whole number match? The contours themselves are a median over many listeners: compare your interpolation error with the difference between ISO 226 and the older curves in Analysis 4. Which is the larger doubt about how loud a tone sounds to a real person?
 
 ## Questions
 
@@ -132,6 +128,13 @@ Sound level β moves in whole decibels, so your match in Part 3 is good only to 
 3. Noise damages the hair cells that report about 4 kHz. How far from the base of the basilar membrane are they (Table 1)? From Table 3, why does hearing recover at 8 kHz in the noise damage audiogram but not in the age audiogram? (Think about which end of the membrane each one wears out first.)
 4. A second machine, as loud as the first, is switched on beside a 70 dB machine. What is the new sound level? At 1 kHz, how many sones is that compared with one machine alone? Does twice the intensity sound twice as loud?
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+Report the slope of your Analysis 1 fit with its uncertainty. Sound level β moves in whole decibels, so your match in Part 3 is good only to the nearest decibel. Return to Part 3 and write down the two settings of β whose loudness levels lie just below and just above the 200 Hz tone's, with their loudness levels. From them, find by linear interpolation the β (to 0.1 dB) that gives exactly the 200 Hz tone's loudness level. How far is it from your whole number match? The contours themselves are a median over many listeners: compare your interpolation error with the difference between ISO 226 and the older curves in Analysis 4. Which is the larger doubt about how loud a tone sounds to a real person?
+
 ## What to hand in
 
-Your answers to Before the lab, Tables 1 to 3 with their calculated columns and graphs, the fits of Analysis 1, 3 and 4, and answers to the Analysis, Uncertainty and Questions sections. Say that your data came from the simulated apparatus.
+Your answers to Before the lab, Tables 1 to 3 with their calculated columns and graphs, the fits of Analysis 1, 3 and 4, and answers to the Analysis and Questions sections (and to Uncertainty, if assigned). Say that your data came from the simulated apparatus.

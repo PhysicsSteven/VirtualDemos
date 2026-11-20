@@ -123,16 +123,19 @@ Note what each trial is (a velocity, a sum) and give the unit of the result.
 3. In Part 3(a), the speed is the same at both times, yet the average acceleration is not zero. Explain, and give the direction of $$\vec a_{\rm avg}$$.
 4. In Part 4, show from your Products table that $$\vec A\cdot\vec B$$ is the same in either order and that $$(\vec A\times\vec B)_z$$ changes sign. Use $$(\vec A\times\vec B)_z$$ to give the area of the parallelogram spanned by $$(3, 4)$$ and $$(4, 3)$$.
 
-## Uncertainty
-
-With tips snapped to the grid every component is exact, and the demo's results are computed from those exact values, so any difference from your answers is arithmetic or rounding, not measurement. Give magnitudes to three significant figures and angles to 0.1°. On paper with a ruler and protractor, a scale drawing is good to about a millimeter and a degree, so components found from a drawing carry that uncertainty.
-
 ## Questions
 
 1. Can a vector have a component larger than its magnitude? Can its magnitude be zero if one component is not?
 2. Work done by a force over a displacement is $$W = \vec F\cdot\Delta\vec r$$ and the torque of a force about a point is $$\vec\tau = \vec r\times\vec F$$. Which of the two is zero when the force is perpendicular to $$\vec r$$ or $$\Delta\vec r$$, and which is largest then?
 3. The car in Before the activity 5 is the car of Part 3(b). From your Part 3(b) row, give the size and direction of its average acceleration (the result $$\Delta\vec v$$ divided by the 4 s), say what it points toward, and compare it with your answer. Explain why it is not zero although the car's speed never changes.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+With tips snapped to the grid every component is exact, and the demo's results are computed from those exact values, so any difference from your answers is arithmetic or rounding, not measurement. Give magnitudes to three significant figures and angles to 0.1°. On paper with a ruler and protractor, a scale drawing is good to about a millimeter and a degree, so components found from a drawing carry that uncertainty.
+
 ## What to hand in
 
-Answers to Before the activity, the Data and Products tables, the analysis and answers to the questions. Identify the demo's checks as simulated results.
+Answers to Before the activity, the Data and Products tables, the analysis and answers to the questions (and to Uncertainty, if assigned). Identify the demo's checks as simulated results.

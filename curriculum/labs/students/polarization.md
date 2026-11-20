@@ -84,14 +84,17 @@ Before each part, predict what you will see. Then measure.
 5. For Part 4, add the water rows to the Analysis 4 graph as a second series, then compare the Brewster angle and the reflection at 0° for water with those for glass. Why is the reflection from water weaker?
 6. At the Brewster angle, what fraction of the unpolarized light is reflected, and what is its polarization? Use this to explain why polarized sunglasses have a vertical transmission axis.
 
-## Uncertainty
-
-The model is exact for ideal elements, and the readings are given to six figures. Element angles are set in whole degrees and the angle of incidence in steps of 0.1°, so the Brewster angle can be located only to about 0.1°. Real sheet polarizers absorb some of the light along their axis and leak a little across it, so real crossed polarizers are never completely dark, and real surfaces are not perfectly flat or clean. The index of a real material also changes a little with the wavelength.
-
 ## Questions
 
 1. In the Many polarizers fold, light passes $$N$$ polarizers, each turned $$90°/N$$ more than the last, so that the last is crossed with the light's original polarization; $$N = 30$$ is the stack of Before the lab 4. How did your answer there hold up against your readings for $$N = 1, 2, 6$$ and $$30$$? Show that each step passes $$\cos^2(90°/N)$$, and explain how the total changes as $$N$$ grows, although each polarizer can only absorb light.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The model is exact for ideal elements, and the readings are given to six figures. Element angles are set in whole degrees and the angle of incidence in steps of 0.1°, so the Brewster angle can be located only to about 0.1°. Real sheet polarizers absorb some of the light along their axis and leak a little across it, so real crossed polarizers are never completely dark, and real surfaces are not perfectly flat or clean. The index of a real material also changes a little with the wavelength.
+
 ## What to hand in
 
-Prelab answers, a Data table copy for each part, the graphs and fits, the Brewster angles you found and the predicted ones, and answers to the questions. Identify simulated data.
+Prelab answers, a Data table copy for each part, the graphs and fits, the Brewster angles you found and the predicted ones, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

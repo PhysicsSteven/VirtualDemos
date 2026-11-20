@@ -78,15 +78,11 @@ Table 1. Meter loading readings (ε = 12 V). Write "ideal" for the resistance of
 
 ## Analysis
 
-1. For each row of part A, find how far V_out is below the ideal 6.00 V, as a percentage, and write it in the last column. Compare each with $$R/(R + 2R_m)$$ from Background. Below which R is the voltmeter's effect too small to see with three significant figures? In the last two rows V_out is low again, though the voltmeter's effect is tiny there: which meter lowers it, and why does it lower V_out by the same fraction as the current?
+1. For each row of part A, find how far V_out is below the ideal 6.00 V, as a percentage, and write it in the last column. Compare each with $$R/(R + 2R_m)$$ from Background. In the last two rows V_out is low again, though the voltmeter's effect is tiny there: which meter lowers it, and why does it lower V_out by the same fraction as the current?
 2. For each row of part A, find the ideal current $$\varepsilon/(2R)$$ and how far the A1 reading is below it, as a percentage. Compare with $$R_A/(2R + R_A)$$. In which rows does the ammeter's error matter and in which does the voltmeter's?
 3. Graph the A1 reading (vertical) against R1 (horizontal) for the part A rows, with **Log scales** ticked. What slope does $$I = \varepsilon/(2R)$$ predict, and what slope do your middle rows give? At which end is the current above that line and at which end below it, and which meter causes each?
 4. Using the two error formulas, find the range of R over which both meters in this setup are within 1% of the ideal reading.
 5. From part B, how does the error change with the voltmeter's R<sub>m</sub>? Check the 1 MΩ and 100 MΩ readings against the formula.
-
-## Uncertainty
-
-The demo's readings are exact solutions of the circuit, rounded to 3 significant figures as a meter display shows them; there is no random scatter. Near 6 V the last digit is 0.01 V, about 0.2% of the reading, so a smaller loading error cannot be seen. Say which of your rows that limits, and how you would see the smaller errors with a meter that shows more digits.
 
 ## Questions
 
@@ -94,6 +90,13 @@ The demo's readings are exact solutions of the circuit, rounded to 3 significant
 2. A biologist reads the voltage across a cell membrane, which acts like a 70 mV source with a resistance of about 100 MΩ, using a 10 MΩ digital voltmeter. What fraction of the true voltage does the meter show? What kind of meter is needed?
 3. Your readings in parts A and B differ from the ideal ones, yet the demo computes the circuit exactly. Is the difference an error of the computation, an error of the model, or a real effect? How could you test which, using the demo? Look back at your guess in Before the lab 1: what would you tell someone who says a meter only reads a circuit?
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The demo's readings are exact solutions of the circuit, rounded to 3 significant figures as a meter display shows them; there is no random scatter. Near 6 V the last digit is 0.01 V, about 0.2% of the reading, so a smaller loading error cannot be seen. Say which of your rows that limits, and how you would see the smaller errors with a meter that shows more digits. Below which R is the voltmeter's effect too small to see with three significant figures?
+
 ## What to hand in
 
-Before the lab answers, the data table with your last column, the graph from Analysis 3, and your answers to the Analysis and Questions. Say that the data are computed by the demo, not measured.
+Before the lab answers, the data table with your last column, the graph from Analysis 3, and your answers to the Analysis and Questions (and to Uncertainty, if assigned). Say that the data are computed by the demo, not measured.

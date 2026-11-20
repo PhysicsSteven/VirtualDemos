@@ -69,10 +69,6 @@ No hazards in the virtual lab. A real spectrum tube runs on several thousand vol
 4. In Part 4, which elements did you find in the mystery star? For each line you recorded, name the element that made it.
 5. One of the elements in the mystery star is hydrogen. Which of your recorded lines matches a hydrogen line from Part 2?
 
-## Uncertainty
-
-The wavelengths in the demo are measured values from NIST, given to a hundredth of a nanometer or better. A real hand spectroscope can be read to about 1 to 2 nm. Would that be good enough to tell sodium's two yellow lines apart? Would it be good enough to tell sodium's lines from hydrogen's red line? Explain.
-
 ## Questions
 
 1. Sunlight shows thousands of dark lines. Which of Kirchhoff's three kinds of spectrum is it, and what does that tell you about the layers of the Sun's surface?
@@ -81,6 +77,13 @@ The wavelengths in the demo are measured values from NIST, given to a hundredth 
 4. Why does a light bulb's filament give a continuous spectrum, with no lines, even though it is made of atoms of one element, tungsten?
 5. Look at your Part 1 notes: with which source button did hydrogen's strip show dark lines (Continuous is the lamp alone, Absorption the lamp shining through cool hydrogen)? Was hydrogen one of the mystery star's elements in Part 4 when Check said you had them all? Does that bear out what you concluded in Before the lab 4? Use the electrons' energy levels to explain why a dark line at one of hydrogen's wavelengths shows that hydrogen is there rather than missing.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The wavelengths in the demo are measured values from NIST, given to a hundredth of a nanometer or better. A real hand spectroscope can be read to about 1 to 2 nm. Would that be good enough to tell sodium's two yellow lines apart? Would it be good enough to tell sodium's lines from hydrogen's red line? Explain.
+
 ## What to hand in
 
-Prelab answers, the three table copies, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.
+Prelab answers, the three table copies, the answers to the analysis section and to the questions (and to Uncertainty, if assigned). Identify simulated data.

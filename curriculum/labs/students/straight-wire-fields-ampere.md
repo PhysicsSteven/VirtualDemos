@@ -69,14 +69,17 @@ Before each part, predict what you will see. Then measure. Pick each setup under
 
 1. Divide the circulation by the current through the loop for every row with current inside. What do you get, how does it compare with $$\mu_0$$, and does it depend on the loop's shape, size, position or direction? What happens with no current inside?
 
-## Uncertainty
-
-The model has no noise: the circulation is given to six significant figures and positions are set to 0.1 cm, so the ratios in Analysis 1 should agree with one another to about the last digit; say how closely they do. In a real experiment the wires are not infinitely long, Earth's field (about 50 μT) adds to the wire's but cancels around a closed loop, and a probe has a size of its own.
-
 ## Questions
 
 1. Ampère's law holds for the rectangle and the circle alike, but only for the circle centered on a single wire can you use it to find $$B$$ on the loop. Explain why, and use your circle of radius 3.0 cm to find $$B$$ from the circulation.
 2. For the circle beside the wire, what were the circulation and the two probe readings, and how do they square with your answers to Before the lab 3? Explain them using the direction of $$\vec B$$ along the loop on the side near the wire and on the far side.
+
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The model has no noise: the circulation is given to six significant figures and positions are set to 0.1 cm, so the ratios in Analysis 1 should agree with one another to about the last digit; say how closely they do. In a real experiment the wires are not infinitely long, Earth's field (about 50 μT) adds to the wire's but cancels around a closed loop, and a probe has a size of its own.
 
 ## With calculus
 
@@ -87,4 +90,4 @@ For courses that use calculus. This section is not counted in the 75 minutes; do
 
 ## What to hand in
 
-Prelab answers, the Data table copy with its comparisons, your ratios and what they equal, and answers to the questions (and to With calculus, if assigned). Identify simulated data.
+Prelab answers, the Data table copy with its comparisons, your ratios and what they equal, and answers to the questions (and to Uncertainty and With calculus, if assigned). Identify simulated data.

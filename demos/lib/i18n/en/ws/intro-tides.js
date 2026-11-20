@@ -48,11 +48,12 @@ VDI18N.add('en', 'ws/intro-tides', [
 "From Part {#}, divide the Sun’s tide by the Moon’s tide. Was your guess in Before the lab {#} right? Explain how the Sun can pull harder yet raise a smaller tide.",
 "The day’s range at one place is {#} times the height of the tide there. Check this for spring tides with (Moon’s tide + Sun’s tide) × {#}, and for neap tides with (Moon’s tide − Sun’s tide) × {#}. How many times bigger is the spring range than the neap range?",
 "From Part {#}, how long is it from one high tide to the next? The Moon returns over the same city every {#} hours {#} minutes. Why is that {#} minutes longer than a day, and how does it explain your interval?",
-"The demo computes the pulls exactly, so a repeated reading gives the same numbers. The bigger uncertainty is in the model: name two things about the real Earth that the demo leaves out and that make real tides differ from place to place.",
 "Tidal friction drags Earth’s bulges a little ahead of the Moon. Their pull speeds the Moon along, and the Moon drifts away from Earth by about {#} cm each year. Will the tides in the far future be bigger or smaller? Use your Part {#} readings.",
 "The Moon always shows Earth the same face. Long ago, Earth raised tidal bulges in the solid Moon, and friction slowed the Moon’s spin until it turned once per orbit. Why would Earth’s tides on the Moon have been much stronger than the Moon’s tides on Earth? (Earth is {#} times heavier than the Moon.)",
 "Io, Jupiter’s closest big moon, is squeezed by tides so strongly that it has hundreds of active volcanoes. Using what you found in Part {#}, why does being close to a giant planet matter so much?",
 "In your second table, how did the Day’s range at full moon ({#} days) compare with new moon ({#} days)? Was your guess in Before the lab {#} right? At full moon the Sun and the Moon pull on Earth from opposite sides: use the two bulges each one raises to explain what you saw.",
-"Prelab answers, the two Data tables with the tide heights and high tide times in the notes, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.",
+"For courses that treat measurement uncertainty. This section is not counted in the {#} minutes; do it when your instructor assigns it.",
+"The demo computes the pulls exactly, so a repeated reading gives the same numbers. The bigger uncertainty is in the model: name two things about the real Earth that the demo leaves out and that make real tides differ from place to place.",
+"Prelab answers, the two Data tables with the tide heights and high tide times in the notes, the answers to the analysis section and to the questions (and to Uncertainty, if assigned). Identify simulated data.",
 "Tides"
 ]);

@@ -80,15 +80,20 @@ Record the string, the absorber and the length for each copy of the table. For P
 4. For Part 4, graph $$P$$ (vertical) against $$\sqrt{T}$$ (horizontal, from the Observation column). Is the power proportional to $$\sqrt{T}$$?
 5. From Part 5, find the unknown string's $$\mu$$ from the slope of $$P$$ against $$A^2$$.
 
-## Uncertainty
-
-The meter in the simulation is exact and the settings are exact, so the points lie on the predicted lines. Any departure from a straight line in your graphs is a real physical effect or a mistake in the table, not noise. On a real apparatus include the measurement of the driver's amplitude (hard to read at the 1 mm level), damping in the string itself, reflections at an imperfect absorber, the pulley's friction and the calibration of a real power or velocity sensor.
-
 ## Questions
 
 1. Why does the absorber's matched value $$b = \sqrt{T\mu}$$ depend on both the tension and the density?
 2. Did the soft absorber in Part 3 do what you expected in Before the lab 4? Use your powers at 1.20, 1.30 and 1.40 m to say, and explain why the soft end's power depends on $$L$$ while the matched end's does not. If at some length the soft end takes more than the matched one, where does the extra power come from, given that the driver's amplitude is the same?
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The meter in the simulation is exact and the settings are exact, so the points lie on the predicted lines. Any departure from a straight line in your graphs is a real physical effect or a mistake in the table, not noise. On a real apparatus include the measurement of the driver's amplitude (hard to read at the 1 mm level), damping in the string itself, reflections at an imperfect absorber, the pulley's friction and the calibration of a real power or velocity sensor.
+
+Give the slope of each fit with its standard error, and give each value of $$\mu$$ with its uncertainty.
+
 ## What to hand in
 
-Prelab answers, a Data table copy for each part, graphs with fits, your values of $$\mu$$ for String B and the unknown string, the comparison of mismatched and matched ends, and answers to the questions. Identify simulated data.
+Prelab answers, a Data table copy for each part, graphs with fits, your values of $$\mu$$ for String B and the unknown string, the comparison of mismatched and matched ends, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

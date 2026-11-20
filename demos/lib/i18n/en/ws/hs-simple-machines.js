@@ -62,9 +62,10 @@ VDI18N.add('en', 'ws/hs-simple-machines', [
 "For the pulley reading with n = {#}, find \\(W_\\mathrm{in}\\), \\(W_\\mathrm{out}\\) and the thermal energy \\(W_\\mathrm{in} - W_\\mathrm{out}\\). Then do the same for n = {#}. Why does the {#} strand tackle waste more energy?",
 "For the ramp, make a graph of efficiency (vertical) against the height the load rises, \\(d_\\mathrm{out}\\) (horizontal), for the five readings with μ = {#}. A steeper ramp of the same length is a taller one, so the points run from {#}° on the left to {#}° on the right. Which angle needs the smallest effort, and which wastes the smallest share of your work?",
 "For the ramp reading with μ = {#} at {#}°, compare the effort with \\(mg\\sin\\theta\\), and its AMA with IMA.",
-"The demo gives the effort to {#} N and the distances to {#} m, so your AMA and IMA are good to about three significant figures. Ask whether a difference between AMA and IMA is larger than that rounding before you call it friction. A real machine adds the weight of its pulleys and rope, which this model leaves out.",
 "Look back at your guess in Before the lab {#}. In Part {#}, how did the efficiency at {#}° compare with the efficiency at {#}°? Use \\(W_\\mathrm{out} = mgh\\) and the friction force \\(\\mu mg\\cos\\theta\\) acting over the {#} m length to explain why the steeper ramp, which needs the bigger push, wastes a smaller share of the work.",
 "A salesman says his pulley system has an IMA of {#} and an efficiency of {#} %. Explain, using work, why you should not buy it.",
-"Prelab answers, the three copies of the Data table with the last three columns filled in, the two graphs, the work calculations of Analysis {#}, and answers to the questions. Identify simulated data.",
+"For courses that treat measurement uncertainty. This section is not counted in the {#} minutes; do it when your instructor assigns it.",
+"The demo gives the effort to {#} N and the distances to {#} m, so your AMA and IMA are good to about three significant figures. Ask whether a difference between AMA and IMA is larger than that rounding before you call it friction. A real machine adds the weight of its pulleys and rope, which this model leaves out.",
+"Prelab answers, the three copies of the Data table with the last three columns filled in, the two graphs, the work calculations of Analysis {#}, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.",
 "Forces and Friction, Simple machines"
 ]);

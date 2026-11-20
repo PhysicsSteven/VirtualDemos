@@ -75,13 +75,9 @@ Keep each part in its own copy of the table, labeled with the part. For Part 3 w
 
 ## Analysis
 
-1. Part 1: plot $$\Omega$$ against $$1/\omega_s$$ and fit a line with a free intercept. Is the intercept zero within its uncertainty? Find $$I_s$$ from the slope and compare it with $$\tfrac12 MR^2$$.
+1. Part 1: plot $$\Omega$$ against $$1/\omega_s$$ and fit a line with a free intercept. Is the intercept close to zero? Find $$I_s$$ from the slope and compare it with $$\tfrac12 MR^2$$.
 2. Part 2: add the released from rest points to the same plot (or fit them separately). At which spins do they agree with the Part 1 line, and at which do they fall below it? Use the tilt traces to explain why.
-3. Part 3: find the mystery wheel's $$I_s$$ and the ratio $$I_s/(MR^2)$$, with uncertainties. Where would its mass have to be to give that ratio? Compare with the value shown when you turned it off.
-
-## Uncertainty
-
-The gate rounds each period to 0.01 s, so the largest error in $$P$$ is 0.005 s and the fractional error in $$\Omega$$ is at most $$0.005\ \text{s}/P$$. Which of your readings is affected most? Use the standard error of the fitted slope to give an uncertainty for $$I_s$$. On a real bench you would also need the spin rate (it slowly falls through bearing friction), $$d$$, the wheel's mass and the pivot friction.
+3. Part 3: find the mystery wheel's $$I_s$$ and the ratio $$I_s/(MR^2)$$. Where would its mass have to be to give that ratio? Compare with the value shown when you turned it off.
 
 ## Questions
 
@@ -89,6 +85,13 @@ The gate rounds each period to 0.01 s, so the largest error in $$P$$ is 0.005 s 
 2. The wheel's center moves in a circle of radius $$d$$ round the post. What supplies the force for this, and how big is it at 3000 rpm with $$d = 0.10\ \text{m}$$?
 3. How did the precession period change from 1000 to 2000 rpm in Part 1? Give both periods with their $$\Omega$$, and say whether that is what you expected in Before the lab 3. Use $$d\varphi = \tau\,dt/L$$ from the Background to explain how the spin rate changes the precession rate when the torque stays the same.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The gate rounds each period to 0.01 s, so the largest error in $$P$$ is 0.005 s and the fractional error in $$\Omega$$ is at most $$0.005\ \text{s}/P$$. Which of your readings is affected most? Use the standard error of the fitted slope to give an uncertainty for $$I_s$$. On a real bench you would also need the spin rate (it slowly falls through bearing friction), $$d$$, the wheel's mass and the pivot friction. Is the Part 1 intercept zero within its uncertainty? Give the mystery wheel's $$I_s$$ and $$I_s/(MR^2)$$ with uncertainties.
+
 ## What to hand in
 
-Prelab answers, the three data tables, the fits with their residuals, $$I_s$$ from Part 1 compared with $$\tfrac12 MR^2$$, the mystery wheel's $$I_s$$ and $$I_s/(MR^2)$$ with uncertainties, your Part 2 and Part 4 observations, and answers to the questions. Identify simulated data.
+Prelab answers, the three data tables, the fits with their residuals, $$I_s$$ from Part 1 compared with $$\tfrac12 MR^2$$, the mystery wheel's $$I_s$$ and $$I_s/(MR^2)$$, your Part 2 and Part 4 observations, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

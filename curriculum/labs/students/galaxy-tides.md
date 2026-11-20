@@ -80,15 +80,18 @@ Set **Speed** to 4× above the picture. Each run ends by itself; press **Record 
 4. In the Andromeda is coming run, when is the first close pass, in billions of years from now, and how close? Compare it with your steady speed answer from Before the lab 3: is the real trip shorter or longer, and why? What did the bigger sideways speed change?
 5. From Part 5, how far away is the next grain of sand, and how many of 100 billion stars would hit another star while crossing the other galaxy?
 
-## Uncertainty
-
-The model's numbers are exact for its setup; the big uncertainty is in Andromeda's sideways speed. Your two Andromeda runs differ only in that speed. By how many million years and how many kpc do their first passes differ? Which outcome would you quote, and how would you say it honestly?
-
 ## Questions
 
 1. When galaxies collide, the stars pass by but the gas clouds do slam together and form bursts of new stars. Clouds of gas are light years across. Why do clouds hit when stars do not?
 2. Look back at your guess in Before the lab 4 and at the Hits among 100 billion stars. How many stars will crash, and why was your guess right or wrong? If the stars do not crash, what pulled the long tails out of the galaxies in Part 1?
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The model's numbers are exact for its setup; the big uncertainty is in Andromeda's sideways speed. Your two Andromeda runs differ only in that speed. By how many million years and how many kpc do their first passes differ? Which outcome would you quote, and how would you say it honestly?
+
 ## What to hand in
 
-Prelab answers, the Data table, Analysis 1 to 5 with the formula work in Analysis 3, the uncertainty answer and the answers to the questions. Identify simulated data: every reading in this lab is simulated.
+Prelab answers, the Data table, Analysis 1 to 5 with the formula work in Analysis 3, and the answers to the questions (and to Uncertainty, if assigned). Identify simulated data: every reading in this lab is simulated.

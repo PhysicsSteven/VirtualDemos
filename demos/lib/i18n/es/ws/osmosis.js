@@ -188,8 +188,6 @@ VDI18N.add('es', 'ws/osmosis', {
   "Ajusta una recta a \\(V\\) contra \\(1000/c_\\text{out}\\) en la Tabla {#}. ¿Cuál es la ordenada al origen, \\(V_s\\)? ¿Qué fracción del volumen normal de la célula (su volumen en solución salina al {#} %) es?",
 "In pure water the cell can swell only to the sphere its area allows (your reading in Part {#} step {#}). Use your line to find the outside concentration at which the cell’s volume reaches that sphere, in mOsm/L, and the saline strength that gives it: % NaCl = \\(c_\\text{out} \\times 58.44 / 20{,}000\\). Then press the <strong>{#}%</strong> chip and Play: does the cell burst, as your answer says it should?":
   "En agua pura la célula solo puede hincharse hasta la esfera que permite su área (tu lectura en la Parte {#}, paso {#}). Usa tu recta para encontrar la concentración de afuera a la que el volumen de la célula llega a esa esfera, en mOsm/L, y la solución salina que la da: % NaCl = \\(c_\\text{out} \\times 58.44 / 20{,}000\\). Luego presiona el botón <strong>{#}%</strong> e Iniciar: ¿revienta la célula, como dice tu respuesta?",
-"The molecules in Part {#} are simulated, {#} of them, so \\(x_\\text{rms}^2\\) scatters by a few percent about \\(2Dt\\); your readings also share the same molecules, so they scatter together. From the standard error of your slope, how well does your \\(D\\) agree with the demo’s value? In Part {#} each piston reading is up to one step ({#} kPa) above the true osmotic pressure. Explain why that moves the intercept of your line but hardly changes its slope.":
-  "Las moléculas de la Parte {#} son simuladas, {#} en total, así que \\(x_\\text{rms}^2\\) se dispersa unos pocos por ciento alrededor de \\(2Dt\\); además tus lecturas comparten las mismas moléculas, así que se dispersan juntas. A partir del error estándar de tu pendiente, ¿qué tan bien concuerda tu \\(D\\) con el valor de la demo? En la Parte {#} cada lectura del pistón está hasta un paso ({#} kPa) por encima de la presión osmótica verdadera. Explica por qué eso mueve la ordenada al origen de tu recta pero casi no cambia su pendiente.",
 "From your \\(D\\) for glucose, how long does it take glucose to spread {#} cm by diffusion alone? Give the answer in hours. Why do we stir sugar into tea?":
   "Con tu \\(D\\) para la glucosa, ¿cuánto tarda la glucosa en dispersarse {#} cm solo por difusión? Da la respuesta en horas. ¿Por qué revolvemos el azúcar en el té?",
 "In Part {#}, which way did water move when the right side held sugar water: toward the side with more dissolved particles or fewer? Did the sugar move? Why does {#} mmol/L salt need a stronger push than {#} mmol/L sugar?":
@@ -198,8 +196,54 @@ VDI18N.add('es', 'ws/osmosis', {
   "Tu predicción (Antes del laboratorio {#}) contra lo que viste en la Parte {#}, paso {#}: ¿cuál era el volumen de la célula cuando reventó, y por qué no pudo hincharse más? Explícalo con el área de la membrana y el mayor volumen que esa área puede contener.",
 "Intravenous drips use {#} % saline. Using your Table {#}, explain what would happen to red cells if a drip were pure water, and what if it were {#} % saline.":
   "Los sueros intravenosos usan solución salina al {#} %. Con tu Tabla {#}, explica qué les pasaría a los glóbulos rojos si un suero fuera agua pura, y qué si fuera solución salina al {#} %.",
-"Your answers to Before the lab, the three Data tables with their graphs and fits, your answers to Analysis, Uncertainty and Questions. Say that your data came from the simulated apparatus.":
-  "Tus respuestas a Antes del laboratorio, las tres tablas de datos con sus gráficas y ajustes, y tus respuestas a Análisis, Incertidumbre y Preguntas. Indica que tus datos vienen del aparato simulado.",
+"For courses that treat measurement uncertainty. This section is not counted in the {#} minutes; do it when your instructor assigns it.":
+  "Para cursos que tratan la incertidumbre de medición. Esta sección no cuenta dentro de los {#} minutos; hazla cuando tu profesor la asigne.",
+"The molecules in Part {#} are simulated, {#} of them, so \\(x_\\text{rms}^2\\) scatters by a few percent about \\(2Dt\\); your readings also share the same molecules, so they scatter together. From the standard error of your slope, how well does your \\(D\\) agree with the demo’s value? In Part {#} each piston reading is up to one step ({#} kPa) above the true osmotic pressure. Explain why that moves the intercept of your line but hardly changes its slope.":
+  "Las moléculas de la Parte {#} son simuladas, {#} en total, así que \\(x_\\text{rms}^2\\) se dispersa unos pocos por ciento alrededor de \\(2Dt\\); además tus lecturas comparten las mismas moléculas, así que se dispersan juntas. A partir del error estándar de tu pendiente, ¿qué tan bien concuerda tu \\(D\\) con el valor de la demo? En la Parte {#} cada lectura del pistón está hasta un paso ({#} kPa) por encima de la presión osmótica verdadera. Explica por qué eso mueve la ordenada al origen de tu recta pero casi no cambia su pendiente.",
+"Give each slope and intercept from your fits with its standard error, for glucose and hemoglobin in Part {#}, for sugar in Part {#}, and for the cell volume line in Part {#}, and say whether each intercept is zero within its standard error and whether \\(R\\) agrees with {#} J/(mol·K) within its standard error.":
+  "Da cada pendiente y ordenada al origen de tus ajustes con su error estándar, para la glucosa y la hemoglobina en la Parte {#}, para el azúcar en la Parte {#} y para la recta del volumen de la célula en la Parte {#}, y di si cada ordenada al origen es cero dentro de su error estándar y si \\(R\\) concuerda con {#} J/(mol·K) dentro de su error estándar.",
+"Your answers to Before the lab, the three Data tables with their graphs and fits, your answers to Analysis and Questions (and to Uncertainty, if assigned). Say that your data came from the simulated apparatus.":
+  "Tus respuestas a Antes del laboratorio, las tres tablas de datos con sus gráficas y ajustes, y tus respuestas a Análisis y Preguntas (y a Incertidumbre, si se asigna). Indica que tus datos vienen del aparato simulado.",
+"Diffusion constant of the molecule in its medium":
+  "Constante de difusión de la molécula en su medio",
+"glucose in water {#} × {#}⁻¹⁰ m²/s (Table {#})":
+  "glucosa en agua {#} × {#}⁻¹⁰ m²/s (Tabla {#})",
+"Piston pressure at which the flow through the membrane turns around":
+  "Presión del pistón a la cual se invierte el flujo a través de la membrana",
+"Osmotic pressure: the pressure on the solution that just stops water crossing into it":
+  "Presión osmótica: la presión sobre la solución que justo impide que el agua cruce hacia ella",
+"in kPa in the tables":
+  "en kPa en las tablas",
+"Gas constant":
+  "Constante de los gases",
+"Temperature in kelvins":
+  "Temperatura en kelvin",
+"Volume of the red cell":
+  "Volumen del glóbulo rojo",
+"Volume of the hemoglobin and other solids in the cell, which takes no part in osmosis":
+  "Volumen de la hemoglobina y otros sólidos de la célula, que no participan en la ósmosis",
+"Concentration of the solute, moles per cubic meter ({#} mmol/L = {#} mol/m³); for the red cell, the outside osmolarity":
+  "Concentración del soluto, moles por metro cúbico ({#} mmol/L = {#} mol/m³); para el glóbulo rojo, la osmolaridad de afuera",
+"Concentration of the sugar after the water that crossed has diluted it":
+  "Concentración del azúcar después de que el agua que cruzó la ha diluido",
+"Osmolarity of the salt water outside the cell":
+  "Osmolaridad del agua salada de afuera de la célula",
+"Acceleration of gravity, {#} m/s²":
+  "Aceleración de la gravedad, {#} m/s²",
+"Height of the water column":
+  "Altura de la columna de agua",
+"Number of particles each unit of solute makes in water: {#} for sugar, {#} for salt":
+  "Número de partículas que produce en agua cada unidad de soluto: {#} para el azúcar, {#} para la sal",
+"Constant of the cell: its water volume times the outside osmolarity":
+  "Constante de la célula: su volumen de agua por la osmolaridad de afuera",
+"Density of water":
+  "Densidad del agua",
+"Time since the molecules left the line":
+  "Tiempo transcurrido desde que las moléculas salieron de la línea",
+"Root mean square distance of the molecules from the starting line, along one direction":
+  "Distancia cuadrática media de las moléculas a la línea de partida, en una dirección",
+"in µm in the tables":
+  "en µm en las tablas",
 "Diffusion and Osmosis":
   "Difusión y ósmosis"
 });

@@ -100,16 +100,19 @@ Press **Heavy pair, lower pitch** again and press **Play**. Watch how high the *
 3. For GW150914 and for the heavy pair, find the mass that turned into waves, $$M - M_\text{final}$$, and what percent of $$M$$ it is. Is it about the same percent for both?
 4. Compare the time from 20 Hz to the last stable orbit for 10 + 10 and for 80 + 80 solar masses. Which pair spends longer in LIGO's band?
 
-## Uncertainty
-
-The frequencies are shown to 0.1 Hz (the ringdown to 1 Hz). For each row, multiply the last stable orbit frequency by M. By how many percent do your six products spread, and is that more or less than the rounding alone explains?
-
 ## Questions
 
 1. The peak of GW150914 changed a LIGO arm by your ΔL at the peak. Compare it with Before the lab 1, which used the strain Hanford actually recorded. The simple formula in the demo overstates the peak by about 1.7 times, because the two black holes are no longer on slow, wide orbits at the end. The rest of the difference is the view: why would a pair tilted to us and off to one side of the sky give a smaller signal than one face on and straight overhead?
 2. The gravitational waves from GW170817 arrived 1.74 s before the gamma rays, after 130 million years. Use your Readouts table: if gravity were 0.1% slower than light, how late would the waves have been? What does the measured gap say about the speed of gravity?
 3. Return to your prediction in Before the lab 4. Using the Last stable orbit and Ringdown columns for GW150914 and the heavy pair, say whether the heavier pair ended higher or lower, by what factor, and how that factor compares with the ratio of their total masses. Explain it with the size of a black hole.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The frequencies are shown to 0.1 Hz (the ringdown to 1 Hz). For each row, multiply the last stable orbit frequency by M. By how many percent do your six products spread, and is that more or less than the rounding alone explains? Also report the slope and intercept of your fit with their uncertainties, and say whether the intercept is zero within its uncertainty.
+
 ## What to hand in
 
-Prelab answers, both tables with the graph, its slope and intercept, and answers to the analysis and the questions. Identify simulated data: every reading comes from the model in the demo.
+Prelab answers, both tables with the graph, its slope and intercept, and answers to the analysis and the questions (and to Uncertainty, if assigned). Identify simulated data: every reading comes from the model in the demo.

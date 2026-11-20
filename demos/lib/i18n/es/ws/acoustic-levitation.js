@@ -130,14 +130,16 @@ VDI18N.add('es', 'ws/acoustic-levitation', {
   "Compara los dos radios de cuenta. ¿Cambia el cociente modelado entre fuerza y peso?",
 "Compare how far foam and water sit below the nearest pressure node at {#} V.":
   "Compara qué tan abajo del nodo de presión más cercano quedan la espuma y el agua a {#} V.",
-"Give intervals for trap positions and the hold/fall threshold. Use the phase control increment when estimating the slope uncertainty. Force readouts in the virtual lab are calculated values; keep those separate from quantities you locate yourself, such as trap positions and threshold brackets.":
-  "Da intervalos para las posiciones de las trampas y para el umbral de sostiene/cae. Usa el incremento del control de fase al estimar la incertidumbre de la pendiente. Las lecturas de fuerza del laboratorio virtual son valores calculados; mantenlas separadas de las cantidades que ubicas tú, como las posiciones de las trampas y los intervalos del umbral.",
 "Why might a large real bead fail the radius cancellation prediction?":
   "¿Por qué una cuenta real grande podría no cumplir la predicción de que el radio se cancela?",
 "Where did you place the foam bead and the water droplet in Before the lab {#}, and where did the trap table put them? Explain the difference with a force balance on each bead: what sets how far below the node it must sit before the acoustic force can carry its weight?":
   "¿Dónde colocaste la cuenta de espuma y la gota de agua en Antes del laboratorio {#}, y dónde las puso la tabla de trampas? Explica la diferencia con un balance de fuerzas en cada cuenta: ¿qué fija qué tan abajo del nodo debe quedar antes de que la fuerza acústica pueda sostener su peso?",
-"Prelab answers, data and screenshots, the spacing and phase graphs, the drive squared plot for steel, threshold and radius comparisons, uncertainty estimates, and answers to the questions. Identify which values were simulated readouts and which you located yourself.":
-  "Respuestas del prelaboratorio, datos y capturas de pantalla, las gráficas del espaciado y de la fase, la gráfica de la excitación al cuadrado para el acero, las comparaciones del umbral y del radio, las estimaciones de incertidumbre y las respuestas a las preguntas. Identifica qué valores fueron lecturas simuladas y cuáles ubicaste tú.",
+"For courses that treat measurement uncertainty. This section is not counted in the {#} minutes; do it when your instructor assigns it.":
+  "Para cursos que tratan la incertidumbre de medición. Esta sección no cuenta dentro de los {#} minutos; hazla cuando tu profesor la asigne.",
+"Give intervals for trap positions and the hold/fall threshold. Use the phase control increment when estimating the slope uncertainty. Force readouts in the virtual lab are calculated values; keep those separate from quantities you locate yourself, such as trap positions and threshold brackets.":
+  "Da intervalos para las posiciones de las trampas y para el umbral de sostiene/cae. Usa el incremento del control de fase al estimar la incertidumbre de la pendiente. Las lecturas de fuerza del laboratorio virtual son valores calculados; mantenlas separadas de las cantidades que ubicas tú, como las posiciones de las trampas y los intervalos del umbral.",
+"Prelab answers, data and screenshots, the spacing and phase graphs, the drive squared plot for steel, threshold and radius comparisons, and answers to the questions (and to Uncertainty, if assigned). Identify which values were simulated readouts and which you located yourself.":
+  "Respuestas del prelaboratorio, datos y capturas de pantalla, las gráficas del espaciado y de la fase, la gráfica de la excitación al cuadrado para el acero, las comparaciones del umbral y del radio, y las respuestas a las preguntas (y de Incertidumbre, si se asigna). Identifica qué valores fueron lecturas simuladas y cuáles ubicaste tú.",
 "Volume of the bead":
   "Volumen de la cuenta",
 "Directivity of a transducer (a piston), {#} on its axis":

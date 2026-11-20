@@ -81,13 +81,18 @@ Keep each part in its own copy of the table, labeled with the part.
 4. Parts 4 and 5: for each radius of B, calculate $$Q_B/(10\ \text{nC})$$, the fraction of the 10 nC that B ends up with. Plot it against $$R_B/(R_A + R_B)$$ for both parts. Which part follows the ratio of the radii? How does the other part differ when B is smaller than A, and when it is larger?
 
 
-## Uncertainty
-
-The demo's charges come from the exact image solution, and each reading is recorded to six significant figures, so rounding alone adds scatter of about $$10^{-5}$$ nC. Part 1 is not quite a lone sphere: B stays 40 cm away, neutral, and its pull changes $$Q_A$$ slightly. On a real bench, the rod is not a point charge, charge leaks away through humid air and the stands, and an electrometer itself has capacitance that takes some of the charge.
-
 ## Questions
 
 1. How much of the 10 nC did the 1 cm sphere B carry away in Part 4, and how does that sit with your decision in Before the lab 5? Use the idea that charge flows between touching conductors until they are at one potential to explain the share B gets.
+
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The demo's charges come from the exact image solution, and each reading is recorded to six significant figures, so rounding alone adds scatter of about $$10^{-5}$$ nC. Part 1 is not quite a lone sphere: B stays 40 cm away, neutral, and its pull changes $$Q_A$$ slightly. On a real bench, the rod is not a point charge, charge leaks away through humid air and the stands, and an electrometer itself has capacitance that takes some of the charge.
+
+Give the slope and the intercept of the Part 1 fit with their standard errors.
 
 ## With calculus
 
@@ -98,4 +103,4 @@ For courses that use calculus. This section is not counted in the 75 minutes; do
 
 ## What to hand in
 
-Prelab answers, the data tables, the Part 1 fit with its residuals compared with $$-q$$, the Part 2 ratios compared with $$-R/(R+d)$$, the Part 2 note on the order of the steps, the Part 3 comparison, the Parts 4 and 5 graph, and answers to the questions (and to With calculus, if assigned). Identify simulated data.
+Prelab answers, the data tables, the Part 1 fit with its residuals compared with $$-q$$, the Part 2 ratios compared with $$-R/(R+d)$$, the Part 2 note on the order of the steps, the Part 3 comparison, the Parts 4 and 5 graph, and answers to the questions (and to Uncertainty and With calculus, if assigned). Identify simulated data.

@@ -86,15 +86,18 @@ Then fill in the Results table from your Data tables.
 4. Compare the measured equivalent resistance of each circuit with the formula. Which circuit has the smaller equivalent resistance, and which draws more current from the battery?
 5. With $$R_2$$ = 20 Ω, which bulb has the larger power in the series circuit, and which in the parallel circuit? Explain the difference using $$P = I^2R$$ for series (same current) and $$P = V^2/R$$ for parallel (same voltage).
 
-## Uncertainty
-
-The demo's meters are ideal, so the readings differ from the formulas only by rounding in their last digit. Check that every difference you found in Analysis 1 to 4 is no bigger than that. A real ammeter adds a small resistance to the path and a real voltmeter draws a small current, so real readings would differ a little more.
-
 ## Questions
 
 1. Look back at your guess in Before the lab 4. What did A1 and A2 read in the series circuit? If the bulb does not use up current, what does it use up? Explain using the meaning of current (charge per second) and voltage (energy per coulomb).
 2. The lights in a house are wired in parallel, not in series. Use your results to give two reasons why: think about the voltage each light gets, and about what happens to the others when one bulb burns out.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The demo's meters are ideal, so the readings differ from the formulas only by rounding in their last digit. Check that every difference you found in Analysis 1 to 4 is no bigger than that. A real ammeter adds a small resistance to the path and a real voltmeter draws a small current, so real readings would differ a little more.
+
 ## What to hand in
 
-Prelab answers, the two copies of the Data table, the Results table, and answers to the questions. Identify simulated data.
+Prelab answers, the two copies of the Data table, the Results table, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

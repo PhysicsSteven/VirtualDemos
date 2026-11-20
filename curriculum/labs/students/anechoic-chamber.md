@@ -81,16 +81,19 @@ A real anechoic chamber is very quiet and can be disorienting: do not work alone
 3. For Part 3, find the slope from the same graph. Did deeper wedges restore the $$1/r^2$$ law at 125 Hz?
 4. For Part 4, graph $$L$$ against $$\log_2 r$$. Far from the source the level is nearly steady: this is the reverberant level. Find the distance at which Part 1's free field line reaches the reverberant level; this is the critical distance. Compare it with $$\sqrt{A/(16\pi)}$$, using $$A$$ from the demo's **Absorption A = ΣSα** readout (the sum of area times α in its Absorption coefficients table).
 
-## Uncertainty
-
-The meter reads to 0.1 dB and the direct sound is exact. The reflected sound comes from a ray trace with a finite number of rays, a scatter of a few percent in the reflected energy, which matters only where the reflections are a large part of the level. On a real chamber add the source not being a point at short range, its directionality, reflections from the wire floor, the microphone stand and the person measuring, and background noise from outside the chamber.
-
 ## Questions
 
 1. Why are the wedges of an anechoic chamber shaped as wedges and not flat slabs of the same material?
 2. Outdoors, far from buildings, is close to a free field. Why does sound outdoors still not fall exactly 6 dB per doubling at long range?
 3. From your Part 1 and Part 4 tables, by how many decibels does the level fall between 1 m and 4 m in the chamber, and in the bare room? Set those beside what you decided in Before the lab 3, then account for the bare room's numbers: what is the meter hearing at 1 m and at 4 m there?
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The meter reads to 0.1 dB and the direct sound is exact. The reflected sound comes from a ray trace with a finite number of rays, a scatter of a few percent in the reflected energy, which matters only where the reflections are a large part of the level. Give each fitted slope and intercept with its standard error. On a real chamber add the source not being a point at short range, its directionality, reflections from the wire floor, the microphone stand and the person measuring, and background noise from outside the chamber.
+
 ## What to hand in
 
-Prelab answers, a Data table copy for each part, graphs with fits, the source power, the wedge cutoff, the critical distance of the room, and answers to the questions. Identify simulated data.
+Prelab answers, a Data table copy for each part, graphs with fits, the source power, the wedge cutoff, the critical distance of the room, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

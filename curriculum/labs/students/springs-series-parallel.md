@@ -66,15 +66,20 @@ Under **System** press **Sandbox**. Use three of its rigs, all with $$k = 20.0$$
 
 1. For each arrangement, fit $$y = y_0 + s\,m$$ and find $$k_{\text{eff}} = g/s$$ (with $$s$$ in m/kg). Compare each with your prediction from Before the lab question 1, and explain what the intercept $$y_0$$ is for each arrangement.
 
-## Uncertainty
-
-The readout gives $$y$$ to 0.01 cm and the block masses are exact settings, so each fit's residuals are the rounding of the readout, and any difference between $$k_{\text{eff}}$$ and your prediction beyond the slope's standard error is arithmetic or rounding in your work. Every spring in the model is exactly 20.0 N/m. On a real bench the largest errors would come from the springs' own mass, from a spring constant that is not the same for every spring of one kind, and from reading the block's position to about a millimeter against a ruler.
-
 ## Questions
 
 1. How far did the block move from 100 g to 400 g on One spring, and on Two in series? From the two, find the spring constant of each half of a cut spring, and check it against your answer to Before the lab 2. Explain using springs in series.
 2. Hanging a block in the Sandbox, how does the period of oscillation change when one spring is replaced by two of the same springs in series, and by two in parallel?
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The readout gives $$y$$ to 0.01 cm and the block masses are exact settings, so each fit's residuals are the rounding of the readout, and any difference between $$k_{\text{eff}}$$ and your prediction beyond the slope's standard error is arithmetic or rounding in your work. Every spring in the model is exactly 20.0 N/m. On a real bench the largest errors would come from the springs' own mass, from a spring constant that is not the same for every spring of one kind, and from reading the block's position to about a millimeter against a ruler.
+
+Give each fitted slope and each $$k_{\text{eff}}$$ with its standard error, and say how many standard errors each $$k_{\text{eff}}$$ lies from your prediction.
+
 ## What to hand in
 
-Prelab answers, the Springs combined tables with their fits and $$k_{\text{eff}}$$ values, and answers to the questions. Identify simulated data.
+Prelab answers, the Springs combined tables with their fits and $$k_{\text{eff}}$$ values, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

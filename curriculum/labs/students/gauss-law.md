@@ -78,14 +78,17 @@ Record all shape dimensions and $$Q$$, $$R$$ above the relevant table. Keep sepa
 2. For the rows whose predicted flux is zero (no net charge inside), a percent difference has no meaning. Instead divide the numerical flux by $$\lvert q \rvert/\epsilon_0$$, with $$q$$ the size of one charge in that row (1 nC gives 112.94 N·m²/C), and report that fraction. Compare it with the relative differences (numerical minus predicted, over predicted) of the rows with charge inside.
 3. Derive $$E(r)$$ inside/outside a uniform ball and a conductor using symmetry. Compare with the radial measurements and discuss continuity or a jump at $$R$$.
 
-## Uncertainty
-
-Include coordinate and surface size resolution when deciding whether a charge is inside. Omit positions whose classification is uncertain. Numerical quadrature error is different from measurement rounding. Near a charge, the field changes rapidly and cancellation can be difficult; an integration warning is not a physical violation of Gauss's law. Only an exact point charge on the surface creates the mathematical singularity.
-
 ## Questions
 
 1. Does zero net flux imply zero electric field on the surface?
 2. What flux did you read at 6.0 and 12.0 cm, and was Before the lab 4 right? Explain it from how the field on the sphere and the sphere's area each change with its radius. Why can changing shape alter outward and inward contributions while leaving their sum unchanged?
+
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+Include coordinate and surface size resolution when deciding whether a charge is inside. Omit positions whose classification is uncertain. Numerical quadrature error is different from measurement rounding. Near a charge, the field changes rapidly and cancellation can be difficult; an integration warning is not a physical violation of Gauss's law. Only an exact point charge on the surface creates the mathematical singularity.
 
 ## With calculus
 
@@ -96,4 +99,4 @@ For courses that use calculus. This section is not counted in the 75 minutes; do
 
 ## What to hand in
 
-Prelab answers, configurations and CSV, calculated fluxes, radial field comparison, uncertainty and answers to the questions (and to With calculus, if assigned). Identify simulated data.
+Prelab answers, configurations and CSV, calculated fluxes, radial field comparison, and answers to the questions (and to Uncertainty and With calculus, if assigned). Identify simulated data.

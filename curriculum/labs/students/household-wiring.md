@@ -71,10 +71,6 @@ Before each part, predict what the currents will be and whether the breaker or t
 3. For Part 3, explain which breakers trip and which do not, and why a 30 A breaker on 14 gauge wire is dangerous even though nothing trips. Use the heat per meter of wire.
 4. For Part 4, explain each result: which device acted, how large the current was, and whether the person was safe. Why does the ground wire make the breaker trip, and why can the GFCI act when the breaker cannot?
 
-## Uncertainty
-
-The simulation solves the circuit exactly, and readings are shown to three or four significant figures, so the results carry no measurement scatter. The approximations are in the model: appliances as fixed resistors (a lamp's filament has a much lower resistance when cold), copper at 20 °C (its resistance rises about 0.4 % per kelvin as it heats), an ideal 120 V supply, and fixed body resistances, where real values vary widely with contact area, moisture and the path through the body.
-
 ## Questions
 
 1. Why are household appliances connected in parallel and not in series?
@@ -82,6 +78,15 @@ The simulation solves the circuit exactly, and readings are shown to three or fo
 3. Why are GFCI outlets required in bathrooms and kitchens?
 4. Look at the Hot current and Neutral current columns of Part 1 and at your answer to Before the lab 5. What does the toaster take from the moving charges, and what does it not? In which Part 4 readings are the two currents not equal, and where does the difference go?
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The simulation solves the circuit exactly, and readings are shown to three or four significant figures, so the results carry no measurement scatter. The approximations are in the model: appliances as fixed resistors (a lamp's filament has a much lower resistance when cold), copper at 20 °C (its resistance rises about 0.4 % per kelvin as it heats), an ideal 120 V supply, and fixed body resistances, where real values vary widely with contact area, moisture and the path through the body.
+
+For the shortest wire in Part 2, say how well the resistance per meter is known, given that the outlet voltage is shown to four figures.
+
 ## What to hand in
 
-Prelab answers, a Data table copy for each part, the resistance per meter from Part 2, your explanations of each fault, and answers to the questions. Identify simulated data.
+Prelab answers, a Data table copy for each part, the resistance per meter from Part 2, your explanations of each fault, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

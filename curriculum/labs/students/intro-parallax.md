@@ -69,10 +69,6 @@ No hazards in the virtual lab.
 3. Part 3: the uncertainty in p stays the same while p shrinks as 1 ÷ d, so the uncertainty in the distance grows in step with the distance: ten times farther, ten times the uncertainty. For each instrument, use one of your readings to work out the distance at which its uncertainty is 10 %. Ground's readings say not measurable, so for Ground use its position uncertainty, 10 mas: the distance uncertainty is 10 % where the parallax is ten times that, 100 mas. That is how far each instrument can reach with good distances.
 4. The Sun is about 8 kpc from the center of our galaxy, and the galaxy's disk is about 30 kpc across. Which instrument can measure parallax distances across a good part of the galaxy? Can any of them reach another galaxy, such as Andromeda, about 2.5 million light years (760 kpc) away? What does this tell you about why astronomers need the other rungs of the distance ladder?
 
-## Uncertainty
-
-Your ruler's ends land a little to one side or the other of each image. Estimate how far off your ruler shift could be for Vega, in mas, and how much that changes the distance from your ruler. How does your ruler's uncertainty compare with the instrument's own position uncertainty?
-
 ## Questions
 
 1. Why do astronomers compare photos taken six months apart, rather than one month apart?
@@ -80,6 +76,13 @@ Your ruler's ends land a little to one side or the other of each image. Estimate
 3. Ancient Greek astronomers looked for stellar parallax and saw none, and many took that as proof that Earth does not move. The first stellar parallax was measured only in 1838, by Friedrich Bessel, for the star 61 Cygni (about 0.3″). Using what you found, explain both why the Greeks saw none and what their mistake was.
 4. Use your Part 1 readings again, this time to check Before the lab 4: give the parallaxes of Proxima Centauri, Sirius and Vega, and put the three stars in order of distance. Why can't how bright a star looks tell you how far away it is, while its parallax can?
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+Your ruler's ends land a little to one side or the other of each image. Estimate how far off your ruler shift could be for Vega, in mas, and how much that changes the distance from your ruler. How does your ruler's uncertainty compare with the instrument's own position uncertainty?
+
 ## What to hand in
 
-Prelab answers, the two copies of the Data table and the Part 2 graph, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.
+Prelab answers, the two copies of the Data table and the Part 2 graph, the answers to the analysis section and to the questions (and to Uncertainty, if assigned). Identify simulated data.

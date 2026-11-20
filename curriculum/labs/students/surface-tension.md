@@ -104,14 +104,10 @@ None for the virtual apparatus. Real mercury is toxic and its vapor is harmful: 
 
 ## Analysis
 
-1. Graph $$h$$ (vertical) against $$1/r$$ (horizontal) from Table 1, with a straight line fit. Give the slope with its uncertainty, in mm², and the intercept. Is the intercept zero within its uncertainty? Compare the slope with your answer to Before the lab 2.
+1. Graph $$h$$ (vertical) against $$1/r$$ (horizontal) from Table 1, with a straight line fit. Give the slope, in mm², and the intercept, and say whether the intercept is close to zero. Compare the slope with your answer to Before the lab 2.
 2. Find the surface tension of water from your slope $$s$$: $$\gamma = \rho g s/2$$, with $$\rho$$ = 1000 kg/m³ and $$g$$ = 9.81 m/s². Convert the slope to m² first and show the units. By what percentage does your $$\gamma$$ differ from the book's 0.0728 N/m?
 3. Graph $$h$$ against $$\cos\theta$$ from Table 2, with a straight line fit. What do the slope and intercept tell you? From the slope, find $$\gamma$$ again (now $$s = 2\gamma/\rho g r$$ with $$r$$ = 0.25 mm) and compare it with Analysis 2.
 4. Fill in the last two columns of Table 3: find $$\cos\theta$$ from each height, with $$r$$ = 0.25 mm in meters and $$h$$ in meters, and then $$\theta$$. Compare each with Table 11.4 (mercury on glass 140°, water on paraffin 107°). How far off are you, and why (think of how many figures the height readout gives)?
-
-## Uncertainty
-
-The demo gives heights with no scatter. In a real lab you would read each height with a ruler to about ±0.5 mm, and know each tube's radius to about ±0.01 mm. For your 0.100 mm tube and your 1.00 mm tube, work out the percentage uncertainty in $$h$$ and in $$r$$. Which one limits each tube's value of $$\gamma$$? Which tubes would you trust most in a real measurement, and why? Then: the formula holds only for tubes much narrower than the capillary length, 2.72 mm for water. Which of your tubes is least well described by it?
 
 ## Questions
 
@@ -120,6 +116,15 @@ The demo gives heights with no scatter. In a real lab you would read each height
 3. Height and time. Untick **Blind** and press the setup **Water climbs thin tubes**: note the readout **Time to 90% of the way, tube r**. Then press **Glycerin: slow climb** (glycerin: $$\gamma$$ = 0.0631 N/m, $$\rho$$ = 1260 kg/m³, about 1500 times as viscous as water; Time runs 100 times faster). First work out how high glycerin climbs in the 0.25 mm tube, then press **Play** and check. Which property of the liquid sets the final height, and which sets how long it takes to get there?
 4. Soap lowers water's surface tension to 0.0370 N/m; the demo keeps its density at 1000 kg/m³ and its contact angle on glass at 0°. Using your slope from Analysis 1, predict the height of soapy water in the 0.25 mm glass tube. Then press **Water climbs thin tubes**, choose **Soapy water** under **Liquid**, press **Play** and check. Does soap help or hinder water climbing a clean glass tube?
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The demo gives heights with no scatter. In a real lab you would read each height with a ruler to about ±0.5 mm, and know each tube's radius to about ±0.01 mm. For your 0.100 mm tube and your 1.00 mm tube, work out the percentage uncertainty in $$h$$ and in $$r$$. Which one limits each tube's value of $$\gamma$$? Which tubes would you trust most in a real measurement, and why? Then: the formula holds only for tubes much narrower than the capillary length, 2.72 mm for water. Which of your tubes is least well described by it?
+
+Give the slope of your $$h$$ against $$1/r$$ graph with its uncertainty, in mm², and say whether the intercept is zero within its uncertainty.
+
 ## What to hand in
 
-Your answers to Before the lab, Tables 1 to 3, the two graphs with their fits, Analysis 2 worked with units, your value of $$\gamma$$, and answers to the Uncertainty and Questions sections. Say that your data came from the simulated apparatus.
+Your answers to Before the lab, Tables 1 to 3, the two graphs with their fits, Analysis 2 worked with units, your value of $$\gamma$$, and answers to the Questions section (and to Uncertainty, if assigned). Say that your data came from the simulated apparatus.

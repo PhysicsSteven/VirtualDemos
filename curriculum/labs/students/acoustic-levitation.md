@@ -92,15 +92,18 @@ Add rows for each phase, drive and material. Record adjacent trap positions and 
 4. Compare the two bead radii. Does the modeled ratio of force to weight change?
 5. Compare how far foam and water sit below the nearest pressure node at 10 V.
 
-## Uncertainty
-
-Give intervals for trap positions and the hold/fall threshold. Use the phase control increment when estimating the slope uncertainty. Force readouts in the virtual lab are calculated values; keep those separate from quantities you locate yourself, such as trap positions and threshold brackets.
-
 ## Questions
 
 1. Why might a large real bead fail the radius cancellation prediction?
 2. Where did you place the foam bead and the water droplet in Before the lab 1, and where did the trap table put them? Explain the difference with a force balance on each bead: what sets how far below the node it must sit before the acoustic force can carry its weight?
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+Give intervals for trap positions and the hold/fall threshold. Use the phase control increment when estimating the slope uncertainty. Force readouts in the virtual lab are calculated values; keep those separate from quantities you locate yourself, such as trap positions and threshold brackets.
+
 ## What to hand in
 
-Prelab answers, data and screenshots, the spacing and phase graphs, the drive squared plot for steel, threshold and radius comparisons, uncertainty estimates, and answers to the questions. Identify which values were simulated readouts and which you located yourself.
+Prelab answers, data and screenshots, the spacing and phase graphs, the drive squared plot for steel, threshold and radius comparisons, and answers to the questions (and to Uncertainty, if assigned). Identify which values were simulated readouts and which you located yourself.

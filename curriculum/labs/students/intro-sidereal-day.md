@@ -78,15 +78,18 @@ A positive sundial reading means the sundial is ahead of the clock; a negative o
 7. In Part 3, on which of your dates is the sundial furthest ahead of the clock, and on which is it furthest behind? By how many minutes?
 8. In Part 3, using the Solar day − 24 h column, on which date was the solar day longest, and on which was it shortest? How far is the longest solar day from 24 hours, in seconds?
 
-## Uncertainty
-
-The demo computes the days from the planets' measured rotation and orbit periods, so a repeated reading gives the same numbers. The top view is not to scale. Your solar day in Analysis 2 comes from dividing two readings. If the time readout were rounded to the nearest hour, how far off could Earth's solar day be after one solar day? After ten solar days? Why does counting many days give a better answer?
-
 ## Questions
 
 1. In your Earth reading from Part 2, the Sidereal day is the time Earth takes to face the same star again, and the Time is one solar day by the clock. How much sooner does Earth face the same star again than it faces the Sun? Use that difference to say when the star in Before the lab 3 rises after 30 nights, and how close your answer there was. Explain why the constellations seen at 9 pm change through the year.
 2. Old clocks were set by sundials. Explain why a town that set its clock by its sundial on 11 February would find its clock about half an hour off from the sundial on 3 November.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The demo computes the days from the planets' measured rotation and orbit periods, so a repeated reading gives the same numbers. The top view is not to scale. Your solar day in Analysis 2 comes from dividing two readings. If the time readout were rounded to the nearest hour, how far off could Earth's solar day be after one solar day? After ten solar days? Why does counting many days give a better answer?
+
 ## What to hand in
 
-Prelab answers, the table copies, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.
+Prelab answers, the table copies, the answers to the analysis section and to the questions (and to Uncertainty, if assigned). Identify simulated data.

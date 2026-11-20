@@ -81,16 +81,19 @@ Work out $$\cos\theta_0$$ and $$T^2$$ (from the time for one turn round) yoursel
 2. Part 2: plot the turn per swing $$\delta$$ (°) against $$a\,b$$ (rad²) and fit a line. Compare the slope with Airy's 67.5° per rad². Which reading lies farthest from Airy's line, and why would the formula be least accurate there?
 3. Part 3: compare your measured narrowest and widest angles for the last setup with the exact ones. How far does the rosette turn in one swing, and how does that compare with the Airy formula for the same $$a$$ and $$b$$?
 
-## Uncertainty
-
-The measured times are shown to 0.001 s and the angles to 0.01°, and the integration error is far smaller. In Part 2 the turns are small, so the rounding of $$\delta$$ to 0.01° matters most for the smallest one: work out its relative uncertainty. Then use the residuals of your Part 2 fit to say whether the scatter about the line is about the size the rounding explains, or whether the points curve away from the line (a sign that the small swing formula is starting to fail).
-
 ## Questions
 
 1. In Part 2, which way did the ellipse turn compared with the direction the bob went round? Was your guess in Before the lab 2 right? Use the Ellipses that turn paragraph of the Background to explain why it turns that way.
 2. In the last setup of Part 3 the bob rises above the pivot's level, where gravity pulls it partly toward the pivot. The pull per kg along the rod is $$v^2/L + g\cos\theta$$. Use your widest angle and the tension you noted to explain why a bob on a string would still follow this path, and work out the slowest speed at that highest point for which a string would stay taut.
 3. A Foucault pendulum in a museum is built to swing in a plane, so that the slow turning of its plane shows Earth's rotation. Use your Part 2 result to explain why the museum must start it with no sideways push at all, and why a long wire and a small swing help.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The measured times are shown to 0.001 s and the angles to 0.01°, and the integration error is far smaller. In Part 2 the turns are small, so the rounding of $$\delta$$ to 0.01° matters most for the smallest one: work out its relative uncertainty. Give the slope and intercept of the Part 1 and Part 2 fits, and $$g$$, with their standard errors, and say whether each difference from the expected value is larger than its standard error. Then use the residuals of your Part 2 fit to say whether the scatter about the line is about the size the rounding explains, or whether the points curve away from the line (a sign that the small swing formula is starting to fail).
+
 ## What to hand in
 
-Prelab answers, the three data tables with the graphs and fits for Parts 1 and 2, your value of $$g$$, the slope compared with Airy's, the comparison for Part 3, the uncertainty estimate, and the answers to the questions. Identify simulated data.
+Prelab answers, the three data tables with the graphs and fits for Parts 1 and 2, your value of $$g$$, the slope compared with Airy's, the comparison for Part 3, and the answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

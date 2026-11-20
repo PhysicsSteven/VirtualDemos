@@ -105,16 +105,19 @@ The last row is the universe of Before the lab 4. Look at the curve in the Expan
 2. Between which two readings did dark energy overtake matter, and between which two did the expansion start speeding up? Check both against the readouts you wrote down in Part 1. At t = −6 Gyr, is the matter density more or less than twice the dark energy density, and is that consistent with the Speeding up? column?
 3. For z = 0.50, find how many times farther the supernova is in our universe than in a universe of matter alone, in two ways: from the two distances, and from the brightness with $$d \propto 1/\sqrt{\text{brightness}}$$. Do they agree?
 
-## Uncertainty
-
-By how many percent does your slope differ from Planck's $$\Omega_m$$ = 0.315? Which reading has the most say in the slope of your line, and why?
-
 ## Questions
 
 1. The Just barely universe has the same $$H_0$$ as ours but is younger. Some stars in the Milky Way are about 13 billion years old. What does your Age today column say about a universe of matter alone?
 2. In your own words, explain the chain from "distant supernovae look fainter than expected" to "the expansion is speeding up". Use your z = 0.50 numbers.
 3. Look back at your prediction in Before the lab 4 and at the last row of your Four universes table. Was the closed universe doomed to a Big Crunch? Use your Back in time table (what happens to each density as the universe grows) to explain why more dark energy than our universe has makes a closed universe expand forever, and why the Big Crunch universe falls back.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+By how many percent does your slope differ from Planck's $$\Omega_m$$ = 0.315? Which reading has the most say in the slope of your line, and why? Give the slope and the intercept with their standard errors.
+
 ## What to hand in
 
-Prelab answers, the three tables with the graph, its slope and intercept, and answers to the analysis and the questions. Identify simulated data: the expansion readings come from a model; the supernova points in the demo are real measurements.
+Prelab answers, the three tables with the graph, its slope and intercept, and answers to the analysis and the questions (and to Uncertainty, if assigned). Identify simulated data: the expansion readings come from a model; the supernova points in the demo are real measurements.

@@ -122,12 +122,14 @@ VDI18N.add('es', 'ws/induction-at-work', {
   "Para la Parte {#}, grafica el Voltaje del capacitor en función del Tiempo para las primeras seis filas (la luz funcionando sola). ¿A qué voltaje se acerca? Compara la energía entregada a la luz con la disminución de \\(\\tfrac12 CV^2\\). Explica a partir de la Parte {#} por qué agitar a {#} por segundo no puede mantener encendida la luz, mientras que {#} por segundo sí puede.",
 "For Part {#}, explain each observation from Faraday’s law: why the still pen vanishes, why a faster swipe gives taller pulses, and how the number can still be read from an uneven swipe.":
   "Para la Parte {#}, explica cada observación a partir de la ley de Faraday: por qué la pluma quieta desaparece, por qué un deslizamiento más rápido da pulsos más altos, y cómo el número aún puede leerse con un deslizamiento irregular.",
-"The model is exact and has no noise; the largest EMF depends a little on when in the cycle it is read, so read it after a few seconds of steady shaking. The magnet is treated as a point dipole, which overstates the flux when it is inside the coil; the diodes are given a fixed {#} V drop, and the coil’s inductance is left out. A real flashlight also loses energy to friction and to the magnet bouncing at the ends.":
-  "El modelo es exacto y no tiene ruido; la FEM máxima depende un poco de en qué momento del ciclo se lee, así que léela después de unos segundos de sacudir de forma constante. El imán se trata como un dipolo puntual, lo que sobrestima el flujo cuando está dentro de la bobina; a los diodos se les da una caída fija de {#} V, y la inductancia de la bobina se deja fuera. Una linterna real también pierde energía por fricción y por los rebotes del imán en los extremos.",
 "Which capacitor had the higher Capacitor voltage at {#} s in Part {#}, and is that what you expected in Before the lab {#}? Use \\(Q = CV\\) to explain it, and say which capacitor stores more energy at {#} s. Then say why a shake flashlight needs a capacitor (or battery) at all.":
   "¿Qué capacitor tuvo el mayor Voltaje del capacitor a {#} s en la Parte {#}, y es lo que esperabas en Antes del laboratorio {#}? Usa \\(Q = CV\\) para explicarlo y di qué capacitor almacena más energía a {#} s. Luego di por qué una linterna de sacudida necesita un capacitor (o una batería) en absoluto.",
-"Prelab answers, a Data table copy for each part, the graphs, your energy balance, your descriptions for Part {#}, and answers to the questions. Identify simulated data.":
-  "Respuestas del prelaboratorio, una copia de la tabla de datos para cada parte, las gráficas, tu balance de energía, tus descripciones de la Parte {#}, y respuestas a las preguntas. Identifica los datos simulados.",
+"For courses that treat measurement uncertainty. This section is not counted in the {#} minutes; do it when your instructor assigns it.":
+  "Para cursos que tratan la incertidumbre de medición. Esta sección no cuenta dentro de los {#} minutos; hazla cuando tu profesor la asigne.",
+"The model is exact and has no noise; the largest EMF depends a little on when in the cycle it is read, so read it after a few seconds of steady shaking. The magnet is treated as a point dipole, which overstates the flux when it is inside the coil; the diodes are given a fixed {#} V drop, and the coil’s inductance is left out. A real flashlight also loses energy to friction and to the magnet bouncing at the ends.":
+  "El modelo es exacto y no tiene ruido; la FEM máxima depende un poco de en qué momento del ciclo se lee, así que léela después de unos segundos de sacudir de forma constante. El imán se trata como un dipolo puntual, lo que sobrestima el flujo cuando está dentro de la bobina; a los diodos se les da una caída fija de {#} V, y la inductancia de la bobina se deja fuera. Una linterna real también pierde energía por fricción y por los rebotes del imán en los extremos.",
+"Prelab answers, a Data table copy for each part, the graphs, your energy balance, your descriptions for Part {#}, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.":
+  "Respuestas del prelaboratorio, una copia de la tabla de datos para cada parte, las gráficas, tu balance de energía, tus descripciones de la Parte {#}, y respuestas a las preguntas (y de Incertidumbre, si se asigna). Identifica los datos simulados.",
 "Amplitude of the shake":
   "Amplitud de la sacudida",
 "Remanence of the magnet":
@@ -136,6 +138,8 @@ VDI18N.add('es', 'ws/induction-at-work', {
   "Número de vueltas de la bobina",
 "Magnetic flux through the coil":
   "Flujo magnético a través de la bobina",
+"Charge on the capacitor":
+  "Carga en el capacitor",
 "Induced EMF":
   "FEM inducida",
 "Frequency of the shake":

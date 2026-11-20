@@ -68,10 +68,6 @@ Fill in λ × f for each reading: multiply the frequency by the wavelength, in m
 4. Convert the wavelength of your visible reading to nanometers (multiply meters by 10⁹). What color is it?
 5. Compare the wavelength of your 10²⁰ Hz gamma ray with the size of an atom, about 10⁻¹⁰ m. Which is smaller, and by how many times?
 
-## Uncertainty
-
-The demo's speed of light is computed from measured constants and agrees with the exact value to better than one part in a trillion, so λ × f should come out the same in every reading to all the digits shown. If one of your products differs, where could the difference come from? (Think about rounding when you multiply.)
-
 ## Questions
 
 1. Hydrogen gas in space gives off radio waves with a wavelength of 21.1 cm (0.211 m). What is their frequency? Radio astronomers map our galaxy with them.
@@ -80,6 +76,13 @@ The demo's speed of light is computed from measured constants and agrees with th
 4. Your eyes see only a tiny slice of the spectrum. Drag the Frequency f slider to its two ends: roughly how many powers of ten in frequency does the whole spectrum in the demo span? Then find the two frequencies where the Band readout changes into and out of visible: how wide is the visible slice?
 5. Before the lab 4 asked whether a flare's radio waves or its X-rays reach Earth first. What does the λ × f column give for your 10⁸ Hz radio reading and your 10¹⁸ Hz X-ray reading, and what does that say about your answer? Using the Background, explain why waves with such different wavelengths and frequencies all travel at the same speed in empty space.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The demo's speed of light is computed from measured constants and agrees with the exact value to better than one part in a trillion, so λ × f should come out the same in every reading to all the digits shown. If one of your products differs, where could the difference come from? (Think about rounding when you multiply.)
+
 ## What to hand in
 
-Prelab answers, the table, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.
+Prelab answers, the table, the answers to the analysis section and to the questions (and to Uncertainty, if assigned). Identify simulated data.

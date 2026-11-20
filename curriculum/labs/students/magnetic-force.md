@@ -93,12 +93,8 @@ The orbit rows fill this table: $$v$$, $$B$$, $$r$$, Turns, Elapsed time and $$T
 
 1. Fit $$r$$ against $$v$$ and infer $$\lvert q\rvert/m$$ from the slope and $$B$$. Compare with the known particle ratio.
 2. Compare your mean period with $$2\pi m/(\lvert q\rvert B)$$.
-3. From the smallest trapped pitch angle $$\alpha^*$$ at 0.20 T, estimate the mirror ratio $$B_{\max}/B_0 = 1/\sin^2\alpha^*$$ and the range it could have, given that 1° smaller escapes. Turn Blind off and compare with **Mirror ratio B<sub>max</sub>/B<sub>0</sub>** and the loss cone.
+3. From the smallest trapped pitch angle $$\alpha^*$$ at 0.20 T, estimate the mirror ratio $$B_{\max}/B_0 = 1/\sin^2\alpha^*$$. Turn Blind off and compare with **Mirror ratio B<sub>max</sub>/B<sub>0</sub>** and the loss cone.
 4. Compare the bounce periods. How does the bounce period change as $$\alpha$$ approaches the loss cone?
-
-## Uncertainty
-
-Estimate radius uncertainty from the ruler's screen resolution and placement. Timing several turns reduces the fractional error from starting and stopping; use simulation time rather than wall clock time. Record that the data are simulated.
 
 ## Questions
 
@@ -106,6 +102,15 @@ Estimate radius uncertainty from the ruler's screen resolution and placement. Ti
 2. Earth's field traps protons and electrons in the Van Allen belts. Why do charged particles reach the atmosphere mainly near the poles?
 3. When you added v∥, what happened to the diameter and the 5 turn time? Check them against Before the lab 4, then use the direction of $$q\mathbf v\times\mathbf B$$ to explain why the motion along $$\mathbf B$$ has the effect it does on the circle and the period.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+Estimate radius uncertainty from the ruler's screen resolution and placement. Timing several turns reduces the fractional error from starting and stopping; use simulation time rather than wall clock time. Record that the data are simulated.
+
+Give $$\lvert q\rvert/m$$ with the standard error of the slope, and say whether it agrees with the known value within that error. Say whether your mean period agrees with $$2\pi m/(\lvert q\rvert B)$$ within the rounding of the timer reading. Give the range the mirror ratio $$B_{\max}/B_0$$ could have, given that 1° smaller escapes.
+
 ## What to hand in
 
-Prelab answers, orbit CSV, bottle table with the smallest trapped pitch angle and mirror ratio, the graph, inferred $$\lvert q\rvert/m$$ with uncertainty and answers to the questions.
+Prelab answers, orbit CSV, bottle table with the smallest trapped pitch angle and mirror ratio, the graph, inferred $$\lvert q\rvert/m$$ and answers to the questions (and to Uncertainty, if assigned).

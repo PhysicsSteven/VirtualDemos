@@ -89,15 +89,18 @@ For Part 4, these are the coefficients of four materials the mystery panels migh
 3. For Part 3, find the absorption of the audience in each band from the difference in $$A$$, and the absorption per person (2 people per m²). Why is the audience much less absorbing at 125 Hz?
 4. For Part 4, find the mystery panels' absorption in each band: the difference between the room's $$A$$ with and without them is $$S_p(\alpha_p - \alpha_{\text{wall}})$$, with $$S_p$$ the panels' area (20 × 0.72 m²) and $$\alpha_{\text{wall}}$$ the coefficient of the walls they cover (the Walls, ceiling row of the Absorption coefficients table, in each band). Which material is it?
 
-## Uncertainty
-
-The ray trace uses a finite number of rays, so a measured $$T$$ carries a scatter of a few percent; the demo always gives the same $$T$$ for the same room, so repeating a reading does not show it. Compare the bare room at 500 Hz in Parts 1 and 2 (different setups) to judge it. On a real measurement add background noise (which limits the range of the decay), the room not being evenly filled with sound, air absorption at high frequencies, and the coefficients of real materials varying with how they are mounted.
-
 ## Questions
 
 1. A lecture room sounds muddy. Name two changes that would shorten $$T$$, and the bands they work in.
 2. Before the lab 4 compared the bare hall with the bare room at 125 Hz, made of the same materials. Take the measured $$T$$ of each from Parts 1 and 3 and their ratio. Using Sabine's formula, show what sets that ratio when every surface has the same $$\alpha$$, and explain the result, given that the hall has more surface as well as more air. Concert halls ring longer than lecture rooms: why does music want that, and how does a hall's size help?
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The ray trace uses a finite number of rays, so a measured $$T$$ carries a scatter of a few percent; the demo always gives the same $$T$$ for the same room, so repeating a reading does not show it. Compare the bare room at 500 Hz in Parts 1 and 2 (different setups) to judge it. Give the slope and intercept of the Part 2 fit with their standard errors, and say whether the line passes through the origin within the uncertainty of the intercept. On a real measurement add background noise (which limits the range of the decay), the room not being evenly filled with sound, air absorption at high frequencies, and the coefficients of real materials varying with how they are mounted.
+
 ## What to hand in
 
-Prelab answers, a Data table copy for each part with its last three columns filled in as the parts say, the graph and fit for Part 2, your audience and mystery panel coefficients, and answers to the questions. Identify simulated data.
+Prelab answers, a Data table copy for each part with its last three columns filled in as the parts say, the graph and fit for Part 2, your audience and mystery panel coefficients, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

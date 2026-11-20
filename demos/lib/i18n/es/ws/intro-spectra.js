@@ -72,8 +72,6 @@ VDI18N.add('es', 'ws/intro-spectra', {
   "En la Parte {#}, ¿qué elementos encontraste en la estrella misteriosa? Para cada línea que registraste, nombra el elemento que la produjo.",
 "One of the elements in the mystery star is hydrogen. Which of your recorded lines matches a hydrogen line from Part {#}?":
   "Uno de los elementos de la estrella misteriosa es el hidrógeno. ¿Cuál de tus líneas registradas coincide con una línea del hidrógeno de la Parte {#}?",
-"The wavelengths in the demo are measured values from NIST, given to a hundredth of a nanometer or better. A real hand spectroscope can be read to about {#} to {#} nm. Would that be good enough to tell sodium’s two yellow lines apart? Would it be good enough to tell sodium’s lines from hydrogen’s red line? Explain.":
-  "Las longitudes de onda de la demo son valores medidos del NIST, dados con una precisión de una centésima de nanómetro o mejor. Un espectroscopio de mano real se puede leer con una precisión de unos {#} a {#} nm. ¿Bastaría eso para distinguir las dos líneas amarillas del sodio? ¿Bastaría para distinguir las líneas del sodio de la línea roja del hidrógeno? Explica.",
 "Sunlight shows thousands of dark lines. Which of Kirchhoff’s three kinds of spectrum is it, and what does that tell you about the layers of the Sun’s surface?":
   "La luz del Sol muestra miles de líneas oscuras. ¿Cuál de los tres tipos de espectro de Kirchhoff es, y qué te dice eso sobre las capas de la superficie del Sol?",
 "Helium was discovered in the Sun’s spectrum in {#}, before it was found on Earth, and it is named after the Greek word for the Sun. How could anyone know an element was there before it had ever been collected?":
@@ -84,8 +82,12 @@ VDI18N.add('es', 'ws/intro-spectra', {
   "¿Por qué el filamento de un foco da un espectro continuo, sin líneas, aunque está hecho de átomos de un solo elemento, el tungsteno?",
 "Look at your Part {#} notes: with which source button did hydrogen’s strip show dark lines (Continuous is the lamp alone, Absorption the lamp shining through cool hydrogen)? Was hydrogen one of the mystery star’s elements in Part {#} when Check said you had them all? Does that bear out what you concluded in Before the lab {#}? Use the electrons’ energy levels to explain why a dark line at one of hydrogen’s wavelengths shows that hydrogen is there rather than missing.":
   "Mira tus notas de la Parte {#}: ¿con qué botón de fuente mostró la franja del hidrógeno líneas oscuras (Continuo es la lámpara sola, Absorción es la lámpara brillando a través de hidrógeno frío)? ¿Era el hidrógeno uno de los elementos de la estrella misteriosa en la Parte {#} cuando Comprobar dijo que los tenías todos? ¿Confirma eso lo que concluiste en Antes del laboratorio {#}? Usa los niveles de energía de los electrones para explicar por qué una línea oscura en una de las longitudes de onda del hidrógeno muestra que el hidrógeno está presente y no ausente.",
-"Prelab answers, the three table copies, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.":
-  "Respuestas previas al laboratorio, las tres copias de la tabla, las respuestas de las secciones de análisis e incertidumbre, y las respuestas a las preguntas. Identifica los datos simulados.",
+"For courses that treat measurement uncertainty. This section is not counted in the {#} minutes; do it when your instructor assigns it.":
+  "Para cursos que tratan la incertidumbre de medición. Esta sección no cuenta dentro de los {#} minutos; hazla cuando tu profesor la asigne.",
+"The wavelengths in the demo are measured values from NIST, given to a hundredth of a nanometer or better. A real hand spectroscope can be read to about {#} to {#} nm. Would that be good enough to tell sodium’s two yellow lines apart? Would it be good enough to tell sodium’s lines from hydrogen’s red line? Explain.":
+  "Las longitudes de onda de la demo son valores medidos del NIST, dados con una precisión de una centésima de nanómetro o mejor. Un espectroscopio de mano real se puede leer con una precisión de unos {#} a {#} nm. ¿Bastaría eso para distinguir las dos líneas amarillas del sodio? ¿Bastaría para distinguir las líneas del sodio de la línea roja del hidrógeno? Explica.",
+"Prelab answers, the three table copies, the answers to the analysis section and to the questions (and to Uncertainty, if assigned). Identify simulated data.":
+  "Respuestas previas al laboratorio, las tres copias de la tabla, las respuestas de la sección de análisis y de las preguntas (y de Incertidumbre, si se asigna). Identifica los datos simulados.",
 "Column E, row {#}":
   "Columna E, fila {#}",
 "Heading of column E":

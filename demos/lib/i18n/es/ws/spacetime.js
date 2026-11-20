@@ -102,14 +102,16 @@ VDI18N.add('es', 'ws/spacetime', {
   "¿A qué rapidez son simultáneos A y B de la configuración Causalidad? Compara con \\(\\beta = c\\Delta t/\\Delta x\\).",
 "How long is the rod in S at {#}c and at {#}c? Compare with \\(L_0/\\gamma\\).":
   "¿Cuánto mide la varilla en S a {#}c y a {#}c? Compara con \\(L_0/\\gamma\\).",
-"The S′ coordinates are given to {#} ly. How large an uncertainty does that put on \\((ct')^2\\) for your largest value of \\(ct'\\)? Compare it with the scatter of your points about the line and with the uncertainty of the intercept.":
-  "Las coordenadas en S′ se dan con resolución de {#} a. l. ¿Qué incertidumbre le da eso a \\((ct')^2\\) para tu mayor valor de \\(ct'\\)? Compárala con la dispersión de tus puntos alrededor de la recta y con la incertidumbre de la ordenada al origen.",
 "S says the clock in S′ runs slow, and S′ says the clock in S runs slow. How can both be right? Use the lines of simultaneity in your answer.":
   "S dice que el reloj de S′ se atrasa, y S′ dice que el reloj de S se atrasa. ¿Cómo pueden tener razón ambos? Usa las líneas de simultaneidad en tu respuesta.",
 "Look back at Before the lab {#}. In the Causality scenario, what did cΔt′ do for A and B, and for A and C, as β went across its whole range? Use \\(s^2\\) for each pair and the light cone of A to explain why one order can be reversed and the other cannot, and what a reversal of A and C would mean if A caused C.":
   "Mira de nuevo Antes del laboratorio {#}. En el escenario Causalidad, ¿qué hizo cΔt′ para A y B, y para A y C, al recorrer β todo su intervalo? Usa \\(s^2\\) para cada par y el cono de luz de A para explicar por qué un orden puede invertirse y el otro no, y qué significaría una inversión de A y C si A causara C.",
-"Prelab answers, the table copies with their graphs and fits, \\(s^2\\) for each event with uncertainties, the dilation, order and length results, and answers to the questions. Identify simulated data.":
-  "Respuestas del prelaboratorio, las copias de la tabla con sus gráficas y ajustes, \\(s^2\\) para cada evento con incertidumbres, los resultados de la dilatación, el orden y la longitud, y las respuestas a las preguntas. Identifica los datos simulados.",
+"For courses that treat measurement uncertainty. This section is not counted in the {#} minutes; do it when your instructor assigns it.":
+  "Para cursos que tratan la incertidumbre de medición. Esta sección no cuenta dentro de los {#} minutos; hazla cuando tu profesor la asigne.",
+"The S′ coordinates are given to {#} ly. How large an uncertainty does that put on \\((ct')^2\\) for your largest value of \\(ct'\\)? Compare it with the scatter of your points about the line and with the uncertainty of the intercept. Give \\(s^2\\) for each event with its uncertainty.":
+  "Las coordenadas en S′ se dan con resolución de {#} a. l. ¿Qué incertidumbre le da eso a \\((ct')^2\\) para tu mayor valor de \\(ct'\\)? Compárala con la dispersión de tus puntos alrededor de la recta y con la incertidumbre de la ordenada al origen. Da \\(s^2\\) de cada evento con su incertidumbre.",
+"Prelab answers, the table copies with their graphs and fits, \\(s^2\\) for each event, the dilation, order and length results, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.":
+  "Respuestas del prelaboratorio, las copias de la tabla con sus gráficas y ajustes, \\(s^2\\) para cada evento, los resultados de la dilatación, el orden y la longitud, y las respuestas a las preguntas (y de Incertidumbre, si se asigna). Identifica los datos simulados.",
 "Length of the rod measured in the other frame":
   "Longitud de la varilla medida en el otro marco",
 "Proper length of the rod":

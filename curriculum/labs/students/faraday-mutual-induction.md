@@ -64,16 +64,19 @@ Use a separate copy for each run and state which current is recorded. Keep both 
 1. For the open secondary, calculate $$M = \text{emf}_\text{peak}/(2\pi f I_{1,\text{peak}})$$. Compare frequency scans and separations. Explain why the air core pair need not obey an ideal transformer's turns ratio.
 2. For the sliding bar, infer $$B$$ from the emf speed slope. Compare $$\lvert F\rvert v$$, $$\lvert \text{emf}\, I\rvert$$ and $$I^2 R$$ during steady motion.
 
-## Uncertainty
-
-Use time spacing, peak bracketing and readout rounding to estimate amplitude uncertainty. Avoid fitting only one sampled peak. For $$M$$, include uncertainties in emf amplitude, primary current amplitude and frequency. The sliding bar emf and current are interval averages; the flux is an endpoint value. State your sampling interval and check whether reducing it changes the result.
-
 ## Questions
 
 1. Why does closing the secondary change the primary current?
 2. Where does the resistor's heat energy come from in each setup?
 3. From 20 Hz to 100 Hz, how did the secondary emf amplitude change while the primary current fell? Was that what you said in Before the lab 2? Use $$\mathcal E_2 = -M\,dI_1/dt$$ to explain how it depends on both the primary current and the frequency.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+Use time spacing, peak bracketing and readout rounding to estimate amplitude uncertainty. Avoid fitting only one sampled peak. For $$M$$, include uncertainties in emf amplitude, primary current amplitude and frequency. The sliding bar emf and current are interval averages; the flux is an endpoint value. State your sampling interval and check whether reducing it changes the result.
+
 ## What to hand in
 
-Prelab answer, settings and CSV, mutual inductance estimates, motional emf and energy calculations, uncertainty and answers to the questions. Identify simulated data.
+Prelab answer, settings and CSV, mutual inductance estimates, motional emf and energy calculations, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

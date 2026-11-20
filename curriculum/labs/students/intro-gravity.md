@@ -66,10 +66,6 @@ No hazards in the virtual lab.
 5. Compare the scale reading with gravity alone at each height. At which place does the scale read almost zero? A satellite at that height goes around Earth exactly once a day, the same as the ground turns. What does that have to do with the scale reading?
 6. For the other worlds (the second table copy), use the scale reading g to find the weight of a 70 kg astronaut on Earth, the Moon and Mars. How many times lighter is the astronaut on the Moon, and on Mars?
 
-## Uncertainty
-
-The demo computes its readouts from Newton's law, so a repeated reading gives the same numbers. At sea level on Earth, compare the demo's scale reading at the equator with its Real Earth at sea level (WGS 84) readout. What does the demo leave out that could explain the difference?
-
 ## Questions
 
 1. An astronaut on the space station floats around the cabin, yet your Space station reading shows that most of Earth's gravity is still there. How does that compare with your first guess in Before the lab 2? Explain why the astronaut floats. (Hint: the station is moving sideways at about 7.7 km/s.)
@@ -77,6 +73,15 @@ The demo computes its readouts from Newton's law, so a repeated reading gives th
 3. The Moon is 384,400 km from Earth's center, about 60.3 Earth radii. Use the inverse square law to find Earth's gravity at the Moon's distance. Newton compared this with how fast the Moon curves around Earth each month and found they agree: the same gravity that drops an apple holds the Moon in its orbit.
 4. Mars has 0.107 times Earth's mass and 0.532 times its radius. Gravity at a planet's surface goes as its mass divided by its radius squared. Predict Mars's surface gravity as a fraction of Earth's, then compare with your measured readings.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The demo computes its readouts from Newton's law, so a repeated reading gives the same numbers. At sea level on Earth, compare the demo's scale reading at the equator with its Real Earth at sea level (WGS 84) readout. What does the demo leave out that could explain the difference?
+
+For the graph of gravity alone against $$(6.371 / r)^2$$, give the slope and intercept with their standard errors.
+
 ## What to hand in
 
-Prelab answers, the two table copies and the graph, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.
+Prelab answers, the two table copies and the graph, the answers to the analysis section and to the questions (and to Uncertainty, if assigned). Identify simulated data.

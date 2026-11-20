@@ -76,15 +76,18 @@ Table 1. Lights and cone signals.
 5. For the filters, list Y against the filter width (the distance between the two edges named in the Light column). Explain how Y changes as the filter narrows, and why daylight through the red filter is dimmer than the incandescent bulb through it.
 6. For the colored filters: is the sum of Y through the red, green and blue filters equal to Y with no filter? Compare the yellow filter with the red and green filters added. Compare yellow then cyan with the green filter alone, and explain why stacked filters multiply their transmissions while lamps add. Why does red then green, or the red lamp through the green filter, give nothing at all?
 
-## Uncertainty
-
-The demo's numbers come from tabulated color matching functions and a model of the lamps, so they carry no random scatter. Name two things that would make real cone signals differ from these numbers for a real person (for example, how cone sensitivities vary between people).
-
 ## Questions
 
 1. What color did the red and green lamps make together, and what did you expect in Before the lab 1? Use the L, M and S of that reading to explain it. Why does mixing red and green paint give a dark brown instead?
 2. Magenta appears in no rainbow. Use the cone signals of red + blue to explain why no single wavelength looks magenta.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The demo's numbers come from tabulated color matching functions and a model of the lamps, so they carry no random scatter. Name two things that would make real cone signals differ from these numbers for a real person (for example, how cone sensitivities vary between people).
+
 ## What to hand in
 
-Prelab answers, the table copies with their graphs, the additivity check, the metamer comparison, the colored filter comparisons, and answers to the questions. Identify simulated data.
+Prelab answers, the table copies with their graphs, the additivity check, the metamer comparison, the colored filter comparisons, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

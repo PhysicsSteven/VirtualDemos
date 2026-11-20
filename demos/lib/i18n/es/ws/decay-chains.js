@@ -106,14 +106,16 @@ VDI18N.add('es', 'ws/decay-chains', {
   "Para la cadena del telurio (segunda copia), grafica \\(R_D/R_P\\) (vertical) en función de \\(t\\) (horizontal). ¿Dónde se estabiliza, y cuánto tarda? Compara con la pregunta {#} de Antes del laboratorio.",
 "After the ratio settles, graph \\(\\ln N_D\\) (vertical) against \\(t\\) (horizontal) for those tellurium rows. What half life does its slope give, and whose half life is it?":
   "Después de que la razón se estabilice, grafica \\(\\ln N_D\\) (vertical) en función de \\(t\\) (horizontal) para esas filas del telurio. ¿Qué vida media da su pendiente, y de quién es esa vida media?",
-"The counts are random. Estimate the uncertainty of your peak time from the spread of \\(N_D\\) near the peak (about \\(\\sqrt{N_D}\\)), and of the settled activity ratio from the scatter of its last few values.":
-  "Los conteos son aleatorios. Estima la incertidumbre de tu tiempo del máximo a partir de la dispersión de \\(N_D\\) cerca del máximo (más o menos \\(\\sqrt{N_D}\\)), y la de la razón de actividades estabilizada a partir de la dispersión de sus últimos valores.",
 "Hospitals get technetium 99m ({#} h) from a “generator” of molybdenum {#} ({#} h). Use transient equilibrium to explain how the generator works.":
   "Los hospitales obtienen tecnecio 99m ({#} h) de un “generador” de molibdeno {#} ({#} h). Usa el equilibrio transitorio para explicar cómo funciona el generador.",
 "Radon {#} ({#} d) comes from radium {#} ({#} yr). What is the ratio of their activities in an old rock, and why?":
   "El radón {#} ({#} d) viene del radio {#} ({#} años). ¿Cuál es la razón de sus actividades en una roca antigua, y por qué?",
 "Read the daughter count at {#} h in your tellurium copy and set it beside your guess in Before the lab {#}. The iodine {#} has been through about {#} of its half lives by then, so why is any of it left, and why that many? Use \\(dN_D/dt = \\lambda_P N_P - \\lambda_D N_D\\) and the half life of the tellurium.":
   "Lee el conteo del hijo a {#} h en tu copia de telurio y compáralo con tu conjetura de Antes del laboratorio {#}. El yodo {#} ha pasado por casi {#} de sus vidas medias para entonces, así que ¿por qué queda algo de él, y por qué esa cantidad? Usa \\(dN_D/dt = \\lambda_P N_P - \\lambda_D N_D\\) y la vida media del telurio.",
+"For courses that treat measurement uncertainty. This section is not counted in the {#} minutes; do it when your instructor assigns it.":
+  "Para cursos que tratan la incertidumbre de medición. Esta sección no cuenta dentro de los {#} minutos; hazla cuando tu profesor la asigne.",
+"The counts are random. Estimate the uncertainty of your peak time from the spread of \\(N_D\\) near the peak (about \\(\\sqrt{N_D}\\)), and of the settled activity ratio from the scatter of its last few values.":
+  "Los conteos son aleatorios. Estima la incertidumbre de tu tiempo del máximo a partir de la dispersión de \\(N_D\\) cerca del máximo (más o menos \\(\\sqrt{N_D}\\)), y la de la razón de actividades estabilizada a partir de la dispersión de sus últimos valores.",
 "For courses that use calculus. This section is not counted in the {#} minutes; do it when your instructor assigns it.":
   "Para cursos que usan cálculo. Esta sección no cuenta dentro de los {#} minutos; hazla cuando tu profesor la asigne.",
 "Differentiate Bateman’s solution for \\(N_D\\) and show that it satisfies \\(dN_D/dt = \\lambda_P N_P - \\lambda_D N_D\\) with \\(N_P = N_0e^{-\\lambda_P t}\\), and that it gives \\(N_D = 0\\) at \\(t = 0\\).":
@@ -122,8 +124,8 @@ VDI18N.add('es', 'ws/decay-chains', {
   "Iguala a cero tu derivada de \\(N_D\\) y deduce \\(t_{\\max} = \\ln(\\lambda_D/\\lambda_P)/(\\lambda_D - \\lambda_P)\\). Calcúlalo para la cadena del bismuto y compáralo con el tiempo de tu mayor \\(N_D\\) en la primera copia.",
 "In the bismuth copy, estimate \\(dN_D/dt\\) at {#} d from your {#} d and {#} d rows (their difference in \\(N_D\\) over the {#} d between them), and compare it with \\(\\lambda_P N_P - \\lambda_D N_D\\) from your {#} d row. Do the same at {#} d with your {#} d and {#} d rows. Why is the agreement worse at {#} d?":
   "En la copia del bismuto, estima \\(dN_D/dt\\) en {#} d a partir de tus filas de {#} d y {#} d (su diferencia en \\(N_D\\) entre los {#} d que las separan) y compárala con \\(\\lambda_P N_P - \\lambda_D N_D\\) de tu fila de {#} d. Haz lo mismo en {#} d con tus filas de {#} d y {#} d. ¿Por qué el acuerdo es peor en {#} d?",
-"Prelab answers, both table copies with their graphs, the peak time and settled ratio with uncertainties, and answers to the questions (and to With calculus, if assigned). Identify simulated data.":
-  "Respuestas del prelaboratorio, ambas copias de la tabla con sus gráficas, el tiempo del máximo y el cociente estable con incertidumbres, y las respuestas a las preguntas (y a Con cálculo, si se asignó). Identifica los datos simulados.",
+"Prelab answers, both table copies with their graphs, the peak time and settled ratio, and answers to the questions (and to Uncertainty and With calculus, if assigned). Identify simulated data.":
+  "Respuestas del prelaboratorio, ambas copias de la tabla con sus gráficas, el tiempo del máximo y el cociente estable, y las respuestas a las preguntas (y de Incertidumbre y Con cálculo, si se asignan). Identifica los datos simulados.",
 "Number of parent nuclei at the start":
   "Número de núcleos madre al inicio",
 "Number of daughter nuclei":

@@ -87,14 +87,17 @@ Use one copy of the table for Parts 1 and 2 together and one for Part 3, and say
 5. Write down your Part 4 readings and compare each with $$\sin^2\theta$$. In which direction does the antenna send nothing, and in which does it send the most?
 6. Part 5: graph $$\langle E^2\rangle$$ against $$1/r$$ for the one wire readings. Is $$r\langle E^2\rangle$$ the same at every distance? Explain it with the energy a long wire sends out spreading over ever larger circles, and say how a point source's intensity would fall instead. Compare the two wires in phase with one wire at the same distance (read it off your graph; what factor do you expect when two equal waves arrive in step?).
 
-## Uncertainty
-
-The demo's values are exact for its model, so the scatter about your lines comes only from the rounding of the readings. Use the standard error of the slope in Analysis 1 to say to how many significant figures your $$c$$ is known. In a real measurement of radiation pressure (a Nichols radiometer), what effects would make the measured force differ from $$I/c$$?
-
 ## Questions
 
 1. Put your 1000 V/m readings at 10 GHz and in visible light side by side: how do their $$I$$ and $$B_0$$ compare, and how does that square with Before the lab 2? Use $$I = \tfrac{1}{2}c\varepsilon_0 E_0^2$$ and $$E = cB$$ to say what the frequency does and does not change. Where do the visible light rows fall in Analysis 1, and why?
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The demo's values are exact for its model, so the scatter about your lines comes only from the rounding of the readings. Report the slope and intercept of the fits in Analysis 1 and 2 with their standard errors, and say whether your $$c$$ agrees with 2.998 × 10⁸ m/s within its standard error. Use the standard error of the slope in Analysis 1 to say to how many significant figures your $$c$$ is known. In a real measurement of radiation pressure (a Nichols radiometer), what effects would make the measured force differ from $$I/c$$?
+
 ## What to hand in
 
-Prelab answers, both table copies with their graphs and fits, your values of $$c$$, $$\varepsilon_0$$ and $$\mu_0$$ with uncertainties and comparisons, the solar sail result, the antenna readings, the In a plane table with its graph, and answers to the questions. Identify simulated data.
+Prelab answers, both table copies with their graphs and fits, your values of $$c$$, $$\varepsilon_0$$ and $$\mu_0$$ with comparisons, the solar sail result, the antenna readings, the In a plane table with its graph, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

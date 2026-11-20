@@ -66,10 +66,6 @@ No hazards in the virtual lab.
 6. Compare your ratios from Analysis 4 and 5. Which effect is bigger, the tilt or the distance? By about how many times?
 7. On June 21, where on Earth is the noon Sun highest, of the five places you measured? Which places have 24 hours of daylight, and which have none?
 
-## Uncertainty
-
-The demo computes its readouts from the geometry of the orbit and the tilt, so a repeated reading gives exactly the same numbers. The uncertainty is in what the model leaves out. Name one thing about the real Earth (its air, clouds, oceans or the size of the Sun's disk) that the demo does not include, and say whether it would make the real day longer or shorter, or the sunlight at the ground stronger or weaker.
-
 ## Questions
 
 1. Look at your January 3 and July 4 readings at Ruston. On which date was Earth closer to the Sun, and on which did Ruston get more daily sunlight? How did your second guess in Before the lab 1 do? Use the tilt and Why height matters to explain the difference. If distance caused the seasons, what season would Australia have in January? What does it actually have, and what does that tell you?
@@ -77,6 +73,13 @@ The demo computes its readouts from the geometry of the orbit and the tilt, so a
 3. The longest day at Ruston is in June, but the hottest weather usually comes in July and August. The demo shows sunlight, not temperature. What could explain the delay?
 4. Shine a flashlight straight down on a sheet of paper, then tilt the paper. Use what happens to the bright spot to explain why a low Sun warms the ground less than a high Sun.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The demo computes its readouts from the geometry of the orbit and the tilt, so a repeated reading gives exactly the same numbers. The uncertainty is in what the model leaves out. Name one thing about the real Earth (its air, clouds, oceans or the size of the Sun's disk) that the demo does not include, and say whether it would make the real day longer or shorter, or the sunlight at the ground stronger or weaker.
+
 ## What to hand in
 
-Prelab answers, the three table copies, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.
+Prelab answers, the three table copies, the answers to the analysis section and to the questions (and to Uncertainty, if assigned). Identify simulated data.

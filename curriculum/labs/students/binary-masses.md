@@ -90,10 +90,6 @@ The link opens the demo with **Two stars** pressed (at the top, next to **Star a
 3. Graph $$v_2$$ (vertical) against $$v_1$$ (horizontal) for all ten readings in Table 2. Is it a straight line through the origin? Find its slope. By the seesaw, the slope is $$-M_1/M_2$$: what mass ratio does it give, and does it agree with $$a_2/a_1$$ for the Spectroscopic pair in Table 1?
 4. In Table 2, how far does $$\lambda_1$$ swing from 656.28 nm at most, and how fast is star 1 moving then? Compare with Before the lab 3 and with the largest $$v_1$$ in Table 2.
 
-## Uncertainty
-
-The separation of a visual binary in AU comes from its angle on the sky times its distance from us, so a distance off by 2% makes $$a$$ off by 2%. By about how many percent is the total mass $$a^3/P^2$$ then off? Why does a small error in $$a$$ matter more than the same error in $$P$$?
-
 ## Questions
 
 1. Alpha Centauri takes about 80 years to go around, and the Spectroscopic pair about a week. Use $$a$$ from Table 1 to explain the difference, and why we can see one pair apart and not the other.
@@ -101,6 +97,13 @@ The separation of a visual binary in AU comes from its angle on the sky times it
 3. In the Sun and red dwarf pair, how far is the Sun's center from the center of mass, in AU? The Sun's radius is 0.00465 AU. Is the center of mass inside the Sun or outside it?
 4. Look back at your prediction in Before the lab 4. In the Seesaw pair, which star was on the bigger circle and moved faster, and what do $$a_1$$ and $$a_2$$ in Table 1 and the slope of your graph say? Each star pulls on the other with a force of the same size; explain why the lighter star still does more of the moving.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The separation of a visual binary in AU comes from its angle on the sky times its distance from us, so a distance off by 2% makes $$a$$ off by 2%. By about how many percent is the total mass $$a^3/P^2$$ then off? Why does a small error in $$a$$ matter more than the same error in $$P$$?
+
 ## What to hand in
 
-Answers to Before the lab, the two tables with the graph and its slope, and your answers to Analysis, Uncertainty and Questions. Identify simulated data: every reading in this lab is simulated, except that Alpha Centauri's orbit and masses are measured values.
+Answers to Before the lab, the two tables with the graph and its slope, and your answers to Analysis and Questions (and to Uncertainty, if assigned). Identify simulated data: every reading in this lab is simulated, except that Alpha Centauri's orbit and masses are measured values.

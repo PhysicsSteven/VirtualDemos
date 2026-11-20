@@ -84,8 +84,6 @@ VDI18N.add('es', 'ws/intro-gravity', {
   "Compara la lectura de la báscula con la gravedad sola a cada altura. ¿En qué lugar marca la báscula casi cero? Un satélite a esa altura da la vuelta a la Tierra exactamente una vez al día, igual que gira el suelo. ¿Qué tiene que ver eso con la lectura de la báscula?",
 "For the other worlds (the second table copy), use the scale reading g to find the weight of a {#} kg astronaut on Earth, the Moon and Mars. How many times lighter is the astronaut on the Moon, and on Mars?":
   "Para los otros mundos (la segunda copia de la tabla), usa la lectura de la báscula g para hallar el peso de un astronauta de {#} kg en la Tierra, la Luna y Marte. ¿Cuántas veces más ligero es el astronauta en la Luna y en Marte?",
-"The demo computes its readouts from Newton’s law, so a repeated reading gives the same numbers. At sea level on Earth, compare the demo’s scale reading at the equator with its Real Earth at sea level (WGS {#}) readout. What does the demo leave out that could explain the difference?":
-  "La demo calcula sus lecturas con la ley de Newton, así que una lectura repetida da los mismos números. Al nivel del mar en la Tierra, compara la lectura de la báscula de la demo en el ecuador con su lectura Tierra real al nivel del mar (WGS {#}). ¿Qué deja fuera la demo que podría explicar la diferencia?",
 "An astronaut on the space station floats around the cabin, yet your Space station reading shows that most of Earth’s gravity is still there. How does that compare with your first guess in Before the lab {#}? Explain why the astronaut floats. (Hint: the station is moving sideways at about {#} km/s.)":
   "Un astronauta de la estación espacial flota por la cabina y, sin embargo, tu lectura de la Estación espacial muestra que la mayor parte de la gravedad de la Tierra sigue ahí. ¿Cómo se compara eso con tu primera suposición de Antes del laboratorio {#}? Explica por qué el astronauta flota. (Pista: la estación se mueve de lado a unos {#} km/s.)",
 "If you can jump {#} m high on Earth, how high could you jump on the Moon with the same push? Use your scale readings, and the fact that the height of a jump goes as {#}/g.":
@@ -94,8 +92,14 @@ VDI18N.add('es', 'ws/intro-gravity', {
   "La Luna está a {#} km del centro de la Tierra, unos {#} radios terrestres. Usa la ley del inverso del cuadrado para encontrar la gravedad de la Tierra a la distancia de la Luna. Newton comparó esto con qué tan rápido se curva la Luna alrededor de la Tierra cada mes y encontró que coinciden: la misma gravedad que hace caer una manzana mantiene a la Luna en su órbita.",
 "Mars has {#} times Earth’s mass and {#} times its radius. Gravity at a planet’s surface goes as its mass divided by its radius squared. Predict Mars’s surface gravity as a fraction of Earth’s, then compare with your measured readings.":
   "Marte tiene {#} veces la masa de la Tierra y {#} veces su radio. La gravedad en la superficie de un planeta va como su masa dividida entre su radio al cuadrado. Predice la gravedad superficial de Marte como fracción de la de la Tierra, y luego compárala con tus lecturas medidas.",
-"Prelab answers, the two table copies and the graph, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.":
-  "Respuestas del prelaboratorio, las dos copias de la tabla y la gráfica, las respuestas de las secciones de análisis e incertidumbre, y las respuestas a las preguntas. Identifica los datos simulados.",
+"For courses that treat measurement uncertainty. This section is not counted in the {#} minutes; do it when your instructor assigns it.":
+  "Para cursos que tratan la incertidumbre de medición. Esta sección no cuenta dentro de los {#} minutos; hazla cuando tu profesor la asigne.",
+"The demo computes its readouts from Newton’s law, so a repeated reading gives the same numbers. At sea level on Earth, compare the demo’s scale reading at the equator with its Real Earth at sea level (WGS {#}) readout. What does the demo leave out that could explain the difference?":
+  "La demo calcula sus lecturas con la ley de Newton, así que una lectura repetida da los mismos números. Al nivel del mar en la Tierra, compara la lectura de la báscula de la demo en el ecuador con su lectura Tierra real al nivel del mar (WGS {#}). ¿Qué deja fuera la demo que podría explicar la diferencia?",
+"For the graph of gravity alone against \\((6.371 / r)^2\\), give the slope and intercept with their standard errors.":
+  "Para la gráfica de la gravedad sola contra \\((6.371 / r)^2\\), da la pendiente y la ordenada al origen con sus errores estándar.",
+"Prelab answers, the two table copies and the graph, the answers to the analysis section and to the questions (and to Uncertainty, if assigned). Identify simulated data.":
+  "Respuestas del prelaboratorio, las dos copias de la tabla y la gráfica, las respuestas de la sección de análisis y las respuestas a las preguntas (y de Incertidumbre, si se asigna). Identifica los datos simulados.",
 "Weight, the force of gravity on you":
   "Peso, la fuerza de gravedad sobre ti",
 "Local gravity":

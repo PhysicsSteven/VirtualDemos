@@ -77,14 +77,19 @@ Export fills the columns from Reading to I/I₀ at B (Dark fringe m stays empty 
 1. For Part 1, graph $$\sin\theta$$ (vertical) against $$m$$ (horizontal) and fit a straight line with a free intercept. Find the slope and intercept. From the slope, $$\lambda/a$$, find the slit width and compare it with 5.0 µm.
 2. For Part 2, graph $$I/I_0$$ from the light meter (vertical) against your computed $$(\sin\beta/\beta)^2$$ (horizontal). What slope and intercept do you expect, and what do you find?
 
-## Uncertainty
-
-The caliper reads to 1 mm, and a dark fringe is a minimum of a smooth pattern, so you find its center by eye or by the light meter. Estimate the uncertainty in $$y$$ and propagate it to $$\sin\theta$$ and to $$a$$. Which dark fringe gives $$a$$ most precisely? A real slit's edges are not perfectly straight and parallel, and a real detector has a finite size: say how each would change what you measure.
-
 ## Questions
 
 1. A double slit pattern (§4.3) is the single slit pattern times the two slit fringes. Use that to explain why some double slit fringes are missing.
 2. In Part 2, where across the first side band (16, 20 and 24 cm) is the light meter reading largest, and how does it compare with the reading at 0? Was your guess in Before the lab 5 close? Divide the slit into three equal parts, as the Background divides it into halves, and use that to explain the side band's brightness.
+
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The caliper reads to 1 mm, and a dark fringe is a minimum of a smooth pattern, so you find its center by eye or by the light meter. Estimate the uncertainty in $$y$$ and propagate it to $$\sin\theta$$ and to $$a$$. Which dark fringe gives $$a$$ most precisely? A real slit's edges are not perfectly straight and parallel, and a real detector has a finite size: say how each would change what you measure.
+
+Give your slit width with its uncertainty. For the Part 1 fit, give the slope and the intercept with their standard errors. For the Part 2 fit, say whether the slope and the intercept agree with their expected values within their standard errors.
 
 ## With calculus
 
@@ -95,4 +100,4 @@ For courses that use calculus. This section is not counted in the 75 minutes; do
 
 ## What to hand in
 
-Prelab answers, a Data table copy for each part with the graphs and fits for Parts 1 and 2, your slit width result with its uncertainty and answers to the questions (and to With calculus, if assigned). Identify simulated data.
+Prelab answers, a Data table copy for each part with the graphs and fits for Parts 1 and 2, your slit width result and answers to the questions (and to Uncertainty and With calculus, if assigned). Identify simulated data.

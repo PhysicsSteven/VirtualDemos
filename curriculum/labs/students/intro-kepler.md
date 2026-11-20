@@ -83,16 +83,19 @@ Press Export to worksheet to send all five readings. They fill the perihelion, a
 5. Neptune orbits the Sun at an average distance of 30.07 AU. Compare that with Pluto's perihelion distance. What does this tell you about the two orbits?
 6. Untick Blind, choose Mars and then Pluto, and read the demo's Semi major axis a, Eccentricity e and Period P readouts for each. By what percentage does each of your values differ from the demo's?
 
-## Uncertainty
-
-Each ruler point is only as good as your placement, and the timer depends on when you paused. Which of your measurements do you think is least certain: a distance at the near end of a small orbit, a distance at the far end of a big one, or a period? How would zooming in, or timing several orbits and dividing, change it?
-
 ## Questions
 
 1. From your Earth reading, how much farther from the Sun is the aphelion than the perihelion, as a percentage of the perihelion distance? Check it against your guess in Before the lab 4. Using your eccentricities, explain why Earth's orbit drawn to scale looks like a circle. Kepler found the first law by studying the orbit of Mars: explain why Mars showed that orbits are ellipses more clearly than Earth's orbit did.
 2. A spacecraft going to Mars can coast on an orbit around the Sun whose perihelion is at Earth's orbit (1.00 AU) and whose aphelion is at Mars's orbit (1.52 AU). Find the semi major axis and period of that orbit. How many days does the trip from Earth to Mars, half of one orbit, take?
 3. Jupiter's moons follow Kepler's laws around Jupiter. Would $$T^2 = a^3$$, with $$T$$ in years and $$a$$ in AU, give the right periods for them? Explain why or why not.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+Each ruler point is only as good as your placement, and the timer depends on when you paused. Give the slope and intercept of your Analysis 3 graph with their standard errors, and say whether each agrees with the third law within its uncertainty. Which of your measurements do you think is least certain: a distance at the near end of a small orbit, a distance at the far end of a big one, or a period? How would zooming in, or timing several orbits and dividing, change it?
+
 ## What to hand in
 
-Prelab answers, the completed Data table and graph, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.
+Prelab answers, the completed Data table and graph, the answers to the analysis section and to the questions (and to Uncertainty, if assigned). Identify simulated data.

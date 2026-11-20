@@ -36,13 +36,13 @@ $$m - M = 5\log_{10}\frac{d}{10\ \text{pc}},\qquad d = 10^{(m - M + 5)/5}\ \text
 
 $$o_i(\mu) = V_i - \mu - M_{\text{ridge}}(B - V)_i .$$
 
-**Spectroscopic parallax.** For one main sequence star, the spectral type gives M from the nearby stars of that type, and then $$m - M$$ gives the distance. The spread $$\sigma_M$$ of M among stars of one type limits the result: a spread of $$\sigma_M$$ in M is a fractional spread of about $$\frac{\ln 10}{5}\sigma_M = 0.46\,\sigma_M$$ in d.
+**Spectroscopic parallax.** For one main sequence star, the spectral type gives M from the nearby stars of that type, and then $$m - M$$ gives the distance.
 
 ## Before the lab
 
 1. An unresolved pair of identical stars looks like one star twice as bright. How many magnitudes brighter is it than one of the stars? If you fitted a cluster's main sequence to such pairs alone, would the distance come out too large or too small, and by what factor? In a real cluster perhaps a third of the stars are pairs, mixed in among single stars of every color. Will its fitted distance come out about right, too large or too small? Say why.
 2. Use the equation for $$o_i(\mu)$$ to show that the mean offset falls by exactly 1 for every 1 added to the shift, and that the mean square offset is a parabola in $$\mu$$ whose lowest point is where the mean offset is zero.
-3. The nearby G0 V stars have a mean $$M = 4.55$$ with a spread of 0.4 mag. A G0 V star has $$V = 8.00$$. Find its spectroscopic distance and its uncertainty in percent.
+3. The nearby G0 V stars have a mean $$M = 4.55$$ with a spread of 0.4 mag. A G0 V star has $$V = 8.00$$. Find its spectroscopic distance.
 
 ## Safety
 
@@ -81,16 +81,19 @@ No hazards in the virtual lab.
 3. For the ten stars, graph the spectroscopic distance (vertical) against the parallax distance (across), with the line where they are equal. Find the median of the Spectroscopic ÷ parallax column.
 4. Which star is furthest off? Suggest what about that star could fool the method.
 
-## Uncertainty
-
-For each cluster, estimate how far the shift can move before the mean square offset rises by its own value divided by the number of stars in the fit; that change in shift is roughly the standard error of the fitted shift. Turn it into a percentage uncertainty in distance and compare it with how far off the cluster's distance was.
-
 ## Questions
 
 1. Real clusters lie behind dust, which dims and reddens their stars. Which way would ignoring the dimming move a fitted distance? Which way would ignoring the reddening move it?
 2. Why is the calibration made from stars within 25 pc and not from stars within 200 pc?
 3. The end of Before the lab 1 asked about a cluster in which only some of the stars are pairs. Which way were your three clusters off in Analysis 2, and is that what you expected? Explain the direction from the offsets $$o_i(\mu)$$ that the fit averages: what does a pair do to its own offset, and what do the single stars do?
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+For each cluster, estimate how far the shift can move before the mean square offset rises by its own value divided by the number of stars in the fit; that change in shift is roughly the standard error of the fitted shift. Turn it into a percentage uncertainty in distance and compare it with how far off the cluster's distance was. The spread $$\sigma_M$$ of M among stars of one type limits a spectroscopic distance: a spread of $$\sigma_M$$ in M is a fractional spread of about $$\frac{\ln 10}{5}\sigma_M = 0.46\,\sigma_M$$ in d. For Before the lab 3, find the uncertainty of the spectroscopic distance in percent, and compare it with the Uncertainty (%) column for the ten stars. Give the fitted shift and distance of each cluster with its uncertainty.
+
 ## What to hand in
 
-Prelab answers, the table copies with their graphs and fits, the fitted shift and distance of each cluster with its uncertainty and the true distances, the mystery cluster's distance, the comparison of the ten stars with the median ratio, and answers to the questions. Identify simulated data: the clusters are simulated; the nearby stars and the ten target stars are real catalog data.
+Prelab answers, the table copies with their graphs and fits, the fitted shift and distance of each cluster and the true distances, the mystery cluster's distance, the comparison of the ten stars with the median ratio, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data: the clusters are simulated; the nearby stars and the ten target stars are real catalog data.

@@ -93,17 +93,20 @@ No physical hazards in the simulation. In a real air table or air track, keep fi
 3. For each mode find the wave speed in block spacings per second, $$v_n = (22/n) f_n$$. How does it change with $$n$$?
 4. Compare your $$f_{10}$$ with the largest possible frequency $$(1/\pi)\sqrt{k/m}$$. Describe how neighboring blocks move in mode 10.
 5. Graph the measured $$f$$ against $$\sqrt{s_p^2 + s_q^2}$$ for the grid. Compare the slope with the chain's slope in Analysis 1 and explain why they should agree.
-6. Which of your grid modes have the same frequency within your uncertainty? Separate those that share it because the grid looks the same turned through 90° from those that share it for another reason. Compare $$(1, 2)$$ along x with $$(1, 2)$$ along y.
-
-## Uncertainty
-
-Each press of the stopwatch can be early or late by your reaction time, about 0.1 to 0.2 s at real time and less in slow motion, so the time of $$N$$ oscillations has an uncertainty of about $$\sqrt2$$ times that if the two errors are independent, and $$T$$ and $$f$$ have a fractional uncertainty smaller by the factor $$N$$. The display truncates $$t$$ to 0.01 s. State the uncertainty of each measured $$f$$ and use it in judging Analysis 1 and 6. The model has no friction and ideal springs, so the scatter comes from your timing.
+6. Which of your grid modes have nearly the same frequency? Separate those that share it because the grid looks the same turned through 90° from those that share it for another reason. Compare $$(1, 2)$$ along x with $$(1, 2)$$ along y.
 
 ## Questions
 
 1. Two degenerate modes started together make a pattern that moves across the grid or turns. Is that pattern itself a normal mode? Explain.
 2. From your chain of ten readings, give $$f_{10}$$ and $$10 f_1$$. Which answer to Before the lab 3 do they bear out? Explain from the shapes of the modes why the high modes do not follow $$n f_1$$, and why that makes the chain dispersive while an ideal smooth string is not.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+Each press of the stopwatch can be early or late by your reaction time, about 0.1 to 0.2 s at real time and less in slow motion, so the time of $$N$$ oscillations has an uncertainty of about $$\sqrt2$$ times that if the two errors are independent, and $$T$$ and $$f$$ have a fractional uncertainty smaller by the factor $$N$$. The display truncates $$t$$ to 0.01 s. State the uncertainty of each measured $$f$$ and use it in judging Analysis 1 and 6. Report the slope and intercept of the fits in Analysis 1 and 5 and your $$k/m$$ values with their uncertainties, say whether the Analysis 1 line passes through the origin within its uncertainty, and say which grid modes have the same frequency within your uncertainty. The model has no friction and ideal springs, so the scatter comes from your timing.
+
 ## What to hand in
 
-Prelab answers, both tables with your uncertainties, the graphs of Analysis 1 and 5 with their fits, your $$k/m$$ values, the list of degenerate modes, and answers to the questions. Identify simulated data.
+Prelab answers, both tables, the graphs of Analysis 1 and 5 with their fits, your $$k/m$$ values, the list of degenerate modes, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

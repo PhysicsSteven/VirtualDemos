@@ -47,7 +47,7 @@ No hazards in the virtual lab.
 
 **Part 1: craters on the Moon.** (1) In Make a crater, choose the setup A 500 m asteroid (Moon): Target Moon, Asteroid made of Dense rock (3000 kg/m³), Speed v 18 km/s, Angle from the ground 45°. (2) Change only the Asteroid diameter L slider: set it to 0.1, 0.5, 1 and 10 km in turn (its readout shows 100 m, 500 m, 1.00 km and 10.0 km; drag close, then fine tune with the arrow keys) and press Record reading at each. The crater redraws as soon as you change a setting; Drop it plays the impact, and then wait for the crater to finish forming before you record. (3) Set Asteroid diameter L to 1 km, choose Earth as the Target, then set Speed v back to 18 km/s (choosing a target resets the speed) and record. (4) Choose the setup Chicxulub (Earth) and record. (5) Press Export to worksheet (the first Data table), then Clear. (6) Choose the setup A 500 m asteroid (Moon) again and set the Angle from the ground slider to 20°. Press Flat above the picture to see the crater from above, and read Final crater D. Write it in your answer to Question 3, next to your 0.5 km reading at 45° from the first Data table.
 
-**Part 2: dating the Moon's surfaces.** (1) In Count craters, choose each of these four setups in turn: Mare Tranquillitatis, Highlands, Copernicus floor and Tycho floor. Leave Count craters at least this wide where the setup puts it. (2) In the Flat view, click every crater at least as wide as the purple circle whose center lies inside the square (click again to unmark; Craters you marked counts them), then press Record reading. Do the Uncertainty step while Mare Tranquillitatis is still marked, before you choose the next surface. (3) After all four, press Export to worksheet (the second Data table), then Clear.
+**Part 2: dating the Moon's surfaces.** (1) In Count craters, choose each of these four setups in turn: Mare Tranquillitatis, Highlands, Copernicus floor and Tycho floor. Leave Count craters at least this wide where the setup puts it. (2) In the Flat view, click every crater at least as wide as the purple circle whose center lies inside the square (click again to unmark; Craters you marked counts them), then press Record reading. (3) After all four, press Export to worksheet (the second Data table), then Clear.
 
 **Part 3: three planets cooling.** In Cooling, choose the setup When the lunar maria erupted (1.0 billion years after the planets formed) and press Record reading, then choose Today and record again. Each reading adds one row for each planet, six rows in all. Press Export to worksheet (the third Data table).
 
@@ -82,16 +82,19 @@ No hazards in the virtual lab.
 7. Choose Highlands again and press Show the right count. Compare its Set age of this surface with the Age from the clock in your table. Which is larger? Explain the difference using saturation.
 8. From Part 3, today: by how many times is the Moon's cold lid thicker than Earth's? How does this connect with the Moon's maria all being billions of years old?
 
-## Uncertainty
-
-A count of N craters is uncertain by about √N, because where the asteroids land is random. Take your Mare Tranquillitatis count, work out √N, and find the age the clock gives for N + √N and for N − √N craters: with your Mare Tranquillitatis marks still showing, mark √N more craters (any craters will do) and read Age from your count, then unmark until N − √N are marked and read it again. How many million years is the age uncertain by?
-
 ## Questions
 
 1. Earth has been hit more often than the Moon (it is a bigger target with stronger gravity), yet Earth shows only about 200 known impact craters while the Moon is covered with them. Give two reasons.
 2. Chicxulub, the crater of the impact that ended the age of dinosaurs 66 million years ago, is about 180 km wide. Using Part 1, about how big was the asteroid?
 3. In Part 1 (6), was the crater at 20° round or stretched, and how wide was it next to the one at 45°? Hold that up against your guess in Before the lab 4. Think about where the asteroid's energy goes in the first moment of the hit, and use it to explain the crater's shape and what the slant did to its size.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+A count of N craters is uncertain by about √N, because where the asteroids land is random. Take your Mare Tranquillitatis count, work out √N, and find the age the clock gives for N + √N and for N − √N craters. Do this right after you record that count, before you choose the next surface, or choose Mare Tranquillitatis again and mark your N craters again. Mark √N more craters (any craters will do) and read Age from your count, then unmark until N − √N are marked and read it again. How many million years is the age uncertain by?
+
 ## What to hand in
 
-Prelab answers, the three tables, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.
+Prelab answers, the three tables, the answers to the analysis section and to the questions (and to Uncertainty, if assigned). Identify simulated data.

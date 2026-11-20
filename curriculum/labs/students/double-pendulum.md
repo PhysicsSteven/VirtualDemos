@@ -81,14 +81,17 @@ Work out $$1/L$$ and $$\omega^2 = (2\pi/T)^2$$ yourself. Keep each part in its o
 2. Part 3: by what percentage did the mode 2 period change from 2° to 24°? Compare the 2° period with the small angle period from Before the lab 1: was 2° small enough for Parts 1 and 2?
 3. Part 4: plot $$t_d$$ against $$\log_{10}\delta$$ and fit a line. Use the slope to find $$\lambda$$ and compare it with the demo's Lyapunov estimate. Why do the points scatter about the line much more than in Parts 1 and 2?
 
-## Uncertainty
-
-The measured periods are shown to 4 significant figures and the separation times to 0.01 s, and the integration error is far smaller than either. In Parts 1 to 3 the rounding of $$T$$ sets the uncertainty of $$\omega^2$$: work it out for your shortest period. In Part 4 the uncertainty comes from the motion itself: the growth rate of a chaotic separation changes from moment to moment, so a single $$t_d$$ can sit well off the line. Use the residuals of your fit to estimate the uncertainty of $$\lambda$$, and say why the demo's own estimate, taken over a finite time, is also only an estimate.
-
 ## Questions
 
 1. How long did the two copies take to come apart at $$\delta = 10^{-6}$$ rad, and how does that sit with your answer to Before the lab 2? Use $$d \approx \delta\,e^{\lambda t}$$ to explain what you saw, and work out how much better you would have to know the starting angle to predict the motion 10 s further ahead if $$\lambda = 1.5\ \text{s}^{-1}$$. The demo has no randomness anywhere, yet the motion at 130° cannot be predicted far ahead: explain how both can be true.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The measured periods are shown to 4 significant figures and the separation times to 0.01 s, and the integration error is far smaller than either. In Parts 1 to 3 the rounding of $$T$$ sets the uncertainty of $$\omega^2$$: work it out for your shortest period. In Part 4 the uncertainty comes from the motion itself: the growth rate of a chaotic separation changes from moment to moment, so a single $$t_d$$ can sit well off the line. Use the residuals of your fit to estimate the uncertainty of $$\lambda$$, and say why the demo's own estimate, taken over a finite time, is also only an estimate. Give the slopes of your two mode fits with their standard errors.
+
 ## What to hand in
 
-Prelab answers, the four data tables with the graphs and fits for Parts 1, 2 and 4, the slopes compared with $$(2 \mp \sqrt2)\,g$$, the amplitude comparison, your value of $$\lambda$$ with its uncertainty, and the answer to the question. Identify simulated data.
+Prelab answers, the four data tables with the graphs and fits for Parts 1, 2 and 4, the slopes compared with $$(2 \mp \sqrt2)\,g$$, the amplitude comparison, your value of $$\lambda$$, and the answer to the question (and to Uncertainty, if assigned). Identify simulated data.

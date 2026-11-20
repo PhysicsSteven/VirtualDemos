@@ -74,14 +74,17 @@ A real solenoid switched off suddenly can induce a large voltage across its own 
 3. For Part 3, graph $$E$$ on the path against the decay constant α (read it from the Current column). What does it show about what makes the electric field: the size of $$B$$, or how fast it changes?
 4. Turn Blind off and look at the field arrows in Part 2. Why can the field outside the solenoid not be found from Faraday's law alone when the path is off center?
 
-## Uncertainty
-
-The model is exact; the circulation is added up numerically in 720 pieces, which agrees with $$-d\Phi/dt$$ to rounding error for centered paths and to a few parts in a million where the path crosses the solenoid's edge (the field has a kink there). A real solenoid is not infinitely long, so a little field leaks outside it near the ends, and a rapidly changing current also radiates; both are left out here.
-
 ## Questions
 
 1. How does a transformer use the induced electric field?
 2. What did Part 1 give for $$-d\Phi/dt$$ on the 3.0 and 9.0 cm paths, and how does that compare with your answer to Before the lab 5? Using where the flux is, explain why the two loops get the EMF they do, although $$E$$ is smaller on the larger loop. Then say why a nonzero $$\oint\vec E\cdot d\vec l$$ makes this field non conservative.
+
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The model is exact; the circulation is added up numerically in 720 pieces, which agrees with $$-d\Phi/dt$$ to rounding error for centered paths and to a few parts in a million where the path crosses the solenoid's edge (the field has a kink there). A real solenoid is not infinitely long, so a little field leaks outside it near the ends, and a rapidly changing current also radiates; both are left out here.
 
 ## With calculus
 
@@ -92,4 +95,4 @@ For courses that use calculus. This section is not counted in the 75 minutes; do
 
 ## What to hand in
 
-Prelab answers, a Data table copy for each part, the graphs and fits, your comparisons of the circulation with $$-d\Phi/dt$$, and answers to the questions (and to With calculus, if assigned). Identify simulated data.
+Prelab answers, a Data table copy for each part, the graphs and fits, your comparisons of the circulation with $$-d\Phi/dt$$, and answers to the questions (and to Uncertainty and With calculus, if assigned). Identify simulated data.

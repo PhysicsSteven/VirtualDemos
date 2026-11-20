@@ -71,15 +71,18 @@ Real solenoids carrying a few amperes get warm; let them cool before handling. L
 3. For Part 3, graph $$B$$ (vertical) against $$B_0$$ (horizontal). Find $$B/B_0 - 1$$ at 0.20 A and compare it with Example 12.10. How does $$B/B_0$$ change as the current rises, and why does the curve level off?
 4. For Part 4, give the remanence ($$B$$ at 0 A on the way down) and the current that brings $$B$$ to zero, and the coercive field $$H_c = nI$$ in A/m. Is the model's iron a soft or a hard magnetic material?
 
-## Uncertainty
-
-The model has no noise. For paramagnets and diamagnets $$B - B_0$$ is about a hundred thousandth of $$B$$, so $$B$$ must be known to many figures to see it; a reading records $$B$$ to nine figures for that reason. A real measurement of $$\chi$$ uses the force on a sample in a varying field (a Gouy balance) instead. The iron is a model fitted to two points of a textbook figure; real irons vary greatly with purity and heat treatment.
-
 ## Questions
 
 1. A frog can be floated in a very strong magnetic field. Why does this need a field that changes strongly with height, and not just a strong field?
 2. In Part 1, which way did copper and water change the field, and by how much? Set that against your answer to Before the lab 5, then explain what the atoms or molecules of each do in the field to give that sign and that size of change. Why is every material diamagnetic, even those that end up paramagnetic overall?
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The model has no noise. For paramagnets and diamagnets $$B - B_0$$ is about a hundred thousandth of $$B$$, so $$B$$ must be known to many figures to see it; a reading records $$B$$ to nine figures for that reason. A real measurement of $$\chi$$ uses the force on a sample in a varying field (a Gouy balance) instead. The iron is a model fitted to two points of a textbook figure; real irons vary greatly with purity and heat treatment.
+
 ## What to hand in
 
-Prelab answers, a Data table copy for each part, the graphs, your values of $$\chi$$, the remanence and coercive field, and answers to the questions. Identify simulated data.
+Prelab answers, a Data table copy for each part, the graphs, your values of $$\chi$$, the remanence and coercive field, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

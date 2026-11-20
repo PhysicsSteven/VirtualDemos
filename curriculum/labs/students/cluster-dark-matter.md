@@ -88,15 +88,18 @@ No hazards in the virtual lab.
 5. Einstein ring: how many times larger is the mass inside the ring than the stars and gas inside it? Why was there no ring when only the stars and gas bent the light?
 6. In the Bullet Cluster today, how far apart are the two clusters' galaxies, and how far behind its galaxies is the small cluster's gas?
 
-## Uncertainty
-
-The spread σ is measured from about 500 galaxies, so it is uncertain by about $$1/\sqrt{2 \times 500}$$, roughly 3%. How large is the resulting uncertainty in the mass, which goes as σ²? Is it big enough to explain the gap between the mass the speeds need and the stars and gas?
-
 ## Questions
 
 1. Speeds, hot gas and bent light rest on different physics: orbits, gas pressure and the bending of light. Do your three answers (Analysis 3, 4 and 5) agree that most of the mass is unseen? Why does it matter that three different methods agree?
 2. Compare your prediction in Before the lab 4 with what the mass map showed in Part 5, with and without dark matter. If dark matter were just more gas we had not counted, where would the map peak? Why is the Bullet Cluster hard to explain by changing the law of gravity instead of adding dark matter?
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The spread σ is measured from about 500 galaxies, so it is uncertain by about $$1/\sqrt{2 \times 500}$$, roughly 3%. How large is the resulting uncertainty in the mass, which goes as σ²? Is it big enough to explain the gap between the mass the speeds need and the stars and gas?
+
 ## What to hand in
 
-Prelab answers, both Data tables with the graph, Analysis 1 to 6 with your work, the uncertainty answer and the answers to the questions. Identify simulated data: every reading in this lab is simulated.
+Prelab answers, both Data tables with the graph, Analysis 1 to 6 with your work and the answers to the questions (and to Uncertainty, if assigned). Identify simulated data: every reading in this lab is simulated.

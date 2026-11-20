@@ -94,16 +94,19 @@ Compare the calcium bar for the two stars, and the Ca II column of Table 1 for t
 3. From Table 1, how many times larger is the share of calcium in the Ca II stage in the Sun than in Rigel?
 4. In Table 1, at which of your temperatures is the most hydrogen on level 2, and what class is it? Use Table 2 to explain why there is less on level 2 at 20,000 K than at 9,600 K.
 
-## Uncertainty
-
-The temperatures in the setups are round values, good to perhaps 5 %. If Betelgeuse were 5 % hotter than 3,500 K, by what percentage would its peak wavelength change? Would it still be class M?
-
 ## Questions
 
 1. Choose **Payne** and press **Betelgeuse**. What share of the titanium is in titanium oxide (TiO) molecules (the **Titanium in TiO** readout)? Press **The Sun** and read it again. Why do molecule bands show up only in the coolest stars?
 2. A cool M star and a hot O star both show weak hydrogen lines. Use Table 1 and Table 2 to say whether it is for the same reason.
 3. Look back at your answer to Before the lab 4 and at the calcium in your table and in the Payne bars. Where has Rigel's calcium gone, and why does that make its lines weak? Did you get it right, and what does this tell you about reading a star's make up from how strong its lines are?
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The temperatures in the setups are round values, good to perhaps 5 %. If Betelgeuse were 5 % hotter than 3,500 K, by what percentage would its peak wavelength change? Would it still be class M? Give Wien's constant from the slope with its standard error.
+
 ## What to hand in
 
-Prelab answers, both tables with the 1/T column filled, the graph with its fit, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data: every reading in this lab comes from the demo's model.
+Prelab answers, both tables with the 1/T column filled, the graph with its fit, the answers to the analysis section and to the questions (and to Uncertainty, if assigned). Identify simulated data: every reading in this lab comes from the demo's model.

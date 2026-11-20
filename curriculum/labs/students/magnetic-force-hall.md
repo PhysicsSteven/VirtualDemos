@@ -64,15 +64,18 @@ Each Hall reading fills $$I$$, signed $$B_z$$ (out of the page positive), $$t$$ 
 1. Plot $$V_H$$ against signed $$B_z$$, taking out of the page as positive. Use the current direction and meter polarity to derive the slope's sign before identifying carriers.
 2. Infer $$n$$ from the slope magnitude $$I/(n\lvert q\rvert t)$$, taking $$\lvert q\rvert = e$$. Check the current and thickness scalings and reveal the sample labels afterward.
 
-## Uncertainty
-
-Estimate the uncertainty in $$V_H$$ from the digits the Hall voltage now readout shows, and in $$B$$ and $$I$$ from the steps of their sliders. Read the voltage only after the build up has finished. Record that the data are simulated.
-
 ## Questions
 
 1. Why can Hall voltage reveal carrier sign when an ordinary resistance measurement cannot?
 2. Once the sample labels are revealed (Analysis 2), how does copper's Hall voltage at 20 mA and 0.30 T compare with germanium's, and does that bear out Before the lab 2? Use the balance of the electric and magnetic forces on the drifting carriers to explain the size of copper's Hall voltage.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+Estimate the uncertainty in $$V_H$$ from the digits the Hall voltage now readout shows, and in $$B$$ and $$I$$ from the steps of their sliders. Read the voltage only after the build up has finished. Record that the data are simulated. Give the slope of your graph of $$V_H$$ against $$B_z$$ and the inferred $$n$$ with their uncertainties.
+
 ## What to hand in
 
-Prelab answers, Hall data and polarity sketch, the graph, inferred $$n$$ with uncertainty, scaling checks and answers to the questions.
+Prelab answers, Hall data and polarity sketch, the graph, inferred $$n$$, scaling checks and answers to the questions (and to Uncertainty, if assigned).

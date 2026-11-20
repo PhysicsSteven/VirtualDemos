@@ -78,15 +78,18 @@ Record the gas, the Amount of gas n and the Heater power for each run.
 4. For the argon free piston run, find the work done on the piston, $$P\,\Delta V$$, from the first and last Volume V readings, and the share of the heat it took. Then find the rise in internal energy, $$\Delta U = Q - P\,\Delta V$$, per kelvin of warming, and set it beside $$Q/\Delta T$$ for the argon locked run.
 5. Find $$C_V/R$$ for the mystery gas. Is it monatomic, diatomic or more complex? Compare with Table 2.3 and suggest which gas it might be.
 
-## Uncertainty
-
-The thermometer reads to 0.01 °C and the heat meter to 0.1 J, and the model has no noise, so the residuals of your fits show only rounding. Estimate the uncertainty of the two argon slopes from their fits, and carry it through to argon's $$C_V$$, $$C_P$$ and their difference. A real cylinder and heater would soak up some heat; say whether that would make your heat capacities too large or too small.
-
 ## Questions
 
 1. Carbon dioxide's $$C_V$$ is well above $$\tfrac{5}{2}R$$. What does that tell you about its molecules?
 2. For solids and liquids, $$C_P$$ and $$C_V$$ are almost the same. Why?
 3. Go back to the guess at the end of Before the lab 2. What did Analysis 4 show about the internal energy gained per kelvin with the piston locked and with it free? Use the first law and what equipartition says the internal energy of an ideal gas depends on to explain the result, and then say why $$C_P$$ is still larger than $$C_V$$.
+
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The thermometer reads to 0.01 °C and the heat meter to 0.1 J, and the model has no noise, so the residuals of your fits show only rounding. Estimate the uncertainty of the two argon slopes from their fits, and carry it through to argon's $$C_V$$, $$C_P$$ and their difference. A real cylinder and heater would soak up some heat; say whether that would make your heat capacities too large or too small. Do the same for nitrogen and the mystery gas, and say whether each $$C_P - C_V$$ equals $$R$$ within its uncertainty.
 
 ## With calculus
 
@@ -97,4 +100,4 @@ For courses that use calculus. This section is not counted in the 75 minutes; do
 
 ## What to hand in
 
-Prelab answers, the table copies with their graphs and fits, $$C_V$$, $$C_P$$, $$C_P - C_V$$ and $$\gamma$$ for each gas with comparisons (with uncertainties for argon), your identification of the mystery gas, and answers to the questions (and to With calculus, if assigned). Identify simulated data.
+Prelab answers, the table copies with their graphs and fits, $$C_V$$, $$C_P$$, $$C_P - C_V$$ and $$\gamma$$ for each gas with comparisons, your identification of the mystery gas, and answers to the questions (and to Uncertainty and With calculus, if assigned). Identify simulated data.

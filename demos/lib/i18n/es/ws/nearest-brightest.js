@@ -146,16 +146,18 @@ VDI18N.add('es', 'ws/nearest-brightest', {
   "Las estrellas más brillantes incluyen supergigantes como Rigel y Deneb. Usa sus magnitudes absolutas para encontrar qué tan lejos podría estar cada una y seguir entre las estrellas más brillantes que V = {#}.",
 "Press <strong>Both</strong>. Only a handful of stars are in both sets. Name them, and explain why a star must be both nearby and fairly luminous to be in both.":
   "Pulsa <strong>Ambas</strong>. Solo un puñado de estrellas están en ambos conjuntos. Nómbralas y explica por qué una estrella debe estar cerca y ser bastante luminosa para estar en ambos.",
-"Distances come from parallaxes, and a small fractional error in the parallax gives about the same fractional error in the distance. For the most distant brightest stars the parallax errors are {#}% or more. How big an error in \\(M_V\\) is that?":
-  "Las distancias vienen de paralajes, y un pequeño error fraccionario en la paralaje da casi el mismo error fraccionario en la distancia. Para las estrellas más brillantes y más lejanas los errores de paralaje son de {#}% o más. ¿De qué tamaño es el error en \\(M_V\\)?",
 "The census of stars within {#} pc is still not complete. What kinds of stars are most likely to be missing, and why?":
   "El censo de estrellas a menos de {#} pc todavía no está completo. ¿Qué tipos de estrellas es más probable que falten, y por qué?",
 "Where do the white dwarfs sit on the diagram? Why are none of them among the brightest stars?":
   "¿Dónde están las enanas blancas en el diagrama? ¿Por qué ninguna está entre las estrellas más brillantes?",
 "Look back at Before the lab {#} and your answer to Analysis {#}: where does the Sun stand among its neighbors? Most stars in the brightest sample are rare kinds of stars. Use what you know about stellar lifetimes to explain why luminous stars are rare, and the Samples part of the Background to explain how the brightest sample still fills up with them.":
   "Mira de nuevo Antes del laboratorio {#} y tu respuesta al Análisis {#}: ¿dónde queda el Sol entre sus vecinas? La mayoría de las estrellas de la muestra de las más brillantes son tipos raros de estrellas. Usa lo que sabes de los tiempos de vida de las estrellas para explicar por qué las estrellas luminosas son raras, y la parte Muestras del Fondo para explicar cómo la muestra de las más brillantes aun así se llena de ellas.",
-"Prelab answers, the data tables, the graph with its fit, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data (here the data are real catalog values).":
-  "Respuestas del prelaboratorio, las tablas de datos, la gráfica con su ajuste, las respuestas a las secciones de análisis e incertidumbre, y respuestas a las preguntas. Identifica los datos simulados (aquí los datos son valores reales de catálogo).",
+"For courses that treat measurement uncertainty. This section is not counted in the {#} minutes; do it when your instructor assigns it.":
+  "Para cursos que tratan la incertidumbre de medición. Esta sección no cuenta dentro de los {#} minutos; hazla cuando tu profesor la asigne.",
+"Distances come from parallaxes, and a small fractional error in the parallax gives about the same fractional error in the distance. For the most distant brightest stars the parallax errors are {#}% or more. How big an error in \\(M_V\\) is that? Give the standard errors of the slope and intercept of each fit in Analysis {#}.":
+  "Las distancias vienen de paralajes, y un pequeño error fraccionario en la paralaje da casi el mismo error fraccionario en la distancia. Para las estrellas más brillantes y más lejanas los errores de paralaje son de {#}% o más. ¿De qué tamaño es el error en \\(M_V\\)? Da los errores estándar de la pendiente y de la ordenada al origen de cada ajuste del Análisis {#}.",
+"Prelab answers, the data tables, the graph with its fit, the answers to the analysis section and to the questions (and to Uncertainty, if assigned). Identify simulated data (here the data are real catalog values).":
+  "Respuestas del prelaboratorio, las tablas de datos, la gráfica con su ajuste, las respuestas de la sección de análisis y de las preguntas (y de Incertidumbre, si se asigna). Identifica los datos simulados (aquí los datos son valores reales de catálogo).",
 "Absolute V magnitude: the magnitude the star would have from {#} pc":
   "Magnitud V absoluta: la magnitud que tendría la estrella desde {#} pc",
 "Apparent V magnitude: how bright the star looks from Earth":

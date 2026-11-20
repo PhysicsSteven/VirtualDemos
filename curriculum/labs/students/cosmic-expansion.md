@@ -87,16 +87,21 @@ Fill the Speed column on the rows for the later time, from $$v = \Delta d/\Delta
 4. Matter only and Empty universes have the same $$H_0$$ today. Compare their ages with $$1/H_0$$ and with $$2/(3H_0)$$, and explain the difference using the shape of each curve on the scale factor graph.
 5. From the Half the size readings (galaxy E), find $$H$$ when $$a$$ = 0.5. Was the universe expanding faster or slower then, in km/s per Mpc?
 
-## Uncertainty
-
-The distances are given to 0.01 Mpc, and each speed comes from a difference of two distances 0.1 Gyr apart. Estimate the uncertainty in the speed of galaxy A and of galaxy E from the rounding alone, and say which galaxies give the best value of $$H$$. Your speed is an average over the 0.1 Gyr step, but the distance on the same row is the one at the end of the step: by roughly what fraction does that make your slope low? A real galaxy also has its own peculiar motion of a few hundred km/s, which the demo leaves out: how far away must a galaxy be for that to be less than 10% of its Hubble speed?
-
 ## Questions
 
 1. Galaxies themselves do not grow as the universe expands, and neither does the solar system. Why not?
 2. A de Sitter universe has no beginning. What does its scale factor graph look like going back in time, and why?
 3. The galaxy in Before the lab 4 is galaxy E. Compare its speed in the Half the size copy with its speed today in the first copy, and with your prediction. Explain how its speed can change the way it did while $$H$$ falls, using $$\dot a = aH$$, and say whether the expansion of Planck ΛCDM is speeding up or slowing down today.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The distances are given to 0.01 Mpc, and each speed comes from a difference of two distances 0.1 Gyr apart. Estimate the uncertainty in the speed of galaxy A and of galaxy E from the rounding alone, and say which galaxies give the best value of $$H$$. Your speed is an average over the 0.1 Gyr step, but the distance on the same row is the one at the end of the step: by roughly what fraction does that make your slope low? A real galaxy also has its own peculiar motion of a few hundred km/s, which the demo leaves out: how far away must a galaxy be for that to be less than 10% of its Hubble speed?
+
+Give the slope of your $$v$$ against $$d$$ graph with its standard error, and say whether its intercept is zero within its uncertainty. Say whether $$H$$ from the Milky Way and from the other galaxy agree within the rounding.
+
 ## What to hand in
 
-Prelab answers, the table copies with their graphs and slopes, your age estimates next to the demo's ages, and answers to the questions. Identify simulated data.
+Prelab answers, the table copies with their graphs and slopes, your age estimates next to the demo's ages, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

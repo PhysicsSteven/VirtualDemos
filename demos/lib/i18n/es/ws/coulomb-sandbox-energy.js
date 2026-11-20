@@ -152,14 +152,16 @@ VDI18N.add('es', 'ws/coulomb-sandbox-energy', {
   "Grafica el \\(E\\) del anillo (vertical) en función de \\(z\\) (horizontal). Compara el campo medido en cada punto con la fórmula del anillo, y la posición del campo más grande con el punto {#} de Antes del laboratorio. Estima \\(E_z = -dV/dz\\) en \\(z\\) = {#} cm a partir de tus lecturas de \\(V\\) en {#} y {#} cm, y explica por qué difiere del campo que leíste ahí.",
 "Compare each arc’s field at the center with \\(2k\\lambda\\sin(\\theta/2)/R\\).":
   "Compara el campo de cada arco en el centro con \\(2k\\lambda\\sin(\\theta/2)/R\\).",
-"Use coordinate and readout resolution to estimate uncertainty. Distance errors matter most near a charge. The simulation is deterministic; do not invent random scatter.":
-  "Usa la resolución de las coordenadas y de las lecturas para estimar la incertidumbre. Los errores de distancia importan más cerca de una carga. La simulación es determinista; no inventes dispersión aleatoria.",
 "Far from the ring (\\(z \\gg R\\)), what does the ring formula become, and why?":
   "Lejos del anillo (\\(z \\gg R\\)), ¿en qué se convierte la fórmula del anillo, y por qué?",
 "How did \\(V\\) and \\(E\\) at the center change from your {#}° arc reading to your {#}° one, and was that what you said in Before the lab {#}? Explain each from how the contributions of the pieces of the arc add, the field as vectors and the potential as numbers.":
   "¿Cómo cambiaron \\(V\\) y \\(E\\) en el centro de tu lectura del arco de {#}° a la del arco de {#}°, y fue lo que dijiste en Antes del laboratorio {#}? Explica cada uno a partir de cómo se suman las contribuciones de los trozos del arco: el campo como vectores y el potencial como números.",
-"Prelab answers, raw data and CSV, the ring’s \\(E\\) against \\(z\\) graph, the Ring and arc and Potential energy tables and answers to the questions. Identify simulated data.":
-  "Respuestas del prelaboratorio, datos en bruto y CSV, la gráfica de \\(E\\) contra \\(z\\) del anillo, las tablas Ring and arc y Potential energy, y las respuestas a las preguntas. Identifica los datos simulados.",
+"For courses that treat measurement uncertainty. This section is not counted in the {#} minutes; do it when your instructor assigns it.":
+  "Para cursos que tratan la incertidumbre de medición. Esta sección no cuenta dentro de los {#} minutos; hazla cuando tu profesor la asigne.",
+"Use coordinate and readout resolution to estimate uncertainty. Distance errors matter most near a charge. The simulation is deterministic; do not invent random scatter.":
+  "Usa la resolución de las coordenadas y de las lecturas para estimar la incertidumbre. Los errores de distancia importan más cerca de una carga. La simulación es determinista; no inventes dispersión aleatoria.",
+"Prelab answers, raw data and CSV, the ring’s \\(E\\) against \\(z\\) graph, the Ring and arc and Potential energy tables and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.":
+  "Respuestas del prelaboratorio, datos en bruto y CSV, la gráfica de \\(E\\) contra \\(z\\) del anillo, las tablas Ring and arc y Potential energy, y las respuestas a las preguntas (y de Incertidumbre, si se asigna). Identifica los datos simulados.",
 "Field component along the ring's axis":
   "Componente del campo a lo largo del eje del anillo",
 "Total charge of the ring or arc":

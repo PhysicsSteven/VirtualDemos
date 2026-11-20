@@ -70,16 +70,19 @@ Use one copy of the table for each part. Export fills the first four columns; ty
 2. Graph the Part 2 peaks the same way and find the wavelength of molybdenum Kα. Compare it with the copper value: the energy of a K line grows roughly as the square of the atomic number (Moseley's law, §8.5). In the form the textbook gives, the Kα energy is in proportion to $$(Z - 1)^2$$; is your ratio of wavelengths close to $$(28/41)^2$$, for copper ($$Z = 29$$) and molybdenum ($$Z = 42$$)?
 3. Graph the Part 3 peaks and, using your molybdenum Kα wavelength from Analysis 2, find the spacing $$d$$ of the (200) planes of LiF.
 
-## Uncertainty
-
-The crystal angle is set in steps of 0.05°, and each peak is about 0.3° wide. Estimate how well you can find the top of a peak, and propagate that into $$\sin\theta$$ for a low order and a high order peak. Which orders give the wavelength most precisely, and why? Use the standard error of the slope to give each wavelength and $$d$$ with an uncertainty.
-
 ## Questions
 
 1. Why is there no peak of any kind below about 3.6° with the NaCl crystal? (Hint: what is the shortest wavelength a 35 kV tube can make?)
 2. In Part 2, at high orders the Kβ peak of one order comes between the Kα peaks of two others. How did you tell which peak was which?
 3. From your Part 2 and Part 3 tables, give the first order Kα angle and the number of Kα peaks on NaCl and on LiF. Did LiF do what you expected in Before the lab 4? Use Bragg's law to explain how the spacing of the planes sets the angles and the number of orders for the same wavelength.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The crystal angle is set in steps of 0.05°, and each peak is about 0.3° wide. Estimate how well you can find the top of a peak, and propagate that into $$\sin\theta$$ for a low order and a high order peak. Which orders give the wavelength most precisely, and why? Use the standard error of the slope to give each wavelength and $$d$$ with an uncertainty.
+
 ## What to hand in
 
-Prelab answers, the three table copies with their graphs and fits, the wavelengths of copper Kα and molybdenum Kα and the spacing of LiF, with uncertainties and comparisons, and answers to the questions. Identify simulated data.
+Prelab answers, the three table copies with their graphs and fits, the wavelengths of copper Kα and molybdenum Kα and the spacing of LiF with their comparisons, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

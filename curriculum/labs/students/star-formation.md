@@ -101,10 +101,6 @@ Now watch two cores. Press **A cold dense core: 10 K**, then **Play**, and watch
 4. The disk edge you wrote down in Part 2 is a distance from the star. How wide is the disk across? Does it fall between the two sizes you found in Analysis 3?
 5. From Table 3, which setups become stars? What is the lightest star at 3 million K, in solar masses and in Jupiter masses (divide by $$1/1{,}048$$, that is, multiply by 1,048)? When fusion needs 5 million K instead, does the lightest star get heavier or lighter? Why?
 
-## Uncertainty
-
-Detailed models of the lightest stars put the dividing line at 0.075 $$M_\odot$$. By how many percent does the demo's lightest star at 3 million K differ from that? The lesson's round number, 0.08 $$M_\odot$$, is 80 Jupiters if Jupiter is taken as 1/1,000 of the Sun. By how many percent does that differ from your answer in Analysis 5?
-
 ## Questions
 
 1. Switch back to **Cold and dense** and press **A giant molecular cloud**. How many Jeans masses does it hold (**Cloud mass M/M_J**)? What does that mean for how many stars it can make, and why are stars born in clusters?
@@ -112,6 +108,15 @@ Detailed models of the lightest stars put the dividing line at 0.075 $$M_\odot$$
 3. In your own words, why can a brown dwarf never become a star, even if you wait a very long time?
 4. Look back at your prediction in Before the lab 4. In Part 1, what did the 10 K core do, and what did the 10,000 K core do? Use the pressures and the values of $$M/M_J$$ you recorded to explain why heating a cloud works against its collapse, and say whether your prediction held up. Table 1 shows how quickly it happens: at which temperature does pressure already win?
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+Detailed models of the lightest stars put the dividing line at 0.075 $$M_\odot$$. By how many percent does the demo's lightest star at 3 million K differ from that? The lesson's round number, 0.08 $$M_\odot$$, is 80 Jupiters if Jupiter is taken as 1/1,000 of the Sun. By how many percent does that differ from your answer in Analysis 5?
+
+Give the intercept of the Jeans mass line in Analysis 1 with its standard error, and say whether it is zero within that error.
+
 ## What to hand in
 
-Answers to Before the lab, the three tables with the graph and its slope, the readouts and sentences you wrote in Parts 1 and 2, and your answers to Analysis, Uncertainty and Questions. Identify simulated data: every reading in this lab is simulated.
+Answers to Before the lab, the three tables with the graph and its slope, the readouts and sentences you wrote in Parts 1 and 2, and your answers to Analysis and Questions (and to Uncertainty, if assigned). Identify simulated data: every reading in this lab is simulated.

@@ -99,15 +99,18 @@ Energies are in J. For the rectangle, use its lowest and highest corner temperat
 3. For the Carnot readings, make a graph of the efficiency from the energies, $$\eta = W_\mathrm{net}/Q_\mathrm{in}$$ (vertical), against the Carnot limit $$\eta_\mathrm{C} = 1 - T_c/T_h$$ (horizontal). Find the slope and the intercept of the line. What do they tell you about the Carnot engine? Then look down the efficiency column: by how much does $$\eta$$ go up for each 200 K added to $$T_h$$? Does it go up by the same amount each time?
 4. For each refrigerator reading, compare the COP from the energies with $$T_c/(T_h - T_c)$$. How does the COP change as the cold side gets colder?
 
-## Uncertainty
-
-The demo gives energies to three or four significant figures, so the efficiencies and COPs you work out should match the formulas to about 0.1 %. Check that any difference is no bigger than that before you call it real. A real engine has friction and leaks heat, so it falls well short of these ideal values.
-
 ## Questions
 
 1. Look back at your guess in Before the lab 4. What efficiencies did you find at 600 K and 1200 K? Explain with $$\eta_\mathrm{C} = 1 - T_c/T_h$$ why doubling $$T_h$$ does not double the efficiency, and what would have to happen for the efficiency to reach 100 %.
 2. A freezer keeps its inside at 250 K in a kitchen at 300 K. From your results, why does the freezer use more electricity on a hot day, or when it is set colder?
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The demo gives energies to three or four significant figures, so the efficiencies and COPs you work out should match the formulas to about 0.1 %. Check that any difference is no bigger than that before you call it real. A real engine has friction and leaks heat, so it falls well short of these ideal values.
+
 ## What to hand in
 
-Prelab answers, the three copies of the Data table and Table 2 with the calculated columns filled in, the graph of Analysis 3, and answers to the questions. Identify simulated data.
+Prelab answers, the three copies of the Data table and Table 2 with the calculated columns filled in, the graph of Analysis 3, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

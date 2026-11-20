@@ -59,16 +59,19 @@ Table 1. Molecules and light.
 1. From the table, which molecules take up microwaves, and what do they have in common? Which take up infrared at 15.0 μm, and why does CO₂ while N₂ and O₂ do not? What has this to do with the greenhouse effect?
 2. For each molecule that breaks in the table, compare the photon energy with its bond energy $$D_0$$. Why does NO₂ break at 254 nm but only glow at 500 nm?
 
-## Uncertainty
-
-The demo's absorption edges and bond energies are approximate, and it counts an infrared lamp as on a vibration within 60 cm⁻¹ of it. Which entries in your table lie closest to one of these limits? How far from the limit is each, in percent or in cm⁻¹, and what does that say about how far to trust those entries?
-
 ## Questions
 
 1. N₂ and O₂ make up most of the air but have no infrared absorption at 15.0 μm. Why?
 2. Ozone is a small part of the air, yet it shields the ground from ultraviolet light near 254 nm, which O₂ lets through. What does the table show about why?
 3. Before the lab 2 asked which photon a water molecule takes up. What does your H₂O row show for the microwave and the ultraviolet lamps, and how does that compare with your choice? Explain each result with the two conditions in the Background: a way for the molecule to take exactly that energy, and a way for the light to push on it.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The demo's absorption edges and bond energies are approximate, and it counts an infrared lamp as on a vibration within 60 cm⁻¹ of it. Which entries in your table lie closest to one of these limits? How far from the limit is each, in percent or in cm⁻¹, and what does that say about how far to trust those entries?
+
 ## What to hand in
 
-Prelab answers, the table, the energy comparison for the molecules that break, and answers to the questions. Identify simulated data.
+Prelab answers, the table, the energy comparison for the molecules that break, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

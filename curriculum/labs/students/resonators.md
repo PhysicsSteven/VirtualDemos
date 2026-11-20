@@ -103,15 +103,18 @@ Here $$x = (2k - 1)/(4f)$$. Record temperature, tube diameter and seed above the
 
 5. Describe how the width of the resonance changed with Q.
 
-## Uncertainty
-
-Use your first bracket and the scatter of the fit to estimate uncertainty. Include the source frequency and temperature uncertainties if available. A common error in the scale's zero cancels from spacing, but changes the fitted end correction. This is one reason the end correction is often less precise than the speed. Discuss whether broad resonance peaks made the center hard to locate.
-
 ## Questions
 
 1. How would mislabeling a skipped resonance affect your result?
-2. Which way did the first resonance move between 20 °C and 30 °C, and by how much? Does your 30 °C copy's spacing agree, given the reading scatter? Check this against Before the lab 4, and explain the move from how the speed of sound depends on temperature.
+2. Which way did the first resonance move between 20 °C and 30 °C, and by how much? Does the spacing of your 30 °C copy change in the same direction? Check this against Before the lab 4, and explain the move from how the speed of sound depends on temperature.
+
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+Report $$c$$ and $$\Delta L$$ from your fits with their standard errors, and give the mean and standard error of your spacing values. Say whether $$\Delta L$$ agrees with $$0.6133a$$ and your speed with the dry air prediction within their uncertainties, and whether your 30 °C spacing agrees with the expected change given the reading scatter. Use your first bracket and the scatter of the fit to estimate uncertainty. Include the source frequency and temperature uncertainties if available. A common error in the scale's zero cancels from spacing, but changes the fitted end correction. This is one reason the end correction is often less precise than the speed. Discuss whether broad resonance peaks made the center hard to locate.
 
 ## What to hand in
 
-Prelab answers, the data table and CSV, spacing calculations, the fitted graph and residuals, $$c$$ and $$\Delta L$$ with uncertainty, the temperature and damping comparison, and answers to the questions. Identify simulated data and give the seed.
+Prelab answers, the data table and CSV, spacing calculations, the fitted graph and residuals, $$c$$ and $$\Delta L$$, the temperature and damping comparison, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data and give the seed.

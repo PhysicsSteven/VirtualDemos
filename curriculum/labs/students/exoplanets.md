@@ -79,14 +79,19 @@ No hazards in the virtual lab.
 5. Find the orbit's radius $$a$$ in AU, and the planet's density in g/cm³. Is it rocky (Earth is 5.5 g/cm³), mostly water or ice, or a gas giant (Jupiter is 1.3 g/cm³, Saturn 0.69)?
 6. Now reveal the planet and compare each of your results.
 
-## Uncertainty
-
-Each measurement has the noise shown in the Mystery system section. The average of $$N$$ readings with scatter $$\sigma$$ has an uncertainty of about $$\sigma/\sqrt{N}$$. Estimate the uncertainty of your transit depth and of $$K$$ this way, and carry them through to $$R_p$$ and $$M_p$$. Which of the two is least certain, and why?
-
 ## Questions
 
 1. Put your guess in Before the lab 2 next to the mass series: what did a tenfold heavier planet do to the dip and to $$K$$? Explain what you saw from $$\delta \approx (R_p/R_s)^2$$ and the formula for $$K$$, and say why the density needs both signals. Earth makes the Sun move at only about 9 cm/s: why, then, are Earth sized planets around Sun like stars so much harder to find than hot Jupiters?
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+Each measurement has the noise shown in the Mystery system section. The average of $$N$$ readings with scatter $$\sigma$$ has an uncertainty of about $$\sigma/\sqrt{N}$$. Estimate the uncertainty of your transit depth and of $$K$$ this way, and carry them through to $$R_p$$ and $$M_p$$. Which of the two is least certain, and why?
+
+Give the slope of each graph with its standard error. Give the mystery planet's radius and mass with their uncertainties, and say whether the revealed values lie within them.
+
 ## What to hand in
 
-Prelab answers, the table copies with their graphs and fits, the mystery planet's radius and mass with uncertainties, its orbit and density, and the comparison with the revealed values, and answers to the questions. Identify simulated data.
+Prelab answers, the table copies with their graphs and fits, the mystery planet's radius and mass, its orbit and density, and the comparison with the revealed values, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

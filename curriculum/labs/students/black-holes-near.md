@@ -81,15 +81,18 @@ No hazards in the virtual lab.
 2. For the series at different masses, show that the stretch at the horizon falls as $$1/M^2$$ (for example, multiply each value by $$M^2$$). Use $$r = r_s$$ in $$\Delta A = 2GML/r^3$$ to explain why.
 3. For the shadow, fill in the last two columns and graph $$\sin\alpha$$ against $$(r_s/r_o)\sqrt{1 - r_s/r_o}$$. Compare the slope with $$b_c = \sqrt{27}/2 = 2.598$$ (in units of $$r_s$$). Below what distance is the far away estimate off by more than 5%?
 
-## Uncertainty
-
-The demo's readings are exact values of its model, shown to six significant figures, so the scatter about your lines is tiny: report each slope with its standard error. A real shadow is not exact. Suppose each shadow radius were measured to 1%. How well would the slope of your graph, and so $$b_c$$, be known?
-
 ## Questions
 
 1. M87\* has a mass of $$6.5\times10^9\ M_\odot$$ and is 16.8 Mpc away. Find the angular diameter of its shadow seen from Earth, $$2b_c/D$$, in microarcseconds, and compare with the 42 µas ring the Event Horizon Telescope imaged in 2019. Why is the shadow 2.6 times wider than the horizon?
 2. Find the $$10^6$$ $$M_\odot$$ reading in your mass series. How did your guess in Before the lab 4 hold up? Explain, from where the horizon sits for a large mass and how the stretch depends on $$r$$, why the size of the hole decides what a falling person feels there. Sagittarius A\* has $$4.3\times10^6\ M_\odot$$: would a person falling into it be pulled apart before or after crossing the horizon?
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The demo's readings are exact values of its model, shown to six significant figures, so the scatter about your lines is tiny: report each slope with its standard error. A real shadow is not exact. Suppose each shadow radius were measured to 1%. How well would the slope of your graph, and so $$b_c$$, be known?
+
 ## What to hand in
 
-Prelab answers, the table copies with their graphs and fits, your values of $$r_s$$, the black hole's mass and $$b_c$$, and answers to the questions. Identify simulated data.
+Prelab answers, the table copies with their graphs and fits, your values of $$r_s$$, the black hole's mass and $$b_c$$, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

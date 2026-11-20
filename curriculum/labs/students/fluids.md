@@ -94,14 +94,17 @@ Keep a separate copy for each part and label unused columns. Convert kPa, cm and
 3. Explain which assumptions would fail for viscous flow, strong turbulence or cavitation.
 4. For each block in Table 2, find $$\rho = W/(gV)$$ and name the metal from the densities 1738 (magnesium), 2700 (aluminum), 4506 (titanium), 7140 (zinc), 7874 (iron), 8960 (copper), 10,490 (silver), 11,340 (lead) and 19,300 kg/m³ (gold). Then compare $$W - T$$ with the weight of the water caught, $$\rho_w g V$$.
 
-## Uncertainty
-
-Propagate depth, diameter and scale resolution. Areas depend on diameter squared, and the dynamic pressure term depends on speed squared. Small differences between large pressure heads can be poorly resolved. Distinguish measurement resolution from the ideal model's omission of viscous losses. Do not treat a cavitation warning as another ordinary steady flow data point. The beaker reads to 1 cm³ and the scale to 0.01 N, so the smallest block has the largest fractional uncertainty in its density.
-
 ## Questions
 
 1. From your Flow readings, give the standpipe heads $$h_1$$ (wide part) and $$h_2$$ (throat) for your widest and narrowest throats. Which way did the pressure change in the throat, and is that what you expected in Before the lab 4? Use Bernoulli's equation, and Newton's second law for the water as it enters the throat, to explain it. Does a higher absolute pressure necessarily mean a larger pressure difference driving flow?
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+Propagate depth, diameter and scale resolution. Areas depend on diameter squared, and the dynamic pressure term depends on speed squared. Small differences between large pressure heads can be poorly resolved. Distinguish measurement resolution from the ideal model's omission of viscous losses. Do not treat a cavitation warning as another ordinary steady flow data point. The beaker reads to 1 cm³ and the scale to 0.01 N, so the smallest block has the largest fractional uncertainty in its density.
+
 ## What to hand in
 
-Prelab answers, raw data/CSV, density fit, the Venturi calculations, the five metals, uncertainty and answers to the questions. Identify simulated data.
+Prelab answers, raw data/CSV, density fit, the Venturi calculations, the five metals, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

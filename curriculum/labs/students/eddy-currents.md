@@ -82,15 +82,18 @@ In Part 2, work out $$m^2$$ for the copper rows only and leave it blank for the 
 5. For the same drop, calculate the heat produced in the pipe. Where did that energy come from?
 6. Part 3: compare the plastic pipe's time with your answer to Before the lab question 4. Did doubling the wall from 0.8 mm to 1.6 mm double the fall time? Use the formula for $$k$$ to explain what you found.
 
-## Uncertainty
-
-The timers read to 0.01 s, and the settings are exact, so a fit with small residuals confirms the model rather than testing it. The model itself is the larger limit: it treats the magnet as a point and the wall as thin, but here the wall is about a sixth of the radius and the magnet fills two thirds of the bore. Say which way a real magnet's fall time would likely differ. The conductivity between −50 °C and −196 °C comes from a straight line in resistivity between measured values, which is close for pure copper but not exact.
-
 ## Questions
 
 1. Why is a copper pipe not attracted to a magnet that is held still inside it? Yet the pipe slows a falling one: compare your copper fall times at 20 °C and −196 °C with what you said in Before the lab 5, and use Faraday's and Lenz's laws to explain what slows the magnet and what cooling does to it.
 2. A copper pipe with a slit cut along its whole length: will the magnet fall faster or slower than in a whole pipe? Explain.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The timers read to 0.01 s, and the settings are exact, so a fit with small residuals confirms the model rather than testing it. The model itself is the larger limit: it treats the magnet as a point and the wall as thin, but here the wall is about a sixth of the radius and the magnet fills two thirds of the bore. Say which way a real magnet's fall time would likely differ. The conductivity between −50 °C and −196 °C comes from a straight line in resistivity between measured values, which is close for pure copper but not exact. Give the standard errors of the Part 1 fitted slope and intercept, and of the Part 2 intercept.
+
 ## What to hand in
 
-Prelab answers, the two data tables with their graphs and fits, the slopes compared with the formula, the terminal speed, $$\tau$$ and heat for one drop, your Part 3 observations, and answers to the questions. Identify simulated data.
+Prelab answers, the two data tables with their graphs and fits, the slopes compared with the formula, the terminal speed, $$\tau$$ and heat for one drop, your Part 3 observations, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

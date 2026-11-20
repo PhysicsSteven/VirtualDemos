@@ -37,12 +37,13 @@ VDI18N.add('en', 'ws/intro-em-spectrum', [
 "How many times longer is the wavelength of your {#}⁸ Hz radio wave than that of your visible light? How many times lower is its frequency?",
 "Convert the wavelength of your visible reading to nanometers (multiply meters by {#}⁹). What color is it?",
 "Compare the wavelength of your {#}²⁰ Hz gamma ray with the size of an atom, about {#}⁻¹⁰ m. Which is smaller, and by how many times?",
-"The demo’s speed of light is computed from measured constants and agrees with the exact value to better than one part in a trillion, so λ × f should come out the same in every reading to all the digits shown. If one of your products differs, where could the difference come from? (Think about rounding when you multiply.)",
 "Hydrogen gas in space gives off radio waves with a wavelength of {#} cm ({#} m). What is their frequency? Radio astronomers map our galaxy with them.",
 "A microwave oven works at {#} × {#}⁹ Hz. What is the wavelength of its microwaves, in centimeters?",
 "Earth’s atmosphere lets visible light and many radio waves through to the ground, but it blocks most ultraviolet, X-rays and gamma rays, and much of the infrared. Use the strip under the spectrum, and the “Reaches the ground?” readout, to check this. Which kinds of telescopes can work on the ground, and which have to go above the atmosphere? Why do infrared telescopes on the ground sit on high, dry mountains?",
 "Your eyes see only a tiny slice of the spectrum. Drag the Frequency f slider to its two ends: roughly how many powers of ten in frequency does the whole spectrum in the demo span? Then find the two frequencies where the Band readout changes into and out of visible: how wide is the visible slice?",
 "Before the lab {#} asked whether a flare’s radio waves or its X-rays reach Earth first. What does the λ × f column give for your {#}⁸ Hz radio reading and your {#}¹⁸ Hz X-ray reading, and what does that say about your answer? Using the Background, explain why waves with such different wavelengths and frequencies all travel at the same speed in empty space.",
-"Prelab answers, the table, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.",
+"For courses that treat measurement uncertainty. This section is not counted in the {#} minutes; do it when your instructor assigns it.",
+"The demo’s speed of light is computed from measured constants and agrees with the exact value to better than one part in a trillion, so λ × f should come out the same in every reading to all the digits shown. If one of your products differs, where could the difference come from? (Think about rounding when you multiply.)",
+"Prelab answers, the table, the answers to the analysis section and to the questions (and to Uncertainty, if assigned). Identify simulated data.",
 "Electromagnetic Waves"
 ]);

@@ -138,14 +138,16 @@ VDI18N.add('es', 'ws/chladni', {
   "Explica cómo cambiar la posición del excitador puede hacer que algunos modos sean difíciles de excitar sin cambiar sus frecuencias naturales.",
 "For the six drumhead modes at {#} N/m, compare \\(f/f_{01}\\) with \\(j_{nm}/j_{01}\\). Are the overtones harmonics of \\(f_{01}\\)? Compare with the string, whose overtones are \\(2f_1, 3f_1, \\dots\\)":
   "Para los seis modos del parche a {#} N/m, compara \\(f/f_{01}\\) con \\(j_{nm}/j_{01}\\). ¿Son los sobretonos armónicos de \\(f_{01}\\)? Compara con la cuerda, cuyos sobretonos son \\(2f_1, 3f_1, \\dots\\)",
-"Frequency tuning resolution, finite resonance width and ambiguous mode identification limit precision. A change in sand pattern is not automatically a new normal mode. Real plates also have uncertain thickness, support conditions and material constants. Treat simulated readings as model results rather than physical measurements.":
-  "La resolución de la sintonía de frecuencia, el ancho finito de la resonancia y la identificación ambigua de los modos limitan la precisión. Un cambio en el patrón de arena no es automáticamente un nuevo modo normal. Las placas reales también tienen espesor, condiciones de soporte y constantes del material inciertos. Trata las lecturas simuladas como resultados del modelo y no como mediciones físicas.",
 "Why should nodal patterns not be used as direct maps of stress?":
   "¿Por qué los patrones nodales no deben usarse como mapas directos del esfuerzo?",
 "Doubling the thickness doubles the mass of every square centimeter of plate. Using your point force readings at {#} and {#} mm, say whether the mode’s frequency went the way you chose in Before the lab {#}. Explain the result by comparing how the plate’s stiffness and its mass change with thickness.":
   "Duplicar el espesor duplica la masa de cada centímetro cuadrado de placa. Con tus lecturas de fuerza puntual a {#} y {#} mm, indica si la frecuencia del modo cambió en el sentido que elegiste en Antes del laboratorio {#}. Explica el resultado comparando cómo cambian con el espesor la rigidez de la placa y su masa.",
-"Prelab answers, a resonance table with sketches, the thickness comparison, the Drumhead table, uncertainty discussion and answers to the questions. Identify simulated data.":
-  "Respuestas previas al laboratorio, una tabla de resonancias con dibujos, la comparación de espesores, la tabla del Parche, la discusión de incertidumbres y las respuestas a las preguntas. Identifica los datos simulados.",
+"For courses that treat measurement uncertainty. This section is not counted in the {#} minutes; do it when your instructor assigns it.":
+  "Para cursos que tratan la incertidumbre de medición. Esta sección no cuenta dentro de los {#} minutos; hazla cuando tu profesor la asigne.",
+"Frequency tuning resolution, finite resonance width and ambiguous mode identification limit precision. A change in sand pattern is not automatically a new normal mode. Real plates also have uncertain thickness, support conditions and material constants. Treat simulated readings as model results rather than physical measurements.":
+  "La resolución de la sintonía de frecuencia, el ancho finito de la resonancia y la identificación ambigua de los modos limitan la precisión. Un cambio en el patrón de arena no es automáticamente un nuevo modo normal. Las placas reales también tienen espesor, condiciones de soporte y constantes del material inciertos. Trata las lecturas simuladas como resultados del modelo y no como mediciones físicas.",
+"Prelab answers, a resonance table with sketches, the thickness comparison, the Drumhead table, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.":
+  "Respuestas previas al laboratorio, una tabla de resonancias con dibujos, la comparación de espesores, la tabla del Parche, y las respuestas a las preguntas (y de Incertidumbre, si se asigna). Identifica los datos simulados.",
 "Acceleration amplitude of the plate":
   "Amplitud de aceleración de la placa",
 "Constant fixed by the free edge":

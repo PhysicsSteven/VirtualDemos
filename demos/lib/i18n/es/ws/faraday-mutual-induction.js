@@ -80,16 +80,18 @@ VDI18N.add('es', 'ws/faraday-mutual-induction', {
   "Para el secundario abierto, calcula \\(M = \\text{emf}_\\text{peak}/(2\\pi f I_{1,\\text{peak}})\\). Compara los barridos de frecuencia y las separaciones. Explica por qué el par con núcleo de aire no tiene que obedecer la razón de espiras de un transformador ideal.",
 "For the sliding bar, infer \\(B\\) from the emf speed slope. Compare \\(\\lvert F\\rvert v\\), \\(\\lvert \\text{emf}\\, I\\rvert\\) and \\(I^2 R\\) during steady motion.":
   "Para la barra deslizante, deduce \\(B\\) con la pendiente de la fem en función de la rapidez. Compara \\(\\lvert F\\rvert v\\), \\(\\lvert \\text{emf}\\, I\\rvert\\) e \\(I^2 R\\) durante el movimiento estable.",
-"Use time spacing, peak bracketing and readout rounding to estimate amplitude uncertainty. Avoid fitting only one sampled peak. For \\(M\\), include uncertainties in emf amplitude, primary current amplitude and frequency. The sliding bar emf and current are interval averages; the flux is an endpoint value. State your sampling interval and check whether reducing it changes the result.":
-  "Usa el espaciado del tiempo, el intervalo que encierra el máximo y el redondeo de las lecturas para estimar la incertidumbre de la amplitud. Evita ajustar un solo máximo muestreado. Para \\(M\\), incluye las incertidumbres de la amplitud de la fem, de la amplitud de la corriente del primario y de la frecuencia. La fem y la corriente de la barra deslizante son promedios por intervalo; el flujo es un valor en el extremo. Indica tu intervalo de muestreo y comprueba si reducirlo cambia el resultado.",
 "Why does closing the secondary change the primary current?":
   "¿Por qué cerrar el secundario cambia la corriente del primario?",
 "Where does the resistor’s heat energy come from in each setup?":
   "¿De dónde viene la energía térmica del resistor en cada configuración?",
 "From {#} Hz to {#} Hz, how did the secondary emf amplitude change while the primary current fell? Was that what you said in Before the lab {#}? Use \\(\\mathcal E_2 = -M\\,dI_1/dt\\) to explain how it depends on both the primary current and the frequency.":
   "De {#} Hz a {#} Hz, ¿cómo cambió la amplitud de la fem del secundario mientras la corriente del primario disminuía? ¿Fue lo que dijiste en Antes del laboratorio {#}? Usa \\(\\mathcal E_2 = -M\\,dI_1/dt\\) para explicar cómo depende tanto de la corriente del primario como de la frecuencia.",
-"Prelab answer, settings and CSV, mutual inductance estimates, motional emf and energy calculations, uncertainty and answers to the questions. Identify simulated data.":
-  "Respuesta del prelaboratorio, ajustes y CSV, estimaciones de la inductancia mutua, cálculos de la EMF de movimiento y de la energía, incertidumbre y respuestas a las preguntas. Identifica los datos simulados.",
+"For courses that treat measurement uncertainty. This section is not counted in the {#} minutes; do it when your instructor assigns it.":
+  "Para cursos que tratan la incertidumbre de medición. Esta sección no cuenta dentro de los {#} minutos; hazla cuando tu profesor la asigne.",
+"Use time spacing, peak bracketing and readout rounding to estimate amplitude uncertainty. Avoid fitting only one sampled peak. For \\(M\\), include uncertainties in emf amplitude, primary current amplitude and frequency. The sliding bar emf and current are interval averages; the flux is an endpoint value. State your sampling interval and check whether reducing it changes the result.":
+  "Usa el espaciado del tiempo, el intervalo que encierra el máximo y el redondeo de las lecturas para estimar la incertidumbre de la amplitud. Evita ajustar un solo máximo muestreado. Para \\(M\\), incluye las incertidumbres de la amplitud de la fem, de la amplitud de la corriente del primario y de la frecuencia. La fem y la corriente de la barra deslizante son promedios por intervalo; el flujo es un valor en el extremo. Indica tu intervalo de muestreo y comprueba si reducirlo cambia el resultado.",
+"Prelab answer, settings and CSV, mutual inductance estimates, motional emf and energy calculations, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.":
+  "Respuesta del prelaboratorio, ajustes y CSV, estimaciones de la inductancia mutua, cálculos de la EMF de movimiento y de la energía, y respuestas a las preguntas (y de Incertidumbre, si se asigna). Identifica los datos simulados.",
 "Area":
   "Área",
 "Force on the bar":

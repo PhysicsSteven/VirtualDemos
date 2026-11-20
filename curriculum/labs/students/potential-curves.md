@@ -65,15 +65,18 @@ Sketch the potential and choose three total energies. Predict turning points and
 2. Calculate $$v = \sqrt{2(E-U)/m}$$ at three allowed positions. At turning points discuss acceleration as well as speed.
 3. Classify equilibria from the local curve shape. Compare turning point patterns below and above a double well barrier.
 
-## Uncertainty
-
-State the spacing used to estimate a slope. Small spacing can amplify rounding, while large spacing smooths local curvature. Treat this as interpretation of a model curve, not independent validation of a real potential.
-
 ## Questions
 
 1. What force did you read at the Spring's turning point, and at what $$x$$? Does it agree with your answer to Before the lab 3? Use $$F_x = -dU/dx$$ to explain whether acceleration must vanish when speed is zero, and say where on the curve the force does vanish.
 2. Why is a local maximum of $$U$$ unstable?
 3. Can the same total energy allow two disconnected regions of motion?
+
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+State the spacing used to estimate a slope. Small spacing can amplify rounding, while large spacing smooths local curvature. Treat this as interpretation of a model curve, not independent validation of a real potential.
 
 ## With calculus
 
@@ -84,4 +87,4 @@ For courses that use calculus. This section is not counted in the 75 minutes; do
 
 ## What to hand in
 
-Predicted sketches, the comparison table, slope/speed calculations and answers to the questions (and to With calculus, if assigned). Identify the activity as a simulation comparison.
+Predicted sketches, the comparison table, slope/speed calculations and answers to the questions (and to Uncertainty and With calculus, if assigned). Identify the activity as a simulation comparison.

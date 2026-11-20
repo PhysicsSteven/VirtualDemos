@@ -74,20 +74,25 @@ Diagnostic ultrasound is safe at the low intensities scanners use, but a real tr
 
 ## Analysis
 
-1. Graph $$t$$ (vertical) against the known depth (horizontal) for Part 1. The slope is $$2/c$$. Find the speed of sound in water with its uncertainty and compare it with 1500 m/s.
+1. Graph $$t$$ (vertical) against the known depth (horizontal) for Part 1. The slope is $$2/c$$. Find the speed of sound in water and compare it with 1500 m/s.
 2. For Part 2, convert each echo time to a depth with 1540 m/s, as a scanner would. Compare with the true layers (1.5 cm of fat, 3.0 cm of muscle, 1.0 cm of bone). Why does the bone look much thinner than it is? Explain which echoes are strong and which are upside down using $$r$$.
 3. For Part 3, compare the separation of the two echoes with the pulse length at each frequency you tried. Explain why the lowest frequency that separates them is the one it is.
 4. For Part 4, find the blood speed from each shift. Find the mystery speed from each angle and its mean.
-
-## Uncertainty
-
-The model has no noise; the uncertainty is in placing the cursor on the middle of an echo or the peak of the spectrum, which you can judge by how far the cursor can move before the reading looks wrong. The spectrum's peak has a width of about 1/(20 ms) = 50 Hz from the length of the stretch of echo it is taken over. In a real body, absorption weakens deep echoes, the speed varies from tissue to tissue and person to person, multiple echoes add false images, and the beam angle is known only to a few degrees, which matters most near 90°.
 
 ## Questions
 
 1. Why does a scanner need coupling gel between the transducer and the skin?
 2. The same blood was measured at 30° and 70° in Part 4. How did the two shifts compare with your choice in Before the lab 4, and why does the angle change the shift but not the speed you work out from it? In smooth (laminar) flow the spectrum spreads from zero up to a largest shift: what does that largest shift tell you, and why must the angle be known to turn it into a speed?
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The model has no noise; the uncertainty is in placing the cursor on the middle of an echo or the peak of the spectrum, which you can judge by how far the cursor can move before the reading looks wrong. The spectrum's peak has a width of about 1/(20 ms) = 50 Hz from the length of the stretch of echo it is taken over. In a real body, absorption weakens deep echoes, the speed varies from tissue to tissue and person to person, multiple echoes add false images, and the beam angle is known only to a few degrees, which matters most near 90°.
+
+Give the speed of sound in water from the Part 1 fit with its uncertainty, using the standard error of the slope, and say whether the intercept is zero within its uncertainty.
+
 ## What to hand in
 
-Prelab answers, a Data table copy for each part, the graph and fit for Part 1, your depth calculations, the thin layer result, the blood speeds, and answers to the questions. Identify simulated data.
+Prelab answers, a Data table copy for each part, the graph and fit for Part 1, your depth calculations, the thin layer result, the blood speeds, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

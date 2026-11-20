@@ -84,8 +84,6 @@ VDI18N.add('es', 'ws/intro-precession', {
   "A {#} rpm con d = {#} m, ¿cuántas veces gira la rueda durante una vuelta alrededor del poste? (La rueda gira {#} veces por minuto, que son {#} veces por segundo.)",
 "Earth spins once a day and precesses once in {#} years. About how many times does Earth spin during one turn of its axis? Which spins “faster compared with its precession,” Earth or the demo’s wheel?":
   "La Tierra gira una vez al día y precesa una vez cada {#} años. ¿Aproximadamente cuántas veces gira la Tierra durante una vuelta de su eje? ¿Cuál gira “más rápido comparado con su precesión”, la Tierra o la rueda de la demo?",
-"The gate times each turn to {#} s, and the model has no friction, so a repeated reading gives the same time. A real gyroscope has friction at the pivot and in the axle bearing, so its spin slowly runs down. Using your results, would a real gyroscope’s turns around the post get faster or slower as it runs down? Explain.":
-  "La compuerta mide cada vuelta con resolución de {#} s, y el modelo no tiene fricción, así que una lectura repetida da el mismo tiempo. Un giroscopio real tiene fricción en el pivote y en el cojinete del eje, así que su giro se va frenando lentamente. Usando tus resultados, ¿las vueltas de un giroscopio real alrededor del poste se volverían más rápidas o más lentas al frenarse? Explica.",
 "Today Polaris is the North Star. Will it still be the North Star when the pyramids are as old again as they are now (about {#} years from now)? Explain using precession.":
   "Hoy Polaris es la Estrella del Norte. ¿Lo seguirá siendo cuando las pirámides tengan otra vez la edad que tienen ahora (dentro de unos {#} años)? Explícalo usando la precesión.",
 "Half of a precession turn from now, Earth’s axis will point to the opposite side of its circle in the sky. About how many years from now is that? Which bright star will then be near the pole?":
@@ -96,8 +94,12 @@ VDI18N.add('es', 'ws/intro-precession', {
   "Si la Tierra girara más despacio, pero el Sol y la Luna jalaran su abultamiento con la misma torca, ¿su precesión sería más rápida o más lenta? Usa lo que encontraste con la rueda.",
 "What did the far end of the axle do in your {#} rpm run, and how long did one turn around the post take? Did it go the way you expected in Before the lab {#}? Using the Precession paragraph of the Background, explain why the torque from the wheel’s weight swings the axle sideways around the post instead of tipping the far end down.":
   "¿Qué hizo el extremo lejano del eje en tu corrida de {#} rpm, y cuánto tardó una vuelta alrededor del poste? ¿Fue como esperabas en Antes del laboratorio {#}? Usando el párrafo Precesión del Fondo, explica por qué el torque del peso de la rueda hace girar el eje de lado alrededor del poste en vez de inclinar hacia abajo el extremo lejano.",
-"Prelab answers, the two table copies with the graph, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.":
-  "Respuestas previas al laboratorio, las dos copias de la tabla con la gráfica, las respuestas de las secciones de análisis e incertidumbre, y las respuestas a las preguntas. Identifica los datos simulados.",
+"For courses that treat measurement uncertainty. This section is not counted in the {#} minutes; do it when your instructor assigns it.":
+  "Para cursos que tratan la incertidumbre de medición. Esta sección no cuenta dentro de los {#} minutos; hazla cuando tu profesor la asigne.",
+"The gate times each turn to {#} s, and the model has no friction, so a repeated reading gives the same time. A real gyroscope has friction at the pivot and in the axle bearing, so its spin slowly runs down. Using your results, would a real gyroscope’s turns around the post get faster or slower as it runs down? Explain.":
+  "La compuerta mide cada vuelta con resolución de {#} s, y el modelo no tiene fricción, así que una lectura repetida da el mismo tiempo. Un giroscopio real tiene fricción en el pivote y en el cojinete del eje, así que su giro se va frenando lentamente. Usando tus resultados, ¿las vueltas de un giroscopio real alrededor del poste se volverían más rápidas o más lentas al frenarse? Explica.",
+"Prelab answers, the two table copies with the graph, the answers to the analysis section and to the questions (and to Uncertainty, if assigned). Identify simulated data.":
+  "Respuestas previas al laboratorio, las dos copias de la tabla con la gráfica, las respuestas de la sección de análisis y de las preguntas (y de Incertidumbre, si se asigna). Identifica los datos simulados.",
 "Gyroscope Precession":
   "Precesión del giroscopio",
 "<a>Virtual Physics Demos</a>":

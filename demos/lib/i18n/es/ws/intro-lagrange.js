@@ -100,8 +100,6 @@ VDI18N.add('es', 'ws/intro-lagrange', {
   "Según la Parte {#}, ¿entre qué dos cocientes de masas deja L4 de ser un lugar donde los objetos se quedan? Dilo con palabras: ¿cuántas veces más pesado debe ser el cuerpo grande que el menor? ¿Los pares Sol–Júpiter y Tierra–Luna están del lado seguro?",
 "From Part {#}, what happens to the L1 and L2 distances as the smaller body gets heavier? Explain why in words.":
   "Según la Parte {#}, ¿qué les pasa a las distancias de L1 y L2 conforme el cuerpo menor se vuelve más pesado? Explica por qué con palabras.",
-"The demo computes the Lagrange points exactly for its model, so the readings repeat. Name two ways the real Sun, Earth and Moon differ from the model, and say which spacecraft or asteroid each would affect.":
-  "La demo calcula los puntos de Lagrange exactamente para su modelo, así que las lecturas se repiten. Nombra dos maneras en que el Sol, la Tierra y la Luna reales difieren del modelo, y di qué nave o asteroide afectaría cada una.",
 "From Part {#}, describe how the Trojan asteroids move compared with L4 and L5, and what happened to the asteroids near L1. Which points are good places for asteroids to collect over billions of years, and why?":
   "Según la Parte {#}, describe cómo se mueven los asteroides troyanos respecto a L4 y L5, y qué les pasó a los asteroides cerca de L1. ¿Qué puntos son buenos lugares para que se acumulen asteroides durante miles de millones de años, y por qué?",
 "Earth has a known Trojan asteroid, {#} TK7, at its L4. Why is it much harder to find Trojans of Earth than of Jupiter? (Think about where in our sky Earth’s L4 and L5 always are.)":
@@ -110,8 +108,12 @@ VDI18N.add('es', 'ws/intro-lagrange', {
   "La nave Lucy, lanzada en {#}, visitará varios de los troyanos de Júpiter. ¿Por qué creen los astrónomos que estos asteroides podrían ser restos de la época en que se formaron los planetas?",
 "In your Sun–Earth reading from Part {#}, the L1 distance from the smaller body is how far L1 is from Earth, in Sun to Earth separations. The Sun’s and Earth’s pulls are equal and opposite {#} separations (about {#} km) from Earth. Which of the three places in Before the lab {#} is L1? Using Keeping pace in the Background, explain why an object that keeps pace with Earth at L1 cannot be where the two pulls cancel.":
   "En tu lectura Sol–Tierra de la Parte {#}, la distancia de L1 al cuerpo menor es qué tan lejos está L1 de la Tierra, en separaciones Sol–Tierra. Las atracciones del Sol y de la Tierra son iguales y opuestas a {#} separaciones (unos {#} km) de la Tierra. ¿Cuál de los tres lugares de Antes del laboratorio {#} es L1? Usando Mantener el paso del Fondo, explica por qué un objeto que mantiene el paso con la Tierra en L1 no puede estar donde las dos atracciones se cancelan.",
-"Prelab answers, the two copies of the Data table with the notes from Part {#}, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.":
-  "Respuestas del prelaboratorio, las dos copias de la tabla de datos con las notas de la Parte {#}, las respuestas de las secciones de análisis e incertidumbre, y las respuestas a las preguntas. Identifica los datos simulados.",
+"For courses that treat measurement uncertainty. This section is not counted in the {#} minutes; do it when your instructor assigns it.":
+  "Para cursos que tratan la incertidumbre de medición. Esta sección no cuenta dentro de los {#} minutos; hazla cuando tu profesor la asigne.",
+"The demo computes the Lagrange points exactly for its model, so the readings repeat. Name two ways the real Sun, Earth and Moon differ from the model, and say which spacecraft or asteroid each would affect.":
+  "La demo calcula los puntos de Lagrange exactamente para su modelo, así que las lecturas se repiten. Nombra dos maneras en que el Sol, la Tierra y la Luna reales difieren del modelo, y di qué nave o asteroide afectaría cada una.",
+"Prelab answers, the two copies of the Data table with the notes from Part {#}, the answers to the analysis section and to the questions (and to Uncertainty, if assigned). Identify simulated data.":
+  "Respuestas del prelaboratorio, las dos copias de la tabla de datos con las notas de la Parte {#}, las respuestas de la sección de análisis y las respuestas a las preguntas (y de Incertidumbre, si se asigna). Identifica los datos simulados.",
 "Lagrange Points":
   "Puntos de Lagrange",
 "<a>Virtual Physics Demos</a>":

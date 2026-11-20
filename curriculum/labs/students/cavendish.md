@@ -97,14 +97,17 @@ Never look into a laser or its reflection from the mirror. The large spheres of 
 4. Find $$\beta$$ and the corrected $$G_{\text{corr}}$$. By what percentage does it differ from the accepted value, $$6.674\times10^{-11}$$ N·m²/kg²?
 5. Use your $$G_{\text{corr}}$$ to find the mass of the Earth, and its average density. Compare the density with that of rock at the surface, about 3000 kg/m³. What does the difference tell you about the inside of the Earth?
 
-## Uncertainty
-
-The spot is read to 1 mm on a shift $$\Delta S$$ of a few centimeters, so a single reading carries an uncertainty of a few percent; using several sets of turning points brings it down. The clock reads to 1 s on a half period of about 180 s, and the slope of seven turning points does much better than that, but $$T$$ enters G squared. The formula leaves out the damping, which makes the swing about 0.3% slower than the undamped period, so G comes out about 0.6% low; you could correct for it from how fast the swing dies away. As the beam turns, the small spheres move closer to the large ones, so the pull grows: the beam turns about 0.7% further, but the square of the period grows by the same factor, and the two cancel in G as long as you use the period you measured. On real apparatus the biggest problems are air currents, temperature changes, shaking and the slow drift of the fiber, which is why Cavendish worked in a closed room and watched the balance through a telescope from outside.
-
 ## Questions
 
 1. Did the time per swing change as the swings died away? Give the time gaps from Part 2 and set them beside your answer to Before the lab 4. Use the fiber's restoring torque $$\kappa\theta$$ and $$T = 2\pi\sqrt{I/\kappa}$$ to explain why the size of the swing does or does not change the time per swing. A thinner fiber makes the period twice as long: by what factor would $$\Delta S$$ change? Why does that help, and what does it cost?
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The spot is read to 1 mm on a shift $$\Delta S$$ of a few centimeters, so a single reading carries an uncertainty of a few percent; using several sets of turning points brings it down. The clock reads to 1 s on a half period of about 180 s, and the slope of seven turning points does much better than that, but $$T$$ enters G squared. The formula leaves out the damping, which makes the swing about 0.3% slower than the undamped period, so G comes out about 0.6% low; you could correct for it from how fast the swing dies away. As the beam turns, the small spheres move closer to the large ones, so the pull grows: the beam turns about 0.7% further, but the square of the period grows by the same factor, and the two cancel in G as long as you use the period you measured. On real apparatus the biggest problems are air currents, temperature changes, shaking and the slow drift of the fiber, which is why Cavendish worked in a closed room and watched the balance through a telescope from outside. Give the slopes of the graphs of $$t$$ against $$n$$, the resting spots, $$\Delta S$$ and $$G_{\text{corr}}$$ with their uncertainties.
+
 ## What to hand in
 
-Answers to Before the lab, the Data tables, the graphs of $$t$$ against $$n$$ with their slopes, the resting spots and $$\Delta S$$, your values of G and $$G_{\text{corr}}$$ with the percentage difference, the mass and density of the Earth, and answers to the questions. Identify simulated data.
+Answers to Before the lab, the Data tables, the graphs of $$t$$ against $$n$$ with their slopes, the resting spots and $$\Delta S$$, your values of G and $$G_{\text{corr}}$$ with the percentage difference, the mass and density of the Earth, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

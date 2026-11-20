@@ -89,14 +89,10 @@ On a real bench, put a pad under the falling mass, keep hands and feet out from 
 
 ## Analysis
 
-1. Plot a against x for Table 1, with a free intercept. Report g from the slope with its standard error, and the intercept with its standard error. Do the runs at 6.0 kg and 10.0 kg fall on the same line? What does that tell you about the total mass?
-2. Plot 1/a against m + m₂ for Table 2. From the Background, 1/a = (m + m₂ + I/r²)/((m₂ − m) g) when f = 0. Find g from the slope and the pulley's I/r² from the intercept. Is the intercept zero within its uncertainty?
+1. Plot a against x for Table 1, with a free intercept. Report g from the slope, and the intercept. Do the runs at 6.0 kg and 10.0 kg fall on the same line? What does that tell you about the total mass?
+2. Plot 1/a against m + m₂ for Table 2. From the Background, 1/a = (m + m₂ + I/r²)/((m₂ − m) g) when f = 0. Find g from the slope and the pulley's I/r² from the intercept. Is the intercept zero?
 3. Compare each tension in Table 3 with the prediction. Explain why T lies between mg and m₂g.
-4. Compare your two values of g with 9.81 m/s². Which part gives the smaller uncertainty, and why?
-
-## Uncertainty
-
-The timer rounds to 0.001 s and the run is 1.000 m. Since $$a = 2d/t^2$$, the fractional uncertainty in a is twice the fractional uncertainty in t, so the fast runs (large x) are the least precise. Find that fraction for your fastest and slowest runs and compare it with the scatter about your fit. Repeating an unchanged run in the simulation gives the same time, so the scatter here comes only from rounding; on a real bench, the reaction time of a hand timer would dominate.
+4. Compare your two values of g with 9.81 m/s². Do they agree?
 
 ## Questions
 
@@ -105,6 +101,15 @@ The timer rounds to 0.001 s and the run is 1.000 m. Since $$a = 2d/t^2$$, the fr
 3. Axle friction f = 0.50 N is added to an ideal pulley. Which graph would show it, and as what?
 4. Before the lab 3 doubled both masses. How did the times and accelerations of those two runs compare, and was that what you expected? Use $$a = (m_2 - m)g/(m + m_2)$$ to explain it: what happens to the unbalanced weight $$(m_2 - m)g$$ and to the total mass when both masses double? With m₂ much larger than m, what does a approach? With m₂ = m?
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The timer rounds to 0.001 s and the run is 1.000 m. Since $$a = 2d/t^2$$, the fractional uncertainty in a is twice the fractional uncertainty in t, so the fast runs (large x) are the least precise. Find that fraction for your fastest and slowest runs and compare it with the scatter about your fit. Repeating an unchanged run in the simulation gives the same time, so the scatter here comes only from rounding; on a real bench, the reaction time of a hand timer would dominate.
+
+Report g from the Part 1 slope with its standard error, and the intercept with its standard error. For Part 2, say whether the intercept is zero within its uncertainty. Then compare your two values of g with 9.81 m/s²: which part gives the smaller uncertainty, and why?
+
 ## What to hand in
 
-Prelab answers, the three tables and the CSV, both graphs with fits and residuals, your two values of g with uncertainty, I/r² from Part 2, the tension comparison and answers to the questions. Identify simulated data.
+Prelab answers, the three tables and the CSV, both graphs with fits and residuals, your two values of g, I/r² from Part 2, the tension comparison and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

@@ -72,16 +72,19 @@ A real Van de Graaff generator can give a painful shock and can damage electroni
 3. For Part 2, graph the time to spark (vertical) against $$1/I$$ (horizontal). What is the slope, and what does it mean?
 4. For Part 3, find the time per spark from your counts, and compare it with $$Q_{\max}/I$$ worked out from the dome's size and belt current. Why does the count give a time a little longer than one charging time per spark?
 
-## Uncertainty
-
-The model is exact, so Parts 1 and 2 have no scatter. In Part 3 the count is a whole number and the run starts with an empty dome, so the time per spark from a count over 20 s is uncertain by up to one spark in the count. On a real generator, the breakdown field depends on humidity, pressure and the smoothness of the dome; charge leaks away through damp air and the column, so the dome may never reach $$E_b R$$; and the dome is not far from other objects, which changes its capacitance.
-
 ## Questions
 
 1. Why can the belt keep adding charge to a dome that is already at hundreds of kilovolts?
 2. A person standing on an insulating stool touches the dome while it charges. Why does their hair stand on end?
 3. Set the 2 μA row of Part 2 beside the 50 μA row. What happened to the highest voltage and to the time to spark, and how does that fit your answer to Before the lab 5? Use the breakdown field of air to explain what the belt current changes and what it does not.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The model is exact, so Parts 1 and 2 have no scatter. In Part 3 the count is a whole number and the run starts with an empty dome, so the time per spark from a count over 20 s is uncertain by up to one spark in the count. On a real generator, the breakdown field depends on humidity, pressure and the smoothness of the dome; charge leaks away through damp air and the column, so the dome may never reach $$E_b R$$; and the dome is not far from other objects, which changes its capacitance.
+
 ## What to hand in
 
-Prelab answers, a Data table copy for each part, the graphs and fits, your breakdown field, $$\varepsilon_0$$ and time per spark, and answers to the questions. Identify simulated data.
+Prelab answers, a Data table copy for each part, the graphs and fits, your breakdown field, $$\varepsilon_0$$ and time per spark, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

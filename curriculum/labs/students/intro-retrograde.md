@@ -71,16 +71,19 @@ No hazards in the virtual activity.
 3. On what date was Mars closest to Earth, and how does that compare with the date of opposition? Why do the two come close together?
 4. Compare your measured synodic periods with the formula. Why are the synodic periods of Jupiter and Saturn only a little longer than one year, while Mars's is more than two years?
 
-## Uncertainty
-
-Your 14 evenly spaced readings are 20 days apart. Using only those 14 readings and their Direction of motion column, between which two days did the retrograde motion start, and between which two did it end? What are the shortest and the longest it could have lasted? Does the length from your two stationary point readings (which Jump to finds to a fraction of a day) fall in that range?
-
 ## Questions
 
 1. Why do Mercury and Venus never appear opposite the Sun in our sky, and when do they go retrograde?
 2. The loops on the sky strip are open loops or zigzags, not motion back and forth along one line. Why do the planets not retrace the same path? (Hint: are the planets' orbits exactly in the same plane as Earth's?)
 3. Someone standing on the Sun watches Mars through the weeks when your Direction of motion read west (retrograde). Going by the view from above, would they ever see Mars move west against the stars? How does that fit your answer to Before the activity 3? Explain why the backward motion shows up only from Earth.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+Your 14 evenly spaced readings are 20 days apart. Using only those 14 readings and their Direction of motion column, between which two days did the retrograde motion start, and between which two did it end? What are the shortest and the longest it could have lasted? Does the length from your two stationary point readings (which Jump to finds to a fraction of a day) fall in that range?
+
 ## What to hand in
 
-Answers to Before the activity, the two tables with your graph, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.
+Answers to Before the activity, the two tables with your graph, the answers to the analysis section and to the questions (and to Uncertainty, if assigned). Identify simulated data.

@@ -88,6 +88,8 @@ the decisions. This file holds the rules; detail lives in the files it points to
 ## Handouts, worksheets, keys and videos
 - Every worksheet takes a student 75 minutes (a class period) or less, done alone as homework or in place of the lecture, so Background still teaches the idea, and every step says what to do and how: what to set, which readout to
   record, what to plot; name the control on first use or wherever a student could miss it (Steve 2026-11-16). Headings, `worksheet.js` maps and course lines: `docs/handouts.md`.
+- Intro worksheets put all uncertainty work in a closing Uncertainty section outside the 75 minutes, assigned by the instructor
+  (Steve 2026-11-20); upper level sheets keep it required. Pattern: `docs/handouts.md`.
 - Every worksheet has a How this works video or a `HOWTO_VIDEO` entry [checked]. One video: `bash tools/howto/take.sh <name>`;
   recipe in `tools/howto/README.md`. Night look only.
 - After a handout edit, reprint its key; after a demo change, rerun the key captures democheck names. Both with

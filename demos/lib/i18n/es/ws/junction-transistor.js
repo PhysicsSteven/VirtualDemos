@@ -92,14 +92,16 @@ VDI18N.add('es', 'ws/junction-transistor', {
   "Parte {#}: grafica \\(I_C\\) (A2) en función de \\(I_B\\) (A1) para la primera serie, donde \\(V_{CE}\\) se mantiene arriba de {#} V, y da \\(\\beta\\) a partir de la pendiente de la recta.",
 "Complete the A2/A1 column in both copies. Where does \\(I_C/I_B\\) stop being constant? What is \\(V_{CE}\\) there, and what limits \\(I_C\\) beyond that point? Compare with your answer to prelab question {#}.":
   "Completa la columna A2/A1 en ambas copias. ¿Dónde deja de ser constante \\(I_C/I_B\\)? ¿Cuánto vale \\(V_{CE}\\) ahí, y qué limita \\(I_C\\) más allá de ese punto? Compáralo con tu respuesta a la pregunta {#} del prelaboratorio.",
-"Use the standard errors of the fits for \\(n\\) and \\(\\beta\\). The readings have three significant figures: how large is the rounding of the diode voltage compared with the {#} V spread of your Part {#} readings per decade of current? Explain why the readings at {#} Ω, {#} Ω and {#} Ω are left out of the Part {#} fit.":
-  "Usa los errores estándar de los ajustes para \\(n\\) y \\(\\beta\\). Las lecturas tienen tres cifras significativas: ¿qué tan grande es el redondeo del voltaje del diodo comparado con la dispersión de {#} V de tus lecturas de la Parte {#} por década de corriente? Explica por qué las lecturas en {#} Ω, {#} Ω y {#} Ω se dejan fuera del ajuste de la Parte {#}.",
 "Why does a transistor used as a switch run in saturation rather than in the active region?":
   "¿Por qué un transistor usado como interruptor trabaja en saturación y no en la región activa?",
 "What did doubling β do to A2 at {#} kΩ and at {#} kΩ, and is that what you said in Before the lab {#}? Explain, from what sets the collector current in each region of operation, why each reading responded as it did.":
   "¿Qué hizo duplicar β con A2 a {#} kΩ y a {#} kΩ, y es eso lo que dijiste en Antes del laboratorio {#}? Explica, a partir de lo que determina la corriente del colector en cada región de operación, por qué cada lectura respondió como lo hizo.",
-"Prelab answers, both data tables with their graphs, \\(n\\) and \\(I_s\\) with uncertainties, \\(\\beta\\) with its uncertainty, the A2/A1 column, and answers to the questions. Identify simulated data.":
-  "Respuestas del prelaboratorio, ambas tablas de datos con sus gráficas, \\(n\\) e \\(I_s\\) con sus incertidumbres, \\(\\beta\\) con su incertidumbre, la columna A2/A1 y respuestas a las preguntas. Identifica los datos simulados.",
+"For courses that treat measurement uncertainty. This section is not counted in the {#} minutes; do it when your instructor assigns it.":
+  "Para cursos que tratan la incertidumbre de medición. Esta sección no cuenta dentro de los {#} minutos; hazla cuando tu profesor la asigne.",
+"Report \\(n\\), \\(I_s\\) and \\(\\beta\\) with the standard errors of the fits. The readings have three significant figures: how large is the rounding of the diode voltage compared with the {#} V spread of your Part {#} readings per decade of current? Explain why the readings at {#} Ω, {#} Ω and {#} Ω are left out of the Part {#} fit.":
+  "Reporta \\(n\\), \\(I_s\\) y \\(\\beta\\) con los errores estándar de los ajustes. Las lecturas tienen tres cifras significativas: ¿qué tan grande es el redondeo del voltaje del diodo comparado con la dispersión de {#} V de tus lecturas de la Parte {#} por década de corriente? Explica por qué las lecturas en {#} Ω, {#} Ω y {#} Ω se dejan fuera del ajuste de la Parte {#}.",
+"Prelab answers, both data tables with their graphs, \\(n\\) and \\(I_s\\), \\(\\beta\\), the A2/A1 column, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.":
+  "Respuestas del prelaboratorio, ambas tablas de datos con sus gráficas, \\(n\\) e \\(I_s\\), \\(\\beta\\), la columna A2/A1 y respuestas a las preguntas (y de Incertidumbre, si se asigna). Identifica los datos simulados.",
 "Diode current":
   "Corriente del diodo",
 "Base current":

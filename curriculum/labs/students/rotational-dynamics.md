@@ -80,17 +80,20 @@ Record the object dimensions, bearing setting and run identifier. Keep empty and
 
 1. Calculate $$a$$, $$\alpha$$ and $$\tau$$ from each timed drop. Fit $$\tau$$ against $$\alpha$$ for each load, with a free intercept, and inspect residuals.
 2. Find the added inertia by subtracting slopes. Compare the two fitted friction torques and explain whether a common bearing model is supported.
-3. Compare a known disk with its shape formula, or report the unknown inertia with uncertainty. Test whether the second spool points follow the same line.
+3. Compare a known disk with its shape formula, or report the unknown inertia. Test whether the second spool points follow the same line.
 4. Complete the energy account. Explain the role of friction work and why neither the falling mass's translational energy nor the table's own inertia may be omitted.
-
-## Uncertainty
-
-The virtual timer rounds to 0.001 s. Its mass and spool settings are exact model inputs; their adjustment steps are not random errors. For a real bench include spool radius measurement, effective string radius, drop height, mass and timing uncertainty. Both plot axes contain the same measured acceleration, so their errors are correlated; an ordinary line fit error is an approximation. Propagate both slope uncertainties into the difference in inertia, including shared systematic errors where appropriate. Repeating identical simulated runs cannot replace that analysis.
 
 ## Questions
 
 1. From your empty table drops, give $$t$$ and $$\alpha$$ for 0.060 and 0.120 kg. Which of the choices in Before the lab 4 fits? Use $$a = 2h/t^2$$ to explain why doubling the hanging mass does not halve the time, and use $$m(g-a)r = I\alpha + \tau_f$$ to explain why $$\alpha$$ comes out slightly more than doubled. What physical assumption makes $$\tau_f$$ the same constant torque in both drops?
 2. Could the friction intercept be resolved reliably if every run had nearly the same acceleration?
+
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The virtual timer rounds to 0.001 s. Its mass and spool settings are exact model inputs; their adjustment steps are not random errors. For a real bench include spool radius measurement, effective string radius, drop height, mass and timing uncertainty. Both plot axes contain the same measured acceleration, so their errors are correlated; an ordinary line fit error is an approximation. Propagate both slope uncertainties into the difference in inertia, including shared systematic errors where appropriate. Repeating identical simulated runs cannot replace that analysis. Report the unknown inertia with its uncertainty, and say whether the two fitted friction torques agree within their uncertainties.
 
 ## With calculus
 
@@ -102,4 +105,4 @@ For courses that use calculus. This section is not counted in the 75 minutes; do
 
 ## What to hand in
 
-Prelab answers, settings and a copy of the data table for each series, empty/loaded fits with residuals, added inertia and friction estimates with uncertainty, spool radius and energy checks, and answers to the questions (and to With calculus, if assigned). Identify simulated data.
+Prelab answers, settings and a copy of the data table for each series, empty/loaded fits with residuals, added inertia and friction estimates, spool radius and energy checks, and answers to the questions (and to Uncertainty and With calculus, if assigned). Identify simulated data.

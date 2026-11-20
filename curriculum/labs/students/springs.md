@@ -57,7 +57,7 @@ Secure a real spring support and keep clear of falling masses. Do not stretch th
 
 **Mass scan.** Press the **Simple harmonic motion** setup (free block on a horizontal track, no damping), then open the **Lab** fold and tick **Unknown spring: hide k** (it turns Blind on). Keep the same unknown spring for the whole scan: **New unknown spring** changes the hidden $$k$$. Set the **Mass m** slider to 0.20, 0.40, 0.60, 0.80 and 1.00 kg in turn. For each, drag the block about 10 cm out and let go, wait a few oscillations, then press **Record reading**. The readout **Period, measured between upward zero crossings** (under Measurements) goes in the Automatic measured $$T$$ column, and the ruler peak in the Release amplitude column. Use the automatic periods for the main fit and square them yourself in the $$T^2$$ column; the export fills $$T^2$$ only from a stopwatch time (the demo's own graph uses stopwatch readings). If you also time with **Stopwatch** (set **Oscillations counted, N** under **Stopwatch and ruler** first), count complete oscillations and keep those results distinct. Press **Export to worksheet**, then **Clear**.
 
-**Amplitude check.** At one mass, release the block from three different distances (for example 5, 10 and 15 cm). Press **Reset peak** (under Stopwatch and ruler) before each release, so the ruler peak is that release's amplitude, and record each. Compare periods and explain any difference within resolution. Export, then clear.
+**Amplitude check.** At one mass, release the block from three different distances (for example 5, 10 and 15 cm). Press **Reset peak** (under Stopwatch and ruler) before each release, so the ruler peak is that release's amplitude, and record each. Compare periods and explain any difference. Export, then clear.
 
 **Reference circle.** The reference circle is hidden while predictions and answers are hidden, so do this after your $$k$$ estimate: untick **Unknown spring: hide k** (the status line then gives $$k$$) and untick **Blind: hide predictions and answers**. Make sure **Reference circle** is ticked under **Display**, and repeat one of your undamped runs at the same $$k$$, mass and release distance. Check that the block is always at the shadow of the moving point. From that run's measured period and release amplitude, predict the block's speed as it passes equilibrium and as it passes half the amplitude. During that run, also press **Pause** when the block is at the far end of a swing, so that the **Velocity v** readout under Measurements is close to 0, and read **Acceleration a**; press **Play**, then pause again as the block passes equilibrium (**Displacement x** close to 0) and read Acceleration a again. Both readings go in your answer to Question 2.
 
@@ -76,19 +76,22 @@ Use the same period method throughout the main fit. State whether the data came 
 ## Analysis
 
 1. Fit $$T^2 = a + s m$$ and infer $$k = 4\pi^2/s$$. Inspect the intercept and residuals.
-2. Compare the inferred $$k$$ with the revealed value. Include slope uncertainty and any mass uncertainty.
+2. Compare the inferred $$k$$ with the revealed value.
 3. Compare the amplitude runs. Explain why the ideal linear spring model predicts the same period.
-4. If you timed oscillations, compare $$t/N$$ with the automatic readout; explain the different reading resolutions.
+4. If you timed oscillations, compare $$t/N$$ with the automatic readout.
 5. For the run you watched with the reference circle, give your predicted speeds at equilibrium and at half the amplitude, and explain from the circle why the block moves fastest at equilibrium and stops at the ends.
-
-## Uncertainty
-
-For automatic periods use the displayed/CSV resolution and the stability of successive estimates. For hand timing, include start/stop uncertainty and divide elapsed time by the counted number of cycles. Do not treat a deterministic automatic readout as a noisy laboratory instrument. In a real spring, effective spring mass and nonlinearity can affect the intercept and amplitude dependence.
 
 ## Questions
 
 1. Why is a straight line fit useful compared with calculating $$k$$ from one mass?
 2. What did Acceleration a read at the far end of the swing, and as the block passed equilibrium? Does that match what you said in Before the lab 4? Use $$m\ddot x = -kx$$ to explain where the acceleration is largest and where it is zero, and say at which points the kinetic and the spring potential energy are greatest.
+
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+For automatic periods use the displayed/CSV resolution and the stability of successive estimates. For hand timing, include start/stop uncertainty and divide elapsed time by the counted number of cycles. Do not treat a deterministic automatic readout as a noisy laboratory instrument. In a real spring, effective spring mass and nonlinearity can affect the intercept and amplitude dependence. In Analysis 2, include the slope uncertainty and any mass uncertainty in the comparison of the inferred $$k$$ with the revealed value. In the amplitude check, say whether any difference between the periods is within the resolution of the readout. If you timed oscillations, explain why the resolution of $$t/N$$ differs from that of the automatic readout.
 
 ## With calculus
 
@@ -100,4 +103,4 @@ For courses that use calculus. This section is not counted in the 75 minutes; do
 
 ## What to hand in
 
-Prelab answers, settings and CSV, the graph of $$T^2$$ against $$m$$ with residuals, $$k$$ with uncertainty, the amplitude comparison, and answers to the questions (and to With calculus, if assigned). Identify simulated data.
+Prelab answers, settings and CSV, the graph of $$T^2$$ against $$m$$ with residuals, $$k$$, the amplitude comparison, and answers to the questions (and to Uncertainty and With calculus, if assigned). Identify simulated data.

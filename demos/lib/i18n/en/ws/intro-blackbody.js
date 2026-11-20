@@ -43,12 +43,13 @@ VDI18N.add('en', 'ws/intro-blackbody', [
 "Rigel is about {#} times as hot as the Sun ({#} K ÷ {#} K). Predict how many times more light each square meter of Rigel gives off, then check it: divide Rigel’s light from each square meter by the Sun’s, from your Part {#} table.",
 "List your three stars with their colors and spectral classes. Which of them peaks in visible light, and which outside it? Where is each one’s peak: ultraviolet (shorter than {#} nm), visible ({#} to {#} nm) or infrared (longer than {#} nm)?",
 "The Sun’s peak is in the green part of the spectrum, yet the Sun looks white from space. Use its visible share and the shape of its curve to explain why the Sun does not look green.",
-"The demo computes an ideal blackbody, so a repeated reading gives exactly the same numbers. Real stars have dark absorption lines, and the light from their surface is not quite a blackbody’s. Would a star’s measured color still give a good estimate of its temperature? Explain briefly.",
 "Betelgeuse is cooler than the Sun, so each square meter gives off less light, yet Betelgeuse is about {#} times more luminous than the Sun. It is {#} times wider than the Sun. The luminosity compared with the Sun is (radius ratio)² × (temperature ratio)⁴. Use the Betelgeuse and Sun temperatures from your Part {#} table to check the {#}.",
 "If you see a red star and a blue star that have the same size, which is more luminous? Why?",
 "Your body is at about {#} K. Use Wien’s law to estimate your peak wavelength, in micrometers ({#} µm = {#} nm). Why can a thermal camera see you in the dark?",
 "Astronomers measure the temperatures of stars without ever touching them. Describe how, using what you learned here.",
 "Which star’s curve was higher at {#} nm, and does that match your answer to Before the lab {#}? Using Wien’s law and the Stefan and Boltzmann law from the Background, explain how the hotter star can give off more red light than the red star from each square meter and still look blue white.",
-"Prelab answers, the two table copies, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.",
+"For courses that treat measurement uncertainty. This section is not counted in the {#} minutes; do it when your instructor assigns it.",
+"The demo computes an ideal blackbody, so a repeated reading gives exactly the same numbers. Real stars have dark absorption lines, and the light from their surface is not quite a blackbody’s. Would a star’s measured color still give a good estimate of its temperature? Explain briefly.",
+"Prelab answers, the two table copies, the answers to the analysis section and to the questions (and to Uncertainty, if assigned). Identify simulated data.",
 "Blackbody Radiation"
 ]);

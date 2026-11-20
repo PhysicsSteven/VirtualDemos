@@ -90,15 +90,18 @@ Use $$1/d = 0$$ for an object far away. Fill in $$1/d$$ and $$1/d_s$$ yourself f
 4. For Part 4, graph the blur in µm (vertical) against $$1/N$$ (horizontal). Is the blur proportional to the aperture diameter $$A = f/N$$? Which f-numbers make the object at 1.00 m sharp while the camera is focused at 2.00 m?
 5. Is the textbook right that a phone camera can keep its sensor in one place? Use Part 3 to say for which distances that works with this sensor, and what a phone must do to take a sharp selfie.
 
-## Uncertainty
-
-The lens to sensor distance moves in steps of 1 µm for the 50 mm lens and 0.1 µm for the phone, so a hand focused $$d_s$$ is within half a step of the best one, and the smallest blur you can reach is not quite zero. The demo's blur is exact for its thin lens; a real lens has aberrations and diffraction, which make a blur spot of a few micrometers even in perfect focus (at f/16 diffraction alone gives a spot about 20 µm across), so real cameras cannot use very small apertures to make everything sharp.
-
 ## Questions
 
 1. A camera cannot focus on an object closer than its focal length. Why not, using the lens equation?
 2. In Part 4, how did the blur at f/16 compare with the blur at f/2, and with what you said in Before the lab 4? Why, using the cone of light from one point of the object? What does the camera give up for it?
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The lens to sensor distance moves in steps of 1 µm for the 50 mm lens and 0.1 µm for the phone, so a hand focused $$d_s$$ is within half a step of the best one, and the smallest blur you can reach is not quite zero. The demo's blur is exact for its thin lens; a real lens has aberrations and diffraction, which make a blur spot of a few micrometers even in perfect focus (at f/16 diffraction alone gives a spot about 20 µm across), so real cameras cannot use very small apertures to make everything sharp. Give the standard errors of the Part 1 slope and intercept and of the focal length, and say whether the slope is $$-1$$ within its uncertainty. Give the standard errors of the Part 4 slope and intercept.
+
 ## What to hand in
 
-Answers to Before the lab, a copy of the Data table for each part, the graph and fit for Part 1, the comparisons for Parts 2 to 4, and answers to the questions. Identify simulated data.
+Answers to Before the lab, a copy of the Data table for each part, the graph and fit for Part 1, the comparisons for Parts 2 to 4, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

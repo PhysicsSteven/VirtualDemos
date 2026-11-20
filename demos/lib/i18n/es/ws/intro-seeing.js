@@ -128,14 +128,16 @@ VDI18N.add('es', 'ws/intro-seeing', {
   "Parte {#}: divide el diámetro de media luz de la exposición larga en luz verde entre {#} λ/D del telescopio de {#} m. ¿Cuántas veces peor que un telescopio perfecto lo hace el aire? El disco de seeing mide unos λ ÷ r₀ de ancho; con r₀ = {#} m a {#} nm, calcula λ ÷ r₀ en segundos de arco y compáralo con tu lectura.",
 "Compare the Strehl ratios with adaptive optics off and on in infrared light, and with it on in green light. Why does adaptive optics work so much better in the infrared?":
   "Compara las razones de Strehl con la óptica adaptativa apagada y encendida en luz infrarroja, y encendida en luz verde. ¿Por qué la óptica adaptativa funciona mucho mejor en el infrarrojo?",
-"In Part {#}, let the air move between three more snapshots of the {#} m telescope in green light and write down each half light diameter. How much do they change from moment to moment? Why is the long exposure a steadier measure of the seeing than any one snapshot?":
-  "En la Parte {#}, deja que el aire se mueva entre tres instantáneas más del telescopio de {#} m en luz verde y anota cada diámetro de media luz. ¿Cuánto cambian de un momento a otro? ¿Por qué la exposición larga es una medida más estable del seeing que cualquier instantánea?",
 "With adaptive optics, a large telescope on a mountain can be sharper than Hubble in infrared light. Using your results, explain why space telescopes are still worth building.":
   "Con óptica adaptativa, un telescopio grande en una montaña puede ser más nítido que el Hubble en luz infrarroja. Usando tus resultados, explica por qué todavía vale la pena construir telescopios espaciales.",
 "Through the same air in green light, how did the {#} m telescope’s long exposure compare with the {#} m one, in half light diameter and in {#} λ/D? Was your prediction in Before the lab {#} right? Use the seeing disk, λ ÷ r₀, and the {#} λ/D readout to explain what you saw.":
   "A través del mismo aire en luz verde, ¿cómo se compara la exposición larga del telescopio de {#} m con la del de {#} m, en diámetro de media luz y en {#} λ/D? ¿Fue correcta tu predicción en Antes del laboratorio {#}? Usa el disco de seeing, λ ÷ r₀, y la lectura de {#} λ/D para explicar lo que viste.",
-"Prelab answers, the two tables, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.":
-  "Respuestas previas al laboratorio, las dos tablas, las respuestas de las secciones de análisis e incertidumbre, y las respuestas a las preguntas. Identifica los datos simulados.",
+"For courses that treat measurement uncertainty. This section is not counted in the {#} minutes; do it when your instructor assigns it.":
+  "Para cursos que tratan la incertidumbre de medición. Esta sección no cuenta dentro de los {#} minutos; hazla cuando tu profesor la asigne.",
+"In Part {#}, let the air move between three more snapshots of the {#} m telescope in green light and write down each half light diameter. How much do they change from moment to moment? Why is the long exposure a steadier measure of the seeing than any one snapshot?":
+  "En la Parte {#}, deja que el aire se mueva entre tres instantáneas más del telescopio de {#} m en luz verde y anota cada diámetro de media luz. ¿Cuánto cambian de un momento a otro? ¿Por qué la exposición larga es una medida más estable del seeing que cualquier instantánea?",
+"Prelab answers, the two tables, the answers to the analysis section and to the questions (and to Uncertainty, if assigned). Identify simulated data.":
+  "Respuestas previas al laboratorio, las dos tablas, las respuestas de la sección de análisis y de las preguntas (y de Incertidumbre, si se asigna). Identifica los datos simulados.",
 "Telescope Aberrations":
   "Aberraciones de telescopios",
 "Mystery":

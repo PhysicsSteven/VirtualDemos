@@ -162,14 +162,16 @@ VDI18N.add('es', 'ws/quasar-engine', {
   "A {#} M☉/año sobre \\(10^8\\) M☉, ¿por qué factor supera L al límite de Eddington? Divide L entre \\(1.26\\times10^{31}\\) W para encontrar el agujero negro más pequeño que podría brillar así, y compruébalo con tu lectura de la Parte {#} en \\(3\\times10^8\\) M☉: ¿ese agujero negro sigue por encima de su límite, como debe ser?",
 "For the {#}° jet reading, divide the distance across the sky by the time between arrivals and compare with the apparent speed. Which angle in your table gives the biggest apparent speed?":
   "Para la lectura del chorro a {#}°, divide la distancia en el cielo entre el tiempo entre llegadas y compáralo con la rapidez aparente. ¿Qué ángulo de tu tabla da la mayor rapidez aparente?",
-"Nobody can see η directly: it ranges from about {#}% for a black hole that does not spin to {#}% for one that spins as fast as possible. If a quasar gives out \\(5.7\\times10^{38}\\) W, how much gas a year must it swallow at {#}% and at {#}%?":
-  "Nadie puede ver η directamente: va de cerca de {#}% para un agujero negro que no gira a {#}% para uno que gira lo más rápido posible. Si un cuásar emite \\(5.7\\times10^{38}\\) W, ¿cuánto gas al año debe tragar a {#}% y a {#}%?",
 "In your jet table, what is the apparent speed at {#}°, with the blob moving straight across the sky? Why does the illusion need a jet pointed nearly at us?":
   "En tu tabla del chorro, ¿cuál es la rapidez aparente a {#}°, con la burbuja moviéndose justo de lado en el cielo? ¿Por qué la ilusión necesita un chorro que apunte casi hacia nosotros?",
 "Look back at your guess in Before the lab {#} and at the {#}° reading. Did the blob seem to cross the sky faster than light? Explain, from the time between the arrivals of its light, how that can happen while the blob itself moves slower than light.":
   "Revisa tu respuesta en Antes del laboratorio {#} y la lectura a {#}°. ¿Pareció la burbuja cruzar el cielo más rápido que la luz? Explica, con el tiempo entre las llegadas de su luz, cómo puede pasar eso mientras la burbuja misma se mueve más lento que la luz.",
-"Prelab answers, the three Data tables with the graph, Analysis {#} to {#} with your work, the uncertainty answer and the answers to the questions. Identify simulated data: every reading in this lab is simulated.":
-  "Las respuestas previas al laboratorio, las tres tablas de Datos con la gráfica, el Análisis {#} a {#} con tu trabajo, la respuesta de incertidumbre y las respuestas a las preguntas. Identifica los datos simulados: todas las lecturas de este laboratorio son simuladas.",
+"For courses that treat measurement uncertainty. This section is not counted in the {#} minutes; do it when your instructor assigns it.":
+  "Para cursos que tratan la incertidumbre de medición. Esta sección no cuenta dentro de los {#} minutos; hazla cuando tu profesor la asigne.",
+"Nobody can see η directly: it ranges from about {#}% for a black hole that does not spin to {#}% for one that spins as fast as possible. If a quasar gives out \\(5.7\\times10^{38}\\) W, how much gas a year must it swallow at {#}% and at {#}%?":
+  "Nadie puede ver η directamente: va de cerca de {#}% para un agujero negro que no gira a {#}% para uno que gira lo más rápido posible. Si un cuásar emite \\(5.7\\times10^{38}\\) W, ¿cuánto gas al año debe tragar a {#}% y a {#}%?",
+"Prelab answers, the three Data tables with the graph, Analysis {#} to {#} with your work, and the answers to the questions (and to Uncertainty, if assigned). Identify simulated data: every reading in this lab is simulated.":
+  "Las respuestas previas al laboratorio, las tres tablas de Datos con la gráfica, el Análisis {#} a {#} con tu trabajo y las respuestas a las preguntas (y de Incertidumbre, si se asigna). Identifica los datos simulados: todas las lecturas de este laboratorio son simuladas.",
 "Biggest size of the region that changes":
   "Tamaño máximo de la región que cambia",
 "Power given out":

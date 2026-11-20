@@ -79,15 +79,18 @@ Add rows as needed. Fill in $$P = IV$$ and the junction or loop label yourself. 
 4. Sum resistor powers and compare with source power.
 5. From the Potential view of the bridge, list the rises and drops around each of your two loops. Use them to explain the loop rule as a statement about height: why must every closed path return to the height it started at? Why does no current flow through the galvanometer when the bridge is balanced?
 
-## Uncertainty
-
-Use meter resolution and component tolerances for a real bench. For the virtual bench, captured readings have three significant figures. Propagate their rounding into junction/loop residuals rather than expecting rounded numbers to cancel exactly. A simulated zero residual is a consistency check, not evidence about meter loading in a real circuit.
-
 ## Questions
 
 1. Why does connecting a load across a divider generally change its output voltage?
 2. Look back at Before the lab 4. How did A2 compare with A1 in your series reading? Explain it with the junction rule and with what a bulb takes from each charge that passes through it.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+Use meter resolution and component tolerances for a real bench. For the virtual bench, captured readings have three significant figures. Propagate their rounding into junction/loop residuals rather than expecting rounded numbers to cancel exactly. A simulated zero residual is a consistency check, not evidence about meter loading in a real circuit. Give the slope of your divider graph with its standard error.
+
 ## What to hand in
 
-Prelab answers, labeled schematics, data/CSV, equivalent resistances, divider graph, junction/loop and power checks, uncertainty and answers to the questions. Identify simulated data.
+Prelab answers, labeled schematics, data/CSV, equivalent resistances, divider graph, junction/loop and power checks, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

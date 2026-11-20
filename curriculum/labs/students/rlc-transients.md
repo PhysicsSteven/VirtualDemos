@@ -87,15 +87,18 @@ Use a separate copy for each run. Write $$L$$, $$C$$, initial voltage and switch
 3. Compare the measured period and damping with the predicted values.
 4. Compare runs at 0.95, 1.00 and 1.05 times $$R_{\rm crit}$$. Explain why a barely visible or absent sign change is not enough by itself to identify critical damping.
 
-## Uncertainty
-
-Bracket peak times using nearby samples and estimate how precisely you can read each peak height. Small late peaks give a poor damping estimate, so state which peaks you used and why. Check the actual CSV timestamps rather than the animation's speed. Compare fits over more than one interval to see how peak choice changes the answer. Include uncertainty in the component values when interpreting an inferred $$L$$ or $$R$$.
-
 ## Questions
 
 1. Why does a resistor reduce the energy even though charge still oscillates?
 2. Why is energy lost faster than the charge envelope shrinks?
 3. Which response returns fastest without overshooting for an initially charged capacitor with zero current? Check your answer to Before the lab 4 against $$V_C$$ at 10 ms in your 1.00 $$R_{\rm crit}$$ and 1 kΩ runs. What does a large resistor do to the current that drains the capacitor?
+
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+Bracket peak times using nearby samples and estimate how precisely you can read each peak height. Small late peaks give a poor damping estimate, so state which peaks you used and why. Check the actual CSV timestamps rather than the animation's speed. Compare fits over more than one interval to see how peak choice changes the answer. Include uncertainty in the component values when interpreting an inferred $$L$$ or $$R$$.
 
 ## With calculus
 
@@ -107,4 +110,4 @@ For courses that use calculus. This section is not counted in the 75 minutes; do
 
 ## What to hand in
 
-Prelab answers, settings and raw traces, the LC period and energy check, damping calculations, the critical damping comparison, and answers to the questions (and to With calculus, if assigned). Identify simulated data.
+Prelab answers, settings and raw traces, the LC period and energy check, damping calculations, the critical damping comparison, and answers to the questions (and to Uncertainty and With calculus, if assigned). Identify simulated data.

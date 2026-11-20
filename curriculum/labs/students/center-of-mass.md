@@ -91,13 +91,16 @@ Keep the plate, the two firework runs and the boat in separate copies of the tab
 3. For the firework thrown at 45°, find when the center of mass first leaves the unexploded parabola. What external force acts then that did not act before? Compare the mass weighted landing point with the unexploded landing point.
 4. Graph how far the boat moved against the person's mass share $$f$$ and fit a line. Use the slope to find how far the person walked along the boat, and compare with the boat's length.
 
-## Uncertainty
-
-Mass positions on the plate are set to 0.01 m and the masses to 0.1 kg; the demo gives positions to 0.001 m. Estimate how far a 0.01 m error in placing mass 2 moves the center of mass for your smallest and largest $$f$$. For the firework, your readings are at the moments you paused; explain why that does not matter for the comparison in Analysis 2. On a real boat, water drag would act while the boat moves: say how that would change the boat's final position.
-
 ## Questions
 
 1. How far did the 150 kg boat move, and what did it do when the person stopped? Check both against your answer to Before the lab 3, then use the center of mass of person and boat, and their total momentum, to explain them. A person on a frictionless frozen pond throws a ball to the east: what happens to the person, and where is the center of mass of person and ball afterwards?
+
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+Mass positions on the plate are set to 0.01 m and the masses to 0.1 kg; the demo gives positions to 0.001 m. Estimate how far a 0.01 m error in placing mass 2 moves the center of mass for your smallest and largest $$f$$. For the firework, your readings are at the moments you paused; explain why that does not matter for the comparison in Analysis 2. On a real boat, water drag would act while the boat moves: say how that would change the boat's final position.
 
 ## With calculus
 
@@ -109,4 +112,4 @@ For courses that use calculus. This section is not counted in the 75 minutes; do
 
 ## What to hand in
 
-Prelab answers, the table copies with the plate and boat graphs and fits, the firework comparisons and landing points, the boat length from your fit, the uncertainty discussion and answers to the questions (and to With calculus, if assigned). Identify simulated data.
+Prelab answers, the table copies with the plate and boat graphs and fits, the firework comparisons and landing points, the boat length from your fit, and answers to the questions (and to Uncertainty and With calculus, if assigned). Identify simulated data.

@@ -77,15 +77,18 @@ After each change, wait for the picture to finish before you read the Strehl rat
 1. Part 1: divide the long exposure half light diameter in green light by 1.22 λ/D for the 1.0 m telescope. How many times worse than a perfect telescope does the air make it? The seeing disk is about λ ÷ r₀ across; with r₀ = 0.112 m at 550 nm, work out λ ÷ r₀ in seconds of arc and compare it with your reading.
 2. Compare the Strehl ratios with adaptive optics off and on in infrared light, and with it on in green light. Why does adaptive optics work so much better in the infrared?
 
-## Uncertainty
-
-In Part 1, let the air move between three more snapshots of the 1.0 m telescope in green light and write down each half light diameter. How much do they change from moment to moment? Why is the long exposure a steadier measure of the seeing than any one snapshot?
-
 ## Questions
 
 1. With adaptive optics, a large telescope on a mountain can be sharper than Hubble in infrared light. Using your results, explain why space telescopes are still worth building.
 2. Through the same air in green light, how did the 4.00 m telescope's long exposure compare with the 1.0 m one, in half light diameter and in 1.22 λ/D? Was your prediction in Before the lab 2 right? Use the seeing disk, λ ÷ r₀, and the 1.22 λ/D readout to explain what you saw.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+In Part 1, let the air move between three more snapshots of the 1.0 m telescope in green light and write down each half light diameter. How much do they change from moment to moment? Why is the long exposure a steadier measure of the seeing than any one snapshot?
+
 ## What to hand in
 
-Prelab answers, the two tables, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.
+Prelab answers, the two tables, the answers to the analysis section and to the questions (and to Uncertainty, if assigned). Identify simulated data.

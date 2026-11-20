@@ -77,16 +77,19 @@ Hot water jackets and baths can scald, and glassware can crack when heated or co
 4. For water, graph the level against $$T$$ (the graph is not a straight line, so ignore the fitted line the worksheet draws) and find the temperature at which the level is lowest. Explain why it is a little above 3.98 °C, the temperature at which water is densest.
 5. Estimate water's $$\beta$$ near 30 °C from the slope of your level readings there, and compare it with the value in Table 1.2.
 
-## Uncertainty
-
-The gauge reads to 0.001 mm and the level to 0.1 mm, and the model has no noise. Find the relative uncertainty of a single gauge reading of about 1 mm and compare it with the scatter of your fit. In a real experiment the rod and the bath would not be at quite the same temperature; say how that would affect your $$\alpha$$.
-
 ## Questions
 
 1. A steel tape measure calibrated at 20 °C is used on a hot day. Does it read too long or too short?
 2. Why is the flask's own expansion more important for the liquids with small $$\beta$$?
 3. Lay your water readings from 0 °C to 20 °C over your sketch from Before the lab 4, and explain what the level did in terms of water's density. Then use the same behavior to say why a lake freezes from the top down, and why that matters for the fish.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The gauge reads to 0.001 mm and the level to 0.1 mm, and the model has no noise. Find the relative uncertainty of a single gauge reading of about 1 mm and compare it with the scatter of your fit. In a real experiment the rod and the bath would not be at quite the same temperature; say how that would affect your $$\alpha$$. Give your values of $$\alpha$$ and $$\beta$$ with their uncertainties from the fits, and say whether they agree with Table 1.2 within those uncertainties.
+
 ## What to hand in
 
-Prelab answers, the table copies with their graphs and fits, your values of $$\alpha$$ and $$\beta$$ with uncertainties and comparisons, the mystery rod's material, the temperature of water's lowest level, and answers to the questions. Identify simulated data.
+Prelab answers, the table copies with their graphs and fits, your values of $$\alpha$$ and $$\beta$$ and comparisons, the mystery rod's material, the temperature of water's lowest level, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

@@ -77,15 +77,18 @@ Fill in the last column yourself for the crown and flint rows ($$\lambda$$ in µ
 3. Type the 589.3 nm prism row from each of your four copies (crown, flint, fused silica and water) into one new copy of the Data table, and graph $$\delta$$ (vertical) against $$n$$ (horizontal) for the four points. Is the deviation set by $$n$$ alone, whatever the material? Use the minimum deviation formula to explain why the curve steepens as $$n$$ grows.
 4. For Part 3, explain why the diamond prism gives no deviation, and why diamond's large index and dispersion make cut diamonds flash with color.
 
-## Uncertainty
-
-The model's indices come from the published Sellmeier formulas, which reproduce measured indices to about the fifth decimal place over the visible range (the older diamond formula less well); the reading gives them to five decimal places. Real glass varies a little from melt to melt, and its index changes with temperature (by a few parts in a million per kelvin for crown glass). The prism is assumed to be a perfect 60° wedge.
-
 ## Questions
 
 1. Which color did the prism turn most in Part 1, and what do the Minimum deviation δ values of your crown glass rows at 400 and 700 nm say? Set them beside your answer to Before the lab 4, and explain the order with $$v = c/n$$ and Snell's law. The same difference in speed shows up in a fiber: a pulse of white light enters a long optical fiber. Why is it longer when it comes out?
 2. Why is the dispersion of air hard to notice, although air does have an index above 1?
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The model's indices come from the published Sellmeier formulas, which reproduce measured indices to about the fifth decimal place over the visible range (the older diamond formula less well); the reading gives them to five decimal places. Real glass varies a little from melt to melt, and its index changes with temperature (by a few parts in a million per kelvin for crown glass). The prism is assumed to be a perfect 60° wedge. Give $$A_C$$ and $$B_C$$ for crown and flint with their standard errors from the fits.
+
 ## What to hand in
 
-Prelab answers, a Data table copy for each material, the graphs and Cauchy fits, your table of spreads, and answers to the questions. Identify simulated data.
+Prelab answers, a Data table copy for each material, the graphs and Cauchy fits, your table of spreads, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

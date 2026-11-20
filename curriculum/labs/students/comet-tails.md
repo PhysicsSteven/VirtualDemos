@@ -106,16 +106,19 @@ Watch the white arrow and the blue ion tail as you step past day 0. Look at the 
 4. From Table 3, how many days apart are the computed and observed dates for each shower? Halley's orbit gives two showers a year, the Orionids in October and the Eta Aquariids in May. What does that tell you about where Halley's orbit passes Earth's?
 5. Rank the five showers from the largest angle between Earth's motion and the dust's to the smallest, and then by their speed into the air. Do the two rankings agree?
 
-## Uncertainty
-
-The computed dates and speeds in Table 3 differ a little from what observers measure. The demo leaves out the planets' pulls, which slowly bend a comet's orbit and its dust stream, and it puts the dust exactly on the comet's orbit as it is today. Which of your showers differs most from the IMO values, in days and in km/s? Give one reason a real stream could sit a little off the comet's present orbit.
-
 ## Questions
 
 1. A friend says the Perseids happen because comet Swift-Tuttle passes Earth every August. Use Swift-Tuttle's period from Table 2 to explain why that can't be right, and what Earth meets every August instead.
 2. The Leonids hit the air at about 71 km/s and the Draconids at about 20 km/s. Use your angles from Table 3 and your answer to Before the lab 3 to explain the difference.
 3. Look back at your sketch for Before the lab 4. Compare it with your Table 1 readings at 20 to 80 days, when Halley was heading out: which way did the ion tail actually point compared with the way the comet moved? Explain why a comet's tail is not like smoke trailing behind a train, and say what the dust tail did differently from the ion tail in the picture.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The computed dates and speeds in Table 3 differ a little from what observers measure. The demo leaves out the planets' pulls, which slowly bend a comet's orbit and its dust stream, and it puts the dust exactly on the comet's orbit as it is today. Which of your showers differs most from the IMO values, in days and in km/s? Give one reason a real stream could sit a little off the comet's present orbit.
+
 ## What to hand in
 
-Prelab answers, the three completed tables, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data: the comet orbits come from JPL and the observed shower values from the IMO, but the tails and the dust streams are simulated.
+Prelab answers, the three completed tables, the answers to the analysis section and to the questions (and to Uncertainty, if assigned). Identify simulated data: the comet orbits come from JPL and the observed shower values from the IMO, but the tails and the dust streams are simulated.

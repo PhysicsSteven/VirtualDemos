@@ -73,15 +73,18 @@ No hazards in the virtual lab.
 4. For the refrigerators, find the least work that is allowed and compare $$Q_c/W$$ there with the Carnot COP.
 5. Describe what the pair did in each case of the pairing argument, and say which statement of the second law the pair breaks.
 
-## Uncertainty
-
-The energies here are set exactly, so there is no measurement uncertainty. Instead, decide how close to zero $$\Delta S_\mathrm{universe}$$ has to be before you would call a device reversible, given that the energies are shown to 0.1 J.
-
 ## Questions
 
 1. A power station runs between steam at 800 K and a river at 290 K. What is the most it could turn into electricity of each joule of heat?
 2. Why is the Carnot efficiency higher when the cold reservoir is colder?
 3. Before the lab 5 asked what one cycle of a refrigerator does to the entropy of the freezer, the room and the refrigerator. What did the bars show at W = 100 J, and how does that square with the second law? Use them to say why a refrigerator needs work, when heat is just moving from one place to another.
+
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The energies here are set exactly, so there is no measurement uncertainty. Instead, decide how close to zero $$\Delta S_\mathrm{universe}$$ has to be before you would call a device reversible, given that the energies are shown to 0.1 J.
 
 ## With calculus
 
@@ -92,4 +95,4 @@ For courses that use calculus. This section is not counted in the 75 minutes; do
 
 ## What to hand in
 
-Prelab answers, the table copies with your entropy changes and graphs, the crossing points compared with the Carnot limits, your account of the pairing argument, and answers to the questions (and to With calculus, if assigned). Identify simulated data.
+Prelab answers, the table copies with your entropy changes and graphs, the crossing points compared with the Carnot limits, your account of the pairing argument, and answers to the questions (and to Uncertainty and With calculus, if assigned). Identify simulated data.

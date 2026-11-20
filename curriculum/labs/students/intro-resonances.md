@@ -103,15 +103,18 @@ No hazards in the virtual lab.
 6. Pluto's closest point to the Sun is 29.7 AU and Neptune's orbit is at 30.1 AU. From Part 3, how close did Pluto ever come to Neptune? What happened when the same orbit started with bad timing? Was your guess in Before the lab 3 right?
 7. In Part 4, how big was the leftover drift with Uranus alone, and with the best planet X you found? At which position on 1846 September 23 was the drift smallest? Compare it with the position of the real Neptune, the Planet X position in your The real Neptune row.
 
-## Uncertainty
-
-The demo's orbits come from Newton's law of gravity, so a repeated run with the same settings gives exactly the same numbers. The uncertainty is in what the model leaves out: each asteroid feels only the Sun and one planet, all the orbits lie flat in one plane, and a run lasts thousands of years, not the hundreds of millions the real belt has had. Name one of these and say how it might change your Part 1 results. In Part 4, planet X moves on a fixed orbit and its pull on Jupiter and Saturn is left out, so even the real Neptune leaves a little drift. How big is it, compared with the drift with Uranus alone?
-
 ## Questions
 
 1. What were the Largest eccentricity and Crossed Mars's orbit readings for your 3:1 resonance and Hildas at 3:2 runs in Part 1? Was your choice in Before the lab 4 right? Using Resonance in the Background, explain why the asteroid nearer Jupiter was the one that stayed calm, and why the 3:2 resonance protects the Hildas instead of clearing them. Earth has about 1/318 of Jupiter's mass, and there is no gap in the asteroid belt at a resonance with Earth. Why not?
 2. Saturn's rings also have gaps, the largest being the Cassini Division. Using what you saw here, what kind of object could clear a gap in a ring?
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The demo's orbits come from Newton's law of gravity, so a repeated run with the same settings gives exactly the same numbers. The uncertainty is in what the model leaves out: each asteroid feels only the Sun and one planet, all the orbits lie flat in one plane, and a run lasts thousands of years, not the hundreds of millions the real belt has had. Name one of these and say how it might change your Part 1 results. In Part 4, planet X moves on a fixed orbit and its pull on Jupiter and Saturn is left out, so even the real Neptune leaves a little drift. How big is it, compared with the drift with Uranus alone?
+
 ## What to hand in
 
-Prelab answers, the Data, Gaps, Pluto and Neptune, and Finding Neptune tables, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.
+Prelab answers, the Data, Gaps, Pluto and Neptune, and Finding Neptune tables, the answers to the analysis section and to the questions (and to Uncertainty, if assigned). Identify simulated data.

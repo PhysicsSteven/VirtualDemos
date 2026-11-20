@@ -72,15 +72,18 @@ No hazards in the virtual lab.
 4. If $$M(<r) \propto r$$ far out, how must the density of the extra mass fall with $$r$$? Show your reasoning from $$M = \int 4\pi r^2\rho\,dr$$.
 5. For three Doppler readings (the 21 cm reading at 12 kpc and the Hα readings at 4 and 12 kpc), find the speed from the Shift of the line's edge column yourself, and compare with the Speed from the shift column and with the Orbital speed column at that radius. What happened to the Hα reading at 12 kpc, and why do radio astronomers use the 21 cm line to measure the outer parts of galaxies?
 
-## Uncertainty
-
-The model's numbers are exact; the uncertainty is in the method. $$M = v^2r/G$$ assumes a spherical mass, but the stars and gas are in a flat disk, which pulls harder in its own plane than a sphere of the same mass: the formula then overestimates the mass, by up to about 35% near three scale lengths. Real speeds are also measured with scatter: the Milky Way circles shown are a fit with an uncertainty of a few km/s. Which of these effects could change your answer to Analysis 3 by more than a factor of 2?
-
 ## Questions
 
 1. A disk galaxy tilted by an angle $$i$$ from face on shows Doppler shifts of only $$v \sin i$$. What would you get for the mass of a galaxy if you forgot to correct for a tilt of 30°?
 2. Now settle your row of stars from Before the lab 4 with the orbital periods at 8.2 kpc and 20 kpc in your Milky Way data: how far around has the star at 20 kpc gone when the Sun has made one full orbit? A flat rotation curve does not mean the galaxy turns like a solid wheel. Explain the difference.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The model's numbers are exact; the uncertainty is in the method. $$M = v^2r/G$$ assumes a spherical mass, but the stars and gas are in a flat disk, which pulls harder in its own plane than a sphere of the same mass: the formula then overestimates the mass, by up to about 35% near three scale lengths. Real speeds are also measured with scatter: the Milky Way circles shown are a fit with an uncertainty of a few km/s. Which of these effects could change your answer to Analysis 3 by more than a factor of 2? Give the standard errors of the fitted slopes in Analysis 1 and 3.
+
 ## What to hand in
 
-Prelab answers, the table copies with their graphs and fits, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.
+Prelab answers, the table copies with their graphs and fits, the answers to the analysis section and to the questions (and to Uncertainty, if assigned). Identify simulated data.

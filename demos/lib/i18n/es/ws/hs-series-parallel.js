@@ -122,14 +122,16 @@ VDI18N.add('es', 'ws/hs-series-parallel', {
   "Compara la resistencia equivalente medida de cada circuito con la fórmula. ¿Qué circuito tiene la menor resistencia equivalente, y cuál toma más corriente de la batería?",
 "With \\(R_2\\) = {#} Ω, which bulb has the larger power in the series circuit, and which in the parallel circuit? Explain the difference using \\(P = I^2R\\) for series (same current) and \\(P = V^2/R\\) for parallel (same voltage).":
   "Con \\(R_2\\) = {#} Ω, ¿qué foco tiene más potencia en el circuito en serie, y cuál en el circuito en paralelo? Explica la diferencia usando \\(P = I^2R\\) para serie (misma corriente) y \\(P = V^2/R\\) para paralelo (mismo voltaje).",
-"The demo’s meters are ideal, so the readings differ from the formulas only by rounding in their last digit. Check that every difference you found in Analysis {#} to {#} is no bigger than that. A real ammeter adds a small resistance to the path and a real voltmeter draws a small current, so real readings would differ a little more.":
-  "Los medidores de la demo son ideales, así que las lecturas difieren de las fórmulas solo por el redondeo de su último dígito. Comprueba que ninguna diferencia que encontraste en los Análisis {#} a {#} sea mayor que eso. Un amperímetro real agrega una pequeña resistencia al camino y un voltímetro real toma una pequeña corriente, así que las lecturas reales diferirían un poco más.",
 "Look back at your guess in Before the lab {#}. What did A1 and A2 read in the series circuit? If the bulb does not use up current, what does it use up? Explain using the meaning of current (charge per second) and voltage (energy per coulomb).":
   "Revisa tu predicción de Antes del laboratorio {#}. ¿Qué marcaron A1 y A2 en el circuito en serie? Si el foco no gasta corriente, ¿qué gasta? Explícalo usando el significado de corriente (carga por segundo) y de voltaje (energía por coulomb).",
 "The lights in a house are wired in parallel, not in series. Use your results to give two reasons why: think about the voltage each light gets, and about what happens to the others when one bulb burns out.":
   "Las luces de una casa se conectan en paralelo, no en serie. Usa tus resultados para dar dos razones: piensa en el voltaje que recibe cada luz y en lo que les pasa a las demás cuando un foco se funde.",
-"Prelab answers, the two copies of the Data table, the Results table, and answers to the questions. Identify simulated data.":
-  "Respuestas del prelaboratorio, las dos copias de la tabla de Datos, la tabla de Resultados y las respuestas a las preguntas. Identifica los datos simulados.",
+"For courses that treat measurement uncertainty. This section is not counted in the {#} minutes; do it when your instructor assigns it.":
+  "Para cursos que tratan la incertidumbre de medición. Esta sección no cuenta dentro de los {#} minutos; hazla cuando tu profesor la asigne.",
+"The demo’s meters are ideal, so the readings differ from the formulas only by rounding in their last digit. Check that every difference you found in Analysis {#} to {#} is no bigger than that. A real ammeter adds a small resistance to the path and a real voltmeter draws a small current, so real readings would differ a little more.":
+  "Los medidores de la demo son ideales, así que las lecturas difieren de las fórmulas solo por el redondeo de su último dígito. Comprueba que ninguna diferencia que encontraste en los Análisis {#} a {#} sea mayor que eso. Un amperímetro real agrega una pequeña resistencia al camino y un voltímetro real toma una pequeña corriente, así que las lecturas reales diferirían un poco más.",
+"Prelab answers, the two copies of the Data table, the Results table, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.":
+  "Respuestas del prelaboratorio, las dos copias de la tabla de Datos, la tabla de Resultados y las respuestas a las preguntas (y de Incertidumbre, si se asigna). Identifica los datos simulados.",
 "Column E, row {#}":
   "Columna E, fila {#}",
 "Heading of column E":

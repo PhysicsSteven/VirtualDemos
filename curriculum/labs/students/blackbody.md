@@ -69,10 +69,6 @@ No hazards in the virtual lab. Never look directly at the Sun or a bright lamp.
 3. Read the peak wavelengths of human skin and the cosmic background from the second table copy, and name the part of the spectrum each lies in.
 4. Use the Stefan and Boltzmann law to find the power given off by 1.5 m² of skin at 305 K. Why is the net loss from a person in a room much smaller?
 
-## Uncertainty
-
-The readings are taken from the curve to five significant figures, so the uncertainty here is from rounding only. Real stars are not perfect blackbodies; say how absorption lines in a star's atmosphere would affect a temperature found from its peak wavelength.
-
 ## Questions
 
 1. Why does a heated piece of metal glow red first, then orange, then white?
@@ -80,6 +76,15 @@ The readings are taken from the curve to five significant figures, so the uncert
 3. Rigel looks blue and Betelgeuse red. Press the Rigel and Betelgeuse buttons and read the Temperature readout for each. Which is hotter, and by roughly how much?
 4. Classical physics predicted the Rayleigh and Jeans curve. What went wrong at short wavelengths, and how did Planck fix it?
 5. Set your three visible shares beside the ranking you made in Before the lab 5. Use each peak wavelength and the shape of Planck's curve to explain why the shares fall in the order they do, and say in which part of the spectrum the rest of each object's power goes.
+
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The readings are taken from the curve to five significant figures, so the uncertainty here is from rounding only. Real stars are not perfect blackbodies; say how absorption lines in a star's atmosphere would affect a temperature found from its peak wavelength.
+
+Give the slope and intercept of each graph with their standard errors. Say whether the intercept of the $$\lambda_\mathrm{max}$$ graph is zero within its uncertainty, and whether your $$\sigma$$ agrees with $$5.670\times10^{-8}$$ W/(m²·K⁴) within its uncertainty.
 
 ## With calculus
 
@@ -91,4 +96,4 @@ For courses that use calculus. This section is not counted in the 75 minutes; do
 
 ## What to hand in
 
-Prelab answers, the table copies with their graphs and fits, your values of $$b$$ and $$\sigma$$ with comparisons, and answers to the questions (and to With calculus, if assigned). Identify simulated data.
+Prelab answers, the table copies with their graphs and fits, your values of $$b$$ and $$\sigma$$ with comparisons, and answers to the questions (and to Uncertainty and With calculus, if assigned). Identify simulated data.

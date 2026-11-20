@@ -68,21 +68,24 @@ A real Rüchardt apparatus uses a large glass flask under slight pressure. Handl
 
 ## Analysis
 
-1. Fit $$T^2$$ against $$V$$ for each gas. Is the intercept zero within its uncertainty?
+1. Fit $$T^2$$ against $$V$$ for each gas. Is the intercept close to zero?
 2. From each slope find $$\gamma = 4\pi^2 m/(P A^2\,\text{slope})$$. Remember to convert liters to cubic meters.
 3. Compare your $$\gamma$$ for air with 1.40, and for argon with $$5/3$$.
 4. From your $$\gamma$$ for each gas find $$C_V = R/(\gamma - 1)$$ and compare with Table 2.3.
 5. Compare your $$\gamma$$ for air with $$7/5$$, the value for a diatomic gas. Air is mostly nitrogen and oxygen; should they agree?
-
-## Uncertainty
-
-The photogate times each swing to a tenth of a millisecond, and the model's only departure from the formula is its slow damping. Estimate how much the damping changes the period of a 20 L flask, and compare it with your fit's uncertainty. In a real apparatus the ball rubs on the tube and some gas leaks past it; say how each would affect the period and your $$\gamma$$.
 
 ## Questions
 
 1. What would happen to the period if the ball were twice as heavy?
 2. In 1929 Rüchardt timed only a few swings with a stopwatch. Why does a larger flask make the measurement easier?
 3. Set your 20 L periods for dry air and argon beside your answer to Before the lab 5. Why does the period depend on $$\gamma$$, a property of the gas's heat capacities, when no heat flows, and why is argon's $$\gamma$$ different from air's?
+
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+Report each fit's intercept and each $$\gamma$$ with its uncertainty, and say whether each intercept is zero within its uncertainty. The photogate times each swing to a tenth of a millisecond, and the model's only departure from the formula is its slow damping. Estimate how much the damping changes the period of a 20 L flask, and compare it with your fit's uncertainty. In a real apparatus the ball rubs on the tube and some gas leaks past it; say how each would affect the period and your $$\gamma$$.
 
 ## With calculus
 
@@ -93,4 +96,4 @@ For courses that use calculus. This section is not counted in the 75 minutes; do
 
 ## What to hand in
 
-Prelab answers, the table copies with their graphs and fits, $$\gamma$$ and $$C_V$$ for each gas with uncertainties and comparisons, and answers to the questions (and to With calculus, if assigned). Identify simulated data.
+Prelab answers, the table copies with their graphs and fits, $$\gamma$$ and $$C_V$$ for each gas with comparisons, and answers to the questions (and to Uncertainty and With calculus, if assigned). Identify simulated data.

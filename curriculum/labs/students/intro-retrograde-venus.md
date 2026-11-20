@@ -59,15 +59,18 @@ No hazards in the virtual activity.
 1. Graph the lit percentage (vertical axis) against the size compared with its smallest (horizontal axis) for the real sky (Kepler) copy of the table. When Venus looks smallest, how much of it is lit? When it looks biggest? Does this match your guess in Before the activity 2? If not, say what the guess missed. Now look at the Ptolemy copy of the table: what is the largest lit percentage there?
 2. Galileo saw Venus go through a full set of phases, from a thin crescent to nearly full, and saw it look small when nearly full. Which world model in your data can produce that? Explain why Ptolemy's arrangement, with Venus's epicycle always between Earth and the Sun, cannot.
 
-## Uncertainty
-
-The real sky positions come from NASA JPL orbit data and are good to about 0.05° for Mars, far finer than you can read off the sky strip. Ptolemy's model in the demo was fitted to the real sky, and it is still off by up to about 1.4° for Mars. Tycho Brahe measured planet positions without a telescope to about 1 or 2 arcminutes (1/60 of a degree is one arcminute), and Kepler threw out one of his own circle models of Mars because it missed Tycho's observations by 8 arcminutes (0.13°). Could Tycho's observations tell Ptolemy's model and the real sky apart for Mars? Explain using these numbers.
-
 ## Questions
 
 1. Choose Copernicus's circles miss and press Play to run through the close opposition of 2020, watching the Off from the real sky readout. How far off is Mars from the real sky at its worst? Why did Copernicus's simple circles not fit the sky better than Ptolemy's epicycles, even though the Sun really is at the center? (Hint: what shape is Mars's real orbit?)
 2. Choose Earth held still (Tycho). Mars traces a loop around Earth. How does this loop compare with Ptolemy's epicycle? Galileo's observation of Venus ruled out Ptolemy's model. Did it rule out Tycho's? Explain.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The real sky positions come from NASA JPL orbit data and are good to about 0.05° for Mars, far finer than you can read off the sky strip. Ptolemy's model in the demo was fitted to the real sky, and it is still off by up to about 1.4° for Mars. Tycho Brahe measured planet positions without a telescope to about 1 or 2 arcminutes (1/60 of a degree is one arcminute), and Kepler threw out one of his own circle models of Mars because it missed Tycho's observations by 8 arcminutes (0.13°). Could Tycho's observations tell Ptolemy's model and the real sky apart for Mars? Explain using these numbers.
+
 ## What to hand in
 
-Answers to Before the activity, both copies of the table with your graph, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.
+Answers to Before the activity, both copies of the table with your graph, the answers to the analysis section and to the questions (and to Uncertainty, if assigned). Identify simulated data.

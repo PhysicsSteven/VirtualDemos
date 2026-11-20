@@ -106,15 +106,18 @@ No hazards in the virtual lab.
 6. Saturn's main rings reach out to about 2.27 Saturn radii, and its nearest big moon, Mimas, orbits at 3.08 Saturn radii. Use Part 3 to explain why there is a ring close in and moons farther out.
 7. From the Io table: when you doubled the eccentricity from 0.002 to 0.004, how many times did the heating go up? From 0.004 to 0.008? What rule does that suggest? What happens at $$e = 0$$?
 
-## Uncertainty
-
-The demo's numbers come from measured data and from calculations, so a repeated reading gives the same values. The uncertainty lies in what the models leave out. The test moon is a pile of smooth, frictionless boulders, and the Roche limit drawn is for a moon with no strength at all; a real moon of rock with some strength can survive closer in. The tidal heating uses one measured number for how Io's interior flexes and turns flexing into heat, known to about ±20%. Io's measured heat output is at least 2.5 W/m². Compare your Io reading at $$e = 0.004$$ with that and say whether the two agree, given the uncertainty.
-
 ## Questions
 
 1. Find Jupiter and Neptune in your Planets table. Which is denser, and is that what you guessed in Before the lab 4? Using what the giants are made of, explain why the most massive planet is not the densest. Saturn's mean density is less than water's, yet near its center the gas is squeezed to many times the density of water: how can both be true?
 2. Press the setup Europa stretches Io's orbit, where the moons pull on each other and Io starts on a perfect circle. It runs at 4 days a second; let it go for about 500 days (about two minutes) while you watch the graph of Io's eccentricity. Then tick Take Europa away (the clock starts again from day 0) and run it for another 500 days. What does Io's eccentricity do each time? Is the middle of the swing close to Io's measured 0.0041, and why does the graph climb well above it? Use this to explain where the oval orbit of Part 4 comes from.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The demo's numbers come from measured data and from calculations, so a repeated reading gives the same values. The uncertainty lies in what the models leave out. The test moon is a pile of smooth, frictionless boulders, and the Roche limit drawn is for a moon with no strength at all; a real moon of rock with some strength can survive closer in. The tidal heating uses one measured number for how Io's interior flexes and turns flexing into heat, known to about ±20%. Io's measured heat output is at least 2.5 W/m². Compare your Io reading at $$e = 0.004$$ with that and say whether the two agree, given the uncertainty.
+
 ## What to hand in
 
-Prelab answers, both copies of the first Data table with the graph of Jupiter's moons, the Planets, Rings and Io tables, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.
+Prelab answers, both copies of the first Data table with the graph of Jupiter's moons, the Planets, Rings and Io tables, the answers to the analysis section and to the questions (and to Uncertainty, if assigned). Identify simulated data.

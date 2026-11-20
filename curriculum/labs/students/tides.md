@@ -84,15 +84,18 @@ Record the Moon's tide $$A_\text{Moon}$$, the Sun's tide $$A_\text{Sun}$$ and th
 4. Find $$A_\text{Sun}/A_\text{Moon}$$ from your readings and compare it with $$(M_\text{Sun}/M_\text{Moon})(d_\text{Moon}/d_\text{Sun})^3$$. Then find the ratio of the Sun's pull to the Moon's, $$(M_\text{Sun}/M_\text{Moon})(d_\text{Moon}/d_\text{Sun})^2$$. Explain how the Sun can pull harder but raise the smaller tide.
 5. Compare your spring and neap ranges with $$1.5(A_\text{Moon} + A_\text{Sun})$$ and $$1.5(A_\text{Moon} - A_\text{Sun})$$.
 
-## Uncertainty
-
-The accelerations are recorded to four significant figures and the distances are exact settings, so the scatter about your fits comes from rounding; use the standard error of each slope. The formula $$2GMR_E/d^3$$ is the first term of a series in $$R_E/d$$; the mean of the near and far sides differs from it by about $$2(R_E/d)^2$$ of itself, which is 0.1% at 40 Earth radii. Say whether your fit can see that. The ocean model is an idealization: say which of its simplifications most limits it as a prediction of real tides.
-
 ## Questions
 
 1. Real tidal ranges run from a few centimeters to over 15 m, while the model gives under 1 m everywhere. What does the model leave out that can make real tides so much larger in some places?
 2. How long after one high tide did the next one come, and how does that interval compare with your answer to Before the lab 4? Explain why it is not exactly 12 h, using how the Moon moves along its orbit while Earth turns.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The accelerations are recorded to four significant figures and the distances are exact settings, so the scatter about your fits comes from rounding; use the standard error of each slope. The formula $$2GMR_E/d^3$$ is the first term of a series in $$R_E/d$$; the mean of the near and far sides differs from it by about $$2(R_E/d)^2$$ of itself, which is 0.1% at 40 Earth radii. Say whether your fit can see that. The ocean model is an idealization: say which of its simplifications most limits it as a prediction of real tides. Give the Moon's mass with its uncertainty from the standard error of the pull slope.
+
 ## What to hand in
 
-Prelab answers, both tables with the distance scan's graphs and fits, the Moon's mass with its uncertainty, the near and far side comparison, the Sun and Moon ratios, the spring and neap ranges, the tide timing and answers to the questions. Identify simulated data.
+Prelab answers, both tables with the distance scan's graphs and fits, the Moon's mass, the near and far side comparison, the Sun and Moon ratios, the spring and neap ranges, the tide timing and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

@@ -79,16 +79,19 @@ On a real sound level meter bench, keep levels moderate (below about 85 dB at an
 3. For Part 3, compare each level with Part 1. At what distance does the background change the reading by more than 0.5 dB? Find the source's own level at 32 m by subtracting the background's intensity.
 4. From Part 4, find the mystery source's power from the intercept of $$\beta$$ against $$\log_2 r$$.
 
-## Uncertainty
-
-The meter reads to 0.1 dB and there is no noise, so the scatter about the line comes only from that rounding: 0.1 dB is a 2.3 % change in intensity. On a real field, add reflections from the ground and nearby objects (they can add or cancel by several decibels), the source not being a point at short range, wind and background noise, and the meter's own calibration (often ±1 dB).
-
 ## Questions
 
 1. Why is the decibel scale logarithmic, and why is that useful for hearing?
 2. Why does real outdoor sound often fall faster than 6 dB per doubling at large distances?
 3. In Part 1, what did the meter read at 1 m and at 2 m, and which choice in Before the lab 2 does that match? Explain the step from the intensity: what happens to $$I$$ when $$r$$ doubles, and what does a factor in $$I$$ do to $$\beta$$?
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The meter reads to 0.1 dB and there is no noise, so the scatter about the line comes only from that rounding: 0.1 dB is a 2.3 % change in intensity. On a real field, add reflections from the ground and nearby objects (they can add or cancel by several decibels), the source not being a point at short range, wind and background noise, and the meter's own calibration (often ±1 dB). Give the slope and the intercept of the Part 1 and Part 4 fits with their uncertainties, and the powers with theirs.
+
 ## What to hand in
 
-Prelab answers, a Data table copy for each part with the last two columns filled, graphs with fits, your values of the slope and of the powers, and answers to the questions. Identify simulated data.
+Prelab answers, a Data table copy for each part with the last two columns filled, graphs with fits, your values of the slope and of the powers, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

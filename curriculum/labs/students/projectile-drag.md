@@ -66,8 +66,6 @@ On a real projectile bench, keep the landing area clear and follow the instructo
 
 **Using the virtual apparatus.** Start with **Air resistance** off (the Off button under Air), set **Launch speed v₀**, **Launch angle θ** and **Launch height** under Launch, and check **Blind: hide predictions and answers** before you press **Launch**. For the trajectory, pick a **Dot interval** under Measure (0.1 s or 0.2 s gives eight or more dots), then step the cursor with **Earlier dot** and **Later dot** and press **Record reading** at each dot you use; it stores the Time t, Position x and Height y shown under Measure, and the range R. For the range scan, press Record reading once per shot. Send each scan to the worksheet before clearing (**Export to worksheet**, then **Clear** under Readings), so the trajectory and the range scan each get their own copy of the Data table. Fit the trajectory in the worksheet: a quadratic for $$y$$ against $$t$$ and a straight line for $$x$$ against $$t$$. The Data table has no $$\sin 2\theta$$ column, so fit $$R$$ against $$\sin 2\theta$$ in the demo (the **R against sin 2θ** button under Plot and fit) before you clear the range scan. Every recorded row keeps its shot's settings, so do not mix launch speeds in one range fit. For drag, turn air resistance on and record the air density and the ball's settings (Mass, Diameter and Drag coefficient under Ball, Air density ρ under Air). For the heavy and light balls, press the **Heavy vs light, same size** setup.
 
-**Many launches.** A real launcher never fires two shots exactly alike. With air resistance off, a baseball at 40 m/s and 45° from the ground, and a spread of 1.0° in angle and 1.0% in speed, fire 10 launches, then 90 more, then 900 more, and record the number of launches, the mean range, the standard deviation and the standard error after each. Use the Many launches panel: set **Angle spread σθ** to 1.0° and **Speed spread σv/v₀** to 1.0%, press **10** (n = 10), then **10** nine more times (n = 100), then **100** nine times (n = 1000); read Launches n, Mean range, Standard deviation σ and Standard error σ/√n after each. Changing the angle starts a new set. Repeat at 30°. Record these in Table 2 by hand.
-
 ## Data
 
 | Shot | $$v_0$$ (m/s) | $$\theta$$ (°) | $$y_0$$ (m) | Air on/off | $$t$$ (s) | $$x$$ (m) | $$y$$ (m) | $$R$$ (m) |
@@ -78,7 +76,7 @@ On a real projectile bench, keep the landing area clear and follow the instructo
 
 Keep separate trajectory and range scans. Record ball mass, diameter, drag coefficient and air density above the drag table.
 
-**Table 2: many launches.** $$v_0$$ = 40 m/s, no air, $$\sigma_\theta$$ = 1.0°, $$\sigma_v/v_0$$ = 1.0%.
+**Table 2: many launches (for the Uncertainty section).** $$v_0$$ = 40 m/s, no air, $$\sigma_\theta$$ = 1.0°, $$\sigma_v/v_0$$ = 1.0%.
 
 | Angle $$\theta$$ (°) | Launches $$n$$ | Mean range $$\bar R$$ (m) | Standard deviation $$\sigma$$ (m) | Standard error $$\sigma/\sqrt n$$ (m) |
 |---|---|---|---|---|
@@ -91,17 +89,20 @@ Keep separate trajectory and range scans. Record ball mass, diameter, drag coeff
 1. Fit $$x$$ against $$t$$ and $$y$$ against $$t$$. Infer horizontal velocity and $$g$$; compare the fitted initial vertical velocity with $$v_0 \sin\theta$$.
 2. Fit $$R$$ against $$\sin(2\theta)$$ in vacuum. Infer $$g = v_0^2/\text{slope}$$ and compare with the trajectory result.
 3. Quantify the range reduction with drag. Explain why equal size does not imply equal drag acceleration for different masses.
-4. From Table 2, how do the standard deviation and the standard error change as n grows from 10 to 1000? Which one tells you how well you know the mean range, and which one how far a single shot may land from it?
-5. In vacuum $$R = v_0^2\sin 2\theta/g$$, so to first order $$\sigma_R^2 = \left(\frac{\partial R}{\partial\theta}\sigma_\theta\right)^2 + \left(\frac{\partial R}{\partial v_0}\sigma_v\right)^2$$ with $$\partial R/\partial v_0 = 2R/v_0$$ and $$\partial R/\partial\theta = 2v_0^2\cos 2\theta/g$$ (θ in radians). Work out $$\sigma_R$$ at 30° and at 45° and compare with your σ for 1000 launches. Why does the angle spread add almost nothing at 45°?
-
-## Uncertainty
-
-Use the resolution of the position and time dots and the rounding of the range. Include launch speed uncertainty when inferring $$g$$ from a range slope; speed is squared. In a real bench, include angle and height alignment. Deterministic simulation points do not acquire random uncertainty merely by repeating them. State whether errors come from reading, numerical approximation or an unsuitable model.
 
 ## Questions
 
 1. Did the ball cover as much ground per time step late in the flight as early on? Give both steps and check them against your answer to Before the lab 4. Name the forces on the ball in flight, and use them to explain why its horizontal motion can be uniform while its vertical motion accelerates.
 2. Is a shorter observed range enough to prove that $$g$$ is larger?
+
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+Report the fit parameters and both estimates of $$g$$ with their uncertainties. Many launches: A real launcher never fires two shots exactly alike. With air resistance off, a baseball at 40 m/s and 45° from the ground, and a spread of 1.0° in angle and 1.0% in speed, fire 10 launches, then 90 more, then 900 more, and record the number of launches, the mean range, the standard deviation and the standard error after each. Use the Many launches panel: set **Angle spread σθ** to 1.0° and **Speed spread σv/v₀** to 1.0%, press **10** (n = 10), then **10** nine more times (n = 100), then **100** nine times (n = 1000); read Launches n, Mean range, Standard deviation σ and Standard error σ/√n after each. Changing the angle starts a new set. Repeat at 30°. Record these in Table 2 by hand. Then answer these. From Table 2, how do the standard deviation and the standard error change as n grows from 10 to 1000? Which one tells you how well you know the mean range, and which one how far a single shot may land from it? In vacuum $$R = v_0^2\sin 2\theta/g$$, so to first order $$\sigma_R^2 = \left(\frac{\partial R}{\partial\theta}\sigma_\theta\right)^2 + \left(\frac{\partial R}{\partial v_0}\sigma_v\right)^2$$ with $$\partial R/\partial v_0 = 2R/v_0$$ and $$\partial R/\partial\theta = 2v_0^2\cos 2\theta/g$$ (θ in radians). Work out $$\sigma_R$$ at 30° and at 45° and compare with your σ for 1000 launches. Why does the angle spread add almost nothing at 45°?
+
+Use the resolution of the position and time dots and the rounding of the range. Include launch speed uncertainty when inferring $$g$$ from a range slope; speed is squared. In a real bench, include angle and height alignment. Deterministic simulation points do not acquire random uncertainty merely by repeating them. State whether errors come from reading, numerical approximation or an unsuitable model.
 
 ## With calculus
 
@@ -112,4 +113,4 @@ For courses that use calculus. This section is not counted in the 75 minutes; do
 
 ## What to hand in
 
-Prelab answers, settings and CSV, trajectory and range fits, both estimates of $$g$$ with uncertainty, the drag comparison, the many launches table and answers to the questions (and to With calculus, if assigned). Identify simulated data.
+Prelab answers, settings and CSV, trajectory and range fits, both estimates of $$g$$, the drag comparison and answers to the questions (and to Uncertainty and With calculus, if assigned). Identify simulated data.

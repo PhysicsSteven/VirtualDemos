@@ -72,14 +72,17 @@ Work out $$\ln R$$ (with $$R$$ in 1/s) for the lead readings and $$1/\sqrt{R}$$ 
 3. Graph $$1/\sqrt{R}$$ against $$d$$ for the distance readings. Is it a straight line? Find $$d_0$$ from the intercept and slope.
 4. A worker stands 1 m from a cesium 137 source. Using your results, which halves the dose rate more cheaply in space and weight: stepping back by how much, or a sheet of lead of what thickness?
 
-## Uncertainty
-
-Each net rate has a counting uncertainty, given in the table. Compare the relative uncertainty of the thickest lead reading with the first. How should that change the weight each point gets in the fit, and would it change your $$\mu/\rho$$ much?
-
 ## Questions
 
 1. Lead is used for shielding gamma rays, but concrete and water are used too. What property of the absorber matters, and how could a thick wall of concrete do the same job as lead?
 2. Divide your 5 cm rate by your 10 cm rate. How does the factor compare with your choice in Before the lab 3? Explain it with $$d_0$$: what does $$d_0$$ stand for in the crystal, and why does doubling d not double the distance that matters?
+
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+Report $$\mu/\rho$$, the half value layer and $$d_0$$ with their uncertainties from your fits. For Question 2, give the factor with its uncertainty from the two rates' uncertainties and say how many standard errors it is from 4. For With calculus 3, use the rate uncertainties of the two rows to say whether the difference is larger than the counting allows. Each net rate has a counting uncertainty, given in the table. Compare the relative uncertainty of the thickest lead reading with the first. How should that change the weight each point gets in the fit, and would it change your $$\mu/\rho$$ much?
 
 ## With calculus
 
@@ -87,8 +90,8 @@ For courses that use calculus. This section is not counted in the 75 minutes; do
 
 1. A thin layer of mass thickness $$dx$$ removes the same fraction $$(\mu/\rho)\,dx$$ of the photons that reach it, so $$dR/dx = -(\mu/\rho)R$$. Separate the variables and integrate from $$R_0$$ at $$x = 0$$ to derive $$R = R_0\,e^{-(\mu/\rho)x}$$.
 2. The chance that a photon is removed between $$x$$ and $$x + dx$$ is $$(\mu/\rho)\,e^{-(\mu/\rho)x}\,dx$$. Show that these chances add up to 1, and integrate by parts to find the mean depth at which a photon is removed, $$\bar x = \int_0^\infty x\,(\mu/\rho)\,e^{-(\mu/\rho)x}\,dx = 1/(\mu/\rho)$$. Work it out from your $$\mu/\rho$$ in g/cm² and in mm of lead. How many half value layers is it?
-3. From your lead rows at 5.5 and 9.4 g/cm², estimate $$dR/dx$$ at 7.4 g/cm² (their difference in $$R$$ over the difference in $$x$$). Compare it with $$-(\mu/\rho)R$$ from your $$\mu/\rho$$ and your 7.4 g/cm² row. Use the rate uncertainties of the two rows to say whether the difference is larger than the counting allows.
+3. From your lead rows at 5.5 and 9.4 g/cm², estimate $$dR/dx$$ at 7.4 g/cm² (their difference in $$R$$ over the difference in $$x$$). Compare it with $$-(\mu/\rho)R$$ from your $$\mu/\rho$$ and your 7.4 g/cm² row.
 
 ## What to hand in
 
-Prelab answers, both table copies with their graphs, $$\mu/\rho$$ and the half value layer with uncertainties, $$d_0$$, and answers to the questions (and to With calculus, if assigned). Identify simulated data.
+Prelab answers, both table copies with their graphs, $$\mu/\rho$$ and the half value layer, $$d_0$$, and answers to the questions (and to Uncertainty and With calculus, if assigned). Identify simulated data.

@@ -104,15 +104,18 @@ Keep the mode identity and driver position with every comparison.
 3. Explain how changing the driver location may make some modes difficult to excite without changing their natural frequencies.
 4. For the six drumhead modes at 1000 N/m, compare $$f/f_{01}$$ with $$j_{nm}/j_{01}$$. Are the overtones harmonics of $$f_{01}$$? Compare with the string, whose overtones are $$2f_1, 3f_1, \dots$$
 
-## Uncertainty
-
-Frequency tuning resolution, finite resonance width and ambiguous mode identification limit precision. A change in sand pattern is not automatically a new normal mode. Real plates also have uncertain thickness, support conditions and material constants. Treat simulated readings as model results rather than physical measurements.
-
 ## Questions
 
 1. Why should nodal patterns not be used as direct maps of stress?
 2. Doubling the thickness doubles the mass of every square centimeter of plate. Using your point force readings at 1.00 and 2.00 mm, say whether the mode's frequency went the way you chose in Before the lab 2. Explain the result by comparing how the plate's stiffness and its mass change with thickness.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+Frequency tuning resolution, finite resonance width and ambiguous mode identification limit precision. A change in sand pattern is not automatically a new normal mode. Real plates also have uncertain thickness, support conditions and material constants. Treat simulated readings as model results rather than physical measurements.
+
 ## What to hand in
 
-Prelab answers, a resonance table with sketches, the thickness comparison, the Drumhead table, uncertainty discussion and answers to the questions. Identify simulated data.
+Prelab answers, a resonance table with sketches, the thickness comparison, the Drumhead table, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

@@ -78,13 +78,16 @@ No hazards in the virtual lab. In a real one, a sphere at 80 °C burns: handle i
 4. Compare the black and polished spheres in still air. The difference of their $$h + h_\mathrm{rad}$$ values is the black sphere's $$h_\mathrm{rad}$$ minus the polished sphere's (the two runs share the same convection, apart from slightly different mean temperatures). Add back $$h_\mathrm{rad}$$ for $$e = 0.05$$ at the polished run's mean temperature (worked as in Before the lab question 1) to get the black sphere's radiation coefficient, and compare it with $$4e\sigma T^3$$ for $$e = 0.95$$ at the black run's mean temperature.
 5. What fraction of the heat leaves by radiation from the black sphere in still air? For the 4.0 m/s wind, take $$h$$ from your polished 4.0 m/s run and $$h_\mathrm{rad}$$ for $$e = 0.95$$ at 36 °C, and find the fraction the same way.
 
-## Uncertainty
-
-The thermocouple reads to 0.01 °C with no noise or lag. Near the end of a run $$T - T_\mathrm{air}$$ is small, so its logarithm is the least certain point: estimate the effect of 0.01 °C at the last reading of each run. The model uses correlations for $$h$$ that fit real measurements to within about 10 to 20%, and a real fan's stream is turbulent, so treat your $$h$$ values as typical, not exact.
-
 ## Questions
 
 1. Before the lab 3 asked what share of the black sphere's heat leaves as radiation in still air; Analysis 5 gives the measured share. Using $$h_\mathrm{rad} = 4e\sigma T^3$$ and your still air $$h$$, explain why radiation takes the share it does this close to room temperature, and why the 4.0 m/s wind changes it. Then use your results to decide: does a household "radiator" at 60 °C heat a room mostly by radiation or by convection?
+
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The thermocouple reads to 0.01 °C with no noise or lag. Near the end of a run $$T - T_\mathrm{air}$$ is small, so its logarithm is the least certain point: estimate the effect of 0.01 °C at the last reading of each run. The model uses correlations for $$h$$ that fit real measurements to within about 10 to 20%, and a real fan's stream is turbulent, so treat your $$h$$ values as typical, not exact.
 
 ## With calculus
 
@@ -95,4 +98,4 @@ For courses that use calculus. This section is not counted in the 75 minutes; do
 
 ## What to hand in
 
-Prelab answers, the table copies with their graphs and fits, your values of $$\tau$$, $$h$$ and the radiation coefficient with comparisons, the radiation fractions, and the answer to the question (and to With calculus, if assigned). Identify simulated data.
+Prelab answers, the table copies with their graphs and fits, your values of $$\tau$$, $$h$$ and the radiation coefficient with comparisons, the radiation fractions, and the answer to the question (and to Uncertainty and With calculus, if assigned). Identify simulated data.

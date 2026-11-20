@@ -105,15 +105,20 @@ Use rows for all requested harmonics and phase comparisons. State which partial 
 3. Explain each missing fundamental period using the common factor of the harmonic numbers present.
 4. Plot $$\Delta x$$ (vertical) against $$1/\Delta k$$ (horizontal) from the Wave packets table, with a free intercept. Compare the slope with 1/2. At which $$\sigma$$ does $$\Delta x\,\Delta k$$ start to rise above 1/2, and why? (Look at which harmonics the packet would need.)
 
-## Uncertainty
-
-State the resolution of the frequency and amplitude controls and how closely you can read waveform timing. Compare calculations with the displayed digits rather than inventing random scatter. If you estimate a peak from a plotted curve, give a reading interval. Listening impressions are observations, but they are not calibrated measurements of amplitude or loudness.
-
 ## Questions
 
 1. A short click of sound has a wide spread of frequencies, a long steady tone a narrow one. Explain this from $$\Delta x\,\Delta k \ge 1/2$$, using $$x = vt$$ and $$k = 2\pi f/v$$.
 2. Which of your answers to Before the lab 3 held up in the Change phase runs? Say what changed and what stayed put, and explain each from the rms formula in Background and from where the crests of the harmonics fall. Then say what a comparison of steady spectra alone still leaves out of a real instrument's sound.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+State the resolution of the frequency and amplitude controls and how closely you can read waveform timing. Compare calculations with the displayed digits rather than inventing random scatter. If you estimate a peak from a plotted curve, give a reading interval. Listening impressions are observations, but they are not calibrated measurements of amplitude or loudness.
+
+Give the slope and intercept of your Analysis 4 fit with their standard errors, and say whether the intercept is zero within its standard error.
+
 ## What to hand in
 
-Prelab answers, the table and screenshots, dB and rms calculations, period explanations, the Wave packets table with its graph, and answers to the questions. State whether you listened as well as using the plots.
+Prelab answers, the table and screenshots, dB and rms calculations, period explanations, the Wave packets table with its graph, and answers to the questions (and to Uncertainty, if assigned). State whether you listened as well as using the plots.

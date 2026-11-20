@@ -93,15 +93,18 @@ No hazards in the virtual lab.
 6. From the Habitable zone table: which planets are inside their star's zone? Earth under the young Sun is inside its zone, yet its model surface temperature, with today's albedo and greenhouse, is below freezing. What would Earth have needed four billion years ago to keep liquid water?
 7. From the Keeping an atmosphere table: which world keeps no gas at all, and which gas does Earth lose? Use the escape speeds and temperatures to explain both.
 
-## Uncertainty
-
-The demo computes its temperatures from a balance of energy, so a repeated reading gives exactly the same numbers. The uncertainty is in what the model leaves out and in the measured temperatures. Mars's surface swings from about 184 K at night to 242 K in the afternoon at the Viking 1 landing site, around an average of about 214 K. Using your Part 2 and Part 3 readings, explain why Mars's greenhouse warming is much less certain than Venus's.
-
 ## Questions
 
 1. Look up Mercury in your Part 2 readings (its temperature with no greenhouse and its measured temperature) and Venus's surface temperature in the model in Part 3. Which is hotter, and is that what you thought in Before the lab 4? Venus gets less starlight than Mercury and reflects more of it: use the greenhouse effect to explain how its surface can still be the hotter one. Without its greenhouse, Earth would average about 255 K. What would that mean for the oceans? Is the greenhouse effect good or bad for Earth?
 2. Proxima Centauri b gets about 64% of the starlight Earth gets and sits inside its star's habitable zone. Does that tell us it has liquid water? Name two things about the planet that we would need to know.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The demo computes its temperatures from a balance of energy, so a repeated reading gives exactly the same numbers. The uncertainty is in what the model leaves out and in the measured temperatures. Mars's surface swings from about 184 K at night to 242 K in the afternoon at the Viking 1 landing site, around an average of about 214 K. Using your Part 2 and Part 3 readings, explain why Mars's greenhouse warming is much less certain than Venus's.
+
 ## What to hand in
 
-Prelab answers, the three copies of the first Data table and its graph, the Habitable zone and Keeping an atmosphere tables, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.
+Prelab answers, the three copies of the first Data table and its graph, the Habitable zone and Keeping an atmosphere tables, the answers to the analysis section and to the questions (and to Uncertainty, if assigned). Identify simulated data.

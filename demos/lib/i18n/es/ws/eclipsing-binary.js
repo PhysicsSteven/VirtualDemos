@@ -92,8 +92,6 @@ VDI18N.add('es', 'ws/eclipsing-binary', {
   "Con la Parte {#}, encuentra ambos radios a partir de los tiempos de contacto. ¿Qué eclipse es total y cuál es anular (la estrella menor delante de la mayor)?",
 "Use the brightness at the middle of the total eclipse to find \\(L_2/L_1\\), then \\(T_2\\) from \\(T_1\\) and the radii.":
   "Usa el brillo a la mitad del eclipse total para encontrar \\(L_2/L_1\\), y luego \\(T_2\\) a partir de \\(T_1\\) y los radios.",
-"For the Sun and red dwarf, compare your masses and radii with the slider values; the radii come out slightly large because the stars cross on a curved path, not a straight line, so say by how much.":
-  "Para Sol y enana roja, compara tus masas y radios con los valores de los controles deslizantes; los radios salen un poco grandes porque las estrellas cruzan por una trayectoria curva, no por una recta, así que di por cuánto.",
 "Choose Partial eclipses. Why can’t you find both radii from its contact times alone?":
   "Elige Eclipses parciales. ¿Por qué no puedes encontrar ambos radios solo con sus tiempos de contacto?",
 "Choose Eccentric pair. Why does the second eclipse not come half an orbit after the first, and why do the two eclipses last different times?":
@@ -102,8 +100,12 @@ VDI18N.add('es', 'ws/eclipsing-binary', {
   "Elige Estrellas gemelas. ¿Por qué ambos eclipses tienen una profundidad de exactamente la mitad de la luz?",
 "The Sun and red dwarf again: the brightness at the middle of each eclipse in Part {#} decides Before the lab {#}. How deep was each dip, and which was deeper? Explain the difference from what is hidden in each eclipse and how bright each star’s surface is, and say whether it agrees with your temperatures.":
   "Otra vez el Sol y la enana roja: el brillo a la mitad de cada eclipse en la Parte {#} decide Antes del laboratorio {#}. ¿Qué tan profundo fue cada descenso, y cuál fue más profundo? Explica la diferencia a partir de lo que se oculta en cada eclipse y de qué tan brillante es la superficie de cada estrella, e indica si concuerda con tus temperaturas.",
-"Prelab answers, the table copies with their graphs, K₁, K₂, γ and the period, both masses, both radii and \\(T_2\\) with their percent errors against the slider values, and answers to the questions. Identify simulated data: every reading in this lab is simulated.":
-  "Respuestas previas al laboratorio, las copias de la tabla con sus gráficas, K₁, K₂, γ y el periodo, ambas masas, ambos radios y \\(T_2\\) con sus errores porcentuales respecto a los valores de los controles deslizantes, y las respuestas a las preguntas. Identifica los datos simulados: todas las lecturas de este laboratorio son simuladas.",
+"For courses that treat measurement uncertainty. This section is not counted in the {#} minutes; do it when your instructor assigns it.":
+  "Para cursos que tratan la incertidumbre de medición. Esta sección no cuenta dentro de los {#} minutos; hazla cuando tu profesor la asigne.",
+"For the Sun and red dwarf, compare your masses and radii with the slider values; the radii come out slightly large because the stars cross on a curved path, not a straight line, so say by how much.":
+  "Para Sol y enana roja, compara tus masas y radios con los valores de los controles deslizantes; los radios salen un poco grandes porque las estrellas cruzan por una trayectoria curva, no por una recta, así que di por cuánto.",
+"Prelab answers, the table copies with their graphs, K₁, K₂, γ and the period, both masses, both radii and \\(T_2\\) with their percent errors against the slider values, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data: every reading in this lab is simulated.":
+  "Respuestas previas al laboratorio, las copias de la tabla con sus gráficas, K₁, K₂, γ y el periodo, ambas masas, ambos radios y \\(T_2\\) con sus errores porcentuales respecto a los valores de los controles deslizantes, y las respuestas a las preguntas (y de Incertidumbre, si se asigna). Identifica los datos simulados: todas las lecturas de este laboratorio son simuladas.",
 "Velocity semi amplitude of star {#}":
   "Semiamplitud de velocidad de la estrella {#}",
 "Luminosity of a star":

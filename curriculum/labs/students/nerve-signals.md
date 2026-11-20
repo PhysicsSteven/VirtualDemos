@@ -128,15 +128,11 @@ One copy of this table for each of Parts 2, 3 and 4 (bare) and 4 (myelinated). T
 
 ## Analysis
 
-1. Graph $$\Delta x$$ (vertical) against $$\Delta t$$ (horizontal) for the myelinated axon of Part 2, with a straight line fit. What is the slope, with its uncertainty, in m/s? Is the intercept zero within its uncertainty? Do the same for the bare axon of Part 3. How many times faster is the myelinated impulse? Compare with your prediction in Before the lab 2.
-2. For the bare axons of Part 4, fill in the $$v^2$$ column. Graph $$v^2$$ against $$d$$ with a straight line fit. Give the slope and intercept with their uncertainties. Is the intercept zero within its uncertainty, as it must be if $$v_\text{bare} \propto \sqrt{d}$$? Use your fit to predict the speed of the squid's bare giant axon, 476 µm across.
-3. For the myelinated axons of Part 4, graph $$v$$ against $$d$$ with a straight line fit. Give the slope (in m/s per µm) and the intercept with their uncertainties. Is the intercept zero within its uncertainty? Compare the ratio $$v(20\ \mu\text{m})/v(5\ \mu\text{m})$$ for each kind of axon with your answers to Before the lab 3.
+1. Graph $$\Delta x$$ (vertical) against $$\Delta t$$ (horizontal) for the myelinated axon of Part 2, with a straight line fit. What is the slope, in m/s? Is the intercept close to zero? Do the same for the bare axon of Part 3. How many times faster is the myelinated impulse? Compare with your prediction in Before the lab 2.
+2. For the bare axons of Part 4, fill in the $$v^2$$ column. Graph $$v^2$$ against $$d$$ with a straight line fit. Give the slope and intercept. Is the intercept close to zero, as it must be if $$v_\text{bare} \propto \sqrt{d}$$? Use your fit to predict the speed of the squid's bare giant axon, 476 µm across.
+3. For the myelinated axons of Part 4, graph $$v$$ against $$d$$ with a straight line fit. Give the slope (in m/s per µm) and the intercept. Is the intercept close to zero? Compare the ratio $$v(20\ \mu\text{m})/v(5\ \mu\text{m})$$ for each kind of axon with your answers to Before the lab 3.
 4. With your fits from Analysis 2 and 3, how thick would a bare axon have to be to match the speed of a myelinated axon 10 µm across? How many times thicker is that?
 5. For each row of the ECG table, work out the axis from lead I and aVF with the formula in the Background and fill in that column. By how many degrees does each differ from the axis set? Which setups show left or right axis deviation, and which leads have a net negative QRS in each?
-
-## Uncertainty
-
-The demo times the impulse where the voltage at an electrode rises through 0 mV, between time steps of 0.004 ms (bare) or 0.001 ms (myelinated). The myelinated impulse jumps from node to node, so its arrival at an electrode depends a little on where in an internode the electrode sits (read the **Internode length** in the Readouts). Compare the scatter of your myelinated and bare points about their lines in Analysis 1 (look at the residuals). Which effect sets the uncertainty of each slope? Would wider electrode gaps help?
 
 ## Questions
 
@@ -146,6 +142,15 @@ The demo times the impulse where the voltage at an electrode rises through 0 mV,
 4. Part 6: give the three leads you copied at one instant. Does lead II equal lead I plus lead III? Why must that hold at every instant?
 5. Switch back to **Axon** and press the setup **Myelin lost**, in which internodes 12 to 14 have lost their myelin. Press **Play**. What happens to the impulse there? Which disease does this model, and why does a patient lose sensation or movement?
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The demo times the impulse where the voltage at an electrode rises through 0 mV, between time steps of 0.004 ms (bare) or 0.001 ms (myelinated). The myelinated impulse jumps from node to node, so its arrival at an electrode depends a little on where in an internode the electrode sits (read the **Internode length** in the Readouts). Compare the scatter of your myelinated and bare points about their lines in Analysis 1 (look at the residuals). Which effect sets the uncertainty of each slope? Would wider electrode gaps help?
+
+For each straight line fit in Analysis 1 to 3, give the slope and the intercept with their uncertainties, and say whether each intercept is zero within its uncertainty.
+
 ## What to hand in
 
-Your answers to Before the lab, the four copies of the Data table with their graphs and fits, the ECG table, your answers to Analysis, Uncertainty and Questions. Say that your data came from the simulated apparatus.
+Your answers to Before the lab, the four copies of the Data table with their graphs and fits, the ECG table, and your answers to Analysis and Questions (and to Uncertainty, if assigned). Say that your data came from the simulated apparatus.

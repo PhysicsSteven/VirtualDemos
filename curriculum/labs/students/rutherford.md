@@ -76,13 +76,9 @@ Check Blind (under Projectile) before you start.
 
 ## Analysis
 
-1. For gold, fill the N/ΔΩ, ln sin(θ/2) and ln(N/ΔΩ) columns and graph $$\ln(N/\Delta\Omega)$$ (vertical) against $$\ln\sin(\theta/2)$$ (horizontal), leaving out bins with fewer than 10 counts. Give the slope with its uncertainty and compare with −4.
+1. For gold, fill the N/ΔΩ, ln sin(θ/2) and ln(N/ΔΩ) columns and graph $$\ln(N/\Delta\Omega)$$ (vertical) against $$\ln\sin(\theta/2)$$ (horizontal), leaving out bins with fewer than 10 counts. Give the slope and compare with −4.
 2. From the intercept find $$D$$ for gold, then $$Z$$. Compare with 79.
 3. What did the plum pudding atom give? Would Geiger and Marsden have seen any alphas turned back?
-
-## Uncertainty
-
-The count in a bin fluctuates by about $$\sqrt{N}$$, so $$\ln N$$ is uncertain by about $$1/\sqrt{N}$$. Find that uncertainty for your bins near 20°, 90° and 160°, and compare with the residuals of your fits. Where do the residuals scatter most, and why? How does the counting statistics limit your value of $$Z$$?
 
 ## Questions
 
@@ -91,6 +87,13 @@ The count in a bin fluctuates by about $$\sqrt{N}$$, so $$\ln N$$ is uncertain b
 3. For aluminum at 10 MeV, alphas with small impact parameters reach the nucleus. How would the real counts at large angles differ from Rutherford's formula, and what did this tell physicists about the size of nuclei?
 4. How does this experiment support the planetary picture of the atom that Bohr's model starts from, and what problem does that picture raise?
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The count in a bin fluctuates by about $$\sqrt{N}$$, so $$\ln N$$ is uncertain by about $$1/\sqrt{N}$$. Find that uncertainty for your bins near 20°, 90° and 160°, and compare with the residuals of your fits. Where do the residuals scatter most, and why? How does the counting statistics limit your value of $$Z$$? Give the slope of your fit in Analysis 1, $$D$$ and $$Z$$ with their uncertainties, and say whether the slope is within one standard error of −4.
+
 ## What to hand in
 
-Prelab answers, the table copy with its graph and fit, the slope, $$D$$ and $$Z$$ with uncertainties, the plum pudding and aluminum notes, and answers to the questions. Identify simulated data.
+Prelab answers, the table copy with its graph and fit, the slope, $$D$$ and $$Z$$, the plum pudding and aluminum notes, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

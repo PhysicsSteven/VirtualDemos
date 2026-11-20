@@ -78,15 +78,18 @@ Before each part, predict what you will see. Then measure. Pick each setup under
 3. For Part 3, explain the field at the midpoint and the field 3.0 cm above the midpoint as the vector sum of the two wires' fields (check the point above the midpoint by working out each wire's field and adding).
 4. For Part 3, fill in $$1/d$$ for the rows with the probe at the midpoint, graph $$F/L$$ (vertical) against $$1/d$$ in 1/m (horizontal), and find $$\mu_0$$ from the slope. What does the sign of $$F/L$$ tell you?
 
-## Uncertainty
-
-The model has no noise: the field is given to four significant figures, and positions are set to 0.1 cm, so a distance read as 1.0 cm could be up to 0.05 cm off when you place the probe by hand (5% at 1 cm). Work out what that does to $$B$$ at 1.0 cm. In a real experiment the wires are not infinitely long or thin, Earth's field (about 50 μT) adds to the wire's, and a probe has a size of its own.
-
 ## Questions
 
 1. A power line 10 m overhead carries 200 A. Compare its field at the ground with Earth's field. Should you worry about a compass reading under it?
 2. Use the Biot and Savart law to explain why the field of a wire only 10 cm long, measured 3 cm from its middle, is smaller than $$\mu_0 I/(2\pi r)$$.
 3. With 5.0 A and 10 A in the wires, which wire's F/L was larger? Was that your answer to Before the lab 3? Use $$F/L = \mu_0 I_1 I_2/(2\pi d)$$, the field each wire makes at the other, and Newton's third law to explain why the two forces compare as they do.
+
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The model has no noise: the field is given to four significant figures, and positions are set to 0.1 cm, so a distance read as 1.0 cm could be up to 0.05 cm off when you place the probe by hand (5% at 1 cm). Work out what that does to $$B$$ at 1.0 cm. In a real experiment the wires are not infinitely long or thin, Earth's field (about 50 μT) adds to the wire's, and a probe has a size of its own.
 
 ## With calculus
 
@@ -97,4 +100,4 @@ For courses that use calculus. This section is not counted in the 75 minutes; do
 
 ## What to hand in
 
-Prelab answers, a Data table copy for each part, the graphs and fits, your values of $$\mu_0$$, and answers to the questions (and to With calculus, if assigned). Identify simulated data.
+Prelab answers, a Data table copy for each part, the graphs and fits, your values of $$\mu_0$$, and answers to the questions (and to Uncertainty and With calculus, if assigned). Identify simulated data.

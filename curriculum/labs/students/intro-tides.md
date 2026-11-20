@@ -74,10 +74,6 @@ No hazards in the virtual lab. At a real beach, check the tide table before walk
 5. The day's range at one place is 1.5 times the height of the tide there. Check this for spring tides with (Moon's tide + Sun's tide) × 1.5, and for neap tides with (Moon's tide − Sun's tide) × 1.5. How many times bigger is the spring range than the neap range?
 6. From Part 3, how long is it from one high tide to the next? The Moon returns over the same city every 24 hours 50 minutes. Why is that 50 minutes longer than a day, and how does it explain your interval?
 
-## Uncertainty
-
-The demo computes the pulls exactly, so a repeated reading gives the same numbers. The bigger uncertainty is in the model: name two things about the real Earth that the demo leaves out and that make real tides differ from place to place.
-
 ## Questions
 
 1. Tidal friction drags Earth's bulges a little ahead of the Moon. Their pull speeds the Moon along, and the Moon drifts away from Earth by about 3.8 cm each year. Will the tides in the far future be bigger or smaller? Use your Part 1 readings.
@@ -85,6 +81,13 @@ The demo computes the pulls exactly, so a repeated reading gives the same number
 3. Io, Jupiter's closest big moon, is squeezed by tides so strongly that it has hundreds of active volcanoes. Using what you found in Part 1, why does being close to a giant planet matter so much?
 4. In your second table, how did the Day's range at full moon (14.77 days) compare with new moon (0 days)? Was your guess in Before the lab 4 right? At full moon the Sun and the Moon pull on Earth from opposite sides: use the two bulges each one raises to explain what you saw.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The demo computes the pulls exactly, so a repeated reading gives the same numbers. The bigger uncertainty is in the model: name two things about the real Earth that the demo leaves out and that make real tides differ from place to place.
+
 ## What to hand in
 
-Prelab answers, the two Data tables with the tide heights and high tide times in the notes, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.
+Prelab answers, the two Data tables with the tide heights and high tide times in the notes, the answers to the analysis section and to the questions (and to Uncertainty, if assigned). Identify simulated data.

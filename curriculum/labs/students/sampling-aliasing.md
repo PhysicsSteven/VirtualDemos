@@ -85,16 +85,12 @@ Parts A, C and D each get their own copy of this table.
 
 ## Analysis
 
-1. For each row of part A, work out the apparent frequency $$f_a$$ from the formula in Background and the bin spacing $$\Delta f = f_s/N$$. Does every measured peak lie within $$\Delta f/2$$ of $$f_a$$?
+1. For each row of part A, work out the apparent frequency $$f_a$$ from the formula in Background and the bin spacing $$\Delta f = f_s/N$$. Is every measured peak at the bin nearest $$f_a$$?
 2. Graph the peak frequency (vertical) against the sample rate (horizontal) for part A. Describe the shape. Above what sample rate is the 440 Hz tone reported correctly, and how does that compare with $$2 \times 440$$ Hz?
 3. Use the formula to predict where harmonics 5 and 8 of 220 Hz appear at $$f_s$$ = 2,000 Hz, and compare with your Folding table. Are the folded partials harmonics of 220 Hz?
 4. From $$\lvert H\rvert = 1/\sqrt{1 + (f/f_c)^{16}}$$ with $$f_c$$ = 800 Hz, calculate in dB how much the filter weakens harmonic 5 and harmonic 8, and compare with the change in their levels in your Folding table. Why does harmonic 5, the one closest to $$f_s/2$$, get through the most?
 5. From part C, explain the peak level and the bins within 40 dB for each of the four readings.
 6. Graph the noise floor (vertical) against $$N$$ (horizontal) for part D and fit a logarithm, $$y = a + b\ln x$$. The Background predicts a fall of 10 dB per factor of 10 in $$N$$, which is $$b = -10/\ln 10 = -4.34$$ dB. Compare your $$b$$ with that.
-
-## Uncertainty
-
-A peak frequency is known only to the nearest bin, $$\pm\Delta f/2$$, unless the tone falls exactly on a bin. The noise floor is itself an average of random numbers, so it scatters from one record to the next: use your three New noise readings at N = 256 to estimate that scatter, and compare it with the residuals of your fit in Analysis 6. Every value here is computed by the demo; the noise is simulated.
 
 ## Questions
 
@@ -102,6 +98,15 @@ A peak frequency is known only to the nearest bin, $$\pm\Delta f/2$$, unless the
 2. Audio CDs use $$f_s$$ = 44,100 Hz. What is the highest frequency they record, and why must the antialiasing filter in a CD recorder fall from passing everything at 20 kHz, the top of human hearing, to almost nothing by 22.05 kHz?
 3. Look at the 500 Hz row of part A, the case in Before the lab 1. What did the converter report there, and why is more than one sample per cycle still not enough to record the tone? Use the identity in Background to name the slower sine that passes through exactly the same sample values.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+A peak frequency is known only to the nearest bin, $$\pm\Delta f/2$$, unless the tone falls exactly on a bin. The noise floor is itself an average of random numbers, so it scatters from one record to the next: use your three New noise readings at N = 256 to estimate that scatter, and compare it with the residuals of your fit in Analysis 6. Every value here is computed by the demo; the noise is simulated.
+
+Check whether every measured peak in part A lies within $$\Delta f/2$$ of $$f_a$$. For Analysis 6, give $$b$$ with its standard error and say how many standard errors it is from $$-4.34$$ dB.
+
 ## What to hand in
 
-Prelab answers, the three copies of the Data table and the Folding table, the two graphs with the fit, the calculations in Analysis, the scatter estimate and answers to the questions.
+Prelab answers, the three copies of the Data table and the Folding table, the two graphs with the fit, the calculations in Analysis, and answers to the questions (and to Uncertainty, if assigned).

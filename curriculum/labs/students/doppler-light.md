@@ -65,15 +65,18 @@ No hazards in the virtual lab.
 3. At $$\theta = 90^\circ$$, what does the classical formula predict, and what did you see? Explain the shift in terms of the source's clock.
 4. At what angle is there no shift at all for $$\beta = 0.60$$? Show that it is where $$\cos\theta = (1 - 1/\gamma)/\beta$$, and say whether your readings at $$45^\circ$$ and $$90^\circ$$ are on either side of it.
 
-## Uncertainty
-
-The angle is shown to 0.1° and the wavelength to 0.1 nm. Because each row uses the angle shown at the same moment as its wavelength, when you pause does not add any error. Estimate how much a 0.1° error in $$\theta$$ changes $$1 - \beta\cos\theta$$ at $$45^\circ$$ and $$\beta = 0.90$$, and so $$\gamma$$ from data. With real light from stars, wavelengths are measured from spectral lines, and the source's own motion must be separated from Earth's orbital motion and the expansion of the universe.
-
 ## Questions
 
 1. Show that for $$\beta \ll 1$$, $$z \approx -\beta\cos\theta$$, so a small redshift measures the radial velocity. A star's hydrogen line at 656.3 nm is received at 656.4 nm. How fast is it receding?
 2. Before the lab 4 asked about light sent at $$70^\circ$$ by a source at $$\beta = 0.900$$. What did you receive near $$70^\circ$$? The source was still approaching, so use the two effects in the Background to explain the shift you saw, and find the angle at which the shift changes sign for $$\beta = 0.900$$.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The angle is shown to 0.1° and the wavelength to 0.1 nm. Because each row uses the angle shown at the same moment as its wavelength, when you pause does not add any error. Estimate how much a 0.1° error in $$\theta$$ changes $$1 - \beta\cos\theta$$ at $$45^\circ$$ and $$\beta = 0.90$$, and so $$\gamma$$ from data. With real light from stars, wavelengths are measured from spectral lines, and the source's own motion must be separated from Earth's orbital motion and the expansion of the universe. For the star in Question 1, say how much its speed changes for a 0.1 nm error in the received wavelength.
+
 ## What to hand in
 
-Prelab answers, the completed Data table, the comparison of the two predictions, the plot of $$1/\gamma^2$$ against $$\beta^2$$ with its fit, and answers to the questions. Identify simulated data.
+Prelab answers, the completed Data table, the comparison of the two predictions, the plot of $$1/\gamma^2$$ against $$\beta^2$$ with its fit, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

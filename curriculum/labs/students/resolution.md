@@ -81,16 +81,19 @@ Export fills every column up to Intensity at the cursor. Fill in θ₁ = x/L for
 2. Graph the smallest resolved angle Δθ (the Separation column, vertical) against 1/D (horizontal) for Part 2. From the slope find the factor multiplying λ, and compare it with 1.22.
 3. At the Rayleigh separation, what was the intensity midway between the two sources, as a fraction of the peaks? Is it the same for every D?
 4. From Part 3, find the farthest distance at which the headlights are resolved for each pupil size. Compare the 3.00 mm result with your answer to Before the lab question 3.
-5. From Part 4, find the mystery pinhole's diameter from each reading, $$D = 1.22\,\lambda/\theta_1$$, and give the mean with its spread.
-
-## Uncertainty
-
-The cursor moves in steps of 1/1000 of the view, so the ring radius is uncertain by about one step; say how zooming in changed that. Near the first dark ring the intensity changes slowly, so the darkest point is harder to pin down than its step suggests; estimate how far you could move the cursor without the reading changing in its fourth decimal. In Part 2, judging when one peak sits on the other's zero is a judgment by eye: how much could Δθ change before you would notice? Propagate the uncertainty in the ring radius into the mystery pinhole's diameter.
+5. From Part 4, find the mystery pinhole's diameter from each reading, $$D = 1.22\,\lambda/\theta_1$$, and give the mean.
 
 ## Questions
 
 1. With the 632.8 nm laser, how did the radius of the first dark ring change as the pinhole opened from 100 to 300 µm, and is that what you said in Before the lab 2? A wider hole lets a wider beam through, so what does set the angle at which light from different parts of the hole cancels?
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The cursor moves in steps of 1/1000 of the view, so the ring radius is uncertain by about one step; say how zooming in changed that. Near the first dark ring the intensity changes slowly, so the darkest point is harder to pin down than its step suggests; estimate how far you could move the cursor without the reading changing in its fourth decimal. In Part 2, judging when one peak sits on the other's zero is a judgment by eye: how much could Δθ change before you would notice? Propagate the uncertainty in the ring radius into the mystery pinhole's diameter. Give the mean mystery pinhole diameter with its spread.
+
 ## What to hand in
 
-Prelab answers, the settings for each part, the table copies with their graphs and fits, the slopes compared with 1.22, the headlight distances, the mystery pinhole's diameter with its uncertainty, and answers to the questions. Identify simulated data.
+Prelab answers, the settings for each part, the table copies with their graphs and fits, the slopes compared with 1.22, the headlight distances, the mystery pinhole's diameter, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

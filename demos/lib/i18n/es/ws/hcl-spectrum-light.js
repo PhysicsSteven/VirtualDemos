@@ -62,16 +62,18 @@ VDI18N.add('es', 'ws/hcl-spectrum-light', {
   "A partir de la tabla, ¿qué moléculas absorben microondas y qué tienen en común? ¿Cuáles absorben infrarrojo a {#} μm, y por qué lo hace el CO₂ mientras que el N₂ y el O₂ no? ¿Qué tiene esto que ver con el efecto invernadero?",
 "For each molecule that breaks in the table, compare the photon energy with its bond energy \\(D_0\\). Why does NO₂ break at {#} nm but only glow at {#} nm?":
   "Para cada molécula de la tabla que se rompe, compara la energía del fotón con su energía de enlace \\(D_0\\). ¿Por qué el NO₂ se rompe a {#} nm pero solo brilla a {#} nm?",
-"The demo’s absorption edges and bond energies are approximate, and it counts an infrared lamp as on a vibration within {#} cm⁻¹ of it. Which entries in your table lie closest to one of these limits? How far from the limit is each, in percent or in cm⁻¹, and what does that say about how far to trust those entries?":
-  "Los bordes de absorción y las energías de enlace del demo son aproximados, y cuenta una lámpara infrarroja como activa en una vibración a menos de {#} cm⁻¹ de ella. ¿Qué entradas de tu tabla están más cerca de uno de estos límites? ¿A qué distancia del límite está cada una, en porcentaje o en cm⁻¹, y qué dice eso sobre cuánto confiar en esas entradas?",
 "N₂ and O₂ make up most of the air but have no infrared absorption at {#} μm. Why?":
   "El N₂ y el O₂ forman la mayor parte del aire pero no tienen absorción infrarroja a {#} μm. ¿Por qué?",
 "Ozone is a small part of the air, yet it shields the ground from ultraviolet light near {#} nm, which O₂ lets through. What does the table show about why?":
   "El ozono es una parte pequeña del aire, pero protege el suelo de la luz ultravioleta cerca de {#} nm, que el O₂ deja pasar. ¿Qué muestra la tabla sobre el porqué?",
 "Before the lab {#} asked which photon a water molecule takes up. What does your H₂O row show for the microwave and the ultraviolet lamps, and how does that compare with your choice? Explain each result with the two conditions in the Background: a way for the molecule to take exactly that energy, and a way for the light to push on it.":
   "Antes del laboratorio {#} preguntó qué fotón absorbe una molécula de agua. ¿Qué muestra tu fila de H₂O para las lámparas de microondas y ultravioleta, y cómo se compara con tu elección? Explica cada resultado con las dos condiciones del Fondo: una manera de que la molécula absorba exactamente esa energía, y una manera de que la luz la empuje.",
-"Prelab answers, the table, the energy comparison for the molecules that break, and answers to the questions. Identify simulated data.":
-  "Respuestas del prelaboratorio, la tabla, la comparación de energías para las moléculas que se rompen, y las respuestas a las preguntas. Identifica los datos simulados.",
+"For courses that treat measurement uncertainty. This section is not counted in the {#} minutes; do it when your instructor assigns it.":
+  "Para cursos que tratan la incertidumbre de medición. Esta sección no cuenta dentro de los {#} minutos; hazla cuando tu profesor la asigne.",
+"The demo’s absorption edges and bond energies are approximate, and it counts an infrared lamp as on a vibration within {#} cm⁻¹ of it. Which entries in your table lie closest to one of these limits? How far from the limit is each, in percent or in cm⁻¹, and what does that say about how far to trust those entries?":
+  "Los bordes de absorción y las energías de enlace del demo son aproximados, y cuenta una lámpara infrarroja como activa en una vibración a menos de {#} cm⁻¹ de ella. ¿Qué entradas de tu tabla están más cerca de uno de estos límites? ¿A qué distancia del límite está cada una, en porcentaje o en cm⁻¹, y qué dice eso sobre cuánto confiar en esas entradas?",
+"Prelab answers, the table, the energy comparison for the molecules that break, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.":
+  "Respuestas del prelaboratorio, la tabla, la comparación de energías para las moléculas que se rompen, y las respuestas a las preguntas (y de Incertidumbre, si se asigna). Identifica los datos simulados.",
 "Bond energy, the energy needed to break the molecule":
   "Energía de enlace, la energía necesaria para romper la molécula",
 "Energy of a photon":

@@ -75,16 +75,19 @@ Each part goes in its own copy of the table. In a single part circuit the voltag
 4. Give the phase for each part. Which current leads the voltage and which lags it, and by how much? Explain each sign from $$i = C\,dv/dt$$ and $$v = L\,di/dt$$.
 5. At what frequency would the 10 µF capacitor and the 100 mH inductor have the same reactance? Check it on the Reactance graph (Graphs, Reactance) with Blind off.
 
-## Uncertainty
-
-The current has four significant figures and the phase is given to 0.1°. How large is the rounding of $$X$$ compared with the scatter of your points about the line? Use the standard errors of the slopes for $$C$$ and $$L$$.
-
 ## Questions
 
 1. What did the ammeter show in your 1000 Hz reading of Part 1, and is that what you expected in Before the lab 4? Charge never crosses the insulator between the plates: use $$i = C\,dv/dt$$ to explain how current can flow in the wires anyway. Then, why is a capacitor said to block direct current but pass high frequencies, and an inductor the opposite?
 2. In Part 4, how did the peak current compare with the ammeter reading? Why do AC meters read rms values rather than peaks?
 3. Pick Power in time (Graphs) with the capacitor or the inductor alone. What is the average power? Where does the energy go during each quarter cycle?
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The current has four significant figures and the phase is given to 0.1°. How large is the rounding of $$X$$ compared with the scatter of your points about the line? Report $$C$$ and $$L$$ with the standard errors of the slopes, and say whether the intercept of the capacitor line is zero within its standard error and whether each result agrees with the value set on the part within its standard error.
+
 ## What to hand in
 
-Prelab answers, the three data tables with the two graphs, $$C$$ and $$L$$ with uncertainties, the phases, and answers to the questions. Identify simulated data.
+Prelab answers, the three data tables with the two graphs, $$C$$ and $$L$$, the phases, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

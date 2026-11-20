@@ -83,15 +83,18 @@ Fill in the last column yourself for the objects the eye sees sharply in Part 1,
 3. For Part 3, compare the reading prescription with Example 2.9.
 4. For Part 4, find the range of distances the older eye sees sharply with its reading glasses. Explain why the range is so short, and why such a person might choose bifocals or progressive lenses.
 
-## Uncertainty
-
-The model is exact; the blur spot and image distance are geometric results for a thin lens, and an object counts as sharp when its blur spot is under 0.02 mm (a chosen limit, several cone cells across). A real eye is a thick, multi surface system with aberrations, its pupil changes with the light, and its near and far points vary from person to person and from day to day.
-
 ## Questions
 
 1. A contact lens sits on the eye, with $$s = 0$$. Would a nearsighted person's contact lens prescription be stronger or weaker than their glasses prescription? Why?
 2. In Part 3, what do the Seen and Blur spot columns say about the far object without and with the reading glasses? Which of your choices in Before the lab 5 do they bear out? Use the power the eye uses and its range of power to explain what the reading glasses do to a far object.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The model is exact; the blur spot and image distance are geometric results for a thin lens, and an object counts as sharp when its blur spot is under 0.02 mm (a chosen limit, several cone cells across). A real eye is a thick, multi surface system with aberrations, its pupil changes with the light, and its near and far points vary from person to person and from day to day. Give the standard errors of the Part 1 slope and intercept.
+
 ## What to hand in
 
-Prelab answers, a Data table copy for each part, the graph and fit for Part 1, your prescriptions and their checks, and answers to the questions. Identify simulated data.
+Prelab answers, a Data table copy for each part, the graph and fit for Part 1, your prescriptions and their checks, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

@@ -74,8 +74,6 @@ VDI18N.add('es', 'ws/intro-em-spectrum', {
   "Convierte a nanómetros la longitud de onda de tu lectura visible (multiplica los metros por {#}⁹). ¿De qué color es?",
 "Compare the wavelength of your {#}²⁰ Hz gamma ray with the size of an atom, about {#}⁻¹⁰ m. Which is smaller, and by how many times?":
   "Compara la longitud de onda de tu rayo gamma de {#}²⁰ Hz con el tamaño de un átomo, unos {#}⁻¹⁰ m. ¿Cuál es más pequeño, y cuántas veces?",
-"The demo’s speed of light is computed from measured constants and agrees with the exact value to better than one part in a trillion, so λ × f should come out the same in every reading to all the digits shown. If one of your products differs, where could the difference come from? (Think about rounding when you multiply.)":
-  "La velocidad de la luz de la demo se calcula a partir de constantes medidas y coincide con el valor exacto en mejor que una parte en un billón, así que λ × f debería resultar igual en todas las lecturas en todas las cifras mostradas. Si uno de tus productos difiere, ¿de dónde podría venir la diferencia? (Piensa en el redondeo al multiplicar.)",
 "Hydrogen gas in space gives off radio waves with a wavelength of {#} cm ({#} m). What is their frequency? Radio astronomers map our galaxy with them.":
   "El gas de hidrógeno en el espacio emite ondas de radio con una longitud de onda de {#} cm ({#} m). ¿Cuál es su frecuencia? Los radioastrónomos mapean nuestra galaxia con ellas.",
 "A microwave oven works at {#} × {#}⁹ Hz. What is the wavelength of its microwaves, in centimeters?":
@@ -86,8 +84,12 @@ VDI18N.add('es', 'ws/intro-em-spectrum', {
   "Tus ojos ven solo una rebanada diminuta del espectro. Arrastra el control Frecuencia f hasta sus dos extremos: ¿aproximadamente cuántas potencias de diez de frecuencia abarca todo el espectro de la demo? Luego halla las dos frecuencias donde la lectura Banda cambia a visible y deja de serlo: ¿qué tan ancha es la rebanada visible?",
 "Before the lab {#} asked whether a flare’s radio waves or its X-rays reach Earth first. What does the λ × f column give for your {#}⁸ Hz radio reading and your {#}¹⁸ Hz X-ray reading, and what does that say about your answer? Using the Background, explain why waves with such different wavelengths and frequencies all travel at the same speed in empty space.":
   "Antes del laboratorio {#} preguntaba si las ondas de radio o los rayos X de una llamarada llegan primero a la Tierra. ¿Qué da la columna λ × f para tu lectura de radio de {#}⁸ Hz y tu lectura de rayos X de {#}¹⁸ Hz, y qué dice eso sobre tu respuesta? Usando el Fondo, explica por qué ondas con longitudes de onda y frecuencias tan distintas viajan todas con la misma rapidez en el espacio vacío.",
-"Prelab answers, the table, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.":
-  "Respuestas del prelaboratorio, la tabla, las respuestas de las secciones de análisis e incertidumbre, y las respuestas a las preguntas. Identifica los datos simulados.",
+"For courses that treat measurement uncertainty. This section is not counted in the {#} minutes; do it when your instructor assigns it.":
+  "Para cursos que tratan la incertidumbre de medición. Esta sección no cuenta dentro de los {#} minutos; hazla cuando tu profesor la asigne.",
+"The demo’s speed of light is computed from measured constants and agrees with the exact value to better than one part in a trillion, so λ × f should come out the same in every reading to all the digits shown. If one of your products differs, where could the difference come from? (Think about rounding when you multiply.)":
+  "La velocidad de la luz de la demo se calcula a partir de constantes medidas y coincide con el valor exacto en mejor que una parte en un billón, así que λ × f debería resultar igual en todas las lecturas en todas las cifras mostradas. Si uno de tus productos difiere, ¿de dónde podría venir la diferencia? (Piensa en el redondeo al multiplicar.)",
+"Prelab answers, the table, the answers to the analysis section and to the questions (and to Uncertainty, if assigned). Identify simulated data.":
+  "Respuestas del prelaboratorio, la tabla, las respuestas de la sección de análisis y las respuestas a las preguntas (y de Incertidumbre, si se asigna). Identifica los datos simulados.",
 "Electromagnetic Waves":
   "Ondas electromagnéticas",
 "<a>Virtual Physics Demos</a>":

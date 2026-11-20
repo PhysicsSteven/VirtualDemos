@@ -113,15 +113,18 @@ No hazards in the virtual lab.
 2. Past the plate's edge, the angle of a crest you recorded is measured from the +x direction, and the edge itself runs at $$90° - \theta_1$$. So $$\theta_2$$ = (angle of the crest) − (90° − $$\theta_1$$). Fill in the Refraction table, then compare $$\sin\theta_2/\sin\theta_1$$ with $$\lambda_2/\lambda_1$$ from your Part 2 wavelengths. Check that the incoming crests ran at 90°.
 3. For the two slits, fill in the table with $$m + \tfrac12$$ positive above the axis and negative below it. Graph $$\sin\theta$$ against $$m + \tfrac12$$. Find the slope and the wavelength it gives ($$\lambda = d \times$$ slope). Compare with the wavelength at 15 Hz from Part 1.
 
-## Uncertainty
-
-The line's ends can be placed to about 1 mm, and a crest is hard to place better than about a tenth of a wavelength by eye, so estimate the uncertainty of each wavelength from that and from $$N$$. A quiet line's angle can be found to about half a degree by watching the amplitude at B. The quiet lines curve slightly near the slits (they are hyperbolas whose asymptotes obey $$d\sin\theta = (m + \tfrac12)\lambda$$), so an angle measured too close to the slits is a little off.
-
 ## Questions
 
 1. Light passes a pair of slits 0.1 mm apart and makes fringes a few milliradians apart. Why does the ripple tank make the same physics easy to see with the naked eye?
 2. Over the plate, what changed and what did not? Answer from your two Part 2 wavelengths and what you saw at the edge, set it against Before the lab 1, and explain why it has to be so.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The line's ends can be placed to about 1 mm, and a crest is hard to place better than about a tenth of a wavelength by eye, so estimate the uncertainty of each wavelength from that and from $$N$$. A quiet line's angle can be found to about half a degree by watching the amplitude at B. The quiet lines curve slightly near the slits (they are hyperbolas whose asymptotes obey $$d\sin\theta = (m + \tfrac12)\lambda$$), so an angle measured too close to the slits is a little off. Give the slopes and wavelengths from your fits with their uncertainties, and say whether the refraction ratio and the angle of the incoming crests agree with what you expect within the uncertainty of laying a line along a crest by eye.
+
 ## What to hand in
 
-Prelab answers, the tables with their graphs and fits, your wavelengths, speeds and slopes with uncertainties and comparisons, and answers to the questions. Identify simulated data.
+Prelab answers, the tables with their graphs and fits, your wavelengths, speeds and slopes and comparisons, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

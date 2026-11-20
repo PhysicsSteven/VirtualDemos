@@ -81,15 +81,20 @@ Add all orbits and keep the two central mass scans separate. Record your referen
 3. For the eccentric orbit, test $$r_p v_p = r_a v_a$$.
 4. Compare fitted slopes at the two central masses. Explain why escape trajectories do not belong on this period plot.
 
-## Uncertainty
-
-Use ruler placement and time crossing resolution. The fractional errors in $$a^3$$ and $$T^2$$ are approximately $$3\,\delta a/a$$ and $$2\,\delta T/T$$. Eccentric orbits make major axis placement and timing near periapsis harder. Do not use the star to planet separation as a substitute for $$a$$, and do not count several revolutions as one.
-
 ## Questions
 
 1. Why can an ellipse have the same period as a circle with the same $$a$$?
 2. At Mercury's nearest and farthest points, what did **Distance now r** and **Speed now** read (from your table notes)? How do the two speeds compare with your guess in Before the lab 4, factor included? Use the equal swept areas to explain the ratio of the two speeds, and $$E = \frac12mv^2 - GMm/r$$ to explain why the planet speeds up near the star without gaining total mechanical energy.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+Use ruler placement and time crossing resolution. The fractional errors in $$a^3$$ and $$T^2$$ are approximately $$3\,\delta a/a$$ and $$2\,\delta T/T$$. Eccentric orbits make major axis placement and timing near periapsis harder. Do not use the star to planet separation as a substitute for $$a$$, and do not count several revolutions as one.
+
+Give each fitted slope and inferred mass with its standard error, and say whether the intercept is zero within its uncertainty.
+
 ## What to hand in
 
-Prelab answers, settings and CSV, both third law fits, inferred masses with uncertainty, the eccentric orbit comparison and answers to the questions. Identify simulated data.
+Prelab answers, settings and CSV, both third law fits, inferred masses, the eccentric orbit comparison and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

@@ -74,14 +74,17 @@ Record the Pressure and Heater readouts (the Pressure on the piston and Heater p
 6. Find the boiling temperature at 28 atm as the average temperature on the plateau in the second table copy, and compare it with the one at 17 atm.
 7. Real argon melts at 83.8 K and boils at 87.3 K at 1 atm, with latent heats of 1.18 kJ/mol and 6.43 kJ/mol. Compare your values with these, and give one reason this small simulated sample differs.
 
-## Uncertainty
-
-The sample has only 432 atoms, so its temperature and bond energy wander by a few percent even with the averaging; the plateaus are noisy, not perfectly flat. Estimate the spread of the temperature readings on each plateau and use it as the uncertainty of the melting and boiling temperatures. The start and end of each plateau are uncertain by about the spacing of your readings, which limits the latent heats.
-
 ## Questions
 
 1. What did the speed colors and the Kinetic energy readout on the boiling plateau show about the liquid and vapor atoms, and does that match Before the lab 3? Explain it from what temperature measures, and say where the latent heat of vaporization went.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The sample has only 432 atoms, so its temperature and bond energy wander by a few percent even with the averaging; the plateaus are noisy, not perfectly flat. Estimate the spread of the temperature readings on each plateau and use it as the uncertainty of the melting and boiling temperatures. The start and end of each plateau are uncertain by about the spacing of your readings, which limits the latent heats. Give the heat capacity from the solid fit with its standard error.
+
 ## What to hand in
 
-Prelab answers, both table copies with their graphs, the melting and boiling temperatures, latent heats and heat capacity with uncertainties, the comparison with real argon, and the answer to the question. Identify simulated data.
+Prelab answers, both table copies with their graphs, the melting and boiling temperatures, latent heats and heat capacity, the comparison with real argon, and the answer to the question (and to Uncertainty, if assigned). Identify simulated data.

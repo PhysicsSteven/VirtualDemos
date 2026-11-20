@@ -71,20 +71,23 @@ Keep separate threshold and timing runs. Record the surface identifier, angle br
 
 ## Analysis
 
-1. Convert each threshold bracket to a bracket for $$\mu_s$$. Compare masses and repeated trials without claiming more precision than the angle step supports.
-2. Plot $$a/\cos\theta$$ against $$\tan\theta$$, fit a line, and report $$g$$ and $$\mu_k$$ with units and uncertainty. Inspect residuals and compare $$\mu_s$$ with $$\mu_k$$.
+1. Convert each threshold bracket to a bracket for $$\mu_s$$. Compare masses and repeated trials.
+2. Plot $$a/\cos\theta$$ against $$\tan\theta$$, fit a line, and report $$g$$ and $$\mu_k$$ with units. Inspect residuals and compare $$\mu_s$$ with $$\mu_k$$.
 3. For the chosen 1.000 m run, compare total work with $$\tfrac12 mv^2$$. Account for the positive thermal energy increase without adding it as positive work on the block.
 4. Compare your calculations with the live readouts at the same displacement. Explain the energy transfer when the block reaches the stop.
-
-## Uncertainty
-
-The virtual angle step is 0.5° and the timer rounds to 0.001 s. Use the threshold bracket directly. Since $$a = 2d/t^2$$, its fractional uncertainty depends on distance uncertainty and twice the fractional timing uncertainty. Angle errors affect both transformed axes; an ordinary line fit error alone understates that contribution. Real friction varies with surface condition, vibration and speed. Repeating an unchanged deterministic simulation does not measure that variability.
 
 ## Questions
 
 1. Identify the third law partner of the ramp's normal force on the block. Why do those forces not cancel in the block's free body diagram?
 2. Did doubling the block's mass change the slip angle? Quote your two threshold brackets and check them against Before the lab 3, then use your free body diagram of the stationary block to explain why the mass does or does not matter.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The virtual angle step is 0.5° and the timer rounds to 0.001 s. Use the threshold bracket directly. Since $$a = 2d/t^2$$, its fractional uncertainty depends on distance uncertainty and twice the fractional timing uncertainty. Angle errors affect both transformed axes; an ordinary line fit error alone understates that contribution. Real friction varies with surface condition, vibration and speed. Repeating an unchanged deterministic simulation does not measure that variability. Do not claim more precision for the threshold angles and $$\mu_s$$ than the angle step supports. Report $$g$$ and $$\mu_k$$ from the fit with their uncertainties.
+
 ## What to hand in
 
-Prelab diagrams and answers, threshold brackets, timing data and CSV, transformed graph and residuals, both friction coefficients and $$g$$ with uncertainty, work/energy calculations and comparison, and answers to the questions. Identify simulated data.
+Prelab diagrams and answers, threshold brackets, timing data and CSV, transformed graph and residuals, both friction coefficients and $$g$$, work/energy calculations and comparison, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

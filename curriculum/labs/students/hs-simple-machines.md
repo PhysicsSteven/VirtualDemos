@@ -86,15 +86,18 @@ Give IMA and AMA to three significant figures and the efficiency to 0.1 %.
 4. For the ramp, make a graph of efficiency (vertical) against the height the load rises, $$d_\mathrm{out}$$ (horizontal), for the five readings with μ = 0.20. A steeper ramp of the same length is a taller one, so the points run from 10° on the left to 50° on the right. Which angle needs the smallest effort, and which wastes the smallest share of your work?
 5. For the ramp reading with μ = 0 at 50°, compare the effort with $$mg\sin\theta$$, and its AMA with IMA.
 
-## Uncertainty
-
-The demo gives the effort to 0.01 N and the distances to 0.001 m, so your AMA and IMA are good to about three significant figures. Ask whether a difference between AMA and IMA is larger than that rounding before you call it friction. A real machine adds the weight of its pulleys and rope, which this model leaves out.
-
 ## Questions
 
 1. Look back at your guess in Before the lab 4. In Part 3, how did the efficiency at 40° compare with the efficiency at 10°? Use $$W_\mathrm{out} = mgh$$ and the friction force $$\mu mg\cos\theta$$ acting over the 3.0 m length to explain why the steeper ramp, which needs the bigger push, wastes a smaller share of the work.
 2. A salesman says his pulley system has an IMA of 6 and an efficiency of 110 %. Explain, using work, why you should not buy it.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The demo gives the effort to 0.01 N and the distances to 0.001 m, so your AMA and IMA are good to about three significant figures. Ask whether a difference between AMA and IMA is larger than that rounding before you call it friction. A real machine adds the weight of its pulleys and rope, which this model leaves out.
+
 ## What to hand in
 
-Prelab answers, the three copies of the Data table with the last three columns filled in, the two graphs, the work calculations of Analysis 3, and answers to the questions. Identify simulated data.
+Prelab answers, the three copies of the Data table with the last three columns filled in, the two graphs, the work calculations of Analysis 3, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

@@ -73,14 +73,17 @@ Write down the Battery voltage V and Resistance R from their sliders (100 V and 
 4. Graph $$B$$ (vertical) against $$I$$ (horizontal) for Part 3. Compare the slope with $$\mu_0/(2\pi r)$$ for $$r = 7.0$$ cm.
 5. From two neighboring Part 3 readings, work out $$\varepsilon_0 A\,\Delta E/\Delta t$$ (with $$A = \pi R^2$$) and compare it with the current halfway between them.
 
-## Uncertainty
-
-The demo gives its values to six significant figures and the plates are ideal, so Analysis 1 to 4 should agree closely; use the standard errors of your fits to say how closely. In Analysis 5 the finite difference $$\Delta E/\Delta t$$ is only an approximation to $$dE/dt$$ because $$E$$ curves as the capacitor charges: say whether using readings closer together, or the current at the midpoint rather than at either end, improves the agreement, and why. Real plates have fringing fields at their edges; say how that would change $$B$$ near $$r = R$$.
-
 ## Questions
 
 1. Why must the right side of Ampère's law be the same for every surface bounded by the loop? (Think about charge conservation.) Then compare $$2\pi rB$$ in the Loop in the gap row of Part 1 with the Loop around the wire row: what does it say about your answer to Before the lab 3, and about the field on a loop where no charge flows?
 2. Why are these fields so hard to measure in a real laboratory, and what would you change to make them larger?
+
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The demo gives its values to six significant figures and the plates are ideal, so Analysis 1 to 4 should agree closely; use the standard errors of your fits to say how closely. In Analysis 5 the finite difference $$\Delta E/\Delta t$$ is only an approximation to $$dE/dt$$ because $$E$$ curves as the capacitor charges: say whether using readings closer together, or the current at the midpoint rather than at either end, improves the agreement, and why. Real plates have fringing fields at their edges; say how that would change $$B$$ near $$r = R$$.
 
 ## With calculus
 
@@ -91,4 +94,4 @@ For courses that use calculus. This section is not counted in the 75 minutes; do
 
 ## What to hand in
 
-Prelab answers, the battery voltage and resistance, the table copies with their graphs and fits, the comparisons in the Analysis, and answers to the questions (and to With calculus, if assigned). Identify simulated data.
+Prelab answers, the battery voltage and resistance, the table copies with their graphs and fits, the comparisons in the Analysis, and answers to the questions (and to Uncertainty and With calculus, if assigned). Identify simulated data.

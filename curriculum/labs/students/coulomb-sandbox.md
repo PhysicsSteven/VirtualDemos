@@ -76,14 +76,19 @@ Add rows for all measurements. Fill in $$r$$ yourself (Export leaves it blank). 
 3. Estimate $$E_x = -[V(x+h)-V(x-h)]/(2h)$$. Explain how the result changes when $$h$$ is reduced.
 4. Compare field direction with the equipotential curves.
 
-## Uncertainty
-
-Use coordinate and readout resolution to estimate uncertainty. Distance errors matter most near a charge. A very small $$h$$ amplifies rounding in the potential difference; a large $$h$$ gives a poorer derivative approximation. Report the $$h$$ values used and identify the stable range. The simulation is deterministic; do not invent random scatter.
-
 ## Questions
 
 1. Why do the field and potential follow different powers of $$r$$?
 2. At the midpoint of the two equal positive charges, what did you read for $$V$$ and $$E$$, and how does that compare with Before the lab 4? Explain the difference from how fields add and how potentials add. Does a negative potential imply that the electric field points in the negative $$x$$ direction?
+
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+Use coordinate and readout resolution to estimate uncertainty. Distance errors matter most near a charge. A very small $$h$$ amplifies rounding in the potential difference; a large $$h$$ gives a poorer derivative approximation. Report the $$h$$ values used and identify the stable range. The simulation is deterministic; do not invent random scatter.
+
+Give each inferred charge with its uncertainty, from the standard error of its slope, and say whether the two charges agree within their uncertainties.
 
 ## With calculus
 
@@ -95,4 +100,4 @@ For courses that use calculus. This section is not counted in the 75 minutes; do
 
 ## What to hand in
 
-Prelab answers, configuration sketches, raw data and CSV, both distance law graphs, inferred charge with uncertainty, the gradient comparison, and answers to the questions (and to With calculus, if assigned). Identify simulated data.
+Prelab answers, configuration sketches, raw data and CSV, both distance law graphs, inferred charge, the gradient comparison, and answers to the questions (and to Uncertainty and With calculus, if assigned). Identify simulated data.

@@ -128,16 +128,18 @@ VDI18N.add('es', 'ws/stellar-temperature', {
   "Según la Tabla {#}, ¿cuántas veces mayor es la fracción del calcio en la etapa Ca II en el Sol que en Rigel?",
 "In Table {#}, at which of your temperatures is the most hydrogen on level {#}, and what class is it? Use Table {#} to explain why there is less on level {#} at {#} K than at {#} K.":
   "En la Tabla {#}, ¿en cuál de tus temperaturas hay más hidrógeno en el nivel {#}, y de qué clase es? Usa la Tabla {#} para explicar por qué hay menos en el nivel {#} a {#} K que a {#} K.",
-"The temperatures in the setups are round values, good to perhaps {#} %. If Betelgeuse were {#} % hotter than {#} K, by what percentage would its peak wavelength change? Would it still be class M?":
-  "Las temperaturas de las configuraciones son valores redondos, buenos quizá a un {#} %. Si Betelgeuse estuviera un {#} % más caliente que {#} K, ¿en qué porcentaje cambiaría la longitud de onda de su pico? ¿Seguiría siendo de clase M?",
 "Choose <strong>Payne</strong> and press <strong>Betelgeuse</strong>. What share of the titanium is in titanium oxide (TiO) molecules (the <strong>Titanium in TiO</strong> readout)? Press <strong>The Sun</strong> and read it again. Why do molecule bands show up only in the coolest stars?":
   "Elige <strong>Payne</strong> y presiona <strong>Betelgeuse</strong>. ¿Qué fracción del titanio está en moléculas de óxido de titanio (TiO) (la lectura <strong>Titanio en TiO</strong>)? Presiona <strong>El Sol</strong> y léela otra vez. ¿Por qué las bandas de moléculas aparecen solo en las estrellas más frías?",
 "A cool M star and a hot O star both show weak hydrogen lines. Use Table {#} and Table {#} to say whether it is for the same reason.":
   "Una estrella M fría y una estrella O caliente muestran líneas de hidrógeno débiles. Usa la Tabla {#} y la Tabla {#} para decir si es por la misma razón.",
 "Look back at your answer to Before the lab {#} and at the calcium in your table and in the Payne bars. Where has Rigel’s calcium gone, and why does that make its lines weak? Did you get it right, and what does this tell you about reading a star’s make up from how strong its lines are?":
   "Revisa tu respuesta a Antes del laboratorio {#} y el calcio en tu tabla y en las barras de Payne. ¿A dónde se fue el calcio de Rigel, y por qué eso hace débiles sus líneas? ¿Acertaste, y qué te dice esto sobre leer la composición de una estrella a partir de la intensidad de sus líneas?",
-"Prelab answers, both tables with the {#}/T column filled, the graph with its fit, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data: every reading in this lab comes from the demo’s model.":
-  "Las respuestas previas al laboratorio, las dos tablas con la columna {#}/T llena, la gráfica con su ajuste, las respuestas de las secciones de análisis e incertidumbre, y las respuestas a las preguntas. Identifica los datos simulados: todas las lecturas de este laboratorio vienen del modelo del demo.",
+"For courses that treat measurement uncertainty. This section is not counted in the {#} minutes; do it when your instructor assigns it.":
+  "Para cursos que tratan la incertidumbre de medición. Esta sección no cuenta dentro de los {#} minutos; hazla cuando tu profesor la asigne.",
+"The temperatures in the setups are round values, good to perhaps {#} %. If Betelgeuse were {#} % hotter than {#} K, by what percentage would its peak wavelength change? Would it still be class M? Give Wien’s constant from the slope with its standard error.":
+  "Las temperaturas de las configuraciones son valores redondos, buenos quizá a un {#} %. Si Betelgeuse estuviera un {#} % más caliente que {#} K, ¿en qué porcentaje cambiaría la longitud de onda de su pico? ¿Seguiría siendo de clase M? Da la constante de Wien a partir de la pendiente con su error estándar.",
+"Prelab answers, both tables with the {#}/T column filled, the graph with its fit, the answers to the analysis section and to the questions (and to Uncertainty, if assigned). Identify simulated data: every reading in this lab comes from the demo’s model.":
+  "Las respuestas previas al laboratorio, las dos tablas con la columna {#}/T llena, la gráfica con su ajuste, las respuestas de la sección de análisis y de las preguntas (y de Incertidumbre, si se asigna). Identifica los datos simulados: todas las lecturas de este laboratorio vienen del modelo del demo.",
 "Surface temperature of the star":
   "Temperatura superficial de la estrella",
 "Wien's constant":

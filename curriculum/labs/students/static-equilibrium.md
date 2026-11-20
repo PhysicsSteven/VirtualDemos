@@ -83,14 +83,17 @@ For the sign, the load position $$x$$ is the sign's distance $$d$$ from the wall
 4. Part 2: plot $$T$$ against $$1/\sin\theta$$ and fit a line. Compare the slope with $$(m_s L/2 + m d)\,g/L$$ and the intercept with zero. Explain in terms of torques why a shallow cable needs a large tension.
 5. For two of your Part 2 rows, check that the horizontal forces on the strut add to zero and that the vertical forces add to zero. Which way does the hinge push on the strut, and why must it push at all?
 
-## Uncertainty
-
-The readouts show forces to 0.1 N and angles to 0.1°, and the positions and heights are exact settings, so your fits should leave residuals no bigger than about 0.05 N; larger residuals mean a misread or mistyped row. On a real bench the largest errors would come from where the supports and the load actually touch, the plank's own weight not being exactly at its middle, and a cable that stretches. Say which way each would shift your Part 1 fit.
-
 ## Questions
 
 1. Which way did the hinge push on the strut in Part 2? Give $$H_x$$ and $$H_y$$ for two cable heights ($$H_x$$ is positive away from the wall and $$H_y$$ positive up) and check them against your answer to Before the lab 4. $$H_y$$ came out the same in every row while $$H_x$$ changed. Explain both, and show that the hinge must push up wherever the sign hangs on the strut.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The readouts show forces to 0.1 N and angles to 0.1°, and the positions and heights are exact settings, so your fits should leave residuals no bigger than about 0.05 N; larger residuals mean a misread or mistyped row. On a real bench the largest errors would come from where the supports and the load actually touch, the plank's own weight not being exactly at its middle, and a cable that stretches. Say which way each would shift your Part 1 fit. Say whether the slopes and intercepts in Analysis 1 and 4 agree with their predictions within the uncertainty of each fit.
+
 ## What to hand in
 
-Prelab answers, the two data tables with their graphs and fits, the masses from your plank fits, the tipping position, the tension slope compared with its prediction, the force checks, and answers to the questions. Identify simulated data.
+Prelab answers, the two data tables with their graphs and fits, the masses from your plank fits, the tipping position, the tension slope compared with its prediction, the force checks, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

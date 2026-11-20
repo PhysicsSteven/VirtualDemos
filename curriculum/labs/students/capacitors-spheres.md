@@ -79,18 +79,23 @@ Use one copy for the radius scans and one for the breakdown scan. Fill in the la
 ## Analysis
 
 1. For the dielectric readings, check that the field inside is $$E_0/\kappa$$ and that the bound charge density is $$(1 - 1/\kappa)$$ times the free charge density. How does the average dipole per molecule depend on $$E_0$$? Explain how benzene, whose molecules have no permanent dipole, is polarized.
-2. Plot $$1/C$$ (vertical) against $$1/a - 1/b$$ (horizontal) for the radius scans. Infer $$\varepsilon_0$$ from the slope, which is $$1/(4\pi\varepsilon_0)$$ for air. Is the intercept consistent with zero?
+2. Plot $$1/C$$ (vertical) against $$1/a - 1/b$$ (horizontal) for the radius scans. Infer $$\varepsilon_0$$ from the slope, which is $$1/(4\pi\varepsilon_0)$$ for air. Is the intercept close to zero?
 3. Plot the spark voltage (vertical) against $$a(b-a)/b$$ (horizontal). The slope is the dielectric strength of air: compare it with the textbook value. Which $$a$$ held the highest voltage, and does that agree with your answer to Before the lab 2?
-
-## Uncertainty
-
-Include the radius setting resolution in the capacitance and spark voltage comparisons. For real spheres, fringing, misalignment and surface roughness can shift the slopes, and the breakdown field of air depends on humidity and the electrode surface. The virtual model is ideal; captured rounding and setting resolution are not random instrumental noise. State which values you measured and which you calculated.
 
 ## Questions
 
 1. The field in the spheres' gap falls off as $$1/r^2$$, so it is strongest at the inner sphere. Why do lightning rods, high voltage terminals and the electrodes of a spark gap have the shapes they have?
 2. Paper holds more than five times the field air does. Why is a paper capacitor still ruined by a single spark while an air gap is not?
 3. A dielectric carries no net charge. Why does it still reduce the field between the plates? Answer for water, with the average alignment you read at 1 MV/m beside your guess in Before the lab 3: how does the turning of its molecules leave bound charge on its faces, and how can an alignment of that size cancel all but 1/80 of the field?
+
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+Include the radius setting resolution in the capacitance and spark voltage comparisons. For real spheres, fringing, misalignment and surface roughness can shift the slopes, and the breakdown field of air depends on humidity and the electrode surface. The virtual model is ideal; captured rounding and setting resolution are not random instrumental noise. State which values you measured and which you calculated.
+
+For the radius scans, give the slope and the intercept of the $$1/C$$ graph with their standard errors, and say whether the intercept is consistent with zero within its uncertainty. Give $$\varepsilon_0$$ with its uncertainty and say how many standard errors it lies from the accepted value.
 
 ## With calculus
 
@@ -102,4 +107,4 @@ For courses that use calculus. This section is not counted in the 75 minutes; do
 
 ## What to hand in
 
-Prelab answers, settings and CSV, your readings from the molecular model with your Analysis 1 answer, the two sphere graphs with $$\varepsilon_0$$ and the dielectric strength of air, and answers to the questions (and to With calculus, if assigned). Identify simulated data.
+Prelab answers, settings and CSV, your readings from the molecular model with your Analysis 1 answer, the two sphere graphs with $$\varepsilon_0$$ and the dielectric strength of air, and answers to the questions (and to Uncertainty and With calculus, if assigned). Identify simulated data.

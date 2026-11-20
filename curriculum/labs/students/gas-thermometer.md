@@ -63,14 +63,10 @@ Liquid nitrogen and dry ice cause severe cold burns, and boiling water scalds. I
 
 ## Analysis
 
-1. Fit $$P$$ (vertical) against $$T$$ (horizontal) for each of the two calibration copies. Find the temperature at which each line reaches $$P = 0$$, with its uncertainty from the fit, and compare both with −273.15 °C.
+1. Fit $$P$$ (vertical) against $$T$$ (horizontal) for each of the two calibration copies. Find the temperature at which each line reaches $$P = 0$$, and compare both with −273.15 °C.
 2. From each slope find $$R = (\text{slope})\,V/n$$ and compare it with 8.314 J/(mol·K).
 3. Use your 20 mmol calibration line to find the mystery bath's temperature.
 4. Convert all five known bath temperatures to kelvins and, for the 20 mmol run, plot $$P$$ (vertical) against $$T_\mathrm{K}$$ (horizontal). What should the intercept be?
-
-## Uncertainty
-
-The gauge reads to 0.01 kPa and the model has no noise, so the residuals of your fits show only rounding and whether you waited long enough. Estimate how far a reading taken too early (say at t = 10 s in this bath, after pressing a new bath) is from the settled value. In a real gas thermometer the bulb expands a little when heated and the gas departs from the ideal gas law; say how each would bend your line.
 
 ## Questions
 
@@ -80,6 +76,13 @@ The gauge reads to 0.01 kPa and the model has no noise, so the residuals of your
 4. What is the temperature of the boiling liquid nitrogen in kelvins and in degrees Fahrenheit?
 5. Divide your 20 mmol Boiling water pressure by your Room air pressure. Is the ratio the one you chose in Before the lab 5? Explain the ratio from the ideal gas law, and say what a ratio of two temperatures has to be measured from for it to predict a ratio of pressures.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The gauge reads to 0.01 kPa and the model has no noise, so the residuals of your fits show only rounding and whether you waited long enough. Estimate how far a reading taken too early (say at t = 10 s in this bath, after pressing a new bath) is from the settled value. In a real gas thermometer the bulb expands a little when heated and the gas departs from the ideal gas law; say how each would bend your line. Give the temperature at which each line reaches $$P = 0$$ with its uncertainty from the fit, and the mystery bath temperature with its uncertainty.
+
 ## What to hand in
 
-Prelab answers, both table copies with their graphs and fits, your values of absolute zero and $$R$$, the mystery bath temperature with its uncertainty, and answers to the questions. Identify simulated data.
+Prelab answers, both table copies with their graphs and fits, your values of absolute zero and $$R$$, the mystery bath temperature, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

@@ -78,14 +78,17 @@ Use one copy of the table for each part. In the notes for Part 2, write down the
 3. Compare the coating's reflectance at 550 nm with the bare glass, and with the formula $$R = \left[(n_1 n_2 - n_f^2)/(n_1 n_2 + n_f^2)\right]^2$$. Use your readings at 450 and 650 nm to explain why coated lenses look faintly purple.
 4. Graph the Part 3 probe position $$x$$ (vertical) against the order $$m$$ (horizontal), with the edge reading as $$m$$ = 0, and fit a straight line. From the slope (the fringe spacing $$\Delta x$$) find the spacer thickness $$h$$, and compare it with 10.0 μm.
 
-## Uncertainty
-
-For the wedge, the probe reads to 0.01 mm; estimate how well you can find the middle of a dark fringe, and propagate that into $$h$$. Why does a fit over nine fringes give a better $$h$$ than one fringe spacing?
-
 ## Questions
 
 1. How did the reflectance of the 10 nm film compare with the largest reflectance you found in Part 1, and with your answer to Before the lab 4? Using the phase shifts at the two surfaces, explain what a soap film much thinner than the wavelength does to reflected light, and what that means for the look of a bubble's top just before it bursts. Why does a coating much thinner than the wavelength on glass not make the glass look black?
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+Report each index with its uncertainty from the 0.1 nm thickness steps, and report the slope and intercept of your Part 3 fit with their uncertainties. For the wedge, the probe reads to 0.01 mm; estimate how well you can find the middle of a dark fringe, and propagate that into $$h$$. Why does a fit over nine fringes give a better $$h$$ than one fringe spacing?
+
 ## What to hand in
 
-Prelab answers, the three table copies, the graphs and fits for Parts 1 and 3, the index of the soap film and of the coating, the spacer thickness with its uncertainty and comparison, and answers to the questions. Identify simulated data.
+Prelab answers, the three table copies, the graphs and fits for Parts 1 and 3, the index of the soap film and of the coating, the spacer thickness and comparison, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

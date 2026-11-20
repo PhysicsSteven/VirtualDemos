@@ -63,15 +63,18 @@ No hazards in the virtual lab.
 1. For the cluster, fill in the last two columns: $$N_{left}$$, the number of stars that have left the main sequence, is the total, 1000, minus the main sequence count. Graph log₁₀ $$N_{left}$$ (vertical) against log₁₀ $$M_{to}$$ (horizontal). Use the slope to find $$x$$, and compare with Salpeter's value for stars near the Sun, $$x = 2.35$$.
 2. Check the turnoff masses against the lifetime fit: does a star of the turnoff mass have a main sequence lifetime $$10\ \text{Gyr}\,(M_{to}/M_\odot)^{-2.5}$$ equal to the cluster's age?
 
-## Uncertainty
-
-The cluster readings are exact counts from a random sample of 1000 stars, so each count $$N$$ has a random scatter of about $$\sqrt{N}$$. Estimate that scatter for your smallest count of stars that have left the main sequence, and use it to judge how well your slope in Analysis 1 fixes $$x$$. The lifetime fit describes typical stars, so the turnoff check in Analysis 2 is a check of the demo's model, not of real clusters.
-
 ## Questions
 
 1. A cluster's turnoff is at 2 $$M_\odot$$. Use the lifetime fit to find its age. Why do astronomers date clusters this way, rather than single stars?
 2. Look at the 13 Gyr row of your table. How many stars were still on the main sequence, and what turnoff mass did the demo give? Set that beside your number in Before the lab 3, and explain the count from the lifetime fit and how many stars are born at each mass.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The cluster readings are exact counts from a random sample of 1000 stars, so each count $$N$$ has a random scatter of about $$\sqrt{N}$$. Estimate that scatter for your smallest count of stars that have left the main sequence, and use it to judge how well your slope in Analysis 1 fixes $$x$$. The lifetime fit describes typical stars, so the turnoff check in Analysis 2 is a check of the demo's model, not of real clusters. Give your value of $$x$$ with its uncertainty from the slope, and say whether it agrees with Salpeter's value within that uncertainty.
+
 ## What to hand in
 
-Prelab answers, the table copy with its graph and fit, your value of $$x$$ with its uncertainty, and answers to the questions. Identify simulated data.
+Prelab answers, the table copy with its graph and fit, your value of $$x$$, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

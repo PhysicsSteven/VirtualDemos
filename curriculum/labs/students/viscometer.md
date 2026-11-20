@@ -74,15 +74,20 @@ Save separate slow flow, tube comparison and diagnostic runs. Record temperature
 2. Fit $$Kv$$ against $$d^2$$ using the accepted points at low $$N_R$$, with $$N_R$$ from your own inferred viscosity; if that invalidates the selected range, revise the fit or state that the approximation is inadequate. Infer $$\eta$$ from the slope and compare the two tubes. Inspect residuals rather than judging agreement from the slope alone.
 3. Explain the results of the large ball and water diagnostics. Separate wall effects, drag at finite $$N_R$$ and failure to reach terminal speed; a single anomalous time does not identify one cause uniquely.
 
-## Uncertainty
-
-The virtual gate time rounds to 0.01 s. Ball and tube diameters are specified model settings; on a real bench measure them carefully because diameter is squared and also enters $$K$$. For $$v = s/t$$, include mark spacing and timing uncertainty. No full propagation is needed: use the standard error of each fitted slope for the uncertainty in $$\eta$$, and say in a sentence or two which other input (density, diameter, mark spacing, timing) would matter most on a real bench. Temperature can strongly affect real viscosity. A fit with no injected noise still has rounding and approximation error; repeating an identical simulated state does not create independent precision.
-
 ## Questions
 
 1. Why is a nylon ball in glycerol unsuitable for the same downward fall procedure?
 2. How many times faster than the 1.0 mm ball did the 2.0 mm ball fall in your slow flow scan? Check that against Before the lab 3, then use the balance of weight, buoyancy and Stokes drag to explain how the terminal speed depends on $$d$$, and say why the ratio of your two measured speeds differs a little from that.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The virtual gate time rounds to 0.01 s. Ball and tube diameters are specified model settings; on a real bench measure them carefully because diameter is squared and also enters $$K$$. For $$v = s/t$$, include mark spacing and timing uncertainty. No full propagation is needed: use the standard error of each fitted slope for the uncertainty in $$\eta$$, and say in a sentence or two which other input (density, diameter, mark spacing, timing) would matter most on a real bench. Temperature can strongly affect real viscosity. A fit with no injected noise still has rounding and approximation error; repeating an identical simulated state does not create independent precision.
+
+Give the viscosity from each fit with the standard error of its slope, and say whether the fitted intercepts are zero within their standard errors. Give the timing resolution as a percentage of the 0.32 s water run.
+
 ## What to hand in
 
-Prelab answers, settings and CSV files, raw and corrected fits with residuals, viscosity estimates and uncertainty, Reynolds number checks and excluded row reasoning, diagnostic observations, and answers to the questions. Identify simulated data.
+Prelab answers, settings and CSV files, raw and corrected fits with residuals, viscosity estimates, Reynolds number checks and excluded row reasoning, diagnostic observations, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

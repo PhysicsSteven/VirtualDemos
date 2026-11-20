@@ -90,12 +90,8 @@ Before you start, open Instrument (below the readings), note the Instrument seed
 ## Analysis
 
 1. For each trial, find $$B$$ from $$I$$ and then $$e/m = 2U/(B^2 r^2)$$. Compare each with the accepted value, $$1.75882\times10^{11}$$ C/kg (CODATA 2022).
-2. Make a graph with $$B^2 r^2$$ on the horizontal axis and $$2U$$ on the vertical axis. According to the equation, the points lie on a straight line through the origin with slope $$e/m$$. Fit a line (with a free intercept, as always) and report the slope as your best value of $$e/m$$; check that the intercept is zero within its uncertainty. Only then compare with the demo's own fit.
+2. Make a graph with $$B^2 r^2$$ on the horizontal axis and $$2U$$ on the vertical axis. According to the equation, the points lie on a straight line through the origin with slope $$e/m$$. Fit a line (with a free intercept, as always) and report the slope as your best value of $$e/m$$; check that the intercept is close to zero. Only then compare with the demo's own fit.
 3. Which is better, the average of the trials or the slope of the graph? Why?
-
-## Uncertainty
-
-$$e/m$$ depends on $$r$$ squared, so a 1% error in $$r$$ becomes a 2% error in $$e/m$$. The same is true of $$B$$, and so of $$I$$ and $$R$$. Estimate how precisely you can read each side of the circle (the beam has a width, and the virtual pointers move in 0.5 mm steps), and use that to estimate the uncertainty in $$e/m$$ for one trial.
 
 ## Questions
 
@@ -103,6 +99,15 @@ $$e/m$$ depends on $$r$$ squared, so a 1% error in $$r$$ becomes a 2% error in $
 2. The earth's magnetic field also acts on the beam. How could you check whether it affects your result?
 3. Compare the radius of trial 5 with that of trial 1 in your Data table, and with your guess in Before the lab 2. Explain the ratio with $$r = mv/(eB)$$ and $$v = \sqrt{2eU/m}$$: what does doubling $$U$$ do to the speed, and doubling $$I$$ to $$B$$? Electrons also lose a little energy in collisions with the helium before they reach the circle. By the same relation, does that make your measured $$e/m$$ too high or too low?
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+$$e/m$$ depends on $$r$$ squared, so a 1% error in $$r$$ becomes a 2% error in $$e/m$$. The same is true of $$B$$, and so of $$I$$ and $$R$$. Estimate how precisely you can read each side of the circle (the beam has a width, and the virtual pointers move in 0.5 mm steps), and use that to estimate the uncertainty in $$e/m$$ for one trial.
+
+Report your value of $$e/m$$ with its uncertainty, using the standard error of the slope of your graph, and say how many standard errors it lies from the accepted value. Give the intercept with its uncertainty and say whether it is zero within that uncertainty.
+
 ## What to hand in
 
-Your prelab answers, the data table, the graph with its fit, your value of $$e/m$$ with its uncertainty and percent error, and answers to the questions. If any of your data came from the virtual apparatus, say so and give the instrument seed.
+Your prelab answers, the data table, the graph with its fit, your value of $$e/m$$ and percent error, and answers to the questions (and to Uncertainty, if assigned). If any of your data came from the virtual apparatus, say so and give the instrument seed.

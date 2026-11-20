@@ -86,9 +86,10 @@ VDI18N.add('en', 'ws/hs-heat-engines', [
 "Which legs of the rectangle take heat in? Add their \\(Q\\) to get \\(Q_\\mathrm{in}\\), and find the efficiency. Compare it with the Carnot limit between the rectangle’s lowest and highest temperatures. How much of the Carnot limit does the rectangle reach?",
 "For the Carnot readings, make a graph of the efficiency from the energies, \\(\\eta = W_\\mathrm{net}/Q_\\mathrm{in}\\) (vertical), against the Carnot limit \\(\\eta_\\mathrm{C} = 1 - T_c/T_h\\) (horizontal). Find the slope and the intercept of the line. What do they tell you about the Carnot engine? Then look down the efficiency column: by how much does \\(\\eta\\) go up for each {#} K added to \\(T_h\\)? Does it go up by the same amount each time?",
 "For each refrigerator reading, compare the COP from the energies with \\(T_c/(T_h - T_c)\\). How does the COP change as the cold side gets colder?",
-"The demo gives energies to three or four significant figures, so the efficiencies and COPs you work out should match the formulas to about {#} %. Check that any difference is no bigger than that before you call it real. A real engine has friction and leaks heat, so it falls well short of these ideal values.",
 "Look back at your guess in Before the lab {#}. What efficiencies did you find at {#} K and {#} K? Explain with \\(\\eta_\\mathrm{C} = 1 - T_c/T_h\\) why doubling \\(T_h\\) does not double the efficiency, and what would have to happen for the efficiency to reach {#} %.",
 "A freezer keeps its inside at {#} K in a kitchen at {#} K. From your results, why does the freezer use more electricity on a hot day, or when it is set colder?",
-"Prelab answers, the three copies of the Data table and Table {#} with the calculated columns filled in, the graph of Analysis {#}, and answers to the questions. Identify simulated data.",
+"For courses that treat measurement uncertainty. This section is not counted in the {#} minutes; do it when your instructor assigns it.",
+"The demo gives energies to three or four significant figures, so the efficiencies and COPs you work out should match the formulas to about {#} %. Check that any difference is no bigger than that before you call it real. A real engine has friction and leaks heat, so it falls well short of these ideal values.",
+"Prelab answers, the three copies of the Data table and Table {#} with the calculated columns filled in, the graph of Analysis {#}, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.",
 "Heat Engine Cycles"
 ]);

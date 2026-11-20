@@ -72,14 +72,17 @@ Use a separate copy for each run. The emf and current readouts are averages over
 2. In the full 6.3 rad/s run, take the flux readings just before and just after the largest emf reading (two time steps apart) and work out the average emf over that interval, $$-N\,\Delta\Phi_B/\Delta t$$. Compare it with the emf reading in the middle, at the peak. Why is the average a little smaller?
 3. For each push in run, find the area under the emf against time graph by adding trapezoids. Compare each area with $$-N(\Phi_{\rm end} - \Phi_{\rm start})$$ from the run's first and last flux readings. Compare the peak emf and the area of the two runs. Which sign did the emf have as the magnet was pulled out, and why, by Lenz's law?
 
-## Uncertainty
-
-The readouts carry six significant figures, so rounding is not the limit; the spacing of the readings is. With readings $$T/12$$ apart (30° of turning), how far from a peak can the nearest reading fall, and how much lower than the amplitude can it read? Would your trapezoid areas come out a little high or a little low, and what would halving the Advance by step do?
-
 ## Questions
 
 1. Find the readings in your 6.3 rad/s run where $$\Phi_B$$ is largest in size and where it is closest to zero. What is the emf at each, and does it agree with Before the lab 3? Explain with Faraday's law.
 2. Why can faster magnet motion raise the peak emf without changing the area under the emf graph between the same start and end positions?
+
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The readouts carry six significant figures, so rounding is not the limit; the spacing of the readings is. With readings $$T/12$$ apart (30° of turning), how far from a peak can the nearest reading fall, and how much lower than the amplitude can it read? Would your trapezoid areas come out a little high or a little low, and what would halving the Advance by step do?
 
 ## With calculus
 
@@ -91,4 +94,4 @@ For courses that use calculus. This section is not counted in the 75 minutes; do
 
 ## What to hand in
 
-Prelab answers, settings and data, flux and emf plots, the amplitude against $$\omega$$ graph, the magnet area check, uncertainty and answers to the questions (and to With calculus, if assigned). Identify simulated data.
+Prelab answers, settings and data, flux and emf plots, the amplitude against $$\omega$$ graph, the magnet area check and answers to the questions (and to Uncertainty and With calculus, if assigned). Identify simulated data.

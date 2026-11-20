@@ -79,15 +79,18 @@ Check Blind (under Moving observer S′) before you start. Record reading always
 4. At what speed are A and B of the Causality setup simultaneous? Compare with $$\beta = c\Delta t/\Delta x$$.
 5. How long is the rod in S at 0.6c and at 0.8c? Compare with $$L_0/\gamma$$.
 
-## Uncertainty
-
-The S′ coordinates are given to 0.001 ly. How large an uncertainty does that put on $$(ct')^2$$ for your largest value of $$ct'$$? Compare it with the scatter of your points about the line and with the uncertainty of the intercept.
-
 ## Questions
 
 1. S says the clock in S′ runs slow, and S′ says the clock in S runs slow. How can both be right? Use the lines of simultaneity in your answer.
 2. Look back at Before the lab 4. In the Causality scenario, what did cΔt′ do for A and B, and for A and C, as β went across its whole range? Use $$s^2$$ for each pair and the light cone of A to explain why one order can be reversed and the other cannot, and what a reversal of A and C would mean if A caused C.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The S′ coordinates are given to 0.001 ly. How large an uncertainty does that put on $$(ct')^2$$ for your largest value of $$ct'$$? Compare it with the scatter of your points about the line and with the uncertainty of the intercept. Give $$s^2$$ for each event with its uncertainty.
+
 ## What to hand in
 
-Prelab answers, the table copies with their graphs and fits, $$s^2$$ for each event with uncertainties, the dilation, order and length results, and answers to the questions. Identify simulated data.
+Prelab answers, the table copies with their graphs and fits, $$s^2$$ for each event, the dilation, order and length results, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

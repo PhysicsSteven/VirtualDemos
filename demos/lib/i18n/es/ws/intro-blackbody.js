@@ -86,8 +86,6 @@ VDI18N.add('es', 'ws/intro-blackbody', {
   "Haz una lista de tus tres estrellas con sus colores y clases espectrales. ¿Cuál de ellas tiene su pico en la luz visible y cuál fuera de ella? ¿Dónde está el pico de cada una: en el ultravioleta (más corto que {#} nm), en el visible ({#} a {#} nm) o en el infrarrojo (más largo que {#} nm)?",
 "The Sun’s peak is in the green part of the spectrum, yet the Sun looks white from space. Use its visible share and the shape of its curve to explain why the Sun does not look green.":
   "El pico del Sol está en la parte verde del espectro, y aun así el Sol se ve blanco desde el espacio. Usa su fracción visible y la forma de su curva para explicar por qué el Sol no se ve verde.",
-"The demo computes an ideal blackbody, so a repeated reading gives exactly the same numbers. Real stars have dark absorption lines, and the light from their surface is not quite a blackbody’s. Would a star’s measured color still give a good estimate of its temperature? Explain briefly.":
-  "La demo calcula un cuerpo negro ideal, así que una lectura repetida da exactamente los mismos números. Las estrellas reales tienen líneas oscuras de absorción, y la luz de su superficie no es exactamente la de un cuerpo negro. ¿El color medido de una estrella seguiría dando una buena estimación de su temperatura? Explica brevemente.",
 "Betelgeuse is cooler than the Sun, so each square meter gives off less light, yet Betelgeuse is about {#} times more luminous than the Sun. It is {#} times wider than the Sun. The luminosity compared with the Sun is (radius ratio)² × (temperature ratio)⁴. Use the Betelgeuse and Sun temperatures from your Part {#} table to check the {#}.":
   "Betelgeuse es más fría que el Sol, así que cada metro cuadrado emite menos luz, y sin embargo Betelgeuse es unas {#} veces más luminosa que el Sol. Es {#} veces más ancha que el Sol. La luminosidad comparada con la del Sol es (razón de radios)² × (razón de temperaturas)⁴. Usa las temperaturas de Betelgeuse y del Sol de tu tabla de la Parte {#} para comprobar el {#}.",
 "If you see a red star and a blue star that have the same size, which is more luminous? Why?":
@@ -98,8 +96,12 @@ VDI18N.add('es', 'ws/intro-blackbody', {
   "Los astrónomos miden las temperaturas de las estrellas sin tocarlas nunca. Describe cómo, usando lo que aprendiste aquí.",
 "Which star’s curve was higher at {#} nm, and does that match your answer to Before the lab {#}? Using Wien’s law and the Stefan and Boltzmann law from the Background, explain how the hotter star can give off more red light than the red star from each square meter and still look blue white.":
   "¿La curva de qué estrella fue mayor en {#} nm, y concuerda con tu respuesta a Antes del laboratorio {#}? Usando la ley de Wien y la ley de Stefan y Boltzmann del Fondo, explica cómo la estrella más caliente puede emitir más luz roja por cada metro cuadrado que la estrella roja y aun así verse blanco azulada.",
-"Prelab answers, the two table copies, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.":
-  "Respuestas del prelaboratorio, las dos copias de la tabla, las respuestas de las secciones de análisis e incertidumbre, y las respuestas a las preguntas. Identifica los datos simulados.",
+"For courses that treat measurement uncertainty. This section is not counted in the {#} minutes; do it when your instructor assigns it.":
+  "Para cursos que tratan la incertidumbre de medición. Esta sección no cuenta dentro de los {#} minutos; hazla cuando tu profesor la asigne.",
+"The demo computes an ideal blackbody, so a repeated reading gives exactly the same numbers. Real stars have dark absorption lines, and the light from their surface is not quite a blackbody’s. Would a star’s measured color still give a good estimate of its temperature? Explain briefly.":
+  "La demo calcula un cuerpo negro ideal, así que una lectura repetida da exactamente los mismos números. Las estrellas reales tienen líneas oscuras de absorción, y la luz de su superficie no es exactamente la de un cuerpo negro. ¿El color medido de una estrella seguiría dando una buena estimación de su temperatura? Explica brevemente.",
+"Prelab answers, the two table copies, the answers to the analysis section and to the questions (and to Uncertainty, if assigned). Identify simulated data.":
+  "Respuestas del prelaboratorio, las dos copias de la tabla, las respuestas de la sección de análisis y las respuestas a las preguntas (y de Incertidumbre, si se asigna). Identifica los datos simulados.",
 "Blackbody Radiation":
   "Radiación de cuerpo negro",
 "<a>Virtual Physics Demos</a>":

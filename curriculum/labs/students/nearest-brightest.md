@@ -80,16 +80,19 @@ No hazards in the virtual lab.
 5. The brightest stars include supergiants such as Rigel and Deneb. Use their absolute magnitudes to find how far away each could be and still be among the stars brighter than V = 2.6.
 6. Press **Both**. Only a handful of stars are in both sets. Name them, and explain why a star must be both nearby and fairly luminous to be in both.
 
-## Uncertainty
-
-Distances come from parallaxes, and a small fractional error in the parallax gives about the same fractional error in the distance. For the most distant brightest stars the parallax errors are 10% or more. How big an error in $$M_V$$ is that?
-
 ## Questions
 
 1. The census of stars within 10 pc is still not complete. What kinds of stars are most likely to be missing, and why?
 2. Where do the white dwarfs sit on the diagram? Why are none of them among the brightest stars?
 3. Look back at Before the lab 5 and your answer to Analysis 2: where does the Sun stand among its neighbors? Most stars in the brightest sample are rare kinds of stars. Use what you know about stellar lifetimes to explain why luminous stars are rare, and the Samples part of the Background to explain how the brightest sample still fills up with them.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+Distances come from parallaxes, and a small fractional error in the parallax gives about the same fractional error in the distance. For the most distant brightest stars the parallax errors are 10% or more. How big an error in $$M_V$$ is that? Give the standard errors of the slope and intercept of each fit in Analysis 1.
+
 ## What to hand in
 
-Prelab answers, the data tables, the graph with its fit, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data (here the data are real catalog values).
+Prelab answers, the data tables, the graph with its fit, the answers to the analysis section and to the questions (and to Uncertainty, if assigned). Identify simulated data (here the data are real catalog values).

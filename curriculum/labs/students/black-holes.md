@@ -86,15 +86,19 @@ No hazards in the virtual lab.
 1. Fill in $$\theta_E^2$$ and graph it (vertical) against the lens mass (horizontal). Use the slope and the two distances to find $$r_s$$ for one solar mass, in km, and compare with your prelab answer.
 2. For the light curve, find $$u$$ from each magnification (prelab 3), then $$u^2$$ and $$(t - t_0)^2$$. Graph $$u^2$$ against $$(t - t_0)^2$$. Find $$t_E$$ from the slope and $$u_0$$ from the intercept, and compare with the crossing time and the offset at closest approach the demo shows.
 3. From your $$t_E$$, with $$v = 200$$ km/s and the two distances, find $$\theta_E$$ and then the lens mass. How close is it to 0.5 $$M_\odot$$?
-## Uncertainty
-
-The demo's readings are exact values of its model, shown to six significant figures, so the scatter about your lines is tiny: report each slope with its standard error. A real light curve is not exact. Suppose each magnification near the peak were measured to 1%. Use the slope of $$A(u)$$ near $$u_0$$ to estimate how well that measures $$u_0$$.
 
 ## Questions
 
 1. Compare the point source magnification with the magnification of the source as drawn near the peak and far from it. Why do they differ near the peak, and when would a real star's size matter?
 2. Your Einstein radii at 1 and 10 $$M_\odot$$ settle Before the lab 4. By what factor did $$\theta_E$$ grow? A lens ten times heavier bends light ten times more at the same $$b$$: use where the ring forms to explain the factor you measured, and say what it does to $$t_E$$. In a real microlensing event astronomers measure $$t_E$$ but usually not the speed $$v$$ or the lens distance $$D_L$$. What can they say about the lens mass from $$t_E$$ alone?
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The demo's readings are exact values of its model, shown to six significant figures, so the scatter about your lines is tiny: report each slope with its standard error. A real light curve is not exact. Suppose each magnification near the peak were measured to 1%. Use the slope of $$A(u)$$ near $$u_0$$ to estimate how well that measures $$u_0$$.
+
 ## What to hand in
 
-Prelab answers, the table copies with their graphs and fits, your values of $$r_s$$ per solar mass, $$t_E$$, $$u_0$$ and the lens mass, and answers to the questions. Identify simulated data.
+Prelab answers, the table copies with their graphs and fits, your values of $$r_s$$ per solar mass, $$t_E$$, $$u_0$$ and the lens mass, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

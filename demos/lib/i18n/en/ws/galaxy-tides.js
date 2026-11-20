@@ -59,10 +59,11 @@ VDI18N.add('en', 'ws/galaxy-tides', [
 "In the dwarf run, the dwarf’s disk has a radius R = {#} kpc. Use your closest approach as d and work out the near ÷ far pull from the formula in the Background. Compare it with the table and with your answer to Before the lab {#}.",
 "In the Andromeda is coming run, when is the first close pass, in billions of years from now, and how close? Compare it with your steady speed answer from Before the lab {#}: is the real trip shorter or longer, and why? What did the bigger sideways speed change?",
 "From Part {#}, how far away is the next grain of sand, and how many of {#} billion stars would hit another star while crossing the other galaxy?",
-"The model’s numbers are exact for its setup; the big uncertainty is in Andromeda’s sideways speed. Your two Andromeda runs differ only in that speed. By how many million years and how many kpc do their first passes differ? Which outcome would you quote, and how would you say it honestly?",
 "When galaxies collide, the stars pass by but the gas clouds do slam together and form bursts of new stars. Clouds of gas are light years across. Why do clouds hit when stars do not?",
 "Look back at your guess in Before the lab {#} and at the Hits among {#} billion stars. How many stars will crash, and why was your guess right or wrong? If the stars do not crash, what pulled the long tails out of the galaxies in Part {#}?",
-"Prelab answers, the Data table, Analysis {#} to {#} with the formula work in Analysis {#}, the uncertainty answer and the answers to the questions. Identify simulated data: every reading in this lab is simulated.",
+"For courses that treat measurement uncertainty. This section is not counted in the {#} minutes; do it when your instructor assigns it.",
+"The model’s numbers are exact for its setup; the big uncertainty is in Andromeda’s sideways speed. Your two Andromeda runs differ only in that speed. By how many million years and how many kpc do their first passes differ? Which outcome would you quote, and how would you say it honestly?",
+"Prelab answers, the Data table, Analysis {#} to {#} with the formula work in Analysis {#}, and the answers to the questions (and to Uncertainty, if assigned). Identify simulated data: every reading in this lab is simulated.",
 "Radius of the stretched galaxy's disk",
 "Distance between the two galaxies' centers",
 "Galaxy Collisions"

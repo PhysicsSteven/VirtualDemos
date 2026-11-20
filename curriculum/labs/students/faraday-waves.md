@@ -91,16 +91,19 @@ Parts A, B, C and D each get their own copy of this table. Work out the last thr
 4. Still in part C, compare the onsets of the two oils with water's. Work out the weak damping estimate for the 100 cSt oil ($$\nu$$ = 100 × 10⁻⁶ m²/s, $$\rho$$ = 965 kg/m³, $$\sigma$$ = 20.9 mN/m) and its $$\alpha/\omega_0$$. Why is the estimate further from the demo's onset here than for water?
 5. For each part D reading, find the capillary share $$s = \sigma k^2/(\rho g + \sigma k^2)$$ from its wavelength (water: $$\rho$$ = 998.2 kg/m³, $$\sigma$$ = 72.8 mN/m; 10 cSt oil: 935 kg/m³, 20.1 mN/m; 100 cSt oil: 965 kg/m³, 20.9 mN/m). Does the rule in Background predict the pattern you saw? For the stripes, read $$\alpha/\omega_0$$ from the **Damping and pattern** readout.
 
-## Uncertainty
-
-In part A the onset is pinned only between two steps of x₀, about 6 % apart in Γ; use half that gap as its uncertainty. In part B use the standard errors of the slope and intercept that the fit gives to put an uncertainty on $$\sigma$$ and $$g$$; the depth of 20.0 mm makes $$\tanh(kd)$$ differ from 1 by less than 0.01 % even at 20 Hz. Every value here is computed by the demo, so the scatter is only rounding. In a real dish, the side walls, the meniscus and a trace of dirt on the water add damping, and measured onsets in water are often several times the demo's.
-
 ## Questions
 
 1. Look back at Before the lab 1. How many times a second did the surface rise and fall at 40 Hz, and does that match your prediction? Use the swing in Background to explain why the surface moves at half the drive frequency.
 2. Switch the **Plot** in the Display fold to **Tongues**. The lowest tongue sits at the wavelength of a wave at f/2, the next one at a wave at f. Why does the tongue at f/2 reach down to a lower Γ than the one at f?
 3. A student repeats part C in a real lab with tap water at 30 Hz and finds the onset well above the demo's value. Name two things the demo leaves out that could explain it, and say which way each one moves the onset.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+In part A the onset is pinned only between two steps of x₀, about 6 % apart in Γ; use half that gap as its uncertainty. In part B use the standard errors of the slope and intercept that the fit gives to put an uncertainty on $$\sigma$$ and $$g$$; the depth of 20.0 mm makes $$\tanh(kd)$$ differ from 1 by less than 0.01 % even at 20 Hz. Every value here is computed by the demo, so the scatter is only rounding. In a real dish, the side walls, the meniscus and a trace of dirt on the water add damping, and measured onsets in water are often several times the demo's.
+
 ## What to hand in
 
-Prelab answers, the four copies of the Data table with the last three columns worked for part B, the graph and fit, the calculations in Analysis, your pattern sketch, the uncertainty estimates and answers to the questions. Identify simulated data.
+Prelab answers, the four copies of the Data table with the last three columns worked for part B, the graph and fit, the calculations in Analysis, your pattern sketch and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

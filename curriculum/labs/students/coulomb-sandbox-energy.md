@@ -110,15 +110,18 @@ Add rows for all measurements. Export leaves $$r$$ blank; you do not need it her
 3. Plot the ring's $$E$$ (vertical) against $$z$$ (horizontal). Compare the measured field at each point with the ring formula, and the position of the largest field with item 2 of Before the lab. Estimate $$E_z = -dV/dz$$ at $$z$$ = 1.0 cm from your $$V$$ readings at 0.5 and 1.5 cm, and explain why it differs from the field you read there.
 4. Compare each arc's field at the center with $$2k\lambda\sin(\theta/2)/R$$.
 
-## Uncertainty
-
-Use coordinate and readout resolution to estimate uncertainty. Distance errors matter most near a charge. The simulation is deterministic; do not invent random scatter.
-
 ## Questions
 
 1. Far from the ring ($$z \gg R$$), what does the ring formula become, and why?
 2. How did $$V$$ and $$E$$ at the center change from your 180° arc reading to your 360° one, and was that what you said in Before the lab 3? Explain each from how the contributions of the pieces of the arc add, the field as vectors and the potential as numbers.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+Use coordinate and readout resolution to estimate uncertainty. Distance errors matter most near a charge. The simulation is deterministic; do not invent random scatter.
+
 ## What to hand in
 
-Prelab answers, raw data and CSV, the ring's $$E$$ against $$z$$ graph, the Ring and arc and Potential energy tables and answers to the questions. Identify simulated data.
+Prelab answers, raw data and CSV, the ring's $$E$$ against $$z$$ graph, the Ring and arc and Potential energy tables and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

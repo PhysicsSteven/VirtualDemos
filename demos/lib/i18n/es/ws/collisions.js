@@ -68,20 +68,24 @@ VDI18N.add('es', 'ws/collisions', {
   "En la gráfica <strong>K perdida vs ½μu²</strong> para ese amortiguador (energía cinética perdida contra \\(\\tfrac12\\mu(u_1-u_2)^2\\)), compara su pendiente con \\(1-e^2\\).",
 "For one run, calculate the center of mass velocity before and after collision (§{#}) and separate the system’s overall translation from relative motion. Explain why individual cart velocities change but this velocity stays fixed.":
   "Para una corrida, calcula la velocidad del centro de masa antes y después de la colisión (§{#}) y separa la traslación global del sistema del movimiento relativo. Explica por qué las velocidades de los carritos individuales cambian pero esta velocidad se mantiene fija.",
-"Propagate mass and gate time resolution into momentum and energy. Gate times are rounded to {#} ms in the simulation; short crossings can have substantial fractional uncertainty. Use signed differences and a nonzero momentum scale when initial total momentum is near zero. Do not divide by zero to report a percentage error.":
-  "Propaga la masa y la resolución temporal de las compuertas al momento y a la energía. En la simulación los tiempos de las compuertas se redondean a {#} ms; los cruces cortos pueden tener una incertidumbre relativa considerable. Usa diferencias con signo y una escala de momento distinta de cero cuando el momento total inicial sea cercano a cero. No dividas entre cero para reportar un error porcentual.",
 "In run {#}, how did the two carts’ momentum changes compare, and how did their velocity changes compare? Was your answer to Before the lab {#} right? Use Newton’s third law to explain both comparisons, and why equal and opposite contact forces conserve total momentum.":
   "En la corrida {#}, ¿cómo se compararon los cambios de cantidad de movimiento de los dos carros y cómo se compararon sus cambios de velocidad? ¿Acertó tu respuesta a Antes del laboratorio {#}? Usa la tercera ley de Newton para explicar ambas comparaciones, y por qué fuerzas de contacto iguales y opuestas conservan la cantidad de movimiento total.",
 "What external effects could spoil a real track experiment?":
   "¿Qué efectos externos podrían arruinar un experimento real en un riel?",
-"Prelab answers, settings and CSV, the three graphs, inferred restitution, a center of mass calculation, uncertainty and answers to the questions. Identify simulated data.":
-  "Respuestas del prelaboratorio, ajustes y CSV, las tres gráficas, la restitución inferida, un cálculo del centro de masa, la incertidumbre y respuestas a las preguntas. Identifica los datos simulados.",
+"For courses that treat measurement uncertainty. This section is not counted in the {#} minutes; do it when your instructor assigns it.":
+  "Para cursos que tratan la incertidumbre de medición. Esta sección no cuenta dentro de los {#} minutos; hazla cuando tu profesor la asigne.",
+"Propagate mass and gate time resolution into momentum and energy. Gate times are rounded to {#} ms in the simulation; short crossings can have substantial fractional uncertainty. Use signed differences and a nonzero momentum scale when initial total momentum is near zero. Do not divide by zero to report a percentage error. Give the fitted slopes and intercepts in Analysis {#} to {#} with their standard errors, and say whether each agrees with its predicted value within them.":
+  "Propaga la masa y la resolución temporal de las compuertas al momento y a la energía. En la simulación los tiempos de las compuertas se redondean a {#} ms; los cruces cortos pueden tener una incertidumbre relativa considerable. Usa diferencias con signo y una escala de momento distinta de cero cuando el momento total inicial sea cercano a cero. No dividas entre cero para reportar un error porcentual. Da las pendientes y ordenadas al origen ajustadas en los Análisis {#} a {#} con sus errores estándar, y di si cada una coincide con su valor predicho dentro de ellos.",
+"Prelab answers, settings and CSV, the three graphs, inferred restitution, a center of mass calculation, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.":
+  "Respuestas del prelaboratorio, ajustes y CSV, las tres gráficas, la restitución inferida, un cálculo del centro de masa y respuestas a las preguntas (y de Incertidumbre, si se asigna). Identifica los datos simulados.",
 "Kinetic energy after the collision":
   "Energía cinética después de la colisión",
 "Kinetic energy before the collision":
   "Energía cinética antes de la colisión",
 "Coefficient of restitution":
   "Coeficiente de restitución",
+"Mass of a cart":
+  "Masa de un carrito",
 "Mass of cart {#}":
   "Masa del carrito {#}",
 "Reduced mass, m₁m₂/(m₁ + m₂)":
@@ -92,6 +96,8 @@ VDI18N.add('es', 'ws/collisions', {
   "Velocidad del carrito {#} antes de la colisión",
 "Velocity after the collision":
   "Velocidad después de la colisión",
+"Velocity of a cart after the collision":
+  "Velocidad de un carrito después de la colisión",
 "Velocity of cart {#} after the collision":
   "Velocidad del carrito {#} después de la colisión",
 "Collisions":

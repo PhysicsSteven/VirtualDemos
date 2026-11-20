@@ -74,19 +74,22 @@ Save each elastic series separately. For yield cycles, pair each peak load with 
 ## Analysis
 
 1. Fit the load mass against $$\Delta L$$ for each elastic series, and multiply the slope by $$g$$ to get the slope of $$F = mg$$ against $$\Delta L$$. Report slope, intercept and residuals. Convert extension to meters before calculating $$Y$$, or explicitly convert a slope in N/mm to N/m.
-2. Compare the two estimates of $$Y$$. Test whether the slope ratio agrees with the squared diameter ratio.
+2. Compare the two estimates of $$Y$$. Compare the slope ratio with the squared diameter ratio.
 3. Convert the two peak loads bracketing permanent set to stresses. Report a yield onset interval rather than an exact material constant from a coarse step.
 4. Explain the difference between total extension under load and residual extension after unloading. Distinguish the operational detection threshold from an exact yield stress.
-
-## Uncertainty
-
-The virtual dial rounds to 0.001 mm. Diameter controls are specified settings in the ideal model; their 0.05 mm adjustment step is not random measurement error. For a real wire, estimate diameter uncertainty from the measuring tool and variation along the wire. Since $$A$$ depends on $$d^2$$, its fractional uncertainty is approximately twice that of diameter. Include length and slope uncertainty in $$Y$$. A tiny fit error does not eliminate calibration errors. For yielding, use load step brackets and the smallest detectable residual extension; repeated exact simulation readings do not supply random scatter.
 
 ## Questions
 
 1. Did the thicker wire give a different Young's modulus? Give each wire's Loaded $$\Delta L$$ at 5 kg and its modulus, and set them against your answer to Before the lab 4. Why do thicker wires have steeper graphs of $$F$$ against $$\Delta L$$ but not necessarily larger Young's moduli?
 2. Can a material be stiff yet have a low yield stress?
 3. Why can an unloaded yielded wire remain longer even though its stress is zero?
+
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+Report each slope and each Young's modulus with its uncertainty from the fit, and say whether the two moduli agree within those uncertainties. The virtual dial rounds to 0.001 mm. Diameter controls are specified settings in the ideal model; their 0.05 mm adjustment step is not random measurement error. For a real wire, estimate diameter uncertainty from the measuring tool and variation along the wire. Since $$A$$ depends on $$d^2$$, its fractional uncertainty is approximately twice that of diameter. Include length and slope uncertainty in $$Y$$. A tiny fit error does not eliminate calibration errors. For yielding, use load step brackets and the smallest detectable residual extension; repeated exact simulation readings do not supply random scatter.
 
 ## With calculus
 
@@ -97,4 +100,4 @@ For courses that use calculus. This section is not counted in the 75 minutes; do
 
 ## What to hand in
 
-Prelab answers, wire dimensions, a separate copy of the data table for each elastic series, both fits with residuals, Young's modulus estimates and uncertainty, the yield onset bracket with unloading evidence, and answers to the questions (and to With calculus, if assigned). Identify simulated data.
+Prelab answers, wire dimensions, a separate copy of the data table for each elastic series, both fits with residuals, Young's modulus estimates, the yield onset bracket with unloading evidence, and answers to the questions (and to Uncertainty and With calculus, if assigned). Identify simulated data.

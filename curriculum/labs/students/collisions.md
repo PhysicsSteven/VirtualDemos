@@ -72,15 +72,18 @@ Keep masses and signed velocities as raw data. Calculate momentum, energy and re
 3. From the **K lost vs ½μu²** graph for that bumper (kinetic energy lost against $$\tfrac12\mu(u_1-u_2)^2$$), compare its slope with $$1-e^2$$.
 4. For one run, calculate the center of mass velocity before and after collision (§9.6) and separate the system's overall translation from relative motion. Explain why individual cart velocities change but this velocity stays fixed.
 
-## Uncertainty
-
-Propagate mass and gate time resolution into momentum and energy. Gate times are rounded to 0.1 ms in the simulation; short crossings can have substantial fractional uncertainty. Use signed differences and a nonzero momentum scale when initial total momentum is near zero. Do not divide by zero to report a percentage error.
-
 ## Questions
 
 1. In run 3, how did the two carts' momentum changes compare, and how did their velocity changes compare? Was your answer to Before the lab 4 right? Use Newton's third law to explain both comparisons, and why equal and opposite contact forces conserve total momentum.
 2. What external effects could spoil a real track experiment?
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+Propagate mass and gate time resolution into momentum and energy. Gate times are rounded to 0.1 ms in the simulation; short crossings can have substantial fractional uncertainty. Use signed differences and a nonzero momentum scale when initial total momentum is near zero. Do not divide by zero to report a percentage error. Give the fitted slopes and intercepts in Analysis 1 to 3 with their standard errors, and say whether each agrees with its predicted value within them.
+
 ## What to hand in
 
-Prelab answers, settings and CSV, the three graphs, inferred restitution, a center of mass calculation, uncertainty and answers to the questions. Identify simulated data.
+Prelab answers, settings and CSV, the three graphs, inferred restitution, a center of mass calculation, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

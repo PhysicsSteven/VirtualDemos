@@ -64,9 +64,10 @@ VDI18N.add('en', 'ws/intro-seeing', [
 "Strehl ratio after the fix, row {#}",
 "Part {#}: divide the long exposure half light diameter in green light by {#} λ/D for the {#} m telescope. How many times worse than a perfect telescope does the air make it? The seeing disk is about λ ÷ r₀ across; with r₀ = {#} m at {#} nm, work out λ ÷ r₀ in seconds of arc and compare it with your reading.",
 "Compare the Strehl ratios with adaptive optics off and on in infrared light, and with it on in green light. Why does adaptive optics work so much better in the infrared?",
-"In Part {#}, let the air move between three more snapshots of the {#} m telescope in green light and write down each half light diameter. How much do they change from moment to moment? Why is the long exposure a steadier measure of the seeing than any one snapshot?",
 "With adaptive optics, a large telescope on a mountain can be sharper than Hubble in infrared light. Using your results, explain why space telescopes are still worth building.",
 "Through the same air in green light, how did the {#} m telescope’s long exposure compare with the {#} m one, in half light diameter and in {#} λ/D? Was your prediction in Before the lab {#} right? Use the seeing disk, λ ÷ r₀, and the {#} λ/D readout to explain what you saw.",
-"Prelab answers, the two tables, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.",
+"For courses that treat measurement uncertainty. This section is not counted in the {#} minutes; do it when your instructor assigns it.",
+"In Part {#}, let the air move between three more snapshots of the {#} m telescope in green light and write down each half light diameter. How much do they change from moment to moment? Why is the long exposure a steadier measure of the seeing than any one snapshot?",
+"Prelab answers, the two tables, the answers to the analysis section and to the questions (and to Uncertainty, if assigned). Identify simulated data.",
 "Telescope Aberrations"
 ]);

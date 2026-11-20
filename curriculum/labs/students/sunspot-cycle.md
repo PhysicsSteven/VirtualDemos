@@ -96,16 +96,21 @@ The full Moon is magnitude −12.74, and in magnitudes a smaller number means br
 3. From Table 2, how many times higher was the peak of cycle 19 than the peak of cycle 24?
 4. Use Table 3 to check your answer to Before the lab 1 for the 4,500 K spot.
 
-## Uncertainty
-
-Near a minimum the smoothed curve is nearly flat. Step through the months around one of your minima and find how many months the smoothed number stays within 1 of its lowest value. About how many years either way could you have picked for that minimum? Compare that with how far your points sit from the fitted line.
-
 ## Questions
 
 1. Look at the cycle lengths in your table and the heights in Table 2. Is the solar cycle the same length and the same height every time? Why do you think astronomers have trouble predicting how strong the next cycle will be?
 2. Go to the start of cycle 19 (1954) and move forward through the cycle, watching the butterfly diagram above the graph. Where on the Sun, in latitude, do the first spots of a new cycle appear, and where are the last ones?
 3. Go back to your guess in Before the lab 4. Compare it with the 4,000 K row of Table 3. A spot gives off only a fraction of the surface's light per square meter, so why does it look black in photographs of the Sun, yet would outshine the full Moon on its own?
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+Near a minimum the smoothed curve is nearly flat. Step through the months around one of your minima and find how many months the smoothed number stays within 1 of its lowest value. About how many years either way could you have picked for that minimum? Compare that with how far your points sit from the fitted line.
+
+Give the slope of your line in Analysis 1 with its standard error. For Analysis 2, say how far from the line real cycles have sat, and give the range of years it puts around your predicted date.
+
 ## What to hand in
 
-Prelab answers, the three tables, the graph with its fit, the answers to the analysis and uncertainty sections, and answers to the questions. Table 1 and Table 2 are real measurements (WDC-SILSO); Table 3 comes from the demo's model.
+Prelab answers, the three tables, the graph with its fit, the answers to the analysis section and to the questions (and to Uncertainty, if assigned). Table 1 and Table 2 are real measurements (WDC-SILSO); Table 3 comes from the demo's model.

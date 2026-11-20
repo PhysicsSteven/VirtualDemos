@@ -103,14 +103,19 @@ Predict each result before reading the demonstration. Compare torque at two forc
 4. From the Door swing table, show that $$\alpha t$$ equals the $$\omega$$ readout and that $$\tfrac12\alpha t^2$$ is 90° in radians for every push. How do $$t$$ and $$\omega$$ at 90° change when $$\alpha$$ is halved or doubled, and why?
 5. Plot $$v_f$$ against $$\omega_0R$$ for the sphere and fit a line. Angular momentum about the contact line on the floor, $$mR(v + k\omega R)$$ with $$k = I/mR^2$$, stays the same while it skids, so $$v_f = (v_0 + k\,\omega_0R)/(1 + k)$$. Find k from the slope and from the intercept, and compare with 2/5.
 
-## Uncertainty
-
-Report readout resolution and use actual settings. These are model comparisons, so agreement is not independent measurement of a material's moment of inertia. Real bearing friction, slipping and changes in body shape can alter the results.
-
 ## Questions
 
 1. In your Door swing table, the first and third pushes are the two from Before the lab 4 (20 N at 0.80 m and 40 N at 0.40 m). How did their Time to turn 90° compare, and is that what you expected? Use $$\tau = rF\sin\theta$$ and $$\sum\tau = I\alpha$$ to explain what sets how fast the door turns. Then say why a force can exert zero torque even when it is nonzero.
 2. A ball launched with backspin can come back toward you. Using $$v_f = (v_0 + k\,\omega_0R)/(1 + k)$$, how much backspin does a solid sphere need to end up at rest?
+
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+Report readout resolution and use actual settings. These are model comparisons, so agreement is not independent measurement of a material's moment of inertia. Real bearing friction, slipping and changes in body shape can alter the results.
+
+For the Analysis 5 fit, give the slope and the intercept with their uncertainties, and give both values of $$k$$ with their uncertainties. Say whether each agrees with 2/5 within its uncertainty.
 
 ## With calculus
 
@@ -121,4 +126,4 @@ For courses that use calculus. This section is not counted in the 75 minutes; do
 
 ## What to hand in
 
-Predictions, the comparison table, the Door swing and Skid tables, the floor graph, the calculations of the Analysis and answers to the questions (and to With calculus, if assigned). Identify the activity as a simulation comparison.
+Predictions, the comparison table, the Door swing and Skid tables, the floor graph, the calculations of the Analysis and answers to the questions (and to Uncertainty and With calculus, if assigned). Identify the activity as a simulation comparison.

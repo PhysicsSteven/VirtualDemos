@@ -96,14 +96,19 @@ No hazards in the virtual lab. Real engines get hot and have moving parts.
 4. For the refrigerator readings, find each COP and compare with $$T_c/(T_h - T_c)$$.
 5. In the First law table, check $$\Delta U = Q - W$$ on every leg, and that $$\Delta U$$ adds to zero around the rectangle while $$W$$ and $$Q$$ do not. Show that the net work of the rectangle is its area on the PV diagram.
 
-## Uncertainty
-
-The energies are shown to several significant figures and the model has no noise, so the residuals of your fits show only rounding. Real engines fall well short of these ideal cycles; give one reason.
-
 ## Questions
 
 1. Why does raising the compression ratio make a gasoline engine more efficient, and what limits how high it can go?
 2. A heat pump delivers more heat to a house than the electrical energy it uses. From your 250 K refrigerator reading, how much heat reached the 320 K side for each joule of work, and does that break the first law? Then turn to your guess in Before the lab 4: what did lowering T<sub>c</sub> to 200 K do to the COP, and why?
+
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The energies are shown to several significant figures and the model has no noise, so the residuals of your fits show only rounding. Real engines fall well short of these ideal cycles; give one reason.
+
+Give the slope and intercept of each fit with their standard errors, and say whether each $$\gamma$$ agrees with its expected value within its uncertainty.
 
 ## With calculus
 
@@ -115,4 +120,4 @@ For courses that use calculus. This section is not counted in the 75 minutes; do
 
 ## What to hand in
 
-Prelab answers, the table copies with their graphs and fits, the efficiencies and COPs with comparisons, your values of $$\gamma$$, and answers to the questions (and to With calculus, if assigned). Identify simulated data.
+Prelab answers, the table copies with their graphs and fits, the efficiencies and COPs with comparisons, your values of $$\gamma$$, and answers to the questions (and to Uncertainty and With calculus, if assigned). Identify simulated data.

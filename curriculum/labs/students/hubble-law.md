@@ -73,22 +73,25 @@ Work out $$v = cz$$ for each galaxy.
 
 ## Analysis
 
-1. Graph $$v$$ against $$d$$ for your first copy of the table. Is it a straight line through the origin? Find $$H_0$$ from the slope, with its uncertainty.
+1. Graph $$v$$ against $$d$$ for your first copy of the table. Is it a straight line through the origin? Find $$H_0$$ from the slope.
 2. Find the Hubble time $$1/H_0$$ in billions of years, and compare it with the age of the universe in the standard cosmological model, 13.8 billion years.
 3. Work out $$v/d$$ for each galaxy. Which galaxies scatter most about your line, in proportion to their velocity?
 4. Compare your $$H_0$$ with the demo's fit to all 34 galaxies. Why do they differ, and which is more trustworthy?
 5. Fit your second copy. By what factor did $$H_0$$ change? Compare with the factor you expect from a calibration 0.10 mag brighter.
 6. Measurements today give $$67.4 \pm 0.5$$ km/s/Mpc from the cosmic microwave background (Planck 2018) and $$73.0 \pm 1.0$$ km/s/Mpc from the Cepheid and supernova ladder (SH0ES, Riess et al. 2022). What shift in the Cepheid calibration, in magnitudes, would change an $$H_0$$ of 70 into 73? Why is so much effort spent on the parallaxes of nearby Cepheids?
 
-## Uncertainty
-
-Estimate how well you can match the comb, as an uncertainty in $$z$$, and convert it to km/s. Compare it with the 250 km/s peculiar velocities and with the distance uncertainties.
-
 ## Questions
 
 1. $$v = cz$$ is accurate only for small $$z$$. For your most distant galaxy, use the relativistic Doppler formula, $$v/c = [(1+z)^2 - 1]/[(1+z)^2 + 1]$$, and say by how much it differs from $$cz$$. (For distant galaxies the redshift comes from the stretching of space, and neither formula is exact.)
-2. Sort your $$v/d$$ values into the near and the far galaxies. Which group kept closer to one value, and is that the group you picked in Before the lab 5? Use the 250 km/s peculiar velocities and the distance errors to explain which source of error dominates for your nearest galaxy and which for your farthest, and say which galaxies you would rely on to measure $$H_0$$.
+2. Sort your $$v/d$$ values into the near and the far galaxies. Which group kept closer to one value, and is that the group you picked in Before the lab 5? Use the 250 km/s peculiar velocities to explain the difference, and say which galaxies you would rely on to measure $$H_0$$.
+
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+Estimate how well you can match the comb, as an uncertainty in $$z$$, and convert it to km/s. Compare it with the 250 km/s peculiar velocities and with the distance uncertainties. Give $$H_0$$ from the slope in Analysis 1 and the Hubble time in Analysis 2 with their uncertainties, and compare your $$H_0$$ with the demo's fit to all 34 galaxies in Analysis 4 and with your second copy in Analysis 5, within those uncertainties. In Question 2, say which source of error dominates for your nearest galaxy and which for your farthest: the peculiar velocity or the distance error.
 
 ## What to hand in
 
-Prelab answers, both table copies, the Hubble diagram with its fit, $$H_0$$ and $$1/H_0$$ with uncertainties, the calibration comparison, and answers to the questions. Identify simulated data.
+Prelab answers, both table copies, the Hubble diagram with its fit, $$H_0$$ and $$1/H_0$$, the calibration comparison, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

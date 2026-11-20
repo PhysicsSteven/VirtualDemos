@@ -76,10 +76,6 @@ Fill in the last column of both table copies from the rule (λ in nm, D in m: 1.
 5. A radio telescope 100 m across observes the radio waves hydrogen gas gives off, which have a wavelength of 21.1 cm (0.211 m). Use θ = 1.22 λ/D (λ and D in meters) to find its smallest resolvable angle in radians, then multiply by 1,000,000 to get microradians. How many times bigger (worse) is this than Hubble's angle at 550 nm?
 6. How wide would a single radio dish have to be to see as fine detail at 21.1 cm as Hubble does at 550 nm? Give your answer in kilometers.
 
-## Uncertainty
-
-The distance between the stars moves in steps of 0.01 light year, so your smallest resolved distance can be off by up to one step. For the 10.0 m mirror, what fraction of your reading is one step? Is the uncertainty bigger for the large mirrors or the small ones? Real telescopes on the ground are also blurred by the moving air above them ("seeing"). Would that make the real smallest angle bigger or smaller than the demo's?
-
 ## Questions
 
 1. Explain in your own words why a bigger mirror sees finer detail, and why it also collects more light. Which of the two effects depends on the wavelength?
@@ -88,6 +84,13 @@ The distance between the stars moves in steps of 0.01 light year, so your smalle
 4. The demo's mirror is perfect and above the air. Why do astronomers put telescopes in space or on high mountains?
 5. At 0.50 ly, what did Intensity at the cursor I/I₀ read at 1× and at 16×, and what did the picture show? Does that match what you expected in Before the lab 4? Using Light spreads in the Background, explain why magnifying the picture cannot separate the two stars, and say what would.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The distance between the stars moves in steps of 0.01 light year, so your smallest resolved distance can be off by up to one step. For the 10.0 m mirror, what fraction of your reading is one step? Is the uncertainty bigger for the large mirrors or the small ones? Say how one step compares with the differences between your angles and the rule's in Analysis 1, 2 and 4. Real telescopes on the ground are also blurred by the moving air above them ("seeing"). Would that make the real smallest angle bigger or smaller than the demo's?
+
 ## What to hand in
 
-Prelab answers, the two table copies, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.
+Prelab answers, the two table copies, the answers to the analysis section and to the questions (and to Uncertainty, if assigned). Identify simulated data.

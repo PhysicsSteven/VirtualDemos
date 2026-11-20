@@ -72,16 +72,19 @@ Record $$N_A$$, $$N_B$$ and $$q$$ (the Oscillators in solid A, Oscillators in so
 3. Find $$\ln\Omega_A + \ln\Omega_B$$ at the start and at the settled value. By how much did the entropy, in units of $$k$$, rise?
 4. Starting from B, where does $$q_A$$ settle? Compare with Analysis 2.
 
-## Uncertainty
-
-Even after settling, $$q_A$$ wobbles about its most likely value. Estimate the size of the wobble for the large solids from your graph, and compare it with $$q_A$$. How would the size of the wobble compared with $$q_A$$ change for solids a thousand times larger?
-
 ## Questions
 
 1. Nothing in the rules says energy must flow from A to B. Why does it?
 2. With small solids, energy sometimes flows back into A for a while. Why is that never seen for a cup of coffee?
 3. Look at where $$q_A$$ settled in your two large solid runs and set it beside your guess in Before the lab 4. Then use $$\Omega_A\,\Omega_B$$ and $$1/T = dS/dU$$ to explain why $$q_A$$ settles there and not anywhere else, and say what the two solids have in common once it has.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+Even after settling, $$q_A$$ wobbles about its most likely value. Estimate the size of the wobble for the large solids from your graph, and compare it with $$q_A$$. How would the size of the wobble compared with $$q_A$$ change for solids a thousand times larger?
+
 ## What to hand in
 
-Prelab answers, the table copies with their graphs, the counts and shares for the small solids, the entropy rise for the large ones, and answers to the questions. Identify simulated data.
+Prelab answers, the table copies with their graphs, the counts and shares for the small solids, the entropy rise for the large ones, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

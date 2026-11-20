@@ -81,14 +81,17 @@ No hazards in the virtual lab. If you go outside to compare with the real sky, s
 5. Give your two Moon readings. By how many hours did the Moon's right ascension grow in the six days? Divide by 6 to get hours per day, convert that to degrees per day, and compare with your answer to Before the lab 3. How did the lit share change through the week?
 6. Give the star nearest the north celestial pole, and its distance from the pole, in 3000 BC, 2027 and AD 14000. Which star was nearest the pole when the pyramids were built, about 2600 BC (a few centuries after your first reading)? Was your guess in Before the lab 4 right?
 
-## Uncertainty
-
-The demo computes positions from a star catalog and from formulas for the motions of Earth, the Sun and the Moon, accurate to well under a tenth of a degree today. The altitude of Polaris is not exactly your latitude, because Polaris is not exactly at the pole: your readings at different places were taken at different moments of the star's daily circle. From its declination in the first table, how far is Polaris from the pole today, and how far could its altitude be from your latitude because of that? What does the demo leave out that would make every star near the horizon look about half a degree higher in the real sky?
-
 ## Questions
 
 1. Going by the Sun's two Distance readings, is Earth closer to the Sun in June or in December, and is that what you said in Before the lab 5? Using your two noon Sun altitudes from Analysis 4 and the tilt of Earth's axis from the Background, explain what really makes Ruston warmer in June than in December.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The demo computes positions from a star catalog and from formulas for the motions of Earth, the Sun and the Moon, accurate to well under a tenth of a degree today. The altitude of Polaris is not exactly your latitude, because Polaris is not exactly at the pole: your readings at different places were taken at different moments of the star's daily circle. Give the slope and intercept of your Analysis 1 line with their standard errors, and say whether each agrees with 1 and 0. From its declination in the first table, how far is Polaris from the pole today, and how far could its altitude be from your latitude because of that? What does the demo leave out that would make every star near the horizon look about half a degree higher in the real sky?
+
 ## What to hand in
 
-Prelab answers, the two data tables and the graph, the answers to the analysis and uncertainty sections, and the answer to the question. Identify simulated data.
+Prelab answers, the two data tables and the graph, the answers to the analysis section and the answer to the question (and to Uncertainty, if assigned). Identify simulated data.

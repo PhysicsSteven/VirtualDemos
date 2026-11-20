@@ -1624,6 +1624,9 @@
      minutes. It gets answer boxes like Questions, but counts toward Your progress only once the student has started it, so a
      student whose instructor did not assign it can still read Ready to hand in. */
   const EXTRA = /^with-calculus$/;
+  /* An Uncertainty section whose opening note carries the class ws-assigned (Steve, 2026-11-20: uncertainty is not required in
+     intro courses) is outside the 75 minutes in the same way: counted only once the student has started it. */
+  const assigned = (s) => EXTRA.test(s.id) || s.nodes.some((n) => n.classList && n.classList.contains('ws-assigned'));
   const m = location.pathname.match(/\/curriculum\/labs\/students\/([a-z0-9-]+?)(?:\.html)?$/);
   /* How this works (Steve, 2026-10-31): every worksheet shows the short video of one sample reading that its demo's How this works
      button plays for it, folded under the link to the demo; it loads only when opened, and is left out of printouts. The video is
@@ -2145,8 +2148,8 @@ details.ws-help p, details.ws-help ul { margin: 6px 0; } details.ws-help code { 
   const prog = { tasks: [] };
   sections.forEach((s) => {
     const name = plain(s.h);   /* read now, before the heading gets its tag */
-    if (ANSWER_LISTS.test(s.id)) prog.tasks.push({ s, name, extra: EXTRA.test(s.id), fields: () => answers.filter((a) => a.key.indexOf(s.id + '-') === 0).map((a) => a.f) });
-    else if (ONE_BOX.test(s.id)) prog.tasks.push({ s, name, fields: () => answers.filter((a) => a.key === s.id).map((a) => a.f) });
+    if (ANSWER_LISTS.test(s.id)) prog.tasks.push({ s, name, extra: assigned(s), fields: () => answers.filter((a) => a.key.indexOf(s.id + '-') === 0).map((a) => a.f) });
+    else if (ONE_BOX.test(s.id)) prog.tasks.push({ s, name, extra: assigned(s), fields: () => answers.filter((a) => a.key === s.id).map((a) => a.f) });
     else { const Ts = tables.filter((T) => s.nodes.indexOf(T.first) >= 0); if (Ts.length) prog.tasks.push({ s, name, tables: Ts }); }
   });
   if (prog.tasks.length) {

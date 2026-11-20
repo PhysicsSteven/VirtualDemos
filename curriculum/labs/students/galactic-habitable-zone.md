@@ -94,16 +94,19 @@ Press **Galaxy** at the top of the demo (beside Star system). Keep the model's a
 4. From Part 3, which assumption moves the zone most? Which changes the share of stars that could host complex life most?
 5. Is the Sun inside the 68% zone? What share of the stars that could host complex life today are older than the Sun? What would that mean for any complex life elsewhere in the Galaxy, if this model were right?
 
-## Uncertainty
-
-The model has no measurement uncertainty: every number is exact for its assumptions. The uncertainty is in the assumptions. Use your Part 3 readings to say which boundary of the zone (inner, outer, oldest, youngest) is least certain, and by how much it moves over the range you tried.
-
 ## Questions
 
 1. Lineweaver, Fenner and Gibson found a zone 7 to 9 kpc from the center, born 8 to 4 billion years ago, with about three quarters of its stars older than the Sun. How do your results compare, and which of this model's simplifications could explain the differences?
 2. Elliptical galaxies formed most of their stars quickly and early. Would you expect a habitable zone in such a galaxy to be wider or narrower in time than the Milky Way's?
 3. Where along the disk did P peak in Part 1, and is that where you put it in Before the lab 4? Explain where the peak falls from where stars form and how metals spread through the disk, and say whether the Sun's birthplace is the best spot. The Sun has probably moved outward by a few kpc since its birth: how would that change the picture of its place in the zone?
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The model has no measurement uncertainty: every number is exact for its assumptions. The uncertainty is in the assumptions. Use your Part 3 readings to say which boundary of the zone (inner, outer, oldest, youngest) is least certain, and by how much it moves over the range you tried.
+
 ## What to hand in
 
-Prelab answers, the three tables with their graphs, the factor that limits each side of the zone, your hand check of one reading, the effect of each assumption, and answers to the questions. Identify model data: every number in this lab comes from a simplified model, not from observations.
+Prelab answers, the three tables with their graphs, the factor that limits each side of the zone, your hand check of one reading, the effect of each assumption, and answers to the questions (and to Uncertainty, if assigned). Identify model data: every number in this lab comes from a simplified model, not from observations.

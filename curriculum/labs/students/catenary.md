@@ -81,13 +81,16 @@ $$y_A$$ and $$y_B$$ are the heights of the supports. Work out the last three col
 3. Part 2: plot $$T_A - T_B$$ against $$y_A - y_B$$ and fit a line. Compare the slope with $$\lambda g$$ and the intercept with zero.
 4. In Part 2, did $$H$$ stay the same as support B was lowered? Within any one row, why must the horizontal parts of the pulls at the two supports be equal?
 
-## Uncertainty
-
-The recorded forces carry 5 significant figures and the sag is given to 1 mm, so rounding alone changes $$1/d$$ by at most about 0.1% for the shallowest row; compare that with the size of your residuals. The model's own approximations are what matter more for a real chain: real links stretch a little under load, have some stiffness at each joint, and are not exactly uniform. Say which way stretching would shift your Part 1 points at the smallest sags.
-
 ## Questions
 
 1. Before the lab 3 asked how hard the supports pull on a chain that hangs nearly straight. Give your T at A readings at 8.50 m and 8.10 m from Part 1, each beside the chain's weight $$\lambda g S$$ at that length. Use the free body diagram from Before the lab 1 to explain why the supports pull as hard as they do when the sag is small, and whether any finite pull could make the chain perfectly straight. On a hot day a power line expands and sags further: what happens to the tension in it, and why do engineers leave some sag on purpose?
+
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+Report the slope of your Part 1 fit with its standard error. The recorded forces carry 5 significant figures and the sag is given to 1 mm, so rounding alone changes $$1/d$$ by at most about 0.1% for the shallowest row; compare that with the size of your residuals. The model's own approximations are what matter more for a real chain: real links stretch a little under load, have some stiffness at each joint, and are not exactly uniform. Say which way stretching would shift your Part 1 points at the smallest sags.
 
 ## With calculus
 
@@ -99,4 +102,4 @@ For courses that use calculus. This section is not counted in the 75 minutes; do
 
 ## What to hand in
 
-Prelab answers, the two data tables with their graphs and fits, the slope of $$H$$ against $$1/d$$ compared with $$\lambda g\,\Delta x^2/8$$, the weight check, the slope of $$T_A - T_B$$ against $$y_A - y_B$$ compared with $$\lambda g$$, and answers to the questions (and to With calculus, if assigned). Identify simulated data.
+Prelab answers, the two data tables with their graphs and fits, the slope of $$H$$ against $$1/d$$ compared with $$\lambda g\,\Delta x^2/8$$, the weight check, the slope of $$T_A - T_B$$ against $$y_A - y_B$$ compared with $$\lambda g$$, and answers to the questions (and to Uncertainty and With calculus, if assigned). Identify simulated data.

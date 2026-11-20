@@ -72,14 +72,17 @@ Strong neodymium magnets snap together hard enough to pinch skin and shatter; ke
 3. For Part 3, graph the Capacitor voltage against Time for the first six rows (the light running alone). What voltage does it approach? Compare the energy given to the light with the drop in $$\tfrac12 CV^2$$. Explain from Part 2 why shaking at 3 per second cannot keep the light on, while 6 per second can.
 4. For Part 4, explain each observation from Faraday's law: why the still pen vanishes, why a faster swipe gives taller pulses, and how the number can still be read from an uneven swipe.
 
-## Uncertainty
-
-The model is exact and has no noise; the largest EMF depends a little on when in the cycle it is read, so read it after a few seconds of steady shaking. The magnet is treated as a point dipole, which overstates the flux when it is inside the coil; the diodes are given a fixed 0.30 V drop, and the coil's inductance is left out. A real flashlight also loses energy to friction and to the magnet bouncing at the ends.
-
 ## Questions
 
 1. Which capacitor had the higher Capacitor voltage at 60 s in Part 2, and is that what you expected in Before the lab 5? Use $$Q = CV$$ to explain it, and say which capacitor stores more energy at 60 s. Then say why a shake flashlight needs a capacitor (or battery) at all.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The model is exact and has no noise; the largest EMF depends a little on when in the cycle it is read, so read it after a few seconds of steady shaking. The magnet is treated as a point dipole, which overstates the flux when it is inside the coil; the diodes are given a fixed 0.30 V drop, and the coil's inductance is left out. A real flashlight also loses energy to friction and to the magnet bouncing at the ends.
+
 ## What to hand in
 
-Prelab answers, a Data table copy for each part, the graphs, your energy balance, your descriptions for Part 4, and answers to the questions. Identify simulated data.
+Prelab answers, a Data table copy for each part, the graphs, your energy balance, your descriptions for Part 4, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

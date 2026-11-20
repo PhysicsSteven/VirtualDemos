@@ -90,10 +90,6 @@ No hazards in the virtual lab.
 5. For the Sun, Betelgeuse and Rigel, compare the blackbody temperature with the surface temperature. For which star does the blackbody thermometer work best?
 6. Vega is an A star. A stars have surface temperatures between 7500 K and 10,000 K (read the **Spectral class** readout). What temperature does the blackbody thermometer give for Vega's B − V = 0? Is Vega bluer or redder than a blackbody at an A star's temperature? Hydrogen absorbs strongly in A stars in two ways: in lines inside the B filter, which take away blue light, and in the continuum beyond 365 nm, where it absorbs more strongly at longer wavelengths, so the V light escapes from higher, cooler layers. Which effect wins for Vega? Does Rigel, a hot B star, show the same?
 
-## Uncertainty
-
-The demo computes an ideal blackbody exactly, so repeated readings agree. A measured B − V is usually good to about 0.01 magnitude. Use the slope from Analysis 2 to find how big a temperature error 0.01 in B − V gives near 3000 K.
-
 ## Questions
 
 1. Cool stars like Betelgeuse have broad molecular absorption bands that take away more blue light than yellow green light. Which way do they push B − V? Does that agree with what you found for Betelgeuse in Analysis 5?
@@ -101,6 +97,13 @@ The demo computes an ideal blackbody exactly, so repeated readings agree. A meas
 3. Why do astronomers measure a color index instead of the peak wavelength of each star's spectrum?
 4. Your Part 1 readings include both doublings of Before the lab 5. How much did B − V change in each, and how much does the cool limit formula, with your slope from Analysis 2, give for the hot one? Use the Rayleigh–Jeans limit, $$B_\lambda \propto T/\lambda^4$$, to explain what you found, and why a color index cannot tell a 30,000 K star from a 50,000 K star.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The demo computes an ideal blackbody exactly, so repeated readings agree. A measured B − V is usually good to about 0.01 magnitude. Use the slope from Analysis 2 to find how big a temperature error 0.01 in B − V gives near 3000 K. Give the slope from Analysis 2, and the temperature it gives, with their standard errors.
+
 ## What to hand in
 
-Prelab answers, the data tables, the graphs with their fits, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.
+Prelab answers, the data tables, the graphs with their fits, the answers to the analysis section and to the questions (and to Uncertainty, if assigned). Identify simulated data.

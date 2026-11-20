@@ -68,16 +68,14 @@ VDI18N.add('es', 'ws/gas-thermometer', {
   "Gas n (mmol), fila {#}",
 "Pressure P (kPa), row {#}":
   "Presión P (kPa), fila {#}",
-"Fit \\(P\\) (vertical) against \\(T\\) (horizontal) for each of the two calibration copies. Find the temperature at which each line reaches \\(P = 0\\), with its uncertainty from the fit, and compare both with −{#} °C.":
-  "Ajusta \\(P\\) (vertical) en función de \\(T\\) (horizontal) para cada una de las dos copias de calibración. Encuentra la temperatura a la que cada recta llega a \\(P = 0\\), con su incertidumbre a partir del ajuste, y compara ambas con −{#} °C.",
+"Fit \\(P\\) (vertical) against \\(T\\) (horizontal) for each of the two calibration copies. Find the temperature at which each line reaches \\(P = 0\\), and compare both with −{#} °C.":
+  "Ajusta \\(P\\) (vertical) en función de \\(T\\) (horizontal) para cada una de las dos copias de calibración. Encuentra la temperatura a la que cada recta llega a \\(P = 0\\), y compara ambas con −{#} °C.",
 "From each slope find \\(R = (\\text{slope})\\,V/n\\) and compare it with {#} J/(mol·K).":
   "A partir de cada pendiente encuentra \\(R = (\\text{slope})\\,V/n\\) y compáralo con {#} J/(mol·K).",
 "Use your {#} mmol calibration line to find the mystery bath’s temperature.":
   "Usa tu recta de calibración de {#} mmol para encontrar la temperatura del baño misterioso.",
 "Convert all five known bath temperatures to kelvins and, for the {#} mmol run, plot \\(P\\) (vertical) against \\(T_\\mathrm{K}\\) (horizontal). What should the intercept be?":
   "Convierte a kelvin las cinco temperaturas de los baños conocidos y, para la corrida de {#} mmol, grafica \\(P\\) (vertical) en función de \\(T_\\mathrm{K}\\) (horizontal). ¿Cuál debería ser la ordenada al origen?",
-"The gauge reads to {#} kPa and the model has no noise, so the residuals of your fits show only rounding and whether you waited long enough. Estimate how far a reading taken too early (say at t = {#} s in this bath, after pressing a new bath) is from the settled value. In a real gas thermometer the bulb expands a little when heated and the gas departs from the ideal gas law; say how each would bend your line.":
-  "El manómetro lee con precisión de {#} kPa y el modelo no tiene ruido, así que los residuos de tus ajustes muestran solo el redondeo y si esperaste lo suficiente. Estima qué tan lejos del valor estabilizado está una lectura tomada demasiado pronto (por ejemplo en t = {#} s en este baño, después de pulsar un baño nuevo). En un termómetro de gas real el bulbo se dilata un poco al calentarse y el gas se aparta de la ley del gas ideal; di cómo curvaría tu recta cada efecto.",
 "Why is it reasonable to call −{#} °C the lowest possible temperature, even though no gas stays a gas that cold?":
   "¿Por qué es razonable llamar a −{#} °C la temperatura más baja posible, aunque ningún gas siga siendo gas a esa temperatura?",
 "Both lines met the axis at the same temperature. What does the amount of gas change?":
@@ -88,8 +86,12 @@ VDI18N.add('es', 'ws/gas-thermometer', {
   "¿Cuál es la temperatura del nitrógeno líquido en ebullición en kelvin y en grados Fahrenheit?",
 "Divide your {#} mmol Boiling water pressure by your Room air pressure. Is the ratio the one you chose in Before the lab {#}? Explain the ratio from the ideal gas law, and say what a ratio of two temperatures has to be measured from for it to predict a ratio of pressures.":
   "Divide tu presión de {#} mmol en Agua hirviendo entre tu presión en Aire de la habitación. ¿Es la razón la que elegiste en Antes del laboratorio {#}? Explica la razón a partir de la ley del gas ideal, y di desde dónde hay que medir una razón de dos temperaturas para que prediga una razón de presiones.",
-"Prelab answers, both table copies with their graphs and fits, your values of absolute zero and \\(R\\), the mystery bath temperature with its uncertainty, and answers to the questions. Identify simulated data.":
-  "Respuestas previas al laboratorio, ambas copias de la tabla con sus gráficas y ajustes, tus valores del cero absoluto y de \\(R\\), la temperatura del baño misterioso con su incertidumbre, y las respuestas a las preguntas. Identifica los datos simulados.",
+"For courses that treat measurement uncertainty. This section is not counted in the {#} minutes; do it when your instructor assigns it.":
+  "Para cursos que tratan la incertidumbre de medición. Esta sección no cuenta dentro de los {#} minutos; hazla cuando tu profesor la asigne.",
+"The gauge reads to {#} kPa and the model has no noise, so the residuals of your fits show only rounding and whether you waited long enough. Estimate how far a reading taken too early (say at t = {#} s in this bath, after pressing a new bath) is from the settled value. In a real gas thermometer the bulb expands a little when heated and the gas departs from the ideal gas law; say how each would bend your line. Give the temperature at which each line reaches \\(P = 0\\) with its uncertainty from the fit, and the mystery bath temperature with its uncertainty.":
+  "El manómetro lee con precisión de {#} kPa y el modelo no tiene ruido, así que los residuos de tus ajustes muestran solo el redondeo y si esperaste lo suficiente. Estima qué tan lejos del valor estabilizado está una lectura tomada demasiado pronto (por ejemplo en t = {#} s en este baño, después de pulsar un baño nuevo). En un termómetro de gas real el bulbo se dilata un poco al calentarse y el gas se aparta de la ley del gas ideal; di cómo curvaría tu recta cada efecto. Da la temperatura a la que cada recta llega a \\(P = 0\\) con su incertidumbre a partir del ajuste, y la temperatura del baño misterioso con su incertidumbre.",
+"Prelab answers, both table copies with their graphs and fits, your values of absolute zero and \\(R\\), the mystery bath temperature, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.":
+  "Respuestas previas al laboratorio, ambas copias de la tabla con sus gráficas y ajustes, tus valores del cero absoluto y de \\(R\\), la temperatura del baño misterioso, y las respuestas a las preguntas (y de Incertidumbre, si se asigna). Identifica los datos simulados.",
 "Bath temperature":
   "Temperatura del baño",
 "Temperature in degrees Celsius":

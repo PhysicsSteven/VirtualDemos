@@ -45,7 +45,7 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**Part 1: dating Mars.** (1) In Count craters, choose each of these Martian setups in turn: Southern highlands, Northern plains, Tharsis lava plains and Olympus Mons caldera. Leave Count craters at least this wide where the setup puts it. (2) In the Flat view, click every crater at least as wide as the purple circle whose center lies inside the square (click again to unmark; Craters you marked counts them), then press Record reading. Do the Uncertainty step while Olympus Mons caldera is still marked. (3) After all four, press Export to worksheet (the first Data table), then Clear.
+**Part 1: dating Mars.** (1) In Count craters, choose each of these Martian setups in turn: Southern highlands, Northern plains, Tharsis lava plains and Olympus Mons caldera. Leave Count craters at least this wide where the setup puts it. (2) In the Flat view, click every crater at least as wide as the purple circle whose center lies inside the square (click again to unmark; Craters you marked counts them), then press Record reading. (3) After all four, press Export to worksheet (the first Data table), then Clear.
 
 **Part 2: the same asteroid on Mars and the Moon.** (1) In Make a crater, choose the setup A 500 m asteroid (Moon) (Dense rock, 3000 kg/m³, at 45°) and set the Asteroid diameter L slider to 1 km (its readout shows 1.00 km). (2) Choose Mars as the Target: Speed v jumps to 10 km/s. Press Record reading. (3) Set Speed v to 18 km/s and record. (4) Choose Moon as the Target (Speed v stays at 18 km/s) and record. The crater redraws as soon as you change a setting; if you press Drop it, wait for the crater to finish forming before you record. (5) Press Export to worksheet (the second Data table), then Clear.
 
@@ -80,10 +80,6 @@ No hazards in the virtual lab.
 5. From Part 2, how many times smaller is the crater on Mars at 18 km/s than on the Moon at 18 km/s (divide the Moon's crater diameter by Mars's)? Explain using gravity. Then divide the crater diameter for Mars at 18 km/s by the one at 10 km/s. Mars's stronger gravity and a slower impact both make a smaller crater: which of the two makes the bigger difference?
 6. From Part 3, how did the cold lid of Mars change from 0.5 to 4.5 billion years? Compare Mars's lid today with the Moon's and Earth's.
 
-## Uncertainty
-
-A count of N craters is uncertain by about √N. For your count on the Olympus Mons caldera, work out √N and the age the clock gives for N + √N and N − √N craters: with your Olympus Mons caldera marks still showing, mark √N more craters (any craters will do) and read Age from your count, then unmark until N − √N are marked and read it again. The Martian clock itself is uncertain by up to about a factor of 2 for young surfaces and by a few hundred million years for old ones. Which matters more for the Olympus Mons caldera, the counting or the clock? Which for the southern highlands?
-
 ## Questions
 
 1. Mars is bigger than the Moon but smaller than Earth. Use your Part 3 results to explain why Mars had volcanoes long after the Moon's maria stopped erupting, while Earth still has them today.
@@ -91,6 +87,13 @@ A count of N craters is uncertain by about √N. For your count on the Olympus M
 3. The demo's surfaces are simulated from the same clock you read the ages from. What part of this lab still tells you something real about Mars?
 4. How wide was the crater in your first Part 2 reading (Mars, 10 km/s), and how close was your estimate in Before the lab 4? Explain why an asteroid makes a crater many times its own width: think about how much energy of motion it carries at 10 km/s and what that energy does to the rock it hits.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+A count of N craters is uncertain by about √N. For your count on the Olympus Mons caldera, work out √N and the age the clock gives for N + √N and N − √N craters. Do this right after you record that count, before you choose the next surface, or choose Olympus Mons caldera again and mark your N craters again. Mark √N more craters (any craters will do) and read Age from your count, then unmark until N − √N are marked and read it again. The Martian clock itself is uncertain by up to about a factor of 2 for young surfaces and by a few hundred million years for old ones. Which matters more for the Olympus Mons caldera, the counting or the clock? Which for the southern highlands?
+
 ## What to hand in
 
-Prelab answers, the three tables, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.
+Prelab answers, the three tables, the answers to the analysis section and to the questions (and to Uncertainty, if assigned). Identify simulated data.

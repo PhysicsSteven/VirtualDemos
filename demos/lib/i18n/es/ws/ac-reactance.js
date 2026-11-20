@@ -90,16 +90,18 @@ VDI18N.add('es', 'ws/ac-reactance', {
   "Da la fase para cada componente. ¿Qué corriente se adelanta al voltaje y cuál se atrasa, y por cuánto? Explica cada signo a partir de \\(i = C\\,dv/dt\\) y \\(v = L\\,di/dt\\).",
 "At what frequency would the {#} µF capacitor and the {#} mH inductor have the same reactance? Check it on the Reactance graph (Graphs, Reactance) with Blind off.":
   "¿A qué frecuencia tendrían la misma reactancia el capacitor de {#} µF y el inductor de {#} mH? Compruébalo en la gráfica de Reactancia (Gráficas, Reactancia) con A ciegas desactivado.",
-"The current has four significant figures and the phase is given to {#}°. How large is the rounding of \\(X\\) compared with the scatter of your points about the line? Use the standard errors of the slopes for \\(C\\) and \\(L\\).":
-  "La corriente tiene cuatro cifras significativas y la fase se da a {#}°. ¿Qué tan grande es el redondeo de \\(X\\) comparado con la dispersión de tus puntos alrededor de la recta? Usa los errores estándar de las pendientes para \\(C\\) y \\(L\\).",
 "What did the ammeter show in your {#} Hz reading of Part {#}, and is that what you expected in Before the lab {#}? Charge never crosses the insulator between the plates: use \\(i = C\\,dv/dt\\) to explain how current can flow in the wires anyway. Then, why is a capacitor said to block direct current but pass high frequencies, and an inductor the opposite?":
   "¿Qué mostró el amperímetro en tu lectura de {#} Hz de la Parte {#}, y es lo que esperabas en Antes del laboratorio {#}? La carga nunca cruza el aislante entre las placas: usa \\(i = C\\,dv/dt\\) para explicar cómo puede fluir corriente en los alambres de todos modos. Luego, ¿por qué se dice que un capacitor bloquea la corriente directa pero deja pasar las frecuencias altas, y un inductor lo contrario?",
 "In Part {#}, how did the peak current compare with the ammeter reading? Why do AC meters read rms values rather than peaks?":
   "En la Parte {#}, ¿cómo se comparó la corriente pico con la lectura del amperímetro? ¿Por qué los medidores de CA leen valores rms en lugar de picos?",
 "Pick Power in time (Graphs) with the capacitor or the inductor alone. What is the average power? Where does the energy go during each quarter cycle?":
   "Elige Potencia en el tiempo (Gráficas) con el capacitor o el inductor solo. ¿Cuál es la potencia promedio? ¿Adónde va la energía durante cada cuarto de ciclo?",
-"Prelab answers, the three data tables with the two graphs, \\(C\\) and \\(L\\) with uncertainties, the phases, and answers to the questions. Identify simulated data.":
-  "Respuestas del prelaboratorio, las tres tablas de datos con las dos gráficas, \\(C\\) y \\(L\\) con incertidumbres, las fases, y respuestas a las preguntas. Identifica los datos simulados.",
+"For courses that treat measurement uncertainty. This section is not counted in the {#} minutes; do it when your instructor assigns it.":
+  "Para cursos que tratan la incertidumbre de medición. Esta sección no cuenta dentro de los {#} minutos; hazla cuando tu profesor la asigne.",
+"The current has four significant figures and the phase is given to {#}°. How large is the rounding of \\(X\\) compared with the scatter of your points about the line? Report \\(C\\) and \\(L\\) with the standard errors of the slopes, and say whether the intercept of the capacitor line is zero within its standard error and whether each result agrees with the value set on the part within its standard error.":
+  "La corriente tiene cuatro cifras significativas y la fase se da a {#}°. ¿Qué tan grande es el redondeo de \\(X\\) comparado con la dispersión de tus puntos alrededor de la recta? Informa \\(C\\) y \\(L\\) con los errores estándar de las pendientes, y di si la ordenada al origen de la recta del capacitor es cero dentro de su error estándar y si cada resultado coincide con el valor fijado en la parte dentro de su error estándar.",
+"Prelab answers, the three data tables with the two graphs, \\(C\\) and \\(L\\), the phases, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.":
+  "Respuestas del prelaboratorio, las tres tablas de datos con las dos gráficas, \\(C\\) y \\(L\\), las fases, y respuestas a las preguntas (y de Incertidumbre, si se asigna). Identifica los datos simulados.",
 "Peak current":
   "Corriente pico",
 "rms current":

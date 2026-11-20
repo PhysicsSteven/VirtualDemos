@@ -79,15 +79,18 @@ In the Power line rows, $$V_P$$ is the 12 kV generator, $$V_S$$ is the transmiss
 3. For Part 2, compare each $$V_S$$ with the ideal 12 V and each power out with the power in, and work out the efficiency. With no load, how large is the primary current, what is its phase from $$v_P$$, and how much power does it take? Why?
 4. Graph the line loss (vertical) against $$1/V_S^2$$ (horizontal) for Part 3 and fit a straight line. Compare the slope with $$P^2R$$. What share of the 10 MW is lost at 69 kV, and at 765 kV? Explain what the demo shows for Example 15.6 at 240 V.
 
-## Uncertainty
-
-The meters show four significant figures and the recorded readings carry six, and the ideal model has no other uncertainty, so your slopes in Analysis 1 and 4 should match the predictions closely; say how closely, using the standard errors of your fits. The real model rests on stated choices (core permeability, wire, coupling) that a real transformer would only approximate: name one that would most change your Part 2 results, and in which direction.
-
 ## Questions
 
 1. Since the line loss falls as $$1/V^2$$, why are power lines not run at even higher voltages?
 2. Follow the $$I_P$$ column of your Part 2 table from no load to the 10 Ω and 2 Ω loads. Does it match your answer to Before the lab 4? The two coils are not connected by any wire: use Lenz's law and the flux in the core to explain what the primary current did, and say where the power delivered to the load comes from.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The meters show four significant figures and the recorded readings carry six, and the ideal model has no other uncertainty, so your slopes in Analysis 1 and 4 should match the predictions closely; say how closely, using the standard errors of your fits. The real model rests on stated choices (core permeability, wire, coupling) that a real transformer would only approximate: name one that would most change your Part 2 results, and in which direction.
+
 ## What to hand in
 
-Prelab answers, the settings for each part, the table copies with their graphs and fits, the comparisons in the Analysis, the efficiencies, and answers to the questions. Identify simulated data.
+Prelab answers, the settings for each part, the table copies with their graphs and fits, the comparisons in the Analysis, the efficiencies, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

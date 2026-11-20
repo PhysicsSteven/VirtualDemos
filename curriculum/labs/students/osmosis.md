@@ -133,10 +133,6 @@ The link at the top opens the demo in Diffusion mode. Open **Lab** (below the Re
 5. Fit a straight line to $$V$$ against $$1000/c_\text{out}$$ in Table 3. What is the intercept, $$V_s$$? What fraction of the cell's normal volume (its volume in 0.9 % saline) is that?
 6. In pure water the cell can swell only to the sphere its area allows (your reading in Part 3 step 1). Use your line to find the outside concentration at which the cell's volume reaches that sphere, in mOsm/L, and the saline strength that gives it: % NaCl = $$c_\text{out} \times 58.44 / 20{,}000$$. Then press the **0.45%** chip and Play: does the cell burst, as your answer says it should?
 
-## Uncertainty
-
-The molecules in Part 1 are simulated, 1600 of them, so $$x_\text{rms}^2$$ scatters by a few percent about $$2Dt$$; your readings also share the same molecules, so they scatter together. From the standard error of your slope, how well does your $$D$$ agree with the demo's value? In Part 2 each piston reading is up to one step (0.05 kPa) above the true osmotic pressure. Explain why that moves the intercept of your line but hardly changes its slope.
-
 ## Questions
 
 1. From your $$D$$ for glucose, how long does it take glucose to spread 1 cm by diffusion alone? Give the answer in hours. Why do we stir sugar into tea?
@@ -144,6 +140,15 @@ The molecules in Part 1 are simulated, 1600 of them, so $$x_\text{rms}^2$$ scatt
 3. Your prediction (Before the lab 4) against what you saw in Part 3 step 1: what was the cell's volume when it burst, and why could it not swell further? Explain with the membrane's area and the largest volume that area can hold.
 4. Intravenous drips use 0.9 % saline. Using your Table 3, explain what would happen to red cells if a drip were pure water, and what if it were 3 % saline.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The molecules in Part 1 are simulated, 1600 of them, so $$x_\text{rms}^2$$ scatters by a few percent about $$2Dt$$; your readings also share the same molecules, so they scatter together. From the standard error of your slope, how well does your $$D$$ agree with the demo's value? In Part 2 each piston reading is up to one step (0.05 kPa) above the true osmotic pressure. Explain why that moves the intercept of your line but hardly changes its slope.
+
+Give each slope and intercept from your fits with its standard error, for glucose and hemoglobin in Part 1, for sugar in Part 2, and for the cell volume line in Part 3, and say whether each intercept is zero within its standard error and whether $$R$$ agrees with 8.314 J/(mol·K) within its standard error.
+
 ## What to hand in
 
-Your answers to Before the lab, the three Data tables with their graphs and fits, your answers to Analysis, Uncertainty and Questions. Say that your data came from the simulated apparatus.
+Your answers to Before the lab, the three Data tables with their graphs and fits, your answers to Analysis and Questions (and to Uncertainty, if assigned). Say that your data came from the simulated apparatus.

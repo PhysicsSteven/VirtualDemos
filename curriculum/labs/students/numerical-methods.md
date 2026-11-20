@@ -106,16 +106,19 @@ Table 3. Pendulum from 90°, two periods.
 5. From Table 3, which errors shrink as N grows, and by roughly what factor from N = 50 to N = 500? Is Euler's largest error consistent with first order there?
 6. The exact period you read in step C is 18% longer than $$2\pi\sqrt{L/g}$$, and every method that stays on the dashed bob shows the same period at every N. Which features of the runs in step C are physics, and which are errors of a method? Give the evidence for each.
 
-## Uncertainty
-
-The demo's numbers are not measurements: the same settings give the same digits every time, so there is no random scatter to average away. Differences between your observed orders and 1, 2 or 4 come from the departure from a single power law at large h, not from noise; they shrink as h does. At very small errors rounding sets a floor: double precision keeps about 16 significant digits, so RK4 at small h cannot be followed far below 10⁻¹². Say which rows you trust for each method's order and why.
-
 ## Questions
 
 1. Draw one Euler step for a block passing x = 0 at its top speed, and use the picture to explain why Euler always lands outside the exact circle on the phase portrait, so its energy grows.
 2. A classmate's simulation of a satellite shows the orbit slowly growing over months. Describe two checks, with the demo's tools in mind, that tell whether this is real physics (a thrust, say) or the method.
 3. Simulations of planets over millions of years and of molecules over millions of steps usually use Verlet, not RK4, even though RK4 is more accurate per step. Use your Table 2 to explain why, and say whether your guess in Before the lab 4 held.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The demo's numbers are not measurements: the same settings give the same digits every time, so there is no random scatter to average away. Differences between your observed orders and 1, 2 or 4 come from the departure from a single power law at large h, not from noise; they shrink as h does. At very small errors rounding sets a floor: double precision keeps about 16 significant digits, so RK4 at small h cannot be followed far below 10⁻¹². Say which rows you trust for each method's order and why.
+
 ## What to hand in
 
-Before the lab answers, the three data tables, the log–log graph of Table 1, the observed orders, and your answers to the Analysis and Questions. Say that the data are computed by the demo, not measured.
+Before the lab answers, the three data tables, the log–log graph of Table 1, the observed orders, and your answers to the Analysis and Questions (and to Uncertainty, if assigned). Say that the data are computed by the demo, not measured.

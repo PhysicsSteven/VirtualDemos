@@ -75,15 +75,18 @@ Part 1 goes in the first copy of the table and Part 2 in the second. Fill in the
 4. From the line, find the capacitance that makes $$\sin\phi = 0$$, so the power factor is 1. Compare it with $$X_L/[\omega(R^2 + X_L^2)]$$.
 5. How did $$P_{\rm ave}$$ change as the capacitance changed, and how did A2 change? Explain both.
 
-## Uncertainty
-
-The phase is rounded to 0.1° and the current to four significant figures. Estimate the largest error these give in $$I_{\rm rms}\sin\phi$$, and compare it with the scatter about your line. Use the standard errors of the fit for the slope and for the capacitance of part 4.
-
 ## Questions
 
 1. Was Before the lab 4 right about the bulb? Check it against the smallest $$p$$ you read in Part 1, and use $$p = vi$$ to explain the sign of the power into a resistor while its current reverses. Then, in Part 3, describe $$p(t)$$ for L1 and C1. Does each take energy all the time, or take it and give it back? Give the average for each.
 2. Suppose the wires from the source to the load have a resistance of 0.50 Ω in all. Ignoring the small change they would make to the current, find the power lost in them with S1 open and with C1 = 100 µF switched in.
 3. What happens to the phase and the source current when C1 is larger than the value from Analysis 4? Is that better or worse than leaving S1 open?
+
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The phase is rounded to 0.1° and the current to four significant figures. Estimate the largest error these give in $$I_{\rm rms}\sin\phi$$, and compare it with the scatter about your line. Use the standard errors of the fit for the slope and for the capacitance of part 4.
 
 ## With calculus
 
@@ -94,4 +97,4 @@ For courses that use calculus. This section is not counted in the 75 minutes; do
 
 ## What to hand in
 
-Prelab answers, both data tables and the graph, the slope and the capacitance for unit power factor with uncertainties, and answers to the questions (and to With calculus, if assigned). Identify simulated data.
+Prelab answers, both data tables and the graph, the slope and the capacitance for unit power factor, and answers to the questions (and to Uncertainty and With calculus, if assigned). Identify simulated data.

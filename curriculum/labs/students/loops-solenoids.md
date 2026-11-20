@@ -82,14 +82,17 @@ Before each part, predict what you will see. Then measure.
 3. For Part 3, divide each central field by $$\mu_0 n I$$ (here $$n = N/L$$ = 125 turns per meter in every row) and compare with $$L/\sqrt{L^2 + 4R^2}$$. Find the ratio of the end field to the central field for each length. How long, compared with its radius, must a solenoid be for its central field to be within 1% of $$\mu_0 n I$$?
 4. For Part 4, how uniform is the field across the middle of the solenoid, and how large is it outside compared with inside? How does the field change along the axis toward the end? Which of the facts used in the Ampère's law argument hold here, and which only nearly hold?
 
-## Uncertainty
-
-The model has no noise: fields are the exact sum over the turns, given to five significant figures. The approximations are in the formulas you compare with. A real winding has a wire of finite thickness, wound as a helix rather than as separate rings, so a real solenoid also carries current along its length and has a weak field outside like that of a single straight wire. Probe positions are set to 0.1 cm; near the wires the field changes fast, so a small error in position gives a large error in field there.
-
 ## Questions
 
 1. A toroid is a solenoid bent into a ring, with $$N$$ turns. Use Ampère's law with a circle of radius $$r$$ inside the ring to find its field. Why is there no end effect?
 2. How did the central field at 1.5 cm compare with the one at 3.0 cm, and with what you expected in Before the lab 5? Use the Ampère's law argument of Before the lab 4 to explain why the radius has the effect it does, and why a single loop behaves differently. Then: an MRI magnet makes 1.5 T inside a long winding. How many ampere turns per meter does that need, and why are such magnets superconducting?
+
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+Report the slope and intercept of your Part 1 fit with their uncertainties. The model has no noise: fields are the exact sum over the turns, given to five significant figures. The approximations are in the formulas you compare with. A real winding has a wire of finite thickness, wound as a helix rather than as separate rings, so a real solenoid also carries current along its length and has a weak field outside like that of a single straight wire. Probe positions are set to 0.1 cm; near the wires the field changes fast, so a small error in position gives a large error in field there.
 
 ## With calculus
 
@@ -101,4 +104,4 @@ For courses that use calculus. This section is not counted in the 75 minutes; do
 
 ## What to hand in
 
-Prelab answers, a Data table copy for each part, the graphs and fits, your value of $$\mu_0$$, the comparisons of Analysis items 2 and 3, and answers to the questions (and to With calculus, if assigned). Identify simulated data.
+Prelab answers, a Data table copy for each part, the graphs and fits, your value of $$\mu_0$$, the comparisons of Analysis items 2 and 3, and answers to the questions (and to Uncertainty and With calculus, if assigned). Identify simulated data.

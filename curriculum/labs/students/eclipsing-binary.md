@@ -77,10 +77,6 @@ Press **Two stars** at the top of the panel and leave **Noise** at 0. Press **Pa
 3. From Part 2, find both radii from the contact times. Which eclipse is total and which is annular (the smaller star in front of the larger)?
 4. Use the brightness at the middle of the total eclipse to find $$L_2/L_1$$, then $$T_2$$ from $$T_1$$ and the radii.
 
-## Uncertainty
-
-For the Sun and red dwarf, compare your masses and radii with the slider values; the radii come out slightly large because the stars cross on a curved path, not a straight line, so say by how much.
-
 ## Questions
 
 1. Choose Partial eclipses. Why can't you find both radii from its contact times alone?
@@ -88,6 +84,13 @@ For the Sun and red dwarf, compare your masses and radii with the slider values;
 3. Choose Twin stars. Why are both eclipses exactly half the light deep?
 4. The Sun and red dwarf again: the brightness at the middle of each eclipse in Part 2 decides Before the lab 4. How deep was each dip, and which was deeper? Explain the difference from what is hidden in each eclipse and how bright each star's surface is, and say whether it agrees with your temperatures.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+For the Sun and red dwarf, compare your masses and radii with the slider values; the radii come out slightly large because the stars cross on a curved path, not a straight line, so say by how much.
+
 ## What to hand in
 
-Prelab answers, the table copies with their graphs, K₁, K₂, γ and the period, both masses, both radii and $$T_2$$ with their percent errors against the slider values, and answers to the questions. Identify simulated data: every reading in this lab is simulated.
+Prelab answers, the table copies with their graphs, K₁, K₂, γ and the period, both masses, both radii and $$T_2$$ with their percent errors against the slider values, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data: every reading in this lab is simulated.

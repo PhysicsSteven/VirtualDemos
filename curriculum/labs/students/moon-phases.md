@@ -75,15 +75,20 @@ No hazards in the virtual lab.
 5. The line of nodes angle jumps by 360° when it passes −180°. Subtract 360° from the angles after the jump, then graph the angle (vertical) against the Time from start column (across). From the slope, find how long it takes the Sun to come back to the same node (the eclipse year).
 6. Show that for three of your readings (one new moon, one full moon and one more) the size of $$\beta$$ is $$5.145° \sin d$$, where $$d$$ is the Sun's distance from the nearest node (the Sun to nearest node column; $$\beta$$ is in the Moon above ecliptic column). Use this to find how close to a node the Sun must be for a solar eclipse to be possible at new moon, and for an umbral lunar eclipse at full moon.
 
-## Uncertainty
-
-The demo's readings are exact for its model, so repeating a reading gives the same numbers. The uncertainty is in the model. The real Moon's orbit is elliptical, so a real new moon can come up to about 14 hours early or late; rise times shift by an hour or more with latitude and the Moon's tilted orbit. Which of your results would change most for the real Moon: the synodic month averaged over many months, the moonrise times, or the dates of the eclipse seasons? Explain.
-
 ## Questions
 
 1. A friend says they saw a thin crescent moon high in the south at midnight. Could they be right? Use your moonrise and moonset times to decide.
 2. How did your answer to Before the lab 4 hold up against the eclipse year you found in Analysis 5? The Sun moves 360° along the ecliptic in 365.26 d: use your slope to find which way the line of nodes itself turns, and by how many degrees a year. How far apart are the eclipse seasons, and does each year's pair come earlier or later in the calendar than the year before?
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The demo's readings are exact for its model, so repeating a reading gives the same numbers. The uncertainty is in the model. The real Moon's orbit is elliptical, so a real new moon can come up to about 14 hours early or late; rise times shift by an hour or more with latitude and the Moon's tilted orbit. Which of your results would change most for the real Moon: the synodic month averaged over many months, the moonrise times, or the dates of the eclipse seasons? Explain.
+
+Give each fitted slope and intercept with its standard error, and give the synodic month and the eclipse year with their uncertainties.
+
 ## What to hand in
 
-Prelab answers, the table copies with their graphs and fits, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.
+Prelab answers, the table copies with their graphs and fits, the answers to the analysis section and to the questions (and to Uncertainty, if assigned). Identify simulated data.

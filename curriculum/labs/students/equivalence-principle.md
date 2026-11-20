@@ -96,16 +96,19 @@ Now set the rocket's acceleration yourself: click the **Rocket's acceleration** 
 3. How many times bigger is the drop at 10¹⁵ g than at g? Is that what $$\text{drop} = \tfrac12 a(L/c)^2$$ says it should be?
 4. How long would relativity alone take to turn Mercury's orbit all the way round? Use the demo's relativity per century.
 
-## Uncertainty
-
-Sobral measured 1.98″ with an uncertainty of ±0.12″, so its true value probably lies between 1.86″ and 2.10″. Work out the same range for Príncipe (±0.30″). Which range contains Einstein's value, and which contains Newton's? Do the same for Mercury: the observed turning has an uncertainty of ±0.65″ a century. Does Einstein's relativity per century fall inside the range of Observed − planets?
-
 ## Questions
 
 1. Someone locked in a windowless rocket speeding up at 9.81 m/s² insists they are standing on Earth. Using your 9.81 m/s² row, is there anything they could do with the ball and the scale to prove otherwise?
 2. In Part 3, from outside the box the light goes straight; from inside it curves down. Explain how the equivalence principle turns this into the prediction that the Sun bends starlight, and why the 1919 astronomers needed an eclipse to see it.
 3. Return to Before the lab 4. In Falling is floating, what did both scales read, and how did the falling room on Earth compare with your 0 m/s² row (the rocket coasting in empty space)? Use that to explain why astronauts on the space station float even though gravity there is about 90% as strong as on the ground, and say whether your prediction matched.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+Sobral measured 1.98″ with an uncertainty of ±0.12″, so its true value probably lies between 1.86″ and 2.10″. Work out the same range for Príncipe (±0.30″). Which range contains Einstein's value, and which contains Newton's? Do the same for Mercury: the observed turning has an uncertainty of ±0.65″ a century. Does Einstein's relativity per century fall inside the range of Observed − planets? Give the slope and intercept of your rocket scale graph with their uncertainties. Give the slope and intercept of your rocket scale graph with their uncertainties.
+
 ## What to hand in
 
-Prelab answers, both tables with the graph, its slope and intercept, and answers to the analysis, the uncertainty and the questions. Identify simulated data: the room and light readings come from the model in the demo; the 1919 and Mercury values are published measurements.
+Prelab answers, both tables with the graph, its slope and intercept, and answers to the analysis and the questions (and to Uncertainty, if assigned). Identify simulated data: the room and light readings come from the model in the demo; the 1919 and Mercury values are published measurements.

@@ -82,15 +82,20 @@ No hazards in the virtual lab.
 4. Use the Leavitt law to find $$M_V$$, then the distance modulus and the distance to the Large Magellanic Cloud. Compare with the measured 49.6 kpc (Pietrzyński et al. 2019).
 5. From Part 2, graph $$\sigma_V$$ (vertical) against the aperture radius (horizontal). Which radius gives the smallest uncertainty? Does V itself change with the radius?
 
-## Uncertainty
-
-Compare the scatter of your V points about the fitted curve with the uncertainties $$\sigma_V$$ the demo gives. Remember that real Cepheids of one period also differ by about 0.1 mag in $$M_V$$, the width of the instability strip, so one Cepheid gives the distance only to about 5%.
-
 ## Questions
 
 1. A comparison star that is itself slightly variable would do what to the light curve?
 2. How did your choice in Before the lab 5 compare with Part 2? Use the variance $$\sigma^2 = N + n_{\text{pix}}(\text{sky} + 5^2)$$ from Photon noise to explain where the best radius falls, and explain what V itself did as the radius grew.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+Compare the scatter of your V points about the fitted curve with the uncertainties $$\sigma_V$$ the demo gives. Remember that real Cepheids of one period also differ by about 0.1 mag in $$M_V$$, the width of the instability strip, so one Cepheid gives the distance only to about 5%.
+
+Give the period and the mean V from the sine fit with their uncertainties, and say whether the two periods from Analysis 2 agree within them.
+
 ## What to hand in
 
-Prelab answers, the table copies with their graphs and fits, the period and mean V with their uncertainties, the distance to the Large Magellanic Cloud, the comparison of the aperture sizes, and answers to the questions. Identify simulated data: the CCD images and the Cepheid's light curve are simulated.
+Prelab answers, the table copies with their graphs and fits, the period and mean V, the distance to the Large Magellanic Cloud, the comparison of the aperture sizes, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data: the CCD images and the Cepheid's light curve are simulated.

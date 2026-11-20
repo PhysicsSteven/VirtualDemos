@@ -77,15 +77,18 @@ The last two columns are for Part 1 only. Write the flight times T from Part 2 b
 4. For Part 3, make a graph of $$R$$ (vertical) against $$\theta$$ (horizontal), and draw a smooth curve through the points. At which angle is the range longest? Which pairs of angles give the same range?
 5. Work out $$R = v_0^2 \sin 2\theta / g$$ for each angle in Part 3 and compare with your measured ranges.
 
-## Uncertainty
-
-The demo gives positions and ranges to 1 cm and times to 0.01 s, so a slope from several points is good to about three significant figures. A difference between your $$g$$ and 9.81 m/s² smaller than that rounding is not a real difference. With air resistance on, the results would change: a real ball would fall short of these ranges.
-
 ## Questions
 
 1. Look back at your guess in Before the lab 4. What flight times did the shots at 2 m/s and 20 m/s have? Use the separate sideways and up and down motions to explain the result: what does the sideways speed change, and what does it not change?
 2. A soccer player can kick at 15° or at 75° and get the same range. Which kick stays in the air longer? Use your Part 3 shots (the Shots list gives T) or the formulas to explain why a goalkeeper might prefer one of them.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The demo gives positions and ranges to 1 cm and times to 0.01 s, so a slope from several points is good to about three significant figures. A difference between your $$g$$ and 9.81 m/s² smaller than that rounding is not a real difference. Give the slope in Analysis 2 and your $$g$$ with their uncertainties, and say whether your $$g$$ agrees with 9.81 m/s² within them. With air resistance on, the results would change: a real ball would fall short of these ranges.
+
 ## What to hand in
 
-Prelab answers, the three copies of the Data table with the last two columns filled in for Part 1, the flight times from Part 2, the four graphs, and answers to the questions. Identify simulated data.
+Prelab answers, the three copies of the Data table with the last two columns filled in for Part 1, the flight times from Part 2, the four graphs, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

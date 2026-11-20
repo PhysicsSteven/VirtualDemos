@@ -76,26 +76,30 @@ VDI18N.add('es', 'ws/speed-of-light', {
   "D (m), fila {#}",
 "B (m), row {#}":
   "B (m), fila {#}",
-"Graph the micrometer reading \\(s\\) (vertical) against the signed speed \\(f\\) (horizontal, CCW negative) for the {#} m bench and fit a straight line. From the slope find \\(c\\), with its uncertainty from the slope.":
-  "Grafica la lectura del micrómetro \\(s\\) (vertical) en función de la rapidez con signo \\(f\\) (horizontal, CCW negativa) para el banco de {#} m y ajusta una recta. A partir de la pendiente encuentra \\(c\\), con su incertidumbre a partir de la pendiente.",
+"Graph the micrometer reading \\(s\\) (vertical) against the signed speed \\(f\\) (horizontal, CCW negative) for the {#} m bench and fit a straight line. From the slope find \\(c\\).":
+  "Grafica la lectura del micrómetro \\(s\\) (vertical) en función de la rapidez con signo \\(f\\) (horizontal, CCW negativa) para el banco de {#} m y ajusta una recta. A partir de la pendiente encuentra \\(c\\).",
 "Compare the intercept with your reading at rest. Do the residuals show any difference between the two directions?":
   "Compara la ordenada al origen con tu lectura en reposo. ¿Muestran los residuos alguna diferencia entre los dos sentidos?",
 "Use the CW and CCW readings at {#} rev/s alone: \\(c = \\frac{4AD^2 \\cdot 2\\pi(f_\\mathrm{CW} + f_\\mathrm{CCW})}{(D + B)\\,\\lvert s_\\mathrm{CW} - s_\\mathrm{CCW} \\rvert}\\), with both speeds as positive meter readings. Does it agree with the fit?":
   "Usa solo las lecturas CW y CCW a {#} rev/s: \\(c = \\frac{4AD^2 \\cdot 2\\pi(f_\\mathrm{CW} + f_\\mathrm{CCW})}{(D + B)\\,\\lvert s_\\mathrm{CW} - s_\\mathrm{CCW} \\rvert}\\), con ambas rapideces como lecturas positivas del medidor. ¿Concuerda con el ajuste?",
 "Find \\(c\\) from the {#} m run. By what factor did the slope grow from {#} m to {#} m? Compare with the factor \\(A D^2/(D + B)\\) predicts.":
   "Encuentra \\(c\\) a partir de la corrida de {#} m. ¿En qué factor creció la pendiente de {#} m a {#} m? Compáralo con el factor que predice \\(A D^2/(D + B)\\).",
-"Compare your values of \\(c\\) with the exact value. Which run gives the more precise result, and why?":
-  "Compara tus valores de \\(c\\) con el valor exacto. ¿Qué corrida da el resultado más preciso, y por qué?",
-"How precisely can you center the crosshair, compared with the jitter of the spot? How does that compare with the largest shift you measured? Find the relative uncertainty of \\(c\\) from the slope and say whether the meter’s {#}% jitter or your micrometer readings limit it. In a real lab the distances \\(D\\), \\(B\\) and \\(A\\) would add to it.":
-  "¿Con qué precisión puedes centrar la retícula, comparada con la fluctuación de la mancha? ¿Cómo se compara eso con el mayor desplazamiento que mediste? Encuentra la incertidumbre relativa de \\(c\\) a partir de la pendiente y di si la limita la fluctuación del {#}% del medidor o tus lecturas del micrómetro. En un laboratorio real las distancias \\(D\\), \\(B\\) y \\(A\\) se sumarían a ella.",
+"Compare your values of \\(c\\) with the exact value.":
+  "Compara tus valores de \\(c\\) con el valor exacto.",
 "Foucault used this method in {#} to show that light is slower in water than in air. What would the shift do if the 2D path were filled with water (\\(n = 1.33\\))?":
   "Foucault usó este método en {#} para mostrar que la luz es más lenta en el agua que en el aire. ¿Qué haría el desplazamiento si la trayectoria 2D estuviera llena de agua (\\(n = 1.33\\))?",
 "Why is \\(c\\) now an exact number with no uncertainty? What does a measurement like this one determine instead?":
   "¿Por qué \\(c\\) es ahora un número exacto sin incertidumbre? ¿Qué determina en cambio una medición como esta?",
 "Your two slopes answer Before the lab {#}: by what factor did the shift grow from {#} m to {#} m (Analysis {#})? If it had grown like \\(D^2\\), what factor would you have found? Use the magnification of L2, \\(A/(D + B)\\), to explain the factor you did measure.":
   "Tus dos pendientes responden Antes del laboratorio {#}: ¿en qué factor creció el desplazamiento de {#} m a {#} m (Análisis {#})? Si hubiera crecido como \\(D^2\\), ¿qué factor habrías encontrado? Usa el aumento de L2, \\(A/(D + B)\\), para explicar el factor que sí mediste.",
-"Prelab answers, the bench seed and dimensions, the table copies with their graphs and fits, \\(c\\) from the fit and from the pair method with uncertainties, the comparison of the two paths, and answers to the questions. Identify simulated data.":
-  "Respuestas del prelaboratorio, la semilla y las dimensiones del banco, las copias de la tabla con sus gráficas y ajustes, \\(c\\) a partir del ajuste y del método de pares con incertidumbres, la comparación de las dos trayectorias, y las respuestas a las preguntas. Identifica los datos simulados.",
+"For courses that treat measurement uncertainty. This section is not counted in the {#} minutes; do it when your instructor assigns it.":
+  "Para cursos que tratan la incertidumbre de medición. Esta sección no cuenta dentro de los {#} minutos; hazla cuando tu profesor la asigne.",
+"How precisely can you center the crosshair, compared with the jitter of the spot? How does that compare with the largest shift you measured? Find the relative uncertainty of \\(c\\) from the slope and say whether the meter’s {#}% jitter or your micrometer readings limit it. In a real lab the distances \\(D\\), \\(B\\) and \\(A\\) would add to it.":
+  "¿Con qué precisión puedes centrar la retícula, comparada con la fluctuación de la mancha? ¿Cómo se compara eso con el mayor desplazamiento que mediste? Encuentra la incertidumbre relativa de \\(c\\) a partir de la pendiente y di si la limita la fluctuación del {#}% del medidor o tus lecturas del micrómetro. En un laboratorio real las distancias \\(D\\), \\(B\\) y \\(A\\) se sumarían a ella.",
+"Give \\(c\\) from the fit and from the pair method with uncertainties, using the standard error of the slope, and say whether each value agrees with the exact value within its uncertainty. Say which run gives the more precise result, and why.":
+  "Da \\(c\\) a partir del ajuste y del método de pares con incertidumbres, usando el error estándar de la pendiente, y di si cada valor concuerda con el valor exacto dentro de su incertidumbre. Indica qué corrida da el resultado más preciso, y por qué.",
+"Prelab answers, the bench seed and dimensions, the table copies with their graphs and fits, \\(c\\) from the fit and from the pair method, the comparison of the two paths, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.":
+  "Respuestas del prelaboratorio, la semilla y las dimensiones del banco, las copias de la tabla con sus gráficas y ajustes, \\(c\\) a partir del ajuste y del método de pares, la comparación de las dos trayectorias, y las respuestas a las preguntas (y de Incertidumbre, si se asigna). Identifica los datos simulados.",
 "Distance from S to lens L2":
   "Distancia de S a la lente L2",
 "Distance from L2 to the turning mirror":

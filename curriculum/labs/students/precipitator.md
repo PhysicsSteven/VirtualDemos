@@ -70,11 +70,6 @@ Industrial precipitators run at tens of kilovolts and are interlocked; never ope
 1. For Part 1, compare the measured and predicted efficiencies. How does the efficiency change with particle size? Which sizes are hardest to catch, and why might real precipitators do better than the model for the smallest?
 2. For Part 2, work out $$-\ln(1 - \eta)$$ from each measured efficiency and graph it against $$L$$. Is it a straight line through the origin? From the slope, find the drift speed and compare it with the drift speed the demo recorded.
 3. For Part 3, work out $$-\ln(1 - \eta)$$ for the four conducting readings and graph it against $$1/u$$ to show how it depends on the gas speed. Why does a faster gas leave more smoke in the air?
-4. Find the uncertainty of each measured efficiency from the counts, $$\sqrt{\eta(1-\eta)/N}$$ with $$N$$ the number counted. Do the measured and predicted values agree within it?
-
-## Uncertainty
-
-Each particle is caught or not at random, so a measured efficiency from $$N$$ particles has a standard uncertainty of $$\sqrt{\eta(1-\eta)/N}$$, about 2 % for $$N = 500$$ near 50 %. The model's approximations matter more for real precipitators: diffusion charging, which helps the smallest particles; dust knocked back off the plates; uneven gas flow; and the field near the wire being much stronger than near the plates.
 
 ## Questions
 
@@ -83,6 +78,13 @@ Each particle is caught or not at random, so a measured efficiency from $$N$$ pa
 3. Why are precipitators less effective for very fine smoke, which is also the most harmful to breathe?
 4. Was the insulating dust caught as you said in Before the lab 5? Compare the Measured efficiency and the Drift speed $$w$$ of your two Part 3 readings at 1.0 m/s, soot and Insulating, κ = 4. Can a particle whose charges cannot move through it pick up charge from the ions? Use the two drift speeds and the Deutsch equation to account for the two efficiencies.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+Each particle is caught or not at random, so a measured efficiency from $$N$$ particles has a standard uncertainty of $$\sqrt{\eta(1-\eta)/N}$$, about 2 % for $$N = 500$$ near 50 %. The model's approximations matter more for real precipitators: diffusion charging, which helps the smallest particles; dust knocked back off the plates; uneven gas flow; and the field near the wire being much stronger than near the plates. Find the uncertainty of each measured efficiency from the counts, with $$N$$ the number counted. Do the measured and predicted values agree within it?
+
 ## What to hand in
 
-Prelab answers, a Data table copy for each part, the graph and fit for Part 2, the measured efficiencies with uncertainties, and answers to the questions. Identify simulated data.
+Prelab answers, a Data table copy for each part, the graph and fit for Part 2, the measured efficiencies, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

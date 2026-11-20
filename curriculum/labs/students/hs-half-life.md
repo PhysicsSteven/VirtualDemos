@@ -79,15 +79,18 @@ The time unit is in the Setup column. Give $$N/N_0$$ to three decimal places and
 4. A piece of charcoal from an old campfire has 30.0 % of the carbon 14 of living wood. Use your graph from Analysis 3 to find its age. Between which two whole numbers of half lives does it lie?
 5. A wooden tool has 60.0 % of the carbon 14 of living wood. Use the graph to find its age.
 
-## Uncertainty
-
-Each count comes from random decays, so a sample of $$N_0$$ nuclei scatters about the expected count by roughly $$\sqrt{N}$$, where $$N$$ is the expected number left. For 400 nuclei after 1 step, $$\sqrt{200} \approx 14$$, about 7 % of the count; for 10,000 nuclei, $$\sqrt{5000} \approx 71$$, under 1.5 %. Are the differences you found in Analysis 1 and 2 about this size? Reading a time off your hand drawn curve adds an uncertainty of its own: estimate it from how far apart your grid lines are.
-
 ## Questions
 
 1. Look back at your guesses in Before the lab 4. How many of the 400 nuclei were left after 2 steps and after 8 steps? Use the meaning of half life to explain why the sample was not gone after 2 half lives. The expected number $$N_0/2^n$$ halves again and again but never reaches zero; a real sample of 400 still runs out after some number of steps. Explain why, thinking about how many nuclei are left by then.
 2. Carbon 14 dating is used for samples up to about 50,000 yr old. Find how many half lives that is and what fraction of the carbon 14 is left. Why is it hard to date a sample much older than that with carbon 14? Why is potassium 40 used for rocks billions of years old instead?
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+Each count comes from random decays, so a sample of $$N_0$$ nuclei scatters about the expected count by roughly $$\sqrt{N}$$, where $$N$$ is the expected number left. For 400 nuclei after 1 step, $$\sqrt{200} \approx 14$$, about 7 % of the count; for 10,000 nuclei, $$\sqrt{5000} \approx 71$$, under 1.5 %. Are the differences you found in Analysis 1 and 2 about this size? Reading a time off your hand drawn curve adds an uncertainty of its own: estimate it from how far apart your grid lines are.
+
 ## What to hand in
 
-Prelab answers, the three copies of the Data table with the last two columns filled in, the two graphs, the ages from Analysis 4 and 5 with the half lives you read, and answers to the questions. Identify simulated data.
+Prelab answers, the three copies of the Data table with the last two columns filled in, the two graphs, the ages from Analysis 4 and 5 with the half lives you read, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

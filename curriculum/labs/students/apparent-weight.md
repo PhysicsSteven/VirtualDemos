@@ -82,15 +82,18 @@ Keep the one ride, the two scans and the cable snap readings in separate copies 
 3. Do the same for the 90 kg scan. How do the slopes of the two lines compare, and why?
 4. For the cable snap readings, compare the scale reading in free fall and during braking with $$N = m(g + a)$$. How many times your true weight did the scale show during braking?
 
-## Uncertainty
-
-The scale reads to 0.1 kg and the acceleration readout to 0.01 m/s²; the mass is an exact setting. Estimate how the 0.1 kg rounding limits $$g$$ from your fit, and compare with the standard errors of the slope and intercept. With gradual starts and stops the reading changes during each stage, so a reading and an acceleration taken at different moments would not match. On a real scale add its response time, the springiness of the floor and the car's vibration.
-
 ## Questions
 
 1. Look back at Before the lab 4. In free fall, what did the scale read, and what did Your weight mg read at the same moment? Use $$N = m(g + a)$$ to explain the scale reading. Then use it to explain why astronauts in an orbiting space station float, although gravity there is about 90% as strong as at the ground.
 2. In a real elevator the scale reading changes gradually at the start and end of a ride. What about the motion makes that happen?
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The scale reads to 0.1 kg and the acceleration readout to 0.01 m/s²; the mass is an exact setting. Estimate how the 0.1 kg rounding limits $$g$$ from your fit, and compare with the standard errors of the slope and intercept. With gradual starts and stops the reading changes during each stage, so a reading and an acceleration taken at different moments would not match. On a real scale add its response time, the springiness of the floor and the car's vibration. Give $$m$$ and $$g$$ from each scan with uncertainties.
+
 ## What to hand in
 
-Prelab answers, the four table copies with the graphs and fits for both scans, $$m$$ and $$g$$ from each scan with uncertainties, the cable snap comparison, the uncertainty discussion and answers to the questions. Identify simulated data.
+Prelab answers, the four table copies with the graphs and fits for both scans, $$m$$ and $$g$$ from each scan, the cable snap comparison and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

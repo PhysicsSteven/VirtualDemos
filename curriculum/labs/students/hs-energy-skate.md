@@ -99,15 +99,18 @@ The link at the top opens the Energy on a Track demo on its Valley setup. Press 
 4. Each turn of Table 2 comes lower than the one before. Find the drop in turning height from the start to turn 1, from turn 1 to turn 2, and from turn 2 to turn 3. Do the drops grow or shrink? Suggest why, thinking about how far the skater slides between turns.
 5. From the Loop setup row of Table 3, find the radius of the track at the top, $$R = v^2/[g(1 + N/mg)]$$. Then predict the lowest starting height that gets round, $$y_\mathrm{top} + R/2$$. Does it lie between your lowest start that made it and your first start that failed?
 
-## Uncertainty
-
-The demo gives heights and speeds to 0.01 m and 0.01 m/s, so $$v^2$$ is good to about 0.1 %, and your slope in Analysis 1 should come within a few tenths of a percent of $$2g$$. In Part 4 each arrow press moves the start by 1 % of the track, about 0.25 m in height, so your bracket for the lowest start is about that wide. Pausing just off the top of the loop changes the speed and normal force you read: try it twice and see how much your $$R$$ changes.
-
 ## Questions
 
 1. Look back at your guess in Before the lab 4. What speeds did the 60 kg and 120 kg skaters have near the bottom? Use $$mg(y_0 - y) = \tfrac12 mv^2$$ to explain why the mass does not matter, even though the heavier skater has twice the potential energy.
 2. A roller coaster designer wants a car to make it round a loop with a top radius of 5.0 m. How far above the top of the loop must the car start if there is no friction? Why would a real designer start it higher than that?
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The demo gives heights and speeds to 0.01 m and 0.01 m/s, so $$v^2$$ is good to about 0.1 %, and your slope in Analysis 1 should come within a few tenths of a percent of $$2g$$. In Part 4 each arrow press moves the start by 1 % of the track, about 0.25 m in height, so your bracket for the lowest start is about that wide. Pausing just off the top of the loop changes the speed and normal force you read: try it twice and see how much your $$R$$ changes.
+
 ## What to hand in
 
-Prelab answers, the three tables with the calculated columns filled in, the graph of Analysis 1, the calculations of Analysis 5, and answers to the questions. Identify simulated data.
+Prelab answers, the three tables with the calculated columns filled in, the graph of Analysis 1, the calculations of Analysis 5, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

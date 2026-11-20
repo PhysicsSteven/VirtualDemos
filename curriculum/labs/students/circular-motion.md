@@ -81,11 +81,6 @@ Keep each series in its own copy of the table, labeled with the part. The speed 
 1. Part 1: plot $$v^2$$ against $$r$$ for the four radii at $$\mu_s = 0.70$$ and fit a line. Compare the slope with $$\mu_s g$$. Does the intercept agree with zero? What do the 2000 kg and wet road readings show? Compare the wet road limit with $$\sqrt{\mu_s g r}$$.
 2. Part 2: plot $$v^2$$ against $$\tan\theta$$ and fit a line. Compare the slope with $$rg$$.
 3. Part 3: plot $$v_0^2$$ against $$r$$ for the four loops and fit a line. Compare the slope with $$5g$$. Compare the slide back reading at 1.5 m with $$\sqrt{2gr}$$.
-4. Each recorded speed lies within one 0.5 m/s step of the true limit, on a known side. Which way does this shift each of your three slopes?
-
-## Uncertainty
-
-The only uncertainty in the virtual readings is the 0.5 m/s step: the true limit lies between the recorded speed and the next step. It is a one sided error, not random scatter, so the standard error of a fitted slope does not describe it. Estimate its effect on $$v^2$$ at your smallest and largest speeds. On a real road, $$\mu_s$$ itself is uncertain by tens of percent and changes with the surface, the tires and the weather.
 
 ## Questions
 
@@ -93,6 +88,13 @@ The only uncertainty in the virtual readings is the 0.5 m/s step: the true limit
 2. A car speeds up while it goes round a flat curve. Why does it slide off at a lower speed than a car going round at constant speed?
 3. At r = 1.5 m and 8.0 m/s the ball had enough energy to rise higher than the top of the loop. What did it do, and is that what you said in Before the lab 3? Use the forces on the ball near the top of the loop and $$a_c = v^2/r$$ to explain it, and whether having enough energy to reach the top's height is enough to get the ball round.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The only uncertainty in the virtual readings is the 0.5 m/s step: the true limit lies between the recorded speed and the next step. It is a one sided error, not random scatter, so the standard error of a fitted slope does not describe it. Estimate its effect on $$v^2$$ at your smallest and largest speeds. On a real road, $$\mu_s$$ itself is uncertain by tens of percent and changes with the surface, the tires and the weather. Each recorded speed lies within one 0.5 m/s step of the true limit, on a known side. Which way does this shift each of your three slopes? Give the standard error of each fitted slope and say whether each slope agrees with its predicted value within it.
+
 ## What to hand in
 
-Prelab answers, the data tables with which side of each limit you recorded, the three fits with their residuals compared with $$\mu_s g$$, $$rg$$ and $$5g$$, and answers to the questions. Identify simulated data.
+Prelab answers, the data tables with which side of each limit you recorded, the three fits with their residuals compared with $$\mu_s g$$, $$rg$$ and $$5g$$, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

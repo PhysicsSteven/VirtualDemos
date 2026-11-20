@@ -98,17 +98,20 @@ Note which part each trial belongs to and which trial tests your prediction.
 
 1. For each part, compare the predicted equilibrant (mass and angle) with the setup that centered the ring. Give the difference in grams and in degrees.
 2. Compare your scale drawing with your component calculation in Part 2. Which is more precise, and why?
-3. In Part 1, use the mass range and the angle range you found to state the equilibrant as a value with an uncertainty. Does your prediction fall inside it?
+3. In Part 1, state the range of masses and the range of angles you found that keep the ring centered. Does your prediction fall inside them?
 4. In Part 3, show from your Components table that the four forces add to zero within the range the table allows.
-
-## Uncertainty
-
-In the simulation, masses are set to 1 g and angles to 1°, and the only source of a range is the chosen pulley friction, so the range you find measures that friction, not random error. On a real table include the reading of the angle scale, the mass of each hanger and its slotted masses, pulley friction and the ring sitting slightly off the pin. Repeating an unchanged simulated setup gives the same result every time.
 
 ## Questions
 
 1. Which range in Before the lab 5 did your Part 2 balancing mass fall in, and was it the one you chose? Use the components of the two forces to explain how the balancing mass compares with their total. For two forces of fixed sizes, for what angle between them is their resultant largest, and for what angle is it smallest?
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+State the equilibrant from your Part 1 ranges as a value with an uncertainty, such as a mass plus or minus a few grams and an angle plus or minus a few degrees, and say whether your prediction falls inside it. In the simulation, masses are set to 1 g and angles to 1°, and the only source of a range is the chosen pulley friction, so the range you find measures that friction, not random error. On a real table include the reading of the angle scale, the mass of each hanger and its slotted masses, pulley friction and the ring sitting slightly off the pin. Repeating an unchanged simulated setup gives the same result every time.
+
 ## What to hand in
 
-Prelab answers, the Data and Components tables, the scale drawing for Part 2, the comparisons and ranges from the Analysis, and answers to the questions. Identify simulated data.
+Prelab answers, the Data and Components tables, the scale drawing for Part 2, the comparisons and ranges from the Analysis, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

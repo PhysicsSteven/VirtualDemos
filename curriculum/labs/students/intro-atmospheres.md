@@ -81,10 +81,6 @@ Escape speeds: NASA's planetary fact sheets; Titan's from its mass and radius in
 4. Part 3: using the rule of thumb (6 or more: kept; well below 6: lost), which gases can each body keep? Which bodies can keep none of them?
 5. Jupiter and Earth both formed in the same cloud of gas, which was mostly hydrogen and helium. Use your table to explain why Jupiter is still mostly hydrogen and helium while Earth has almost none of either left.
 
-## Uncertainty
-
-In the box the molecules trade energy in every collision, but the total never changes, so the temperature and the rms speed stay fixed while each molecule's own speed changes all the time. Watch the histogram at 300 K: roughly what share of the molecules move faster than twice the rms speed in the box at any moment? Those fast few are the ones that escape from a real planet. The bigger uncertainty is in Part 3: give two reasons the temperatures in the table might not be the temperature where molecules actually escape.
-
 ## Questions
 
 1. By the rule, Earth at 288 K keeps helium, yet Earth's air has almost none. Molecules escape from the very top of the atmosphere, where the thin air is heated by sunlight to about 1000 K (the U.S. Standard Atmosphere, 1976). Redo Earth's check for helium at 1000 K. What do you find?
@@ -92,6 +88,15 @@ In the box the molecules trade energy in every collision, but the total never ch
 3. Worked out the same way as your table, Mercury's day side (escape speed 4.3 km/s, 725 K) gives a number close to 6 for carbon dioxide, and Mars can keep nitrogen and carbon dioxide by the rule, yet Mercury has almost no atmosphere and Mars's air is very thin. Mercury is the planet closest to the Sun; Mars is small and has no global magnetic field to shield it from the solar wind. What else might strip their gas away?
 4. Before the lab 4 asked what collisions do to molecules that all start at one speed. What did the Mean speed, the rms speed and the histogram do in your first run? Collisions between molecules lose no energy: use that to explain why the rms speed stayed the same while the speeds spread out, and why that spread matters for the Background's rule of thumb.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+In the box the molecules trade energy in every collision, but the total never changes, so the temperature and the rms speed stay fixed while each molecule's own speed changes all the time. Watch the histogram at 300 K: roughly what share of the molecules move faster than twice the rms speed in the box at any moment? Those fast few are the ones that escape from a real planet. The bigger uncertainty is in Part 3: give two reasons the temperatures in the table might not be the temperature where molecules actually escape.
+
+For the graph of Part 2, give the slope and intercept with their standard errors and say whether the intercept is zero within its standard error.
+
 ## What to hand in
 
-Prelab answers, the two copies of the Data table with the Part 2 graph, the Escape speed ÷ rms speed table, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.
+Prelab answers, the two copies of the Data table with the Part 2 graph, the Escape speed ÷ rms speed table, the answers to the analysis section and to the questions (and to Uncertainty, if assigned). Identify simulated data.

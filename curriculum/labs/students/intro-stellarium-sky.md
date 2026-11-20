@@ -61,16 +61,19 @@ Stellarium shows the sky for the place and time you set. To find a star, search 
 5. In which constellation was the Sun on each of the five dates? On which dates was the Sun on the celestial equator (declination near 0°), and on which was it farthest north and farthest south?
 6. Near noon, the Sun's altitude should be about 90° − 32.5° + its declination. Check this for June 21 and December 22.
 
-## Uncertainty
-
-Stellarium computes positions from star catalogs and the motions of Earth and the Sun, accurate to a small fraction of a degree. Your readings can still differ from a classmate's if the location or the time is set a little differently. The sky turns 15° per hour. By about how many degrees can a star's azimuth change if the time is off by 4 minutes? Which of your readings would that affect, and which would it not?
-
 ## Questions
 
 1. Astrology sign dates were set about 2,000 years ago. A person born on January 15 is told their sign is Capricorn. In which constellation was the Sun on January 15, 2027? Use precession to explain the difference.
 2. Why do we see Orion in winter evenings but not in summer evenings? Use the Sun's position along the ecliptic in your table.
 3. What altitude did the Sun reach in your June 21 reading, and how far below overhead is that? Check it against your prediction in Before the lab 4. Use the Sun's declination that day and Ruston's latitude to explain the Sun's noon altitude, and say between which latitudes on Earth the noon Sun can pass straight overhead.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+Stellarium computes positions from star catalogs and the motions of Earth and the Sun, accurate to a small fraction of a degree. Your readings can still differ from a classmate's if the location or the time is set a little differently. The sky turns 15° per hour. By about how many degrees can a star's azimuth change if the time is off by 4 minutes? Which of your readings would that affect, and which would it not?
+
 ## What to hand in
 
-Prelab answers, the completed Data table, the answers to the analysis and uncertainty sections, and answers to the questions.
+Prelab answers, the completed Data table, the answers to the analysis section and to the questions (and to Uncertainty, if assigned).

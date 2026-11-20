@@ -77,14 +77,18 @@ No hazards in the virtual lab.
 5. For the comet (the second copy of the table), describe how its perihelion, aphelion and orbital period changed. Convert the perihelion and aphelion to AU at the start and the end ($$a = 5.2038$$ AU). Did its energy about the Sun change?
 6. How much did $$C$$ and Tisserand's $$T$$ change over the same time? Explain why $$C$$ is conserved when the comet's energy about the Sun is not.
 
-## Uncertainty
-
-The demo integrates the equations of motion numerically. Its own check is the drift of $$C$$, which should stay exactly constant: read $$\lvert\Delta C/C\rvert$$ (the readout **Drift since launch** in the rail; the table has no column for it) for your last comet reading. How large is it compared with the changes in $$C$$ you would need to explain any of the changes in the comet's orbit?
 ## Questions
 
 1. Explain why a particle with $$C$$ larger than $$C$$ at L1 can never cross from near Earth to near the Moon, though nothing blocks its way.
 2. A Lagrange point is often described as the place where the two gravities cancel. Find L1 for $$\mu = 10^{-3}$$ in your first table and set it beside the 0.0307 $$a$$ of Before the lab 4: where did it land? Explain from the rotating frame why L1 is not where the pulls are equal, and why the same description fails at L4, where both masses pull the particle toward them.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The demo integrates the equations of motion numerically. Its own check is the drift of $$C$$, which should stay exactly constant: read $$\lvert\Delta C/C\rvert$$ (the readout **Drift since launch** in the rail; the table has no column for it) for your last comet reading. How large is it compared with the changes in $$C$$ you would need to explain any of the changes in the comet's orbit? Give the standard errors of the slopes in Analysis 1 and 3 and say whether each slope agrees with its predicted value within them.
+
 ## What to hand in
 
-Prelab answers, the table copies with their graphs and fits, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.
+Prelab answers, the table copies with their graphs and fits, the answers to the analysis section and to the questions (and to Uncertainty, if assigned). Identify simulated data.

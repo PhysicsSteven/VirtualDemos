@@ -69,10 +69,6 @@ No hazards in the virtual lab. In the real sky, never look at the Sun without pr
 6. What is the largest size of β in your eclipse series (ignore its sign)? Compare it with the tilt of the Moon's orbit.
 7. How many days pass from the first eclipse season in your data to the next one? Use the Time from start of the first row in each season whose Eclipse column says an eclipse is possible. About how many months (of 29.53 days) is that?
 
-## Uncertainty
-
-The demo's readings are exact for its model, so a repeated reading gives the same numbers. The model leaves things out: the real Moon's orbit is an ellipse, so a real new moon can come several hours earlier or later than in the model, and real rise and set times change with your latitude and the time of year. Which of your results would you trust most for the real Moon, and which least? Explain.
-
 ## Questions
 
 1. Some people think the phases are caused by Earth's shadow falling on the Moon. Your readings at 3.69 and 25.84 days are crescents: what do their Elongation and Illuminated columns show, and where does that put the Moon compared with your sketch in Before the lab 5? Use the elongations to explain why the shadow idea cannot be true, and say what does make the crescent.
@@ -80,6 +76,13 @@ The demo's readings are exact for its model, so a repeated reading gives the sam
 3. Why is there not a solar eclipse at every new moon and a lunar eclipse at every full moon?
 4. According to NASA's eclipse list (eclipse.gsfc.nasa.gov), the eclipses of 2027 are an annular solar eclipse on February 6, a faint (penumbral) lunar eclipse on February 20, penumbral lunar eclipses on July 18 and August 17, and a total solar eclipse on August 2. Group them into eclipse seasons. How far apart are the seasons, and does that agree with your answer to Analysis 7?
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The demo's readings are exact for its model, so a repeated reading gives the same numbers. The model leaves things out: the real Moon's orbit is an ellipse, so a real new moon can come several hours earlier or later than in the model, and real rise and set times change with your latitude and the time of year. Which of your results would you trust most for the real Moon, and which least? Explain.
+
 ## What to hand in
 
-Prelab answers, the two table copies, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.
+Prelab answers, the two table copies, the answers to the analysis section and to the questions (and to Uncertainty, if assigned). Identify simulated data.

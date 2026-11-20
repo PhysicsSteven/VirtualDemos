@@ -87,14 +87,10 @@ Use one copy of the table for each part.
 
 ## Analysis
 
-1. For Part 1, fit $$\Delta P$$ against $$Q$$, convert the slope to Pa·s/m³ (1 mL/s = 10⁻⁶ m³/s) and find $$\eta$$ from it, $$\eta = \text{slope}\times\pi r^4/(8L)$$, with its uncertainty. Compare with 1.002 mPa·s.
+1. For Part 1, fit $$\Delta P$$ against $$Q$$, convert the slope to Pa·s/m³ (1 mL/s = 10⁻⁶ m³/s) and find $$\eta$$ from it, $$\eta = \text{slope}\times\pi r^4/(8L)$$. Compare with 1.002 mPa·s.
 2. For Parts 1 and 2, find $$N_R$$ only for the readings on either side of the two dye changes (the last straight thread and the first puffs, then the last puffs and the first mixed). Between which readings does the dye first break up, and from which reading is it mixed across the whole pipe? Compare these Reynolds numbers with the textbook's 2000 and 3000.
 3. Compare each Part 2 pressure drop with the Poiseuille prediction from your Part 1 slope. By what factor is the measured $$\Delta P$$ larger at the highest flow? Use pairs of readings to find the exponent $$n$$ in $$\Delta P\propto Q^n$$ for the lowest flows and for the highest.
 4. For Part 3, give the Mystery liquid's viscosity, your predicted flow rate at $$N_R = 2000$$, and what the dye did there.
-
-## Uncertainty
-
-The cylinder is read to 1 mL and the stopwatch to 0.01 s, so a reading of a few hundred milliliters over tens of seconds gives $$Q$$ to better than 1%; short collections at high flow rates are the least precise. The gauge reads to 0.1 Pa, which matters most for the smallest laminar pressure drops (a few pascals in Part 1). The pipe radius enters Poiseuille's law to the fourth power, so a 1% error in $$r$$ gives a 4% error in $$\eta$$: in a real experiment the bore is the measurement to make most carefully. The transition Reynolds numbers are not sharp constants; in real pipes they depend on how disturbed the inlet flow is.
 
 ## Questions
 
@@ -102,6 +98,13 @@ The cylinder is read to 1 mL and the stopwatch to 0.01 s, so a reading of a few 
 2. Blood flow in the aorta reaches $$N_R$$ of a few thousand during each heartbeat. What could a doctor hear with a stethoscope that would not be there in laminar flow?
 3. At 6 mL/s, how many times larger was ΔP in the 6 mm pipe than in the 10 mm pipe? Which of the three factors in Before the lab 3 comes closest, and is it the one you chose? Use Poiseuille's law to explain why the narrower pipe needs that much more pressure: think about both the smaller cross section and the speed of the liquid near the wall. Then a clogged artery has 80% of its original radius: if the heart kept the same pressure difference across it, what fraction of the original laminar blood flow would get through?
 4. Turbulent flow needs a larger pressure difference for the same flow rate. Where does the extra energy go?
+
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The cylinder is read to 1 mL and the stopwatch to 0.01 s, so a reading of a few hundred milliliters over tens of seconds gives $$Q$$ to better than 1%; short collections at high flow rates are the least precise. The gauge reads to 0.1 Pa, which matters most for the smallest laminar pressure drops (a few pascals in Part 1). The pipe radius enters Poiseuille's law to the fourth power, so a 1% error in $$r$$ gives a 4% error in $$\eta$$: in a real experiment the bore is the measurement to make most carefully. Give the viscosity from Part 1 and the Mystery liquid's viscosity from Part 3 with their uncertainties, from the standard error of each slope. The transition Reynolds numbers are not sharp constants; in real pipes they depend on how disturbed the inlet flow is.
 
 ## With calculus
 
@@ -113,4 +116,4 @@ For courses that use calculus. This section is not counted in the 75 minutes; do
 
 ## What to hand in
 
-Answers to Before the lab, a copy of the Data table for each part, the Poiseuille fits with residuals, the viscosities with uncertainties, the transition Reynolds numbers you observed, the exponents, and answers to the questions (and to With calculus, if assigned). Identify simulated data.
+Answers to Before the lab, a copy of the Data table for each part, the Poiseuille fits with residuals, the viscosities, the transition Reynolds numbers you observed, the exponents, and answers to the questions (and to Uncertainty and With calculus, if assigned). Identify simulated data.

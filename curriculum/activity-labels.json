@@ -1,8 +1,8 @@
 {
- "about": "Labels for every worksheet (2026-11-16): min is student minutes working alone with the demo open (rounded to 5; time audit of 2026-11-16, recounted after the cuts and splits), math is algebra or calculus (calculus only when the student must differentiate, integrate or solve a differential equation), level is intro or upper, needs is what a student should know first (needs_es in Mexican Spanish, a draft), why_math notes the reason for the math call. Read by tools/courses.py (tools/activities.py) for the topic pages, the home page filter and search.",
+ "about": "Labels for every worksheet (2026-11-16): min is student minutes working alone with the demo open (rounded to 5; time audit of 2026-11-16, recounted after the cuts and splits), math is algebra or calculus (calculus only when the student must differentiate, integrate or solve a differential equation), level is intro or upper, needs is what a student should know first (needs_es in Mexican Spanish, a draft), why_math notes the reason for the math call. Read by tools/courses.py (tools/activities.py) for the topic pages, the home page filter and search. Since 2026-11-20 the minutes of intro worksheets leave out their Uncertainty section, which is assigned by the instructor (docs/handouts.md).",
  "worksheets": {
   "ac-circuits": {
-   "min": 80,
+   "min": 70,
    "math": "algebra",
    "level": "intro",
    "needs": "Impedance of inductors and capacitors; rms and peak values; reading a resonance curve",
@@ -10,7 +10,7 @@
    "why_math": "Plugging into given impedance and resonance formulas"
   },
   "ac-power": {
-   "min": 80,
+   "min": 70,
    "math": "algebra",
    "level": "intro",
    "needs": "Phase between voltage and current; rms values; power in a resistor; fitting a line",
@@ -18,7 +18,7 @@
    "why_math": "Formulas given; uses trig and linear fits"
   },
   "ac-reactance": {
-   "min": 75,
+   "min": 65,
    "math": "calculus",
    "level": "intro",
    "needs": "Capacitors and inductors; sinusoidal voltage; rms values; derivatives of sine functions",
@@ -26,7 +26,7 @@
    "why_math": "Differentiate sine to explain phase signs"
   },
   "acoustic-levitation": {
-   "min": 75,
+   "min": 70,
    "math": "algebra",
    "level": "intro",
    "needs": "Standing waves and nodes; wavelength and frequency; force and weight; fitting a line",
@@ -42,7 +42,7 @@
    "why_math": "Given formulas, logarithms, limits, linear fits"
   },
   "anechoic-chamber": {
-   "min": 75,
+   "min": 70,
    "math": "algebra",
    "level": "intro",
    "needs": "Sound intensity and decibels; inverse square law; logarithms; reading a slope from a graph",
@@ -50,7 +50,7 @@
    "why_math": "Logarithms and plugging into given formulas"
   },
   "apparent-weight": {
-   "min": 80,
+   "min": 70,
    "math": "algebra",
    "level": "intro",
    "needs": "Newton's second law; free body diagrams; normal force; fitting a line to a graph",
@@ -58,7 +58,7 @@
    "why_math": "Linear fit of N = m(g + a)"
   },
   "atwood": {
-   "min": 80,
+   "min": 75,
    "math": "algebra",
    "level": "intro",
    "needs": "Newton's second law; free body diagrams; tension; constant acceleration; reading a slope",
@@ -74,7 +74,7 @@
    "why_math": "Exponentials, logs, and linear fits only"
   },
   "binary-masses": {
-   "min": 71,
+   "min": 66,
    "math": "algebra",
    "level": "intro",
    "needs": "Cubes and squares of numbers; a seesaw balances when the heavier side sits closer to the middle; the Doppler shift of light",
@@ -90,7 +90,7 @@
    "why_math": "Plugging into given formulas; reading graphs"
   },
   "black-hole-chirp": {
-   "min": 70,
+   "min": 65,
    "math": "algebra",
    "level": "intro",
    "needs": "Orbits and gravity; waves and frequency; E = mc²",
@@ -98,7 +98,7 @@
    "why_math": "given formulas; ratios; one straight line graph"
   },
   "black-holes": {
-   "min": 75,
+   "min": 65,
    "math": "algebra",
    "level": "intro",
    "needs": "Gravity and escape speed; angles in radians; logarithmic scales; fitting a line",
@@ -106,7 +106,7 @@
    "why_math": "Algebra on given magnification formulas"
   },
   "black-holes-near": {
-   "min": 75,
+   "min": 70,
    "math": "algebra",
    "level": "intro",
    "needs": "Gravity and escape speed; time dilation idea; angles in radians; fitting a line",
@@ -114,7 +114,7 @@
    "why_math": "Plugging into given formulas; linearizing data"
   },
   "blackbody": {
-   "min": 70,
+   "min": 65,
    "math": "algebra",
    "level": "intro",
    "needs": "Thermal radiation and temperature; logarithms and power laws; fitting a line to logged data",
@@ -122,7 +122,7 @@
    "why_math": "Log fits of given power laws"
   },
   "bonds-and-latent-heat": {
-   "min": 75,
+   "min": 70,
    "math": "algebra",
    "level": "intro",
    "needs": "Temperature and kinetic energy; heat and phase changes; first law; reading a slope",
@@ -138,7 +138,7 @@
    "why_math": "Given formulas; linear fits of transformed data"
   },
   "camera": {
-   "min": 80,
+   "min": 75,
    "math": "algebra",
    "level": "intro",
    "needs": "Thin lens equation; real images; similar triangles; fitting a line to reciprocals",
@@ -146,7 +146,7 @@
    "why_math": "Lens equation and linear fits of reciprocals"
   },
   "capacitors": {
-   "min": 80,
+   "min": 75,
    "math": "algebra",
    "level": "intro",
    "needs": "Capacitance, C = Q/V; stored energy; series and parallel capacitors; reading a slope",
@@ -154,7 +154,7 @@
    "why_math": "Given formulas and linear fits"
   },
   "capacitors-spheres": {
-   "min": 75,
+   "min": 70,
    "math": "algebra",
    "level": "intro",
    "needs": "Capacitance; Gauss's law results; dielectrics and polarization; electric field strength; fitting a line",
@@ -162,7 +162,7 @@
    "why_math": "Given formulas; maximum found from a parabola"
   },
   "catenary": {
-   "min": 80,
+   "min": 75,
    "math": "algebra",
    "level": "intro",
    "needs": "Static equilibrium; free body diagrams; tension and components of force; reading a slope",
@@ -170,7 +170,7 @@
    "why_math": "Given formulas; cosh never evaluated by student"
   },
   "cavendish": {
-   "min": 80,
+   "min": 70,
    "math": "algebra",
    "level": "intro",
    "needs": "Newton's law of gravitation; torque; torsion pendulum period; small angle approximation",
@@ -178,7 +178,7 @@
    "why_math": "Plugging into given formulas; linear fits"
   },
   "center-of-mass": {
-   "min": 80,
+   "min": 70,
    "math": "algebra",
    "level": "intro",
    "needs": "Center of mass; momentum and Newton's laws for systems; projectile motion; fitting a line",
@@ -186,7 +186,7 @@
    "why_math": "Weighted averages and linear fits"
   },
   "cepheid-photometry": {
-   "min": 75,
+   "min": 70,
    "math": "algebra",
    "level": "intro",
    "needs": "Apparent magnitude and logarithms; distance modulus; periodic motion; fitting a sine curve",
@@ -194,7 +194,7 @@
    "why_math": "Logarithms and fitting a sine; no calculus"
   },
   "chladni": {
-   "min": 75,
+   "min": 70,
    "math": "algebra",
    "level": "intro",
    "needs": "Standing waves and resonance; nodes and antinodes; wave speed; proportional reasoning",
@@ -202,7 +202,7 @@
    "why_math": "Scaling and ratios; Bessel zeros are given"
   },
   "circular-motion": {
-   "min": 80,
+   "min": 70,
    "math": "algebra",
    "level": "intro",
    "needs": "Centripetal acceleration; Newton's second law; static friction; energy conservation; fitting a line",
@@ -210,7 +210,7 @@
    "why_math": "Algebra, trig, and linear fits of v² data"
   },
   "cluster-dark-matter": {
-   "min": 75,
+   "min": 70,
    "math": "algebra",
    "level": "intro",
    "needs": "Weighing with an orbit (M = v²r/G); Wien's law; light is bent by mass",
@@ -218,7 +218,7 @@
    "why_math": "square roots, squares and powers of ten; one straight line graph"
   },
   "collisions": {
-   "min": 75,
+   "min": 70,
    "math": "algebra",
    "level": "intro",
    "needs": "Conservation of momentum; elastic and inelastic collisions; kinetic energy; center of mass velocity",
@@ -226,7 +226,7 @@
    "why_math": "Algebra on conservation laws; linear fits"
   },
   "color-vision": {
-   "min": 80,
+   "min": 75,
    "math": "algebra",
    "level": "intro",
    "needs": "Light and wavelength; additive color mixing; how the eye responds; reading graphs",
@@ -234,7 +234,7 @@
    "why_math": "Integrals only described; student adds and multiplies"
   },
   "comet-tails": {
-   "min": 70,
+   "min": 65,
    "math": "algebra",
    "level": "intro",
    "needs": "Kepler's third law with P in years and a in au; adding and subtracting speeds",
@@ -250,7 +250,7 @@
    "why_math": "Given formulas, trig, and a linear fit"
   },
   "convection": {
-   "min": 75,
+   "min": 70,
    "math": "algebra",
    "level": "intro",
    "needs": "Heat transfer by convection and radiation; exponential decay; natural logarithms; time constant",
@@ -258,7 +258,7 @@
    "why_math": "Solution given; student fits ln of data"
   },
   "cosmic-expansion": {
-   "min": 75,
+   "min": 65,
    "math": "algebra",
    "level": "intro",
    "needs": "Hubble's law; redshift and recession speed; speed as distance over time; reading a slope",
@@ -266,7 +266,7 @@
    "why_math": "Differences and slopes; derivative only mentioned"
   },
   "cosmic-fate": {
-   "min": 75,
+   "min": 70,
    "math": "algebra",
    "level": "intro",
    "needs": "Redshift and Hubble's law; the inverse square law for brightness; reading a graph",
@@ -274,7 +274,7 @@
    "why_math": "given formulas; powers and square roots; one straight line graph"
   },
   "coulomb-sandbox": {
-   "min": 80,
+   "min": 75,
    "math": "algebra",
    "level": "intro",
    "needs": "Coulomb's law; electric field and potential of point charges; vector addition; fitting a line",
@@ -282,7 +282,7 @@
    "why_math": "Numerical central difference; no derivatives taken"
   },
   "coulomb-sandbox-energy": {
-   "min": 70,
+   "min": 65,
    "math": "calculus",
    "level": "intro",
    "needs": "Electric potential and potential energy; fields of rings and arcs; E = -dV/dz; superposition",
@@ -290,7 +290,7 @@
    "why_math": "Maximize ring field by differentiating; E = -dV/dz"
   },
   "critical-mass": {
-   "min": 75,
+   "min": 70,
    "math": "algebra",
    "level": "intro",
    "needs": "Exponential growth; neutron multiplication; sphere volume and surface area",
@@ -298,7 +298,7 @@
    "why_math": "logs and exponentials only"
   },
   "current-sheet": {
-   "min": 80,
+   "min": 75,
    "math": "algebra",
    "level": "intro",
    "needs": "Electric field and potential; equipotentials; resistance and resistivity; reading a slope",
@@ -306,7 +306,7 @@
    "why_math": "fits lines, plugs into given formulas"
   },
   "dc-circuits": {
-   "min": 80,
+   "min": 75,
    "math": "algebra",
    "level": "intro",
    "needs": "Ohm's law; series and parallel resistors; Kirchhoff's rules; solving simple linear equations",
@@ -314,7 +314,7 @@
    "why_math": "linear equations and line fit"
   },
   "decay-chains": {
-   "min": 75,
+   "min": 65,
    "math": "algebra",
    "level": "intro",
    "needs": "Exponential decay and half life; decay constant; natural logarithms; reading a graph",
@@ -322,7 +322,7 @@
    "why_math": "given Bateman solution; plugs in"
   },
   "diffraction-grating": {
-   "min": 80,
+   "min": 70,
    "math": "algebra",
    "level": "intro",
    "needs": "Interference of waves; path difference; grating equation; sine and tangent",
@@ -330,7 +330,7 @@
    "why_math": "trig and straight line fit"
   },
   "diffusion": {
-   "min": 75,
+   "min": 70,
    "math": "algebra",
    "level": "intro",
    "needs": "Kinetic theory of gases; mean free path; random walk; slope from a graph",
@@ -346,7 +346,7 @@
    "why_math": "straight line fits, given formulas"
   },
   "displacement-current": {
-   "min": 80,
+   "min": 75,
    "math": "algebra",
    "level": "intro",
    "needs": "Ampère's law; electric flux; capacitors and RC circuits; reading a slope",
@@ -354,7 +354,7 @@
    "why_math": "given formulas; slopes and plugging in"
   },
   "doppler": {
-   "min": 75,
+   "min": 70,
    "math": "algebra",
    "level": "intro",
    "needs": "Sound waves; frequency and wave speed; Doppler shift; basic trigonometry",
@@ -362,7 +362,7 @@
    "why_math": "plugging into given formulas"
   },
   "doppler-light": {
-   "min": 75,
+   "min": 70,
    "math": "algebra",
    "level": "intro",
    "needs": "Special relativity; time dilation and gamma; Doppler effect; wavelength and frequency",
@@ -370,7 +370,7 @@
    "why_math": "algebra with given relativistic formulas"
   },
   "double-pendulum": {
-   "min": 75,
+   "min": 65,
    "math": "algebra",
    "level": "intro",
    "needs": "Pendulum oscillation and period; angular frequency; coupled oscillators; logarithms; line fits",
@@ -378,7 +378,7 @@
    "why_math": "given equations; linear fits only"
   },
   "double-slit": {
-   "min": 80,
+   "min": 65,
    "math": "algebra",
    "level": "intro",
    "needs": "Interference of waves; path difference; small angle approximation; reading a slope",
@@ -386,7 +386,7 @@
    "why_math": "small angle algebra and line fits"
   },
   "e-over-m": {
-   "min": 75,
+   "min": 70,
    "math": "algebra",
    "level": "intro",
    "needs": "Magnetic force on a moving charge; circular motion; kinetic energy and voltage",
@@ -402,7 +402,7 @@
    "why_math": "given formulas; plugging in"
   },
   "eddy-currents": {
-   "min": 80,
+   "min": 75,
    "math": "algebra",
    "level": "intro",
    "needs": "Faraday's and Lenz's laws; terminal speed; resistivity and conductivity; reading a slope",
@@ -410,7 +410,7 @@
    "why_math": "given force law; line fits"
   },
   "einstein-solids": {
-   "min": 75,
+   "min": 70,
    "math": "calculus",
    "level": "intro",
    "needs": "Energy quanta; counting arrangements with factorials; entropy and temperature; second law",
@@ -418,7 +418,7 @@
    "why_math": "maximize entropy by differentiating"
   },
   "electron-diffraction": {
-   "min": 75,
+   "min": 65,
    "math": "algebra",
    "level": "intro",
    "needs": "Wave nature of matter; de Broglie wavelength; Bragg diffraction; kinetic energy and voltage",
@@ -426,7 +426,7 @@
    "why_math": "given formulas; line fits"
   },
   "em-waves": {
-   "min": 75,
+   "min": 70,
    "math": "algebra",
    "level": "intro",
    "needs": "Electric and magnetic fields; electromagnetic waves; intensity; reading a slope from a graph",
@@ -458,7 +458,7 @@
    "why_math": "given level formulas; line fits"
   },
   "equivalence-principle": {
-   "min": 70,
+   "min": 65,
    "math": "algebra",
    "level": "intro",
    "needs": "Weight and what a scale measures; free fall; elliptical orbits",
@@ -474,7 +474,7 @@
    "why_math": "arithmetic, kinematics formulas"
   },
   "exoplanets": {
-   "min": 75,
+   "min": 65,
    "math": "algebra",
    "level": "intro",
    "needs": "Kepler's third law; center of mass orbits; density; reading a slope from a graph",
@@ -482,7 +482,7 @@
    "why_math": "given formulas; slopes and plugging in"
   },
   "faraday": {
-   "min": 75,
+   "min": 70,
    "math": "algebra",
    "level": "intro",
    "needs": "Magnetic flux; Faraday's and Lenz's laws; sinusoidal functions; rates of change",
@@ -490,7 +490,7 @@
    "why_math": "Average emf as −NΔΦ/Δt, emf amplitude NBAω given, area under the emf graph by adding trapezoids; differentiating flux and integrating emf moved to With calculus"
   },
   "faraday-mutual-induction": {
-   "min": 75,
+   "min": 70,
    "math": "algebra",
    "level": "intro",
    "needs": "Faraday's law; mutual inductance; motional emf; sinusoidal signals and amplitudes",
@@ -498,7 +498,7 @@
    "why_math": "given formulas; plugging in"
   },
   "fluids": {
-   "min": 80,
+   "min": 75,
    "math": "algebra",
    "level": "intro",
    "needs": "Pressure and depth; Archimedes' principle; continuity and Bernoulli's equation; reading a slope",
@@ -506,7 +506,7 @@
    "why_math": "given formulas; line fits"
   },
   "force-table": {
-   "min": 80,
+   "min": 75,
    "math": "algebra",
    "level": "intro",
    "needs": "Newton's first law; force vectors and components; sine and cosine; equilibrium",
@@ -514,7 +514,7 @@
    "why_math": "vector components with trigonometry"
   },
   "forces": {
-   "min": 80,
+   "min": 70,
    "math": "algebra",
    "level": "intro",
    "needs": "Newton's laws; free body diagrams; friction coefficients; work and kinetic energy; line fits",
@@ -522,7 +522,7 @@
    "why_math": "given formulas; transformed line fit"
   },
   "franck-hertz": {
-   "min": 75,
+   "min": 65,
    "math": "algebra",
    "level": "intro",
    "needs": "Bohr model; energy levels of atoms; electron volts; photon wavelength and energy",
@@ -530,7 +530,7 @@
    "why_math": "line fits and given formulas"
   },
   "free-expansion": {
-   "min": 75,
+   "min": 60,
    "math": "algebra",
    "level": "intro",
    "needs": "Ideal gas; counting arrangements with combinations; entropy and the second law; probability",
@@ -546,7 +546,7 @@
    "why_math": "log log line fit; given formulas"
   },
   "galactic-habitable-zone": {
-   "min": 75,
+   "min": 70,
    "math": "algebra",
    "level": "intro",
    "needs": "Fusion makes heavy elements; supernovae harm life; probabilities multiply; reading a graph",
@@ -554,7 +554,7 @@
    "why_math": "Powers of ten and products of probabilities"
   },
   "galaxy-center": {
-   "min": 70,
+   "min": 65,
    "math": "algebra",
    "level": "intro",
    "needs": "Brightness falls as one over distance squared; orbits and Kepler's third law in AU and years; light years",
@@ -562,7 +562,7 @@
    "why_math": "square roots, powers of ten and unit conversions; one straight line graph"
   },
   "galaxy-tides": {
-   "min": 65,
+   "min": 60,
    "math": "algebra",
    "level": "intro",
    "needs": "Gravity weakens as one over distance squared; tides on the Earth; time equals distance over speed",
@@ -570,7 +570,7 @@
    "why_math": "ratios, squares and unit conversions; no graph"
   },
   "galton-board": {
-   "min": 75,
+   "min": 70,
    "math": "algebra",
    "level": "intro",
    "needs": "Probability of independent events; counting paths; mean and standard deviation",
@@ -578,7 +578,7 @@
    "why_math": "Binomial formulas, slopes of fitted lines"
   },
   "gamma-absorption": {
-   "min": 75,
+   "min": 65,
    "math": "algebra",
    "level": "intro",
    "needs": "Exponential decay; inverse square law; natural logarithms and slopes",
@@ -594,7 +594,7 @@
    "why_math": "Linear calibration fit and given formulas"
   },
   "gas-thermometer": {
-   "min": 70,
+   "min": 60,
    "math": "algebra",
    "level": "intro",
    "needs": "Ideal gas law; Kelvin and Celsius scales; fitting a line and extrapolating",
@@ -602,7 +602,7 @@
    "why_math": "Linear fits and extrapolation only"
   },
   "gauss-law": {
-   "min": 75,
+   "min": 70,
    "math": "algebra",
    "level": "intro",
    "needs": "Electric flux; Gauss's law; spherical symmetry; superposition of charges",
@@ -610,7 +610,7 @@
    "why_math": "Symmetry reduces flux to field times area"
   },
   "gps-clocks": {
-   "min": 80,
+   "min": 75,
    "math": "algebra",
    "level": "intro",
    "needs": "Time dilation from speed; gravity slows clocks; circular orbit speed; fitting a line",
@@ -618,7 +618,7 @@
    "why_math": "Given approximate formulas, linear fits"
   },
   "gravity-near-earth": {
-   "min": 80,
+   "min": 70,
    "math": "algebra",
    "level": "intro",
    "needs": "Newton's law of gravitation; centripetal acceleration; fitting a line to transformed data",
@@ -626,7 +626,7 @@
    "why_math": "Linear fits to 1/r² and cos² data"
   },
   "gyroscope": {
-   "min": 70,
+   "min": 60,
    "math": "algebra",
    "level": "intro",
    "needs": "Torque; angular momentum; moment of inertia; vector directions",
@@ -634,7 +634,7 @@
    "why_math": "Given precession formula, line fits"
   },
   "habitable-zones": {
-   "min": 70,
+   "min": 65,
    "math": "algebra",
    "level": "intro",
    "needs": "Square roots and powers of ten; what a star's luminosity is; reading a straight line graph",
@@ -650,7 +650,7 @@
    "why_math": "Given formulas, linear and quadratic fits"
   },
   "hcl-spectrum-light": {
-   "min": 45,
+   "min": 40,
    "math": "algebra",
    "level": "intro",
    "needs": "Photon energy E = hc/λ; electric dipole; molecular vibration; greenhouse effect",
@@ -658,7 +658,7 @@
    "why_math": "Only photon energy arithmetic"
   },
   "heat-capacities-of-gases": {
-   "min": 75,
+   "min": 70,
    "math": "algebra",
    "level": "intro",
    "needs": "First law of thermodynamics; molar heat capacity; equipartition; fitting a line",
@@ -666,7 +666,7 @@
    "why_math": "Given formulas, slopes of fitted lines"
   },
   "heat-conduction": {
-   "min": 75,
+   "min": 65,
    "math": "algebra",
    "level": "intro",
    "needs": "Conduction of heat; thermal resistance of layers; reading a slope",
@@ -674,7 +674,7 @@
    "why_math": "Slopes of linear fits only"
   },
   "heat-engines": {
-   "min": 75,
+   "min": 70,
    "math": "algebra",
    "level": "intro",
    "needs": "First law; PV diagrams and work; adiabatic and isothermal processes; efficiency",
@@ -682,7 +682,7 @@
    "why_math": "Given formulas, logs and line fits"
   },
   "heating-curve": {
-   "min": 75,
+   "min": 70,
    "math": "algebra",
    "level": "intro",
    "needs": "Specific heat; latent heat; phase changes; fitting a line",
@@ -690,7 +690,7 @@
    "why_math": "Slopes of linear fits only"
   },
   "holography": {
-   "min": 85,
+   "min": 75,
    "math": "algebra",
    "level": "intro",
    "needs": "Interference of waves; diffraction grating; angles and sines; wavelength and color",
@@ -698,7 +698,7 @@
    "why_math": "Sine formulas and straight line fits"
   },
   "household-wiring": {
-   "min": 75,
+   "min": 70,
    "math": "algebra",
    "level": "intro",
    "needs": "Ohm's law; electric power P = IV; resistance of a wire; parallel circuits",
@@ -706,7 +706,7 @@
    "why_math": "Ohm's law and power formulas"
   },
   "hr-diagram": {
-   "min": 75,
+   "min": 70,
    "math": "algebra",
    "level": "intro",
    "needs": "Blackbody radiation; luminosity, radius and temperature; power laws and logarithms",
@@ -714,7 +714,7 @@
    "why_math": "Log graphs and given formulas"
   },
   "hr-diagram-cluster": {
-   "min": 40,
+   "min": 35,
    "math": "calculus",
    "level": "intro",
    "needs": "Main sequence lifetime; star clusters; power laws and logarithms; integrating a power",
@@ -722,7 +722,7 @@
    "why_math": "Prelab integrates a power law"
   },
   "hubble-law": {
-   "min": 75,
+   "min": 65,
    "math": "algebra",
    "level": "intro",
    "needs": "Doppler redshift; recession velocity; reading a slope from a graph",
@@ -746,7 +746,7 @@
    "why_math": "Given formulas, standard errors, line fits"
   },
   "hydrogen-in-stars": {
-   "min": 75,
+   "min": 70,
    "math": "algebra",
    "level": "intro",
    "needs": "Hydrogen energy levels; Boltzmann factor; ionization; exponentials and logarithms",
@@ -754,7 +754,7 @@
    "why_math": "Plugging into Boltzmann and Saha formulas"
   },
   "ideal-gas": {
-   "min": 75,
+   "min": 65,
    "math": "algebra",
    "level": "intro",
    "needs": "Ideal gas law; kinetic theory of gases; temperature and molecular speed",
@@ -762,7 +762,7 @@
    "why_math": "Given formulas, slopes of fitted lines"
   },
   "impulse": {
-   "min": 75,
+   "min": 70,
    "math": "algebra",
    "level": "intro",
    "needs": "Momentum and impulse; Newton's second law; area under a force curve",
@@ -778,7 +778,7 @@
    "why_math": "Given formulas for E and dB/dt"
   },
   "induction": {
-   "min": 80,
+   "min": 75,
    "math": "algebra",
    "level": "intro",
    "needs": "Conductors and induced charge; grounding; Coulomb's law; charge sharing",
@@ -794,7 +794,7 @@
    "why_math": "Given formulas, energy bookkeeping"
   },
   "ink-jet-printer": {
-   "min": 80,
+   "min": 75,
    "math": "algebra",
    "level": "intro",
    "needs": "Electric force on a charge; projectile motion; electric field between plates",
@@ -802,7 +802,7 @@
    "why_math": "Given deflection formula, line fits"
   },
   "interstellar-medium": {
-   "min": 75,
+   "min": 70,
    "math": "algebra",
    "level": "intro",
    "needs": "Spectra and the colors of light; brightness falls as 1/d²; c = λf; the Doppler shift",
@@ -810,7 +810,7 @@
    "why_math": "powers of ten, square roots and ratios; one straight line graph"
   },
   "intro-aberrations": {
-   "min": 70,
+   "min": 65,
    "math": "algebra",
    "level": "intro",
    "needs": "Diffraction limit of a telescope; focal ratio; lenses and mirrors; angles in arcseconds",
@@ -818,7 +818,7 @@
    "why_math": "Given formulas and ratios"
   },
   "intro-atmospheres": {
-   "min": 70,
+   "min": 65,
    "math": "algebra",
    "level": "intro",
    "needs": "Temperature and molecular speed; escape speed; square roots and ratios",
@@ -826,7 +826,7 @@
    "why_math": "Square roots and ratios only"
   },
   "intro-blackbody": {
-   "min": 60,
+   "min": 55,
    "math": "algebra",
    "level": "intro",
    "needs": "Powers and ratios; what temperature and color of a hot object mean",
@@ -834,7 +834,7 @@
    "why_math": "Ratios and fourth powers of given laws"
   },
   "intro-celestial-sphere": {
-   "min": 60,
+   "min": 50,
    "math": "algebra",
    "level": "intro",
    "needs": "Angles and degrees; latitude and longitude on Earth; why stars rise and set",
@@ -842,7 +842,7 @@
    "why_math": "Angle arithmetic; line slope and intercept"
   },
   "intro-constellations-3d": {
-   "min": 60,
+   "min": 50,
    "math": "algebra",
    "level": "intro",
    "needs": "Inverse square law of light; magnitude scale; logarithms on a calculator",
@@ -850,7 +850,7 @@
    "why_math": "Given logarithm formulas; no derivatives needed"
   },
   "intro-craters": {
-   "min": 70,
+   "min": 60,
    "math": "algebra",
    "level": "intro",
    "needs": "Surface area and volume of a sphere; impacts and gravity; rates and counting",
@@ -866,7 +866,7 @@
    "why_math": "Scientific notation and v = λf"
   },
   "intro-exoplanets": {
-   "min": 80,
+   "min": 70,
    "math": "algebra",
    "level": "intro",
    "needs": "Size and mass ratios; density; inverse square law of light; Kepler's third law",
@@ -874,7 +874,7 @@
    "why_math": "Multi step algebra with given recipe"
   },
   "intro-giant-planets": {
-   "min": 80,
+   "min": 75,
    "math": "algebra",
    "level": "intro",
    "needs": "Kepler's third law; density; gravity and orbits; graphing a slope",
@@ -882,7 +882,7 @@
    "why_math": "Graph slopes and ratios only"
   },
   "intro-gravity": {
-   "min": 65,
+   "min": 60,
    "math": "algebra",
    "level": "intro",
    "needs": "Newton's law of gravity; inverse square law; mass versus weight; reading a slope",
@@ -890,7 +890,7 @@
    "why_math": "Inverse square plugging in; linear graph"
   },
   "intro-inside-a-planet": {
-   "min": 75,
+   "min": 70,
    "math": "algebra",
    "level": "intro",
    "needs": "Density as mass over volume; floating and buoyancy; heat flow; reading a graph line",
@@ -898,7 +898,7 @@
    "why_math": "Linear graph and ratios"
   },
   "intro-kepler": {
-   "min": 65,
+   "min": 60,
    "math": "algebra",
    "level": "intro",
    "needs": "Ellipses, perihelion and aphelion; Kepler's three laws; graphing a slope",
@@ -906,7 +906,7 @@
    "why_math": "Averages, ratios and a linear graph"
   },
   "intro-lagrange": {
-   "min": 60,
+   "min": 55,
    "math": "algebra",
    "level": "intro",
    "needs": "Newton's law of gravity; orbital period; ratios and unit conversion",
@@ -914,7 +914,7 @@
    "why_math": "Unit conversions and ratios"
   },
   "intro-mars-ages": {
-   "min": 65,
+   "min": 55,
    "math": "algebra",
    "level": "intro",
    "needs": "Crater counting and surface age; area and density of craters; gravity and impacts",
@@ -922,7 +922,7 @@
    "why_math": "Ratios, square roots and counts"
   },
   "intro-mirrors": {
-   "min": 55,
+   "min": 50,
    "math": "algebra",
    "level": "intro",
    "needs": "Refraction of light and index of refraction; focal length of lenses and mirrors",
@@ -930,7 +930,7 @@
    "why_math": "Subtraction and percent of focal lengths"
   },
   "intro-moon": {
-   "min": 65,
+   "min": 60,
    "math": "algebra",
    "level": "intro",
    "needs": "Moon's orbit and phases; Sun, Earth, Moon geometry; angles per day",
@@ -938,7 +938,7 @@
    "why_math": "Differences, rates and angle arithmetic"
   },
   "intro-parallax": {
-   "min": 65,
+   "min": 60,
    "math": "algebra",
    "level": "intro",
    "needs": "Parallax and angle of view; arcseconds; inverse proportions; reading a slope",
@@ -946,7 +946,7 @@
    "why_math": "Inverse proportion; linear graph slope"
   },
   "intro-planet-temperatures": {
-   "min": 75,
+   "min": 70,
    "math": "algebra",
    "level": "intro",
    "needs": "Inverse square law; energy balance; greenhouse effect; escape speed; reading a slope",
@@ -954,7 +954,7 @@
    "why_math": "Ratios and a linear graph"
   },
   "intro-precession": {
-   "min": 65,
+   "min": 60,
    "math": "algebra",
    "level": "intro",
    "needs": "Torque and angular momentum of a spinning wheel; Earth's axis tilt; period and rate",
@@ -962,7 +962,7 @@
    "why_math": "Ratios, rates and a graph shape"
   },
   "intro-resolution": {
-   "min": 65,
+   "min": 60,
    "math": "algebra",
    "level": "intro",
    "needs": "Light waves and wavelength; diffraction limit 1.22 λ/D; angles in radians",
@@ -970,7 +970,7 @@
    "why_math": "Plugging into given resolution formula"
   },
   "intro-resonances": {
-   "min": 75,
+   "min": 65,
    "math": "algebra",
    "level": "intro",
    "needs": "Kepler's third law; orbital period ratios; gravity between planets; calculator powers",
@@ -978,7 +978,7 @@
    "why_math": "Fractional powers by calculator; ratios"
   },
   "intro-retrograde": {
-   "min": 70,
+   "min": 65,
    "math": "algebra",
    "level": "intro",
    "needs": "Orbital periods; Earth and planet positions from above; synodic period; sky longitude",
@@ -986,7 +986,7 @@
    "why_math": "Given synodic formula; plotting a graph"
   },
   "intro-retrograde-venus": {
-   "min": 65,
+   "min": 60,
    "math": "algebra",
    "level": "intro",
    "needs": "Phases of Venus; Sun, Earth, Venus geometry; Ptolemy's and Copernicus's models of the sky",
@@ -994,7 +994,7 @@
    "why_math": "Percent and angle comparisons only"
   },
   "intro-scale": {
-   "min": 65,
+   "min": 60,
    "math": "algebra",
    "level": "intro",
    "needs": "Scientific notation; astronomical unit and light year; speed of light as distance over time",
@@ -1002,7 +1002,7 @@
    "why_math": "Scientific notation and unit conversion"
   },
   "intro-seasons": {
-   "min": 60,
+   "min": 55,
    "math": "algebra",
    "level": "intro",
    "needs": "Tilt of Earth's axis; inverse square law; latitude; angle of sunlight on a surface",
@@ -1010,7 +1010,7 @@
    "why_math": "Ratios and angle differences"
   },
   "intro-seeing": {
-   "min": 60,
+   "min": 55,
    "math": "algebra",
    "level": "intro",
    "needs": "Diffraction limit 1.22 λ/D; wavelength of light; how air blurs images",
@@ -1018,7 +1018,7 @@
    "why_math": "Plugging into given formulas"
   },
   "intro-sidereal-day": {
-   "min": 70,
+   "min": 65,
    "math": "algebra",
    "level": "intro",
    "needs": "Rotation and revolution of planets; angles in degrees; converting hours to minutes",
@@ -1026,7 +1026,7 @@
    "why_math": "Subtraction, ratios and unit conversion"
   },
   "intro-solar-system-formation": {
-   "min": 70,
+   "min": 65,
    "math": "algebra",
    "level": "intro",
    "needs": "Angular momentum; inverse square law of sunlight; temperature and ice; ratios",
@@ -1034,7 +1034,7 @@
    "why_math": "Ratios and given scaling rules"
   },
   "intro-spectra": {
-   "min": 60,
+   "min": 55,
    "math": "algebra",
    "level": "intro",
    "needs": "Atoms and electron energy levels; wavelength of light; Kirchhoff's three spectra",
@@ -1042,7 +1042,7 @@
    "why_math": "Mostly conceptual; subtracting wavelengths"
   },
   "intro-stellarium-sky": {
-   "min": 75,
+   "min": 70,
    "math": "algebra",
    "level": "intro",
    "needs": "Altitude and azimuth; right ascension and declination; latitude and the pole star",
@@ -1050,7 +1050,7 @@
    "why_math": "Degree arithmetic and given rules"
   },
   "intro-telescope": {
-   "min": 65,
+   "min": 60,
    "math": "algebra",
    "level": "intro",
    "needs": "Lenses and focal length; magnification as a ratio; circle area; reading a slope",
@@ -1058,7 +1058,7 @@
    "why_math": "Ratios, squares and a linear graph"
   },
   "intro-tides": {
-   "min": 65,
+   "min": 60,
    "math": "algebra",
    "level": "intro",
    "needs": "Newton's law of gravity; inverse square law; Earth–Moon–Sun geometry; ratios",
@@ -1074,7 +1074,7 @@
    "why_math": "Algebra with given kinematics; statistics of masses"
   },
   "ising": {
-   "min": 75,
+   "min": 65,
    "math": "algebra",
    "level": "intro",
    "needs": "Boltzmann probability and entropy; ferromagnetism and the Curie temperature; log log graphs",
@@ -1082,7 +1082,7 @@
    "why_math": "Plugging into given formulas; log fits"
   },
   "junction-transistor": {
-   "min": 70,
+   "min": 60,
    "math": "algebra",
    "level": "intro",
    "needs": "Diode and resistor circuits; Ohm's law; reading a slope from a log graph",
@@ -1090,7 +1090,7 @@
    "why_math": "Exponential diode law, ln graphs, no derivatives"
   },
   "kepler-orbits": {
-   "min": 80,
+   "min": 75,
    "math": "algebra",
    "level": "intro",
    "needs": "Newton's law of gravitation; ellipses and orbits; angular momentum; fitting a line",
@@ -1098,7 +1098,7 @@
    "why_math": "Power law fit, given formulas"
   },
   "kundts-tube": {
-   "min": 75,
+   "min": 65,
    "math": "algebra",
    "level": "intro",
    "needs": "Standing waves, nodes and antinodes; wave speed and wavelength; speed of sound in gases",
@@ -1106,7 +1106,7 @@
    "why_math": "Wave speed formulas, straight line fits"
   },
   "lagrange-points": {
-   "min": 75,
+   "min": 70,
    "math": "algebra",
    "level": "intro",
    "needs": "Newton's gravity and circular orbits; the rotating frame; effective potential; log and power fits",
@@ -1146,7 +1146,7 @@
    "why_math": "Given magnification formulas"
   },
   "loops-solenoids": {
-   "min": 80,
+   "min": 75,
    "math": "algebra",
    "level": "intro",
    "needs": "Magnetic field of currents; Biot Savart law; Ampère's law; solenoids",
@@ -1154,7 +1154,7 @@
    "why_math": "Given field formulas, symmetry only"
   },
   "magnetic-force": {
-   "min": 70,
+   "min": 60,
    "math": "algebra",
    "level": "intro",
    "needs": "Magnetic force on a moving charge; circular motion; velocity components",
@@ -1162,7 +1162,7 @@
    "why_math": "Plugging into formulas, linear fits"
   },
   "magnetic-force-hall": {
-   "min": 30,
+   "min": 25,
    "math": "algebra",
    "level": "intro",
    "needs": "Magnetic force on moving charges; right hand rule; current and drift velocity",
@@ -1178,7 +1178,7 @@
    "why_math": "Given formulas, slope of a line"
   },
   "magnets-oersted": {
-   "min": 75,
+   "min": 70,
    "math": "algebra",
    "level": "intro",
    "needs": "Magnetic poles and field lines; field of a current carrying wire; vector addition",
@@ -1186,7 +1186,7 @@
    "why_math": "Tangent graphs, given field formulas"
   },
   "main-sequence-fitting": {
-   "min": 75,
+   "min": 65,
    "math": "algebra",
    "level": "intro",
    "needs": "Apparent and absolute magnitude; distance modulus; the H-R diagram; quadratic fit",
@@ -1218,7 +1218,7 @@
    "why_math": "Given formulas, fit against T squared"
   },
   "meter-loading": {
-   "min": 70,
+   "min": 65,
    "math": "algebra",
    "level": "intro",
    "needs": "Ohm's law; series and parallel resistors; how voltmeters and ammeters connect",
@@ -1226,7 +1226,7 @@
    "why_math": "student fits and reads graphs; no calculus steps"
   },
   "michelson": {
-   "min": 80,
+   "min": 65,
    "math": "algebra",
    "level": "intro",
    "needs": "Interference of light; path difference and phase; index of refraction",
@@ -1234,7 +1234,7 @@
    "why_math": "Counting fringes, linear fits"
   },
   "mirrors-refraction": {
-   "min": 80,
+   "min": 75,
    "math": "algebra",
    "level": "intro",
    "needs": "Reflection and refraction; the mirror equation; sign conventions for images",
@@ -1250,7 +1250,7 @@
    "why_math": "Plugging into formulas, linear fits"
   },
   "moon-phases": {
-   "min": 75,
+   "min": 70,
    "math": "algebra",
    "level": "intro",
    "needs": "Orbits of the Moon and Earth; the Moon's phases; angles and basic trigonometry",
@@ -1258,7 +1258,7 @@
    "why_math": "Trig in given formulas, linear fits"
   },
   "motion-graphs": {
-   "min": 75,
+   "min": 65,
    "math": "algebra",
    "level": "intro",
    "needs": "Position, velocity and acceleration; slope and area of graphs; constant acceleration",
@@ -1410,7 +1410,7 @@
    "why_math": "Differentiates ln of an integral"
   },
   "nearest-brightest": {
-   "min": 75,
+   "min": 70,
    "math": "algebra",
    "level": "intro",
    "needs": "Apparent and absolute magnitude; the inverse square law; logarithms; fitting a line",
@@ -1418,7 +1418,7 @@
    "why_math": "Logs and line fits only"
   },
   "neutral-attraction": {
-   "min": 80,
+   "min": 75,
    "math": "algebra",
    "level": "intro",
    "needs": "Coulomb's law and electric field; polarization of insulators; log log graphs",
@@ -1426,7 +1426,7 @@
    "why_math": "Derivative given; plug into formulas"
   },
   "normal-modes": {
-   "min": 80,
+   "min": 70,
    "math": "algebra",
    "level": "intro",
    "needs": "Masses and springs; simple harmonic motion and frequency; standing waves; sine of an angle",
@@ -1442,7 +1442,7 @@
    "why_math": "Arithmetic with given formulas"
   },
   "numerical-methods": {
-   "min": 75,
+   "min": 70,
    "math": "algebra",
    "level": "intro",
    "needs": "Simple harmonic motion; conservation of energy; slopes on log scale graphs",
@@ -1466,7 +1466,7 @@
    "why_math": "Plugging into the threshold formula"
   },
   "pendulum": {
-   "min": 70,
+   "min": 60,
    "math": "algebra",
    "level": "intro",
    "needs": "Simple harmonic motion and period; reading a slope; squaring data to straighten a graph",
@@ -1490,7 +1490,7 @@
    "why_math": "Line fit and unit conversion"
   },
   "pipe-flow": {
-   "min": 80,
+   "min": 75,
    "math": "algebra",
    "level": "intro",
    "needs": "Fluid pressure and flow rate; viscosity; Poiseuille's law; reading a slope",
@@ -1522,7 +1522,7 @@
    "why_math": "Slopes estimated from table values"
   },
   "precipitator": {
-   "min": 75,
+   "min": 65,
    "math": "algebra",
    "level": "intro",
    "needs": "Electric force on a charge; drag on a moving particle; exponentials and natural logs",
@@ -1530,7 +1530,7 @@
    "why_math": "Logs and line fits only"
   },
   "projectile-drag": {
-   "min": 80,
+   "min": 60,
    "math": "algebra",
    "level": "intro",
    "needs": "Projectile motion; kinematic equations; air resistance; fitting a quadratic",
@@ -1538,7 +1538,7 @@
    "why_math": "Kinematics formulas and error propagation formula"
   },
   "pulsar-spin": {
-   "min": 70,
+   "min": 65,
    "math": "algebra",
    "level": "intro",
    "needs": "Density as mass over volume; a spinning object that shrinks turns faster; powers of ten",
@@ -1570,7 +1570,7 @@
    "why_math": "Counting charges and a line fit"
   },
   "quasar-engine": {
-   "min": 75,
+   "min": 70,
    "math": "algebra",
    "level": "intro",
    "needs": "The speed of light and light years; E = mc²; power as energy per second",
@@ -1594,7 +1594,7 @@
    "why_math": "Takes logs of the given result"
   },
   "rc-circuits": {
-   "min": 80,
+   "min": 75,
    "math": "algebra",
    "level": "intro",
    "needs": "Capacitors and resistors; Kirchhoff's loop rule; exponentials and natural logs",
@@ -1602,7 +1602,7 @@
    "why_math": "Given exponentials, log line fits"
   },
   "relative-motion": {
-   "min": 70,
+   "min": 65,
    "math": "algebra",
    "level": "intro",
    "needs": "Adding velocities in different frames; projectile motion; constant acceleration",
@@ -1618,7 +1618,7 @@
    "why_math": "Algebra with given relativity formulas"
   },
   "relativistic-momentum": {
-   "min": 75,
+   "min": 70,
    "math": "algebra",
    "level": "intro",
    "needs": "Newton's second law as F = dp/dt; kinetic energy and work; reading a slope",
@@ -1634,7 +1634,7 @@
    "why_math": "Plugging into given formulas, fitting lines"
   },
   "resistivity": {
-   "min": 80,
+   "min": 70,
    "math": "algebra",
    "level": "intro",
    "needs": "Ohm's law; current as moving charge; fitting a straight line",
@@ -1642,7 +1642,7 @@
    "why_math": "Plugging into given formulas, fitting lines"
   },
   "resolution": {
-   "min": 80,
+   "min": 70,
    "math": "algebra",
    "level": "intro",
    "needs": "Single slit diffraction; wavelength and angle; small angle approximation",
@@ -1650,7 +1650,7 @@
    "why_math": "Plugging into given formulas, fitting lines"
   },
   "resonators": {
-   "min": 75,
+   "min": 65,
    "math": "algebra",
    "level": "intro",
    "needs": "Standing waves in a pipe; nodes and antinodes; speed of sound; fitting a line",
@@ -1658,7 +1658,7 @@
    "why_math": "Plugging into given formulas, fitting lines"
   },
   "ripple-tank": {
-   "min": 75,
+   "min": 65,
    "math": "algebra",
    "level": "intro",
    "needs": "Wave speed v = fλ; two source interference; Snell's law; sines",
@@ -1666,7 +1666,7 @@
    "why_math": "Plugging into given formulas, fitting lines"
   },
   "rlc-transients": {
-   "min": 80,
+   "min": 70,
    "math": "algebra",
    "level": "intro",
    "needs": "Energy in capacitors and inductors; oscillation and damping; natural logarithm",
@@ -1674,7 +1674,7 @@
    "why_math": "Plugging into given formulas, fitting lines"
   },
   "rocket": {
-   "min": 80,
+   "min": 75,
    "math": "algebra",
    "level": "intro",
    "needs": "Momentum conservation; Newton's second law; natural logarithm; fitting a line",
@@ -1682,7 +1682,7 @@
    "why_math": "Plugging into given formulas, fitting lines"
   },
   "room-acoustics": {
-   "min": 75,
+   "min": 70,
    "math": "algebra",
    "level": "intro",
    "needs": "Sound level in decibels; sound absorption; reciprocals and fitting a line",
@@ -1690,7 +1690,7 @@
    "why_math": "Plugging into given formulas, fitting lines"
   },
   "rotation": {
-   "min": 80,
+   "min": 75,
    "math": "algebra",
    "level": "intro",
    "needs": "Torque; angular velocity and acceleration; rolling without slipping; angular momentum",
@@ -1698,7 +1698,7 @@
    "why_math": "Plugging into given formulas, fitting lines"
   },
   "rotation-curves": {
-   "min": 75,
+   "min": 70,
    "math": "calculus",
    "level": "intro",
    "needs": "Circular orbits and gravity; Doppler shift; integrating a mass density",
@@ -1706,7 +1706,7 @@
    "why_math": "Integrates a density over radius to find mass"
   },
   "rotational-dynamics": {
-   "min": 75,
+   "min": 65,
    "math": "algebra",
    "level": "intro",
    "needs": "Torque and rotational inertia; Newton's second law; free body diagrams; fitting a line",
@@ -1714,7 +1714,7 @@
    "why_math": "Plugging into given formulas, fitting lines"
   },
   "ruchardt": {
-   "min": 75,
+   "min": 65,
    "math": "algebra",
    "level": "intro",
    "needs": "Adiabatic process; simple harmonic motion; heat capacities; pressure and force",
@@ -1722,7 +1722,7 @@
    "why_math": "Plugging into given formulas, fitting lines"
   },
   "rutherford": {
-   "min": 70,
+   "min": 60,
    "math": "algebra",
    "level": "intro",
    "needs": "Coulomb force and energy conservation; logarithms; counting statistics",
@@ -1730,7 +1730,7 @@
    "why_math": "Plugging into given formulas, fitting lines"
   },
   "sampling-aliasing": {
-   "min": 75,
+   "min": 65,
    "math": "algebra",
    "level": "intro",
    "needs": "Frequency and period; harmonics of a tone; sine waves",
@@ -1738,7 +1738,7 @@
    "why_math": "student fits and reads graphs; no calculus steps"
   },
   "seasons": {
-   "min": 75,
+   "min": 70,
    "math": "algebra",
    "level": "intro",
    "needs": "Earth's tilt and orbit; inverse square law; sine and cosine of an angle",
@@ -1762,7 +1762,7 @@
    "why_math": "Plugging into given formulas, fitting lines"
   },
   "shear-bulk": {
-   "min": 80,
+   "min": 70,
    "math": "algebra",
    "level": "intro",
    "needs": "Stress and strain; Young's modulus; pressure; fitting a line",
@@ -1770,7 +1770,7 @@
    "why_math": "Plugging into given formulas, fitting lines"
   },
   "single-slit": {
-   "min": 80,
+   "min": 70,
    "math": "algebra",
    "level": "intro",
    "needs": "Wave interference; path difference; sine of an angle; fitting a line",
@@ -1778,7 +1778,7 @@
    "why_math": "Plugging into given formulas, fitting lines"
   },
   "sound-intensity": {
-   "min": 75,
+   "min": 70,
    "math": "algebra",
    "level": "intro",
    "needs": "Intensity and the inverse square law; decibels; logarithms",
@@ -1786,7 +1786,7 @@
    "why_math": "Plugging into given formulas, fitting lines"
   },
   "sound-waves": {
-   "min": 75,
+   "min": 60,
    "math": "algebra",
    "level": "intro",
    "needs": "Wave speed and wavelength; pressure and displacement; ideal gas; fitting a line",
@@ -1794,7 +1794,7 @@
    "why_math": "Plugging into given formulas, fitting lines"
   },
   "spacetime": {
-   "min": 75,
+   "min": 70,
    "math": "algebra",
    "level": "intro",
    "needs": "Postulates of relativity; time dilation and length contraction; Lorentz transformation",
@@ -1802,7 +1802,7 @@
    "why_math": "Plugging into given formulas, fitting lines"
   },
   "spectra": {
-   "min": 75,
+   "min": 70,
    "math": "algebra",
    "level": "intro",
    "needs": "Bohr model of hydrogen; photon energy and wavelength; fitting a line",
@@ -1810,7 +1810,7 @@
    "why_math": "Plugging into given formulas, fitting lines"
   },
   "speed-of-light": {
-   "min": 75,
+   "min": 65,
    "math": "algebra",
    "level": "intro",
    "needs": "Reflection of light; angular speed; lenses and image distance; fitting a line",
@@ -1826,7 +1826,7 @@
    "why_math": "Plugging into given formulas, fitting lines"
   },
   "springs": {
-   "min": 75,
+   "min": 65,
    "math": "algebra",
    "level": "intro",
    "needs": "Hooke's law; simple harmonic motion; period; fitting a line",
@@ -1834,7 +1834,7 @@
    "why_math": "Plugging into given formulas, fitting lines"
   },
   "springs-driven": {
-   "min": 50,
+   "min": 40,
    "math": "algebra",
    "level": "intro",
    "needs": "Simple harmonic motion; natural frequency; damping; reading a graph",
@@ -1842,7 +1842,7 @@
    "why_math": "Plugging into given formulas, fitting lines"
   },
   "springs-series-parallel": {
-   "min": 55,
+   "min": 50,
    "math": "algebra",
    "level": "intro",
    "needs": "Hooke's law; equilibrium of forces; fitting a line",
@@ -1850,7 +1850,7 @@
    "why_math": "Plugging into given formulas, fitting lines"
   },
   "standing-waves": {
-   "min": 75,
+   "min": 70,
    "math": "algebra",
    "level": "intro",
    "needs": "Standing waves on a string; harmonics; wave speed; beats between two tones",
@@ -1858,7 +1858,7 @@
    "why_math": "Plugging into given formulas, fitting lines"
   },
   "star-census": {
-   "min": 69,
+   "min": 64,
    "math": "algebra",
    "level": "intro",
    "needs": "The inverse square law; the magnitude scale (5 magnitudes = 100 times); volume of a sphere",
@@ -1866,7 +1866,7 @@
    "why_math": "ratios, squares and cubes; one straight line graph"
   },
   "star-formation": {
-   "min": 72,
+   "min": 67,
    "math": "algebra",
    "level": "intro",
    "needs": "Pressure of a gas (P = nkT in words); Kepler's third law; a slow spin speeds up as it shrinks",
@@ -1874,7 +1874,7 @@
    "why_math": "ratios and powers; one straight line graph"
   },
   "star-lifetimes": {
-   "min": 73,
+   "min": 68,
    "math": "algebra",
    "level": "intro",
    "needs": "E = mc² in words; luminosity as energy each second; scientific notation",
@@ -1882,7 +1882,7 @@
    "why_math": "plugging into a given formula; ratios; one straight line graph"
   },
   "static-equilibrium": {
-   "min": 75,
+   "min": 70,
    "math": "algebra",
    "level": "intro",
    "needs": "Force balance; torque about a point; free body diagrams; trigonometry",
@@ -1890,7 +1890,7 @@
    "why_math": "Plugging into given formulas, fitting lines"
   },
   "stellar-temperature": {
-   "min": 68,
+   "min": 63,
    "math": "algebra",
    "level": "intro",
    "needs": "Wavelength and color of light; temperature in kelvin; atoms with electrons on energy levels",
@@ -1906,7 +1906,7 @@
    "why_math": "Plugging into given formulas, fitting lines"
   },
   "straight-wire-fields": {
-   "min": 80,
+   "min": 75,
    "math": "algebra",
    "level": "intro",
    "needs": "Magnetic field of a current; right hand rule; reading a slope from a graph",
@@ -1914,7 +1914,7 @@
    "why_math": "no derivatives or integrals required"
   },
   "straight-wire-fields-ampere": {
-   "min": 40,
+   "min": 35,
    "math": "algebra",
    "level": "intro",
    "needs": "Magnetic field of a long wire; right hand rule; what a line sum of B means",
@@ -1922,7 +1922,7 @@
    "why_math": "circulation given in the data table"
   },
   "stress-strain": {
-   "min": 75,
+   "min": 70,
    "math": "algebra",
    "level": "intro",
    "needs": "Stress, strain and Young's modulus; Hooke's law; fitting a line to data",
@@ -1930,7 +1930,7 @@
    "why_math": "no derivatives or integrals required"
   },
   "string-density": {
-   "min": 75,
+   "min": 70,
    "math": "algebra",
    "level": "intro",
    "needs": "Standing waves on a string; wave speed and tension; fitting a line to data",
@@ -1938,7 +1938,7 @@
    "why_math": "no derivatives or integrals required"
   },
   "sunspot-cycle": {
-   "min": 69,
+   "min": 59,
    "math": "algebra",
    "level": "intro",
    "needs": "Temperature in kelvin; a fourth power on a calculator; reading a graph against time",
@@ -1946,7 +1946,7 @@
    "why_math": "a fourth power ratio; one straight line graph"
   },
   "terminal-velocity": {
-   "min": 75,
+   "min": 70,
    "math": "algebra",
    "level": "intro",
    "needs": "Newton's second law; free body diagrams; drag force growing with speed",
@@ -1962,7 +1962,7 @@
    "why_math": "no derivatives or integrals required"
   },
   "thermal-equilibrium": {
-   "min": 75,
+   "min": 65,
    "math": "algebra",
    "level": "intro",
    "needs": "Heat and specific heat; conservation of energy; temperature versus heat",
@@ -1970,7 +1970,7 @@
    "why_math": "no derivatives or integrals required"
   },
   "thermal-expansion": {
-   "min": 75,
+   "min": 70,
    "math": "algebra",
    "level": "intro",
    "needs": "Temperature and thermal expansion coefficients; fractional change; reading a slope from a graph",
@@ -1986,7 +1986,7 @@
    "why_math": "power law slopes on log graphs only"
   },
   "thin-films": {
-   "min": 75,
+   "min": 70,
    "math": "algebra",
    "level": "intro",
    "needs": "Wave interference; path difference; phase shift on reflection; index of refraction",
@@ -1994,7 +1994,7 @@
    "why_math": "no derivatives or integrals required"
   },
   "tides": {
-   "min": 80,
+   "min": 70,
    "math": "algebra",
    "level": "intro",
    "needs": "Newton's law of gravitation; inverse square law; fitting a line to transformed data",
@@ -2002,7 +2002,7 @@
    "why_math": "no derivatives or integrals required"
   },
   "timbre": {
-   "min": 75,
+   "min": 70,
    "math": "algebra",
    "level": "intro",
    "needs": "Sound waves, frequency and harmonics; decibels; adding waves",
@@ -2010,7 +2010,7 @@
    "why_math": "no derivatives or integrals required"
   },
   "transformers": {
-   "min": 75,
+   "min": 70,
    "math": "algebra",
    "level": "intro",
    "needs": "Faraday's law of induction; AC voltage and current; power as V times I",
@@ -2018,7 +2018,7 @@
    "why_math": "no derivatives or integrals required"
   },
   "two-speaker": {
-   "min": 75,
+   "min": 70,
    "math": "algebra",
    "level": "intro",
    "needs": "Wave interference; path difference; wavelength, frequency and wave speed",
@@ -2026,7 +2026,7 @@
    "why_math": "no derivatives or integrals required"
   },
   "ubv-colors": {
-   "min": 75,
+   "min": 70,
    "math": "algebra",
    "level": "intro",
    "needs": "Blackbody radiation; magnitudes and color index; Wien's law",
@@ -2034,7 +2034,7 @@
    "why_math": "logarithms and given formulas only"
   },
   "ultrasound": {
-   "min": 75,
+   "min": 70,
    "math": "algebra",
    "level": "intro",
    "needs": "Speed of sound; echoes and reflection; the Doppler effect",
@@ -2050,7 +2050,7 @@
    "why_math": "fits to given formulas; no derivations"
   },
   "van-de-graaff": {
-   "min": 80,
+   "min": 75,
    "math": "algebra",
    "level": "intro",
    "needs": "Electric potential and capacitance of a sphere; current as charge per time; dielectric breakdown",
@@ -2058,7 +2058,7 @@
    "why_math": "no derivatives or integrals required"
   },
   "vector-fields-work": {
-   "min": 70,
+   "min": 65,
    "math": "calculus",
    "level": "intro",
    "needs": "Vectors and components; work as force times displacement; partial derivatives; integrals along a parameter",
@@ -2066,7 +2066,7 @@
    "why_math": "student evaluates line integrals by hand, takes partial derivatives and finds a potential"
   },
   "vectors": {
-   "min": 85,
+   "min": 80,
    "math": "algebra",
    "level": "intro",
    "needs": "Components of a vector; trigonometry; average acceleration; dot and cross products",
@@ -2082,7 +2082,7 @@
    "why_math": "plugging into given formulas"
   },
   "viscometer": {
-   "min": 80,
+   "min": 70,
    "math": "algebra",
    "level": "intro",
    "needs": "Forces on a falling object; buoyancy; viscous drag and Stokes' law",
@@ -2098,7 +2098,7 @@
    "why_math": "no derivatives or integrals required"
   },
   "wave-power": {
-   "min": 75,
+   "min": 70,
    "math": "algebra",
    "level": "intro",
    "needs": "Waves on a string; wave speed; energy and power of a wave",
@@ -2114,7 +2114,7 @@
    "why_math": "Mestel law given; power law slope fits"
   },
   "wire-force": {
-   "min": 70,
+   "min": 65,
    "math": "algebra",
    "level": "intro",
    "needs": "Magnetic force on a current; right hand rule; torque on a loop",
@@ -2122,7 +2122,7 @@
    "why_math": "no derivatives or integrals required"
   },
   "x-ray-diffraction": {
-   "min": 75,
+   "min": 65,
    "math": "algebra",
    "level": "intro",
    "needs": "Wave interference; Bragg's law; electromagnetic spectrum",
@@ -2146,7 +2146,7 @@
    "why_math": "no derivatives or integrals required"
   },
   "faraday-waves": {
-   "min": 75,
+   "min": 65,
    "math": "algebra",
    "level": "intro",
    "needs": "Damped and driven oscillations; wavelength, frequency and wavenumber; fitting a straight line",

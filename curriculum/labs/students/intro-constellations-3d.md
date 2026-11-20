@@ -74,10 +74,6 @@ No hazards in the virtual lab.
 6. In Cassiopeia, Caph and γ Cas look nearly equally bright. How many times farther away is γ Cas? How many times more visible light does it give out?
 7. Describe what Orion looks like from the side. Would the figure of Orion look the same to someone living near a star 500 ly from Earth in a different direction?
 
-## Uncertainty
-
-A star's distance is 1 divided by its parallax: a parallax of 1 milliarcsecond (mas) means 1000 parsecs, or 3262 ly. Alnilam's parallax is about 1.65 mas. If that measurement could be off by 0.5 mas either way, what range of distances in light years could Alnilam have? How would that change its absolute magnitude and its visible light output? Why are the distances of the Big Dipper stars much more certain?
-
 ## Questions
 
 1. Explain in your own words why the stars of a constellation are not a real group in space, even though they look like one.
@@ -86,6 +82,13 @@ A star's distance is 1 divided by its parallax: a parallax of 1 milliarcsecond (
 4. Dust between the stars dims distant stars a little, and the demo leaves it out. Would including it make the farthest stars' absolute magnitudes brighter or fainter?
 5. Find Rigel and Bellatrix in your Part 2 rows. Which is farther, how do their Visible light values compare, and is that what you guessed in Before the lab 4? Using the Background's idea of absolute magnitude, explain why a star that looks brighter is not necessarily closer.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+A star's distance is 1 divided by its parallax: a parallax of 1 milliarcsecond (mas) means 1000 parsecs, or 3262 ly. Alnilam's parallax is about 1.65 mas. If that measurement could be off by 0.5 mas either way, what range of distances in light years could Alnilam have? How would that change its absolute magnitude and its visible light output? Why are the distances of the Big Dipper stars much more certain?
+
 ## What to hand in
 
-Prelab answers, the side view sketch of Orion, the table, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.
+Prelab answers, the side view sketch of Orion, the table, the answers to the analysis section and to the questions (and to Uncertainty, if assigned). Identify simulated data.

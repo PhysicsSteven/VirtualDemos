@@ -39,11 +39,12 @@ VDI18N.add('en', 'ws/intro-seasons', [
 "For the distance alone series, divide the daily sunlight on January {#} by the daily sunlight on July {#}. Compare with your answer to Before the lab {#}.",
 "Compare your ratios from Analysis {#} and {#}. Which effect is bigger, the tilt or the distance? By about how many times?",
 "On June {#}, where on Earth is the noon Sun highest, of the five places you measured? Which places have {#} hours of daylight, and which have none?",
-"The demo computes its readouts from the geometry of the orbit and the tilt, so a repeated reading gives exactly the same numbers. The uncertainty is in what the model leaves out. Name one thing about the real Earth (its air, clouds, oceans or the size of the Sun’s disk) that the demo does not include, and say whether it would make the real day longer or shorter, or the sunlight at the ground stronger or weaker.",
 "Look at your January {#} and July {#} readings at Ruston. On which date was Earth closer to the Sun, and on which did Ruston get more daily sunlight? How did your second guess in Before the lab {#} do? Use the tilt and Why height matters to explain the difference. If distance caused the seasons, what season would Australia have in January? What does it actually have, and what does that tell you?",
 "Use your readings at {#}° S and {#}° N on June {#} to explain why the two hemispheres have opposite seasons.",
 "The longest day at Ruston is in June, but the hottest weather usually comes in July and August. The demo shows sunlight, not temperature. What could explain the delay?",
 "Shine a flashlight straight down on a sheet of paper, then tilt the paper. Use what happens to the bright spot to explain why a low Sun warms the ground less than a high Sun.",
-"Prelab answers, the three table copies, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.",
+"For courses that treat measurement uncertainty. This section is not counted in the {#} minutes; do it when your instructor assigns it.",
+"The demo computes its readouts from the geometry of the orbit and the tilt, so a repeated reading gives exactly the same numbers. The uncertainty is in what the model leaves out. Name one thing about the real Earth (its air, clouds, oceans or the size of the Sun’s disk) that the demo does not include, and say whether it would make the real day longer or shorter, or the sunlight at the ground stronger or weaker.",
+"Prelab answers, the three table copies, the answers to the analysis section and to the questions (and to Uncertainty, if assigned). Identify simulated data.",
 "Reasons for Seasons"
 ]);

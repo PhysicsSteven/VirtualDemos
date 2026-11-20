@@ -31,11 +31,12 @@ VDI18N.add('en', 'ws/hcl-spectrum-light', [
 "Ultraviolet {#} nm, row {#}",
 "From the table, which molecules take up microwaves, and what do they have in common? Which take up infrared at {#} μm, and why does CO₂ while N₂ and O₂ do not? What has this to do with the greenhouse effect?",
 "For each molecule that breaks in the table, compare the photon energy with its bond energy \\(D_0\\). Why does NO₂ break at {#} nm but only glow at {#} nm?",
-"The demo’s absorption edges and bond energies are approximate, and it counts an infrared lamp as on a vibration within {#} cm⁻¹ of it. Which entries in your table lie closest to one of these limits? How far from the limit is each, in percent or in cm⁻¹, and what does that say about how far to trust those entries?",
 "N₂ and O₂ make up most of the air but have no infrared absorption at {#} μm. Why?",
 "Ozone is a small part of the air, yet it shields the ground from ultraviolet light near {#} nm, which O₂ lets through. What does the table show about why?",
 "Before the lab {#} asked which photon a water molecule takes up. What does your H₂O row show for the microwave and the ultraviolet lamps, and how does that compare with your choice? Explain each result with the two conditions in the Background: a way for the molecule to take exactly that energy, and a way for the light to push on it.",
-"Prelab answers, the table, the energy comparison for the molecules that break, and answers to the questions. Identify simulated data.",
+"For courses that treat measurement uncertainty. This section is not counted in the {#} minutes; do it when your instructor assigns it.",
+"The demo’s absorption edges and bond energies are approximate, and it counts an infrared lamp as on a vibration within {#} cm⁻¹ of it. Which entries in your table lie closest to one of these limits? How far from the limit is each, in percent or in cm⁻¹, and what does that say about how far to trust those entries?",
+"Prelab answers, the table, the energy comparison for the molecules that break, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.",
 "Bond energy, the energy needed to break the molecule",
 "Energy of a photon"
 ]);

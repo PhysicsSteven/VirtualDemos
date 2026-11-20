@@ -102,16 +102,19 @@ The demo opens with a small field, $$h = -0.2$$: press Set h = 0 first. Keep the
 3. For the Wolff readings at $$T_c$$, fill in the log columns. Graph $$\ln \langle \lvert m\rvert\rangle$$ against $$\ln L$$ and $$\ln \chi$$ against $$\ln L$$, and compare the slopes with $$-1/8$$ and $$7/4$$.
 4. Graph $$c$$ against $$\ln L$$ for the Wolff readings. Compare the slope with $$8K_c^2/\pi$$.
 
-## Uncertainty
-
-Monte Carlo readings carry a statistical error that shrinks as one over the square root of the number of independent samples, not of sweeps. Use the ± of $$\langle \lvert m\rvert\rangle$$ at $$L = 256$$ shown in the demo's table (write it next to your reading) to find the uncertainty of $$\ln \langle \lvert m\rvert\rangle$$ there, and compare the scatter of your points about the line in Analysis 3 with these errors.
-
 ## Questions
 
 1. Choose Hysteresis. In equilibrium below $$T_c$$ the magnetization would flip as soon as $$h$$ changes sign, yet the lattice stays magnetized against the field until $$h$$ is near $$\mp 0.5$$. Why? What would a slower sweep of the field do?
 2. Iron loses its magnetism at its Curie temperature, 1043 K. If iron were a two dimensional Ising magnet, what coupling $$J$$ (in eV) would give that $$T_c$$? Use $$k = 8.617 \times 10^{-5}$$ eV/K.
 3. Choose Antiferromagnet ($$J = -1$$ at $$T = 1.5$$) and let it run for about a minute, then read Magnetization m and Staggered m<sub>s</sub> under Now. Were they what you expected in Before the lab 2? Flipping every second spin, in a checkerboard pattern, turns any arrangement of the ferromagnet into one of the antiferromagnet with the same energy. What does that say about whether the antiferromagnet orders, and about its critical temperature?
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+Monte Carlo readings carry a statistical error that shrinks as one over the square root of the number of independent samples, not of sweeps. Use the ± of $$\langle \lvert m\rvert\rangle$$ at $$L = 256$$ shown in the demo's table (write it next to your reading) to find the uncertainty of $$\ln \langle \lvert m\rvert\rangle$$ there, and compare the scatter of your points about the line in Analysis 3 with these errors. For the fits of Analysis 1, 3 and 4, give each slope and intercept with its standard error, and say whether it agrees with the prediction within that error.
+
 ## What to hand in
 
-Prelab answers, the table copies with their graphs and fits, the comparison with Yang's formula, the three exponents from the critical point, and answers to the questions. Identify simulated data.
+Prelab answers, the table copies with their graphs and fits, the comparison with Yang's formula, the three exponents from the critical point, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

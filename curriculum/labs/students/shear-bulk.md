@@ -111,20 +111,23 @@ For a liquid, $$-\Delta V/V_0 = \Delta x/h_0$$; for a cube, $$-\Delta V/V_0 = 1 
 
 ## Analysis
 
-1. For each block, fit $$F$$ against $$\Delta x$$ and find $$S = \text{slope}\times L_0/A$$, with its uncertainty from the slope's. Compare steel with Table 12.1 of the textbook, and give the Mystery metal's shear modulus.
+1. For each block, fit $$F$$ against $$\Delta x$$ and find $$S = \text{slope}\times L_0/A$$. Compare steel with Table 12.1 of the textbook, and give the Mystery metal's shear modulus.
 2. For each liquid, fit $$F$$ against $$\Delta x$$ and find $$B = \text{slope}\times h_0/A$$. Compare water with Table 12.1, and give the Mystery liquid's bulk modulus and its compressibility in 1/atm (1 atm = 101,325 Pa).
-3. For the steel cube, fit $$F$$ against the strain gauge reading $$\varepsilon$$. Since $$\varepsilon$$ is negative the slope is negative, so $$B = -\text{slope}/(3A)$$ with $$\varepsilon$$ in plain numbers (1 µε = 10⁻⁶). Then, for the largest force, find $$B$$ from the exact $$\Delta V/V_0 = (1 + \varepsilon)^3 - 1$$ and show that the approximation $$3\varepsilon$$ changes $$B$$ by much less than your uncertainty.
+3. For the steel cube, fit $$F$$ against the strain gauge reading $$\varepsilon$$. Since $$\varepsilon$$ is negative the slope is negative, so $$B = -\text{slope}/(3A)$$ with $$\varepsilon$$ in plain numbers (1 µε = 10⁻⁶). Then, for the largest force, find $$B$$ from the exact $$\Delta V/V_0 = (1 + \varepsilon)^3 - 1$$ and show how little the approximation $$3\varepsilon$$ changes $$B$$.
 4. Compare water's bulk modulus with steel's. By what factor does the same pressure change water's volume more than steel's? Is it reasonable to treat water as incompressible in a hydraulic jack at a few megapascals?
-
-## Uncertainty
-
-The readings are exact model values rounded by the instruments: the load cell to 0.01 kN, the displacement sensor to 0.1 µm, the dial gauge to 0.001 mm and the strain gauge to 0.1 µε. The smallest readings (a stiff sample at a low force) have the largest relative rounding error, so judge which points limit your fit. The dimensions are exact in the model; on real apparatus the face area, the piston diameter and the column height each carry a measurement uncertainty, and the piston diameter enters the area squared. A real cell's walls also stretch a little under pressure, which a careful experiment corrects for with a sample of known modulus.
 
 ## Questions
 
 1. A hydraulic system uses oil with $$B \approx 1.5\times10^{9}$$ Pa. Explain why air bubbles in the oil make the brake pedal feel spongy.
 2. For steel, which came out larger per megapascal, the shear strain or the volume strain, and by roughly what factor? Set that beside your answer to Before the lab 3. Steel's Young's modulus is about $$2.0\times10^{11}$$ Pa: put steel's $$Y$$, $$S$$ and $$B$$ in order, and say which is easier for steel, changing its shape or changing its volume, and what in the material makes it so.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The readings are exact model values rounded by the instruments: the load cell to 0.01 kN, the displacement sensor to 0.1 µm, the dial gauge to 0.001 mm and the strain gauge to 0.1 µε. The smallest readings (a stiff sample at a low force) have the largest relative rounding error, so judge which points limit your fit. The dimensions are exact in the model; on real apparatus the face area, the piston diameter and the column height each carry a measurement uncertainty, and the piston diameter enters the area squared. A real cell's walls also stretch a little under pressure, which a careful experiment corrects for with a sample of known modulus. Give each modulus with an uncertainty from the standard error of its slope. In Analysis 3, show that the change the approximation $$3\varepsilon$$ makes in $$B$$ is much less than your uncertainty.
+
 ## What to hand in
 
-Answers to Before the lab, a copy of the shear table for each block and of the bulk table for each sample, the fits with residuals, the moduli with uncertainties and their comparison with Table 12.1, and answers to the questions. Identify simulated data.
+Answers to Before the lab, a copy of the shear table for each block and of the bulk table for each sample, the fits with residuals, the moduli and their comparison with Table 12.1, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

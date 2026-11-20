@@ -74,15 +74,11 @@ Open the Instrument fold, type the bench seed your instructor gives you into Ben
 
 ## Analysis
 
-1. Graph the micrometer reading $$s$$ (vertical) against the signed speed $$f$$ (horizontal, CCW negative) for the 12 m bench and fit a straight line. From the slope find $$c$$, with its uncertainty from the slope.
+1. Graph the micrometer reading $$s$$ (vertical) against the signed speed $$f$$ (horizontal, CCW negative) for the 12 m bench and fit a straight line. From the slope find $$c$$.
 2. Compare the intercept with your reading at rest. Do the residuals show any difference between the two directions?
 3. Use the CW and CCW readings at 1000 rev/s alone: $$c = \frac{4AD^2 \cdot 2\pi(f_\mathrm{CW} + f_\mathrm{CCW})}{(D + B)\,\lvert s_\mathrm{CW} - s_\mathrm{CCW} \rvert}$$, with both speeds as positive meter readings. Does it agree with the fit?
 4. Find $$c$$ from the 20 m run. By what factor did the slope grow from 12 m to 20 m? Compare with the factor $$A D^2/(D + B)$$ predicts.
-5. Compare your values of $$c$$ with the exact value. Which run gives the more precise result, and why?
-
-## Uncertainty
-
-How precisely can you center the crosshair, compared with the jitter of the spot? How does that compare with the largest shift you measured? Find the relative uncertainty of $$c$$ from the slope and say whether the meter's 0.15% jitter or your micrometer readings limit it. In a real lab the distances $$D$$, $$B$$ and $$A$$ would add to it.
+5. Compare your values of $$c$$ with the exact value.
 
 ## Questions
 
@@ -90,6 +86,15 @@ How precisely can you center the crosshair, compared with the jitter of the spot
 2. Why is $$c$$ now an exact number with no uncertainty? What does a measurement like this one determine instead?
 3. Your two slopes answer Before the lab 5: by what factor did the shift grow from 12 m to 20 m (Analysis 4)? If it had grown like $$D^2$$, what factor would you have found? Use the magnification of L2, $$A/(D + B)$$, to explain the factor you did measure.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+How precisely can you center the crosshair, compared with the jitter of the spot? How does that compare with the largest shift you measured? Find the relative uncertainty of $$c$$ from the slope and say whether the meter's 0.15% jitter or your micrometer readings limit it. In a real lab the distances $$D$$, $$B$$ and $$A$$ would add to it.
+
+Give $$c$$ from the fit and from the pair method with uncertainties, using the standard error of the slope, and say whether each value agrees with the exact value within its uncertainty. Say which run gives the more precise result, and why.
+
 ## What to hand in
 
-Prelab answers, the bench seed and dimensions, the table copies with their graphs and fits, $$c$$ from the fit and from the pair method with uncertainties, the comparison of the two paths, and answers to the questions. Identify simulated data.
+Prelab answers, the bench seed and dimensions, the table copies with their graphs and fits, $$c$$ from the fit and from the pair method, the comparison of the two paths, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

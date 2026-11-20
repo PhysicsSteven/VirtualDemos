@@ -76,16 +76,18 @@ VDI18N.add('es', 'ws/einstein-solids', {
   "Encuentra \\(\\ln\\Omega_A + \\ln\\Omega_B\\) al inicio y en el valor estabilizado. ¿Cuánto aumentó la entropía, en unidades de \\(k\\)?",
 "Starting from B, where does \\(q_A\\) settle? Compare with Analysis {#}.":
   "Empezando desde B, ¿dónde se estabiliza \\(q_A\\)? Compara con el Análisis {#}.",
-"Even after settling, \\(q_A\\) wobbles about its most likely value. Estimate the size of the wobble for the large solids from your graph, and compare it with \\(q_A\\). How would the size of the wobble compared with \\(q_A\\) change for solids a thousand times larger?":
-  "Incluso después de estabilizarse, \\(q_A\\) oscila alrededor de su valor más probable. Estima el tamaño de esa oscilación para los sólidos grandes a partir de tu gráfica, y compáralo con \\(q_A\\). ¿Cómo cambiaría el tamaño de la oscilación comparado con \\(q_A\\) para sólidos mil veces más grandes?",
 "Nothing in the rules says energy must flow from A to B. Why does it?":
   "Nada en las reglas dice que la energía deba fluir de A a B. ¿Por qué lo hace?",
 "With small solids, energy sometimes flows back into A for a while. Why is that never seen for a cup of coffee?":
   "Con sólidos pequeños, la energía a veces regresa a A por un rato. ¿Por qué eso nunca se ve en una taza de café?",
 "Look at where \\(q_A\\) settled in your two large solid runs and set it beside your guess in Before the lab {#}. Then use \\(\\Omega_A\\,\\Omega_B\\) and \\(1/T = dS/dU\\) to explain why \\(q_A\\) settles there and not anywhere else, and say what the two solids have in common once it has.":
   "Mira dónde se estableció \\(q_A\\) en tus dos corridas de sólidos grandes y compáralo con tu estimación de Antes del laboratorio {#}. Luego usa \\(\\Omega_A\\,\\Omega_B\\) y \\(1/T = dS/dU\\) para explicar por qué \\(q_A\\) se establece ahí y no en otro lado, y di qué tienen en común los dos sólidos una vez que lo ha hecho.",
-"Prelab answers, the table copies with their graphs, the counts and shares for the small solids, the entropy rise for the large ones, and answers to the questions. Identify simulated data.":
-  "Respuestas del prelaboratorio, las copias de la tabla con sus gráficas, los conteos y fracciones para los sólidos pequeños, el aumento de entropía para los grandes, y respuestas a las preguntas. Identifica los datos simulados.",
+"For courses that treat measurement uncertainty. This section is not counted in the {#} minutes; do it when your instructor assigns it.":
+  "Para cursos que tratan la incertidumbre de medición. Esta sección no cuenta dentro de los {#} minutos; hazla cuando tu profesor la asigne.",
+"Even after settling, \\(q_A\\) wobbles about its most likely value. Estimate the size of the wobble for the large solids from your graph, and compare it with \\(q_A\\). How would the size of the wobble compared with \\(q_A\\) change for solids a thousand times larger?":
+  "Incluso después de estabilizarse, \\(q_A\\) oscila alrededor de su valor más probable. Estima el tamaño de esa oscilación para los sólidos grandes a partir de tu gráfica, y compáralo con \\(q_A\\). ¿Cómo cambiaría el tamaño de la oscilación comparado con \\(q_A\\) para sólidos mil veces más grandes?",
+"Prelab answers, the table copies with their graphs, the counts and shares for the small solids, the entropy rise for the large ones, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.":
+  "Respuestas del prelaboratorio, las copias de la tabla con sus gráficas, los conteos y fracciones para los sólidos pequeños, el aumento de entropía para los grandes, y respuestas a las preguntas (y de Incertidumbre, si se asigna). Identifica los datos simulados.",
 "Number of oscillators":
   "Número de osciladores",
 "Number of oscillators in solid A":

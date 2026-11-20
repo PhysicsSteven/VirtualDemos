@@ -90,16 +90,19 @@ Make a graph of the half light diameter (up) against the star's angle from the c
 4. Part 2: is your graph close to a straight line? Use it to predict the half light diameter for a star 30′ from the center. By how many times did the corrector shrink the half light diameter at 20′?
 5. Part 3: for the single lens, subtract the best focus for blue light from the best focus for red light. A lens's colors spread over about f ÷ V, where f is the focal length and V the glass's Abbe number (64.2 for this crown glass). Compare your gap with 900 mm ÷ 64.2. How big is the gap for the achromat?
 
-## Uncertainty
-
-You found each best focus by eye from the Strehl ratio. For the single lens in red light, how far (in mm) can you move the camera from your best focus before the Strehl ratio drops by 0.05? Use that as the uncertainty of each best focus, and say whether your blue to red gap in Analysis 5 agrees with 900 mm ÷ 64.2 within it.
-
 ## Questions
 
 1. Large research telescopes are fast (f/1 to f/2) parabolas. What problem do they then have away from the center of the view, and how do they deal with it?
 2. Why are almost all large research telescopes mirrors rather than lenses? Give two reasons from this lab.
 3. Your Hubble in 1990 reading in the first table was taken at its best focus. Give its Strehl ratio and half light diameter next to those of Hubble fixed (1993): does that settle your answer to Before the lab 3? Using your results for the spherical mirror, explain why no focus setting could make Hubble's 1990 images sharp. Hubble's mistake was found only after launch: what would its star have looked like a little inside and a little outside the focus, a test that would have shown the problem on the ground?
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+You found each best focus by eye from the Strehl ratio. For the single lens in red light, how far (in mm) can you move the camera from your best focus before the Strehl ratio drops by 0.05? Use that as the uncertainty of each best focus, and say whether your blue to red gap in Analysis 5 agrees with 900 mm ÷ 64.2 within it.
+
 ## What to hand in
 
-Prelab answers, the three tables and the graph, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.
+Prelab answers, the three tables and the graph, the answers to the analysis section and to the questions (and to Uncertainty, if assigned). Identify simulated data.

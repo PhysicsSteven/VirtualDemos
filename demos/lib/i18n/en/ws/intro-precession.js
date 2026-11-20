@@ -42,12 +42,13 @@ VDI18N.add('en', 'ws/intro-precession', [
 "In the lever arm series, what happens to the time for one turn when d doubles ({#} to {#} m, and {#} to {#} m)? Explain using the torque.",
 "At {#} rpm with d = {#} m, how many times does the wheel spin during one turn around the post? (The wheel spins {#} times per minute, which is {#} times per second.)",
 "Earth spins once a day and precesses once in {#} years. About how many times does Earth spin during one turn of its axis? Which spins “faster compared with its precession,” Earth or the demo’s wheel?",
-"The gate times each turn to {#} s, and the model has no friction, so a repeated reading gives the same time. A real gyroscope has friction at the pivot and in the axle bearing, so its spin slowly runs down. Using your results, would a real gyroscope’s turns around the post get faster or slower as it runs down? Explain.",
 "Today Polaris is the North Star. Will it still be the North Star when the pyramids are as old again as they are now (about {#} years from now)? Explain using precession.",
 "Half of a precession turn from now, Earth’s axis will point to the opposite side of its circle in the sky. About how many years from now is that? Which bright star will then be near the pole?",
 "Precession moves the place where the Sun crosses the celestial equator in March by {#} arcseconds per year (an arcsecond is {#}/{#} of a degree). How many years does it take to move {#}°? About how far has it moved in the {#} years since the zodiac signs were named, and why does that mean the Sun is no longer in “your” constellation on your birthday?",
 "If Earth spun more slowly, but the Sun and Moon pulled on its bulge with the same torque, would its precession be faster or slower? Use what you found with the wheel.",
 "What did the far end of the axle do in your {#} rpm run, and how long did one turn around the post take? Did it go the way you expected in Before the lab {#}? Using the Precession paragraph of the Background, explain why the torque from the wheel’s weight swings the axle sideways around the post instead of tipping the far end down.",
-"Prelab answers, the two table copies with the graph, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.",
+"For courses that treat measurement uncertainty. This section is not counted in the {#} minutes; do it when your instructor assigns it.",
+"The gate times each turn to {#} s, and the model has no friction, so a repeated reading gives the same time. A real gyroscope has friction at the pivot and in the axle bearing, so its spin slowly runs down. Using your results, would a real gyroscope’s turns around the post get faster or slower as it runs down? Explain.",
+"Prelab answers, the two table copies with the graph, the answers to the analysis section and to the questions (and to Uncertainty, if assigned). Identify simulated data.",
 "Gyroscope Precession"
 ]);

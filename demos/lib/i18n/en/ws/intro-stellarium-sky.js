@@ -47,9 +47,10 @@ VDI18N.add('en', 'ws/intro-stellarium-sky', [
 "Use the declinations you recorded and your answer to Before the lab {#} to decide which of Dubhe, Kochab, Capella and Vega should be circumpolar from Ruston. Does that agree with what you saw when time ran forward?",
 "In which constellation was the Sun on each of the five dates? On which dates was the Sun on the celestial equator (declination near {#}°), and on which was it farthest north and farthest south?",
 "Near noon, the Sun’s altitude should be about {#}° − {#}° + its declination. Check this for June {#} and December {#}.",
-"Stellarium computes positions from star catalogs and the motions of Earth and the Sun, accurate to a small fraction of a degree. Your readings can still differ from a classmate’s if the location or the time is set a little differently. The sky turns {#}° per hour. By about how many degrees can a star’s azimuth change if the time is off by {#} minutes? Which of your readings would that affect, and which would it not?",
 "Astrology sign dates were set about {#} years ago. A person born on January {#} is told their sign is Capricorn. In which constellation was the Sun on January {#}, {#}? Use precession to explain the difference.",
 "Why do we see Orion in winter evenings but not in summer evenings? Use the Sun’s position along the ecliptic in your table.",
 "What altitude did the Sun reach in your June {#} reading, and how far below overhead is that? Check it against your prediction in Before the lab {#}. Use the Sun’s declination that day and Ruston’s latitude to explain the Sun’s noon altitude, and say between which latitudes on Earth the noon Sun can pass straight overhead.",
-"Prelab answers, the completed Data table, the answers to the analysis and uncertainty sections, and answers to the questions."
+"For courses that treat measurement uncertainty. This section is not counted in the {#} minutes; do it when your instructor assigns it.",
+"Stellarium computes positions from star catalogs and the motions of Earth and the Sun, accurate to a small fraction of a degree. Your readings can still differ from a classmate’s if the location or the time is set a little differently. The sky turns {#}° per hour. By about how many degrees can a star’s azimuth change if the time is off by {#} minutes? Which of your readings would that affect, and which would it not?",
+"Prelab answers, the completed Data table, the answers to the analysis section and to the questions (and to Uncertainty, if assigned)."
 ]);

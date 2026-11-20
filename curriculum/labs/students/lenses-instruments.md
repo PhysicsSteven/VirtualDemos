@@ -84,14 +84,17 @@ Before each part, predict what you will see. Then measure.
 3. For Part 3, make the same graph and find $$f$$. Why does a diverging lens always give a virtual, upright, smaller image?
 4. For Part 4, graph the Depth ratio column (vertical) against the $$m_1m_2$$ column (horizontal). What slope do you find? Compare the depth ratio with the height ratio and with its square for each row. As the house moves toward the focal point, which grows faster, the height or the depth of the image? In the magnifier, is the letter F's virtual image stretched or squeezed along the axis, and by how much compared with its height?
 
-## Uncertainty
-
-The model has no noise, and its lenses are ideal thin lenses, so the traced image distances agree with the thin lens equation to the 0.01 cm they are given to. Your own uncertainty is in where you put the object and the lenses. Real lenses have thickness, spherical aberration and dispersion (color fringes).
-
 ## Questions
 
 1. What did the picture do when you moved the screen 2 cm in Part 2, and which of your choices in Before the lab 3 does that match? Explain, from where the rays from one point of the object meet, why the picture looks the way it does at each screen position. Then use the thin lens equation to find how far a phone camera lens with $$f = 4.0$$ mm must move to change focus from a distant scene to an object 10 cm away.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The model has no noise, and its lenses are ideal thin lenses, so the traced image distances agree with the thin lens equation to the 0.01 cm they are given to. Your own uncertainty is in where you put the object and the lenses. Real lenses have thickness, spherical aberration and dispersion (color fringes).
+
 ## What to hand in
 
-Prelab answers, a Data table copy for each part, the graphs and fits, the camera screen distances, the Depth table with its graph, and the answer to the question. Identify simulated data.
+Prelab answers, a Data table copy for each part, the graphs and fits, the camera screen distances, the Depth table with its graph, and the answer to the question (and to Uncertainty, if assigned). Identify simulated data.

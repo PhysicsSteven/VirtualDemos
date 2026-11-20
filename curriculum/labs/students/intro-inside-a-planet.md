@@ -92,15 +92,20 @@ No hazards in the virtual lab.
 6. In Part 4, divide the root below by the crust thickness for the continent. Compare with your answer to Before the lab 3.
 7. By how many km does the average continent (34.4 km thick) stand higher than the ocean floor (8.0 km thick)? Earth's average land is 0.84 km above sea level and its average sea floor 3.68 km below it. Compare.
 
-## Uncertainty
-
-The layers and the floating crust are computed from formulas, so a repeated reading gives the same numbers; their uncertainty is in what the model leaves out. The convection changes from moment to moment: your two readings of each setup show how much. For each Part 3 setup, give the range of the surface speed (the larger minus the smaller of your two readings). Compare the smaller of your Earth readings with the larger of your Venus readings: is Earth's surface faster than Venus's even allowing for the spread?
-
 ## Questions
 
 1. Venus is about the same size as Earth but has no plate tectonics. Water weakens rock. In Part 3, which setup gets the most heat out of its top, and which has the hottest mantle? Use the link between the two to suggest how the lack of water on Venus changes the way it loses its heat.
 2. Look at your continent readings at 20, 50 and 70 km in the fourth table. What did the Height above the mantle and the Root below do as the crust got thicker, and how much higher did the continent stand for each extra 10 km of crust? Was your answer to Before the lab 4 right? Using the Background's idea of floating crust, explain why the thicker, heavier block stands higher, and what happens to its root.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The layers and the floating crust are computed from formulas, so a repeated reading gives the same numbers; their uncertainty is in what the model leaves out. The convection changes from moment to moment: your two readings of each setup show how much. For each Part 3 setup, give the range of the surface speed (the larger minus the smaller of your two readings). Compare the smaller of your Earth readings with the larger of your Venus readings: is Earth's surface faster than Venus's even allowing for the spread?
+
+Give the intercept and slope of your Part 1 graph with their standard errors, and say whether the intercept agrees with the mantle density within its uncertainty.
+
 ## What to hand in
 
-Prelab answers, the four data tables, your graph from Analysis 1, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.
+Prelab answers, the four data tables, your graph from Analysis 1, the answers to the analysis section and to the questions (and to Uncertainty, if assigned). Identify simulated data.

@@ -61,10 +61,11 @@ VDI18N.add('en', 'ws/hs-series-parallel', [
 "For the two parallel readings, compare \\(V_1\\) and \\(V_2\\) with the battery voltage. Check Ohm’s law for each bulb: does \\(V_1/I_1\\) give \\(R_1\\), and \\(V_2/I_2\\) give \\(R_2\\)?",
 "Compare the measured equivalent resistance of each circuit with the formula. Which circuit has the smaller equivalent resistance, and which draws more current from the battery?",
 "With \\(R_2\\) = {#} Ω, which bulb has the larger power in the series circuit, and which in the parallel circuit? Explain the difference using \\(P = I^2R\\) for series (same current) and \\(P = V^2/R\\) for parallel (same voltage).",
-"The demo’s meters are ideal, so the readings differ from the formulas only by rounding in their last digit. Check that every difference you found in Analysis {#} to {#} is no bigger than that. A real ammeter adds a small resistance to the path and a real voltmeter draws a small current, so real readings would differ a little more.",
 "Look back at your guess in Before the lab {#}. What did A1 and A2 read in the series circuit? If the bulb does not use up current, what does it use up? Explain using the meaning of current (charge per second) and voltage (energy per coulomb).",
 "The lights in a house are wired in parallel, not in series. Use your results to give two reasons why: think about the voltage each light gets, and about what happens to the others when one bulb burns out.",
-"Prelab answers, the two copies of the Data table, the Results table, and answers to the questions. Identify simulated data.",
+"For courses that treat measurement uncertainty. This section is not counted in the {#} minutes; do it when your instructor assigns it.",
+"The demo’s meters are ideal, so the readings differ from the formulas only by rounding in their last digit. Check that every difference you found in Analysis {#} to {#} is no bigger than that. A real ammeter adds a small resistance to the path and a real voltmeter draws a small current, so real readings would differ a little more.",
+"Prelab answers, the two copies of the Data table, the Results table, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.",
 "Column E, row {#}",
 "Heading of column E"
 ]);

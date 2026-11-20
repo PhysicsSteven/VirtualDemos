@@ -98,16 +98,19 @@ With the eye only box ticked, compare the map with the one you had before: count
 3. At 6 pc, what percentage of the stars are red dwarfs, and what percentage are more luminous than the Sun?
 4. Check Before the lab 2 against the Two stars readings, and check the Background's distance for $$m - M = 10$$ against your reading.
 
-## Uncertainty
-
-Inside 2 pc there are only a few stars, so one star more or less changes the count a lot; with N stars, a count is uncertain by about $$\sqrt{N}$$. Work out $$\sqrt{N}$$ for your 2 pc and 6 pc counts, as a percentage of each count. Which of your points should you trust most when you judge the fit?
-
 ## Questions
 
 1. The catalog is missing stars beyond about 6 pc. Which kind of star do you think is easiest to miss, and why? (Look at how faint the red dwarfs are on the census map.)
 2. Your Sun at 10 pc in Part 2 had magnitude 4.81. How far away could you put the Sun and still see it with your eyes alone (magnitude 6)? Use the magnitude scale: is it more or less than 10 pc?
 3. Return to your guesses in Before the lab 4 and set them beside Table 2. What fraction of the 10 pc neighbors can you see with your eyes, which kind of star makes up most of the neighborhood, and what are the stars you do see like? Explain why the stars in the night sky are not a fair sample of the stars around us.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+Inside 2 pc there are only a few stars, so one star more or less changes the count a lot; with N stars, a count is uncertain by about $$\sqrt{N}$$. Work out $$\sqrt{N}$$ for your 2 pc and 6 pc counts, as a percentage of each count. Which of your points should you trust most when you judge the fit? Give the slope of your fit with its standard error.
+
 ## What to hand in
 
-Prelab answers, both tables with the r³ column filled, the graph with its fit, the answers to the analysis and uncertainty sections, and answers to the questions. The star counts are real catalog data (HYG v3.8); the two stars and absolute magnitude readings come from the demo's formulas.
+Prelab answers, both tables with the r³ column filled, the graph with its fit, the answers to the analysis section and to the questions (and to Uncertainty, if assigned). The star counts are real catalog data (HYG v3.8); the two stars and absolute magnitude readings come from the demo's formulas.

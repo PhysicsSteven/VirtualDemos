@@ -68,10 +68,6 @@ Fill in D² for Part 2, in the second copy of the table (the diameter times itse
 5. Using your data, how many times more light does the 6 cm objective gather than the 3 cm one? Compare with your answer to Before the lab 3.
 6. The Hubble Space Telescope's mirror is 2.4 m (240 cm) across and each Keck telescope's is 10 m (1000 cm). Using (D ÷ 0.7 cm)², how many times more light than your dark adapted eye does each collect from a star?
 
-## Uncertainty
-
-The demo traces ideal lenses, so a repeated reading gives exactly the same numbers. Name two things a real telescope has that the demo leaves out (think about the lenses, the light and the air above the telescope), and say for each whether it would make the view sharper or blurrier.
-
 ## Questions
 
 1. What did Light from a star do across your three Part 1 readings, at magnifications 10, 20 and 12.5, and what did it do in Part 2, where only the diameter changed? How did your guess about the star in Before the lab 2 hold up? Explain what sets how bright a star looks through a telescope, and use it to say why amateur astronomers say the diameter of a telescope matters more than its magnification.
@@ -79,6 +75,13 @@ The demo traces ideal lenses, so a repeated reading gives exactly the same numbe
 3. Through the telescope the Moon looks bigger but no brighter than to the bare eye, while a star looks many times brighter. What is the difference between a star and the Moon that explains this?
 4. Why do astronomers build telescopes with bigger and bigger mirrors, when the stars they look at would stay points at any magnification?
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The demo traces ideal lenses, so a repeated reading gives exactly the same numbers. Name two things a real telescope has that the demo leaves out (think about the lenses, the light and the air above the telescope), and say for each whether it would make the view sharper or blurrier.
+
 ## What to hand in
 
-Prelab answers, the two table copies, the graph, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.
+Prelab answers, the two table copies, the graph, the answers to the analysis section and to the questions (and to Uncertainty, if assigned). Identify simulated data.

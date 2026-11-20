@@ -88,10 +88,6 @@ Keep the steady cart, accelerating cart and incline launches in separate copies 
 3. For the incline, compare each time in the air with $$2u/(g\cos\theta)$$. Where did the ball come down each time, and why?
 4. For one steady cart launch at 3.0 m/s, find the ball's velocity relative to the ground just after the launch (speed and angle) and its highest point above the launcher. Compare with the demo's readouts (Ball velocity relative to the ground at launch and Highest point above the launcher).
 
-## Uncertainty
-
-The demo rounds the time in the air to 0.001 s, distances along the track to 0.001 m and $$\Delta x$$ to 0.1 cm; the settings are exact. Estimate how much that rounding could change your slopes, and compare with the fit's standard errors. On a real track, list what would add scatter: the cart's speed changing slightly along the track, the launcher's timing and aim, air resistance, and how well you can see where the ball lands.
-
 ## Questions
 
 1. Seen from a cart moving at constant speed, what path does the ball follow? Why is that what Newton's first law predicts?
@@ -100,6 +96,13 @@ The demo rounds the time in the air to 0.001 s, distances along the track to 0.0
 4. A passenger on a train moving at constant velocity drops a coin. Where does it land? Where would it land if the train were braking?
 5. In your steady cart readings, what was the time in the air at a cart speed of 0, and at 3.0 m/s? Does that bear out what you said in Before the lab 5? Use the ball's vertical motion to explain how the cart's speed affects the time in the air.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The demo rounds the time in the air to 0.001 s, distances along the track to 0.001 m and $$\Delta x$$ to 0.1 cm; the settings are exact. Estimate how much that rounding could change your slopes, and compare with the fit's standard errors. Give each slope with its standard error and $$g$$ with its uncertainty. On a real track, list what would add scatter: the cart's speed changing slightly along the track, the launcher's timing and aim, air resistance, and how well you can see where the ball lands.
+
 ## What to hand in
 
-Prelab answers, the three table copies with their graphs and fits, the time in the air and $$g$$ from each graph, the incline comparison, the launch velocity calculation, the uncertainty discussion and answers to the questions. Identify simulated data.
+Prelab answers, the three table copies with their graphs and fits, the time in the air and $$g$$ from each graph, the incline comparison, the launch velocity calculation and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

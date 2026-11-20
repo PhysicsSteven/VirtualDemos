@@ -80,16 +80,19 @@ Fill in $$n$$, $$\Delta y = (B - A)/n$$, $$1/d$$ and $$\lambda L/d$$ yourself (w
 3. For Part 3, graph $$\Delta y$$ against $$L$$ and compare the slope with $$\lambda/d$$.
 4. For Part 4, compare your count of bright fringes in the central envelope and the position of the first envelope zero with your predictions from Before the lab question 2.
 
-## Uncertainty
-
-You place each cursor by eye on a fringe built from a finite number of random hits, and the cursor moves in steps of 1/500 of the screen range. Estimate how far off each cursor could be, and propagate that through $$\Delta y = (B - A)/n$$. Explain why a larger $$n$$ gives a smaller uncertainty in $$\Delta y$$, and why more hits help. The single slit envelope also falls across each bright fringe, which pulls the fringe's peak slightly toward the center: would that make your $$\Delta y$$ too large or too small, and is it worse when $$d/a$$ is large or small? Which part of the experiment would a real laboratory find hardest to measure precisely?
-
 ## Questions
 
 1. A single photon lands at one point. Where in the experiment is the interference?
 2. Close one slit (the One slit setup does this for electrons). What happens to the fringes, and why can opening a second slit make some places on the screen darker?
 3. In Part 2, what happened to $$\Delta y$$ when $$d$$ went from 0.25 to 0.50 mm, and how does that sit with Before the lab 3? Why, in terms of the path difference $$d\sin\theta$$?
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+You place each cursor by eye on a fringe built from a finite number of random hits, and the cursor moves in steps of 1/500 of the screen range. Estimate how far off each cursor could be, and propagate that through $$\Delta y = (B - A)/n$$. Explain why a larger $$n$$ gives a smaller uncertainty in $$\Delta y$$, and why more hits help. The single slit envelope also falls across each bright fringe, which pulls the fringe's peak slightly toward the center: would that make your $$\Delta y$$ too large or too small, and is it worse when $$d/a$$ is large or small? Which part of the experiment would a real laboratory find hardest to measure precisely?
+
 ## What to hand in
 
-Prelab answers, a Data table copy for each part with its graph and fit, your Part 4 count, the uncertainty estimate and answers to the questions. Identify simulated data.
+Prelab answers, a Data table copy for each part with its graph and fit, your Part 4 count, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

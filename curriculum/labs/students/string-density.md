@@ -69,15 +69,18 @@ Keep the two scan types separate and state whether the string density was known 
 2. For the tension scan, graph $$T$$ (vertical) against $$1/n^2$$ (horizontal), fit a straight line, and infer $$\mu$$ independently from the slope, $$4L^2f^2\mu$$.
 3. Compare the estimates, including units in kg/m and g/m, and check whether the inferred density changes when the tension or mode number changes.
 
-## Uncertainty
-
-Record the frequency adjustment and mass increments. The simulation's set values are prescribed, not independent noisy measurements. For real equipment include the vibrating length measurement, mass calibration, pulley friction and uncertainty in locating resonance peaks. Do not turn adjustment increments into random error bars without justification.
-
 ## Questions
 
 1. What causes a resonance peak to have finite width?
 2. The wavelength is $$2L/n$$, so the wave speed is $$v = 2Lf/n$$. Work it out from the $$n$$ = 1 and $$n$$ = 2 rows of your frequency scan. Was your answer to Before the lab 4 right? Use $$f_n = (n/2L)\sqrt{T/\mu}$$ to explain what sets the speed of a wave on a string and why the frequency does not. Then name a physical change in a real string that would make the speed, and so the inferred density, depend on mode number.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+Record the frequency adjustment and mass increments. The simulation's set values are prescribed, not independent noisy measurements. For real equipment include the vibrating length measurement, mass calibration, pulley friction and uncertainty in locating resonance peaks. Do not turn adjustment increments into random error bars without justification. Give $$\mu$$ from each scan with its uncertainty from the standard error of the fit slope.
+
 ## What to hand in
 
-Prelab answers, separate data tables for both scans, plots with fits, two density estimates and uncertainty discussion, and answers to the questions. Identify simulated data.
+Prelab answers, separate data tables for both scans, plots with fits, two density estimates, and answers to the questions (and to Uncertainty, if assigned). Identify simulated data.

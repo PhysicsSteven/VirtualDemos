@@ -68,10 +68,6 @@ No hazards in the virtual lab.
 4. From Part 2, between which two mass ratios does L4 stop being a place where objects stay? Turn that into words: how many times heavier must the big body be than the smaller one? Are the Sun–Jupiter and Earth–Moon pairs on the safe side?
 5. From Part 2, what happens to the L1 and L2 distances as the smaller body gets heavier? Explain why in words.
 
-## Uncertainty
-
-The demo computes the Lagrange points exactly for its model, so the readings repeat. Name two ways the real Sun, Earth and Moon differ from the model, and say which spacecraft or asteroid each would affect.
-
 ## Questions
 
 1. From Part 3, describe how the Trojan asteroids move compared with L4 and L5, and what happened to the asteroids near L1. Which points are good places for asteroids to collect over billions of years, and why?
@@ -79,6 +75,13 @@ The demo computes the Lagrange points exactly for its model, so the readings rep
 3. The Lucy spacecraft, launched in 2021, will visit several of Jupiter's Trojans. Why do astronomers think these asteroids could be leftovers from the time the planets formed?
 4. In your Sun–Earth reading from Part 1, the L1 distance from the smaller body is how far L1 is from Earth, in Sun to Earth separations. The Sun's and Earth's pulls are equal and opposite 0.0017 separations (about 260,000 km) from Earth. Which of the three places in Before the lab 4 is L1? Using Keeping pace in the Background, explain why an object that keeps pace with Earth at L1 cannot be where the two pulls cancel.
 
+## Uncertainty
+
+For courses that treat measurement uncertainty. This section is not counted in the 75 minutes; do it when your instructor assigns it.
+{: .ws-assigned}
+
+The demo computes the Lagrange points exactly for its model, so the readings repeat. Name two ways the real Sun, Earth and Moon differ from the model, and say which spacecraft or asteroid each would affect.
+
 ## What to hand in
 
-Prelab answers, the two copies of the Data table with the notes from Part 3, the answers to the analysis and uncertainty sections, and answers to the questions. Identify simulated data.
+Prelab answers, the two copies of the Data table with the notes from Part 3, the answers to the analysis section and to the questions (and to Uncertainty, if assigned). Identify simulated data.
