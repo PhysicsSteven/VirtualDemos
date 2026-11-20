@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="../demos/lib/theme.js"></script>
+<title>Confidence Intervals: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+@media screen { :root[data-theme="dark"] {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; overflow-wrap: break-word; }   /* a long file name breaks instead of pushing a phone sideways */
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+<link rel="stylesheet" id="vd-paper" href="../demos/lib/paper.css">
+</head>
+<body class="notes">
+<header class="top" aria-label="Site"><a class="brand" href="../index.html"><svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><ellipse cx="16" cy="16" rx="13" ry="6" fill="none" stroke="currentColor" stroke-width="1.8" transform="rotate(-30 16 16)"/><ellipse cx="16" cy="16" rx="13" ry="6" fill="none" stroke="currentColor" stroke-width="1.8" transform="rotate(30 16 16)"/><circle cx="16" cy="16" r="2.6" fill="currentColor"/></svg>Virtual Physics Demos</a><nav class="tabs" aria-label="Library"><a class="tab" href="../index.html#topics">Demos</a><a class="tab" href="../openstax.html">OpenStax</a><a class="tab" href="index.html" aria-current="page">Notes</a></nav><span class="hfind"></span><span data-vd-theme></span><a class="courses" href="../courses.html"><b>For a class</b> Courses</a></header>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Confidence Intervals</h1><ul class="meta"><li><a href="../demos/confidence-intervals.html">Open the demo</a></li><li>Statistics (OpenStax Introductory Statistics 2e 8.1 to 8.6) and physics labs that report a mean with its uncertainty (a pendulum&#x27;s period, photon counting with a polarizer)</li><li>15 to 35 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>A 95 % confidence interval comes from a method that catches the true value in 95 % of samples. Any one interval either catches it or not; the 95 % is about the method, not about one interval.</li>
+<li>Higher confidence means wider intervals. The width shrinks as 1/√n: four times the sample, half the width.</li>
+<li>With σ unknown and a small sample, the interval needs t with n − 1 degrees of freedom. Putting s in place of σ with z makes intervals that are too narrow and miss too often.</li>
+<li>The t interval assumes a normal population; for a skewed one it needs a larger n.</li>
+<li>A proportion's interval p′ ± z√(p′q′/n) is a normal approximation; for a rare event and a small n it fails, and the plus four interval does much better.</li>
+</ul>
+<h2>Before class</h2>
+<p>Nothing to install. Population picks Pendulum period, hand timed (s); Heights (cm), normal; Times between decays (s), skewed; or Photons through a polarizer: a proportion (with the Polarizer angle θ). Sample size n has −1 and +1. The interval is z, σ known; z with s; t with s; Normal approximation; or Plus four, and Also draw z with s (thin) adds a second interval for comparison. Confidence level (%) is 90, 95 or 99. Draw one, Draw 100, Draw 1,000 or Play stack the intervals under the true value; misses are drawn red. Two tabs: Capture rate as they pile up and Width against n. Draw set, in the Lab fold, starts new samples; Blind hides the true value and which intervals caught it. Every sample is simulated. The Handout and worksheet link opens the coverage worksheet.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Count the misses.</strong> Open on <strong>A pendulum's period: 95 % z intervals</strong>. Ask what share will miss, then Draw 100 (Q1).</li>
+<li><strong>Change the level.</strong> <strong>90, 95 or 99 %: the same samples</strong>: Draw 100, then switch the level (Q2).</li>
+<li><strong>Small samples.</strong> <strong>n = 4: t against z with s</strong> (Q3).</li>
+<li><strong>Skewed data.</strong> <strong>Skewed decay times, t at n = 5</strong>, then raise n to 40 (Q4). <strong>Heights, t intervals, n = 25</strong> for a normal population.</li>
+<li><strong>Width.</strong> <strong>Width shrinks as 1/√n</strong> on the Width against n tab (Q5).</li>
+<li><strong>A proportion.</strong> <strong>Photons through a polarizer at 60°</strong>, then <strong>A rare event, n = 15: plus four</strong> (Q6, Q7).</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> A 1.000 m pendulum has a true period T = 2π√(L/g) = 2.006 s. Each sample is ten hand timings with σ = 0.080 s known. Find the width 2zσ/√n of a 95 % z interval (0.0992 s). Before you Draw 100, how many intervals do you expect to miss? Are all samples of 100 going to give exactly 5? Does a red interval mean the student made a mistake?</p></div>
+
+<div class="q"><p><strong>Q2.</strong> With the same samples, the 90 % and 99 % intervals are 0.0832 s and 0.1303 s wide. Why does more confidence cost width? What would a 100 % interval look like?</p></div>
+
+<div class="q"><p><strong>Q3.</strong> With four timings and σ unknown, t with 3 degrees of freedom is 3.182, not 1.96. The z with s interval catches the truth only P(|T| ≤ 1.96) = 85.5 % of the time for df = 3. Why is s so often smaller than σ in a small sample, and why does the t interval fix it?</p></div>
+
+<div class="q"><p><strong>Q4.</strong> Times between decays are exponential with mean 2.00 s. In 20,000 simulated samples, t intervals at n = 5 catch the mean about 88 % of the time, and at n = 40 about 93 %. Why does a skewed population hurt the t interval, and why does a larger n help?</p></div>
+
+<div class="q"><p><strong>Q5.</strong> The width of a 95 % z interval for the pendulum is 0.0992 s at n = 10. Predict it at n = 40 and n = 160, then check on the Width against n tab (0.0496 s and 0.0248 s). How many timings would halve the n = 40 width again?</p></div>
+
+<div class="q"><p><strong>Q6.</strong> A photon passes a polarizer at 60° with probability cos² 60° = 0.25 (Malus's law). With 50 photons a sample, check np and nq. The normal approximation interval catches p about 94 % of the time in 20,000 samples: is that close enough to 95 %?</p></div>
+
+<div class="q"><p><strong>Q7.</strong> At 72° only p = 0.0955 of the photons pass. With n = 15, what is the chance a sample has no photons at all (0.222), and what interval does p′ = 0 give? The normal approximation catches p about 77 % of the time; plus four, about 95 %. What does plus four do, and why does it help?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"There is a 95 % chance the true value is in this interval."</strong> The true value is fixed; the method catches it 95 % of the time. A given interval either does or does not.</li>
+<li><strong>"95 % of the data lie in the interval."</strong> The interval is for the mean (or proportion), not for single readings, which spread √n times wider.</li>
+<li><strong>"A wider interval is a worse measurement."</strong> It is a more honest one at higher confidence; more data, not a smaller z, is the way to narrow it.</li>
+<li><strong>"z and t are interchangeable."</strong> For small samples with s, z gives intervals that miss far too often.</li>
+<li><strong>"Zero successes means p = 0."</strong> A sample of 15 with no photons is common at p = 0.0955; the normal interval of zero width is useless there.</li>
+</ul>
+<h2>How the demo works</h2>
+<ul>
+<li>Every sample is simulated with a seeded random number generator: the pendulum timings are T plus a normal error with σ = 0.080 s, with g = 9.81 m/s² from constants.js; heights normal with μ = 165.0 cm and σ = 7.0 cm; times between decays exponential with mean 2.00 s; each photon passes with probability cos²θ.</li>
+<li>The intervals follow the book: x̄ ± z(σ/√n); z with s; x̄ ± t(s/√n) with n − 1 degrees of freedom; p′ ± z√(p′q′/n); plus four, with two successes and two failures added. The critical values come from the exact normal and t distributions (demos/lib/vdstats.js).</li>
+<li>The samples are kept, so a new level or interval recounts the same samples; a new n, population, angle or draw set starts new ones. Each n has its own stream.</li>
+<li>On the Width against n tab, each dot is the mean width at that n, and the curve is 2zσ/√n (or 2z√(pq/n)).</li>
+<li>The capture rates over 20,000 samples quoted above were computed with the demo's own code (Draw set 1).</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>. © 2026 Steven Anderson. All rights reserved; see the <a href="../LICENSE.html">terms of use</a>.</footer>
+</main>
+</body>
+</html>

@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="../demos/lib/theme.js"></script>
+<title>Chi-Square Tests: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+@media screen { :root[data-theme="dark"] {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; overflow-wrap: break-word; }   /* a long file name breaks instead of pushing a phone sideways */
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+<link rel="stylesheet" id="vd-paper" href="../demos/lib/paper.css">
+</head>
+<body class="notes">
+<header class="top" aria-label="Site"><a class="brand" href="../index.html"><svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><ellipse cx="16" cy="16" rx="13" ry="6" fill="none" stroke="currentColor" stroke-width="1.8" transform="rotate(-30 16 16)"/><ellipse cx="16" cy="16" rx="13" ry="6" fill="none" stroke="currentColor" stroke-width="1.8" transform="rotate(30 16 16)"/><circle cx="16" cy="16" r="2.6" fill="currentColor"/></svg>Virtual Physics Demos</a><nav class="tabs" aria-label="Library"><a class="tab" href="../index.html#topics">Demos</a><a class="tab" href="../openstax.html">OpenStax</a><a class="tab" href="index.html" aria-current="page">Notes</a></nav><span class="hfind"></span><span data-vd-theme></span><a class="courses" href="../courses.html"><b>For a class</b> Courses</a></header>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Chi-Square Tests</h1><ul class="meta"><li><a href="../demos/chi-square-tests.html">Open the demo</a></li><li>Statistics (OpenStax Introductory Statistics 2e 3.4 and 11.1 to 11.8) and physics labs that test counts against a model (radioactive decay against Poisson, detector dead time, a timer&#x27;s spread)</li><li>15 to 40 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>χ² = Σ (O − E)²/E adds up how far each observed count is from the count the hypothesis expects, scaled by that count. The demo draws each cell's share as a square.</li>
+<li>Goodness of fit compares one variable with a hypothesized distribution (df = categories − 1, less one more for each parameter estimated from the data). Independence asks whether two variables of one sample are related; homogeneity asks whether several samples share one distribution. Both use E = (row total)(column total)/(grand total) and df = (rows − 1)(columns − 1).</li>
+<li>The p value is the area under the chi square curve to the right of the statistic. The curve is an approximation for counts, good when every expected count is at least 5.</li>
+<li>A very small χ² can be suspicious too: data that fit too well.</li>
+<li>The test of a single variance, χ² = (n − 1)s²/σ₀², asks about a spread and needs normal data.</li>
+</ul>
+<h2>Before class</h2>
+<p>Nothing to install. Four modes: <strong>Goodness of fit</strong>, <strong>Independence</strong>, <strong>Homogeneity</strong> and <strong>Single variance</strong>. Each simulated source has its own controls: Rolls and Chance of a six for the die; Intervals of 1 s, Count rate (per s) and Dead time for the counter; Throws for the die and coin; Timings n and Stopwatch spread σ for the stopwatch. The tail (Hₐ) and α are set for a single variance. New data draws another seeded data set. Simulate 1,000 (or Play) draws data sets where H₀ is true and fills a histogram of their statistics under the chi square curve. Two panels: The cells and The test. The setups include eight book examples (11.2, 11.3, 11.4, 11.6, 11.7, 11.8, 11.9 and 11.11), Mendel's peas, and simulated sources. Blind, in the Lab fold, hides χ², the p value and the decision. The Handout and worksheet link opens the chi square worksheet.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>A loaded die.</strong> Open on <strong>A loaded die (simulated)</strong> with Blind on: ask whether the bars give the loading away, then show χ². Raise Rolls to 300 (Q1). Then <strong>A fair die (simulated)</strong> and Simulate 1,000 (Q2).</li>
+<li><strong>Mendel's peas</strong> (Q3), then <strong>Two coins (book Example 11.4)</strong> and <strong>Absent days (book Example 11.2)</strong> (Q4).</li>
+<li><strong>Physics counts.</strong> <strong>Decay counts against Poisson (simulated)</strong>, then <strong>A counter with dead time (simulated)</strong> (Q5).</li>
+<li>Switch modes to <strong>Independence.</strong> <strong>Volunteer hours (book Example 11.6)</strong> and <strong>A die and a coin (simulated)</strong> (Q6).</li>
+<li>Switch modes to <strong>Homogeneity.</strong> <strong>Living arrangements (book Example 11.8)</strong> (Q7).</li>
+<li>Switch modes to <strong>Single variance.</strong> <strong>Post office lines (book Example 11.11)</strong> and <strong>Stopwatch timings (simulated)</strong> (Q8).</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> A die is loaded so a six comes up a quarter of the time (the other faces 0.15 each). H₀: the die is fair. With 60 rolls the expected count is 10 a face, df = 5 and the critical value at α = 0.05 is 11.07. Press New data several times: how often does the test catch the loading? (In 100,000 simulated sets of 60 rolls, about 22 % reject; with 300 rolls, about 83 %.) What does that say about small samples?</p></div>
+
+<div class="q"><p><strong>Q2.</strong> With a fair die, H₀ is true. About what share of data sets give p &lt; 0.05? Press Simulate 1,000: the histogram of χ² should follow the chi square curve with df = 5. What are its mean and its standard deviation?</p></div>
+
+<div class="q"><p><strong>Q3.</strong> Mendel counted 315 round yellow, 108 round green, 101 wrinkled yellow and 32 wrinkled green seeds, 556 in all. Find the expected counts for 9 : 3 : 3 : 1 (312.75, 104.25, 104.25, 34.75), χ² (0.470), df and the p value (0.9254). Some have argued the fit is too close: how likely is a fit at least this good if his theory is right?</p></div>
+
+<div class="q"><p><strong>Q4.</strong> Two coins tossed 100 times give 20, 57 and 23 for two, one and no heads. Show that χ² = 2.14 with df = 2 (p = 0.3430). Sixty absences spread over five days as 15, 12, 9, 9 and 15 give χ² = 3 with df = 4 (p = 0.5578). What do you conclude in each case, in words?</p></div>
+
+<div class="q"><p><strong>Q5.</strong> A Geiger counter counts 100 intervals of 1 s at 4 counts a second. Why are the counts grouped so every expected count is at least 5, and why is df = groups − 2? A busy counter sees 25 arrivals a second and is blind for 20 ms after each count it records. Show that it records 25/(1 + 25 × 0.020) = 16.7 counts a second, about a third fewer. Why are its counts more even than a Poisson distribution allows, and does the test notice?</p></div>
+
+<div class="q"><p><strong>Q6.</strong> For 839 volunteers in three groups and three ranges of hours, H₀: hours are independent of the kind of volunteer. Find the expected count for community college students volunteering 1 to 3 hours (90.57). The book gives χ² = 12.99, df = 4, p = 0.0113. For a fair coin and a fair die thrown together 120 times, H₀ is true: what does the histogram of p values look like over many data sets?</p></div>
+
+<div class="q"><p><strong>Q7.</strong> 250 men and 300 women report where they live. Why is this a test of homogeneity, not independence, though the arithmetic is the same? The book gives χ² = 10.1287, df = 3, p = 0.0175. What do you conclude?</p></div>
+
+<div class="q"><p><strong>Q8.</strong> With a single line, 25 waiting times have s = 3.5 min against σ₀ = 7.2 min for separate lines. Find χ² = (n − 1)s²/σ₀² (5.67), df and the left tailed p value (0.000042). For twenty stopwatch timings and a maker's claim of σ₀ = 0.05 s, the right tailed critical value at α = 0.05 is 30.14. What would s = 0.07 s give (37.24), and what would you conclude?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"A large χ² proves the die is loaded in a particular way."</strong> It says the counts do not fit H₀; the cell squares show where.</li>
+<li><strong>"A small p is the only warning sign."</strong> A p value very close to 1 (Mendel's 0.9254) can mean data that fit suspiciously well.</li>
+<li><strong>"Use the percentages."</strong> χ² needs counts: the same percentages from ten times the data give ten times the χ².</li>
+<li><strong>"Independence and homogeneity are the same test."</strong> The arithmetic is the same, but the sampling and the question differ: one sample cross classified, or several samples compared.</li>
+<li><strong>"Expected counts must be whole numbers."</strong> They are averages over many samples, such as 312.75.</li>
+</ul>
+<h2>How the demo works</h2>
+<ul>
+<li>χ² = Σ (O − E)²/E over every cell; E = n·p for goodness of fit and (row total)(column total)/(grand total) for tables; a single variance uses (n − 1)s²/σ₀². The p value is the chi square curve's area beyond the statistic (the regularized incomplete gamma function in demos/lib/vdstats.js), as the book's calculator gives it.</li>
+<li>Small expected counts are flagged, and the decay counts are grouped so every expected count is at least 5, with one more degree of freedom lost to the estimated mean.</li>
+<li>The simulation needs no approximation: counts fall into the cells with the chances H₀ gives, and the simulated p value is the share of simulated statistics at or beyond the observed one.</li>
+<li>The simulated sources are seeded: a die with the chance of a six you set; a long lived source counted in 1 s intervals as a Poisson process, with a counter blind for its dead time after each recorded count; a fair die and coin; a stopwatch whose readings of a 2.006 s period (a 1.000 m pendulum) scatter normally with the set σ, rounded to 0.01 s.</li>
+<li>The book's data are from OpenStax Introductory Statistics 2e, chapter 11; Mendel's from Versuche über Pflanzen-Hybriden (1866).</li>
+<li>The rejection rates in Q1 were computed for these notes by simulating the loaded die directly (100,000 sets each), not read from the demo.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>. © 2026 Steven Anderson. All rights reserved; see the <a href="../LICENSE.html">terms of use</a>.</footer>
+</main>
+</body>
+</html>

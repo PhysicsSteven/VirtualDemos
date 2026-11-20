@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="../demos/lib/theme.js"></script>
+<title>Data Explorer: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+@media screen { :root[data-theme="dark"] {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; overflow-wrap: break-word; }   /* a long file name breaks instead of pushing a phone sideways */
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+<link rel="stylesheet" id="vd-paper" href="../demos/lib/paper.css">
+</head>
+<body class="notes">
+<header class="top" aria-label="Site"><a class="brand" href="../index.html"><svg class="mark" viewBox="0 0 32 32" aria-hidden="true"><ellipse cx="16" cy="16" rx="13" ry="6" fill="none" stroke="currentColor" stroke-width="1.8" transform="rotate(-30 16 16)"/><ellipse cx="16" cy="16" rx="13" ry="6" fill="none" stroke="currentColor" stroke-width="1.8" transform="rotate(30 16 16)"/><circle cx="16" cy="16" r="2.6" fill="currentColor"/></svg>Virtual Physics Demos</a><nav class="tabs" aria-label="Library"><a class="tab" href="../index.html#topics">Demos</a><a class="tab" href="../openstax.html">OpenStax</a><a class="tab" href="index.html" aria-current="page">Notes</a></nav><span class="hfind"></span><span data-vd-theme></span><a class="courses" href="../courses.html"><b>For a class</b> Courses</a></header>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Data Explorer</h1><ul class="meta"><li><a href="../demos/data-explorer.html">Open the demo</a></li><li>Statistics (OpenStax Introductory Statistics 2e 1.3, 2.1 to 2.8, 6.3 and 6.4) and physics labs that repeat one measurement (hand timings, decay counts, temperature logs)</li><li>15 to 35 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>One data set can be drawn many ways: a frequency table, a stemplot, a dot plot, a histogram, a box plot and a time series. Each keeps something and throws something away; only the time series keeps the order the data were taken in.</li>
+<li>The mean and standard deviation chase an extreme value; the median and the IQR barely move. For skewed data or data with outliers, the median is the better center.</li>
+<li>The book's outlier rule: a value below Q1 − 1.5 IQR or above Q3 + 1.5 IQR.</li>
+<li>A histogram's shape depends on the start and the bin width as well as on the data.</li>
+<li>A z score says how many standard deviations a value sits from the mean; more than two is unusual.</li>
+<li>Levels of measurement matter: on an interval scale such as degrees Celsius, differences mean something but ratios do not.</li>
+</ul>
+<h2>Before class</h2>
+<p>Nothing to install. Four simulated lab sets (<strong>Pendulum: 25 hand timings</strong>, <strong>Lap times of a tiring runner</strong>, <strong>Decay counts in 10 s</strong>, <strong>Lab temperature (°C)</strong>) and eight from the book (<strong>Hours worked per day (1.3)</strong>, <strong>Exam scores (2.1)</strong>, <strong>Distances to supermarkets (2.1)</strong>, <strong>Soccer player heights (2.2)</strong>, <strong>Consumer Price Index by month (2.2)</strong>, <strong>Home prices (2.3)</strong>, <strong>Emergency room ages (2.5)</strong>, <strong>Baseball team ages (2.7)</strong>). Drag any point and every graph and statistic follows. Bin width and Start set the histogram (or drag their tabs); the frequency table shows Each value or The histogram's classes; Modified box plot draws outliers apart. Each value has Reading #, Value, Smallest, Largest and Remove it. k-th percentile, k = finds a percentile. Your data are sets the level of measurement. The box under the graphs holds the data in the order taken: edit them or paste your own. New draw makes another simulated set. Blind, in the Lab fold, hides the statistics, the box plot and the mean and median marks. The Handout and worksheet link opens the describing data worksheet.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>The opening timings.</strong> <strong>Pendulum: 25 hand timings</strong>, Blind on. Ask for the mean, median and spread from the dot plot, then turn Blind off. Drag the rightmost dot far to the right (Q1).</li>
+<li><strong>Skewed counts.</strong> <strong>Decay counts in 10 s</strong>; switch the frequency table to Each value (Q2).</li>
+<li><strong>The book's outliers.</strong> <strong>Exam scores (2.1)</strong>, <strong>Distances to supermarkets (2.1)</strong> and <strong>Home prices (2.3)</strong> (Q3, Q4).</li>
+<li><strong>Bins.</strong> <strong>Soccer player heights (2.2)</strong>: drag Start and Bin width (Q5).</li>
+<li><strong>Order matters.</strong> <strong>Lap times of a tiring runner</strong> and <strong>Lab temperature (°C)</strong>: compare the histogram with the time series (Q6, Q7).</li>
+<li><strong>z scores.</strong> <strong>Baseball team ages (2.7)</strong> with Reading # (Q8).</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> Draw 1 of the pendulum timings has mean 2.0072 s, median 2.02 s, s = 0.0553 s and IQR 0.085 s. Predict what happens to each when the largest timing, 2.08 s, is dragged to 4.00 s (someone counted two swings). Then drag it: the mean becomes 2.084 s and s 0.403 s. What happened to the median and the IQR, and is 4.00 s an outlier by the book's rule?</p></div>
+
+<div class="q"><p><strong>Q2.</strong> Forty counts of 10 s each from a weak source (simulated, mean 3.2 counts) have mean 3.425 and median 3. Why can counts not be symmetric here? Which way is the skew? The counts 7 and 8 sit above Q3 + 1.5 IQR = 6.25: are they mistakes, or just the long tail of the counts?</p></div>
+
+<div class="q"><p><strong>Q3.</strong> The book's 31 exam scores have mean 73.5 and median 73, and the skew is negative, yet the mean is above the median. What does that say about the rule "the mean is pulled toward the tail"? Drag the 33 down to 0: the mean drops to 72.5. In the supermarket distances, is 12.3 km an outlier? Drag it in to 7 km and list what changes.</p></div>
+
+<div class="q"><p><strong>Q4.</strong> The book's 13 home prices have median $488,800, Q1 $308,750 and Q3 $649,000. Find the IQR and the upper fence, and show that only $5,500,000 is an outlier. The mean is $865,015. Drag that home to $700,000: the mean becomes $495,785. Which center would you report for home prices, and why?</p></div>
+
+<div class="q"><p><strong>Q5.</strong> The book's 100 soccer heights start at 59.95 in with bars 2 in wide. Why start at 59.95 rather than 60? The class counts are 5, 3, 15, 40, 17, 12, 7 and 1: what share is under 65.95 in? Drag Bin width to 1 and to 4: did the data change, or only the picture?</p></div>
+
+<div class="q"><p><strong>Q6.</strong> The runner's 20 laps, in order, start at 88.3 s and end at 94.3 s (Draw 1). What does the histogram miss that the time series shows at once? Would the mean lap time be a good summary of this run?</p></div>
+
+<div class="q"><p><strong>Q7.</strong> The room warms from 20.3 °C to 21.2 °C over six hours (Draw 1). Set Your data are to interval. Is 22 °C "10 % hotter" than 20 °C? Convert both to kelvins and find the real ratio.</p></div>
+
+<div class="q"><p><strong>Q8.</strong> The book's 25 baseball ages have mean 30.68 and s = 6.09. Find the z scores of the youngest (21) and oldest (40) players. Is any player unusual by the two standard deviation rule?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"The mean is the middle."</strong> The median is the middle; the mean is the balance point and can sit far from the middle of skewed data.</li>
+<li><strong>"An outlier is a mistake."</strong> It is a value to check. The decay counts' 7 and 8 are honest counts from the tail.</li>
+<li><strong>"The histogram shows the data."</strong> It shows the data grouped; a different Start or Bin width can change its shape.</li>
+<li><strong>"Standard deviation is the average distance from the mean."</strong> It is the square root of the average squared distance (dividing by n − 1 for a sample), so one far value counts heavily.</li>
+<li><strong>"Order does not matter."</strong> For the tiring runner and the warming room, the trend in time is the main story.</li>
+</ul>
+<h2>How the demo works</h2>
+<ul>
+<li>Every statistic follows the book's rules through the shared library (demos/lib/vdstats.js): quartiles by the median of each half (the TI method), percentiles, the 1.5 IQR fences, the sample standard deviation with n − 1, and the skewness.</li>
+<li>A value on a bin boundary goes in the bar to its right, and the largest value is always counted. The default start is half a unit of the last decimal place below the smallest value, as the book does.</li>
+<li>The stemplot uses the smallest leaf unit that keeps the stems to 20 or fewer, cuts digits past the leaf unit (never rounds), and keeps empty stems.</li>
+<li>The book's data are from OpenStax Introductory Statistics 2e (CC BY 4.0), in the section named on each setup. The lab sets are simulated from seeded random numbers: pendulum timings of a 2.000 s period with σ = 0.06 s; laps of 88.0 s plus 0.35 s a lap with σ = 1.0 s; Poisson counts with mean 3.2; a room warming from 20.0 °C by 1.5 °C over six hours with σ = 0.15 °C.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>. © 2026 Steven Anderson. All rights reserved; see the <a href="../LICENSE.html">terms of use</a>.</footer>
+</main>
+</body>
+</html>
