@@ -48,8 +48,8 @@ VDI18N.add('es', 'demo/confidence-intervals', {
   "Intervalos de confianza",
 "<a>Math for physics</a>":
   "<a>Matemáticas para física</a>",
-"<span><a><span>←</span> <span>Sampling Lab</span></a></span>":
-  "<span><a><span>←</span> <span>Laboratorio de muestreo</span></a></span>",
+"<a><span>←</span> <span>Sampling Lab</span></a><a><span>Hypothesis Tests</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Laboratorio de muestreo</span></a><a><span>Pruebas de hipótesis</span> <span>→</span></a>",
 "Draw a sample, build its interval, and stack it under the last one against the true value. About {#} of every {#} intervals at {#} % catch the truth; the rest miss, and you can see which. Try a small n with t and with z, a proportion, and watch the width shrink as {#}/√n.":
   "Toma una muestra, construye su intervalo y apílalo bajo el anterior contra el valor real. Cerca de {#} de cada {#} intervalos al {#} % atrapan el valor real; los demás fallan, y puedes ver cuáles. Prueba una n pequeña con t y con z, una proporción, y mira cómo el ancho se reduce como {#}/√n.",
 "Clear the intervals drawn and start the count again":
@@ -124,10 +124,6 @@ VDI18N.add('es', 'demo/confidence-intervals', {
   "Fotones a través de un polarizador a {#}°",
 "A rare event, n = {#}: plus four":
   "Un evento raro, n = {#}: más cuatro",
-"Level (%)":
-  "Nivel (%)",
-"Caught (%)":
-  "Atrapados (%)",
 "Formulas":
   "Fórmulas",
 "<span>Blind: hide the true value and which intervals caught it, to predict the share first</span>":
@@ -146,6 +142,10 @@ VDI18N.add('es', 'demo/confidence-intervals', {
   "Las muestras se conservan, así que al cambiar el nivel de confianza o el intervalo se vuelven a contar las mismas muestras. Una nueva n, población, ángulo o conjunto de sorteo empieza muestras nuevas. Cada n tiene su propia serie de números aleatorios, así que las {#} muestras con n = {#} son las mismas sin importar lo que hayas tomado antes.",
 "Width against n: each dot is the mean width of the intervals drawn at that n, at the level and interval shown; the curve is 2z σ/√n (or 2z√(pq/n)) at that level, the width an interval with σ known would have.":
   "Ancho contra n: cada punto es el ancho medio de los intervalos tomados con esa n, al nivel y con el intervalo mostrados; la curva es 2z σ/√n (o 2z√(pq/n)) a ese nivel, el ancho que tendría un intervalo con σ conocida.",
+"Level (%)":
+  "Nivel (%)",
+"Caught (%)":
+  "Atrapados (%)",
 "Your own setup: every control above can be changed.":
   "Tu propia configuración: puedes cambiar cualquier control de arriba.",
 "Mean width of the intervals against n ({k}, {c} %)":
@@ -168,8 +168,8 @@ VDI18N.add('es', 'demo/confidence-intervals', {
   "z con s, ancho medio",
 "Mean width of the intervals against n (t with s, {#} %)":
   "Ancho medio de los intervalos contra n (t con s, {#} %)",
-"Times between decays are strongly skewed, not normal. The t interval assumes a normal population; at n = {#} it catches fewer than {#} %. Raise n to {#} and the central limit theorem rescues it.":
-  "Los tiempos entre decaimientos están muy sesgados, no son normales. El intervalo t supone una población normal; con n = {#} atrapa menos del {#} %. Sube n a {#} y el teorema del límite central lo rescata.",
+"Times between decays are strongly skewed, not normal. The t interval assumes a normal population; at n = {#} it catches fewer than {#} %. Raise n to {#} and the central limit theorem brings it most of the way back, to about {#} % of intervals, but not all the way: the skew of a mean fades only as {#}/√n.":
+  "Los tiempos entre decaimientos están muy sesgados, no son normales. El intervalo t supone una población normal; con n = {#} atrapa menos del {#} %. Sube n a {#} y el teorema del límite central lo recupera casi por completo, a cerca del {#} % de los intervalos, pero no del todo: el sesgo de una media se desvanece solo como {#}/√n.",
 "Heights, simulated as normal with μ = {#} cm and σ = {#} cm (the book's {#} lab measures real ones). With σ unknown, t intervals from samples of {#}.":
   "Estaturas, simuladas como normales con μ = {#} cm y σ = {#} cm (el laboratorio {#} del libro mide estaturas reales). Con σ desconocida, intervalos t de muestras de {#}.",
 "value (cm)":
@@ -249,5 +249,9 @@ VDI18N.add('es', 'demo/confidence-intervals', {
 "Play draws one sample about every half second at first, then faster, up to the next 100. Red intervals missed the true value.":
   "Iniciar toma una muestra cada medio segundo más o menos al principio, luego más rápido, hasta las siguientes 100. Los intervalos rojos no atraparon el valor real.",
 "Draw some intervals first: Play, or Draw 100.":
-  "Primero toma algunos intervalos: Iniciar, o Tomar 100."
+  "Primero toma algunos intervalos: Iniciar, o Tomar 100.",
+"<span><a><span>←</span> <span>Sampling Lab</span></a></span>":
+  "<span><a><span>←</span> <span>Laboratorio de muestreo</span></a></span>",
+"Times between decays are strongly skewed, not normal. The t interval assumes a normal population; at n = {#} it catches fewer than {#} %. Raise n to {#} and the central limit theorem rescues it.":
+  "Los tiempos entre decaimientos están muy sesgados, no son normales. El intervalo t supone una población normal; con n = {#} atrapa menos del {#} %. Sube n a {#} y el teorema del límite central lo rescata."
 });
