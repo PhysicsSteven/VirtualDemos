@@ -601,6 +601,16 @@
      "worksheets": [
       "collisions"
      ]
+    },
+    {
+     "sec": "8.7",
+     "title": "Introduction to Rocket Propulsion",
+     "demos": [
+      "rocket"
+     ],
+     "worksheets": [
+      "rocket"
+     ]
     }
    ]
   },
@@ -1105,7 +1115,7 @@
     },
     {
      "sec": "15.3",
-     "title": "Carnot’s Perfect Heat Engine: The Second Law of Thermodynamics Restated",
+     "title": "Introduction to the Second Law of Thermodynamics: Heat Engines and Their Efficiency",
      "demos": [
       "heat-engines",
       "entropy"
@@ -1118,7 +1128,7 @@
     },
     {
      "sec": "15.4",
-     "title": "Applications of Thermodynamics: Heat Pumps and Refrigerators",
+     "title": "Carnot’s Perfect Heat Engine: The Second Law of Thermodynamics Restated",
      "demos": [
       "heat-engines",
       "entropy"
@@ -1131,6 +1141,19 @@
     },
     {
      "sec": "15.5",
+     "title": "Applications of Thermodynamics: Heat Pumps and Refrigerators",
+     "demos": [
+      "heat-engines",
+      "entropy"
+     ],
+     "worksheets": [
+      "hs-heat-engines",
+      "heat-engines",
+      "second-law"
+     ]
+    },
+    {
+     "sec": "15.6",
      "title": "Entropy and the Second Law of Thermodynamics: Disorder and the Unavailability of Energy",
      "demos": [
       "entropy",
@@ -1142,7 +1165,7 @@
      ]
     },
     {
-     "sec": "15.6",
+     "sec": "15.7",
      "title": "Statistical Interpretation of Entropy and the Second Law of Thermodynamics: The Underlying Explanation",
      "demos": [
       "entropy",
