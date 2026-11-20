@@ -335,3 +335,16 @@ table.rows input:focus { border-color: var(--accent); }
 .toggles input { accent-color: var(--accent); margin: 0; }
 .vd-readings .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(--line); border-radius: 4px; padding: 0 4px; background: var(--canvas); }
+/* Setups fold (VD.setups in vd.js, 2026-11-20): Show all / Show fewer in the Setups heading; folded, only the pressed chip shows */
+.vd-setups-h, .vd-setups-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.vd-setups-tog { display: inline-flex; align-items: center; gap: 4px; margin: -4px -6px -4px auto; padding: 4px 6px; border: 0; border-radius: 6px; background: none; color: var(--muted); font: inherit; font-family: var(--font-ui, inherit); font-size: 0.78rem; font-weight: 600; letter-spacing: 0; text-transform: none; cursor: pointer; white-space: nowrap; }
+.vd-setups-tog:hover { color: var(--ink); background: var(--canvas); }
+.vd-setups-tog:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.vd-setups-tog[hidden] { display: none; }
+.vd-setups-tog svg { width: 12px; height: 12px; transition: transform 0.15s; }
+.vd-setups-tog[aria-expanded="true"] svg { transform: rotate(180deg); }
+.chips.vd-setups-long { gap: 5px; }
+.chips.vd-setups-long button { padding: 4px 9px; font-size: 0.84rem; }
+.chips.vd-setups-closed button:not([aria-pressed="true"]) { display: none; }
+@media (prefers-reduced-motion: reduce) { .vd-setups-tog svg { transition: none; } }
+@media (max-width: 820px) { .vd-setups-tog { min-height: 36px; } }

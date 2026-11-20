@@ -97,6 +97,7 @@
       if (n && !window.confirm('Reset all clears ' + (n > 1 ? 'the ' + n + ' readings' : n === 1 ? 'the reading' : 'the readings') + ' you recorded. '
         + 'Export them first if you need them. Reset anyway?')) return;
       document.querySelectorAll('input,select,textarea,form').forEach(function (e) { e.setAttribute('autocomplete', 'off'); });
+      try { localStorage.removeItem(SETUPS_KEY); } catch (_) {}   /* the Setups fold (VD.setups) goes back to its default */
       try { localStorage.removeItem(SIZE_KEY); } catch (_) {}   /* the picture's size (VD.pictureSize) goes back to its default too */
       try { for (var i = localStorage.length - 1; i >= 0; i--) { var lk = localStorage.key(i); if (lk && lk.indexOf(SPLIT_PRE) === 0) localStorage.removeItem(lk); } } catch (_) {}   /* and every divider (VD.split) */
       /* settings from a shared link (set=, which Copy link also writes into the address) are dropped, so Reset all always resets */
@@ -1383,7 +1384,87 @@
   };
   function a11yStart() { VD.a11y(); setTimeout(VD.a11y, 2000); }
 
+  /* Setups fold (Steve 2026-11-20: "make the setups collapsible, they are getting lengthy"). Each Setups list in the sidebar (the
+     chips under an h2 that reads Setups, and any #presets chip row) gets a Show all / Show fewer button in its heading. Folded, only
+     the pressed chip stays (so the setup on show is always named) and the rest hide; nothing else changes: the chips keep their ids,
+     handlers and aria-pressed, so ?scene= and set= links, Start here, Copy link and key captures work as before. Lists of 4 or
+     more get the button; lists longer than SETUPS_LONG chips start folded and set their chips a little tighter (vd-setups-long). The choice is remembered per demo (localStorage vd-setups:<demo>) and
+     Reset all clears it. A browser driven by a script (navigator.webdriver: key captures, harvests, checks, videos) starts unfolded
+     unless it chose otherwise, so tools that click a chip still find it. VD.setups.set(open) is there for tests. */
+  var SETUPS_KEY = 'vd-setups:' + (location.pathname.split('/').pop().replace(/\.html$/, '') || 'index'), SETUPS_LONG = 6;
+  VD.setups = function () {
+    var rail = document.querySelector('.rail') || document.body, regions = [], seen = new Set();
+    var isSetups = function (h) { return /^\s*setups?\s*$/i.test(h.textContent); };
+    rail.querySelectorAll('h2').forEach(function (h) {
+      if (!isSetups(h)) return;
+      var els = [];
+      for (var e = h.nextElementSibling; e && e.tagName !== 'H2'; e = e.nextElementSibling) els.push(e);
+      var chips = [];
+      els.forEach(function (e) { (e.matches('.chips') ? [e] : []).concat([].slice.call(e.querySelectorAll('.chips'))).forEach(function (c) { if (!seen.has(c)) { seen.add(c); chips.push(c); } }); });
+      if (chips.length) regions.push({ head: h, chips: chips });
+    });
+    var pr = document.getElementById('presets');
+    if (pr && pr.closest('.rail') && !seen.has(pr) && !pr.querySelector('.chips')) {
+      var head = pr.previousElementSibling;
+      if (!head || head.tagName !== 'H2') {
+        head = document.createElement('h2'); head.className = 'vd-setups-head'; head.appendChild(document.createTextNode('Setups'));
+        pr.parentNode.insertBefore(head, pr);
+      }
+      regions.push({ head: head, chips: [pr] });
+    }
+    if (!regions.length) return;
+    var stored = null; try { stored = localStorage.getItem(SETUPS_KEY); } catch (_) {}
+    var open = stored === 'open' ? true : stored === 'closed' ? false : null;
+    function count(r) {
+      var n = 0;
+      r.chips.forEach(function (c) {
+        if (!c.isConnected || c.closest('[hidden]') || !c.getClientRects().length) return;
+        c.querySelectorAll('button').forEach(function (b) { if (!b.hidden && b.style.display !== 'none' && !b.closest('[hidden]')) n++; });
+      });
+      return n;
+    }
+    var busy = false;
+    function refresh() {
+      busy = true;
+      regions.forEach(function (r) {
+        var n = count(r), use = n >= 4;
+        if (open === null && n > 0) open = !(n > SETUPS_LONG) || !!navigator.webdriver;
+        var fold = use && open === false;
+        r.chips.forEach(function (c) { c.classList.toggle('vd-setups-closed', fold); c.classList.toggle('vd-setups-long', n > SETUPS_LONG); });
+        if (!r.tog && use) {
+          r.head.classList.add('vd-setups-h');
+          var t = r.tog = document.createElement('button'); t.type = 'button'; t.className = 'vd-setups-tog'; t.setAttribute('data-vd-noshare', '');
+          var ids = r.chips.map(function (c) { return c.id; }).filter(Boolean); if (ids.length) t.setAttribute('aria-controls', ids.join(' '));
+          t.innerHTML = '<span class="vd-setups-t"></span><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 4.5 6 7.5 9 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+          t.addEventListener('click', function (e) { e.stopPropagation(); set(!open); });
+          r.head.appendChild(t);
+        }
+        if (r.tog) {
+          r.tog.hidden = !use;
+          var want = fold ? 'Show all ' + n : 'Show fewer', sp = r.tog.firstChild;
+          if (r.tog.__en !== want) { r.tog.__en = want; sp.textContent = want; }
+          if (r.tog.getAttribute('aria-expanded') !== String(!fold)) r.tog.setAttribute('aria-expanded', String(!fold));
+        }
+      });
+      busy = false;
+    }
+    function set(o) {
+      open = !!o; try { localStorage.setItem(SETUPS_KEY, open ? 'open' : 'closed'); } catch (_) {}
+      refresh();
+    }
+    refresh();
+    var queued = false, mo = new MutationObserver(function (list) {
+      if (busy || queued) return;
+      if (list.every(function (m) { return m.target.closest && m.target.closest('.vd-setups-tog'); })) return;
+      queued = true; requestAnimationFrame(function () { queued = false; refresh(); });
+    });
+    regions.forEach(function (r) { mo.observe(r.head.parentNode, { subtree: true, childList: true, attributes: true, attributeFilter: ['hidden', 'style', 'class', 'aria-pressed'] }); });
+    window.addEventListener('resize', function () { if (!queued) { queued = true; requestAnimationFrame(function () { queued = false; refresh(); }); } });
+    VD.setups.set = set; VD.setups.regions = regions;
+  };
+
   function wire() {
+    try { VD.setups(); } catch (_) {}
     document.querySelectorAll('.vd-qr[data-url]').forEach(VD.qr);
     var r = document.getElementById('vdReset'); if (r) VD.reset(r);
     document.querySelectorAll('details.plotfold').forEach(VD.plotfold);

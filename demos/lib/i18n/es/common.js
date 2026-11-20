@@ -2729,5 +2729,9 @@ VDI18N.add('es', 'common', {
 "Is something on this worksheet or its demo confusing, or not working?":
   "¿Algo de esta hoja de trabajo o de su demo es confuso o no funciona?",
 "Tell us in a short form":
-  "Cuéntanos en un formulario corto"
+  "Cuéntanos en un formulario corto",
+"Show all {#}":
+  "Ver las {#}",
+"Show fewer":
+  "Ver menos"
 });

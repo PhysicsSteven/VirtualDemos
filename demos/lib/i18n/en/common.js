@@ -1364,5 +1364,7 @@ VDI18N.add('en', 'common', [
 "Feedback (opens a form in a new tab)",
 "Tell us what was confusing or what did not work on this page (opens a short form)",
 "Is something on this worksheet or its demo confusing, or not working?",
-"Tell us in a short form"
+"Tell us in a short form",
+"Show all {#}",
+"Show fewer"
 ]);
