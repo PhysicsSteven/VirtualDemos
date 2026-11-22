@@ -186,6 +186,8 @@ VDI18N.add('en', 'demo/sampling-lab', [
 "Theorem",
 "study hours: light few, dark many",
 "inner dot: study hours, light few, dark many",
+"study hours: dark few, light many",
+"inner dot: study hours, dark few, light many",
 "Their spread is {#}; the theorem gives ?.",
 "{#} readings sent to the worksheet. <a>Open the worksheet</a>",
 "Readings cleared.",

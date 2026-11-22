@@ -108,7 +108,7 @@ footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line);
 <h2>How the demo works</h2>
 <ul>
 <li>Every typed box is read by the site's math parser (demos/lib/vdmath.js), never run as code. A bound may use only the coordinates outside it.</li>
-<li>Iterated integrals are computed one coordinate at a time by adaptive Gauss–Kronrod (7, 15) quadrature, to about ten significant figures (eight for triple integrals; fewer where a square root bound reaches zero, as at the edge of a disk). A function evaluation budget stops a runaway input.</li>
+<li>Iterated integrals are computed one coordinate at a time by adaptive Gauss–Kronrod (7, 15) quadrature, to about ten significant figures (eight for triple integrals; fewer where a square root bound reaches zero, as at the edge of a disk). A function evaluation budget stops a runaway input. When pieces of the quadrature stop splitting without settling (an integrand that blows up, such as 1/x on the unit square, whose integral does not exist), the page says the value is not reliable rather than showing a number as if it were exact.</li>
 <li>Riemann sums use cells fitted to the region: the outer coordinate in equal steps, each inner one in equal steps between its bounds there; each cell's size is its steps times the Jacobian at its sample point.</li>
 <li>In Mass and inertia the density shape is scaled so the body has the mass typed. The rod, plate and disk are thin, so their density is per length or per area. Closed forms are listed for the uniform and the two graded densities.</li>
 <li>The Jacobian of a change of variables is an exact symbolic determinant; the marked cell's image area comes from its curved boundary by the shoelace formula.</li>

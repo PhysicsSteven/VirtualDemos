@@ -77,7 +77,7 @@ No hazards in the virtual lab.
 
 **C. Around closed loops.** Press the **Uniform gravity** setup. Set **Path** to **Circle (closed loop)** and check that **Center** is (1, 1) and **Radius** is 1; press **Record reading**. Press the **A swirl force** setup, set **Path** to **Circle (closed loop)** with the same center and radius, and record. Then set **Path** to **Square (closed loop)** (center (1, 1); Radius 1 is half the side) and record.
 
-**D. The wire (check your prediction).** Press **The field around a long wire** setup. Set **Radius** to 1 (center (0, 0)) and record. Then set the **Center** to (3, 0) and record. Press **Export to worksheet** (the five loop rows go to Table 2), then **Clear**. Read the note the Readouts show under the circulation for the first of the two loops.
+**D. The wire (check your prediction).** Press **The field around a long wire** setup. Set **Radius** to 1 (center (0, 0)) and record, and read the note the Readouts show under the circulation. Then set the **Center** to (3, 0) and record. Press **Export to worksheet** (the five loop rows go to Table 2), then **Clear**.
 
 **E. Curl and potential.** Untick **Blind**. Press the **Uniform gravity** setup, tick **Paddle wheel** on the Probes card, and drag the wheel to two different places; write down the **curl F at the paddle** readout each time, and the readouts f(A) and f(B). Do the same with the **A swirl force** setup. Last, press **A point mass: inverse square**: it compares the straight line and the half circle from A = (3, 0) to B = (1, 0). Write down both line integrals and f(A), f(B).
 

@@ -414,13 +414,18 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       h += dd('Total mass', `${f(C.M, 1)} kg`) + (S.blind ? dd('Center of mass', 'hidden in Blind') : dd('Center of mass', `(${f(C.x, 3)}, ${f(C.y, 3)}) m`));
     } else if (S.mode === 'lamina') {
       const { St, E } = lamNow(), P = pinTip(L.f, L.g, L.a, L.b, L.px, L.py, SIGMA);
-      h += dd('Plate', `${VDMATH.text(VDMATH.parse(L.gT, { vars: ['x'] }).node)} ≤ y ≤ ${VDMATH.text(VDMATH.parse(L.fT, { vars: ['x'] }).node)}, ${f(L.a, 3)} ≤ x ≤ ${f(L.b, 3)} m`, true);
+      /* the curves as typed (VDMATH.text would reorder 0.09 − x² and write x/0.6 as 1.6666667x), with math signs */
+      const typed = (t) => String(t).trim().replace(/\*/g, '·').replace(/sqrt/g, '√').replace(/\^2(?![0-9.(])/g, '²').replace(/\^3(?![0-9.(])/g, '³').replace(/-/g, '−')
+        .replace(/([0-9a-zA-Z)²³])\s*−\s*/g, '$1 − ').replace(/([0-9])e − ([0-9])/g, '$1e−$2');
+      /* a moment that is zero by symmetry shows 0, not rounding noise of 10⁻¹⁷ */
+      const z = (v, s) => (Math.abs(v) <= 1e-9 * s ? 0 : v), sx = E.M * Math.max(Math.abs(L.a), Math.abs(L.b), 1e-300), sy = E.M * Math.max(Math.abs(E.Mx / E.M), Math.abs(L.b - L.a), 1e-300);
+      h += dd('Plate', `${typed(L.gT)} ≤ y ≤ ${typed(L.fT)}, ${f(L.a, 3)} ≤ x ≤ ${f(L.b, 3)} m`, true);
       h += dd('Strips n, each Δx', `${L.n}, ${f(St.dx, 4)} m`) + dd('Area A', `${g4(St.A)} m² (strips), ${g4(E.A)} m²`);
       h += dd('Mass M = σA', `${g4(E.M)} kg`);
       if (S.blind) h += dd('Moments and balance point', 'hidden in Blind', true);
       else {
-        h += dd('M<sub>y</sub> = σ∫x(f − g) dx', `${g4(St.My)} kg·m (strips), ${g4(E.My)} kg·m`, true);
-        h += dd('M<sub>x</sub> = σ∫½(f² − g²) dx', `${g4(St.Mx)} kg·m (strips), ${g4(E.Mx)} kg·m`, true);
+        h += dd('M<sub>y</sub> = σ∫x(f − g) dx', `${g4(z(St.My, sx))} kg·m (strips), ${g4(z(E.My, sx))} kg·m`, true);
+        h += dd('M<sub>x</sub> = σ∫½(f² − g²) dx', `${g4(z(St.Mx, sy))} kg·m (strips), ${g4(z(E.Mx, sy))} kg·m`, true);
         h += dd('Balance point from the strips', `(${f(St.xbar, 4)}, ${f(St.ybar, 4)}) m`, true);
         h += dd('x̄ = M<sub>y</sub>/M, ȳ = M<sub>x</sub>/M', `(${f(E.xbar, 4)}, ${f(E.ybar, 4)}) m`, true);
       }

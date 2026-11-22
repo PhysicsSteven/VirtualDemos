@@ -42,10 +42,10 @@ VDI18N.add('es', 'demo/series', {
   "Una pelota soltada desde {#} m con un coeficiente de restitución de {#} sube a {#} de su altura en cada rebote. El rebote n la lleva arriba y de vuelta abajo: a(n) = {#}({#})ⁿ m.",
 "Sequences and Series":
   "Sucesiones y series",
-"<a>Math for physics</a>":
-  "<a>Matemáticas para la física</a>",
-"<span><a><span>←</span> <span>Vector Fields, Work and Curl</span></a></span>":
-  "<span><a><span>←</span> <span>Campos vectoriales, trabajo y rotacional</span></a></span>",
+"<a>Integrals, series and change</a>":
+  "<a>Integrales, series y cambio</a>",
+"<a><span>←</span> <span>Solids of Revolution</span></a><a><span>Taylor Polynomials and Series</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Sólidos de revolución</span></a><a><span>Polinomios y series de Taylor</span> <span>→</span></a>",
 "Type the terms a(n) of any series and add them up one at a time: the terms as bars above, the running total below. A bouncing ball that stops in finite time, a harmonic sum that passes every bound, a crystal's Madelung constant, and the tests that tell you which sums settle.":
   "Escribe los términos a(n) de cualquier serie y súmalos uno a la vez: los términos como barras arriba y el total acumulado abajo. Una pelota que rebota y se detiene en un tiempo finito, una suma armónica que rebasa cualquier cota, la constante de Madelung de un cristal y los criterios que te dicen qué sumas se estabilizan.",
 "Put N back where this setup started":
@@ -112,6 +112,8 @@ VDI18N.add('es', 'demo/series', {
   "Divisor entre los términos y las sumas parciales",
 "converges: ratio test, ρ = {#} < {#}":
   "converge: criterio del cociente, ρ = {#} < {#}",
+"<span>Show fewer</span>":
+  "<span>Ver menos</span>",
 "<span>In physics</span>":
   "<span>En física</span>",
 "Bouncing ball: total distance":
@@ -194,6 +196,8 @@ VDI18N.add('es', 'demo/series', {
   "En una configuración, la suma S es la forma cerrada que aparece en la lectura. Para una serie que escribes, el demo aplica los criterios en este orden y dice cuál decidió: el criterio de divergencia (el mayor |a(n)| cerca de n = {#}⁹ y {#}¹² no disminuye), el criterio del cociente (|a(n+{#})/a(n)| en el mayor n cuyos términos siguen siendo números normales, extrapolado como {#}ρ(n) − ρ(n/{#})), el criterio de series alternantes (los signos alternan y |a(n)| disminuye) y luego el criterio de la integral con ∫ a(x) dx hasta x = {#}³⁰⁰. Las sumas que encuentra el criterio del cociente se suman directamente; las alternantes se aceleran (Cohen, Rodriguez Villegas y Zagier, {#}); las del criterio de la integral suman {#} términos más la cola de Euler–Maclaurin. Cuando ningún criterio decide, la lectura lo dice.",
 "A sequence's limit is read from short windows of terms at n = {#}⁴, {#}⁶ and {#}⁸; it is given when the windows agree to about {#}⁻⁵. N(ε) is checked term by term up to n = {#}.":
   "El límite de una sucesión se lee de ventanas cortas de términos en n = {#}⁴, {#}⁶ y {#}⁸; se da cuando las ventanas coinciden a unos {#}⁻⁵. N(ε) se revisa término por término hasta n = {#}.",
+"<span>Feedback</span>":
+  "<span>Comentarios</span>",
 "The terms are a(n) = {e}, from n = {a}.":
   "Los términos son a(n) = {e}, desde n = {a}.",
 "After N = {N}, the partial sum is {s}.":
@@ -286,10 +290,6 @@ VDI18N.add('es', 'demo/series', {
   "converge: criterio del cociente, ρ = {#}/{#} < {#}",
 "Stack books so the center of mass of the top k books sits right over the edge of the book below: book k then sticks out {#}/(2k) book lengths. The total overhang is half the harmonic series, so it grows without bound: {#} books reach past one whole length, and {#} books reach two lengths past the table.":
   "Apila libros de modo que el centro de masa de los k libros de arriba quede justo sobre el borde del libro de abajo: el libro k sobresale entonces {#}/(2k) largos de libro. El voladizo total es la mitad de la serie armónica, así que crece sin cota: {#} libros pasan un largo completo y {#} libros llegan a dos largos más allá de la mesa.",
-"diverges: integral test, ∫ a(x) dx grows without bound":
-  "diverge: criterio de la integral, ∫ a(x) dx crece sin cota",
-"The terms are a(n) = {#}/(2n), from n = {#}.":
-  "Los términos son a(n) = {#}/(2n), desde n = {#}.",
 "book lengths":
   "largos de libro",
 "a(n) (book lengths)":
@@ -302,6 +302,8 @@ VDI18N.add('es', 'demo/series', {
   "rebasar {#}",
 "none: diverges":
   "ninguna: diverge",
+"diverges: integral test, ∫ a(x) dx grows without bound":
+  "diverge: criterio de la integral, ∫ a(x) dx crece sin cota",
 "S_N first passes {B}":
   "S_N rebasa {B} por primera vez",
 "at N = {N} (S_N = {s})":
@@ -312,6 +314,8 @@ VDI18N.add('es', 'demo/series', {
   "S_N rebasa {#} por primera vez",
 "at N = {#} (S_N = {#})":
   "en N = {#} (S_N = {#})",
+"The terms are a(n) = {#}/(2n), from n = {#}.":
+  "Los términos son a(n) = {#}/(2n), desde n = {#}.",
 "One ion in a long chain of alternating charges: its two nearest neighbors (distance d) attract, the next two (2d) repel, and so on. The Madelung constant M = {#}({#} − {#}/{#} + {#}/{#} − …) = {#} ln {#} = {#}. It is alternating: each partial sum is within the next term of the limit, and the sums zigzag in.":
   "Un ion en una larga cadena de cargas alternadas: sus dos vecinos más cercanos (distancia d) lo atraen, los dos siguientes (2d) lo repelen, y así sucesivamente. La constante de Madelung M = {#}({#} − {#}/{#} + {#}/{#} − …) = {#} ln {#} = {#}. Es alternante: cada suma parcial está a menos del siguiente término del límite, y las sumas se acercan en zigzag.",
 "S = {#} ln {#}":
@@ -567,5 +571,9 @@ VDI18N.add('es', 'demo/series', {
 "not found out to x = 10³⁰⁰":
   "no se encontró hasta x = 10³⁰⁰",
 "not within 10,000,000 terms":
-  "no en 10,000,000 términos"
+  "no en 10,000,000 términos",
+"<a>Math for physics</a>":
+  "<a>Matemáticas para la física</a>",
+"<span><a><span>←</span> <span>Vector Fields, Work and Curl</span></a></span>":
+  "<span><a><span>←</span> <span>Campos vectoriales, trabajo y rotacional</span></a></span>"
 });

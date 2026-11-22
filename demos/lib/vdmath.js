@@ -130,6 +130,8 @@ var VDMATH = (function () {
       if (groups.has(k)) groups.get(k).ex.push(ex);
       else { groups.set(k, { base, ex: [ex] }); order.push(k); }
     }
+    /* 0 times 1/0 (typed 0/0) has no value; any other 0 times something is 0 (2026-11-22) */
+    if (c.v === 0 && flat.some((f) => f.k === 'pow' && isNum(f.a, 0) && f.b.k === 'n' && f.b.v < 0)) return flt(NaN);
     if (c.v === 0 && isFinite(c.v)) return ZERO;
     const out = []; let again = false;
     for (const k of order) {

@@ -318,9 +318,16 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     return big > 100 * m0 && inside(poly, worst[0], worst[1]) ? [Number(worst[0].toPrecision(3)), Number(worst[1].toPrecision(3))] : null;
   }
   /* the double integral of f over the region inside the loop: exact rules for a circle and a square, a 200 × 200 grid for a
-     freehand loop. skip: leave out points where f is undefined (a loop around a wire, which Green's theorem does not cover) */
+     freehand loop. skip: leave out points where f is undefined (a loop around a wire, which Green's theorem does not cover).
+     An integral that does not converge (div F = 1/r³ around a point mass) is given up (NaN) after 200,000 evaluations of f,
+     about 30 times what a smooth field takes, so it cannot stall the page. */
+  const AREA_BUDGET = { budget: true };
   function areaInt(f, path, skip) {
-    const g = skip ? (x, y) => { const v = f(x, y); return isFinite(v) ? v : 0; } : f;
+    let n = 0;
+    const g0 = skip ? (x, y) => { const v = f(x, y); return isFinite(v) ? v : 0; } : f, g = (x, y) => { if (++n > 200000) throw AREA_BUDGET; return g0(x, y); };
+    try { return areaSum(g, path); } catch (e) { if (e === AREA_BUDGET) return NaN; throw e; }
+  }
+  function areaSum(g, path) {
     if (path.shape === 'circle') {
       const [cx, cy] = path.C, R = path.R;
       return VM.integral((t) => { const c = Math.cos(t), s = Math.sin(t); return VM.integral((r) => g(cx + r * c, cy + r * s) * r, 0, R); }, 0, 2 * Math.PI);
@@ -342,7 +349,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
      clockwise loop the circulation is −∬ curl dA. */
   function greens(F, path) {
     const sing = singularInside(F, path);
-    return { circ: pathInt(F, path), flux: path.orient * pathInt(F, path, true), curlSum: areaInt(F.curl, path, !!sing), divSum: areaInt(F.div, path, !!sing), orient: path.orient, sing };
+    return { circ: pathInt(F, path), flux: path.orient * pathInt(F, path, true), curlSum: F.curl0 ? 0 : areaInt(F.curl, path, !!sing), divSum: F.div0 ? 0 : areaInt(F.div, path, !!sing), orient: path.orient, sing };
   }
   /* the net outflow through a square box of side h centered at (x, y) */
   function boxFlux(F, x, y, h) {

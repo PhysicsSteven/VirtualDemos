@@ -713,17 +713,19 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       c.fill(); c.globalAlpha = 1; void N;
       c.strokeStyle = TK.ink; c.lineWidth = 1.6 * p; c.setLineDash([7 * p, 5 * p]); c.beginPath(); c.moveTo(pl, Y(L.mu)); c.lineTo(w - pr, Y(L.mu)); c.stroke(); c.setLineDash([]);
     }
-    if (T.n) {
+    /* the running series keeps its first CAP trials; past that the line and its dot stay at the last one stored */
+    const nS = Math.min(T.n, CAP);
+    if (nS) {
       c.strokeStyle = S.lr === 'rfA' ? TK.a : TK.x; c.lineWidth = 2.2 * p; c.lineJoin = 'round'; c.beginPath();
       const px = w - pl - pr; let lastI = -1;
       for (let k = 0; k <= px * 2; k++) {
-        const n = Math.max(1, Math.min(T.n, Math.round(10 ** (decs * k / (px * 2))))); if (n - 1 === lastI) continue; if (n - 1 < lastI) continue;
+        const n = Math.max(1, Math.min(nS, Math.round(10 ** (decs * k / (px * 2))))); if (n - 1 === lastI) continue; if (n - 1 < lastI) continue;
         if (n - 1 > lastI + 1 && lastI >= 0 && n < 400) { for (let j = lastI + 1; j < n; j++) c.lineTo(X(j + 1), Y(L.arr[j])); }
         lastI = n - 1; if (k === 0) c.moveTo(X(n), Y(L.arr[n - 1])); else c.lineTo(X(n), Y(L.arr[n - 1]));
-        if (n >= T.n) break;
+        if (n >= nS) break;
       }
       c.stroke();
-      c.fillStyle = S.lr === 'rfA' ? TK.a : TK.x; c.beginPath(); c.arc(X(T.n), Y(L.arr[T.n - 1]), 4 * p, 0, 7); c.fill();
+      c.fillStyle = S.lr === 'rfA' ? TK.a : TK.x; c.beginPath(); c.arc(X(nS), Y(L.arr[nS - 1]), 4 * p, 0, 7); c.fill();
     }
     c.restore();
     c.fillStyle = TK.ink; c.font = `600 ${11 * p}px ${TK.mono}`; c.textAlign = 'left'; c.textBaseline = 'top';

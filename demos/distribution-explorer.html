@@ -241,11 +241,13 @@
       }
       case 'hypergeometric': return 'Σ C(K, x)·C(N − K, n − x)/C(N, n)';
       case 'uniform': {
-        const lo = Math.max(q.A, A), hi = Math.min(q.B, B);
+        /* the overlap of the event with [a, b], empty (0) when they do not meet */
+        const lo = Math.min(Math.max(q.A, A), q.B), hi = Math.max(Math.min(q.B, B), lo);
         const pn = (v) => (v < 0 ? `(${c(v)})` : c(v));
         return `(${c(isFinite(hi) ? hi : q.B)} − ${pn(isFinite(lo) ? lo : q.A)})·1/(${c(q.B)} − ${pn(q.A)})`;
       }
       case 'exponential': {
+        a = Math.max(0, a); b = Math.max(0, b);
         if (tail === 'left') return `1 − e^(−${c(q.m)}·${c(b)})`;
         if (tail === 'right') return `e^(−${c(q.m)}·${c(a)})`;
         return `e^(−${c(q.m)}·${c(a)}) − e^(−${c(q.m)}·${c(b)})`;
@@ -515,8 +517,13 @@
     /* the percentile mark */
     if (!S.blind) { const xk = S.D.inv(S.k), u = X(xk, Lo); if (u >= Lo.L && u <= Lo.R) { ctx.fillStyle = T.draw; ctx.beginPath(); ctx.moveTo(u, Lo.B - 1); ctx.lineTo(u - 5 * p, Lo.B - 10 * p); ctx.lineTo(u + 5 * p, Lo.B - 10 * p); ctx.closePath(); ctx.fill(); } }
     /* the probability on the picture, and the pace of the draws */
-    ctx.font = `700 ${14 * p}px ${T.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'top'; ctx.fillStyle = T.area;
-    labelOn(ctx, eventText() + ' = ' + (S.blind ? '?' : fp(P())), Lo.R, 8 * p);
+    /* on a narrow stage the probability shrinks (down to 10 px) so it never runs into the axis label at the top left */
+    ctx.font = `600 ${11 * p}px ${T.mono}`;
+    const axisEnd = Lo.L + 6 * p + ctx.measureText(FAM[S.fam].discrete ? tt('P(X = x)') : tt('density f(x)')).width + 10 * p, ptxt = eventText() + ' = ' + (S.blind ? '?' : fp(P()));
+    let fs = 14; ctx.font = `700 ${fs * p}px ${T.mono}`;
+    while (fs > 10 && Lo.R - ctx.measureText(ptxt).width < axisEnd) { fs -= 0.5; ctx.font = `700 ${fs * p}px ${T.mono}`; }
+    ctx.textAlign = 'right'; ctx.textBaseline = 'top'; ctx.fillStyle = T.area;
+    labelOn(ctx, ptxt, Lo.R, 8 * p);
     ctx.font = `${11 * p}px ${T.mono}`; ctx.fillStyle = T.draw;
     if (S.draws.length || S.run) labelOn(ctx, tt('{n} draws, {r} a second', { n: fmt(S.draws.length, 0), r: fmt(S.speed, 0) }), Lo.R, 28 * p);
   }

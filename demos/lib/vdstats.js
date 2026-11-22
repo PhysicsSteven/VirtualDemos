@@ -8,8 +8,9 @@
    - Distributions: dist.<name>(params) returns { pdf | pmf, cdf, inv, mean, sd, discrete, lo, hi } for binomial, geometric
      (trials to first success, x = 1, 2, ...), hypergeometric, poisson, uniform, exponential, normal, t, chisq, f.
      inv(p) is the smallest x with cdf(x) >= p for discrete ones.
-   - Describing data: mean, median, quantile (the book's method: the median of each half, for Q1 and Q3), percentileRank,
-     sd (sample, n - 1), variance, fiveNum, iqrFences, skew.
+   - Describing data: mean, median, fiveNum (the book's quartiles: the median of each half, the TI method), quantile (the k-th
+     percentile at position k(n + 1)/100, interpolated between neighbors; the book's 2.3 averages the two neighbors instead),
+     percentileRank, sd (sample, n - 1), variance, iqrFences, skew.
    - Regression: linreg(x, y) gives slope, intercept, r, r2, s (standard error of estimate), SE of slope and intercept,
      t for r and its two sided p value, df = n - 2, and residuals.
    - Tests: tTest1, zTest1, propTest1, tTest2 (Welch, unpooled as the book does), zTest2s (two means, sigmas known), propTest2, pairedT, chisqGOF, chisqIndep,
@@ -89,13 +90,13 @@ var VDSTATS = (function () {
   }
   const erf = (x) => (x >= 0 ? gammaP(0.5, x * x) : -gammaP(0.5, x * x));
 
-  /* invert a continuous cdf by bracketing and bisection (to 1e-12 of the bracket) */
+  /* invert a continuous cdf by bracketing and bisection (to 1e-12 relative) */
   function invert(cdf, p, lo, hi) {
     if (p <= 0) return lo; if (p >= 1) return hi;
     let a = lo, b = hi;
     if (!isFinite(a)) { a = -1; while (cdf(a) > p) a *= 2; }
     if (!isFinite(b)) { b = 1; while (cdf(b) < p) b *= 2; }
-    for (let i = 0; i < 200; i++) { const m = (a + b) / 2; if (cdf(m) < p) a = m; else b = m; if (b - a < 1e-12 * Math.max(1, Math.abs(m))) break; }
+    for (let i = 0; i < 200; i++) { const m = (a + b) / 2; if (cdf(m) < p) a = m; else b = m; if (b - a < 1e-12 * Math.abs(m) + 1e-16) break; } /* relative, so small quantiles (chi-square 1 df at 0.005) keep their digits */
     return (a + b) / 2;
   }
   function discreteInv(cdf, p, lo, hi) { let k = lo; while (k < hi && cdf(k) < p - 1e-12) k++; return k; }
@@ -133,12 +134,15 @@ var VDSTATS = (function () {
         mean: 1 / rate, sd: 1 / rate, lo: 0, hi: Infinity };
     },
     normal(mu = 0, s = 1) {
-      const cdf = (x) => 0.5 * (1 + erf((x - mu) / (s * Math.SQRT2)));
+      const cdf = (x) => { const z = (x - mu) / (s * Math.SQRT2); return z < 0 ? 0.5 * gammaQ(0.5, z * z) : 1 - 0.5 * gammaQ(0.5, z * z); }; /* lower tail kept to full relative precision */
       return { pdf: (x) => Math.exp(-0.5 * ((x - mu) / s) ** 2) / (s * Math.sqrt(2 * Math.PI)), cdf, inv: (q) => invert(cdf, q, -Infinity, Infinity),
         mean: mu, sd: s, lo: -Infinity, hi: Infinity };
     },
     t(df) {
-      const cdf = (x) => { const ib = betaI(df / (df + x * x), df / 2, 0.5); return x >= 0 ? 1 - ib / 2 : ib / 2; };
+      /* near x = 0 the form in x² / (df + x²) keeps full precision (the other form loses it to 1 − ε, so the median came out at −2e−7) */
+      const cdf = (x) => { const x2 = x * x;
+        if (x2 < df) { const h = betaI(x2 / (df + x2), 0.5, df / 2) / 2; return x >= 0 ? 0.5 + h : 0.5 - h; }
+        const ib = betaI(df / (df + x2), df / 2, 0.5); return x >= 0 ? 1 - ib / 2 : ib / 2; };
       const lc = lgamma((df + 1) / 2) - lgamma(df / 2) - 0.5 * Math.log(df * Math.PI);
       return { pdf: (x) => Math.exp(lc - (df + 1) / 2 * Math.log(1 + x * x / df)), cdf, inv: (q) => invert(cdf, q, -Infinity, Infinity),
         mean: df > 1 ? 0 : NaN, sd: df > 2 ? Math.sqrt(df / (df - 2)) : Infinity, lo: -Infinity, hi: Infinity };
@@ -177,7 +181,8 @@ var VDSTATS = (function () {
     const lower = s.slice(0, h), upper = s.slice(n % 2 ? h + 1 : h);
     return { min: s[0], q1: n > 1 ? median(lower) : s[0], med: median(s), q3: n > 1 ? median(upper) : s[0], max: s[n - 1] };
   }
-  /* the k-th percentile by the book's rule (2.3): position i = k (n + 1) / 100, interpolated between ordered values */
+  /* the k-th percentile: position i = k (n + 1) / 100 as in the book (2.3), interpolated between ordered values (the book itself
+     averages the values at the two positions next to i when i is not whole, Example 2.16: i = 24.9 gives their average) */
   function quantile(a, k) {
     const s = sorted(a), n = s.length, i = k * (n + 1) / 100;
     if (i <= 1) return s[0]; if (i >= n) return s[n - 1];

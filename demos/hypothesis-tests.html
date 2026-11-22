@@ -528,14 +528,16 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (const cv of [lo, hi]) {
       if (!isFinite(cv) || Math.abs(cv) > L) continue;
       const u = X(cv); ctx.beginPath(); ctx.moveTo(u, y0 + 26 * p); ctx.lineTo(u, ax); ctx.stroke();
-      ctx.textAlign = cv > 0 ? 'left' : 'right'; lab(ctx, `${VDI18N.t('critical')} ${num(cv, 3)}`, u + (cv > 0 ? 4 : -4) * p, ax - 18 * p);
+      /* kept inside the picture on a phone: the label slides over the dashed line rather than off the edge */
+      const ct = `${VDI18N.t('critical')} ${num(cv, 3)}`, cw = ctx.measureText(ct).width;
+      ctx.textAlign = cv > 0 ? 'left' : 'right'; lab(ctx, ct, cv > 0 ? Math.min(u + 4 * p, x1 - cw) : Math.max(u - 4 * p, x0 + cw), ax - 18 * p);
     }
     ctx.setLineDash([]);
     ctx.textAlign = 'right'; ctx.textBaseline = 'top'; ctx.fillStyle = T.crit; ctx.font = `${10.5 * p}px ${T.mono}`;
     lab(ctx, VDI18N.t('gray: rejection region at α = {a}', { a: num(P.alpha, 2) }), x1, WA < 620 ? y0 + 14 * p : y0);
     /* the observed statistic: a pin */
     const sx = X(Math.max(-L, Math.min(L, A.stat)));
-    const pinTop = y0 + 22 * p;
+    const pinTop = y0 + (WA < 620 ? 36 : 22) * p;   /* below the rejection region caption, which drops a line on narrow screens */
     ctx.strokeStyle = T.data; ctx.lineWidth = 2.5 * p; ctx.beginPath(); ctx.moveTo(sx, ax); ctx.lineTo(sx, pinTop); ctx.stroke();
     ctx.fillStyle = T.data; ctx.beginPath(); ctx.arc(sx, pinTop, 5 * p, 0, 7); ctx.fill();
     ctx.font = `700 ${12 * p}px ${T.mono}`; ctx.textBaseline = 'middle'; const right = sx < (x0 + x1) / 2;

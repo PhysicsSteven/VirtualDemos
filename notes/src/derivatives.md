@@ -1,6 +1,6 @@
 ---
 title: Functions and Their Derivatives
-level: Physics I (Vol 1 3.2, 3.3, 3.6) and any course that uses calculus; Calculus I (OpenStax Calculus Vol 1 2.1, 3.1, 4.4, 4.9) for Secant to tangent and Newton's method
+level: Physics I (Vol 1 3.2, 3.3, 3.6) and any course that uses calculus; Calculus I (OpenStax Calculus Vol 1 2.1, 3.1, 4.2, 4.4, 4.9) for Secant to tangent and Newton's method
 time: 10 to 25 minutes for each mode
 ---
 ## What students should come away with
@@ -65,5 +65,5 @@ Nothing to install. Use Projector mode so the curves are thick enough to read. T
 - Derivatives are symbolic and exact: the sum, product, power and chain rules, then like terms and factors are combined, so the formulas shown are the exact derivatives. Odd roots of negative numbers are real (∛x is defined for x < 0); even roots are not.
 - The integral is numerical: adaptive Simpson's rule, to about nine significant figures. Where the area diverges (1/x across 0) it stops.
 - A derivative is drawn only where f is defined, and a jump is left as a gap. Angles are in radians.
-- Secant to tangent computes the difference quotient directly from f, so the table shows the real rounding at small h. The Mean Value points are found by stepping along f′ minus the secant slope and bisecting each change of sign; a jump in f′, as at a corner, is not counted.
+- Secant to tangent computes the difference quotient directly from f, so the table shows the real rounding at small h. The Mean Value points are found by stepping along f′ minus the secant slope and bisecting each change of sign; a jump in f′, as at a corner, is not counted, and on a straight line the readout says every c works.
 - Newton's method takes x − f(x)/f′(x) with the exact f′. It stops when f′ = 0 (flat tangent), when a value repeats (cycle), or when a step no longer changes x in double precision. The correct digits are counted against the root the steps settle on.

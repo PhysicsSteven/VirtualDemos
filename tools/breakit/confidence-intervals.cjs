@@ -2,12 +2,17 @@
    - the pendulum's true period is 2π√(L/g) with L = 1.000 m and g = 9.81 m/s²: 2.00607 s;
    - z at 95 % is 1.95996 and an interval with σ known is 2z σ/√n wide, the same for every sample;
    - z with s at n = 4 for a normal population catches 85.51 % (the t distribution with 3 degrees of freedom);
-   - the plus four interval equals vdstats' plusFourInterval. */
+   - the plus four interval equals vdstats' plusFourInterval;
+   - at 90° no photon passes: p = cos² 90° is exactly 0. */
 module.exports = {
   checks: [
     { name: 'the pendulum period is 2π√(L/g)', fn: `(() => {
       const C = window.__ci; if (!C) return true; const p = C.population('pendulum', 0);
       return Math.abs(p.truth - 2 * Math.PI * Math.sqrt(1 / 9.81)) < 1e-12 ? true : 'truth ' + p.truth;
+    })()` },
+    { name: 'cos² 90° is exactly 0 and cos² 60° is 0.25', fn: `(() => {
+      const C = window.__ci; if (!C) return true;
+      return C.malus(90) === 0 && Math.abs(C.malus(60) - 0.25) < 1e-15 ? true : 'malus ' + C.malus(90) + ' ' + C.malus(60);
     })()` },
     { name: 'z intervals with σ known have width 2z σ/√n', fn: `(() => {
       const C = window.__ci; if (!C || !C.P || C.P.kind !== 'mean') return true; const S = C.S, cl = S.cl / 100;

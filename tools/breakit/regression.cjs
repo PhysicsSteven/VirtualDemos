@@ -42,5 +42,11 @@ module.exports = {
     { name: 'the shuffle test run to the end is repeatable and its p stays near the t test', fn: `(() => { const R = window.__reg; R.applySetup('exam'); R.setRun(true); let sh = R.S.sh; while (sh.rs.length < sh.N) sh.rs.push(sh.next().r);
       const p1 = R.shuffleP(sh.rs, R.S.F.r); R.setRun(false); document.getElementById('reset').click(); R.setRun(true); sh = R.S.sh; while (sh.rs.length < sh.N) sh.rs.push(sh.next().r);
       const p2 = R.shuffleP(sh.rs, R.S.F.r); R.setRun(false); return p1 === p2 && Math.abs(p1 - 0.0262) < 0.02 ? true : 'p ' + p1 + ' then ' + p2; })()` },
+    { name: 'a setup change frames the new data, not the last setup\'s line (exam to pendulum, ice cream to CPI)', fn: `(() => { const R = window.__reg;
+      for (const [a, b, top, bot] of [['exam', 'pendulum', 10, -1], ['ice', 'cpi', 400, -100]]) { R.applySetup(a); R.applySetup(b); const v = R.S.view;
+        if (v.y1 > top || v.y0 < bot) return b + ' after ' + a + ': y from ' + v.y0 + ' to ' + v.y1; }
+      return true; })()` },
+    { name: 'no shuffle reaching |r| reads p < 1/N, never < 0.0001 from 1,000 shuffles', fn: `(() => { const R = window.__reg; R.applySetup('pendulum'); R.setRun(true); const sh = R.S.sh; while (sh.rs.length < sh.N) sh.rs.push(sh.next().r);
+      R.setRun(false); R.readouts(); const t = document.getElementById('out').textContent; const i = t.indexOf('Shuffle p value'); return t.indexOf('< 0.001 (1,000 shuffles)') >= 0 ? true : 'readout: ' + t.slice(i, i + 60); })()` },
   ],
 };

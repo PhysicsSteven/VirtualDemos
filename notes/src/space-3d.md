@@ -10,7 +10,7 @@ time: 15 to 40 minutes
 - The cross product a × b is a vector at right angles to both, by the right hand rule, with length |a||b| sin θ, the area of the parallelogram. It is zero for parallel vectors and changes sign when the order changes. Torque is τ = r × F; the magnetic force is F = qv × B.
 - A line is a point and a direction, r = P₀ + t d; a plane is a point and a normal, n · (r − Q) = 0. Put the line into the plane equation to find where they meet; n · d = 0 means the line is parallel to the plane.
 - A quadric surface is known by its traces, the curves where planes x, y or z = k cut it: ellipses, hyperbolas, parabolas, or two crossing lines.
-- A point has three sets of coordinates. In each, holding one coordinate fixed gives a surface: planes; a cylinder, a half plane and a plane; a sphere, a cone and a half plane. The demo uses the physics convention (ISO 80000-2): θ is the polar angle down from +z and φ the azimuth from +x. OpenStax Calculus swaps the letters: it writes θ for the azimuth, φ for the angle from +z and ρ for the distance from the origin.
+- A point has three sets of coordinates. In each, holding one coordinate fixed gives a surface: planes; a cylinder, a half plane and a plane; a sphere, a cone and a half plane. The demo uses the physics convention (ISO 80000-2): θ is the polar angle down from +z and φ the azimuth from +x. OpenStax Calculus swaps the letters: it writes θ for the azimuth, φ for the angle from +z and ρ for the distance from the origin. Its cylindrical coordinates are (r, θ, z) for the demo's (ρ, φ, z).
 
 ## Before class
 

@@ -31,7 +31,7 @@
 .dsrc .cite { flex: 1 1 100%; color: var(--muted); font-size: 0.8rem; }
 .pane { position: relative; flex: 1 1 auto; min-height: 400px; }
 .pane canvas, .tsbox canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; outline: none; touch-action: none; }
-.lower { position: relative; flex: none; height: 230px; display: flex; border-top: 1px solid var(--line); background: var(--canvas); }
+.lower { position: relative; flex: none; min-height: 230px; max-height: 420px; display: flex; border-top: 1px solid var(--line); background: var(--canvas); }
 .tsbox { position: relative; flex: 1.5 1 0; min-width: 0; }
 .stembox { flex: 1 1 0; min-width: 0; overflow: auto; border-left: 1px solid var(--line); padding: 8px 10px; font-size: 0.82rem; }
 .stembox h3, .shelf-card h3 { margin: 0 0 4px; font-size: 0.78rem; font-weight: 700; color: var(--muted); }
@@ -60,8 +60,8 @@ table.ft tr.on td { color: var(--sel); font-weight: 700; }
 .rail p.rule { margin: 6px 0 0; font-size: 0.84rem; color: var(--muted); }
 .warn { color: var(--red); font-size: 0.82rem; }
 @media (min-width: 821px) { .bench > .stage { align-self: start; min-height: max(720px, 100%); } }
-@media (max-width: 820px) { table.ft { font-size: 0.76rem; } table.ft th, table.ft td { padding: 2px 3px; } .pane { min-height: 0; height: 480px; flex: none; } .lower { height: auto; flex-direction: column; } .tsbox { flex: none; height: 210px; }
-  .stembox { flex: none; border-left: 0; border-top: 1px solid var(--line); max-height: 260px; } .shelf-card, .shelf-card.wide { flex: 1 1 100%; } }
+@media (max-width: 820px) { table.ft { font-size: 0.76rem; } table.ft th, table.ft td { padding: 2px 3px; } .pane { min-height: 0; height: 480px; flex: none; } .lower { height: auto; max-height: none; flex-direction: column; } .tsbox { flex: none; height: 210px; }
+  .stembox { flex: none; border-left: 0; border-top: 1px solid var(--line); max-height: 420px; } .shelf-card, .shelf-card.wide { flex: 1 1 100%; } }
 </style>
 <link rel="stylesheet" id="vd-paper" href="lib/paper.css">
 </head>
@@ -541,8 +541,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   function drawPace(Lo) {
     if (!S.run) return;
-    const p = Lo.p; ctx.font = `${11 * p}px ${T.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'top'; ctx.fillStyle = T.muted;
-    labelOn(ctx, tt('values arrive in the order taken: {k} of {n}, one every {s} s', { k: Math.min(S.shown, S.vals.length), n: S.vals.length, s: fmt(pace(), 2) }), Lo.R, 6 * p);
+    const p = Lo.p, txt = tt('values arrive in the order taken: {k} of {n}, one every {s} s', { k: Math.min(S.shown, S.vals.length), n: S.vals.length, s: fmt(pace(), 2) });
+    /* on a narrow stage the line shrinks (down to 8 px) to stay clear of the Histogram label, and drops below it if it still does not fit */
+    ctx.font = `${11 * p}px ${T.mono}`; const left = Lo.L + ctx.measureText(tt('Histogram')).width + 10 * p;
+    let fs = 11; while (fs > 8 && Lo.R - ctx.measureText(txt).width < left) { fs -= 0.5; ctx.font = `${fs * p}px ${T.mono}`; }
+    const below = Lo.R - ctx.measureText(txt).width < left;
+    ctx.textAlign = 'right'; ctx.textBaseline = 'top'; ctx.fillStyle = T.muted;
+    labelOn(ctx, txt, Lo.R, below ? 20 * p : 6 * p);
   }
   function tab(x, y, name, p, on) {
     ctx.fillStyle = on ? T.sel : T.bar; ctx.beginPath(); ctx.moveTo(x, y + 1); ctx.lineTo(x - 6 * p, y + 9 * p); ctx.lineTo(x + 6 * p, y + 9 * p); ctx.closePath(); ctx.fill();

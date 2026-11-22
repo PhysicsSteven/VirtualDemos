@@ -185,7 +185,7 @@ VDI18N.add('en', 'demo/multiple-integrals', [
 "In the order dy dx the inner integral ∫ e^(y²) dy has no formula, so this cannot be done by hand. Reversed, the triangle is {#} ≤ x ≤ y, {#} ≤ y ≤ {#}, the inner integral is y e^(y²) and the answer is (e − {#})/{#} = {#}. The computer gets the same number either way.",
 "The first moment of a half disk of radius {#} m about its flat edge, ∬ y dA = {#}/{#} m³. Divided by the area π/{#} it gives the height of the centroid, ȳ = {#}/({#}π) = {#} m: where a uniform half disk balances.",
 "A(x) at x = −{#}",
-"The region above y = x² and below y = {#} has area {#}/{#}. The reversed bounds typed here, y² ≤ x ≤ {#}, describe a different region: the picture marks where the two disagree. Fix the inner bounds of the second order to {#} ≤ x ≤ √y and the two areas match.",
+"The region above y = x² and below y = {#} has area {#}/{#}. The reversed bounds typed here, y² ≤ x ≤ {#}, describe a different region, the mirror image of it across y = x. That region happens to have the same area, {#}/{#}, so a matching number does not prove the bounds right: the picture marks where the two regions disagree. Fix the inner bounds of the second order to {#} ≤ x ≤ √y and the two regions match.",
 "The two orders describe different regions: they disagree on about {p} % of it, marked on the picture. Check the bounds of the second order.",
 "The two orders describe different regions: they disagree on about {#} % of it, marked on the picture. Check the bounds of the second order.",
 "The heart shaped curve r = {#} + cos θ. With f = {#} the integral ∬ r dr dθ is the area, {#}π/{#} = {#}. Each wedge has area r Δr Δθ: wedges far from the origin are bigger than those near it, even with the same Δr and Δθ.",
@@ -235,6 +235,7 @@ VDI18N.add('en', 'demo/multiple-integrals', [
 "Boxes need a rectangle: use numbers for the bounds on y. For curved sides switch modes to Slices.",
 "x: Not finished yet.",
 "This one needs too many steps to compute here: try simpler bounds or a smaller region.",
+"The quadrature did not settle: f probably blows up somewhere in the region, so the integral may not exist, and the value shown is not reliable.",
 "ρ sin φ Δθ ≈ {#}×{#}⁹",
 "ΔV = {#}×{#}²⁶",
 "The sum over {#} cells is −{#}×{#}²⁵."

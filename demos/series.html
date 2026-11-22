@@ -609,7 +609,7 @@ dl.formulas dd { margin: 0; font-family: var(--font-mono); font-size: 0.88rem; o
       c.fillStyle = T.term; labelOn(c, VDI18N.t('bars on [n, n+1]: S_N, above the curve'), W - 8 * p, 8 * p);
       c.fillStyle = T.band; labelOn(c, VDI18N.t('moved to [n−1, n]: under it'), W - 8 * p, 24 * p);
       c.fillStyle = T.area; labelOn(c, VDI18N.t('curve a(x)'), W - 8 * p, 40 * p);
-      markN(c, XX, p);
+      markN(c, XX, p, 58);   /* below the three legend lines */
       return;
     }
     if (S.view === 'seq') {
@@ -641,7 +641,7 @@ dl.formulas dd { margin: 0; font-family: var(--font-mono); font-size: 0.88rem; o
         } else { c.lineWidth = Math.max(1, Math.min(2, halfW * 2)); c.beginPath(); c.moveTo(X + off, YY(Math.min(0, lo))); c.lineTo(X + off, YY(Math.max(0, hi))); c.stroke(); }
       }
     }
-    c.globalAlpha = 1; markN(c, XX, p);
+    c.globalAlpha = 1; markN(c, XX, p, S.view === 'compare' && S.fB ? 42 : 26);   /* below the legend */
     c.font = `${12 * p}px ${T.mono}`; c.textAlign = 'right'; c.textBaseline = 'top'; c.fillStyle = T.term;
     labelOn(c, S.view === 'compare' ? VDI18N.t('a(n), filled') : VDI18N.t('the terms a(n); faint: not added yet'), W - 8 * p, 8 * p);
     if (S.view === 'compare' && S.fB) { c.fillStyle = T.b; labelOn(c, VDI18N.t('b(n), outlined'), W - 8 * p, 24 * p); }
@@ -655,12 +655,12 @@ dl.formulas dd { margin: 0; font-family: var(--font-mono); font-size: 0.88rem; o
     const pad = 0.1 * (hi - lo); return [lo - pad, hi + 2.2 * pad];
   }
   /* the line at N: the last term added */
-  function markN(c, XX, p) {
+  function markN(c, XX, p, ly) {
     if (lg() && S.N < 1) return;
     const u = XX(U(S.N)); if (u < -2 || u > W + 2) return;
     c.strokeStyle = T.ink; c.lineWidth = 1.2 * p; c.setLineDash([3 * p, 4 * p]); c.beginPath(); c.moveTo(u, 0); c.lineTo(u, H); c.stroke(); c.setLineDash([]);
     c.fillStyle = T.ink; c.font = `700 ${12 * p}px ${T.mono}`; c.textBaseline = 'top'; c.textAlign = u > W - 70 * p ? 'right' : 'left';
-    labelOn(c, `N = ${big(S.N)}`, u + (u > W - 70 * p ? -5 : 5) * p, 26 * p);
+    labelOn(c, `N = ${big(S.N)}`, u + (u > W - 70 * p ? -5 : 5) * p, (ly || 26) * p);
   }
   function limitOf() {
     const c = PRESETS[S.preset];

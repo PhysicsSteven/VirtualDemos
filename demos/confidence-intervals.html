@@ -182,7 +182,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     decay: { kind: 'mean', mu: 2.00, sigma: 2.00, unit: 's', dec: 2, draw: (r, d) => r.exp(1 / d.mu) },
     polar: { kind: 'prop', unit: '', dec: 3 },
   };
-  const malus = (deg) => Math.cos(deg * Math.PI / 180) ** 2;
+  /* cos²θ, exactly 0 at 90° (Math.cos(π/2) is 6e-17, not 0, which made every p′ = 0 interval miss a p shown as 0.0000) */
+  const malus = (deg) => { const c = Math.cos(deg * Math.PI / 180); return Math.abs(c) < 1e-12 ? 0 : c * c; };
   function seedOf(...parts) {
     let h = 0x9E3779B9;
     for (const p of parts) { h = Math.imul(h ^ (p >>> 0), 0x85EBCA6B); h ^= h >>> 13; h = Math.imul(h, 0xC2B2AE35); h ^= h >>> 16; }
@@ -194,8 +195,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (d.kind === 'prop') { const p = malus(angle); return { pop, kind: 'prop', truth: p, sigma: Math.sqrt(p * (1 - p)), unit: '', dec: 3 }; }
     return { pop, kind: 'mean', truth: d.mu, sigma: d.sigma, unit: d.unit, dec: d.dec, def: d };
   }
-  /* a stream of samples: sample k is the same whatever was drawn before, for one draw set, population, angle and n */
-  const sampleRng = (seed, pop, angle, n) => VDSTATS.rng(seedOf(seed, 53, POPS.indexOf(pop), Math.round(angle * 10), n));
+  /* a stream of samples: sample k is the same whatever was drawn before, for one draw set, population, angle and n (the angle
+     counts only for photons; the other populations always use the stream of the opening angle, 60°, so a polarizer angle left
+     from an earlier setup cannot change their samples) */
+  const sampleRng = (seed, pop, angle, n) => VDSTATS.rng(seedOf(seed, 53, POPS.indexOf(pop), Math.round((pop === 'polar' ? angle : 60) * 10), n));
   /* one sample of n: its values (or, for photons, the number x that passed of n), mean and s */
   function drawSample(Pp, n, r) {
     if (Pp.kind === 'prop') { const vals = []; let x = 0; for (let i = 0; i < n; i++) { const v = r() < Pp.truth ? 1 : 0; vals.push(v); x += v; } return { vals, x, n }; }

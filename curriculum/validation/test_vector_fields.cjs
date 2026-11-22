@@ -113,4 +113,15 @@ group('dipole and spreading flow are conservative, the swirl is not', () => {
   near(c.potentialAt(F('x', 'y'), [0, 0], 0, [1, 2]), 2.5, 1e-10, 'f = r²/2');
 });
 
+group('a loop around the point mass: circulation 0, flux −2π/R, and the divergent ∬ div dA ends as undefined, not a hang', () => {
+  /* F = −r̂/r² in the plane has div F = 1/r³, whose integral over a disk about the origin diverges (2026-11-22: it used to stall the page) */
+  const m = F('-x/(x^2+y^2)^(3/2)', '-y/(x^2+y^2)^(3/2)');
+  for (const [sh, R, flux] of [['circle', 1.5, -2 * PI / 1.5], ['square', 1, null]]) {
+    const t0 = Date.now(), G = c.greens(m, P(sh, { C: [0, 0], R }));
+    assert(Date.now() - t0 < 10000, sh + ' took ' + (Date.now() - t0) + ' ms');
+    near(G.circ, 0, 1e-9, sh + ' circulation'); assert.strictEqual(G.curlSum, 0, sh + ' curl sum'); assert(Number.isNaN(G.divSum), sh + ' div sum ' + G.divSum);
+    assert(G.sing, sh + ' finds the mass'); if (flux !== null) near(G.flux, flux, 1e-9, 'flux −2π/R');
+  }
+});
+
 console.log(`${n} groups passed`);

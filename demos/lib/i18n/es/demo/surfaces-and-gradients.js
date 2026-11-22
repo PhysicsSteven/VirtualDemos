@@ -15,17 +15,17 @@ VDI18N.add('es', 'demo/surfaces-and-gradients', {
 "The point moving along r(t)":
   "El punto que se mueve a lo largo de r(t)",
 "Play moves the point along x, so the slice y = b sweeps across.":
-  "Play mueve el punto a lo largo de x, así que el corte y = b recorre la superficie.",
+  "Iniciar mueve el punto a lo largo de x, así que el corte y = b recorre la superficie.",
 "Drag the tip of u on the map, or press Play to turn it.":
-  "Arrastra la punta de u en el mapa, o presiona Play para girarla.",
+  "Arrastra la punta de u en el mapa, o presiona Iniciar para girarla.",
 "Play releases a ball at the point; it moves under F = −∇f.":
-  "Play suelta una bola en el punto; se mueve bajo F = −∇f.",
+  "Iniciar suelta una bola en el punto; se mueve bajo F = −∇f.",
 "The point stays on g = c. Drag it along the curve, or press Play to slide.":
-  "El punto se queda sobre g = c. Arrástralo a lo largo de la curva, o presiona Play para deslizarlo.",
+  "El punto se queda sobre g = c. Arrástralo a lo largo de la curva, o presiona Iniciar para deslizarlo.",
 "Play sends a point in along each path. Drag the point to approach another one.":
-  "Play manda un punto hacia adentro por cada camino. Arrastra el punto para acercarte a otro.",
+  "Iniciar manda un punto hacia adentro por cada camino. Arrastra el punto para acercarte a otro.",
 "Play walks the point along the path. Drag t, or drag the point along the path.":
-  "Play hace avanzar el punto por el camino. Arrastra t, o arrastra el punto a lo largo del camino.",
+  "Iniciar hace avanzar el punto por el camino. Arrastra t, o arrastra el punto a lo largo del camino.",
 "Point":
   "Punto",
 "angle α of u (degrees)":
@@ -149,7 +149,7 @@ VDI18N.add('es', 'demo/surfaces-and-gradients', {
 "A charge carried past a dipole: dV/dt = −E · v":
   "Una carga que pasa junto a un dipolo: dV/dt = −E · v",
 "A hill {#} m high with a lower summit to the northeast, x east and y north in kilometers, h in meters. The gradient points straight uphill, across the level curves, and its size is the steepest slope in meters of rise per kilometer. Press Play to turn the direction arrow u: the slope along u, ∇h · u, is largest along ∇h, zero along the level curve, and most negative straight downhill.":
-  "Una colina de {#} m de alto con una cima más baja al noreste, x hacia el este y y hacia el norte en kilómetros, h en metros. El gradiente apunta directo cuesta arriba, a través de las curvas de nivel, y su tamaño es la pendiente máxima en metros de subida por kilómetro. Presiona Play para girar la flecha de dirección u: la pendiente a lo largo de u, ∇h · u, es máxima a lo largo de ∇h, cero a lo largo de la curva de nivel y más negativa directo cuesta abajo.",
+  "Una colina de {#} m de alto con una cima más baja al noreste, x hacia el este y y hacia el norte en kilómetros, h en metros. El gradiente apunta directo cuesta arriba, a través de las curvas de nivel, y su tamaño es la pendiente máxima en metros de subida por kilómetro. Presiona Iniciar para girar la flecha de dirección u: la pendiente a lo largo de u, ∇h · u, es máxima a lo largo de ∇h, cero a lo largo de la curva de nivel y más negativa directo cuesta abajo.",
 "At the point":
   "En el punto",
 "D_uh = ∇h · u":
@@ -213,7 +213,7 @@ VDI18N.add('es', 'demo/surfaces-and-gradients', {
 "<span>saddle</span>":
   "<span>punto silla</span>",
 "Press Play to release a ball at the point: its energy is graphed here.":
-  "Presiona Play para soltar una bola en el punto: su energía se grafica aquí.",
+  "Presiona Iniciar para soltar una bola en el punto: su energía se grafica aquí.",
 "∇f is not zero here, so this is not a critical point: the test applies only where ∇f = {#}.":
   "∇f no es cero aquí, así que este no es un punto crítico: el criterio solo se aplica donde ∇f = {#}.",
 "h_xx":
@@ -231,7 +231,7 @@ VDI18N.add('es', 'demo/surfaces-and-gradients', {
 "largest":
   "máximo",
 "A rectangular pen x by y meters with {#} m of fence: 2x + 2y = {#}, so the constraint is x + y = {#}. Slide the point along the constraint (Play): the area A = xy is largest where the constraint just touches a level curve of A, so ∇A is parallel to ∇g. That happens at the square, x = y = {#} m, A = {#} m², with λ = {#} m: one more meter of x + y adds about {#} m² of area.":
-  "Un corral rectangular de x por y metros con {#} m de cerca: 2x + 2y = {#}, así que la restricción es x + y = {#}. Desliza el punto a lo largo de la restricción (Play): el área A = xy es máxima donde la restricción apenas toca una curva de nivel de A, así que ∇A es paralelo a ∇g. Eso pasa en el cuadrado, x = y = {#} m, A = {#} m², con λ = {#} m: un metro más de x + y agrega unos {#} m² de área.",
+  "Un corral rectangular de x por y metros con {#} m de cerca: 2x + 2y = {#}, así que la restricción es x + y = {#}. Desliza el punto a lo largo de la restricción (Iniciar): el área A = xy es máxima donde la restricción apenas toca una curva de nivel de A, así que ∇A es paralelo a ∇g. Eso pasa en el cuadrado, x = y = {#} m, A = {#} m², con λ = {#} m: un metro más de x + y agrega unos {#} m² de área.",
 "<span>largest</span>":
   "<span>máximo</span>",
 "distance along the constraint":
@@ -245,7 +245,7 @@ VDI18N.add('es', 'demo/surfaces-and-gradients', {
 "∇f is not parallel to ∇g, so moving along the constraint still changes f: keep sliding.":
   "∇f no es paralelo a ∇g, así que moverse a lo largo de la restricción todavía cambia f: sigue deslizando.",
 "f = xy/(x² + y²) is not defined at the origin. Along the x axis and the y axis it is {#}, along y = x it is ½, and along y = mx it is m/({#} + m²) at every point, all the way in. Different paths give different values, so the limit at the origin does not exist. Drag m to try other lines; press Play to send a point in along each path.":
-  "f = xy/(x² + y²) no está definida en el origen. A lo largo del eje x y del eje y vale {#}, a lo largo de y = x vale ½, y a lo largo de y = mx vale m/({#} + m²) en cada punto, hasta el final. Caminos distintos dan valores distintos, así que el límite en el origen no existe. Arrastra m para probar otras rectas; presiona Play para mandar un punto hacia adentro por cada camino.",
+  "f = xy/(x² + y²) no está definida en el origen. A lo largo del eje x y del eje y vale {#}, a lo largo de y = x vale ½, y a lo largo de y = mx vale m/({#} + m²) en cada punto, hasta el final. Caminos distintos dan valores distintos, así que el límite en el origen no existe. Arrastra m para probar otras rectas; presiona Iniciar para mandar un punto hacia adentro por cada camino.",
 "distance from the point":
   "distancia al punto",
 "along each path":
@@ -311,13 +311,13 @@ VDI18N.add('es', 'demo/surfaces-and-gradients', {
 "The gradient there is (-{#}, {#}).":
   "Ahí el gradiente es (-{#}, {#}).",
 "The pressure of {#} mol of ideal gas, P = nRT/V = {#}T/V kPa, with x the volume V in liters and y the temperature T in kelvins. Cut the surface at constant T and the slope is ∂P/∂V = −nRT/V², negative (squeeze it and the pressure rises); cut at constant V and it is ∂P/∂T = nR/V, the slope of a gas thermometer. The level curves are isobars, straight lines through the origin. Play moves the point along V.":
-  "La presión de {#} mol de gas ideal, P = nRT/V = {#}T/V kPa, con x el volumen V en litros y y la temperatura T en kelvin. Corta la superficie a T constante y la pendiente es ∂P/∂V = −nRT/V², negativa (comprime el gas y la presión sube); corta a V constante y es ∂P/∂T = nR/V, la pendiente de un termómetro de gas. Las curvas de nivel son isobaras, rectas que pasan por el origen. Play mueve el punto a lo largo de V.",
+  "La presión de {#} mol de gas ideal, P = nRT/V = {#}T/V kPa, con x el volumen V en litros y y la temperatura T en kelvin. Corta la superficie a T constante y la pendiente es ∂P/∂V = −nRT/V², negativa (comprime el gas y la presión sube); corta a V constante y es ∂P/∂T = nR/V, la pendiente de un termómetro de gas. Las curvas de nivel son isobaras, rectas que pasan por el origen. Iniciar mueve el punto a lo largo de V.",
 "Point V":
   "Punto V",
 "Arrows of E = −∇V":
   "Flechas de E = −∇V",
 "The potential of +{#} nC at ({#}, {#}) and −{#} nC at (−{#}, {#}), in volts, x and y in centimeters. The electric field is E = −∇V: it points straight downhill on this surface, from the positive charge toward the negative, across the equipotentials. The surface is cut off near each charge, where V grows without limit. Turn u with Play: the slope of V along u is −E · u.":
-  "El potencial de +{#} nC en ({#}, {#}) y −{#} nC en (−{#}, {#}), en volts, x y y en centímetros. El campo eléctrico es E = −∇V: apunta directo cuesta abajo en esta superficie, de la carga positiva hacia la negativa, a través de las equipotenciales. La superficie se corta cerca de cada carga, donde V crece sin límite. Gira u con Play: la pendiente de V a lo largo de u es −E · u.",
+  "El potencial de +{#} nC en ({#}, {#}) y −{#} nC en (−{#}, {#}), en volts, x y y en centímetros. El campo eléctrico es E = −∇V: apunta directo cuesta abajo en esta superficie, de la carga positiva hacia la negativa, a través de las equipotenciales. La superficie se corta cerca de cada carga, donde V crece sin límite. Gira u con Iniciar: la pendiente de V a lo largo de u es −E · u.",
 "D_uV = ∇V · u (V/cm)":
   "D_uV = ∇V · u (V/cm)",
 "D_uV = ∇V · u":
@@ -325,7 +325,7 @@ VDI18N.add('es', 'demo/surfaces-and-gradients', {
 "No critical points in the square the surface shows.":
   "No hay puntos críticos en el cuadrado que muestra la superficie.",
 "A particle of mass {#} kg in the potential energy U = (x² − {#})² + y² joules: two pits at (±{#}, {#}) and a pass between them at the origin, a saddle. In a molecule the pits are two stable shapes and the saddle is the transition state between them. Press Play to release a ball at the point: it feels F = −∇U, swings across the pit, and with drag it settles at a minimum. A ball placed exactly on the saddle stays, but the slightest push sends it into a pit.":
-  "Una partícula de masa {#} kg en la energía potencial U = (x² − {#})² + y² joules: dos hondonadas en (±{#}, {#}) y un paso entre ellas en el origen, un punto silla. En una molécula las hondonadas son dos formas estables y el punto silla es el estado de transición entre ellas. Presiona Play para soltar una bola en el punto: siente F = −∇U, oscila a través de la hondonada y, con arrastre, se asienta en un mínimo. Una bola puesta exactamente en el punto silla se queda ahí, pero el menor empujón la manda a una hondonada.",
+  "Una partícula de masa {#} kg en la energía potencial U = (x² − {#})² + y² joules: dos hondonadas en (±{#}, {#}) y un paso entre ellas en el origen, un punto silla. En una molécula las hondonadas son dos formas estables y el punto silla es el estado de transición entre ellas. Presiona Iniciar para soltar una bola en el punto: siente F = −∇U, oscila a través de la hondonada y, con arrastre, se asienta en un mínimo. Una bola puesta exactamente en el punto silla se queda ahí, pero el menor empujón la manda a una hondonada.",
 "<span>pit</span>":
   "<span>hondonada</span>",
 "U_xx":
@@ -343,7 +343,7 @@ VDI18N.add('es', 'demo/surfaces-and-gradients', {
 "V_xy":
   "V_xy",
 "f = x³ − 3x + y³ − 3y has ∇f = (3x² − {#}, 3y² − {#}) = {#} at four points (±{#}, ±{#}). The second derivative test sorts them: D = 36xy, so ({#}, {#}) is a pit, (−{#}, −{#}) a peak and the other two saddles. Click a critical point in the list to move there, or press Play to roll a ball from the point.":
-  "f = x³ − 3x + y³ − 3y tiene ∇f = (3x² − {#}, 3y² − {#}) = {#} en cuatro puntos (±{#}, ±{#}). El criterio de la segunda derivada los clasifica: D = 36xy, así que ({#}, {#}) es una hondonada, (−{#}, −{#}) una cima y los otros dos puntos silla. Haz clic en un punto crítico de la lista para ir ahí, o presiona Play para rodar una bola desde el punto.",
+  "f = x³ − 3x + y³ − 3y tiene ∇f = (3x² − {#}, 3y² − {#}) = {#} en cuatro puntos (±{#}, ±{#}). El criterio de la segunda derivada los clasifica: D = 36xy, así que ({#}, {#}) es una hondonada, (−{#}, −{#}) una cima y los otros dos puntos silla. Haz clic en un punto crítico de la lista para ir ahí, o presiona Iniciar para rodar una bola desde el punto.",
 "f_xx":
   "f_xx",
 "f_yy":

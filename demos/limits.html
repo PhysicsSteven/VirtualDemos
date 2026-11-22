@@ -231,7 +231,23 @@ dl.formulas .f { color: var(--fg-f); } dl.formulas .d { color: var(--c-d); }
     }
     return { kind: up || down ? 'slow' : 'osc', last: y[y.length - 1] };
   }
-  function limitSide(f, a, s) { const q = sideSeq(f, a, s); return Object.assign(classify(q.ys), { seq: q }); }
+  /* A settled value is checked on a second sequence that is not a power of 2 times h₀ (h₀/√2 instead, and √2·2ᵏ toward
+     infinity): halving alone can hit only the zeros of sin(π/x) (doubling those of sin(πx)), which then looks like it settles to 0 although it swings between −1 and 1. Where the first
+     values are within 10⁻⁴ of L, most of the second ones must be within 10⁻³ of it (added 2026-11-22). */
+  function limitSide(f, a, s) {
+    const q = sideSeq(f, a, s), r = classify(q.ys);
+    if (r.kind === 'value') {
+      const h0 = 0.5 * Math.max(1, Math.abs(a)) * Math.SQRT1_2, sc = 1 + Math.abs(r.L);
+      let near = 0, off = 0;
+      for (let k = 0; k < q.ys.length; k++) {
+        if (!(Math.abs(q.ys[k] - r.L) <= 1e-4 * sc)) continue;
+        const x = isFinite(a) ? a + s * h0 * Math.pow(2, -k) : s * Math.SQRT2 * Math.pow(2, k); if (x === a) break;
+        near++; if (!(Math.abs(f(x) - r.L) <= 1e-3 * sc)) off++;
+      }
+      if (near >= 5 && off > near / 2) return { kind: 'osc', last: r.L, seq: q };
+    }
+    return Object.assign(r, { seq: q });
+  }
   /* the two sides together: the limit exists when both settle to the same value (within their error estimates) */
   function limitBoth(f, a) {
     const left = isFinite(a) || a === -Infinity ? limitSide(f, a, isFinite(a) ? -1 : -1) : null;

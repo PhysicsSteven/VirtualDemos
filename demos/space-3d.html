@@ -131,7 +131,7 @@
           <div class="row"><div class="sl"><div class="slider-head"><label for="c2" id="lc2" translate="no">θ</label><output id="o2" for="c2"></output></div><input type="range" id="c2" min="0" max="180" step="1" value="50"></div></div>
           <div class="row"><div class="sl"><div class="slider-head"><label for="c3" id="lc3" translate="no">φ</label><output id="o3" for="c3"></output></div><input type="range" id="c3" min="0" max="360" step="1" value="35"></div></div>
           <label class="check"><input type="checkbox" id="showSurf" checked><span>Coordinate surfaces through P</span></label>
-          <span class="hint" id="convNote">Physics convention (ISO 80000-2): θ is the polar angle down from +z and φ the azimuth from +x. OpenStax Calculus swaps the letters: it writes θ for the azimuth and φ for the angle from +z, and ρ for the distance r.</span>
+          <span class="hint" id="convNote">Physics convention (ISO 80000-2): θ is the polar angle down from +z and φ the azimuth from +x. OpenStax Calculus swaps the letters: it writes θ for the azimuth and φ for the angle from +z, and ρ for the distance r. Its cylindrical coordinates are (r, θ, z) for this demo's (ρ, φ, z).</span>
         </div>
         <div class="shelf-card" role="group" aria-label="The view">
           <span class="card-title">The view</span>
@@ -278,7 +278,7 @@
       hint: 'Two vectors by their components. Their sum adds component by component, the tail of b on the tip of a. The dot product a · b = |a||b| cos θ multiplies the components and adds; it is |a| times the shadow of b on a. The cross product a × b is at right angles to both, by the right hand rule (fingers from a toward b, thumb along a × b), with length |a||b| sin θ, the area of the parallelogram. Press Play to turn b about the z axis and watch a · b and a × b change.' },
     torque: { mode: 'vec', a: [0.3, 0, 0], b: [0, 20, 10], names: ['r', 'F', 'τ = r × F'], units: ['m', 'N', 'N·m'], show: { sum: 0, dot: 0, cross: 1 },
       hint: 'A wrench 0.30 m long along x, pushed at its end with F = (0, 20, 10) N. The torque τ = r × F = (0, −3, 6) N·m points along the axis the wrench turns the bolt about, by the right hand rule; its size is |r||F| sin θ. Only the part of F at right angles to r turns the bolt: the part along r does nothing. Play turns F about the z axis: the torque is largest with F at right angles to the wrench and zero when F points along it.' },
-    lorentz: { mode: 'vec', a: [2, 0, 1], b: [0, 0, 0.5], names: ['v', 'B', 'v × B'], units: ['10⁵ m/s', 'T', 'm·T/s'], show: { sum: 0, dot: 1, cross: 1 }, charge: true,
+    lorentz: { mode: 'vec', a: [2, 0, 1], b: [0, 0, 0.5], names: ['v', 'B', 'v × B'], units: ['× 10⁵ m/s', 'T', '× 10⁵ m·T/s'], show: { sum: 0, dot: 1, cross: 1 }, charge: true,
       hint: 'A proton with v = (2, 0, 1) × 10⁵ m/s in a magnetic field B = 0.50 T along z. The force is F = qv × B: at right angles to both v and B, so it never does work and only turns the motion. The part of v along B (here vz) feels nothing, which is why the path is a helix. Play turns v about z: the force turns with it, always sideways.' },
     work: { mode: 'vec', a: [30, 0, 10], b: [4, 2, 0], names: ['F', 'd', 'F × d'], units: ['N', 'm', 'N·m'], show: { sum: 0, dot: 1, cross: 0 },
       hint: 'A constant force F = (30, 0, 10) N pulls a crate through the displacement d = (4, 2, 0) m across the floor. The work is the dot product W = F · d = 30 × 4 + 0 × 2 + 10 × 0 = 120 J: only the part of F along d counts. The upward 10 N does no work on a horizontal displacement. Play turns d about z: the work changes sign when d turns more than 90° from F.' },
@@ -307,9 +307,10 @@
     TK = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), mono: g('--font-mono') || 'monospace',
       a: g('--sp-a'), b: g('--sp-b'), c: g('--sp-c'), s: g('--sp-s'), pl: g('--sp-pl'), surf: g('--sp-surf'), tr: g('--sp-tr'), x: g('--sp-x'), y: g('--sp-y'), z: g('--sp-z'), pt: g('--sp-pt') };
   }
-  const fmt = (v, s = 4) => {
+  /* zero: below this size a value is rounding noise and reads 0 (the proton's force, about 10⁻¹⁴ N, passes its own) */
+  const fmt = (v, s = 4, zero = 1e-10) => {
     if (!isFinite(v)) return '—';
-    if (Math.abs(v) < 1e-10) return '0';
+    if (v === 0 || Math.abs(v) < zero) return '0';
     const a = Math.abs(v);
     if (a >= 1e6 || a < 1e-3) { const e = Math.floor(Math.log10(a)), m = v / Math.pow(10, e), sup = String(e).replace(/[-0-9]/g, (c) => '⁻⁰¹²³⁴⁵⁶⁷⁸⁹'['-0123456789'.indexOf(c)]); return `${m.toFixed(s - 1).replace('-', '−')} × 10${sup}`; }
     const t = Number(v.toPrecision(s)).toString();
@@ -611,7 +612,7 @@
       if (spLen(a) > 0) h += dd(VDI18N.t('Part of {b} along {a}', { a: na, b: nb }), H_(`${fmt(spDot(a, b) / spLen(a))}${un(ub)}`));
       h += dd(nc, H_(`${vfmt(c)}${un(uc)}`)) + dd(`|${nc.split(' = ')[0]}|`, H_(`${fmt(spLen(c))}${un(uc)}`));
       h += dd(`|${na}||${nb}| sin θ`, H_(`${fmt(spLen(a) * spLen(b) * Math.sin(th))}${un(uc)}`));
-      if (S.charge) { const F = spScale(c, QE * 1e5); h += dd('F = qv × B', H_(`${vfmt(F)} N`)) + dd('|F|', H_(`${fmt(spLen(F))} N`)); }
+      if (S.charge) { const F = spScale(c, QE * 1e5), z = 1e-10 * spLen(F); h += dd('F = qv × B', H_(`(${F.map((q) => fmt(q, 4, z)).join(', ')}) N`)) + dd('|F|', H_(`${fmt(spLen(F), 4, 0)} N`)); }
       if (S.preset === 'work') h += dd(VDI18N.t('Work W = F · d'), H_(`${fmt(spDot(a, b))} J`));
       const NN = { a: S.names[0], b: S.names[1] };
       v = S.blind ? '' : Math.abs(spDot(a, b)) <= 1e-12 * spLen(a) * spLen(b) ? VDI18N.t('{a} · {b} = 0: the vectors are at right angles.', NN) : spLen(c) <= 1e-12 * spLen(a) * spLen(b) ? VDI18N.t('{a} × {b} = 0: the vectors are parallel, so they span no area.', NN) : VDI18N.t('{a} × {b} is at right angles to both: ({a} × {b}) · {a} = ({a} × {b}) · {b} = 0.', NN);

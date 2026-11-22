@@ -372,6 +372,10 @@ VDI18N.add('es', 'demo/sampling-lab', {
   "horas de estudio: claro pocas, oscuro muchas",
 "inner dot: study hours, light few, dark many":
   "punto interior: horas de estudio, claro pocas, oscuro muchas",
+"study hours: dark few, light many":
+  "horas de estudio: oscuro pocas, claro muchas",
+"inner dot: study hours, dark few, light many":
+  "punto interior: horas de estudio, oscuro pocas, claro muchas",
 "Their spread is {#}; the theorem gives ?.":
   "Su dispersión es {#}; el teorema da ?.",
 "{#} readings sent to the worksheet. <a>Open the worksheet</a>":

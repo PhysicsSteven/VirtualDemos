@@ -43,7 +43,7 @@ VDI18N.add('es', 'demo/space-3d', {
 "<span><span></span>Cross product a × b and its area</span>":
   "<span><span></span>Producto cruz a × b y su área</span>",
 "<span>Drag an arrow tip to move it across; type a component for height. Play turns b about the z axis.</span>":
-  "<span>Arrastra la punta de una flecha para moverla en horizontal; escribe una componente para la altura. Play gira b alrededor del eje z.</span>",
+  "<span>Arrastra la punta de una flecha para moverla en horizontal; escribe una componente para la altura. Iniciar gira b alrededor del eje z.</span>",
 "The line and the plane":
   "La recta y el plano",
 "<span>A line r = P₀ + t d and a plane n · (r − Q) = {#}</span>":
@@ -51,7 +51,7 @@ VDI18N.add('es', 'demo/space-3d', {
 "<span><span></span>Reflected ray (the plane as a mirror)</span>":
   "<span><span></span>Rayo reflejado (el plano como espejo)</span>",
 "<span>Play moves a point along the line, through the plane.</span>":
-  "<span>Play mueve un punto a lo largo de la recta, a través del plano.</span>",
+  "<span>Iniciar mueve un punto a lo largo de la recta, a través del plano.</span>",
 "The quadric surface":
   "La superficie cuádrica",
 "<span>Quadric surface</span>":
@@ -73,7 +73,7 @@ VDI18N.add('es', 'demo/space-3d', {
 "Trace in the plane":
   "Traza en el plano",
 "<span>Play sweeps the plane through the surface.</span>":
-  "<span>Play recorre la superficie con el plano.</span>",
+  "<span>Iniciar recorre la superficie con el plano.</span>",
 "The point":
   "El punto",
 "<span>The point P</span>":
@@ -90,8 +90,8 @@ VDI18N.add('es', 'demo/space-3d', {
   "Esféricas",
 "<span>Coordinate surfaces through P</span>":
   "<span>Superficies coordenadas por P</span>",
-"Physics convention (ISO {#}-{#}): θ is the polar angle down from +z and φ the azimuth from +x. OpenStax Calculus swaps the letters: it writes θ for the azimuth and φ for the angle from +z, and ρ for the distance r.":
-  "Convención de física (ISO {#}-{#}): θ es el ángulo polar medido desde +z y φ el azimut desde +x. OpenStax Calculus intercambia las letras: escribe θ para el azimut y φ para el ángulo desde +z, y ρ para la distancia r.",
+"Physics convention (ISO {#}-{#}): θ is the polar angle down from +z and φ the azimuth from +x. OpenStax Calculus swaps the letters: it writes θ for the azimuth and φ for the angle from +z, and ρ for the distance r. Its cylindrical coordinates are (r, θ, z) for this demo's (ρ, φ, z).":
+  "Convención de física (ISO {#}-{#}): θ es el ángulo polar medido desde +z y φ el azimut desde +x. OpenStax Calculus intercambia las letras: escribe θ para el azimut y φ para el ángulo desde +z, y ρ para la distancia r. Sus coordenadas cilíndricas son (r, θ, z) para las (ρ, φ, z) de esta demo.",
 "The view":
   "La vista",
 "<span>The view</span>":
@@ -135,7 +135,7 @@ VDI18N.add('es', 'demo/space-3d', {
 "A point charge: V and E depend only on r":
   "Una carga puntual: V y E dependen solo de r",
 "Two vectors by their components. Their sum adds component by component, the tail of b on the tip of a. The dot product a · b = |a||b| cos θ multiplies the components and adds; it is |a| times the shadow of b on a. The cross product a × b is at right angles to both, by the right hand rule (fingers from a toward b, thumb along a × b), with length |a||b| sin θ, the area of the parallelogram. Press Play to turn b about the z axis and watch a · b and a × b change.":
-  "Dos vectores por sus componentes. Su suma se hace componente por componente, la cola de b en la punta de a. El producto punto a · b = |a||b| cos θ multiplica las componentes y suma; es |a| por la sombra de b sobre a. El producto cruz a × b es perpendicular a ambos, por la regla de la mano derecha (dedos de a hacia b, pulgar a lo largo de a × b), con longitud |a||b| sin θ, el área del paralelogramo. Presiona Play para girar b alrededor del eje z y ver cómo cambian a · b y a × b.",
+  "Dos vectores por sus componentes. Su suma se hace componente por componente, la cola de b en la punta de a. El producto punto a · b = |a||b| cos θ multiplica las componentes y suma; es |a| por la sombra de b sobre a. El producto cruz a × b es perpendicular a ambos, por la regla de la mano derecha (dedos de a hacia b, pulgar a lo largo de a × b), con longitud |a||b| sin θ, el área del paralelogramo. Presiona Iniciar para girar b alrededor del eje z y ver cómo cambian a · b y a × b.",
 "Adding and subtracting vectors in a plane by dragging their tips, relative velocity and a force table: <a>Vectors and Relative Motion</a>.":
   "Sumar y restar vectores en un plano arrastrando sus puntas, velocidad relativa y una mesa de fuerzas: <a>Vectores y movimiento relativo</a>.",
 "Part of b along a":
@@ -157,7 +157,7 @@ VDI18N.add('es', 'demo/space-3d', {
 "Every number is computed from the components in the boxes, exactly as the formulas say, and rounded only for display. Vectors with different units (r and F, v and B) are drawn to different scales, each named on the picture; their directions, and the direction of the cross product, are true. The proton's charge is e from CODATA {#} (exact); the point charge uses the CODATA {#} Coulomb constant with q = {#} nC.":
   "Cada número se calcula a partir de las componentes en las casillas, exactamente como dicen las fórmulas, y solo se redondea al mostrarlo. Los vectores con unidades distintas (r y F, v y B) se dibujan a escalas distintas, cada una indicada en la imagen; sus direcciones, y la dirección del producto cruz, son exactas. La carga del protón es e de CODATA {#} (exacta); la carga puntual usa la constante de Coulomb de CODATA {#} con q = {#} nC.",
 "The line r = ({#}, −{#}, {#}) + t({#}, {#}, {#}) and the plane through Q = ({#}, {#}, {#}) with normal n = ({#}, {#}, {#}), that is x + y + z = {#}. Putting the line into the plane equation gives one equation for t: t = n · (Q − P₀)/(n · d) = {#}/{#}, so they meet at ({#}, −{#}, {#}). When n · d = {#} the line is parallel to the plane: it never meets it, or lies in it. Press Play to move a point along the line and watch its signed distance to the plane change sign.":
-  "La recta r = ({#}, −{#}, {#}) + t({#}, {#}, {#}) y el plano por Q = ({#}, {#}, {#}) con normal n = ({#}, {#}, {#}), es decir x + y + z = {#}. Al poner la recta en la ecuación del plano queda una ecuación para t: t = n · (Q − P₀)/(n · d) = {#}/{#}, así que se cruzan en ({#}, −{#}, {#}). Cuando n · d = {#} la recta es paralela al plano: nunca lo cruza, o está contenida en él. Presiona Play para mover un punto a lo largo de la recta y ver cómo su distancia con signo al plano cambia de signo.",
+  "La recta r = ({#}, −{#}, {#}) + t({#}, {#}, {#}) y el plano por Q = ({#}, {#}, {#}) con normal n = ({#}, {#}, {#}), es decir x + y + z = {#}. Al poner la recta en la ecuación del plano queda una ecuación para t: t = n · (Q − P₀)/(n · d) = {#}/{#}, así que se cruzan en ({#}, −{#}, {#}). Cuando n · d = {#} la recta es paralela al plano: nunca lo cruza, o está contenida en él. Presiona Iniciar para mover un punto a lo largo de la recta y ver cómo su distancia con signo al plano cambia de signo.",
 "Plane":
   "Plano",
 "They meet at t":
@@ -189,7 +189,7 @@ VDI18N.add('es', 'demo/space-3d', {
 "Trace in z = {#}":
   "Traza en z = {#}",
 "A point by its spherical coordinates: the distance r from the origin, the angle θ down from the +z axis, and the azimuth φ around from +x. Each coordinate held fixed is a surface: r = constant a sphere, θ = constant a cone around the z axis, φ = constant a half plane hinged on the z axis. The point is where the three meet. Play turns φ.":
-  "Un punto por sus coordenadas esféricas: la distancia r al origen, el ángulo θ medido desde el eje +z y el azimut φ alrededor desde +x. Cada coordenada fija es una superficie: r = constante una esfera, θ = constante un cono alrededor del eje z, φ = constante un semiplano con bisagra en el eje z. El punto está donde se cruzan las tres. Play gira φ.",
+  "Un punto por sus coordenadas esféricas: la distancia r al origen, el ángulo θ medido desde el eje +z y el azimut φ alrededor desde +x. Cada coordenada fija es una superficie: r = constante una esfera, θ = constante un cono alrededor del eje z, φ = constante un semiplano con bisagra en el eje z. El punto está donde se cruzan las tres. Iniciar gira φ.",
 "Rectangular (x, y, z)":
   "Rectangulares (x, y, z)",
 "Cylindrical (ρ, φ, z)":
@@ -205,7 +205,7 @@ VDI18N.add('es', 'demo/space-3d', {
 "The point is at ({#}, {#}, {#}).":
   "El punto está en ({#}, {#}, {#}).",
 "A wrench {#} m long along x, pushed at its end with F = ({#}, {#}, {#}) N. The torque τ = r × F = ({#}, −{#}, {#}) N·m points along the axis the wrench turns the bolt about, by the right hand rule; its size is |r||F| sin θ. Only the part of F at right angles to r turns the bolt: the part along r does nothing. Play turns F about the z axis: the torque is largest with F at right angles to the wrench and zero when F points along it.":
-  "Una llave de {#} m de largo a lo largo de x, empujada en su extremo con F = ({#}, {#}, {#}) N. La torca τ = r × F = ({#}, −{#}, {#}) N·m apunta a lo largo del eje alrededor del cual la llave gira el tornillo, por la regla de la mano derecha; su tamaño es |r||F| sin θ. Solo la parte de F perpendicular a r gira el tornillo: la parte a lo largo de r no hace nada. Play gira F alrededor del eje z: la torca es máxima con F perpendicular a la llave y cero cuando F apunta a lo largo de ella.",
+  "Una llave de {#} m de largo a lo largo de x, empujada en su extremo con F = ({#}, {#}, {#}) N. La torca τ = r × F = ({#}, −{#}, {#}) N·m apunta a lo largo del eje alrededor del cual la llave gira el tornillo, por la regla de la mano derecha; su tamaño es |r||F| sin θ. Solo la parte de F perpendicular a r gira el tornillo: la parte a lo largo de r no hace nada. Iniciar gira F alrededor del eje z: la torca es máxima con F perpendicular a la llave y cero cuando F apunta a lo largo de ella.",
 "grid unit":
   "unidad de la cuadrícula",
 "r: {#} grid unit = {#} m":
@@ -223,7 +223,7 @@ VDI18N.add('es', 'demo/space-3d', {
 "r · F = {#}: the vectors are at right angles.":
   "r · F = {#}: los vectores son perpendiculares.",
 "A proton with v = ({#}, {#}, {#}) × {#}⁵ m/s in a magnetic field B = {#} T along z. The force is F = qv × B: at right angles to both v and B, so it never does work and only turns the motion. The part of v along B (here vz) feels nothing, which is why the path is a helix. Play turns v about z: the force turns with it, always sideways.":
-  "Un protón con v = ({#}, {#}, {#}) × {#}⁵ m/s en un campo magnético B = {#} T a lo largo de z. La fuerza es F = qv × B: perpendicular a v y a B, así que nunca hace trabajo y solo desvía el movimiento. La parte de v a lo largo de B (aquí vz) no siente nada, por eso la trayectoria es una hélice. Play gira v alrededor de z: la fuerza gira con ella, siempre de lado.",
+  "Un protón con v = ({#}, {#}, {#}) × {#}⁵ m/s en un campo magnético B = {#} T a lo largo de z. La fuerza es F = qv × B: perpendicular a v y a B, así que nunca hace trabajo y solo desvía el movimiento. La parte de v a lo largo de B (aquí vz) no siente nada, por eso la trayectoria es una hélice. Iniciar gira v alrededor de z: la fuerza gira con ella, siempre de lado.",
 "v: {#} grid unit = {#} {#}⁵ m/s":
   "v: {#} unidad de la cuadrícula = {#} {#}⁵ m/s",
 "B: {#} grid unit = {#} T":
@@ -239,7 +239,7 @@ VDI18N.add('es', 'demo/space-3d', {
 "v × B is at right angles to both: (v × B) · v = (v × B) · B = {#}.":
   "v × B es perpendicular a ambos: (v × B) · v = (v × B) · B = {#}.",
 "A constant force F = ({#}, {#}, {#}) N pulls a crate through the displacement d = ({#}, {#}, {#}) m across the floor. The work is the dot product W = F · d = {#} × {#} + {#} × {#} + {#} × {#} = {#} J: only the part of F along d counts. The upward {#} N does no work on a horizontal displacement. Play turns d about z: the work changes sign when d turns more than {#}° from F.":
-  "Una fuerza constante F = ({#}, {#}, {#}) N jala una caja a lo largo del desplazamiento d = ({#}, {#}, {#}) m sobre el piso. El trabajo es el producto punto W = F · d = {#} × {#} + {#} × {#} + {#} × {#} = {#} J: solo cuenta la parte de F a lo largo de d. Los {#} N hacia arriba no hacen trabajo en un desplazamiento horizontal. Play gira d alrededor de z: el trabajo cambia de signo cuando d gira más de {#}° respecto a F.",
+  "Una fuerza constante F = ({#}, {#}, {#}) N jala una caja a lo largo del desplazamiento d = ({#}, {#}, {#}) m sobre el piso. El trabajo es el producto punto W = F · d = {#} × {#} + {#} × {#} + {#} × {#} = {#} J: solo cuenta la parte de F a lo largo de d. Los {#} N hacia arriba no hacen trabajo en un desplazamiento horizontal. Iniciar gira d alrededor de z: el trabajo cambia de signo cuando d gira más de {#}° respecto a F.",
 "d: {#} grid unit = {#} m":
   "d: {#} unidad de la cuadrícula = {#} m",
 "F × d: {#} grid unit = {#} N·m":
@@ -297,9 +297,9 @@ VDI18N.add('es', 'demo/space-3d', {
 "The surface z/{#} = x²/{#} − y²/{#}, cut by the plane z = {#}.":
   "La superficie z/{#} = x²/{#} − y²/{#}, cortada por el plano z = {#}.",
 "A point by its cylindrical coordinates: the distance ρ from the z axis, the azimuth φ from +x and the height z. Its coordinate surfaces are a cylinder (ρ fixed), a half plane (φ fixed) and a horizontal plane (z fixed). Polar coordinates in the xy plane, with z added. Play turns φ.":
-  "Un punto por sus coordenadas cilíndricas: la distancia ρ al eje z, el azimut φ desde +x y la altura z. Sus superficies coordenadas son un cilindro (ρ fija), un semiplano (φ fija) y un plano horizontal (z fija). Coordenadas polares en el plano xy, con z agregada. Play gira φ.",
+  "Un punto por sus coordenadas cilíndricas: la distancia ρ al eje z, el azimut φ desde +x y la altura z. Sus superficies coordenadas son un cilindro (ρ fija), un semiplano (φ fija) y un plano horizontal (z fija). Coordenadas polares en el plano xy, con z agregada. Iniciar gira φ.",
 "A point charge q = {#} nC at the origin. Its potential V = kq/r and its field E = kq/r² r̂ depend only on r, so in spherical coordinates the equipotentials are the spheres r = constant and E points straight out along r̂. Change θ or φ (or press Play) and V and |E| stay the same; change r and they fall as {#}/r and {#}/r². Lengths in meters.":
-  "Una carga puntual q = {#} nC en el origen. Su potencial V = kq/r y su campo E = kq/r² r̂ dependen solo de r, así que en coordenadas esféricas las equipotenciales son las esferas r = constante y E apunta directo hacia afuera a lo largo de r̂. Cambia θ o φ (o presiona Play) y V y |E| no cambian; cambia r y disminuyen como {#}/r y {#}/r². Longitudes en metros.",
+  "Una carga puntual q = {#} nC en el origen. Su potencial V = kq/r y su campo E = kq/r² r̂ dependen solo de r, así que en coordenadas esféricas las equipotenciales son las esferas r = constante y E apunta directo hacia afuera a lo largo de r̂. Cambia θ o φ (o presiona Iniciar) y V y |E| no cambian; cambia r y disminuyen como {#}/r y {#}/r². Longitudes en metros.",
 "V = kq/r":
   "V = kq/r",
 "|E| = kq/r²":

@@ -184,6 +184,7 @@ VDI18N.add('en', 'demo/derivatives', [
 "{c} drawn × {k}",
 "flat tangent: it never meets the axis",
 "none: f′ is not defined everywhere between",
+"every c between: f′ equals the secant slope throughout",
 "Stopped: the tangent here is flat (f′ = 0), so it never meets the axis.",
 "too long to show",
 "f is level here: f′ = 0",

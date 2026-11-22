@@ -48,7 +48,7 @@ with variance equal to its mean. The demo estimates μ from the data as the aver
 
 ## Before the lab
 
-1. A die is rolled 60 times to test H₀: the die is fair. Give the expected count of each face, the number of categories and df. Use the table in §11.2 or the demo's Critical value to state the critical value of χ² at α = 0.05 for this df.
+1. A die is rolled 60 times to test H₀: the die is fair. Give the expected count of each face, the number of categories and df. Use the chi square table in the book's Appendix H (Tables) or the demo's Critical value to state the critical value of χ² at α = 0.05 for this df.
 2. A table of 3 rows by 3 columns has a row total of 255, a column total of 298 and a grand total of 839 (the book's Example 11.6). Compute the expected count of the cell in that row and column under independence, and the df of the table.
 3. Predict before you look: the demo's loaded die comes up six a quarter of the time instead of a sixth. With 60 rolls, will the test reject H₀ (p ≤ 0.05)? With 300 rolls? And will Poisson counts from a radioactive source pass the test? Write one sentence of reasoning for each.
 

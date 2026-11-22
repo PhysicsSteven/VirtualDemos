@@ -60,8 +60,14 @@ group('proportions: the normal approximation at n = 50, p = 0.25 is near 95 %; a
   assert(b.s.every((x) => Number.isInteger(x.x) && x.x >= 0 && x.x <= 15), 'counts are whole');
 });
 
-group('streams repeat: the same draw set, population, angle and n give the same samples', () => {
+group('streams repeat: the same draw set, population, angle and n give the same samples; the angle counts only for photons', () => {
   const a = many('pendulum', 60, 10, 50, 1).s, b = many('pendulum', 60, 10, 50, 1).s;
   assert.deepStrictEqual(a.map((x) => x.mean), b.map((x) => x.mean)); assert.notDeepStrictEqual(a.map((x) => x.mean), many('pendulum', 60, 10, 50, 2).s.map((x) => x.mean));
+  /* at 90° no photon passes: p is exactly 0, and the zero width interval at p′ = 0 catches it every time */
+  const z = many('polar', 90, 15, 200, 1); assert.strictEqual(z.P.truth, 0, 'cos² 90° = 0 exactly');
+  assert.strictEqual(c.coverage(z.P, z.s, 'prop', 0.95).rate, 1, 'p = 0 is caught by p′ = 0');
+  /* the polarizer angle left from a photon setup must not change the pendulum's samples; for photons it starts new ones */
+  assert.deepStrictEqual(a.map((x) => x.mean), many('pendulum', 72, 10, 50, 1).s.map((x) => x.mean), 'pendulum samples independent of the angle');
+  assert.notDeepStrictEqual(many('polar', 60, 15, 50, 1).s.map((x) => x.x), many('polar', 72, 15, 50, 1).s.map((x) => x.x));
 });
 console.log(`${n} groups passed`);

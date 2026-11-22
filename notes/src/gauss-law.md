@@ -20,6 +20,7 @@ Students need the point charge field, flux as E·A, and line and surface charge 
 3. **Dipole inside.** Q_enc = 0, Φ = 0, yet E is strong on parts of the box. Add a charge with **+1 nC** and predict the new flux.
 4. **Uniform sphere.** Follow **Gauss's law, step by step**; pause and drag r inside and outside the ball. Then try **Conductor**.
 5. **Line of charge** and **Plane of charge.** Change the cylinder length L or the cap distance h: E does not change.
+6. **Typed field** (Calculus III, the divergence theorem, OpenStax Calculus Vol 3 6.8). Type F(x, y, z) in place of the charges: the flux ∮F·dA is summed piece by piece over the surface and ∫∫∫ div F dV is a separate volume integral, so students see them agree. **Uniform divergence** (F = (x, y, z), 3 times the volume), **Zero divergence**, **Varying divergence**, **Open hemisphere** (the closed sphere less its lower half) and **Inverse square field** (flux 4π with the origin inside, while ∫∫∫ div F dV = 0: the source sits at one point, which is why Gauss's law counts the charge enclosed).
 
 ## Questions
 

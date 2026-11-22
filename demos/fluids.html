@@ -515,11 +515,13 @@ table.rows button:hover { color: var(--pos); }
     if (tk.shape === 'cone') { const V = Math.PI * tk.R * tk.R / (tk.H * tk.H) * a * a * a / 3; return { V, ycm: 3 * a / 4 }; }
     const V = tk.Lt * tk.R / tk.H * a * a; return { V, ycm: 2 * a / 3 };
   }
+  /* each slice taken a fraction s of the way down it, as for the plate's strips (0 its top, 0.5 its middle, 1 its bottom): y is
+     measured up from the bottom, so the sample height is (i + 1 − s)Δy */
   function pumpSlices(tk, rho, n, s) {
     const dy = tk.yw / n, slices = [];
     let W = 0;
     for (let i = 0; i < n; i++) {
-      const y = (i + s) * dy, A = tankArea(tk, y), dW = rho * G * A * (tk.yo - y) * dy;
+      const y = (i + 1 - s) * dy, A = tankArea(tk, y), dW = rho * G * A * (tk.yo - y) * dy;
       W += dW; slices.push({ y0: i * dy, y1: (i + 1) * dy, y, A, lift: tk.yo - y, dW });
     }
     return { W, slices, dy };

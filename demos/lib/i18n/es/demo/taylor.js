@@ -42,10 +42,12 @@ VDI18N.add('es', 'demo/taylor', {
   "orden {n}",
 "Taylor Polynomials and Series":
   "Polinomios y series de Taylor",
-"<a>Math for physics</a>":
-  "<a>Matemáticas para física</a>",
-"<span><a><span>←</span> <span>Numerical Methods for Motion</span></a></span>":
-  "<span><a><span>←</span> <span>Métodos numéricos para el movimiento</span></a></span>",
+"<a>Integrals, series and change</a>":
+  "<a>Integrales, series y cambio</a>",
+"<span>Feedback</span>":
+  "<span>Comentarios</span>",
+"<a><span>←</span> <span>Sequences and Series</span></a><a><span>Slope Fields and Euler's Method</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Sucesiones y series</span></a><a><span>Campos de pendientes y el método de Euler</span> <span>→</span></a>",
 "Type any function and add the terms of its Taylor polynomial one at a time: watch the polynomial hug the curve near the center a, see how far it stays within {#}%, and find the error bound. The radius of convergence comes from the complex plane. Then build new series from known ones by substitution, differentiation and integration.":
   "Escribe cualquier función y agrega los términos de su polinomio de Taylor uno a uno: mira cómo el polinomio se ciñe a la curva cerca del centro a, qué tan lejos se mantiene dentro del {#}% y encuentra la cota del error. El radio de convergencia viene del plano complejo. Luego construye series nuevas a partir de otras conocidas por sustitución, derivación e integración.",
 "Add the next nonzero term":
@@ -134,6 +136,8 @@ VDI18N.add('es', 'demo/taylor', {
   "Ajustar y a f",
 "Reset view":
   "Restablecer vista",
+"<span>Show fewer</span>":
+  "<span>Ver menos</span>",
 "Pendulum: sin θ ≈ θ":
   "Péndulo: sen θ ≈ θ",
 "Binomial: √({#} + x) ≈ {#} + x/{#}":
@@ -234,12 +238,14 @@ VDI18N.add('es', 'demo/taylor', {
   "<span>Los colores muestran f(z) para z compleja: el tono es su fase, y el sombreado se repite cada vez que |f| se duplica. El eje real es la gráfica de arriba.</span> <span>El círculo punteado es el disco de convergencia, de radio R = {#}: llega hasta el punto singular más cercano.</span>",
 "The binomial approximation ({#} + x)ⁿ ≈ {#} + nx, here with n = {#}/{#}. It turns the length √(L² + y²) = L√({#} + y²/L²) of a slanted path into L + y²/2L, the step behind the path differences in interference and the sag of a stretched string. Type another power in the box, like ({#} + x)^(-{#}) or ({#} + x)^{#}: a whole number power gives a polynomial that ends, every other power gives a series that converges only for |x| < {#}, because ({#} + x)ⁿ is not analytic at x = −{#}.":
   "La aproximación binomial ({#} + x)ⁿ ≈ {#} + nx, aquí con n = {#}/{#}. Convierte la longitud √(L² + y²) = L√({#} + y²/L²) de un camino inclinado en L + y²/2L, el paso detrás de las diferencias de camino en la interferencia y de la flecha de una cuerda tensa. Escribe otra potencia en el cuadro, como ({#} + x)^(-{#}) o ({#} + x)^{#}: una potencia entera da un polinomio que termina; cualquier otra potencia da una serie que converge solo para |x| < {#}, porque ({#} + x)ⁿ no es analítica en x = −{#}.",
-"Kinetic energy is K = (γ − {#})mc², with γ = {#}/√({#} − v²/c²) and v measured in units of c here. The series is γ − {#} = v²/2c² + 3v⁴/8c⁴ + …: the first term is Newton’s ½mv². It is within {#}% of the exact K up to v = {#}c, faster than anything but particles and the fastest spacecraft move. The radius of convergence is c itself: the branch points at v = ±c, where K grows without limit.":
-  "La energía cinética es K = (γ − {#})mc², con γ = {#}/√({#} − v²/c²) y v medida aquí en unidades de c. La serie es γ − {#} = v²/2c² + 3v⁴/8c⁴ + …: el primer término es el ½mv² de Newton. Está dentro del {#}% de la K exacta hasta v = {#}c, más rápido de lo que se mueve cualquier cosa salvo las partículas y las naves espaciales más rápidas. El radio de convergencia es c misma: los puntos de ramificación en v = ±c, donde K crece sin límite.",
+"Kinetic energy is K = (γ − {#})mc², with γ = {#}/√({#} − v²/c²) and v measured in units of c here. The series is γ − {#} = v²/2c² + 3v⁴/8c⁴ + …: the first term is Newton’s ½mv². It is within {#}% of the exact K up to v = {#}c, faster than anything but particles moves: the fastest spacecraft have reached less than {#}c. The radius of convergence is c itself: the branch points at v = ±c, where K grows without limit.":
+  "La energía cinética es K = (γ − {#})mc², con γ = {#}/√({#} − v²/c²) y v medida aquí en unidades de c. La serie es γ − {#} = v²/2c² + 3v⁴/8c⁴ + …: el primer término es el ½mv² de Newton. Está dentro del {#}% de la K exacta hasta v = {#}c, más rápido de lo que se mueve cualquier cosa salvo las partículas: las naves espaciales más rápidas no han llegado ni a {#}c. El radio de convergencia es c misma: los puntos de ramificación en v = ±c, donde K crece sin límite.",
 "Probe v":
   "Sonda v",
 "M = largest |f⁽ⁿ⁺¹⁾| from a to v":
   "M = mayor |f⁽ⁿ⁺¹⁾| de a a v",
+"The radius of convergence is {#}.":
+  "El radio de convergencia es {#}.",
 "At a height h above Earth’s surface, g = g₀R²/(R + h)² = g₀/({#} + h/R)², with h in Earth radii here (R = {#} km). The first two terms give g ≈ g₀({#} − 2h/R). The probe is at {#} km, about where the International Space Station orbits: the exact g is {#}% of g₀ and the straight line gives {#}%. The series converges only for h < R, because of the pole at h = −R, the center of the Earth.":
   "A una altura h sobre la superficie de la Tierra, g = g₀R²/(R + h)² = g₀/({#} + h/R)², con h en radios terrestres aquí (R = {#} km). Los dos primeros términos dan g ≈ g₀({#} − 2h/R). La sonda está a {#} km, más o menos donde orbita la Estación Espacial Internacional: la g exacta es {#}% de g₀ y la recta da {#}%. La serie converge solo para h < R, por el polo en h = −R, el centro de la Tierra.",
 "Probe h":
@@ -250,8 +256,6 @@ VDI18N.add('es', 'demo/taylor', {
   "M = mayor |f⁽ⁿ⁺¹⁾| de a a h",
 "Charges +q and −q a distance 2d apart, and a point on their axis a distance r from the middle. The exact field is E = kq/(r − d)² − kq/(r + d)², so Er²/kq = {#}/({#} − x)² − {#}/({#} + x)² with x = d/r. The first term, 4x, is the dipole field E = 2kp/r³ with p = 2qd; the next, 8x³, is the first correction. Far away (small x) the dipole term is all you need. The series converges only for r > d: inside that, you have passed a charge.":
   "Cargas +q y −q separadas una distancia 2d, y un punto sobre su eje a una distancia r del centro. El campo exacto es E = kq/(r − d)² − kq/(r + d)², así que Er²/kq = {#}/({#} − x)² − {#}/({#} + x)² con x = d/r. El primer término, 4x, es el campo del dipolo E = 2kp/r³ con p = 2qd; el siguiente, 8x³, es la primera corrección. Lejos (x pequeña) basta con el término del dipolo. La serie converge solo para r > d: más adentro, ya pasaste una carga.",
-"The radius of convergence is {#}.":
-  "El radio de convergencia es {#}.",
 "eˣ = {#} + x + x²/{#} + x³/{#} + … Every term is positive for x > {#}, and the polynomials hug the curve further out as terms are added, at any x: the radius of convergence is infinite, because eˣ has no singular point anywhere in the complex plane. For a decay, e^(−t/τ) ≈ {#} − t/τ while t is much less than τ.":
   "eˣ = {#} + x + x²/{#} + x³/{#} + … Cada término es positivo para x > {#}, y los polinomios se ciñen a la curva cada vez más lejos al agregar términos, en cualquier x: el radio de convergencia es infinito, porque eˣ no tiene ningún punto singular en el plano complejo. Para un decaimiento, e^(−t/τ) ≈ {#} − t/τ mientras t sea mucho menor que τ.",
 "ln({#} + x) = x − x²/{#} + x³/{#} − … The log is defined for every x > −{#}, but the series converges only for −{#} < x ≤ {#}: the singular point at x = −{#} caps the radius at {#} on both sides. Past x = {#} the terms grow and the polynomials swing wider with each one, though ln({#} + x) itself is perfectly smooth there. A small fractional change has ln({#} + x) ≈ x, the rule behind percentages and decibels for small changes.":
@@ -353,5 +357,9 @@ VDI18N.add('es', 'demo/taylor', {
 "Pick a known series, then apply steps. The center stays at 0. Play adds one term each second.":
   "Elige una serie conocida y luego aplica pasos. El centro se queda en 0. Iniciar agrega un término cada segundo.",
 "Type a function first.":
-  "Primero escribe una función."
+  "Primero escribe una función.",
+"<a>Math for physics</a>":
+  "<a>Matemáticas para física</a>",
+"<span><a><span>←</span> <span>Numerical Methods for Motion</span></a></span>":
+  "<span><a><span>←</span> <span>Métodos numéricos para el movimiento</span></a></span>"
 });

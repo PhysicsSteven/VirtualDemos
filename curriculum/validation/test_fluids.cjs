@@ -289,9 +289,12 @@ test('pumping a tank empty: W = ∫ρg A(y)(lift) dy = ρgV × (lift of the cent
     // the work to lower the level from yw to y1 is the difference of the closed forms
     close(F.pumpWorkTo(t, rho, yw) - F.pumpWorkTo(t, rho, yw / 2), (() => { let s = 0; const N = 20000, a = yw / 2; for (let i = 0; i < N; i++) { const y = a + (i + 0.5) * a / N; s += rho * g * F.tankArea(t, y) * (yo - y) * a / N; } return s; })(), 1e-8);
   }
-  // the top of each slice is lifted least: sampling there undercounts, the bottom overcounts
-  tk = { shape: 'cone', R: 2, H: 4, Lt: 0, yw: 4, yo: 5 };
-  const W = F.pumpWorkTo(tk, rho, 4); assert(F.pumpSlices(tk, rho, 10, 0).W < W && F.pumpSlices(tk, rho, 10, 1).W > W);
+  // the sample point follows the Top, Middle, Bottom buttons (s = 0, 0.5, 1 of the way down each slice, as for the plate):
+  // in a cylinder every slice has one area, and the top of each slice is lifted least, so Top undercounts and Bottom overcounts
+  tk = { shape: 'cyl', R: 1.5, H: 4, Lt: 0, yw: 4, yo: 5 };
+  const W = F.pumpWorkTo(tk, rho, 4), dW = rho * g * Math.PI * 2.25 * 4 * 4 / (2 * 10);
+  close(F.pumpSlices(tk, rho, 10, 0).W, W - dW, 1e-12); close(F.pumpSlices(tk, rho, 10, 1).W, W + dW, 1e-12);
+  const top = F.pumpSlices(tk, rho, 10, 0).slices[0]; close(top.y, 0.4, 1e-12); close(top.lift, 4.6, 1e-12);
 });
 
 const H = core('fluids', 'G,hydraulic,MMHG,RHO_BLOOD,RHO_IV,bodyP,ivP,ivHeight,cuffBeats');

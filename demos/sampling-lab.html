@@ -467,7 +467,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         c.fillStyle = T.treat; c.fillRect(lx, ly + 2, 10 * f, 10 * f); c.fillStyle = T.ink; c.fillText(VDI18N.t('watched the videos ({n})', { n: L.nt }), lx + 14 * f, ly);
         c.fillStyle = T.ctrl; c.fillRect(lx, ly + 18 * f, 10 * f, 10 * f); c.fillStyle = T.ink; c.fillText(VDI18N.t('did not ({n})', { n: L.nc }), lx + 14 * f, ly + 16 * f);
       } else if (!S.lurk) { c.fillStyle = T.muted; c.fillText(VDI18N.t('Press Play or Run the study to form the two groups.'), lx, ly); }
-      if (S.lurk) { c.fillStyle = T.muted; c.textAlign = 'right'; c.fillText(VDI18N.t(L ? 'inner dot: study hours, light few, dark many' : 'study hours: light few, dark many'), G.x0 + G.s * NC, ly + (L ? 32 * f : 0)); }
+      if (S.lurk) {   /* Day shades few hours light and many dark; Night (dark canvas) the other way round, so the words follow the colors */
+        const lum = (q) => 0.299 * q[0] + 0.587 * q[1] + 0.114 * q[2], darkLow = lum(T.rgb[0]) < lum(T.rgb[2]);
+        const say = L ? (darkLow ? VDI18N.t('inner dot: study hours, dark few, light many') : VDI18N.t('inner dot: study hours, light few, dark many'))
+          : (darkLow ? VDI18N.t('study hours: dark few, light many') : VDI18N.t('study hours: light few, dark many'));
+        c.fillStyle = T.muted; c.textAlign = 'right'; c.fillText(say, G.x0 + G.s * NC, ly + (L ? 32 * f : 0));
+      }
     } else {
       const wide = W > 640, fr = SPL.f(), hw = wide ? W * fr : W, hh = wide ? H : H * fr;
       const G = hallGeom(0, 0, hw, hh - 16 * f);
@@ -485,7 +490,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const X = (v) => x + (v - lo) / (nb * step) * w;
     c.fillStyle = T.ink; c.font = `700 ${Math.round(12 * f)}px ${T.mono}`; c.textAlign = 'left'; c.textBaseline = 'bottom';
     c.fillText(VDI18N.t('The population: all 400'), x, y - 4);
-    hs.counts.forEach((k, j) => { const bh = k / top * (h - 4); c.fillStyle = shade((j + 0.5) / nb); c.fillRect(X(lo + j * step) + 0.5, y + h - bh, w / nb - 1, bh); });
+    /* each bar takes the shade its students have in the hall, which goes by rank: the middle rank of the students in the bar */
+    let below = 0;
+    hs.counts.forEach((k, j) => { const bh = k / top * (h - 4); c.fillStyle = shade(Math.min(1, (below + k / 2) / N)); below += k; c.fillRect(X(lo + j * step) + 0.5, y + h - bh, w / nb - 1, bh); });
     c.strokeStyle = T.line; c.beginPath(); c.moveTo(x, y + h + 0.5); c.lineTo(x + w, y + h + 0.5); c.stroke();
     c.fillStyle = T.muted; c.font = `${Math.round(11 * f)}px ${T.mono}`; c.textBaseline = 'top';
     c.textAlign = 'left'; c.fillText(val(lo, -1), x, y + h + 3); c.textAlign = 'right'; c.fillText(val(lo + nb * step, -1) + unit(), x + w, y + h + 3);

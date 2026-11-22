@@ -131,4 +131,21 @@ group('factorial (2026-11-19, for Sequences and Series): n! and fact(n), exact w
   assert.throws(() => c.parse('!n', N));
 });
 
+group('deep check 2026-11-22: edge values, real odd roots, 0/0, and antiderivatives that differentiate back to f', () => {
+  const V = (s, x) => { const r = c.parse(s); return c.compile(r.node, [r.v])(x); }, D = (s, x) => { const r = c.parse(s); return c.compile(c.derivative(r.node, r.v), [r.v])(x); };
+  const eq = (a, b, w) => assert(Math.abs(a - b) <= 1e-12 * (1 + Math.abs(b)), `${w}: expected ${b}, got ${a}`);
+  eq(V('-2^2', 0), -4, '-2^2'); eq(V('-x^2', 3), -9, '-x^2'); eq(V('e^-x^2', 1), Math.exp(-1), 'e^-x^2'); eq(V('x^2^0.5', 3), Math.pow(3, Math.SQRT2), 'x^2^0.5 is x^(√2)');
+  eq(V('x^(1/3)', -8), -2, 'cube root of −8'); eq(V('x^(2/3)', -8), 4, '(−8)^(2/3)'); eq(D('x^(2/3)', -8), -1 / 3, 'slope of x^(2/3) at −8'); eq(D('x^(1/3)', -8), 1 / 12, 'slope of ∛x at −8');
+  assert(Number.isNaN(V('sqrt(x)', -1)), 'an even root of a negative number has no real value');
+  eq(V('log(x)', 100), 2, 'log is base 10'); eq(V('ln(x)', Math.E), 1, 'ln is base e'); eq(D('log(x)', 100), 1 / (100 * Math.LN10), 'd log x');
+  eq(D('x^x', 2), 4 * (Math.log(2) + 1), 'd x^x'); eq(D('sin x cos x', 1), Math.cos(2), 'd sin x cos x'); eq(V('sin 2x', 1), Math.sin(2), 'sin 2x');
+  assert(Number.isNaN(V('0/0', 0)), '0/0 has no value'); assert.strictEqual(V('1/0', 0), Infinity); assert.strictEqual(V('0x', 5), 0);
+  eq(c.integral(Math.sin, 0, Math.PI), 2, '∫ sin from 0 to π'); assert(Number.isNaN(c.integral((x) => 1 / x, -1, 1)), '∫ 1/x across 0 does not converge');
+  for (const s of ['(3x+2)^-1', '2^(3x)', 'sec(2x)^2', 'csc(x)^2', 'x^-0.5', 'e^(-x/2)', 'cosh(2x)', 'ln(3x)', 'tan(2x+1)', '(1-x)^(1/3)', '3/(2x)', '1/x^2', 'sec(x)^2 - 1']) {
+    const n = c.parse(s).node, A = c.antiderivative(n); assert(A, s + ' has an antiderivative by the basic rules');
+    const F = c.compile(A), f = c.compile(n);
+    for (const x of [0.3, 0.7, 1.1, 1.9]) { const h = 1e-5, num = (F(x + h) - F(x - h)) / (2 * h); assert(Math.abs(num - f(x)) <= 1e-6 * (1 + Math.abs(f(x))), `${s}: F′ = f at ${x}`); }
+  }
+});
+
 console.log(`vdmath: ${n} groups passed`);

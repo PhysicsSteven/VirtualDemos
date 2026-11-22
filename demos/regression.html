@@ -401,6 +401,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const cnt = (n) => String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   const dec = (v, d) => (isFinite(v) ? (v < 0 ? '−' : '') + Math.abs(v).toFixed(d) : '—');
   const pTxt = (p) => (!isFinite(p) ? '—' : p < 0.0001 ? '< 0.0001' : p.toFixed(4));
+  /* a shuffle p of 0 means none of the N shuffles reached |r|: all it says is p < 1/N (0 of 1,000 is not p < 0.0001) */
+  const shTxt = (p, N) => (p === 0 && N > 0 ? '< ' + String(Number((1 / N).toPrecision(2))) : pTxt(p));
   const minus = (s) => String(s).replace(/^-/, '−');
   const esc = (s) => String(s == null ? '' : s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
@@ -494,7 +496,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const d = SETS[S.p];
     if (isFinite(S.px)) { x0 = Math.min(x0, S.px); x1 = Math.max(x1, S.px); }
     if (d && d.origin) { x0 = Math.min(x0, 0); y0 = Math.min(y0, 0); }
-    if (S.F && isFinite(S.px)) { const yp = S.F.intercept + S.F.slope * S.px; if (isFinite(yp)) { y0 = Math.min(y0, yp); y1 = Math.max(y1, yp); } }
+    /* the prediction at px from the fit of these points (S.F can still be the last setup's: a setup change fits the view first) */
+    const I = included(), Fv = fitOf(I.x, I.y);
+    if (Fv && isFinite(S.px)) { const yp = Fv.intercept + Fv.slope * S.px; if (isFinite(yp)) { y0 = Math.min(y0, yp); y1 = Math.max(y1, yp); } }
     if (x1 - x0 < 1e-9) { x0 -= 1; x1 += 1; } if (y1 - y0 < 1e-9) { y0 -= 1; y1 += 1; }
     const mx = 0.08 * (x1 - x0), my = 0.12 * (y1 - y0);
     S.view = { x0: x0 - mx, x1: x1 + mx, y0: y0 - my, y1: y1 + my };
@@ -707,7 +711,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       c.fillText('r = ' + dec(rObs, 4), xi(rObs) + (rObs > 0.4 ? -5 : 5), HM.t + 14);
     }
     c.font = `11px ${C.mono}`; c.fillStyle = C.ink; c.textAlign = 'right'; c.textBaseline = 'top';
-    if (rs.length) c.fillText(VDI18N.t('{n} shuffles · shuffle p = {p}', { n: cnt(rs.length), p: pTxt(shuffleP(rs, rObs)) }), HW - HM.r - 4, HM.t + 28);
+    if (rs.length) c.fillText(VDI18N.t('{n} shuffles · shuffle p = {p}', { n: cnt(rs.length), p: shTxt(shuffleP(rs, rObs), rs.length) }), HW - HM.r - 4, HM.t + 28);
     else { c.fillStyle = C.muted; c.textAlign = 'center'; c.fillText(VDI18N.t('Press Play to shuffle'), (HW + HM.l) / 2, HM.t + 40); }
   }
 
@@ -746,8 +750,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   function note() {
     const sh = S.sh, el = $('note');
-    if (S.run && sh) el.textContent = sh.rs.length < sh.slow ? VDI18N.t('Shuffle {k} of {n}: the y values trade places among the x values, slowly for the first {m}.', { k: sh.rs.length, n: num(sh.N, 6), m: sh.slow })
-      : VDI18N.t('Shuffle {k} of {n}, about three seconds for the rest.', { k: cnt(sh.rs.length), n: num(sh.N, 6) });
+    if (S.run && sh) el.textContent = sh.rs.length < sh.slow ? VDI18N.t('Shuffle {k} of {n}: the y values trade places among the x values, slowly for the first {m}.', { k: sh.rs.length, n: cnt(sh.N), m: sh.slow })
+      : VDI18N.t('Shuffle {k} of {n}, about three seconds for the rest.', { k: cnt(sh.rs.length), n: cnt(sh.N) });
     else if (sh && sh.rs.length >= sh.N) el.textContent = VDI18N.t('Shuffle test done: {n} shuffles. Reset clears it; a change to the points clears it too.', { n: cnt(sh.N) });
     else if (sh && sh.rs.length) el.textContent = VDI18N.t('Paused after {k} shuffles. Play goes on.', { k: cnt(sh.rs.length) });
     else el.textContent = VDI18N.t('Play runs the shuffle test. Drag points to move them; Add and Remove change what a click does.');
@@ -792,7 +796,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     h += dd(esc(VDI18N.t('p value, t test (two sided)')), q(pTxt(F.p)));
     h += dd(esc(VDI18N.t('Critical value r* (95 %, df = {df})', { df: F.df })), q(dec(F.rcrit, 3)));
     const shP = S.sh && S.sh.rs.length ? shuffleP(S.sh.rs, F.r) : NaN;
-    h += dd(esc(VDI18N.t('Shuffle p value')), hide ? '?' : S.sh && S.sh.rs.length ? pTxt(shP) + ' ' + esc(VDI18N.t('({n} shuffles)', { n: cnt(S.sh.rs.length) })) : esc(VDI18N.t('press Play')));
+    h += dd(esc(VDI18N.t('Shuffle p value')), hide ? '?' : S.sh && S.sh.rs.length ? shTxt(shP, S.sh.rs.length) + ' ' + esc(VDI18N.t('({n} shuffles)', { n: cnt(S.sh.rs.length) })) : esc(VDI18N.t('press Play')));
     if (!hide) h += wide(esc(VDI18N.t('Is r significant?')), F.flat ? esc(VDI18N.t('r is undefined: every y is the same.')) : esc(F.sig ? VDI18N.t('Yes: |r| = {r} is larger than r* = {c}, and p {p} is below 0.05. The data show a linear relationship.', { r: dec(Math.abs(F.r), 4), c: dec(F.rcrit, 3), p: F.p < 0.0001 ? '< 0.0001' : '= ' + pTxt(F.p) })
       : VDI18N.t('No: |r| = {r} is not larger than r* = {c}, and p {p} is not below 0.05. The data do not show a linear relationship.', { r: dec(Math.abs(F.r), 4), c: dec(F.rcrit, 3), p: F.p < 0.0001 ? '< 0.0001' : '= ' + pTxt(F.p) })));
     /* prediction */

@@ -79,4 +79,11 @@ group('the largest δ for an ε, and N at infinity (OpenStax 2.5)', () => {
   near(c.nFor(P(`50(1 - e^(-${g}t/50))`).f, 1, 50, 1).N, (50 / g) * Math.log(50), 1e-10, 'terminal: t = (v_T/g) ln(v_T/ε)');
 });
 
+group('no aliasing: sin(π/x) at 0 and sin(πx) at ∞ swing, although x = 2⁻ᵏ and 2ᵏ hit only their zeros (2026-11-22)', () => {
+  for (const [s, a] of [['sin(pi/x)', 0], ['cos(pi/x)', 0], ['sin(pi/(x - 1))', 1], ['sin(pi x)', Infinity], ['cos(2pi x)', -Infinity]]) {
+    const r = lim(s, a); assert(r.both.kind !== 'value', s + ' has no limit, got ' + r.both.L);
+  }
+  for (const [s, a, L] of [['x cos(pi/x)', 0, 0], ['sin(pi x)/x', Infinity, 0], ['(1 + x)^(1/x)', 0, Math.E]]) { const r = lim(s, a); assert(r.both.kind === 'value', s); near(r.both.L, L, 1e-8, s); }
+});
+
 console.log(`limits: ${n} groups passed`);

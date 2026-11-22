@@ -84,6 +84,12 @@ group('secant to tangent: the difference quotient tends to f′(x); the MVT poin
   assert.strictEqual(c.mvtPoints(da, -1, 2, (fa(2) - fa(-1)) / 3).length, 0, '|x| has no MVT point: the theorem needs f′ everywhere between');
   const [fb, db] = fd('20 - 4.905t^2'), avg = (fb(2) - fb(0)) / 2, cs = c.mvtPoints(db, 0, 2, avg);
   assert(cs.length === 1 && Math.abs(cs[0] - 1) < 1e-12, 'a falling ball has its average velocity at the midpoint time');
+  assert(!c.mvtPoints(da, -1, 2, (fa(2) - fa(-1)) / 3).all, '|x| is not marked every c');
+  for (const [s, x0, h] of [['3x + 1', 0.3, 0.7], ['2x', 1, 0.5], ['5 - x', -2, 3]]) {
+    const [fl, dl] = fd(s), r = c.mvtPoints(dl, x0, x0 + h, c.diffQuot(fl, x0, h));
+    assert(r.all === true && r.length === 0, s + ': on a straight line every c is a mean value point (2026-11-22)');
+  }
+  assert(c.mvtPoints(da, 0, 0.0005, c.diffQuot(fa, 0, 0.0005)).all === true, '|x| from its corner to the right: every c inside works');
 });
 
 group("Newton's method: digits double near a simple root, and the textbook failures", () => {

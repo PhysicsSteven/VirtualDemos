@@ -19,6 +19,10 @@ module.exports = {
       if (Math.abs(Gw.circ - 2 * Math.PI) > 1e-8) bad.push('wire ' + Gw.circ);
       if (Math.abs(D.boxFlux(D.makeField('x', 'y'), 0.3, -0.2, 0.4) - 2 * 0.16) > 1e-10) bad.push('box');
       if (Math.abs(D.potentialAt(g, [0, 0], 0, [1, 2]) + 19.62) > 1e-9) bad.push('potential');
+      /* a loop around the point mass: div F = 1/r³ does not integrate, so ∬ div dA ends as undefined within a second, not a stalled page */
+      const m = D.makeField('-x/(x^2+y^2)^(3/2)', '-y/(x^2+y^2)^(3/2)'), t0 = performance.now();
+      const Gm = D.greens(m, { pcs: [{ k: 'a', c: [0, 0], r: 1.5, t0: 0, t1: 2 * Math.PI }], closed: true, orient: 1, shape: 'circle', C: [0, 0], R: 1.5 });
+      if (performance.now() - t0 > 5000 || !Number.isNaN(Gm.divSum) || Math.abs(Gm.flux + 2 * Math.PI / 1.5) > 1e-8) bad.push('point mass loop ' + Gm.divSum + ' ' + Gm.flux);
       return bad.length ? bad.join('; ') : true;
     })()` },
     { name: 'readout matches the path total', fn: `(() => {

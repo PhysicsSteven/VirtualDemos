@@ -27,8 +27,14 @@ module.exports = {
         if (!(Math.abs(y - S.lim.L) < S.eps)) return 'f(' + x + ') = ' + y + ' outside L ± ε'; }
       return true;
     })()` },
+    { name: 'no limit where the values swing: sin(1/x), sin(π/x) at 0 (halving h hits only zeros of sin(π/x); 2026-11-22)', fn: `(() => {
+      const F = window.__lim; if (!F || !F.S.f) return true; const S = F.S; F.work();
+      const t = VDMATH.text(S.node); if (S.a !== 0 || (S.preset !== 'osc' && t !== 'sin(π/x)')) return true;
+      return S.lim.kind !== 'value' ? true : t + ': shows L = ' + S.lim.L;
+    })()` },
   ],
   steps: [
+    { name: 'sin(π/x) typed at a = 0', fn: `(() => { const F = window.__lim; F.applyPreset('osc'); const b = document.getElementById('fx'); b.value = 'sin(pi/x)'; b.dispatchEvent(new Event('input')); })()` },
     { name: 'sin x / x, Play zooms in', fn: `(() => { const F = window.__lim; F.applyPreset('sinc'); F.setRun(true); })()` },
     { name: 'the line, then a tiny ε', fn: `(() => { const F = window.__lim; F.setRun(false); F.applyPreset('line'); F.S.eps = 1e-4; F.S.del = null; F.refresh(); })()` },
     { name: 'the hole and the jump', fn: `(() => { const F = window.__lim; F.applyPreset('hole'); setTimeout(() => F.applyPreset('jump'), 300); })()` },

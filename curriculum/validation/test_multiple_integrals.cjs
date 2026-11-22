@@ -104,4 +104,15 @@ group('typing: names allowed per bound, ρ and θ, errors and the evaluation bud
   assert(Date.now() - t0 < 20000 && (w.ok || w.why === 'costly'), 'a wild input ends');
 });
 
+group('a divergent integral is flagged rough, the setups are not', () => {
+  const R = (names, b, f) => c.integrate(c.makeRegion(names, b), c.makeFn(f).f);
+  for (const [names, b, f] of [[['x', 'y'], [['0', '1'], ['0', '1']], '1/x'], [['theta', 'r'], [['0', '2pi'], ['0', '1']], '1/r^2'],
+    [['theta', 'phi', 'rho'], [['0', '2pi'], ['0', 'pi'], ['0', '1']], '1/rho^3'], [['x', 'y'], [['0', '1'], ['0', '1']], '1/(x^2 + y^2)']]) assert(R(names, b, f).rough, 'diverges: ' + f);
+  /* integrable singularities: 1/r in polar and 1/ρ² in spherical lose their pole to the Jacobian */
+  assert(!R(['theta', 'r'], [['0', '2pi'], ['0', '1']], '1/r').rough && !R(['theta', 'phi', 'rho'], [['0', '2pi'], ['0', 'pi'], ['0', '1']], '1/rho^2').rough, 'Jacobian cancels the pole');
+  for (const [names, b, f] of [[['x', 'y'], [['0', '2'], ['0', '1']], '1 + x y^2'], [['y', 'x'], [['0', '1'], ['-sqrt(1-y^2)', 'sqrt(1-y^2)']], 'y'],
+    [['x', 'y', 'z'], [['-1', '1'], ['-sqrt(1-x^2)', 'sqrt(1-x^2)'], ['-sqrt(1-x^2-y^2)', 'sqrt(1-x^2-y^2)']], '1'], [['theta', 'r', 'z'], [['0', '2pi'], ['0', '1'], ['-sqrt(1-r^2)', 'sqrt(1-r^2)']], '1'],
+    [['theta', 'r'], [['0', '2pi'], ['0', '1 + cos(θ)']], '1'], [['x', 'y'], [['0', '1'], ['x', '1']], 'e^(y^2)']]) assert(!R(names, b, f).rough, 'settles: ' + f + ' ' + b);
+});
+
 console.log(`multiple-integrals: ${n} groups passed`);

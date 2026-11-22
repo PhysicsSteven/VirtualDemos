@@ -324,5 +324,7 @@ VDI18N.add('en', 'demo/gauss-law', [
 "div F = −2x − {#}/x².",
 "The flux cannot be found: F blows up on or inside the surface.",
 "div F = −2x.",
-"The surface is open: the cap at z = +d/{#} is left out. The flux through the open surface is −{#} u·cm²."
+"The surface is open: the cap at z = +d/{#} is left out. The flux through the open surface is −{#} u·cm².",
+"Too costly to integrate.<span>The integrals did not meet their error target within the demo's budget of evaluations of F. F may blow up on or inside the surface, or change too fast; move the surface or change F.</span>",
+"Quadrature tolerance not met.<span>Some one dimensional integrals ran out of adaptive panels before reaching their error target, so the last digits may be wrong.</span>"
 ]);

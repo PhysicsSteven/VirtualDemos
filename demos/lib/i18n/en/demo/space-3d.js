@@ -45,7 +45,7 @@ VDI18N.add('en', 'demo/space-3d', [
 "Cylindrical",
 "Spherical",
 "<span>Coordinate surfaces through P</span>",
-"Physics convention (ISO {#}-{#}): θ is the polar angle down from +z and φ the azimuth from +x. OpenStax Calculus swaps the letters: it writes θ for the azimuth and φ for the angle from +z, and ρ for the distance r.",
+"Physics convention (ISO {#}-{#}): θ is the polar angle down from +z and φ the azimuth from +x. OpenStax Calculus swaps the letters: it writes θ for the azimuth and φ for the angle from +z, and ρ for the distance r. Its cylindrical coordinates are (r, θ, z) for this demo's (ρ, φ, z).",
 "The view",
 "<span>The view</span>",
 "Reset view",

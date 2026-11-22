@@ -106,10 +106,10 @@ VDI18N.add('es', 'demo/regression', {
   "Presiona Reproducir para barajar",
 "Linear Regression and Correlation":
   "Regresión lineal y correlación",
-"<a>Math for physics</a>":
-  "<a>Matemáticas para la física</a>",
-"<span><a><span>←</span> <span>Related Rates and Optimization</span></a></span>":
-  "<span><a><span>←</span> <span>Razones de cambio relacionadas y optimización</span></a></span>",
+"<a>Statistical inference</a>":
+  "<a>Inferencia estadística</a>",
+"<a><span>←</span> <span>Chi-Square Tests</span></a><a><span>One Way ANOVA</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Pruebas de ji cuadrada</span></a><a><span>ANOVA de un factor</span> <span>→</span></a>",
 "Drag the points of a scatter plot and watch the least squares line follow. Each residual is drawn as a square: the least squares line is the one line whose squares add up to the smallest total area, so drag your own line and try to beat it. Read r, r², s and the slope and intercept with their uncertainties, test r with the t test, the book's critical value and a shuffle test, predict inside and outside the data, and find the outliers that pull the line.":
   "Arrastra los puntos de un diagrama de dispersión y observa cómo los sigue la recta de mínimos cuadrados. Cada residuo se dibuja como un cuadrado: la recta de mínimos cuadrados es la única cuyos cuadrados suman el área total más pequeña, así que arrastra tu propia recta e intenta ganarle. Lee r, r², s y la pendiente y la ordenada al origen con sus incertidumbres, prueba r con la prueba t, el valor crítico del libro y una prueba de barajado, predice dentro y fuera de los datos, y encuentra los valores atípicos que jalan la recta.",
 "Shuffle the y values among the x values again and again and build up the histogram of r":
@@ -198,6 +198,8 @@ VDI18N.add('es', 'demo/regression', {
   "Valores atípicos, |y − ŷ| ≥ 2s = {#}",
 "({#}, {#}): residual {#}":
   "({#}, {#}): residuo {#}",
+"<span>Show fewer</span>":
+  "<span>Ver menos</span>",
 "<span>From the book</span>":
   "<span>Del libro</span>",
 "Third exam and final exam":
@@ -252,6 +254,8 @@ VDI18N.add('es', 'demo/regression', {
   "Los valores atípicos siguen la regla del libro (§{#}): un punto cuyo residuo mide al menos 2s. Las líneas punteadas junto a la recta de mínimos cuadrados son ŷ ± 2s. Un punto es influyente cuando quitarlo cambia mucho la recta; selecciona un punto para ver la recta sin él.",
 "Simulated physics data are made by adding random normal errors to the ideal law: spring k = {#} N/m, g = {#} m/s² (constants.js), R = {#} Ω, and pendulum periods with timing errors of {#} s. They are labeled simulated and are not measurements.":
   "Los datos de física simulados se hacen sumando errores normales aleatorios a la ley ideal: resorte k = {#} N/m, g = {#} m/s² (constants.js), R = {#} Ω, y periodos del péndulo con errores de cronometraje de {#} s. Están marcados como simulados y no son mediciones.",
+"<span>Feedback</span>":
+  "<span>Comentarios</span>",
 "The least squares line is y hat = {a} + {b} x, with r = {r} and s = {s}.":
   "La recta de mínimos cuadrados es y gorro = {a} + {b} x, con r = {r} y s = {s}.",
 "{k} outliers are at least 2s from the line.":
@@ -316,6 +320,8 @@ VDI18N.add('es', 'demo/regression', {
   "Conos de helado vendidos (conos)",
 "Residuals y − ŷ (cones)":
   "Residuos y − ŷ (conos)",
+"{#} points: ice cream cones sold against noon temperature.":
+  "{#} puntos: conos de helado vendidos contra temperatura al mediodía.",
 "The book's Consumer Price Index from {#} to {#}. r is large and significant and no point is 2s from the line, yet the residual plot is a U shape: the prices grow along a curve, not a line. Look at the residual plot before you trust a line.":
   "El índice de precios al consumidor del libro de {#} a {#}. r es grande y significativa y ningún punto está a 2s de la recta, pero la gráfica de residuos tiene forma de U: los precios crecen siguiendo una curva, no una recta. Mira la gráfica de residuos antes de confiar en una recta.",
 "§{#} Outliers (example: the Consumer Price Index, {#} to {#})":
@@ -330,8 +336,6 @@ VDI18N.add('es', 'demo/regression', {
   "Por cada aumento de {#} year en año, el valor predicho de índice de precios al consumidor sube {#}.",
 "At year = {#}, the predicted consumer price index is −{#}. x = {#} is outside the data ({#} to {#}), so the intercept is an extrapolation: it fixes the line's height and may mean nothing by itself.":
   "Con año = {#}, el valor predicho de índice de precios al consumidor es −{#}. x = {#} está fuera de los datos ({#} a {#}), así que la ordenada al origen es una extrapolación: fija la altura de la recta y puede no significar nada por sí sola.",
-"{#} points: consumer price index against year.":
-  "{#} puntos: índice de precios al consumidor contra año.",
 "Year":
   "Año",
 "Consumer price index":
@@ -496,8 +500,8 @@ VDI18N.add('es', 'demo/regression', {
   "{#} puntos: tiempo máximo de buceo contra profundidad.",
 "The least squares line is y hat = {#} + −{#} x, with r = −{#} and s = {#}.":
   "La recta de mínimos cuadrados es y gorro = {#} + −{#} x, con r = −{#} y s = {#}.",
-"{#} points: ice cream cones sold against noon temperature.":
-  "{#} puntos: conos de helado vendidos contra temperatura al mediodía.",
+"{#} points: consumer price index against year.":
+  "{#} puntos: índice de precios al consumidor contra año.",
 "{#} points: winning time against year.":
   "{#} puntos: tiempo ganador contra año.",
 "{#} points: period squared T² against length.":
@@ -619,5 +623,9 @@ VDI18N.add('es', 'demo/regression', {
 "Yes: |r| = {r} is larger than r* = {c}, and p {p} is below 0.05. The data show a linear relationship.":
   "Sí: |r| = {r} es mayor que r* = {c}, y p {p} es menor que 0.05. Los datos muestran una relación lineal.",
 "No: |r| = {r} is not larger than r* = {c}, and p {p} is not below 0.05. The data do not show a linear relationship.":
-  "No: |r| = {r} no es mayor que r* = {c}, y p {p} no es menor que 0.05. Los datos no muestran una relación lineal."
+  "No: |r| = {r} no es mayor que r* = {c}, y p {p} no es menor que 0.05. Los datos no muestran una relación lineal.",
+"<a>Math for physics</a>":
+  "<a>Matemáticas para la física</a>",
+"<span><a><span>←</span> <span>Related Rates and Optimization</span></a></span>":
+  "<span><a><span>←</span> <span>Razones de cambio relacionadas y optimización</span></a></span>"
 });

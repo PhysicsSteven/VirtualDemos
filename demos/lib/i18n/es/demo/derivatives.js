@@ -368,6 +368,8 @@ VDI18N.add('es', 'demo/derivatives', {
   "tangente horizontal: nunca toca el eje",
 "none: f′ is not defined everywhere between":
   "ninguno: f′ no está definida en todo el intervalo",
+"every c between: f′ equals the secant slope throughout":
+  "todo c en el intervalo: f′ es igual a la pendiente de la secante en todas partes",
 "Stopped: the tangent here is flat (f′ = 0), so it never meets the axis.":
   "Se detuvo: aquí la tangente es horizontal (f′ = 0), así que nunca toca el eje.",
 "too long to show":

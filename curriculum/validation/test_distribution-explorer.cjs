@@ -89,4 +89,10 @@ group('every setup gives a legal state, a view that holds the event, and finite 
     const pr = c.prob(Dd, c.FAM[p.fam].discrete, p.tail, p.a, p.b); assert(pr > 0 && pr < 1, k + ' prob ' + pr);
   }
 });
+group('calculator text for an event outside the support reads 0, never a negative length (S2 2026-11-22)', () => {
+  assert.strictEqual(c.tiText('uniform', { A: 0, B: 23 }, 'between', 30, 40), '(23 − 23)·1/(23 − 0)');
+  assert.strictEqual(c.tiText('uniform', { A: 0, B: 23 }, 'between', -10, -5), '(0 − 0)·1/(23 − 0)');
+  assert.strictEqual(c.tiText('uniform', { A: 0, B: 23 }, 'between', 2, 5), '(5 − 2)·1/(23 − 0)');
+  assert.strictEqual(c.tiText('exponential', { m: 0.25 }, 'right', -2, 0), 'e^(−0.25·0)');
+});
 console.log(`distribution-explorer: ${n} groups passed`);

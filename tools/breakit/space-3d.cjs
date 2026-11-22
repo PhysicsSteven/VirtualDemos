@@ -1,6 +1,6 @@
 /* Known values for the break-it test (tools/breakit.cjs). Whatever the view, zoom or theme, computed fresh from the page's own
    code: the torque (0.3, 0, 0) × (0, 20, 10) = (0, −3, 6) N·m; the line (1, −2, 1) + t(1, 2, 1) meets the plane x + y + z = 3 at
-   t = 0.75, (1.75, −0.5, 1.75); spherical (2, 50°, 35°) goes back to itself; the Mach 2 cone is 30°; and the readouts of the
+   t = 0.75, (1.75, −0.5, 1.75); the proton's force e|v × B| = 1.602 × 10⁻¹⁴ N; spherical (2, 50°, 35°) goes back to itself; the Mach 2 cone is 30°; and the readouts of the
    default setup match the boxes. */
 module.exports = {
   checks: [
@@ -17,7 +17,7 @@ module.exports = {
       return bad.length ? bad.join('; ') : true;
     })()` },
     { name: 'the dot product readout matches the boxes', fn: `(() => {
-      const D = window.__sp; if (!D || D.S.mode !== 'vec' || D.S.blind) return true;
+      const D = window.__sp; if (!D || D.S.mode !== 'vec' || D.S.blind || /10/.test(D.S.units[0])) return true;
       const a = D.S.a, b = D.S.b, want = D.spDot(a, b), dd = [...document.querySelectorAll('#out div')].find((d) => / · /.test(d.querySelector('dt') ? d.querySelector('dt').textContent : ''));
       if (!dd) return true;
       const tx = dd.querySelector('dd').textContent.replace(/−/g, '-').replace(/,/g, '').replace(/[⁻⁰¹²³⁴⁵⁶⁷⁸⁹]/g, (ch) => '-0123456789'['⁻⁰¹²³⁴⁵⁶⁷⁸⁹'.indexOf(ch)]);
@@ -25,6 +25,16 @@ module.exports = {
       const got = parseFloat(mm[1]) * (mm[2] ? Math.pow(10, +mm[2]) : 1);
       if (!isFinite(got)) return true;
       return Math.abs(got - want) <= 1e-3 * Math.max(1e-6, Math.abs(want)) + 1e-9 ? true : 'a . b ' + got + ' vs ' + want;
+    })()` },
+    { name: 'the proton force is e |v × B|, not rounded to zero', fn: `(() => {
+      const D = window.__sp; if (!D || D.S.preset !== 'lorentz' || D.S.blind) return true;
+      const c = D.spCross(D.S.a, D.S.b), want = 1.602176634e-19 * 1e5 * Math.hypot(c[0], c[1], c[2]);
+      const dd = [...document.querySelectorAll('#out div')].find((d) => d.querySelector('dt') && d.querySelector('dt').textContent === '|F|');
+      if (!dd) return 'no |F| readout';
+      const tx = dd.querySelector('dd').textContent.replace(/−/g, '-').replace(/,/g, '').replace(/[⁻⁰¹²³⁴⁵⁶⁷⁸⁹]/g, (ch) => '-0123456789'['⁻⁰¹²³⁴⁵⁶⁷⁸⁹'.indexOf(ch)]);
+      const mm = tx.match(/(-?[\\d.]+)(?: × 10(-?\\d+))?/); if (!mm) return 'F ' + tx;
+      const got = parseFloat(mm[1]) * (mm[2] ? Math.pow(10, +mm[2]) : 1);
+      return want === 0 ? (got === 0 || 'F ' + got) : Math.abs(got - want) <= 1e-3 * want ? true : '|F| ' + got + ' vs ' + want;
     })()` },
   ],
 };

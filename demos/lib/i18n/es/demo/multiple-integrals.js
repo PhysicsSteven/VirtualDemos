@@ -1,7 +1,7 @@
 /* demo/multiple-integrals in es: English key, translation (tools/i18n.cjs todo and merge; see demos/lib/i18n.md) */
 VDI18N.add('es', 'demo/multiple-integrals', {
 "A metal plate {#} m by {#} m whose density grows across it, σ(x, y) = {#} + xy² kg/m². The height of the surface is the density, so each box holds σ ΔA, the mass of one small piece. Press Play: as the boxes shrink the sum settles on the double integral, {#}/{#} kg = {#} kg. Try the low and high corners: they settle more slowly than the middle.":
-  "Una placa metálica de {#} m por {#} m cuya densidad crece de un lado a otro, σ(x, y) = {#} + xy² kg/m². La altura de la superficie es la densidad, así que cada caja contiene σ ΔA, la masa de un pedacito. Presiona Play: al encogerse las cajas, la suma se asienta en la integral doble, {#}/{#} kg = {#} kg. Prueba las esquinas inferior y superior: se asientan más despacio que el centro.",
+  "Una placa metálica de {#} m por {#} m cuya densidad crece de un lado a otro, σ(x, y) = {#} + xy² kg/m². La altura de la superficie es la densidad, así que cada caja contiene σ ΔA, la masa de un pedacito. Presiona Iniciar: al encogerse las cajas, la suma se asienta en la integral doble, {#}/{#} kg = {#} kg. Prueba las esquinas inferior y superior: se asientan más despacio que el centro.",
 "The rectangle R":
   "El rectángulo R",
 "Order dx dy: y outside, x inside":
@@ -9,7 +9,7 @@ VDI18N.add('es', 'demo/multiple-integrals', {
 "Cells per side":
   "Celdas por lado",
 "Play makes the boxes smaller and smaller. Drag to turn the 3D view; scroll or pinch to zoom.":
-  "Play hace las cajas cada vez más pequeñas. Arrastra para girar la vista 3D; desplaza o pellizca para acercar.",
+  "Iniciar hace las cajas cada vez más pequeñas. Arrastra para girar la vista 3D; desplaza o pellizca para acercar.",
 "Boxes":
   "Cajas",
 "Riemann sum Σ f ΔA":
@@ -239,7 +239,7 @@ VDI18N.add('es', 'demo/multiple-integrals', {
 "Slabs":
   "Placas",
 "Play sweeps a slice across the region: each slice's area A is an inner integral, and adding up the slabs gives the double integral.":
-  "Play recorre la región con una rebanada: el área A de cada rebanada es una integral interior, y sumar las placas da la integral doble.",
+  "Iniciar recorre la región con una rebanada: el área A de cada rebanada es una integral interior, y sumar las placas da la integral doble.",
 "Difference":
   "Diferencia",
 "Areas":
@@ -265,7 +265,7 @@ VDI18N.add('es', 'demo/multiple-integrals', {
 "Wedges per side":
   "Cuñas por lado",
 "Play makes the wedges smaller. Each wedge has area about r Δr Δθ.":
-  "Play hace las cuñas más pequeñas. Cada cuña tiene un área de aproximadamente r Δr Δθ.",
+  "Iniciar hace las cuñas más pequeñas. Cada cuña tiene un área de aproximadamente r Δr Δθ.",
 "Wedges":
   "Cuñas",
 "Wedge sum Σ f r Δr Δθ":
@@ -285,7 +285,7 @@ VDI18N.add('es', 'demo/multiple-integrals', {
 "Outer to inner":
   "De exterior a interior",
 "Play fills the region with cells one layer at a time. Drag to turn; Cut away a quarter shows the inside.":
-  "Play llena la región con celdas, una capa a la vez. Arrastra para girar; Quitar un cuarto muestra el interior.",
+  "Iniciar llena la región con celdas, una capa a la vez. Arrastra para girar; Quitar un cuarto muestra el interior.",
 "Cells":
   "Celdas",
 "Cell sum Σ f ΔV":
@@ -299,7 +299,7 @@ VDI18N.add('es', 'demo/multiple-integrals', {
 "A uniform disk of {#} kg and radius {#} m spinning about the axis through its center, perpendicular to it. I = ∬ r² dm = ½MR² = {#} kg·m². Try the axis along a diameter (¼MR²) and the density that grows outward (⅗MR²).":
   "Un disco uniforme de {#} kg y radio {#} m que gira alrededor del eje que pasa por su centro, perpendicular a él. I = ∬ r² dm = ½MR² = {#} kg·m². Prueba el eje a lo largo de un diámetro (¼MR²) y la densidad que crece hacia afuera (⅗MR²).",
 "Play turns the body about its axis. The cells are colored by density.":
-  "Play gira el cuerpo alrededor de su eje. Las celdas están coloreadas según la densidad.",
+  "Iniciar gira el cuerpo alrededor de su eje. Las celdas están coloreadas según la densidad.",
 "Mass M":
   "Masa M",
 "Density scale k":
@@ -337,7 +337,7 @@ VDI18N.add('es', 'demo/multiple-integrals', {
 "Grid lines per side":
   "Líneas de cuadrícula por lado",
 "Play walks the marked cell across the grid; its image has area about |J| Δu Δv.":
-  "Play mueve la celda marcada por la cuadrícula; su imagen tiene un área de aproximadamente |J| Δu Δv.",
+  "Iniciar mueve la celda marcada por la cuadrícula; su imagen tiene un área de aproximadamente |J| Δu Δv.",
 "Area of the image":
   "Área de la imagen",
 "∬ f dA = ∬ f |J| du dv":
@@ -370,8 +370,8 @@ VDI18N.add('es', 'demo/multiple-integrals', {
   "El primer momento de un medio disco de radio {#} m respecto a su borde recto, ∬ y dA = {#}/{#} m³. Dividido entre el área π/{#} da la altura del centroide, ȳ = {#}/({#}π) = {#} m: donde se equilibra un medio disco uniforme.",
 "A(x) at x = −{#}":
   "A(x) en x = −{#}",
-"The region above y = x² and below y = {#} has area {#}/{#}. The reversed bounds typed here, y² ≤ x ≤ {#}, describe a different region: the picture marks where the two disagree. Fix the inner bounds of the second order to {#} ≤ x ≤ √y and the two areas match.":
-  "La región sobre y = x² y bajo y = {#} tiene área {#}/{#}. Los límites invertidos escritos aquí, y² ≤ x ≤ {#}, describen otra región: la imagen marca dónde no coinciden. Corrige los límites interiores del segundo orden a {#} ≤ x ≤ √y y las dos áreas coinciden.",
+"The region above y = x² and below y = {#} has area {#}/{#}. The reversed bounds typed here, y² ≤ x ≤ {#}, describe a different region, the mirror image of it across y = x. That region happens to have the same area, {#}/{#}, so a matching number does not prove the bounds right: the picture marks where the two regions disagree. Fix the inner bounds of the second order to {#} ≤ x ≤ √y and the two regions match.":
+  "La región sobre y = x² y bajo y = {#} tiene área {#}/{#}. Los límites invertidos escritos aquí, y² ≤ x ≤ {#}, describen otra región, su reflejo respecto a y = x. Esa región tiene por casualidad la misma área, {#}/{#}, así que un número que coincide no prueba que los límites estén bien: la imagen marca dónde no coinciden las dos regiones. Corrige los límites interiores del segundo orden a {#} ≤ x ≤ √y y las dos regiones coinciden.",
 "The two orders describe different regions: they disagree on about {p} % of it, marked on the picture. Check the bounds of the second order.":
   "Los dos órdenes describen regiones distintas: no coinciden en cerca del {p} % de ella, marcado en la imagen. Revisa los límites del segundo orden.",
 "The two orders describe different regions: they disagree on about {#} % of it, marked on the picture. Check the bounds of the second order.":
@@ -470,6 +470,8 @@ VDI18N.add('es', 'demo/multiple-integrals', {
   "x: Aún no está terminado.",
 "This one needs too many steps to compute here: try simpler bounds or a smaller region.":
   "Esto necesita demasiados pasos para calcularse aquí: prueba límites más simples o una región más pequeña.",
+"The quadrature did not settle: f probably blows up somewhere in the region, so the integral may not exist, and the value shown is not reliable.":
+  "La cuadratura no se estabilizó: f probablemente crece sin límite en alguna parte de la región, así que la integral puede no existir, y el valor mostrado no es confiable.",
 "ρ sin φ Δθ ≈ {#}×{#}⁹":
   "ρ sen φ Δθ ≈ {#}×{#}⁹",
 "ΔV = {#}×{#}²⁶":

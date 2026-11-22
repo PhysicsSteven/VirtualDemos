@@ -679,5 +679,9 @@ VDI18N.add('es', 'demo/gauss-law', {
 "−{#}×{#}⁻¹⁶ N·m²/C <span>≈ {#}</span><span>differs from Q<sub>enc</sub>/ε₀ by {#}×{#}⁻¹⁶ N·m²/C</span>":
   "−{#}×{#}⁻¹⁶ N·m²/C <span>≈ {#}</span><span>difiere de Q<sub>enc</sub>/ε₀ en {#}×{#}⁻¹⁶ N·m²/C</span>",
 "Close":
-  "Cerrar"
+  "Cerrar",
+"Too costly to integrate.<span>The integrals did not meet their error target within the demo's budget of evaluations of F. F may blow up on or inside the surface, or change too fast; move the surface or change F.</span>":
+  "Demasiado costoso de integrar.<span>Las integrales no alcanzaron su meta de error dentro del límite de evaluaciones de F de la demo. Puede que F diverja en la superficie o en su interior, o que cambie demasiado rápido; mueve la superficie o cambia F.</span>",
+"Quadrature tolerance not met.<span>Some one dimensional integrals ran out of adaptive panels before reaching their error target, so the last digits may be wrong.</span>":
+  "No se alcanzó la tolerancia de la cuadratura.<span>Algunas integrales de una dimensión se quedaron sin paneles adaptativos antes de alcanzar su meta de error, así que los últimos dígitos pueden estar mal.</span>"
 });
