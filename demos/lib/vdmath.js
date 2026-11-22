@@ -406,6 +406,15 @@ var VDMATH = (function () {
     const vars = o && o.vars, s = greek(clean(src, o));
     return parseTokens(tokenize(s, namesFor(vars || ['x', 't'])), s.length, vars);
   }
+  /* powerHint(text): a power of e or of a number followed at once by one variable letter, as in e^2x or 2^3t, is read as
+     (e^2)·x, the usual rule that ^ takes only the next number; students usually mean e^(2x). Returns { typed, read, power } so
+     the page can say so beside the box (Steve 2026-11-22), or null. Only e, pi and plain numbers as bases, so x^2y stays quiet. */
+  function powerHint(src) {
+    const m = /(?:(?<![A-Za-z])(e|pi|π)|(?<![A-Za-z0-9.])(\d+(?:\.\d+)?))\s*\^\s*(-?\d+(?:\.\d+)?)([A-Za-zθ])(?![A-Za-z(])/.exec(String(src || ''));
+    if (!m) return null;
+    const base = m[1] || m[2], n = m[3], v = m[4];
+    return { typed: base + '^' + n + v, read: '(' + base + '^' + n + ')·' + v, power: base + '^(' + n + v + ')' };
+  }
   /* while typing: when the text simply stops early ("x^2 + ", "sin(x"), graph what is finished, closing open parentheses */
   function parseLive(src, o) {
     const vars = o && o.vars, s = greek(clean(src, o));
@@ -571,7 +580,7 @@ var VDMATH = (function () {
     }
     return null;
   }
-    return { parse, parseLive, derivative, compile, subst, varsOf, hasV, text, fmt, sup, integral, cumulative, simpson,
+    return { parse, parseLive, powerHint, derivative, compile, subst, varsOf, hasV, text, fmt, sup, integral, cumulative, simpson,
     mkAdd, mkMul, mkPow, mkFn, num: flt, rat, ZERO, ONE, isNum, antiderivative };
 })();
 if (typeof window !== 'undefined') window.VDMATH = VDMATH;

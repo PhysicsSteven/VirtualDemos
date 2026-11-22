@@ -9,7 +9,7 @@
      (trials to first success, x = 1, 2, ...), hypergeometric, poisson, uniform, exponential, normal, t, chisq, f.
      inv(p) is the smallest x with cdf(x) >= p for discrete ones.
    - Describing data: mean, median, fiveNum (the book's quartiles: the median of each half, the TI method), quantile (the k-th
-     percentile at position k(n + 1)/100, interpolated between neighbors; the book's 2.3 averages the two neighbors instead),
+     percentile at position k(n + 1)/100, a whole i takes that value, otherwise the average of the two neighbors, as the book's 2.3),
      percentileRank, sd (sample, n - 1), variance, iqrFences, skew.
    - Regression: linreg(x, y) gives slope, intercept, r, r2, s (standard error of estimate), SE of slope and intercept,
      t for r and its two sided p value, df = n - 2, and residuals.
@@ -181,12 +181,13 @@ var VDSTATS = (function () {
     const lower = s.slice(0, h), upper = s.slice(n % 2 ? h + 1 : h);
     return { min: s[0], q1: n > 1 ? median(lower) : s[0], med: median(s), q3: n > 1 ? median(upper) : s[0], max: s[n - 1] };
   }
-  /* the k-th percentile: position i = k (n + 1) / 100 as in the book (2.3), interpolated between ordered values (the book itself
-     averages the values at the two positions next to i when i is not whole, Example 2.16: i = 24.9 gives their average) */
+  /* the k-th percentile by the book's rule (2.3): position i = k (n + 1) / 100 in the ordered list; a whole i takes that value,
+     otherwise average the values at the two positions next to i (Example 2.16: i = 24.9 averages the 24th and 25th values).
+     Below position 1 it is the smallest value, past position n the largest (Steve 2026-11-22: follow the book, not interpolation). */
   function quantile(a, k) {
     const s = sorted(a), n = s.length, i = k * (n + 1) / 100;
     if (i <= 1) return s[0]; if (i >= n) return s[n - 1];
-    const lo = Math.floor(i); return s[lo - 1] + (i - lo) * (s[lo] - s[lo - 1]);
+    const lo = Math.floor(i + 1e-9); return Math.abs(i - lo) < 1e-9 ? s[lo - 1] : (s[lo - 1] + s[lo]) / 2;
   }
   /* percentile of a value by the book's formula (x + 0.5 y) / n × 100: x values below, y values equal */
   function percentileRank(a, v) { let x = 0, y = 0; for (const u of a) { if (u < v) x++; else if (u === v) y++; } return (x + 0.5 * y) / a.length * 100; }

@@ -7,6 +7,7 @@
 <script src="lib/theme.js"></script>
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vdmath.js"></script>
 <script src="lib/vdpanel.js"></script>
 <title>Functions and Their Derivatives</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -210,6 +211,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
             <li><code>sin cos tan sec csc cot</code>, <code>asin acos atan</code> (or <code>arcsin</code>, <code>sin^-1</code>), <code>sinh cosh tanh</code></li>
             <li><code>exp</code> or <code>e^x</code>, <code>ln</code> (natural log), <code>log</code> (base 10), <code>sqrt</code>, <code>cbrt</code>, <code>abs</code> or <code>|x|</code>, <code>pi</code></li>
             <li>A pasted <code>y =</code> or <code>f(x) =</code> at the start is fine. <code>sin x</code> and <code>sin^2(x)</code> work too.</li>
+            <li><code>^</code> takes only the number right after it: <code>e^2x</code> is e²·x, so type <code>e^(2x)</code> for e to the power 2x.</li>
           </ul>
         </details>
         <details class="more"><summary>How it works</summary>
@@ -800,7 +802,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       st.classList.add('bad'); $('fx').classList.add('bad'); return;
     }
     st.classList.remove('bad'); $('fx').classList.remove('bad');
-    st.textContent = r.partial ? VDI18N.t('Graphing what is finished so far, while you type.') : '';
+    st.textContent = ((r.partial ? VDI18N.t('Graphing what is finished so far, while you type.') : '') + (VDMATH.powerHint(src) ? ' ' + VDI18N.t('{typed} is read as {read}. For the power, type {power}.', VDMATH.powerHint(src)) : '')).trim();
     setNode(r.node, r.v);
   }
   function setNode(node, v) {

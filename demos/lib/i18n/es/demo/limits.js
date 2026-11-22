@@ -50,8 +50,8 @@ VDI18N.add('es', 'demo/limits', {
   "Acercándose",
 "Limits":
   "Límites",
-"<a>Math for physics</a>":
-  "<a>Matemáticas para la física</a>",
+"<a>Functions and derivatives</a>":
+  "<a>Funciones y derivadas</a>",
 "<a><span>←</span> <span>Families of Functions</span></a><a><span>Functions and Their Derivatives</span> <span>→</span></a>":
   "<a><span>←</span> <span>Familias de funciones</span></a><a><span>Funciones y sus derivadas</span> <span>→</span></a>",
 "Zoom in on a point and watch f(x) settle, or not: holes, jumps, blow ups and endless wiggles, from the left and from the right. Set an ε band and see the largest δ window that fits inside it, follow f out to infinity to its asymptotes, and see why f/g and f′/g′ head for the same number at {#}/{#}.":
@@ -98,6 +98,8 @@ VDI18N.add('es', 'demo/limits', {
   "Divisor entre la gráfica y la gráfica inferior",
 "{#}/{#} at a. Differentiating top and bottom once: N′(a)/D′(a) = {#}/{#} = {#}":
   "{#}/{#} en a. Derivando arriba y abajo una vez: N′(a)/D′(a) = {#}/{#} = {#}",
+"<span>Show fewer</span>":
+  "<span>Ver menos</span>",
 "sin x / x → {#}":
   "sen x / x → {#}",
 "ε and δ for a line":
@@ -152,6 +154,12 @@ VDI18N.add('es', 'demo/limits', {
   "se multiplican.",
 "(base {#}),":
   "(base {#}),",
+"takes only the number right after it:":
+  "toma solo el número que le sigue:",
+"is e²·x, so type":
+  "es e²·x, así que escribe",
+"for e to the power 2x.":
+  "para e elevado a 2x.",
 "How it works":
   "Cómo funciona",
 "The box is read by a small parser (demos/lib/vdmath.js); nothing you type is run as code. The parser simplifies as it reads, so x/x becomes {#} and x²/x becomes x: their holes are gone before f is ever evaluated.":
@@ -164,6 +172,8 @@ VDI18N.add('es', 'demo/limits', {
   "La δ más grande: cada lado se recorre en {#} puntos igualmente espaciados y en mitades hacia a, desde la mitad del ancho de la vista hasta {#}⁻⁵ × max({#}, |a|) de a (más cerca, el redondeo se come las cifras de x − a y de diferencias como {#} − cos x), y el primer punto fuera de la banda ε se refina por bisección hasta el redondeo. Una oscilación más angosta que el espaciado del recorrido podría pasarse por alto. Hacia el infinito, N se encuentra igual, recorriendo hacia adentro desde {#}¹⁵ con {#} puntos por década.",
 "Zoomed in far enough, a difference of nearly equal numbers loses its digits to rounding ({#} − cos x near {#}, for one), and the graph turns to noise. That is the computer's arithmetic, not the function; the values graph shows where it starts.":
   "Con suficiente acercamiento, una diferencia de números casi iguales pierde sus cifras por el redondeo ({#} − cos x cerca de {#}, por ejemplo), y la gráfica se vuelve ruido. Eso es la aritmética de la computadora, no la función; la gráfica de valores muestra dónde empieza.",
+"<span>Feedback</span>":
+  "<span>Comentarios</span>",
 "f({v}) = {e}, as {v} approaches {a}.":
   "f({v}) = {e}, cuando {v} tiende a {a}.",
 "From the left: {k}.":
@@ -432,6 +442,8 @@ VDI18N.add('es', 'demo/limits', {
   "{n} necesita algo sobre qué actuar, como {n}(x).",
 "Type a function of x, like x^2 sin(x).":
   "Escribe una función de x, como x^2 sin(x).",
+"{typed} is read as {read}. For the power, type {power}.":
+  "{typed} se lee como {read}. Para la potencia, escribe {power}.",
 "x ticks: distance from a = {a}":
   "marcas en x: distancia desde a = {a}",
 "L'Hôpital's rule here works at a number a, where f/g is 0/0. Type a number for a.":
@@ -465,5 +477,7 @@ VDI18N.add('es', 'demo/limits', {
 "The values at x = a ± h for h = 1, 0.1, 0.01, … (log axis): do they settle?":
   "Los valores en x = a ± h para h = 1, 0.1, 0.01, … (eje logarítmico): ¿se estabilizan?",
 "Near 0/0, f/g and f′/g′ close in on the same value.":
-  "Cerca de 0/0, f/g y f′/g′ se acercan al mismo valor."
+  "Cerca de 0/0, f/g y f′/g′ se acercan al mismo valor.",
+"<a>Math for physics</a>":
+  "<a>Matemáticas para la física</a>"
 });

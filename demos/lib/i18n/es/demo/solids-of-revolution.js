@@ -52,10 +52,10 @@ VDI18N.add('es', 'demo/solids-of-revolution', {
   "Un florero acostado: su radio f(x) en cm a lo largo de sus {#} cm de largo. El volumen en cm³ es su capacidad en mL.",
 "Solids of Revolution":
   "Sólidos de revolución",
-"<a>Math for physics</a>":
-  "<a>Matemáticas para la física</a>",
-"<span><a><span>←</span> <span>Sequences and Series</span></a></span>":
-  "<span><a><span>←</span> <span>Sucesiones y series</span></a></span>",
+"<a>Integrals, series and change</a>":
+  "<a>Integrales, series y cambio</a>",
+"<a><span>←</span> <span>Riemann Sums and Integrals</span></a><a><span>Sequences and Series</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Sumas de Riemann e integrales</span></a><a><span>Sucesiones y series</span> <span>→</span></a>",
 "Spin a region under any curve around an axis and slice the solid into disks, washers or shells you can count. Raise n and the sum closes in on the integral. Stand squares or semicircles on a base, lay a chain along a curve for its length and bands for its surface area, and add up a cone's or a sphere's moment of inertia slice by slice.":
   "Gira una región bajo cualquier curva alrededor de un eje y corta el sólido en discos, arandelas o capas cilíndricas que puedes contar. Aumenta n y la suma se acerca a la integral. Levanta cuadrados o semicírculos sobre una base, tiende una cadena a lo largo de una curva para su longitud y bandas para el área de su superficie, y suma rebanada por rebanada el momento de inercia de un cono o de una esfera.",
 "Put n back where this setup started":
@@ -112,6 +112,8 @@ VDI18N.add('es', 'demo/solids-of-revolution', {
   "Δx",
 "Volume, the integral":
   "Volumen, la integral",
+"<span>Show fewer</span>":
+  "<span>Ver menos</span>",
 "<span>In physics</span>":
   "<span>En física</span>",
 "The volume of a vase":
@@ -174,6 +176,16 @@ VDI18N.add('es', 'demo/solids-of-revolution', {
   "o",
 "The limits and k take a number or an expression:":
   "Los límites y k aceptan un número o una expresión:",
+"is the natural log and":
+  "es el logaritmo natural y",
+"is base {#}.":
+  "es base {#}.",
+"takes only the number right after it:":
+  "toma solo el número que le sigue:",
+"is e²·x, so type":
+  "es e²·x, así que escribe",
+"for e to the power 2x.":
+  "para e elevado a 2x.",
 "How it works":
   "Cómo funciona",
 "The boxes are read by a small parser (demos/lib/vdmath.js); nothing you type is run as code. The interval from a to b is cut into n slices of width Δx = (b − a)/n. A disk or washer takes its radii at the middle of its slice, R and r measured from the line y = k: π(R² − r²)Δx. A shell around the line x = k takes its radius and height at the middle: {#}π r h Δx. A cross section takes its side s = f − g at the middle: s², πs²/{#} or (√{#}/{#})s², times Δx.":
@@ -184,6 +196,8 @@ VDI18N.add('es', 'demo/solids-of-revolution', {
   "Momento de inercia respecto al eje: un sólido uniforme de masa M tiene densidad ρ = M/V. Una arandela delgada suma ½ρπ(R⁴ − r⁴)Δx y una capa delgada {#}πρ r³ h Δx. Luego la I de una esfera o de un cono se compara con MR², donde R es su radio más grande.",
 "Disks and washers here turn about a horizontal line y = k, and shells about a vertical line x = k, so each slice stays a function of x.":
   "Aquí los discos y las arandelas giran alrededor de una recta horizontal y = k, y las capas alrededor de una recta vertical x = k, así cada rebanada sigue siendo función de x.",
+"<span>Feedback</span>":
+  "<span>Comentarios</span>",
 "f(x) = {f} from x = {a} to {b}.":
   "f(x) = {f} desde x = {a} hasta {b}.",
 "{n} slices add to {s}.":
@@ -381,5 +395,9 @@ VDI18N.add('es', 'demo/solids-of-revolution', {
 "Disks and washers turn about a horizontal line y = k here. Choose “the line y = k”, or use Shells.":
   "Aquí los discos y las arandelas giran alrededor de una recta horizontal y = k. Elige “la recta y = k”, o usa Capas cilíndricas.",
 "Shells turn about a vertical line x = k here. Choose “the line x = k”, or use Disks and washers.":
-  "Aquí las capas giran alrededor de una recta vertical x = k. Elige “la recta x = k”, o usa Discos y arandelas."
+  "Aquí las capas giran alrededor de una recta vertical x = k. Elige “la recta x = k”, o usa Discos y arandelas.",
+"<a>Math for physics</a>":
+  "<a>Matemáticas para la física</a>",
+"<span><a><span>←</span> <span>Sequences and Series</span></a></span>":
+  "<span><a><span>←</span> <span>Sucesiones y series</span></a></span>"
 });

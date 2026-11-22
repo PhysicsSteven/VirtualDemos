@@ -148,4 +148,11 @@ group('deep check 2026-11-22: edge values, real odd roots, 0/0, and antiderivati
   }
 });
 
+group('powerHint flags e^2x and 2^3t (read as (e^2)x), not x^2y, e^(2x) or x^2 sin(x)', () => {
+  const h = c.powerHint('e^2x'); assert(h && h.power === 'e^(2x)' && h.read === '(e^2)·x');
+  assert(c.powerHint('3e^-2x + 1').power === 'e^(-2x)');
+  assert(c.powerHint('2^3t').power === '2^(3t)');
+  for (const s of ['x^2y', 'e^(2x)', 'x^2 sin(x)', 'e^2', 'e^2 x', 'e^2sin(x)', '']) assert.strictEqual(c.powerHint(s), null, s);
+  assert(Math.abs(c.compile(c.parse('e^2x').node)(2) - 2 * Math.exp(2)) < 1e-12, 'e^2x really is (e^2)x');
+});
 console.log(`vdmath: ${n} groups passed`);

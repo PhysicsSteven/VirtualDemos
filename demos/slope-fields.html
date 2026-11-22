@@ -168,6 +168,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
             <li><code>+ − * / ^</code> and parentheses; <code>2y</code>, <code>3sin(t)</code> and <code>(y+1)(y−1)</code> multiply.</li>
             <li><code>sin cos tan</code>, <code>exp</code> or <code>e^t</code>, <code>ln</code>, <code>sqrt</code>, <code>abs</code> or <code>|y|</code>, <code>pi</code></li>
             <li>A pasted <code>dy/dt =</code> or <code>y' =</code> at the start is fine.</li>
+            <li><code>ln</code> is the natural log and <code>log</code> is base 10.</li>
+            <li><code>^</code> takes only the number right after it: <code>e^2x</code> is e²·x, so type <code>e^(2x)</code> for e to the power 2x.</li>
           </ul>
         </details>
         <details class="more"><summary>How it works</summary>
@@ -414,7 +416,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const r = VDMATH.parseLive(src, { vars: VARS });
     if (!r.node) { status((S.eq ? VDI18N.t('Still showing the last field. ') : '') + (MSG[r.error.code] || MSG.end)(r.error), true); return; }
     S.eq = equation(r.node); S.typed = true;
-    status(r.partial ? VDI18N.t('Drawing what is finished so far, while you type.') : VDI18N.t('Read as dy/dt = {f}', { f: S.eq.text }));
+    status((r.partial ? VDI18N.t('Drawing what is finished so far, while you type.') : VDI18N.t('Read as dy/dt = {f}', { f: S.eq.text })) + (VDMATH.powerHint(src) ? ' ' + VDI18N.t('{typed} is read as {read}. For the power, type {power}.', VDMATH.powerHint(src)) : ''));
     changed();
   }
   /* anything that changes the curves: recompute on the next draw */

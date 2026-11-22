@@ -188,6 +188,12 @@ VDI18N.add('es', 'demo/series', {
   "El primer índice,",
 ", is a whole number from {#} to {#}.":
   ", es un número entero de {#} a {#}.",
+"takes only the number right after it:":
+  "toma solo el número que le sigue:",
+"is e²·x, so type":
+  "es e²·x, así que escribe",
+"for e to the power 2x.":
+  "para e elevado a 2x.",
 "How it works":
   "Cómo funciona",
 "The box is read by a small parser (demos/lib/vdmath.js); nothing you type is run as code. The partial sums S_N = a(n₀) + … + a(N) are added in double precision with compensated (Kahan) summation, up to N = {#}.":
@@ -288,6 +294,8 @@ VDI18N.add('es', 'demo/series', {
   "Un corredor recorre la mitad de los {#} m que faltan, luego la mitad de lo que queda, y así sucesivamente.",
 "converges: ratio test, ρ = {#}/{#} < {#}":
   "converge: criterio del cociente, ρ = {#}/{#} < {#}",
+"The terms are a(n) = {#}/{#}^n, from n = {#}.":
+  "Los términos son a(n) = {#}/{#}^n, desde n = {#}.",
 "Stack books so the center of mass of the top k books sits right over the edge of the book below: book k then sticks out {#}/(2k) book lengths. The total overhang is half the harmonic series, so it grows without bound: {#} books reach past one whole length, and {#} books reach two lengths past the table.":
   "Apila libros de modo que el centro de masa de los k libros de arriba quede justo sobre el borde del libro de abajo: el libro k sobresale entonces {#}/(2k) largos de libro. El voladizo total es la mitad de la serie armónica, así que crece sin cota: {#} libros pasan un largo completo y {#} libros llegan a dos largos más allá de la mesa.",
 "book lengths":
@@ -314,8 +322,6 @@ VDI18N.add('es', 'demo/series', {
   "S_N rebasa {#} por primera vez",
 "at N = {#} (S_N = {#})":
   "en N = {#} (S_N = {#})",
-"The terms are a(n) = {#}/(2n), from n = {#}.":
-  "Los términos son a(n) = {#}/(2n), desde n = {#}.",
 "One ion in a long chain of alternating charges: its two nearest neighbors (distance d) attract, the next two (2d) repel, and so on. The Madelung constant M = {#}({#} − {#}/{#} + {#}/{#} − …) = {#} ln {#} = {#}. It is alternating: each partial sum is within the next term of the limit, and the sums zigzag in.":
   "Un ion en una larga cadena de cargas alternadas: sus dos vecinos más cercanos (distancia d) lo atraen, los dos siguientes (2d) lo repelen, y así sucesivamente. La constante de Madelung M = {#}({#} − {#}/{#} + {#}/{#} − …) = {#} ln {#} = {#}. Es alternante: cada suma parcial está a menos del siguiente término del límite, y las sumas se acercan en zigzag.",
 "S = {#} ln {#}":
@@ -408,8 +414,8 @@ VDI18N.add('es', 'demo/series', {
   "no se encontró hasta x = {#}³⁰⁰",
 "The terms are a(n) = {#}√{#}·{#}^n, from n = {#}.":
   "Los términos son a(n) = {#}√{#}·{#}^n, desde n = {#}.",
-"The terms are a(n) = {#}/{#}^n, from n = {#}.":
-  "Los términos son a(n) = {#}/{#}^n, desde n = {#}.",
+"The terms are a(n) = {#}/(2n), from n = {#}.":
+  "Los términos son a(n) = {#}/(2n), desde n = {#}.",
 "The terms are a(n) = {#}(−{#})^(n + {#})/n, from n = {#}.":
   "Los términos son a(n) = {#}(−{#})^(n + {#})/n, desde n = {#}.",
 "The terms are a(n) = e^(−n/{#}), from n = {#}.":
@@ -530,6 +536,8 @@ VDI18N.add('es', 'demo/series', {
   "Escribe los términos a(n), como 1/n^2.",
 "The first index is a whole number from 0 to 1,000.":
   "El primer índice es un número entero de 0 a 1,000.",
+"{typed} is read as {read}. For the power, type {power}.":
+  "{typed} se lee como {read}. Para la potencia, escribe {power}.",
 "1: the test says nothing here":
   "1: aquí el criterio no dice nada",
 "ratio |a(n+1)/a(n)|":

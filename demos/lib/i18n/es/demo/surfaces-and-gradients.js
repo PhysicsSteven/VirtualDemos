@@ -46,10 +46,10 @@ VDI18N.add('es', 'demo/surfaces-and-gradients', {
   "D_u f = |∇f| cos θ: máxima a lo largo de ∇f, cero a lo largo de la curva de nivel, más negativa directo cuesta abajo.",
 "Surfaces and Gradients":
   "Superficies y gradientes",
-"<a>Math for physics</a>":
-  "<a>Matemáticas para física</a>",
-"<a><span>←</span> <span>Solids of Revolution</span></a><a><span>Vectors and Surfaces in Space</span> <span>→</span></a>":
-  "<a><span>←</span> <span>Sólidos de revolución</span></a><a><span>Vectores y superficies en el espacio</span> <span>→</span></a>",
+"<a>Space, vectors and fields</a>":
+  "<a>Espacio, vectores y campos</a>",
+"<a><span>←</span> <span>Vectors and Surfaces in Space</span></a><a><span>Multiple Integrals</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Vectores y superficies en el espacio</span></a><a><span>Integrales múltiples</span> <span>→</span></a>",
 "Type a function z = f(x, y) and see it as a surface beside its contour map. Cut it with planes to read the partial derivatives as slopes, lay a tangent plane on it, turn a direction arrow to read the directional derivative, and see the gradient point straight uphill, across the level curves. Find peaks, pits and saddles with the second derivative test, slide along a constraint until it touches a level curve (Lagrange multipliers), approach a point along different paths, and walk a point along a path to see the chain rule. Derivatives are exact.":
   "Escribe una función z = f(x, y) y mírala como una superficie junto a su mapa de contorno. Córtala con planos para leer las derivadas parciales como pendientes, coloca un plano tangente sobre ella, gira una flecha de dirección para leer la derivada direccional y ve cómo el gradiente apunta directo cuesta arriba, a través de las curvas de nivel. Encuentra cimas, hondonadas y puntos silla con el criterio de la segunda derivada, deslízate por una restricción hasta que toque una curva de nivel (multiplicadores de Lagrange), acércate a un punto por distintos caminos y haz avanzar un punto por un camino para ver la regla de la cadena. Las derivadas son exactas.",
 "Put the point, the arrow and the ball back where this setup started":
@@ -108,6 +108,8 @@ VDI18N.add('es', 'demo/surfaces-and-gradients', {
   "Restablecer vista",
 "On the map: drag the point, or drag elsewhere to pan. Scroll or pinch to zoom. The surface shows the square in the middle of the map.":
   "En el mapa: arrastra el punto, o arrastra en otro lugar para desplazarte. Usa la rueda o pellizca para hacer zoom. La superficie muestra el cuadrado del centro del mapa.",
+"<span>Show fewer</span>":
+  "<span>Ver menos</span>",
 "Slopes and the gradient":
   "Pendientes y el gradiente",
 "A hill and its contour map":
@@ -172,6 +174,16 @@ VDI18N.add('es', 'demo/surfaces-and-gradients', {
   "funciona.",
 "The box c takes a number or an expression such as":
   "La casilla c acepta un número o una expresión como",
+"is the natural log and":
+  "es el logaritmo natural y",
+"is base {#}.":
+  "es base {#}.",
+"takes only the number right after it:":
+  "toma solo el número que le sigue:",
+"is e²·x, so type":
+  "es e²·x, así que escribe",
+"for e to the power 2x.":
+  "para e elevado a 2x.",
 "∇f = (∂f/∂x, ∂f/∂y), D<sub>u</sub>f = ∇f · u = |∇f| cos θ, tangent plane z = f(a, b) + f<sub>x</sub>(x − a) + f<sub>y</sub>(y − b)":
   "∇f = (∂f/∂x, ∂f/∂y), D<sub>u</sub>f = ∇f · u = |∇f| cos θ, plano tangente z = f(a, b) + f<sub>x</sub>(x − a) + f<sub>y</sub>(y − b)",
 "D = f<sub>xx</sub>f<sub>yy</sub> − f<sub>xy</sub>², at ∇f = {#}: D > {#} and f<sub>xx</sub> > {#} a pit (minimum), D > {#} and f<sub>xx</sub> &lt; {#} a peak (maximum), D &lt; {#} a saddle, D = {#} the test says nothing":
@@ -190,6 +202,8 @@ VDI18N.add('es', 'demo/surfaces-and-gradients', {
   "Regla de la cadena: x′(t) y y′(t) son derivadas exactas del camino escrito, así que el valor por la regla de la cadena es exacto. La rapidez a partir de los valores a lo largo del camino es la diferencia centrada [z(t + Δt) − z(t − Δt)]/({#}Δt) con Δt = {#}⁻⁴ del intervalo de tiempo, que difiere de dz/dt en aproximadamente (Δt)²z‴/{#}; las lecturas muestran las dos lado a lado.",
 "The surface is drawn on a {#} by {#} grid and cut off where it leaves the box; contours on the map are traced on a finer grid. A limit is read from the values at a distance of {#}⁻⁶ of the view from the point.":
   "La superficie se dibuja en una cuadrícula de {#} por {#} y se corta donde sale de la caja; los contornos del mapa se trazan en una cuadrícula más fina. Un límite se lee de los valores a una distancia de {#}⁻⁶ de la vista desde el punto.",
+"<span>Feedback</span>":
+  "<span>Comentarios</span>",
 "The contour map of f(x, y) =":
   "El mapa de contorno de f(x, y) =",
 "The point is at (-{#}, -{#}), where f is {#}.":
@@ -558,6 +572,10 @@ VDI18N.add('es', 'demo/surfaces-and-gradients', {
   "Potencia de E sobre +1 nC, qE · v",
 "The path is not defined at this time t; the point stays where it last was.":
   "El camino no está definido en este tiempo t; el punto se queda donde estaba.",
+"<a>Math for physics</a>":
+  "<a>Matemáticas para física</a>",
+"<a><span>←</span> <span>Solids of Revolution</span></a><a><span>Vectors and Surfaces in Space</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Sólidos de revolución</span></a><a><span>Vectores y superficies en el espacio</span> <span>→</span></a>",
 "<span><a><span>←</span> <span>Vector Fields, Work and Curl</span></a></span>":
   "<span><a><span>←</span> <span>Campos vectoriales, trabajo y rotacional</span></a></span>",
 "Type a function z = f(x, y) and see it as a surface beside its contour map. Cut it with planes to read the partial derivatives as slopes, lay a tangent plane on it, turn a direction arrow to read the directional derivative, and see the gradient point straight uphill, across the level curves. Find peaks, pits and saddles with the second derivative test, slide along a constraint until it touches a level curve (Lagrange multipliers), and approach a point along different paths. Derivatives are exact.":

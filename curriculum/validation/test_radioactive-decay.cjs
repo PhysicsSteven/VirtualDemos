@@ -1,7 +1,7 @@
 'use strict';
 // Radioactive Decay: Bateman chain with branching and elution (the ⁹⁹Mo → ⁹⁹ᵐTc generator, Medical Physics module, 2026-10-25).
 const assert = require('node:assert');
-const { core, readLib } = require('./demo_source.cjs');
+const { core, readLib, readDemo } = require('./demo_source.cjs');
 const vm = require('node:vm');
 const c = core('radioactive-decay', 'fractions,cumDecays,peakTime,makeSim,stepSim,elute,expected');
 let n = 0;
@@ -111,5 +111,40 @@ group('Counting: χ² cells expect at least 5 each and add up to n; a true Poiss
   let reject = 0; const T = 400;
   for (let s = 1; s <= T; s++) { const c = k.counterNew(4, STc.rng(1000 + s)), o = { counts: [] }; k.counterRun(c, 100, 1, o); if (k.poissonCells(o.counts, 4, STc).p < 0.05) reject++; }
   near(reject / T, 0.05, 0.6, 'type I rate');
+});
+/* Counting view wiring (Steve 2026-11-22): the draws depend only on the draw set, R and Δt, never on the slider path. This runs the
+   page's own runSeed, start, restart, take, runTo, count100 and changed (outside the CORE) on the CORE counter and vdstats, with
+   the DOM stubbed out; the slider and the Δt buttons do exactly what slide and pressDt do (set K.ri or K.dt, then changed()). */
+group('Counting view: the same draw set, R and Δt reached by different slider paths give the same counts and waits', () => {
+  const src = readDemo('radioactive-decay'), coreSrc = src.match(/\/\/ ==CORE START==([\s\S]*?)\/\/ ==CORE END==/)[1];
+  const fnSrc = (name) => {
+    const f = src.search(new RegExp(`^[ \\t]*function ${name}\\(`, 'm')); assert(f >= 0, 'no function ' + name);
+    let i = src.indexOf('{', f), depth = 0; for (; i < src.length; i++) { const ch = src[i]; if (ch === '{') depth++; else if (ch === '}' && --depth === 0) break; }
+    return src.slice(f, i + 1);
+  };
+  const rates = src.match(/const RATES = (\[[^\]]+\]);/)[1];
+  const body = `${readLib('vdstats.js')}\n${coreSrc}\nconst C = { counterNew, counterRun }, ST = VDSTATS, RATES = ${rates};
+    const K = { run: false, ri: 4, dt: 1, seed: 1, rng: null, c: null, counts: [], waits: [], recent: [], flashes: [], tSim: 0 };
+    const MAXW = 500000, R = () => RATES[K.ri], setRun = (on) => { K.run = on; }, refresh = () => {}, live = () => {};
+    ${['runSeed', 'start', 'restart', 'take', 'runTo', 'count100', 'changed'].map(fnSrc).join('\n')}
+    globalThis.P = { K, restart, count100, changed };`;
+  const page = () => { const d = {}; vm.runInNewContext(body, d, { timeout: 10000 }); d.P.restart(); return d.P; };
+  const slide = (P, ri) => { P.K.ri = ri; P.changed(); }, pressDt = (P, dt) => { P.K.dt = dt; P.changed(); };
+  const snap = (P) => JSON.stringify({ counts: P.K.counts, waits: P.K.waits.slice(0, 50).map((w) => w.toFixed(12)) });
+  /* each setting two ways: straight to it; or Δt 10 first, the slider dragged down through every rate and back up with Count 100
+     times at each stop, Δt 5, then Δt and R last */
+  for (const [ri, dt] of [[2, 1], [4, 1], [6, 2], [10, 5], [11, 10], [0, 1]]) {
+    const A = page(); slide(A, ri); pressDt(A, dt); A.count100(); A.count100();
+    const B = page(); pressDt(B, 10); B.count100(); for (let r = 11; r >= 0; r--) { slide(B, r); B.count100(); }
+    for (let r = 0; r <= ri; r++) slide(B, r); pressDt(B, 5); B.count100(); pressDt(B, dt); slide(B, ri); B.count100(); B.count100();
+    assert.strictEqual(A.K.counts.length, 200); assert.strictEqual(snap(A), snap(B), `R index ${ri}, Δt ${dt}: the two paths differ`);
+  }
+  /* back to draw set 1 after draw set 2 and a slider detour gives the opening counts again; draw set 2 differs */
+  const A = page(); A.count100(); const first = snap(A);
+  A.K.seed = 2; A.restart(); A.count100(); assert.notStrictEqual(snap(A), first, 'draw set 2 differs from draw set 1');
+  A.K.seed = 1; A.restart(); slide(A, 7); slide(A, 4); A.count100(); assert.strictEqual(snap(A), first, 'back to draw set 1');
+  /* every (R, Δt) pair has its own stream: the first uniform draw differs for all 48 */
+  const P = page(), seen = new Set(); for (let r = 0; r < 12; r++) for (const dt of [1, 2, 5, 10]) { slide(P, r); pressDt(P, dt); seen.add(P.K.rng()); }
+  assert.strictEqual(seen.size, 48, 'every (R, Δt) pair has its own stream');
 });
 console.log(`${n} groups passed`);

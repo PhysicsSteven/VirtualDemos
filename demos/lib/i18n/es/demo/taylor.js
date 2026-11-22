@@ -44,8 +44,6 @@ VDI18N.add('es', 'demo/taylor', {
   "Polinomios y series de Taylor",
 "<a>Integrals, series and change</a>":
   "<a>Integrales, series y cambio</a>",
-"<span>Feedback</span>":
-  "<span>Comentarios</span>",
 "<a><span>←</span> <span>Sequences and Series</span></a><a><span>Slope Fields and Euler's Method</span> <span>→</span></a>":
   "<a><span>←</span> <span>Sucesiones y series</span></a><a><span>Campos de pendientes y el método de Euler</span> <span>→</span></a>",
 "Type any function and add the terms of its Taylor polynomial one at a time: watch the polynomial hug the curve near the center a, see how far it stays within {#}%, and find the error bound. The radius of convergence comes from the complex plane. Then build new series from known ones by substitution, differentiation and integration.":
@@ -192,6 +190,12 @@ VDI18N.add('es', 'demo/taylor', {
   "se multiplican.",
 "(base {#}),":
   "(base {#}),",
+"takes only the number right after it:":
+  "toma solo el número que le sigue:",
+"is e²·x, so type":
+  "es e²·x, así que escribe",
+"for e to the power 2x.":
+  "para e elevado a 2x.",
 "How it works":
   "Cómo funciona",
 "The box is read by the site's own parser (nothing you type is run as code). Each derivative f⁽ᵏ⁾ is worked out exactly by the rules of calculus, so c<sub>k</sub> = f⁽ᵏ⁾(a)/k! is exact; the table prints it as a fraction when it is one. The polynomial is T<sub>n</sub>(x) = c₀ + c₁(x − a) + … + c<sub>n</sub>(x − a)ⁿ.":
@@ -204,6 +208,8 @@ VDI18N.add('es', 'demo/taylor', {
   "En Construir una serie los coeficientes son fracciones exactas que se arrastran en cada paso: x → s·xᵐ lleva c<sub>k</sub>sᵏ a la potencia km y convierte R en (R/|s|)<sup>{#}/m</sup>; d/dx y ∫₀ˣ conservan R. La curva es la función que forman los pasos: su fórmula cuando se conoce una, y si no, la integral calculada numéricamente.",
 "Angles are in radians. In the physics setups the variable is a ratio: θ in radians, v in units of c, h in Earth radii (R = {#} km, the mean radius), d/r for the dipole.":
   "Los ángulos están en radianes. En las configuraciones de física la variable es un cociente: θ en radianes, v en unidades de c, h en radios terrestres (R = {#} km, el radio medio), d/r para el dipolo.",
+"<span>Feedback</span>":
+  "<span>Comentarios</span>",
 "The graph shows the function and its Taylor polynomial of order {#} about a = {#}; both formulas are printed under the graph.":
   "La gráfica muestra la función y su polinomio de Taylor de orden {#} alrededor de a = {#}; ambas fórmulas aparecen debajo de la gráfica.",
 "At the probe, at {#}, f is {#} and the polynomial gives {#}.":
@@ -244,8 +250,6 @@ VDI18N.add('es', 'demo/taylor', {
   "Sonda v",
 "M = largest |f⁽ⁿ⁺¹⁾| from a to v":
   "M = mayor |f⁽ⁿ⁺¹⁾| de a a v",
-"The radius of convergence is {#}.":
-  "El radio de convergencia es {#}.",
 "At a height h above Earth’s surface, g = g₀R²/(R + h)² = g₀/({#} + h/R)², with h in Earth radii here (R = {#} km). The first two terms give g ≈ g₀({#} − 2h/R). The probe is at {#} km, about where the International Space Station orbits: the exact g is {#}% of g₀ and the straight line gives {#}%. The series converges only for h < R, because of the pole at h = −R, the center of the Earth.":
   "A una altura h sobre la superficie de la Tierra, g = g₀R²/(R + h)² = g₀/({#} + h/R)², con h en radios terrestres aquí (R = {#} km). Los dos primeros términos dan g ≈ g₀({#} − 2h/R). La sonda está a {#} km, más o menos donde orbita la Estación Espacial Internacional: la g exacta es {#}% de g₀ y la recta da {#}%. La serie converge solo para h < R, por el polo en h = −R, el centro de la Tierra.",
 "Probe h":
@@ -254,6 +258,8 @@ VDI18N.add('es', 'demo/taylor', {
   "polo",
 "M = largest |f⁽ⁿ⁺¹⁾| from a to h":
   "M = mayor |f⁽ⁿ⁺¹⁾| de a a h",
+"The radius of convergence is {#}.":
+  "El radio de convergencia es {#}.",
 "Charges +q and −q a distance 2d apart, and a point on their axis a distance r from the middle. The exact field is E = kq/(r − d)² − kq/(r + d)², so Er²/kq = {#}/({#} − x)² − {#}/({#} + x)² with x = d/r. The first term, 4x, is the dipole field E = 2kp/r³ with p = 2qd; the next, 8x³, is the first correction. Far away (small x) the dipole term is all you need. The series converges only for r > d: inside that, you have passed a charge.":
   "Cargas +q y −q separadas una distancia 2d, y un punto sobre su eje a una distancia r del centro. El campo exacto es E = kq/(r − d)² − kq/(r + d)², así que Er²/kq = {#}/({#} − x)² − {#}/({#} + x)² con x = d/r. El primer término, 4x, es el campo del dipolo E = 2kp/r³ con p = 2qd; el siguiente, 8x³, es la primera corrección. Lejos (x pequeña) basta con el término del dipolo. La serie converge solo para r > d: más adentro, ya pasaste una carga.",
 "eˣ = {#} + x + x²/{#} + x³/{#} + … Every term is positive for x > {#}, and the polynomials hug the curve further out as terms are added, at any x: the radius of convergence is infinite, because eˣ has no singular point anywhere in the complex plane. For a decay, e^(−t/τ) ≈ {#} − t/τ while t is much less than τ.":
@@ -342,6 +348,8 @@ VDI18N.add('es', 'demo/taylor', {
   "{n} necesita algo sobre qué actuar, como {n}(x).",
 "Type a function, like sin(x) or 1/(1 + x^2).":
   "Escribe una función, como sin(x) o 1/(1 + x^2).",
+"{typed} is read as {read}. For the power, type {power}.":
+  "{typed} se lee como {read}. Para la potencia, escribe {power}.",
 "A known series. Apply a step to make a new one.":
   "Una serie conocida. Aplica un paso para hacer una nueva.",
 "Integrated term by term from 0. Every coefficient of xᵏ is divided by k + 1.":

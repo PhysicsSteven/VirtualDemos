@@ -30,10 +30,10 @@ VDI18N.add('es', 'demo/function-families', {
   "Iniciar corre en tiempo real: {#} s en pantalla es {#} s de t, así que P gira ω = {w} rad cada segundo.",
 "Families of Functions":
   "Familias de funciones",
-"<a>Math for physics</a>":
-  "<a>Matemáticas para la física</a>",
-"<span><a><span>Functions and Their Derivatives</span> <span>→</span></a></span>":
-  "<span><a><span>Funciones y sus derivadas</span> <span>→</span></a></span>",
+"<a>Functions and derivatives</a>":
+  "<a>Funciones y derivadas</a>",
+"<span><a><span>Limits</span> <span>→</span></a></span>":
+  "<span><a><span>Límites</span> <span>→</span></a></span>",
 "Turn a point around the unit circle and watch it draw sine and cosine, with the angle measured as arc length. Stretch and shift any function you type, and see what each number does. Reflect a graph in y = x to make its inverse, and watch the slope turn into {#}/slope. Oscillations, phasors and exponential decay are these same moves.":
   "Gira un punto alrededor del círculo unitario y míralo dibujar el seno y el coseno, con el ángulo medido como longitud de arco. Estira y desplaza cualquier función que escribas, y ve qué hace cada número. Refleja una gráfica en y = x para obtener su inversa, y mira cómo la pendiente se vuelve {#}/pendiente. Las oscilaciones, los fasores y el decaimiento exponencial son estos mismos movimientos.",
 "Put the angle, the numbers or the point back where this setup started":
@@ -96,6 +96,8 @@ VDI18N.add('es', 'demo/function-families', {
   "cos²θ + sen²θ",
 "Play runs in real time: {#} s on screen is {#} s of t, so P turns ω = {#} rad each second.":
   "Iniciar corre en tiempo real: {#} s en pantalla es {#} s de t, así que P gira ω = {#} rad cada segundo.",
+"<span>Show fewer</span>":
+  "<span>Ver menos</span>",
 "<span>Unit circle</span>":
   "<span>Círculo unitario</span>",
 "sin and cos from the unit circle":
@@ -150,6 +152,12 @@ VDI18N.add('es', 'demo/function-families', {
   "multiplican.",
 "(base {#}),":
   "(base {#}),",
+"takes only the number right after it:":
+  "toma solo el número que le sigue:",
+"is e²·x, so type":
+  "es e²·x, así que escribe",
+"for e to the power 2x.":
+  "para e elevado a 2x.",
 "How it works":
   "Cómo funciona",
 "The box is read by a small parser (demos/lib/vdmath.js); nothing you type is run as code. Angles are in radians.":
@@ -160,6 +168,10 @@ VDI18N.add('es', 'demo/function-families', {
   "Estirar y desplazar: g(x) = a·f(b(x − c)) + d se calcula a partir de f tal como está escrita, y su fórmula es f con x reemplazada por b(x − c), simplificada. Un punto (x, y) de f cae en (c + x/b, a·y + d) sobre g.",
 "Inverse: f must be one to one on the domain; the demo checks it at {#} points (the values must strictly rise or strictly fall). The mirror image is every point (x, f(x)) drawn at (f(x), x). The slope of f at x₀ is f′(x₀), exact from the derivative rules; the slope of the inverse at y₀ = f(x₀) is {#}/f′(x₀). As a check, the demo also measures it from the inverse itself: f⁻¹ is found by bisection to rounding and its slope by a central difference.":
   "Inversa: f debe ser uno a uno en el dominio; el demo lo verifica en {#} puntos (los valores deben subir siempre o bajar siempre). La imagen reflejada es cada punto (x, f(x)) dibujado en (f(x), x). La pendiente de f en x₀ es f′(x₀), exacta por las reglas de derivación; la pendiente de la inversa en y₀ = f(x₀) es {#}/f′(x₀). Como comprobación, el demo también la mide en la inversa misma: f⁻¹ se encuentra por bisección hasta el redondeo y su pendiente por una diferencia central.",
+"<span>Feedback</span>":
+  "<span>Comentarios</span>",
+"<a><span>Limits</span> <span>→</span></a>":
+  "<a><span>Límites</span> <span>→</span></a>",
 "stretched vertically by {k}":
   "estirada verticalmente por {k}",
 "no horizontal stretch":
@@ -400,6 +412,8 @@ VDI18N.add('es', 'demo/function-families', {
   "{n} necesita algo sobre qué actuar, como {n}(x).",
 "Type a function of x, like x^2 sin(x).":
   "Escribe una función de x, como x^2 sin(x).",
+"{typed} is read as {read}. For the power, type {power}.":
+  "{typed} se lee como {read}. Para la potencia, escribe {power}.",
 "a = 0 flattens the graph onto y = d":
   "a = 0 aplana la gráfica sobre y = d",
 "b = 0 makes g the constant a·f(0) + d":
@@ -423,5 +437,9 @@ VDI18N.add('es', 'demo/function-families', {
 "1 / slope":
   "1 / pendiente",
 "at an end of the range":
-  "en un extremo del rango"
+  "en un extremo del rango",
+"<a>Math for physics</a>":
+  "<a>Matemáticas para la física</a>",
+"<span><a><span>Functions and Their Derivatives</span> <span>→</span></a></span>":
+  "<span><a><span>Funciones y sus derivadas</span> <span>→</span></a></span>"
 });

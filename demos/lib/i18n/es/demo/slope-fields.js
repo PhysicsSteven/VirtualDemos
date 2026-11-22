@@ -42,10 +42,10 @@ VDI18N.add('es', 'demo/slope-fields', {
   "y = {#}, estable",
 "Slope Fields and Euler's Method":
   "Campos de pendientes y el método de Euler",
-"<a>Math for physics</a>":
-  "<a>Matemáticas para la física</a>",
-"<span><a><span>←</span> <span>Numerical Methods for Motion</span></a></span>":
-  "<span><a><span>←</span> <span>Métodos numéricos para el movimiento</span></a></span>",
+"<a>Integrals, series and change</a>":
+  "<a>Integrales, series y cambio</a>",
+"<a><span>←</span> <span>Taylor Polynomials and Series</span></a><a><span>Numerical Methods for Motion</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Polinomios y series de Taylor</span></a><a><span>Métodos numéricos para el movimiento</span> <span>→</span></a>",
 "Type a differential equation dy/dt = f(t, y) and see its slope field: a short line at each point with the slope the equation gives there. Click to start a solution curve, step along it with Euler's method, and compare with the accurate solution. The phase line beside the field marks the equilibria and whether they are stable.":
   "Escribe una ecuación diferencial dy/dt = f(t, y) y mira su campo de pendientes: una línea corta en cada punto con la pendiente que da ahí la ecuación. Haz clic para iniciar una curva solución, avanza por ella con el método de Euler y compárala con la solución precisa. La línea de fase junto al campo marca los equilibrios y si son estables.",
 "Take one Euler step":
@@ -102,6 +102,8 @@ VDI18N.add('es', 'demo/slope-fields', {
   "y de",
 "Reset view":
   "Restablecer la vista",
+"<span>Show fewer</span>":
+  "<span>Ver menos</span>",
 "Newton's cooling: a cup of coffee":
   "Enfriamiento de Newton: una taza de café",
 "Radioactive decay":
@@ -150,6 +152,16 @@ VDI18N.add('es', 'demo/slope-fields', {
   "Un",
 "at the start is fine.":
   "pegado al inicio no causa problema.",
+"is the natural log and":
+  "es el logaritmo natural y",
+"is base {#}.":
+  "es base {#}.",
+"takes only the number right after it:":
+  "toma solo el número que le sigue:",
+"is e²·x, so type":
+  "es e²·x, así que escribe",
+"for e to the power 2x.":
+  "para e elevado a 2x.",
 "How it works":
   "Cómo funciona",
 "The box is read by the site's own parser (nothing you type is run as code). Each short line of the field has the slope f(t, y) at its center, drawn at the same angle the graph shows for that slope on these axes.":
@@ -160,6 +172,8 @@ VDI18N.add('es', 'demo/slope-fields', {
   "La línea de fase se dibuja cuando f depende solo de y (una ecuación autónoma). Sus equilibrios son los ceros de f(y) en la vista, hallados por bisección; una flecha hacia arriba significa que y crece, hacia abajo que disminuye. Un punto relleno es estable (las flechas apuntan hacia él por ambos lados), un punto hueco inestable, un medio punto semiestable. Las isoclinas unen los puntos donde la pendiente tiene un mismo valor; la de pendiente {#} es la nulclina.",
 "The mystery setups draw their k, room temperature, growth rate and carrying capacity at random each time the page opens or New mystery is pressed. The thermometer readings of the cooling cup are simulated from that model, rounded to {#} °C.":
   "Las configuraciones de misterio eligen al azar su k, la temperatura del cuarto, la tasa de crecimiento y la capacidad de carga cada vez que se abre la página o se presiona Nuevo misterio. Las lecturas del termómetro de la taza que se enfría están simuladas con ese modelo, redondeadas a {#} °C.",
+"<span>Feedback</span>":
+  "<span>Comentarios</span>",
 "The equation is dy/dt = −{#}(y − {#}).":
   "La ecuación es dy/dt = −{#}(y − {#}).",
 "Its slope field is drawn.":
@@ -362,6 +376,8 @@ VDI18N.add('es', 'demo/slope-fields', {
   "Todavía no está completa.",
 "Type the right side of dy/dt = f(t, y), like -0.5y or t - y.":
   "Escribe el lado derecho de dy/dt = f(t, y), como -0.5y o t - y.",
+"{typed} is read as {read}. For the power, type {power}.":
+  "{typed} se lee como {read}. Para la potencia, escribe {power}.",
 "semistable":
   "semiestable",
 "every y: f is zero everywhere":
@@ -371,5 +387,9 @@ VDI18N.add('es', 'demo/slope-fields', {
 "Your own equation. Every setup above can be edited in the box, too.":
   "Tu propia ecuación. Cada configuración de arriba también se puede editar en la caja.",
 "Type an equation first.":
-  "Primero escribe una ecuación."
+  "Primero escribe una ecuación.",
+"<a>Math for physics</a>":
+  "<a>Matemáticas para la física</a>",
+"<span><a><span>←</span> <span>Numerical Methods for Motion</span></a></span>":
+  "<span><a><span>←</span> <span>Métodos numéricos para el movimiento</span></a></span>"
 });

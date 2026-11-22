@@ -183,6 +183,7 @@ dl.formulas dd { margin: 0; font-family: var(--font-mono); font-size: 0.88rem; o
             <li><code>n!</code> or <code>(2n)!</code> for factorials; <code>+ − * / ^</code> and parentheses; <code>2n</code> and <code>3sin(n)</code> multiply.</li>
             <li><code>sin cos tan</code>, <code>exp</code> or <code>e^n</code>, <code>ln</code>, <code>log</code> (base 10), <code>sqrt</code>, <code>abs</code> or <code>|n|</code>, <code>pi</code></li>
             <li>The first index, <code>from n =</code>, is a whole number from 0 to 1,000.</li>
+            <li><code>^</code> takes only the number right after it: <code>e^2x</code> is e²·x, so type <code>e^(2x)</code> for e to the power 2x.</li>
           </ul>
         </details>
         <details class="more"><summary>How it works</summary>
@@ -442,7 +443,7 @@ dl.formulas dd { margin: 0; font-family: var(--font-mono); font-size: 0.88rem; o
     if (n0 <= 1000) S.n0 = n0;
     if (r.empty) { status(MSG.empty(), false); return; }
     if (!r.node) { status((S.node ? VDI18N.t('Still showing the last series. ') : '') + (MSG[r.error.code] || MSG.end)(r.error), true); return; }
-    status(r.partial ? VDI18N.t('Adding up what is finished so far, while you type.') : !(n0 <= 1000) ? VDI18N.t('The first index is a whole number from 0 to 1,000.') : '', !(n0 <= 1000));
+    status(((r.partial ? VDI18N.t('Adding up what is finished so far, while you type.') : !(n0 <= 1000) ? VDI18N.t('The first index is a whole number from 0 to 1,000.') : '') + (VDMATH.powerHint($('an').value) ? ' ' + VDI18N.t('{typed} is read as {read}. For the power, type {power}.', VDMATH.powerHint($('an').value)) : '')).trim(), !(n0 <= 1000));
     S.node = r.node; Object.assign(S, compileTerms(r.node));
     if (S.view === 'compare') {
       const q = M.parseLive($('bn').value, NV);

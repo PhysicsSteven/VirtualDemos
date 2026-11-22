@@ -131,4 +131,12 @@ group('reference values (scipy 2026-11-22) in the tails and at small and fractio
   for (const df of [1, 2, 5, 30, 1000]) near(S.dist.t(df).inv(0.5), 0, 1e-11, `t(${df}) median is 0`);
   for (const df of [1, 3, 30]) near(S.dist.t(df).cdf(-2) + S.dist.t(df).cdf(2), 1, 1e-15, 't symmetry');
 });
+group("k-th percentile by the book's 2.3 rule: a whole position takes that value, otherwise the two neighbors' average", () => {
+  const a = []; for (let v = 1; v <= 49; v++) a.push(v * 2);   /* 2, 4, ..., 98; n + 1 = 50 */
+  near(S.quantile(a, 50), 50, 1e-12, 'i = 25 is whole: the 25th value');
+  near(S.quantile(a, 49.8), (48 + 50) / 2, 1e-12, 'i = 24.9: average of the 24th and 25th values (Example 2.16 pattern)');
+  near(S.quantile(a, 1), 2, 1e-12, 'below position 1: the smallest');
+  near(S.quantile(a, 99), 98, 1e-12, 'past position n: the largest');
+  near(S.quantile([1, 2, 3, 4], 50), 2.5, 1e-12, 'i = 2.5: average of 2 and 3');
+});
 console.log(`${n} groups passed`);

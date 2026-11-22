@@ -2494,8 +2494,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     counts: [], waits: [], recent: [], flashes: [], tSim: 0 };
   const R = () => RATES[K.ri], mu = () => R() * K.dt, t0 = () => K.t0i / 10 / R();
   const MAXW = 500000;
-  function start() { K.c = C.counterNew(R(), K.rng); K.counts = []; K.waits = []; K.recent = []; K.flashes = []; K.tSim = 0; }
-  function restart() { K.rng = ST.rng(K.seed); start(); }
+  /* the draws depend only on the draw set and the settings that set the run (R and Δt), never on the path a student took to them:
+     every start seeds a fresh generator from (draw set, R, Δt) with an FNV-1a hash (Steve 2026-11-22) */
+  function runSeed(set, r, dt) { let h = 2166136261; for (const ch of `${set}|${r}|${dt}`) { h ^= ch.charCodeAt(0); h = Math.imul(h, 16777619); } return h >>> 0; }
+  function start() { K.rng = ST.rng(runSeed(K.seed, R(), K.dt)); K.c = C.counterNew(R(), K.rng); K.counts = []; K.waits = []; K.recent = []; K.flashes = []; K.tSim = 0; }
+  function restart() { start(); }
   function take(out) {
     for (const k of out.counts) K.counts.push(k);
     for (const w of out.waits) if (K.waits.length < MAXW) K.waits.push(w);
@@ -2760,7 +2763,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     o.push({ t: `${int(ws.n)} waits between counts, mean ${sig4(ws.mean)} s${K.blind ? '' : `; the exponential distribution expects ${sig4(1 / R())} s`}.`, live: false });
     return o;
   });
-  window.__rdc = { K, RATES, show, reading, count100, countStats, waitStats, restart, mu, t0, setRun };
+  window.__rdc = { K, RATES, show, reading, count100, countStats, waitStats, restart, runSeed, mu, t0, setRun };
   requestAnimationFrame(loop);
 })();
 </script>

@@ -28,10 +28,10 @@ VDI18N.add('es', 'demo/multiple-integrals', {
   "ΔA = {#}",
 "Multiple Integrals":
   "Integrales múltiples",
-"<a>Math for physics</a>":
-  "<a>Matemáticas para física</a>",
-"<span><a><span>←</span> <span>Vector Fields, Work and Curl</span></a></span>":
-  "<span><a><span>←</span> <span>Campos vectoriales, trabajo y rotacional</span></a></span>",
+"<a>Space, vectors and fields</a>":
+  "<a>Espacio, vectores y campos</a>",
+"<a><span>←</span> <span>Surfaces and Gradients</span></a><a><span>Vector Fields, Work and Curl</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Superficies y gradientes</span></a><a><span>Campos vectoriales, trabajo y rotacional</span> <span>→</span></a>",
 "Add up a quantity spread over an area or a volume. Boxes under a surface turn into a double integral as the grid gets finer; slices taken in either order give the same answer; polar wedges, cylindrical and spherical cells fill round regions; the same sums give the mass, center of mass and moment of inertia of a body; and a change of variables stretches a grid by its Jacobian. Integrals are computed numerically; derivatives and Jacobians are exact.":
   "Suma una cantidad repartida sobre un área o un volumen. Las cajas bajo una superficie se vuelven una integral doble al afinar la cuadrícula; las rebanadas tomadas en cualquier orden dan la misma respuesta; las cuñas polares y las celdas cilíndricas y esféricas llenan regiones redondas; las mismas sumas dan la masa, el centro de masa y el momento de inercia de un cuerpo; y un cambio de variables estira una cuadrícula según su jacobiano. Las integrales se calculan numéricamente; las derivadas y los jacobianos son exactos.",
 "Back to the start of this run: the coarse grid, the first slice, no cells yet":
@@ -126,6 +126,8 @@ VDI18N.add('es', 'demo/multiple-integrals', {
   "<span>Quitar un cuarto para ver adentro</span>",
 "Reset view":
   "Restablecer vista",
+"<span>Show fewer</span>":
+  "<span>Ver menos</span>",
 "<span>Boxes under a surface</span>":
   "<span>Cajas bajo una superficie</span>",
 "A plate's mass from its density":
@@ -208,6 +210,16 @@ VDI18N.add('es', 'demo/multiple-integrals', {
   "multiplican.",
 "A bound may use only the coordinates outside it: the bounds on y may use x, the bounds on z may use x and y.":
   "Un límite solo puede usar las coordenadas de afuera: los límites de y pueden usar x, los de z pueden usar x y y.",
+"is the natural log and":
+  "es el logaritmo natural y",
+"is base {#}.":
+  "es base {#}.",
+"takes only the number right after it:":
+  "toma solo el número que le sigue:",
+"is e²·x, so type":
+  "es e²·x, así que escribe",
+"for e to the power 2x.":
+  "para e elevado a 2x.",
 "How it works":
   "Cómo funciona",
 "Each box is read by the site's small parser (nothing you type is run as code). Partial derivatives and the Jacobian of a change of variables come from the exact rules of calculus.":
@@ -222,6 +234,8 @@ VDI18N.add('es', 'demo/multiple-integrals', {
   "Alturas dibujadas a {k} veces la escala horizontal",
 "Heights drawn {#} times the horizontal scale":
   "Alturas dibujadas a {#} veces la escala horizontal",
+"<span>Feedback</span>":
+  "<span>Comentarios</span>",
 "The integral is {v}.":
   "La integral vale {v}.",
 "The sum over {n} cells is {s}.":
@@ -388,14 +402,14 @@ VDI18N.add('es', 'demo/multiple-integrals', {
   "Δz ≈ {#}",
 "The corner cut off by the plane x + y + z = {#}. Its volume is {#}/{#}: each bound uses the coordinates outside it. Change f to x and divide by {#}/{#}: the centroid is at x̄ = {#}/{#}.":
   "La esquina que corta el plano x + y + z = {#}. Su volumen es {#}/{#}: cada límite usa las coordenadas de afuera. Cambia f a x y divide entre {#}/{#}: el centroide está en x̄ = {#}/{#}.",
-"A uniform ball of {#} kg and radius {#} m about a diameter: I = ⅖MR² = {#} kg·m². The cells are spherical, each of mass δ ρ² sin φ Δρ Δφ Δθ. About an axis touching the surface, the parallel axis theorem adds MR²: {#}/{#} MR².":
-  "Una bola uniforme de {#} kg y radio {#} m respecto a un diámetro: I = ⅖MR² = {#} kg·m². Las celdas son esféricas, cada una de masa δ ρ² sen φ Δρ Δφ Δθ. Respecto a un eje que toca la superficie, el teorema de los ejes paralelos suma MR²: {#}/{#} MR².",
-"Touching the surface":
-  "Tocando la superficie",
 "The body has mass {M} kg and moment of inertia {I} kg·m² about the axis.":
   "El cuerpo tiene masa {M} kg y momento de inercia {I} kg·m² respecto al eje.",
 "The body has mass {#} kg and moment of inertia {#} kg·m² about the axis.":
   "El cuerpo tiene masa {#} kg y momento de inercia {#} kg·m² respecto al eje.",
+"A uniform ball of {#} kg and radius {#} m about a diameter: I = ⅖MR² = {#} kg·m². The cells are spherical, each of mass δ ρ² sin φ Δρ Δφ Δθ. About an axis touching the surface, the parallel axis theorem adds MR²: {#}/{#} MR².":
+  "Una bola uniforme de {#} kg y radio {#} m respecto a un diámetro: I = ⅖MR² = {#} kg·m². Las celdas son esféricas, cada una de masa δ ρ² sen φ Δρ Δφ Δθ. Respecto a un eje que toca la superficie, el teorema de los ejes paralelos suma MR²: {#}/{#} MR².",
+"Touching the surface":
+  "Tocando la superficie",
 "A uniform rod of {#} kg and length {#} m turning about one end, like a door seen from above or a swinging leg: I = ∫ x² dm = ⅓ML² = {#} kg·m². About its center, {#}/{#} ML²: four times smaller.":
   "Una varilla uniforme de {#} kg y longitud {#} m que gira respecto a un extremo, como una puerta vista desde arriba o una pierna que se balancea: I = ∫ x² dm = ⅓ML² = {#} kg·m². Respecto a su centro, {#}/{#} ML²: cuatro veces menor.",
 "Length L (m)":
@@ -470,14 +484,18 @@ VDI18N.add('es', 'demo/multiple-integrals', {
   "x: Aún no está terminado.",
 "This one needs too many steps to compute here: try simpler bounds or a smaller region.":
   "Esto necesita demasiados pasos para calcularse aquí: prueba límites más simples o una región más pequeña.",
-"The quadrature did not settle: f probably blows up somewhere in the region, so the integral may not exist, and the value shown is not reliable.":
-  "La cuadratura no se estabilizó: f probablemente crece sin límite en alguna parte de la región, así que la integral puede no existir, y el valor mostrado no es confiable.",
 "ρ sin φ Δθ ≈ {#}×{#}⁹":
   "ρ sen φ Δθ ≈ {#}×{#}⁹",
 "ΔV = {#}×{#}²⁶":
   "ΔV = {#}×{#}²⁶",
 "The sum over {#} cells is −{#}×{#}²⁵.":
   "La suma sobre {#} celdas es −{#}×{#}²⁵.",
+"<a>Math for physics</a>":
+  "<a>Matemáticas para física</a>",
+"<span><a><span>←</span> <span>Vector Fields, Work and Curl</span></a></span>":
+  "<span><a><span>←</span> <span>Campos vectoriales, trabajo y rotacional</span></a></span>",
+"The quadrature did not settle: f probably blows up somewhere in the region, so the integral may not exist, and the value shown is not reliable.":
+  "La cuadratura no se estabilizó: f probablemente crece sin límite en alguna parte de la región, así que la integral puede no existir, y el valor mostrado no es confiable.",
 "A sphere of mass {#} kg, its moment of inertia about the axis is {#} kg·m².":
   "Una esfera de masa {#} kg; su momento de inercia respecto al eje es {#} kg·m².",
 "A rod of mass {#} kg, its moment of inertia about the axis is {#} kg·m².":

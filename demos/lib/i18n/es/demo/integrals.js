@@ -54,10 +54,12 @@ VDI18N.add('es', 'demo/integrals', {
   "Límites",
 "Riemann Sums and Integrals":
   "Sumas de Riemann e integrales",
-"<a>Math for physics</a>":
-  "<a>Matemáticas para la física</a>",
-"<a><span>←</span> <span>Functions and Their Derivatives</span></a><a><span>Numerical Methods for Motion</span> <span>→</span></a>":
-  "<a><span>←</span> <span>Funciones y sus derivadas</span></a><a><span>Métodos numéricos para el movimiento</span> <span>→</span></a>",
+"<a>Integrals, series and change</a>":
+  "<a>Integrales, series y cambio</a>",
+"<span>Feedback</span>":
+  "<span>Comentarios</span>",
+"<a><span>Solids of Revolution</span> <span>→</span></a>":
+  "<a><span>Sólidos de revolución</span> <span>→</span></a>",
 "Type any function and fill the area under it with rectangles, trapezoids or Simpson's parabolas. Raise n and watch the sum close in on the exact integral, see on log axes how fast each rule gets there, and follow the area as it builds up: work, impulse, charge and displacement are all areas.":
   "Escribe cualquier función y llena el área bajo ella con rectángulos, trapecios o las parábolas de Simpson. Aumenta n y observa cómo la suma se acerca a la integral exacta, mira en ejes logarítmicos qué tan rápido llega cada regla, y sigue el área mientras se acumula: el trabajo, el impulso, la carga y el desplazamiento son áreas.",
 "Put n, the moving point or the moving end back where this setup started":
@@ -114,6 +116,8 @@ VDI18N.add('es', 'demo/integrals', {
   "Restablecer vista",
 "Divider between the area and the lower graph":
   "Divisor entre el área y la gráfica inferior",
+"<span>Show fewer</span>":
+  "<span>Ver menos</span>",
 "Left and right sums on a rising curve":
   "Sumas izquierda y derecha en una curva creciente",
 "Signed area: sin x":
@@ -166,6 +170,12 @@ VDI18N.add('es', 'demo/integrals', {
   "(base {#}),",
 "A data table: one reading per line, x then y, separated by a comma, a space or a tab. The x values must increase.":
   "Una tabla de datos: una lectura por línea, x y luego y, separadas por una coma, un espacio o un tabulador. Los valores de x deben aumentar.",
+"takes only the number right after it:":
+  "toma solo el número que le sigue:",
+"is e²·x, so type":
+  "es e²·x, así que escribe",
+"for e to the power 2x.":
+  "para e elevado a 2x.",
 "How it works":
   "Cómo funciona",
 "The box is read by a small parser (demos/lib/vdmath.js); nothing you type is run as code. With n pieces of width h = (b − a)/n, the Left, Right and Midpoint sums add h times f at the left end, the right end or the middle of each piece; the Trapezoid sum joins the points with straight lines; Simpson's rule (n even) fits a parabola through each pair of pieces.":
@@ -256,10 +266,6 @@ VDI18N.add('es', 'demo/integrals', {
   "La función es una tabla de lecturas.",
 "The Trapezoid rule with n = {#} pieces gives {#}.":
   "La regla Trapecio con n = {#} piezas da {#}.",
-"At {v} = {x}, the area so far is {A} and f is {f}.":
-  "En {v} = {x}, el área hasta ahí es {A} y f vale {f}.",
-"At t = {#}, the area so far is {#} and f is {#}.":
-  "En t = {#}, el área hasta ahí es {#} y f es {#}.",
 "Area below the axis counts as negative (hatched). From {#} to {#}π/{#} the hump above the axis has area {#} and the part below has area {#}, so the integral, the net signed area, is {#} while the total area is {#}. Drag b to {#}π and the two humps cancel exactly.":
   "El área bajo el eje cuenta como negativa (rayada). De {#} a {#}π/{#} la joroba sobre el eje tiene área {#} y la parte de abajo tiene área {#}, así que la integral, el área neta con signo, es {#} mientras que el área total es {#}. Arrastra b a {#}π y las dos jorobas se cancelan exactamente.",
 "Total area, ∫|f|":
@@ -360,6 +366,10 @@ VDI18N.add('es', 'demo/integrals', {
   "indefinido",
 "The area under v(t) is the displacement, in m. The total area, counting backward motion as positive, is the distance traveled.":
   "El área bajo v(t) es el desplazamiento, en m. El área total, contando el movimiento hacia atrás como positivo, es la distancia recorrida.",
+"At {v} = {x}, the area so far is {A} and f is {f}.":
+  "En {v} = {x}, el área hasta ahí es {A} y f vale {f}.",
+"At t = {#}, the area so far is {#} and f is {#}.":
+  "En t = {#}, el área hasta ahí es {#} y f es {#}.",
 "One more or one fewer piece n (Error against n)":
   "Una pieza n más o una menos (Error contra n)",
 "Move x along the curve (F(x), the area so far; Shift for bigger steps)":
@@ -398,6 +408,8 @@ VDI18N.add('es', 'demo/integrals', {
   "Escribe g, la curva inferior.",
 "Graphing what is finished so far, while you type.":
   "Graficando lo que ya está terminado, mientras escribes.",
+"{typed} is read as {read}. For the power, type {power}.":
+  "{typed} se lee como {read}. Para la potencia, escribe {power}.",
 "No finite integral from a to b, so there is no error to plot.":
   "No hay integral finita de a a b, así que no hay error que graficar.",
 "Every rule is exact here, to rounding: no error to plot.":
@@ -441,5 +453,9 @@ VDI18N.add('es', 'demo/integrals', {
 "Type a function first.":
   "Primero escribe una función.",
 "Switch the lower graph to Error against n to record a sum.":
-  "Cambia la gráfica inferior a Error contra n para registrar una suma."
+  "Cambia la gráfica inferior a Error contra n para registrar una suma.",
+"<a>Math for physics</a>":
+  "<a>Matemáticas para la física</a>",
+"<a><span>←</span> <span>Functions and Their Derivatives</span></a><a><span>Numerical Methods for Motion</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Funciones y sus derivadas</span></a><a><span>Métodos numéricos para el movimiento</span> <span>→</span></a>"
 });

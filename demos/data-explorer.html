@@ -185,7 +185,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the statistics, the box plot and the mean and median marks, to predict them first</span></label>
         <details class="more" open><summary>The book's rules used here</summary>
           <p class="rule"><b>Quartiles</b> (OpenStax <i>Introductory Statistics 2e</i>, 2.3 and 2.4): the median splits the ordered data into halves; Q1 is the median of the lower half and Q3 the median of the upper half. When n is odd the median itself is left out of both halves. This is the rule a TI-83 or TI-84 uses (1-Var Stats); spreadsheets and some software use other rules and can give slightly different quartiles.</p>
-          <p class="rule"><b>k-th percentile</b> (2.3): its position in the ordered list is i = k(n + 1)/100; when i is not a whole number, go that fraction of the way from the value at the whole part of i to the next value. Below position 1 it is the smallest value, past position n the largest. The 25th percentile found this way can differ a little from Q1.</p>
+          <p class="rule"><b>k-th percentile</b> (2.3): its position in the ordered list is i = k(n + 1)/100; when i is not a whole number, average the two values at the positions on either side of i. Below position 1 it is the smallest value, past position n the largest. The 25th percentile found this way can differ a little from Q1.</p>
           <p class="rule"><b>Percentile of a value</b> (2.3): (x + 0.5y)/n × 100, where x values are below it and y values equal it.</p>
           <p class="rule"><b>Outliers</b> (2.3, 2.4): values below Q1 − 1.5 IQR or above Q3 + 1.5 IQR, with IQR = Q3 − Q1. The book's box plot runs its whiskers to the smallest and largest values; tick Modified box plot to stop them at the last values inside the fences and draw outliers as separate points.</p>
           <p class="rule"><b>Standard deviation</b> (2.7): the sample s = √(Σ(x − x̄)²/(n − 1)). <b>Skew</b> (2.6): read from where the mean sits against the median and the long tail; the number shown is the sample skewness coefficient (n/((n − 1)(n − 2)))·Σ((x − x̄)/s)³, what spreadsheets call SKEW. Positive means a long tail to the right.</p>
@@ -680,7 +680,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (!a.length) { $('kNote').textContent = ''; return; }
     if (S.blind) { $('kNote').textContent = tt('Hidden: predict it.'); return; }
     const n = a.length, i = S.k * (n + 1) / 100, q = STS.quantile(a, S.k);
-    $('kNote').textContent = tt('Position i = k(n + 1)/100 = {k}·{n1}/100 = {i} in the ordered list, so the {k}th percentile is {q}.', { k: S.k, n1: n + 1, i: fmt(i, 2), q: fmt(q, Math.min(S.d + 2, 6)) + unit() });
+    const lo = Math.floor(i + 1e-9), whole = Math.abs(i - lo) < 1e-9, P = { k: S.k, n1: n + 1, i: fmt(i, 2), lo: lo, hi: lo + 1, q: fmt(q, Math.min(S.d + 2, 6)) + unit() };
+    $('kNote').textContent = i <= 1 || i >= n || whole
+      ? tt('Position i = k(n + 1)/100 = {k}·{n1}/100 = {i} in the ordered list, so the {k}th percentile is {q}.', P)
+      : tt('Position i = k(n + 1)/100 = {k}·{n1}/100 = {i} is not a whole number, so the {k}th percentile is the average of values {lo} and {hi} in the ordered list: {q}.', P);
   }
   function levelCard() {
     for (const s of document.querySelectorAll('#levels span')) s.classList.toggle('on', s.dataset.l === S.level);

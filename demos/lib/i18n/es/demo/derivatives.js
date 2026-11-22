@@ -6,10 +6,10 @@ VDI18N.add('es', 'demo/derivatives', {
   "f se curva hacia abajo: f″ < {#}",
 "Functions and Their Derivatives":
   "Funciones y sus derivadas",
-"<a>Math for physics</a>":
-  "<a>Matemáticas para física</a>",
-"<a><span>←</span> <span>Limits</span></a><a><span>Numerical Methods for Motion</span> <span>→</span></a>":
-  "<a><span>←</span> <span>Límites</span></a><a><span>Métodos numéricos para el movimiento</span> <span>→</span></a>",
+"<a>Functions and derivatives</a>":
+  "<a>Funciones y derivadas</a>",
+"<a><span>←</span> <span>Limits</span></a><a><span>Related Rates and Optimization</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Límites</span></a><a><span>Razones de cambio relacionadas y optimización</span> <span>→</span></a>",
 "Type or paste a function and see it graphed with its first and second derivatives on the same axes, updating as you type. Turn on the third derivative or the integral too. The derivatives are worked out exactly, by the rules of calculus; the integral is computed numerically.":
   "Escribe o pega una función y mírala graficada junto con su primera y segunda derivada en los mismos ejes, actualizándose mientras escribes. También puedes activar la tercera derivada o la integral. Las derivadas se calculan de forma exacta, con las reglas del cálculo; la integral se calcula numéricamente.",
 "Put the point back at its starting place":
@@ -88,6 +88,8 @@ VDI18N.add('es', 'demo/derivatives', {
   "Borrar los pasos",
 "<span>x<sub>n+{#}</sub> = x<sub>n</sub> − f(x<sub>n</sub>)/f′(x<sub>n</sub>): follow the tangent at x<sub>n</sub> down to the axis. The point is the start x<sub>{#}</sub>: drag it to start somewhere else. Play takes one step a second.</span>":
   "<span>x<sub>n+{#}</sub> = x<sub>n</sub> − f(x<sub>n</sub>)/f′(x<sub>n</sub>): sigue la tangente en x<sub>n</sub> hasta el eje. El punto es el inicio x<sub>{#}</sub>: arrástralo para empezar en otro lugar. Iniciar da un paso por segundo.</span>",
+"<span>Show fewer</span>":
+  "<span>Ver menos</span>",
 "A cubic: peaks and an inflection":
   "Una cúbica: máximos, mínimos y una inflexión",
 "Sine: f″ = −f":
@@ -158,6 +160,12 @@ VDI18N.add('es', 'demo/derivatives', {
   "pegado al inicio no causa problema.",
 "work too.":
   "también funcionan.",
+"takes only the number right after it:":
+  "toma solo el número que le sigue:",
+"is e²·x, so type":
+  "es e²·x, así que escribe",
+"for e to the power 2x.":
+  "para e elevado a 2x.",
 "How it works":
   "Cómo funciona",
 "The box is read by a small parser written for this page (nothing you type is run as code). The derivatives come from the exact rules (sum, product, quotient, power and chain rules) applied to what you typed, then tidied, so the formulas shown are exact. Each curve is drawn from those formulas.":
@@ -170,6 +178,8 @@ VDI18N.add('es', 'demo/derivatives', {
   "Método de Newton: cada paso es x − f(x)/f′(x) con la f′ exacta. La raíz hacia la que va se encuentra siguiendo hasta que un paso ya no cambia x; los dígitos correctos de cada paso se cuentan respecto a esa raíz. Se detiene en una tangente horizontal (f′ = {#}) e indica cuando los pasos se repiten.",
 "Angles are in radians. A jump in a curve is left as a gap rather than joined with a vertical line.":
   "Los ángulos están en radianes. Un salto en una curva se deja como un hueco en lugar de unirse con una línea vertical.",
+"<span>Feedback</span>":
+  "<span>Comentarios</span>",
 "The function is f(x) =":
   "La función es f(x) =",
 "The graph shows it on shared axes.":
@@ -276,16 +286,16 @@ VDI18N.add('es', 'demo/derivatives', {
   "desde",
 "Start the integral at a = {#}: the area under {#}/x from {#} to x is ln x, which keeps growing but ever more slowly. Move the point left of {#} and the area counts as negative. The integral cannot cross x = {#}, where the area is infinite, so F stops there.":
   "Empieza la integral en a = {#}: el área bajo {#}/x desde {#} hasta x es ln x, que sigue creciendo pero cada vez más despacio. Mueve el punto a la izquierda de {#} y el área cuenta como negativa. La integral no puede cruzar x = {#}, donde el área es infinita, así que F se detiene ahí.",
+"The secant through x = {#} and x = {#} + h has slope [({#} + h)² − {#}]/h = {#} + h exactly. Press Play: h halves every half second and the secant swings into the tangent, whose slope is f′({#}) = {#}. The table shows the difference quotient from both sides closing in on {#}, until at very small h rounding in f(x + h) − f(x) spoils it.":
+  "La secante por x = {#} y x = {#} + h tiene pendiente [({#} + h)² − {#}]/h = {#} + h exactamente. Presiona Iniciar: h se reduce a la mitad cada medio segundo y la secante gira hasta la tangente, cuya pendiente es f′({#}) = {#}. La tabla muestra el cociente de diferencias de ambos lados acercándose a {#}, hasta que en h muy pequeño el redondeo en f(x + h) − f(x) lo arruina.",
 "The integral curve is shown.":
   "Se muestra la curva de la integral.",
 "The point is at x = {#}.":
   "El punto está en x = {#}.",
 "The integral starts at a = {#}.":
   "La integral empieza en a = {#}.",
-"The integral of f from a to the point is −{#}.":
-  "La integral de f desde a hasta el punto es −{#}.",
-"The secant through x = {#} and x = {#} + h has slope [({#} + h)² − {#}]/h = {#} + h exactly. Press Play: h halves every half second and the secant swings into the tangent, whose slope is f′({#}) = {#}. The table shows the difference quotient from both sides closing in on {#}, until at very small h rounding in f(x + h) − f(x) spoils it.":
-  "La secante por x = {#} y x = {#} + h tiene pendiente [({#} + h)² − {#}]/h = {#} + h exactamente. Presiona Iniciar: h se reduce a la mitad cada medio segundo y la secante gira hasta la tangente, cuya pendiente es f′({#}) = {#}. La tabla muestra el cociente de diferencias de ambos lados acercándose a {#}, hasta que en h muy pequeño el redondeo en f(x + h) − f(x) lo arruina.",
+"The integral of f from a to the point is {#}.":
+  "La integral de f desde a hasta el punto es {#}.",
 "The height in meters of a ball dropped from {#} m (g = {#} m/s², no air drag), t in seconds. The secant slope over [t, t + h] is the average velocity; the tangent slope is the instantaneous velocity. From t = {#} s to {#} s the average is −{#} m/s, while at t = {#} s the ball moves at −{#} m/s. Shrink h and the average closes in on −{#} m/s. The mean value point c is always the middle of the interval here, because the acceleration is constant.":
   "La altura en metros de una pelota que se deja caer desde {#} m (g = {#} m/s², sin resistencia del aire), t en segundos. La pendiente de la secante sobre [t, t + h] es la velocidad media; la pendiente de la tangente es la velocidad instantánea. De t = {#} s a {#} s la media es −{#} m/s, mientras que en t = {#} s la pelota se mueve a −{#} m/s. Reduce h y la media se acerca a −{#} m/s. Aquí el punto c del valor medio siempre está a la mitad del intervalo, porque la aceleración es constante.",
 "Average velocity over [t, t + h]":
@@ -304,6 +314,8 @@ VDI18N.add('es', 'demo/derivatives', {
   "¿Dónde está un planeta en su órbita elíptica en un momento dado? La ecuación de Kepler M = E − e sin E no tiene solución en forma cerrada, así que los astrónomos la resuelven con el método de Newton. Aquí la excentricidad es e = {#} y la anomalía media (el tiempo desde el máximo acercamiento, como ángulo) es M = {#} rad, así que la anomalía excéntrica E es la raíz de x − {#} sin x − {#}. Desde x₀ = M = {#} llega a E = {#} rad con precisión completa en {#} pasos.",
 "x - {#}sin(x) - {#}":
   "x - {#}sin(x) - {#}",
+"The integral of f from a to the point is −{#}.":
+  "La integral de f desde a hasta el punto es −{#}.",
 "From x₀ = {#} the tangent lands at x₁ = {#}, and the tangent there lands back at {#}: the steps cycle {#}, {#}, {#}, {#}, … forever and never reach the root at −{#}. Starts near {#}, such as {#}, are drawn into the same cycle. Start at −{#} and it converges in {#} steps.":
   "Desde x₀ = {#} la tangente llega a x₁ = {#}, y la tangente ahí regresa a {#}: los pasos ciclan {#}, {#}, {#}, {#}, … para siempre y nunca llegan a la raíz en −{#}. Los inicios cerca de {#}, como {#}, caen en el mismo ciclo. Empieza en −{#} y converge en {#} pasos.",
 "At x₀ = {#}, the valley of x³ − 3x, the tangent is flat: f′({#}) = {#}, so it never meets the axis and the step x − f(x)/f′(x) divides by zero. A start near a flat tangent is almost as bad: from {#} the first step flies out to {#}. A start beyond the outer root, x₀ = {#}, goes straight in to √{#}.":
@@ -316,16 +328,12 @@ VDI18N.add('es', 'demo/derivatives', {
   "Desde x₀ = {#} esperarías que el método de Newton encontrara π, la raíz más cercana. Pero ahí la tangente es casi horizontal, así que el primer paso cae en −{#} y los pasos se asientan en −{#}π = −{#}. Empieza en {#} y encuentra π.",
 "sin(x)":
   "sin(x)",
-"The integral of f from a to the point is {#}.":
-  "La integral de f desde a hasta el punto es {#}.",
 "The point is moving along the curve.":
   "El punto se mueve a lo largo de la curva.",
 "sqrt(x)":
   "sqrt(x)",
 "The view runs from x = {#} to {#} and from y = −{#} to {#}.":
   "La vista va de x = {#} a {#} y de y = −{#} a {#}.",
-"f is level here: f′ = {#}<br>f is not bending here: f″ = {#}":
-  "f está plana aquí: f′ = {#}<br>f no se curva aquí: f″ = {#}",
 "undefined":
   "no definido",
 "f(x) is undefined.":
@@ -362,14 +370,16 @@ VDI18N.add('es', 'demo/derivatives', {
   "Todavía se muestra la última gráfica.",
 "Graphing what is finished so far, while you type.":
   "Graficando lo que ya está completo, mientras escribes.",
+"{typed} is read as {read}. For the power, type {power}.":
+  "{typed} se lee como {read}. Para la potencia, escribe {power}.",
 "{c} drawn × {k}":
   "{c} dibujada × {k}",
 "flat tangent: it never meets the axis":
   "tangente horizontal: nunca toca el eje",
-"none: f′ is not defined everywhere between":
-  "ninguno: f′ no está definida en todo el intervalo",
 "every c between: f′ equals the secant slope throughout":
   "todo c en el intervalo: f′ es igual a la pendiente de la secante en todas partes",
+"none: f′ is not defined everywhere between":
+  "ninguno: f′ no está definida en todo el intervalo",
 "Stopped: the tangent here is flat (f′ = 0), so it never meets the axis.":
   "Se detuvo: aquí la tangente es horizontal (f′ = 0), así que nunca toca el eje.",
 "too long to show":
@@ -396,6 +406,12 @@ VDI18N.add('es', 'demo/derivatives', {
   "Cambia a Derivadas o a De secante a tangente para registrar una lectura.",
 "f has no value at the point.":
   "f no tiene valor en el punto.",
+"<a>Math for physics</a>":
+  "<a>Matemáticas para física</a>",
+"<a><span>←</span> <span>Limits</span></a><a><span>Numerical Methods for Motion</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Límites</span></a><a><span>Métodos numéricos para el movimiento</span> <span>→</span></a>",
+"f is level here: f′ = {#}<br>f is not bending here: f″ = {#}":
+  "f está plana aquí: f′ = {#}<br>f no se curva aquí: f″ = {#}",
 "<span><a><span>Numerical Methods for Motion</span> <span>→</span></a></span>":
   "<span><a><span>Métodos numéricos para el movimiento</span> <span>→</span></a></span>",
 "Describe the picture":

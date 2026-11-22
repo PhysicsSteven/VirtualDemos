@@ -30,10 +30,10 @@ VDI18N.add('es', 'demo/curves-and-motion', {
   "Área barrida A",
 "Curves and Motion":
   "Curvas y movimiento",
-"<a>Math for physics</a>":
-  "<a>Matemáticas para la física</a>",
-"<span><a><span>←</span> <span>Numerical Methods for Motion</span></a></span>":
-  "<span><a><span>←</span> <span>Métodos numéricos para el movimiento</span></a></span>",
+"<a>Space, vectors and fields</a>":
+  "<a>Espacio, vectores y campos</a>",
+"<span><a><span>Vectors and Surfaces in Space</span> <span>→</span></a></span>":
+  "<span><a><span>Vectores y superficies en el espacio</span> <span>→</span></a></span>",
 "Type a path as x(t) and y(t), as a polar curve r(θ), or as a curve in space, and watch a point move along it with its velocity and acceleration. The acceleration splits into a tangential part that changes the speed and a normal part that turns the motion, set by the curvature. Arc length and swept area build up as it goes, and the conics come from a focus and a directrix.":
   "Escribe una trayectoria como x(t) y y(t), como una curva polar r(θ) o como una curva en el espacio, y observa cómo un punto la recorre con su velocidad y su aceleración. La aceleración se divide en una parte tangencial, que cambia la rapidez, y una parte normal, que hace girar el movimiento y depende de la curvatura. La longitud de arco y el área barrida crecen a medida que avanza, y las cónicas salen de un foco y una directriz.",
 "Put the point back at the start of the curve":
@@ -82,6 +82,8 @@ VDI18N.add('es', 'demo/curves-and-motion', {
   "<span>La vista</span>",
 "Reset view":
   "Restablecer vista",
+"<span>Show fewer</span>":
+  "<span>Ver menos</span>",
 "Motion in a plane, x(t) and y(t)":
   "Movimiento en un plano, x(t) y y(t)",
 "A rolling wheel: the cycloid":
@@ -142,6 +144,16 @@ VDI18N.add('es', 'demo/curves-and-motion', {
   "o",
 "The range boxes take numbers or expressions such as":
   "Las casillas del intervalo aceptan números o expresiones como",
+"is the natural log and":
+  "es el logaritmo natural y",
+"is base {#}.":
+  "es base {#}.",
+"takes only the number right after it:":
+  "toma solo el número que le sigue:",
+"is e²·x, so type":
+  "es e²·x, así que escribe",
+"for e to the power 2x.":
+  "para e elevado a 2x.",
 "v = r′(t), a = r″(t), T = v/|v|, a<sub>T</sub> = a·T = d|v|/dt, a<sub>N</sub> = |v × a|/|v| = κ|v|², N = (a − a<sub>T</sub>T)/a<sub>N</sub>, κ = |v × a|/|v|³":
   "v = r′(t), a = r″(t), T = v/|v|, a<sub>T</sub> = a·T = d|v|/dt, a<sub>N</sub> = |v × a|/|v| = κ|v|², N = (a − a<sub>T</sub>T)/a<sub>N</sub>, κ = |v × a|/|v|³",
 "s = ∫ |r′| dt, A = ½ ∫ (x y′ − y x′) dt = ½ ∫ r² dθ, conic: r = ep/({#} + e cos θ), directrix x = p":
@@ -152,6 +164,10 @@ VDI18N.add('es', 'demo/curves-and-motion', {
   "En una curva polar que se recorre de manera uniforme en θ, θ hace el papel del tiempo, así que las flechas son dr/dθ y d²r/dθ². Con áreas iguales en tiempos iguales, dθ/dt = h/r² con h constante: el movimiento de un planeta bajo una fuerza dirigida al origen.",
 "Orbits: the Sun's GM is the IAU nominal value, lengths in astronomical units and time in Julian years. The planet's own mass and every other body are left out. The helix uses CODATA {#} values for the proton, with the numbers in the boxes rounded to four significant figures.":
   "Órbitas: el GM del Sol es el valor nominal de la IAU, las longitudes están en unidades astronómicas y el tiempo en años julianos. Se omiten la masa del propio planeta y todos los demás cuerpos. La hélice usa los valores CODATA {#} del protón, con los números de las casillas redondeados a cuatro cifras significativas.",
+"<span>Feedback</span>":
+  "<span>Comentarios</span>",
+"<a><span>Vectors and Surfaces in Space</span> <span>→</span></a>":
+  "<a><span>Vectores y superficies en el espacio</span> <span>→</span></a>",
 "The curve x(t) =":
   "La curva x(t) =",
 "{#}(2pi t - sin(2pi t))":
@@ -214,6 +230,8 @@ VDI18N.add('es', 'demo/curves-and-motion', {
   "GM/r²",
 "t = {#} yr":
   "t = {#} yr",
+"An orbit with eccentricity {#}, the Sun at the focus.":
+  "Una órbita con excentricidad {#}, el Sol en el foco.",
 "A ball launched at {#} m/s across and {#} m/s up, g = {#} m/s², no air drag. Its acceleration never changes, but its parts do: going up, a_T is negative (it slows), coming down positive (it speeds up). At the top a_T = {#} and all of g is normal, so the radius of curvature there is v²/g = {#}²/{#} = {#} m. It lands at t = {#}/{#} = {#} s, {#} m away.":
   "Una pelota lanzada a {#} m/s en horizontal y {#} m/s hacia arriba, g = {#} m/s², sin resistencia del aire. Su aceleración nunca cambia, pero sus partes sí: al subir, a_T es negativa (se frena); al bajar, positiva (se acelera). En lo más alto a_T = {#} y toda g es normal, así que el radio de curvatura ahí es v²/g = {#}²/{#} = {#} m. Cae en t = {#}/{#} = {#} s, a {#} m.",
 "aT":
@@ -238,8 +256,6 @@ VDI18N.add('es', 'demo/curves-and-motion', {
   "dr/dθ: {#}",
 "A short antenna along the x axis radiates power in each direction in proportion to sin²θ, where θ is measured from the antenna: none along the wire, most at right angles to it. Drawn as r(θ) the pattern is two lobes. The area swept is ½∫sin⁴θ dθ = {#}π/{#} over the full turn.":
   "Una antena corta a lo largo del eje x radia potencia en cada dirección en proporción a sin²θ, donde θ se mide desde la antena: nada a lo largo del alambre, el máximo en ángulo recto con él. Dibujado como r(θ), el patrón tiene dos lóbulos. El área barrida es ½∫sin⁴θ dθ = {#}π/{#} en la vuelta completa.",
-"An orbit with eccentricity {#}, the Sun at the focus.":
-  "Una órbita con excentricidad {#}, el Sol en el foco.",
 "a parabola":
   "una parábola",
 "With e = {#} the point is as far from the Sun as from the directrix: a parabola. This is escape at exactly the escape speed: at its closest, {#} au from the Sun, it moves at √(2GM/q) = {#} km/s, √{#} times the speed of a circular orbit there, and it never comes back. The slices are still equal in area.":
@@ -349,5 +365,9 @@ VDI18N.add('es', 'demo/curves-and-motion', {
 "infinite (straight)":
   "infinito (recta)",
 "Your own orbit: move e through 1 to go from an ellipse to a parabola to a hyperbola, with the same closest distance to the Sun.":
-  "Tu propia órbita: pasa e por 1 para ir de una elipse a una parábola y a una hipérbola, con la misma distancia mínima al Sol."
+  "Tu propia órbita: pasa e por 1 para ir de una elipse a una parábola y a una hipérbola, con la misma distancia mínima al Sol.",
+"<a>Math for physics</a>":
+  "<a>Matemáticas para la física</a>",
+"<span><a><span>←</span> <span>Numerical Methods for Motion</span></a></span>":
+  "<span><a><span>←</span> <span>Métodos numéricos para el movimiento</span></a></span>"
 });

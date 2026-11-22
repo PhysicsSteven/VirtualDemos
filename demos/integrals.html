@@ -210,6 +210,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
             <li><code>+ − * / ^</code> and parentheses; <code>2x</code>, <code>3sin(x)</code> and <code>(x+1)(x−1)</code> multiply.</li>
             <li><code>sin cos tan sec csc cot</code>, <code>asin acos atan</code>, <code>sinh cosh tanh</code>, <code>exp</code> or <code>e^x</code>, <code>ln</code>, <code>log</code> (base 10), <code>sqrt</code>, <code>abs</code> or <code>|x|</code>, <code>pi</code></li>
             <li>A data table: one reading per line, x then y, separated by a comma, a space or a tab. The x values must increase.</li>
+            <li><code>^</code> takes only the number right after it: <code>e^2x</code> is e²·x, so type <code>e^(2x)</code> for e to the power 2x.</li>
           </ul>
         </details>
         <details class="more"><summary>How it works</summary>
@@ -478,7 +479,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       else nodeG = q.node;
     }
     const partial = r.partial;
-    status(partial ? VDI18N.t('Graphing what is finished so far, while you type.') : '', false);
+    status(((partial ? VDI18N.t('Graphing what is finished so far, while you type.') : '') + (VDMATH.powerHint(src) ? ' ' + VDI18N.t('{typed} is read as {read}. For the power, type {power}.', VDMATH.powerHint(src)) : '')).trim(), false);
     S.node = r.node; S.v = r.v; S.nodeG = nodeG;
     S.fF = M.compile(r.node, [r.v]);
     S.gF = nodeG ? M.compile(nodeG, [r.v]) : null;

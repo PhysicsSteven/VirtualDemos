@@ -168,6 +168,7 @@ dl.formulas .f { color: var(--fg-f); } dl.formulas .d { color: var(--c-d); }
             <li>Use <code>x</code> or <code>t</code> as the variable. For the point, type a number, <code>pi/2</code>, <code>inf</code> or <code>-inf</code>.</li>
             <li><code>+ − * / ^</code> and parentheses; <code>2x</code>, <code>3sin(x)</code> and <code>(x+1)(x−1)</code> multiply.</li>
             <li><code>sin cos tan sec csc cot</code>, <code>asin acos atan</code>, <code>sinh cosh tanh</code>, <code>exp</code> or <code>e^x</code>, <code>ln</code>, <code>log</code> (base 10), <code>sqrt</code>, <code>abs</code> or <code>|x|</code>, <code>sign</code>, <code>pi</code></li>
+            <li><code>^</code> takes only the number right after it: <code>e^2x</code> is e²·x, so type <code>e^(2x)</code> for e to the power 2x.</li>
           </ul>
         </details>
         <details class="more"><summary>How it works</summary>
@@ -413,7 +414,7 @@ dl.formulas .f { color: var(--fg-f); } dl.formulas .d { color: var(--c-d); }
     $('fx').classList.toggle('bad', !r.node && !r.empty);
     if (r.empty) { status(MSG.empty(), false); return; }
     if (!r.node) { status((S.node ? VDI18N.t('Still showing the last graph. ') : '') + (MSG[r.error.code] || MSG.end)(r.error), true); return; }
-    status(r.partial ? VDI18N.t('Graphing what is finished so far, while you type.') : '', false);
+    status(((r.partial ? VDI18N.t('Graphing what is finished so far, while you type.') : '') + (VDMATH.powerHint($('fx').value) ? ' ' + VDI18N.t('{typed} is read as {read}. For the power, type {power}.', VDMATH.powerHint($('fx').value)) : '')).trim(), false);
     S.node = r.node; S.v = r.v; S.f = M.compile(r.node, [r.v]);
     $('fxLabel').textContent = `f(${r.v}) =`; $('aLabel').textContent = `${VDI18N.t('as')} ${r.v} →`;
     S.res = null;

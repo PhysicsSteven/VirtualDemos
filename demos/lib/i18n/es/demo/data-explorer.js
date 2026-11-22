@@ -68,8 +68,8 @@ VDI18N.add('es', 'demo/data-explorer', {
   "Clave: {s} | {l} significa {v}. Unidad de la hoja {u}.",
 "Click a dot, or type a reading number, to select a value.":
   "Haz clic en un punto, o escribe un número de lectura, para seleccionar un valor.",
-"Position i = k(n + {#})/{#} = {k}·{n1}/{#} = {i} in the ordered list, so the {k}th percentile is {q}.":
-  "Posición i = k(n + {#})/{#} = {k}·{n1}/{#} = {i} en la lista ordenada, así que el percentil {k} es {q}.",
+"Position i = k(n + {#})/{#} = {k}·{n1}/{#} = {i} is not a whole number, so the {k}th percentile is the average of values {lo} and {hi} in the ordered list: {q}.":
+  "Posición i = k(n + {#})/{#} = {k}·{n1}/{#} = {i} no es entero, así que el percentil {k} es el promedio de los valores {lo} y {hi} de la lista ordenada: {q}.",
 "Ratio: a time has a true zero, so {#} s is twice {#} s, and differences make sense too.":
   "De razón: un tiempo tiene un cero verdadero, así que {#} s es el doble de {#} s, y las diferencias también tienen sentido.",
 "Simulated, draw {d}":
@@ -84,10 +84,10 @@ VDI18N.add('es', 'demo/data-explorer', {
   "{b} barras desde {s}, cada una de {w} de ancho.",
 "Data Explorer":
   "Explorador de datos",
-"<a>Math for physics</a>":
-  "<a>Matemáticas para física</a>",
-"<a><span>←</span> <span>Related Rates and Optimization</span></a><a><span>Distribution Explorer</span> <span>→</span></a>":
-  "<a><span>←</span> <span>Razones de cambio relacionadas y optimización</span></a><a><span>Explorador de distribuciones</span> <span>→</span></a>",
+"<a>Probability and data</a>":
+  "<a>Probabilidad y datos</a>",
+"<span><a><span>Chance Lab: Dice, Cards and Candies</span> <span>→</span></a></span>":
+  "<span><a><span>Laboratorio de azar: dados, cartas y dulces</span> <span>→</span></a></span>",
 "One data set, every way the book draws it, all at once: frequency table, stemplot, dot plot, histogram, box plot and time series. Drag a point and watch the mean, median, quartiles, outlier fences, standard deviation and skew respond.":
   "Un conjunto de datos, de todas las formas en que el libro lo dibuja, todo a la vez: tabla de frecuencias, diagrama de tallo y hojas, diagrama de puntos, histograma, diagrama de caja y serie de tiempo. Arrastra un punto y mira cómo responden la media, la mediana, los cuartiles, los límites de valores atípicos, la desviación estándar y el sesgo.",
 "Put the data set back as it opened: every dragged or typed value comes back":
@@ -126,8 +126,8 @@ VDI18N.add('es', 'demo/data-explorer', {
   "Percentiles",
 "k-th percentile, k =":
   "percentil k, k =",
-"Position i = k(n + {#})/{#} = {#}·{#}/{#} = {#} in the ordered list, so the 90th percentile is {#} s.":
-  "Posición i = k(n + {#})/{#} = {#}·{#}/{#} = {#} en la lista ordenada, así que el percentil 90 es {#} s.",
+"Position i = k(n + {#})/{#} = {#}·{#}/{#} = {#} is not a whole number, so the 90th percentile is the average of values {#} and {#} in the ordered list: {#} s.":
+  "Posición i = k(n + {#})/{#} = {#}·{#}/{#} = {#} no es entero, así que el percentil 90 es el promedio de los valores {#} y {#} de la lista ordenada: {#} s.",
 "Level of measurement":
   "Nivel de medición",
 "<span>Nominal</span><span>Ordinal</span><span>Interval</span><span>Ratio</span>":
@@ -154,6 +154,8 @@ VDI18N.add('es', 'demo/data-explorer', {
   "{#} y {#} s",
 "−{#}, skewed left (a long tail to the left)":
   "−{#}, sesgada a la izquierda (una cola larga a la izquierda)",
+"<span>Show fewer</span>":
+  "<span>Ver menos</span>",
 "<span>Simulated lab readings</span>":
   "<span>Lecturas de laboratorio simuladas</span>",
 "Pendulum: {#} hand timings":
@@ -196,8 +198,8 @@ VDI18N.add('es', 'demo/data-explorer', {
   "Las reglas del libro que se usan aquí",
 "<b>Quartiles</b> (OpenStax <i>Introductory Statistics 2e</i>, {#} and {#}): the median splits the ordered data into halves; Q1 is the median of the lower half and Q3 the median of the upper half. When n is odd the median itself is left out of both halves. This is the rule a TI-{#} or TI-{#} uses ({#}-Var Stats); spreadsheets and some software use other rules and can give slightly different quartiles.":
   "<b>Cuartiles</b> (OpenStax <i>Introductory Statistics 2e</i>, {#} y {#}): la mediana divide los datos ordenados en dos mitades; Q1 es la mediana de la mitad inferior y Q3 la mediana de la mitad superior. Cuando n es impar, la mediana misma queda fuera de ambas mitades. Esta es la regla que usa una TI-{#} o TI-{#} ({#}-Var Stats); las hojas de cálculo y otros programas usan otras reglas y pueden dar cuartiles un poco distintos.",
-"<b>k-th percentile</b> ({#}): its position in the ordered list is i = k(n + {#})/{#}; when i is not a whole number, go that fraction of the way from the value at the whole part of i to the next value. Below position {#} it is the smallest value, past position n the largest. The 25th percentile found this way can differ a little from Q1.":
-  "<b>Percentil k</b> ({#}): su posición en la lista ordenada es i = k(n + {#})/{#}; cuando i no es entero, avanza esa fracción del camino desde el valor en la parte entera de i hasta el valor siguiente. Antes de la posición {#} es el valor mínimo; después de la posición n, el máximo. El percentil 25 hallado así puede diferir un poco de Q1.",
+"<b>k-th percentile</b> ({#}): its position in the ordered list is i = k(n + {#})/{#}; when i is not a whole number, average the two values at the positions on either side of i. Below position {#} it is the smallest value, past position n the largest. The 25th percentile found this way can differ a little from Q1.":
+  "<b>Percentil k</b> ({#}): su posición en la lista ordenada es i = k(n + {#})/{#}; cuando i no es entero, promedia los dos valores en las posiciones a cada lado de i. Antes de la posición {#} es el valor mínimo; después de la posición n, el máximo. El percentil 25 hallado así puede diferir un poco de Q1.",
 "<b>Percentile of a value</b> ({#}): (x + {#}y)/n × {#}, where x values are below it and y values equal it.":
   "<b>Percentil de un valor</b> ({#}): (x + {#}y)/n × {#}, donde x valores están por debajo de él y y valores son iguales a él.",
 "<b>Outliers</b> ({#}, {#}): values below Q1 − {#} IQR or above Q3 + {#} IQR, with IQR = Q3 − Q1. The book's box plot runs its whiskers to the smallest and largest values; tick Modified box plot to stop them at the last values inside the fences and draw outliers as separate points.":
@@ -214,6 +216,8 @@ VDI18N.add('es', 'demo/data-explorer', {
   "Los conjuntos marcados \"Del libro\" están copiados de OpenStax <i>Introductory Statistics 2e</i> (Holmes, Illowsky y Dean, {#}; CC BY {#}), en la sección indicada en cada uno; acceso gratuito en openstax.org/details/books/introductory-statistics-2e. Las lecturas de laboratorio se simulan aquí, con números aleatorios con semilla, y así lo dicen: el sorteo {#} es lo que ve cada estudiante al abrir, y Nuevo sorteo genera otro conjunto.",
 "Pendulum: one period timed by hand {#} times; the true period is {#} s and each timing is off by a normal reaction error with σ = {#} s, shown to {#} s. Laps: {#} laps of a {#} m track, {#} s plus {#} s more each lap as the runner tires, with normal scatter σ = {#} s, to {#} s. Decay counts: counts in {#} intervals of {#} s from a weak source, drawn from a Poisson distribution with mean {#}. Lab temperature: {#} readings {#} min apart in a room warming from {#} °C by {#} °C over the six hours, with thermometer scatter σ = {#} °C, to {#} °C.":
   "Péndulo: un periodo medido a mano {#} veces; el periodo verdadero es {#} s y cada medición se desvía por un error de reacción normal con σ = {#} s, mostrado a {#} s. Vueltas: {#} vueltas a una pista de {#} m, {#} s más {#} s adicionales en cada vuelta conforme el corredor se cansa, con dispersión normal σ = {#} s, a {#} s. Conteos de decaimiento: conteos en {#} intervalos de {#} s de una fuente débil, tomados de una distribución de Poisson con media {#}. Temperatura del laboratorio: {#} lecturas separadas {#} min en un cuarto que se calienta desde {#} °C en {#} °C a lo largo de las seis horas, con dispersión del termómetro σ = {#} °C, a {#} °C.",
+"<a><span>Chance Lab: Dice, Cards and Candies</span> <span>→</span></a>":
+  "<a><span>Laboratorio de azar: dados, cartas y dulces</span> <span>→</span></a>",
 "{name}: {n} values from {a} to {b}.":
   "{name}: {n} valores de {a} a {b}.",
 "Mean {m}, median {md}, standard deviation {s}.":
@@ -262,8 +266,8 @@ VDI18N.add('es', 'demo/data-explorer', {
   "{#} ({#} veces)",
 "{#} and {#} counts":
   "{#} y {#} conteos",
-"Position i = k(n + {#})/{#} = {#}·{#}/{#} = {#} in the ordered list, so the 90th percentile is {#} counts.":
-  "Posición i = k(n + {#})/{#} = {#}·{#}/{#} = {#} en la lista ordenada, así que el percentil 90 es {#} conteos.",
+"Position i = k(n + {#})/{#} = {#}·{#}/{#} = {#} is not a whole number, so the 90th percentile is the average of values {#} and {#} in the ordered list: {#} counts.":
+  "Posición i = k(n + {#})/{#} = {#}·{#}/{#} = {#} no es entero, así que el percentil 90 es el promedio de los valores {#} y {#} de la lista ordenada: {#} conteos.",
 "<b>Counts in {#} s from a weak radioactive source</b><span>Simulated, draw {#}</span><span>Simulated readings from seeded random numbers, not measurements. New draw makes another set.</span>":
   "<b>Conteos en {#} s de una fuente radiactiva débil</b><span>Simulado, sorteo {#}</span><span>Lecturas simuladas con números aleatorios con semilla, no mediciones. Nuevo sorteo genera otro conjunto.</span>",
 "{#} bars from −{#}, each {#} wide.":
@@ -280,8 +284,8 @@ VDI18N.add('es', 'demo/data-explorer', {
   "{#}, {#}, {#} ({#} veces)",
 "{#} and {#} °C":
   "{#} y {#} °C",
-"Position i = k(n + {#})/{#} = {#}·{#}/{#} = {#} in the ordered list, so the 90th percentile is {#} °C.":
-  "Posición i = k(n + {#})/{#} = {#}·{#}/{#} = {#} en la lista ordenada, así que el percentil 90 es {#} °C.",
+"Position i = k(n + {#})/{#} = {#}·{#}/{#} = {#} is not a whole number, so the 90th percentile is the average of values {#} and {#} in the ordered list: {#} °C.":
+  "Posición i = k(n + {#})/{#} = {#}·{#}/{#} = {#} no es entero, así que el percentil 90 es el promedio de los valores {#} y {#} de la lista ordenada: {#} °C.",
 "<b>Lab temperature every {#} minutes, {#} readings</b><span>Simulated, draw {#}</span><span>Simulated readings from seeded random numbers, not measurements. New draw makes another set.</span>":
   "<b>Temperatura del laboratorio cada {#} minutos, {#} lecturas</b><span>Simulado, sorteo {#}</span><span>Lecturas simuladas con números aleatorios con semilla, no mediciones. Nuevo sorteo genera otro conjunto.</span>",
 "The book's first frequency table ({#}). With the table on Each value, read the frequency, the relative frequency (frequency divided by {#}) and the cumulative relative frequency of each answer: {#} h was given {#} times, so its relative frequency is {#}/{#} = {#}. The cumulative relative frequency of the last row is always {#}.":
@@ -306,8 +310,8 @@ VDI18N.add('es', 'demo/data-explorer', {
   "Horas trabajadas por día, {#} estudiantes",
 "{#} and {#} h":
   "{#} y {#} h",
-"Position i = k(n + {#})/{#} = {#}·{#}/{#} = {#} in the ordered list, so the 90th percentile is {#} h.":
-  "Posición i = k(n + {#})/{#} = {#}·{#}/{#} = {#} en la lista ordenada, así que el percentil 90 es {#} h.",
+"Position i = k(n + {#})/{#} = {#}·{#}/{#} = {#} is not a whole number, so the 90th percentile is the average of values {#} and {#} in the ordered list: {#} h.":
+  "Posición i = k(n + {#})/{#} = {#}·{#}/{#} = {#} no es entero, así que el percentil 90 es el promedio de los valores {#} y {#} de la lista ordenada: {#} h.",
 "<b>Hours worked per day, {#} students</b><span>From the book</span><span>OpenStax Introductory Statistics 2e, {#} Frequency, Frequency Tables, and Levels of Measurement (CC BY {#}).</span>":
   "<b>Horas trabajadas por día, {#} estudiantes</b><span>Del libro</span><span>OpenStax Introductory Statistics 2e, {#} Frecuencia, tablas de frecuencias y niveles de medición (CC BY {#}).</span>",
 "The book's stemplot ({#}): stems are the tens, leaves the ones. Most scores are in the 60s to 90s, with a few low scores trailing off to the left, and the skew coefficient is negative. Yet the mean, {#}, sits just above the median, {#}: \"the mean is pulled toward the tail\" is a rule of thumb ({#}), not a law. Drag the {#} down to {#} and watch the mean drop below the median.":
@@ -328,8 +332,8 @@ VDI18N.add('es', 'demo/data-explorer', {
   "{#} y {#} puntos",
 "−{#}, roughly symmetric":
   "−{#}, aproximadamente simétrica",
-"Position i = k(n + {#})/{#} = {#}·{#}/{#} = {#} in the ordered list, so the 90th percentile is {#} points.":
-  "Posición i = k(n + {#})/{#} = {#}·{#}/{#} = {#} en la lista ordenada, así que el percentil 90 es {#} puntos.",
+"Position i = k(n + {#})/{#} = {#}·{#}/{#} = {#} is not a whole number, so the 90th percentile is the average of values {#} and {#} in the ordered list: {#} points.":
+  "Posición i = k(n + {#})/{#} = {#}·{#}/{#} = {#} no es entero, así que el percentil 90 es el promedio de los valores {#} y {#} de la lista ordenada: {#} puntos.",
 "<b>First exam scores, a precalculus class (n = {#})</b><span>From the book</span><span>OpenStax Introductory Statistics 2e, {#} Stem-and-Leaf Graphs (Stemplots), Line Graphs, and Bar Graphs (CC BY {#}).</span>":
   "<b>Calificaciones del primer examen, un grupo de precálculo (n = {#})</b><span>Del libro</span><span>OpenStax Introductory Statistics 2e, {#} Diagramas de tallo y hojas, gráficas de líneas y gráficas de barras (CC BY {#}).</span>",
 "First exam scores, a precalculus class (n = {#}): {#} values from {#} to {#}.":
@@ -348,10 +352,12 @@ VDI18N.add('es', 'demo/data-explorer', {
   "−{#} y {#} km",
 "{#}, skewed right (a long tail to the right)":
   "{#}, sesgada a la derecha (una cola larga a la derecha)",
-"Position i = k(n + {#})/{#} = {#}·{#}/{#} = {#} in the ordered list, so the 90th percentile is {#} km.":
-  "Posición i = k(n + {#})/{#} = {#}·{#}/{#} = {#} en la lista ordenada, así que el percentil 90 es {#} km.",
+"Position i = k(n + {#})/{#} = {#}·{#}/{#} = {#} is not a whole number, so the 90th percentile is the average of values {#} and {#} in the ordered list: {#} km.":
+  "Posición i = k(n + {#})/{#} = {#}·{#}/{#} = {#} no es entero, así que el percentil 90 es el promedio de los valores {#} y {#} de la lista ordenada: {#} km.",
 "<b>Distances from a home to {#} supermarkets</b><span>From the book</span><span>OpenStax Introductory Statistics 2e, {#} Stem-and-Leaf Graphs (Stemplots), Line Graphs, and Bar Graphs (CC BY {#}).</span>":
   "<b>Distancias de una casa a {#} supermercados</b><span>Del libro</span><span>OpenStax Introductory Statistics 2e, {#} Diagramas de tallo y hojas, gráficas de líneas y gráficas de barras (CC BY {#}).</span>",
+"Distances from a home to {#} supermarkets: {#} values from {#} to {#}.":
+  "Distancias de una casa a {#} supermercados: {#} valores de {#} a {#}.",
 "The book's histogram ({#}): start at {#} ({#} − {#}, one more decimal place than the data, so no height falls on a boundary) with bars {#} in wide. The same eight classes make the grouped frequency table of {#}: switch the table to The histogram's classes. Drag the Start or Bin width tab and watch the shape change: the data stay the same.":
   "El histograma del libro ({#}): empieza en {#} ({#} − {#}, un decimal más que los datos, para que ninguna estatura caiga en una frontera) con barras de {#} in de ancho. Las mismas ocho clases forman la tabla de frecuencias agrupadas de {#}: cambia la tabla a Las clases del histograma. Arrastra la pestaña de Inicio o de Ancho de clase y mira cómo cambia la forma: los datos son los mismos.",
 "height (in)":
@@ -368,12 +374,10 @@ VDI18N.add('es', 'demo/data-explorer', {
   "{#} in",
 "{#} and {#} in":
   "{#} y {#} in",
-"Position i = k(n + {#})/{#} = {#}·{#}/{#} = {#} in the ordered list, so the 90th percentile is {#} in.":
-  "Posición i = k(n + {#})/{#} = {#}·{#}/{#} = {#} en la lista ordenada, así que el percentil 90 es {#} in.",
+"Position i = k(n + {#})/{#} = {#}·{#}/{#} = {#} is not a whole number, so the 90th percentile is the average of values {#} and {#} in the ordered list: {#} in.":
+  "Posición i = k(n + {#})/{#} = {#}·{#}/{#} = {#} no es entero, así que el percentil 90 es el promedio de los valores {#} y {#} de la lista ordenada: {#} in.",
 "<b>Heights of {#} semiprofessional soccer players</b><span>From the book</span><span>OpenStax Introductory Statistics 2e, {#} Histograms, Frequency Polygons, and Time Series Graphs (CC BY {#}).</span>":
   "<b>Estaturas de {#} jugadores de futbol semiprofesionales</b><span>Del libro</span><span>OpenStax Introductory Statistics 2e, {#} Histogramas, polígonos de frecuencias y gráficas de series de tiempo (CC BY {#}).</span>",
-"Heights of {#} semiprofessional soccer players: {#} values from {#} to {#}.":
-  "Estaturas de {#} jugadores de futbol semiprofesionales: {#} valores de {#} a {#}.",
 "The book's time series data ({#}), {#} months in order. The histogram only says where values piled up; the time series graph shows the trend, and the dip in year {#} to {#}. A time series is the one graph here that uses the order of the data.":
   "Los datos de serie de tiempo del libro ({#}), {#} meses en orden. El histograma solo dice dónde se acumularon los valores; la gráfica de serie de tiempo muestra la tendencia y la caída del año {#} al {#}. Una serie de tiempo es la única gráfica aquí que usa el orden de los datos.",
 "CPI":
@@ -390,8 +394,8 @@ VDI18N.add('es', 'demo/data-explorer', {
   "{#}, {#}, {#}, {#} ({#} veces)",
 "{#} and {#}":
   "{#} y {#}",
-"Position i = k(n + {#})/{#} = {#}·{#}/{#} = {#} in the ordered list, so the 90th percentile is {#}.":
-  "Posición i = k(n + {#})/{#} = {#}·{#}/{#} = {#} en la lista ordenada, así que el percentil 90 es {#}.",
+"Position i = k(n + {#})/{#} = {#}·{#}/{#} = {#} is not a whole number, so the 90th percentile is the average of values {#} and {#} in the ordered list: {#}.":
+  "Posición i = k(n + {#})/{#} = {#}·{#}/{#} = {#} no es entero, así que el percentil 90 es el promedio de los valores {#} y {#} de la lista ordenada: {#}.",
 "<b>Consumer Price Index, each month for ten years</b><span>From the book</span><span>OpenStax Introductory Statistics 2e, {#} Histograms, Frequency Polygons, and Time Series Graphs (CC BY {#}).</span>":
   "<b>Índice de precios al consumidor, cada mes durante diez años</b><span>Del libro</span><span>OpenStax Introductory Statistics 2e, {#} Histogramas, polígonos de frecuencias y gráficas de series de tiempo (CC BY {#}).</span>",
 "The book's outlier example ({#}): one home at ${#}. It is far above Q3 + {#} IQR, so it is an outlier, and it pulls the mean far above the median. For data like these, the median is the better center. Click it and drag it in to ${#}: the median does not move at all.":
@@ -408,8 +412,8 @@ VDI18N.add('es', 'demo/data-explorer', {
   "Precios de {#} casas",
 "−{#} and {#} $":
   "−{#} y {#} $",
-"Position i = k(n + {#})/{#} = {#}·{#}/{#} = {#} in the ordered list, so the 90th percentile is {#} $.":
-  "Posición i = k(n + {#})/{#} = {#}·{#}/{#} = {#} en la lista ordenada, así que el percentil 90 es {#} $.",
+"Position i = k(n + {#})/{#} = {#}·{#}/{#} = {#} is not a whole number, so the 90th percentile is the average of values {#} and {#} in the ordered list: {#} $.":
+  "Posición i = k(n + {#})/{#} = {#}·{#}/{#} = {#} no es entero, así que el percentil 90 es el promedio de los valores {#} y {#} de la lista ordenada: {#} $.",
 "<b>Prices of {#} homes</b><span>From the book</span><span>OpenStax Introductory Statistics 2e, {#} Measures of the Location of the Data (CC BY {#}).</span>":
   "<b>Precios de {#} casas</b><span>Del libro</span><span>OpenStax Introductory Statistics 2e, {#} Medidas de la ubicación de los datos (CC BY {#}).</span>",
 "The book's mean and median example ({#}). n = {#} is even, so the median is midway between the 20th and 21st values, both {#}. Compare the mean with the median and look at the tail.":
@@ -434,8 +438,8 @@ VDI18N.add('es', 'demo/data-explorer', {
   "−{#} y {#} años",
 "−{#} years":
   "−{#} años",
-"Position i = k(n + {#})/{#} = {#}·{#}/{#} = {#} in the ordered list, so the 90th percentile is {#} years.":
-  "Posición i = k(n + {#})/{#} = {#}·{#}/{#} = {#} en la lista ordenada, así que el percentil 90 es {#} años.",
+"Position i = k(n + {#})/{#} = {#}·{#}/{#} = {#} is not a whole number, so the 90th percentile is the average of values {#} and {#} in the ordered list: {#} years.":
+  "Posición i = k(n + {#})/{#} = {#}·{#}/{#} = {#} no es entero, así que el percentil 90 es el promedio de los valores {#} y {#} de la lista ordenada: {#} años.",
 "<b>Ages of {#} emergency room patients in one week</b><span>From the book</span><span>OpenStax Introductory Statistics 2e, {#} Measures of the Center of the Data (CC BY {#}).</span>":
   "<b>Edades de {#} pacientes de la sala de urgencias en una semana</b><span>Del libro</span><span>OpenStax Introductory Statistics 2e, {#} Medidas del centro de los datos (CC BY {#}).</span>",
 "The book's standard deviation example ({#}). Pick a player with the Reading # box and read his z score, how many standard deviations he is from the mean: a value more than two standard deviations away is unusual.":
@@ -454,8 +458,12 @@ VDI18N.add('es', 'demo/data-explorer', {
   "los valores llegan en el orden en que se tomaron: {k} de {n}, uno cada {s} s",
 "values arrive in the order taken: {#} of {#}, one every {#} s":
   "los valores llegan en el orden en que se tomaron: {#} de {#}, uno cada {#} s",
+"Position i = k(n + {#})/{#} = {k}·{n1}/{#} = {i} in the ordered list, so the {k}th percentile is {q}.":
+  "Posición i = k(n + {#})/{#} = {k}·{n1}/{#} = {i} en la lista ordenada, así que el percentil {k} es {q}.",
 "— years":
   "— años",
+"Position i = k(n + {#})/{#} = {#}·{#}/{#} = {#} in the ordered list, so the 90th percentile is {#} years.":
+  "Posición i = k(n + {#})/{#} = {#}·{#}/{#} = {#} en la lista ordenada, así que el percentil 90 es {#} años.",
 "Move the selected value by one unit of the data's last decimal place (Shift for ten)":
   "Mueve el valor seleccionado una unidad del último decimal de los datos (Shift para diez)",
 "on the graphs":
@@ -476,8 +484,8 @@ VDI18N.add('es', 'demo/data-explorer', {
   "Temperatura del laboratorio cada {#} minutos, {#} lecturas: {#} valores de {#} a {#}.",
 "Hours worked per day, {#} students: {#} values from {#} to {#}.":
   "Horas trabajadas por día, {#} estudiantes: {#} valores de {#} a {#}.",
-"Distances from a home to {#} supermarkets: {#} values from {#} to {#}.":
-  "Distancias de una casa a {#} supermercados: {#} valores de {#} a {#}.",
+"Heights of {#} semiprofessional soccer players: {#} values from {#} to {#}.":
+  "Estaturas de {#} jugadores de futbol semiprofesionales: {#} valores de {#} a {#}.",
 "Consumer Price Index, each month for ten years: {#} values from {#} to {#}.":
   "Índice de precios al consumidor, cada mes durante diez años: {#} valores de {#} a {#}.",
 "Prices of {#} homes: {#} values from {#} to {#}.":
@@ -520,6 +528,8 @@ VDI18N.add('es', 'demo/data-explorer', {
   "Oculto: predícelo.",
 "<span>hidden: predict it</span>":
   "<span>oculto: predícelo</span>",
+"Position i = k(n + {#})/{#} = {#}·{#}/{#} = {#} in the ordered list, so the 90th percentile is {#} s.":
+  "Posición i = k(n + {#})/{#} = {#}·{#}/{#} = {#} en la lista ordenada, así que el percentil 90 es {#} s.",
 "“{t}” is not a number. Write numbers without thousands commas.":
   "“{t}” no es un número. Escribe los números sin comas de miles.",
 "“x” is not a number. Write numbers without thousands commas.":
@@ -544,6 +554,8 @@ VDI18N.add('es', 'demo/data-explorer', {
   "Tus datos",
 "−{#} and {#}":
   "−{#} y {#}",
+"Position i = k(n + {#})/{#} = {#}·{#}/{#} = {#} in the ordered list, so the 90th percentile is {#}.":
+  "Posición i = k(n + {#})/{#} = {#}·{#}/{#} = {#} en la lista ordenada, así que el percentil 90 es {#}.",
 "<b>Your data</b><span>Typed in</span><span>Your own numbers.</span>":
   "<b>Tus datos</b><span>Escritos a mano</span><span>Tus propios números.</span>",
 "Your data: {#} values from {#} to {#}.":
@@ -562,6 +574,26 @@ VDI18N.add('es', 'demo/data-explorer', {
   "Nominal: categorías sin orden. Los números aquí serían códigos, y una media o mediana de códigos no significa nada.",
 "{#} readings sent to the worksheet. <a>Open the worksheet</a>":
   "{#} lecturas enviadas a la hoja de trabajo. <a>Abrir la hoja de trabajo</a>",
+"<a>Math for physics</a>":
+  "<a>Matemáticas para física</a>",
+"<a><span>←</span> <span>Related Rates and Optimization</span></a><a><span>Distribution Explorer</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Razones de cambio relacionadas y optimización</span></a><a><span>Explorador de distribuciones</span> <span>→</span></a>",
+"<b>k-th percentile</b> ({#}): its position in the ordered list is i = k(n + {#})/{#}; when i is not a whole number, go that fraction of the way from the value at the whole part of i to the next value. Below position {#} it is the smallest value, past position n the largest. The 25th percentile found this way can differ a little from Q1.":
+  "<b>Percentil k</b> ({#}): su posición en la lista ordenada es i = k(n + {#})/{#}; cuando i no es entero, avanza esa fracción del camino desde el valor en la parte entera de i hasta el valor siguiente. Antes de la posición {#} es el valor mínimo; después de la posición n, el máximo. El percentil 25 hallado así puede diferir un poco de Q1.",
+"Position i = k(n + {#})/{#} = {#}·{#}/{#} = {#} in the ordered list, so the 90th percentile is {#} counts.":
+  "Posición i = k(n + {#})/{#} = {#}·{#}/{#} = {#} en la lista ordenada, así que el percentil 90 es {#} conteos.",
+"Position i = k(n + {#})/{#} = {#}·{#}/{#} = {#} in the ordered list, so the 90th percentile is {#} °C.":
+  "Posición i = k(n + {#})/{#} = {#}·{#}/{#} = {#} en la lista ordenada, así que el percentil 90 es {#} °C.",
+"Position i = k(n + {#})/{#} = {#}·{#}/{#} = {#} in the ordered list, so the 90th percentile is {#} h.":
+  "Posición i = k(n + {#})/{#} = {#}·{#}/{#} = {#} en la lista ordenada, así que el percentil 90 es {#} h.",
+"Position i = k(n + {#})/{#} = {#}·{#}/{#} = {#} in the ordered list, so the 90th percentile is {#} points.":
+  "Posición i = k(n + {#})/{#} = {#}·{#}/{#} = {#} en la lista ordenada, así que el percentil 90 es {#} puntos.",
+"Position i = k(n + {#})/{#} = {#}·{#}/{#} = {#} in the ordered list, so the 90th percentile is {#} km.":
+  "Posición i = k(n + {#})/{#} = {#}·{#}/{#} = {#} en la lista ordenada, así que el percentil 90 es {#} km.",
+"Position i = k(n + {#})/{#} = {#}·{#}/{#} = {#} in the ordered list, so the 90th percentile is {#} in.":
+  "Posición i = k(n + {#})/{#} = {#}·{#}/{#} = {#} en la lista ordenada, así que el percentil 90 es {#} in.",
+"Position i = k(n + {#})/{#} = {#}·{#}/{#} = {#} in the ordered list, so the 90th percentile is {#} $.":
+  "Posición i = k(n + {#})/{#} = {#}·{#}/{#} = {#} en la lista ordenada, así que el percentil 90 es {#} $.",
 "<span><a><span>←</span> <span>Related Rates and Optimization</span></a></span>":
   "<span><a><span>←</span> <span>Razones de cambio relacionadas y optimización</span></a></span>",
 "Mode":

@@ -95,5 +95,15 @@ module.exports = {
       document.querySelector('#cntDt button').click(); set('cntR', 6); $('cnt100').click(); document.querySelector('#cntSpeed [data-s="16"]').click(); $('cntPlay').click(); await w(1200);
       set('cntT0', 30); await w(100); $('cntBlind').click(); await w(100); $('cntBlind').click(); $('cntNew').click(); $('cnt100').click(); await w(100);
       document.querySelector('#viewSeg [data-v=many]').click(); await w(300); document.querySelector('#viewSeg [data-v=count]').click(); await w(200); })()` },
+    { name: "counting: R = 1 and Δt = 2 straight away and by dragging the slider through every rate give the same counts (Steve 2026-11-22)", fn: `(async () => {
+      const w = (ms) => new Promise((r) => setTimeout(r, ms)), $ = (i) => document.getElementById(i), set = (id, v) => { const e = $(id); e.value = v; e.dispatchEvent(new Event('input', { bubbles: true })); };
+      const dtb = (v) => document.querySelector('#cntDt [data-dt="' + v + '"]').click(), K = window.__rdc.K, snap = () => K.counts.join(',');
+      document.querySelector('#viewSeg [data-v=count]').click(); await w(200); K.seed = 1; $('cntReset').click();
+      set('cntR', 2); dtb(2); $('cnt100').click(); const a = snap();
+      dtb(10); for (let r = 11; r >= 0; r--) { set('cntR', r); $('cnt100').click(); } dtb(5); set('cntR', 2); dtb(2); $('cnt100').click(); const b = snap();
+      $('cntNew').click(); $('cnt100').click(); const c = snap(); K.seed = 1; $('cntReset').click(); $('cnt100').click();
+      if (a !== b) throw new Error('two slider paths to R = 1, Δt = 2 gave different counts'); if (a === c) throw new Error('draw set 2 gave the counts of draw set 1');
+      if (snap() !== a) throw new Error('back to draw set 1 did not give its counts');
+      dtb(1); set('cntR', 4); await w(100); })()` },
   ],
 };

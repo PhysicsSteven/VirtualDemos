@@ -6,10 +6,10 @@ VDI18N.add('es', 'demo/vector-fields', {
   "Los trazadores avanzan a lo largo de F, no por la trayectoria de una masa",
 "Vector Fields, Work and Curl":
   "Campos vectoriales, trabajo y rotacional",
-"<a>Math for physics</a>":
-  "<a>Matemáticas para la física</a>",
-"<span><a><span>←</span> <span>Numerical Methods for Motion</span></a></span>":
-  "<span><a><span>←</span> <span>Métodos numéricos para el movimiento</span></a></span>",
+"<a>Space, vectors and fields</a>":
+  "<a>Espacio, vectores y campos</a>",
+"<span><a><span>←</span> <span>Multiple Integrals</span></a></span>":
+  "<span><a><span>←</span> <span>Integrales múltiples</span></a></span>",
 "Type a field F(x, y) = (P, Q) and see its arrows and the flow it makes. Add up the work ∫F·dr along a path, test whether it depends on the route, find the potential of a conservative field, measure the curl with a paddle wheel and the divergence with a small box, and check Green's theorem around a loop. Derivatives are exact; integrals are computed numerically.":
   "Escribe un campo F(x, y) = (P, Q) y ve sus flechas y el flujo que produce. Suma el trabajo ∫F·dr a lo largo de una trayectoria, comprueba si depende de la ruta, encuentra el potencial de un campo conservativo, mide el rotacional con una rueda de paletas y la divergencia con una caja pequeña, y verifica el teorema de Green alrededor de un lazo. Las derivadas son exactas; las integrales se calculan numéricamente.",
 "Put the bead back at the start of the path and start the tracers again":
@@ -98,6 +98,8 @@ VDI18N.add('es', 'demo/vector-fields', {
   "Divergencia",
 "Reset view":
   "Restablecer vista",
+"<span>Show fewer</span>":
+  "<span>Ver menos</span>",
 "Uniform gravity: work depends only on height":
   "Gravedad uniforme: el trabajo depende solo de la altura",
 "A swirl force: work depends on the path":
@@ -146,6 +148,16 @@ VDI18N.add('es', 'demo/vector-fields', {
   "para r³;",
 "for the wire.":
   "para el alambre.",
+"is the natural log and":
+  "es el logaritmo natural y",
+"is base {#}.":
+  "es base {#}.",
+"takes only the number right after it:":
+  "toma solo el número que le sigue:",
+"is e²·x, so type":
+  "es e²·x, así que escribe",
+"for e to the power 2x.":
+  "para e elevado a 2x.",
 "How it works":
   "Cómo funciona",
 "Each box is read by the site's small parser (nothing you type is run as code). The partial derivatives come from the exact rules, so the curl ∂Q/∂x − ∂P/∂y and the divergence ∂P/∂x + ∂Q/∂y shown are exact formulas.":
@@ -156,6 +168,10 @@ VDI18N.add('es', 'demo/vector-fields', {
   "Aquí F se llama conservativo cuando su rotacional es cero en cada punto de muestra de la vista y el trabajo alrededor de cada lazo pequeño de la cuadrícula suma cero. El potencial f cumple ∇f = F (para una fuerza, la energía potencial es U = −f; para un campo eléctrico, el potencial es V = −f). Su valor en un punto es el trabajo desde el punto de referencia en línea recta; las curvas salen del mismo trabajo sumado a lo largo de una cuadrícula.",
 "The paddle wheel is fixed in place and turns at ω = ½ curl F, the rate a small piece of fluid with velocity F spins. Tracers move with velocity F, so they show its direction and size; for a force they are not the path a mass would take.":
   "La rueda de paletas está fija en su lugar y gira a ω = ½ rot F, la rapidez con que gira un pedacito de fluido con velocidad F. Los trazadores se mueven con velocidad F, así que muestran su dirección y tamaño; para una fuerza no son la trayectoria que seguiría una masa.",
+"<span>Feedback</span>":
+  "<span>Comentarios</span>",
+"<a><span>←</span> <span>Multiple Integrals</span></a>":
+  "<a><span>←</span> <span>Integrales múltiples</span></a>",
 "The field F = (P, Q) is the one typed in the two boxes, drawn as arrows over the plane.":
   "El campo F = (P, Q) es el que está escrito en las dos casillas, dibujado como flechas sobre el plano.",
 "Path: Straight line.":
@@ -327,5 +343,9 @@ VDI18N.add('es', 'demo/vector-fields', {
 "Your own field. Every setup above can be edited in the boxes, too. The potential is set to 0 at the origin.":
   "Tu propio campo. Cada configuración de arriba también se puede editar en las casillas. El potencial vale 0 en el origen.",
 "Draw or choose a path first.":
-  "Dibuja o elige primero una trayectoria."
+  "Dibuja o elige primero una trayectoria.",
+"<a>Math for physics</a>":
+  "<a>Matemáticas para la física</a>",
+"<span><a><span>←</span> <span>Numerical Methods for Motion</span></a></span>":
+  "<span><a><span>←</span> <span>Métodos numéricos para el movimiento</span></a></span>"
 });
