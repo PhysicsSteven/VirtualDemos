@@ -34,7 +34,7 @@ Two modes, chosen above the picture. **Tails**: a comet from JPL's Small-Body Da
 
 **Q5.** The Leonids hit the air at about 71 km/s and the Draconids at about 20 km/s. Earth moves at about 30 km/s. Use the directions of Earth's motion and the stream's motion to explain the difference.
 
-**Q6.** The dust grains in the demo are pushed by sunlight with a force β times the Sun's gravity, and β = 0.57 for a 1 μm grain of density 1,000 kg/m³. What is β for a grain 10 μm across? Which grains end up farther from the comet?
+**Q6.** The dust grains in the demo are pushed by sunlight with a force β times the Sun's gravity, and β = 0.57 for a grain of radius 1 μm and density 1,000 kg/m³. What is β for a grain of radius 10 μm? Which grains end up farther from the comet?
 
 ## Common misconceptions
 
