@@ -2749,5 +2749,11 @@ VDI18N.add('es', 'common', {
 "Range {lo} to {hi}":
   "Intervalo de {lo} a {hi}",
 "Set to {v}, in steps of {st}":
-  "Se puso en {v}, en pasos de {st}"
+  "Se puso en {v}, en pasos de {st}",
+"Zoom the counting field in or out about the center (Count craters, Flat)":
+  "Acerca o aleja el campo de conteo respecto a su centro (Contar cráteres, Plano)",
+"Show the whole counting field again":
+  "Vuelve a mostrar todo el campo de conteo",
+"Move around the zoomed counting field":
+  "Muévete por el campo de conteo ampliado"
 });

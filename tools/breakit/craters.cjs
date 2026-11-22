@@ -3,6 +3,7 @@
    D ÷ L), and the shape follows the transition diameters (3.2 km on Earth, scaled by 1/g). A finished impact is never smaller than D_tc.
    Presets: the cited sizes (Meteor Crater 1.2 km, Tycho 85, Copernicus 93, Chicxulub 180, Mead 270, Caloris 1550, Hellas 2300 km) within 10 %.
    Count: the density readout is marked ÷ area, the age readout inverts the Neukum or Ivanov clock, the right count equals an independent count.
+   Count zoom: the wheel zooms about the middle of the view, never the pointer, from 1x to 6x; a click on a crater marks it at any zoom and pan.
    Cooling: every table row equals the model rows at the clock time; the lid is k ΔT / q; the clock row at t = 4.5 Gyr is the last row. */
 const pre = `const C = window.__cr; if (!C) return true; const S = C.S;
   const num = (s) => parseFloat(String(s).replace(/\\u2212/g, '-').replace(/,/g, ''));
@@ -102,6 +103,24 @@ module.exports = {
       const s = q('#sT'); s.value = '4.5'; s.dispatchEvent(new Event('input', { bubbles: true })); await pause(100); q('#play').click(); await pause(600);
       const t = q('#selStart'); for (const o of [...t.options]) { t.value = o.value; t.dispatchEvent(new Event('change', { bubbles: true })); await pause(80); }
       q('#presets [data-p=small]').click(); await pause(300);
+    })()` },
+    { name: 'count zoom: wheel off center, + and pan, mark a crater by a click on it, zoom far out and back (2026-11-22)', fn: `(async () => {
+      const C = window.__cr, S = C.S, pause = (ms) => new Promise((r) => setTimeout(r, ms)), q = (s) => document.querySelector(s), can = q('#can');
+      q('#presets [data-p=copfloor]').click(); await pause(300); const b = can.getBoundingClientRect(), f0 = C.field(), mid = () => { const f = C.field(), z = C.zoom(); return [f.x + z.cx * f.s - f.box.x - f.box.side / 2, f.y + z.cy * f.s - f.box.y - f.box.side / 2]; };
+      if (S.mode !== 'count' || !f0.box) throw new Error('no flat count view');
+      for (let i = 0; i < 4; i++) can.dispatchEvent(new WheelEvent('wheel', { bubbles: true, cancelable: true, clientX: b.left + f0.box.x + 10, clientY: b.top + f0.box.y + 10, deltaY: -100 }));
+      let z = C.zoom(); if (!(z.k > 1.5) || Math.abs(z.cx - S.surf.L / 2) > 1e-9 || Math.abs(z.cy - S.surf.L / 2) > 1e-9) throw new Error('wheel at a corner did not zoom about the middle: ' + JSON.stringify(z));
+      q('#zIn').click(); q('#zIn').click(); q('#zIn').click(); z = C.zoom(); if (Math.abs(z.k - 6) > 1e-9) throw new Error('zoom limit is not 6: ' + z.k);
+      can.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true })); can.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', bubbles: true }));
+      const m = mid(); if (Math.hypot(m[0], m[1]) > 0.5) throw new Error('the view middle is off its center by ' + m);
+      const f = C.field(), inView = S.surf.list.filter((c) => !c.gone && c.D >= S.Dc && c.x >= 0 && c.y >= 0 && c.x < S.surf.L && c.y < S.surf.L && f.x + c.x * f.s > f.box.x + 4 && f.x + c.x * f.s < f.box.x + f.box.side - 4 && f.y + c.y * f.s > f.box.y + 4 && f.y + c.y * f.s < f.box.y + f.box.side - 4);
+      S.marks = new Set(); for (const c of inView) { const [x, y] = C.px(c.x, c.y); can.dispatchEvent(new MouseEvent('click', { bubbles: true, clientX: x, clientY: y })); if (!S.marks.has(c)) throw new Error('a click on the crater at ' + c.x + ', ' + c.y + ' km (D ' + c.D + ') did not mark it at zoom ' + C.zoom().k); }
+      if (S.marks.size !== inView.length) throw new Error('marked ' + S.marks.size + ', clicked ' + inView.length);
+      for (let i = 0; i < 12; i++) q('#zOut').click(); for (let i = 0; i < 12; i++) if (!q('#zIn').disabled) q('#zIn').click(); await pause(50);
+      if (Math.abs(C.zoom().k - 6) > 1e-9) throw new Error('zoom out far and back in by as many steps gave ' + C.zoom().k);
+      can.dispatchEvent(new MouseEvent('dblclick', { bubbles: true })); if (C.zoom().k !== 1) throw new Error('double click did not show the whole field');
+      const g = C.field(); if (Math.abs(g.x - g.box.x) > 1e-9 || Math.abs(g.s * S.surf.L - g.box.side) > 1e-9) throw new Error('the whole field is not back in its square');
+      C.markAll(); await pause(100);
     })()` },
   ],
 };

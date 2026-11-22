@@ -20,8 +20,6 @@ VDI18N.add('es', 'demo/craters', {
   "Cráteres, enfriamiento y edades de superficies",
 "<a>Planets and their surfaces</a>":
   "<a>Los planetas y sus superficies</a>",
-"<a><span>←</span> <span>Galaxy Rotation Curves</span></a><a><span>Inside a Planet</span> <span>→</span></a>":
-  "<a><span>←</span> <span>Curvas de rotación galácticas</span></a><a><span>El interior de un planeta</span> <span>→</span></a>",
 "Drop an asteroid on the Moon, Mercury, Venus, Earth or Mars and see the crater it makes, from a small bowl to a basin with a ring of peaks. Count the craters on a surface to date it with the crater clock, and cool a Moon, a Mars and an Earth to see why small worlds go quiet first.":
   "Deja caer un asteroide sobre la Luna, Mercurio, Venus, la Tierra o Marte y mira el cráter que hace, desde un cuenco pequeño hasta una cuenca con un anillo de picos. Cuenta los cráteres de una superficie para fecharla con el reloj de cráteres, y enfría una Luna, un Marte y una Tierra para ver por qué los mundos pequeños se apagan primero.",
 "km · km/s · billions of years (Gyr)":
@@ -38,6 +36,10 @@ VDI18N.add('es', 'demo/craters', {
   "Contar cráteres",
 "Cooling":
   "Enfriamiento",
+"Show the whole field again (or double click the picture)":
+  "Vuelve a mostrar todo el campo (o haz doble clic en la imagen)",
+"Reset view":
+  "Restablecer la vista",
 "The picture: a crater and the asteroid that made it, a cratered surface to count, or three planets cut open to show how hot they are inside.":
   "La imagen: un cráter y el asteroide que lo hizo, una superficie con cráteres para contar, o tres planetas abiertos para mostrar qué tan calientes están por dentro.",
 "Impact view: an asteroid {#} m across, {#} kg/m³, hits Moon at {#} km/s at an impact angle of {#}°.":
@@ -70,8 +72,14 @@ VDI18N.add('es', 'demo/craters', {
   "Hierro ({#} kg/m³)",
 "Asteroid diameter L":
   "Diámetro del asteroide L",
+"Asteroid diameter L: click, or press Enter, to type a value":
+  "Diámetro del asteroide L: haz clic, o pulsa Enter, para escribir un valor",
+"Speed v: click, or press Enter, to type a value":
+  "Rapidez v: haz clic, o pulsa Enter, para escribir un valor",
 "Angle from the ground":
   "Ángulo desde el suelo",
+"Angle from the ground: click, or press Enter, to type a value":
+  "Ángulo desde el suelo: haz clic, o pulsa Enter, para escribir un valor",
 "Count craters at least this wide":
   "Contar cráteres de al menos este ancho",
 "In the Flat view, click or tap each crater at least as wide as the purple circle to mark it; click again to unmark.":
@@ -310,6 +318,14 @@ VDI18N.add('es', 'demo/craters', {
   "Los cuencos colapsan arriba de (Tierra)",
 "Earth · g = {#} m/s²":
   "Tierra · g = {#} m/s²",
+"Impact view: an asteroid {#} m across, {#} kg/m³, hits Earth at {#} km/s at an impact angle of {#}°.":
+  "Vista de impacto: un asteroide de {#} m de diámetro y {#} kg/m³ golpea la Tierra a {#} km/s con un ángulo de impacto de {#}°.",
+"Impact energy {#} megatons of TNT.":
+  "Energía del impacto: {#} megatones de TNT.",
+"Final crater {#} km wide and {#} m deep, {#} times the asteroid.":
+  "Cráter final de {#} km de ancho y {#} m de profundidad, {#} veces el asteroide.",
+"Graph of final crater diameter against asteroid diameter on Earth, both on log scales, rising as a line.":
+  "Gráfica del diámetro final del cráter contra el diámetro del asteroide en la Tierra, ambos en escala logarítmica, que sube como una línea.",
 "asteroid to scale: L = {#} km":
   "asteroide a escala: L = {#} km",
 "cross section, heights drawn {#} times larger":
@@ -472,14 +488,6 @@ VDI18N.add('es', 'demo/craters', {
   "temperatura interior (K)",
 "Graph of inside temperature in K against time since the planets formed, {#} to {#} Gyr, one curve each for the Moon, Mars and Earth.":
   "Gráfica de la temperatura interior en K contra el tiempo desde que se formaron los planetas, de {#} a {#} Ga, una curva para la Luna, Marte y la Tierra.",
-"Impact view: an asteroid {#} m across, {#} kg/m³, hits Earth at {#} km/s at an impact angle of {#}°.":
-  "Vista de impacto: un asteroide de {#} m de diámetro y {#} kg/m³ golpea la Tierra a {#} km/s con un ángulo de impacto de {#}°.",
-"Impact energy {#} megatons of TNT.":
-  "Energía del impacto: {#} megatones de TNT.",
-"Final crater {#} km wide and {#} m deep, {#} times the asteroid.":
-  "Cráter final de {#} km de ancho y {#} m de profundidad, {#} veces el asteroide.",
-"Graph of final crater diameter against asteroid diameter on Earth, both on log scales, rising as a line.":
-  "Gráfica del diámetro final del cráter contra el diámetro del asteroide en la Tierra, ambos en escala logarítmica, que sube como una línea.",
 "Impact view: an asteroid {#} km across, {#} kg/m³, hits Earth at {#} km/s at an impact angle of {#}°.":
   "Vista de impacto: un asteroide de {#} km de diámetro y {#} kg/m³ golpea la Tierra a {#} km/s con un ángulo de impacto de {#}°.",
 "The crater is a basin with a ring of peaks.":
@@ -496,6 +504,8 @@ VDI18N.add('es', 'demo/craters', {
   "Vista de impacto: un asteroide de {#} km de diámetro y {#} kg/m³ golpea Marte a {#} km/s con un ángulo de impacto de {#}°.",
 "Graph of final crater diameter against asteroid diameter on Mars, both on log scales, rising as a line.":
   "Gráfica del diámetro final del cráter contra el diámetro del asteroide en Marte, ambos en escalas logarítmicas, que sube como una recta.",
+"field {#} × {#} km · sunlight from the left":
+  "campo de {#} × {#} km · luz solar desde la izquierda",
 "Counting view: Mars: southern highlands (Noachian) on Mars, {#} km on a side.":
   "Vista de conteo: Marte: tierras altas del sur (Noéico), en Marte, de {#} km por lado.",
 "Counting view: Mars: northern plains (Hesperian) on Mars, {#} km on a side.":
@@ -506,6 +516,10 @@ VDI18N.add('es', 'demo/craters', {
   "Vista de conteo: Marte, la caldera de la cima del Monte Olimpo, en Marte, de {#} km por lado.",
 "timing not to scale":
   "tiempos fuera de escala",
+"Use two fingers to zoom and move the picture":
+  "Usa dos dedos para acercar y mover la imagen",
+"<a><span>←</span> <span>Galaxy Rotation Curves</span></a><a><span>Inside a Planet</span> <span>→</span></a>":
+  "<a><span>←</span> <span>Curvas de rotación galácticas</span></a><a><span>El interior de un planeta</span> <span>→</span></a>",
 "Describe the picture":
   "Describir la imagen",
 "Time controls":

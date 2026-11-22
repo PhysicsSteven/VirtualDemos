@@ -1374,5 +1374,8 @@ VDI18N.add('en', 'common', [
 "Drag to move the panel",
 "Hide the controls panel",
 "Range {lo} to {hi}",
-"Set to {v}, in steps of {st}"
+"Set to {v}, in steps of {st}",
+"Zoom the counting field in or out about the center (Count craters, Flat)",
+"Show the whole counting field again",
+"Move around the zoomed counting field"
 ]);

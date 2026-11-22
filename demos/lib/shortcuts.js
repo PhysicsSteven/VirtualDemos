@@ -70,6 +70,11 @@ window.VD_SHORTCUTS = {
     ["↑ ↓ ← →", "Change the axle speed by a semitone (Shift for an octave)", "on the picture"],
     ["Page Up Page Down", "Double or halve the axle speed", "on the picture"]
   ],
+  "craters": [
+    ["+ −", "Zoom the counting field in or out about the center (Count craters, Flat)", "on the picture"],
+    ["0", "Show the whole counting field again", "on the picture"],
+    ["← → ↑ ↓", "Move around the zoomed counting field", "on the picture"]
+  ],
   "ct-reconstruction": [
     ["↑ ↓ ← →", "Step the view shown on the scanner and the graph (Shift for ten)", "on the picture"],
     ["+ −", "Zoom the image in or out about its center", "on the picture"]

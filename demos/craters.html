@@ -21,6 +21,8 @@
 :root[data-theme="dark"] { --mark: #fb923c; --gauge: #c4a5ff; --hot: #ff8a50; --lid: #aca59b; --curve-moon: #b6c0cc; --curve-mars: #f08a52; --curve-earth: #69a0ff; }
 .stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
 .stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.zoompair { display: inline-flex; gap: 8px; }   /* − + and Reset view stay together when the strip wraps */
+.zoompair[hidden] { display: none; }
 .stage-ctl .clock { margin-left: auto; font-size: 0.8rem; color: var(--muted); }
 .scene { position: relative; flex: 1 1 auto; min-height: 470px; }
 @media (min-width: 821px) { .bench > .stage { align-self: start; min-height: max(600px, 100%); } :root[data-projector="on"] .bench > .stage { min-height: max(440px, 100%); } }   /* the stage grows with its graph and set up card instead of cutting them off (stage-clipping) */
@@ -79,6 +81,7 @@
         </div>
         <button type="button" class="spin attn" id="play" data-vd-key="play">Drop it</button>
         <div class="seg" role="group" aria-label="Perspective" id="dimSeg"><button type="button" data-dim="3d" aria-pressed="true">3D</button><button type="button" data-dim="flat" aria-pressed="false">Flat</button></div>
+        <span class="zoompair" id="zoomBox" hidden><button type="button" class="btn sq" id="zOut" aria-label="Zoom out">−</button><button type="button" class="btn sq" id="zIn" aria-label="Zoom in">+</button><button type="button" class="btn" id="zHome" title="Show the whole field again (or double click the picture)">Reset view</button></span>
         <span class="clock mono" id="clock" aria-live="off"></span>
       </div>
       <div class="scene" id="scene">
@@ -398,6 +401,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     S.cBody = spec.body;
     S.surf = surface(spec.body, spec.T, spec.L, spec.Dmin, spec.L / 2, S.seed * 101 + spec.L);
     S.surf.name = spec.name; S.marks = new Set(); S.show = false; hf = null; dirty3 = true;
+    Z.k = 1; Z.want = null; Z.cx = Z.cy = spec.L / 2; zKey = '';   /* a new surface opens whole */
   }
   const inField = (c) => c.x >= 0 && c.x < S.surf.L && c.y >= 0 && c.y < S.surf.L;
   const marked = () => S.marks.size;
@@ -433,14 +437,15 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
     return a * f;
   }
-  function surfHeights(n) {
-    const s = S.surf, sc = s.L / n, h = new Float32Array(n * n), alb = new Float32Array(n * n), r = rng(s.T * 1000 + s.L), keep = EJ_KEEP[s.body] || 0.3;
+  /* win = { x0, y0, span } in km draws only that square of the field, at n cells (the zoomed view, sharper than the whole field's 512) */
+  function surfHeights(n, win) {
+    const s = S.surf, w0 = win || { x0: 0, y0: 0, span: s.L }, sc = w0.span / n, h = new Float32Array(n * n), alb = new Float32Array(n * n), r = rng(s.T * 1000 + s.L), keep = EJ_KEEP[s.body] || 0.3;
     for (let i = 0; i < n * n; i++) h[i] = (r() - 0.5) * 0.002 * sc;
     for (const c of s.list) {
       const g = BODIES[s.body].g, Dc = transitionD(g), Dm = c.D * 1000;
       const cc = { D: Dm, form: Dm <= Dc ? 'simple' : (Dm >= peakRingD(g) ? 'ring' : 'complex'), d: Dm <= Dc ? 0.2 * Dm : 400 * Math.pow(Dm / 1000, 0.3) * Math.pow(9.81 / g, 0.533), h: 0.04 * Dm * (Dm <= Dc ? 1 : Math.pow(Dc / Dm, 0.5)) };
       const f = fresh(c.age) * keep, rays = RAYS[s.body] && f > 0.03 ? rayset(Math.floor(c.x * 7919 + c.y * 104729 + c.D * 1e4)) : null;
-      const R = c.D / 2 / sc, cx = c.x / sc, cy = c.y / sc, reach = R * (rays ? 10 : 2.2);
+      const R = c.D / 2 / sc, cx = (c.x - w0.x0) / sc, cy = (c.y - w0.y0) / sc, reach = R * (rays ? 10 : 2.2);
       if (cx + reach < 0 || cy + reach < 0 || cx - reach > n || cy - reach > n) continue;
       if (R < 0.6) continue;
       const ci = Math.max(0, Math.min(n - 1, Math.round(cx))), cj = Math.max(0, Math.min(n - 1, Math.round(cy))), base = h[cj * n + ci];
@@ -466,6 +471,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function shade(H, exag, w, hgt) {
     const n = H.n, img = new ImageData(n, n), P = PAL[H.body] || PAL.moon, sz = Math.cos(0.38), sx = -Math.sin(0.38) * 0.94, sy = -Math.sin(0.38) * 0.34;
     let lo = Infinity, hi = -Infinity; for (let i = 0; i < n * n; i++) { const v = H.h[i]; if (v < lo) lo = v; if (v > hi) hi = v; }
+    if (H.lo != null) { lo = H.lo; hi = H.hi; }   /* a zoomed piece is shaded on the whole field's height range, so it matches */
     for (let j = 0; j < n; j++) for (let i = 0; i < n; i++) {
       const q = j * n + i, hx = (H.h[j * n + Math.min(n - 1, i + 1)] - H.h[j * n + Math.max(0, i - 1)]) / (2 * H.scale) * exag, hy = (H.h[Math.min(n - 1, j + 1) * n + i] - H.h[Math.max(0, j - 1) * n + i]) / (2 * H.scale) * exag;
       const nl = Math.hypot(hx, hy, 1), lam = Math.max(0, (-hx * sx - hy * sy + sz) / nl) / sz, alb = 0.82 + 0.18 * (hi > lo ? (H.h[q] - lo) / (hi - lo) : 0.5);
@@ -482,6 +488,37 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const key = 'c' + S.seed + S.sKey + S.surf.L;
     if (offKey !== key) { off.width = hf.n; off.height = hf.n; octx.putImageData(shade(hf, 3), 0, 0); offKey = key; }
     return off;
+  }
+  /* zoom and pan on the flat counting field (2026-11-22 student run: on a 360 px phone the smallest craters to count were 3 to 5 px
+     across). Z.k is the zoom, 1 (the whole field) to ZMAX; Z.cx, Z.cy the field point at the middle of the view, in km. The wheel,
+     a pinch and + − zoom about the middle of the view, never the pointer; a drag (two fingers on a phone) pans; Reset view and a
+     double click show the whole field. Only the picture changes: the craters, the count and the age are the same at any zoom. */
+  const ZMAX = 6, Z = { k: 1, cx: 0, cy: 0, want: null, wantT: 0 };
+  const zoomOn = () => S.mode === 'count' && !!S.surf && !use3();
+  function clampZ() { const L = S.surf.L, h = L / (2 * Z.k); Z.cx = Math.max(h, Math.min(L - h, Z.cx)); Z.cy = Math.max(h, Math.min(L - h, Z.cy)); }
+  /* steps that undo each other; within one burst (none more than 1.5 s apart) the steps past a limit are remembered, so zooming far
+     out and back in by as many steps comes back to the same view, as VD3.orbit does */
+  function zoomBy(f) {
+    if (!S.surf) return; const now = Date.now(), cl = (v) => Math.max(1, Math.min(ZMAX, v));
+    const base = Z.want != null && now - Z.wantT < 1500 && cl(Z.want) === Z.k ? Z.want : Z.k;
+    Z.want = base * f; Z.wantT = now; const k = cl(Z.want); if (k === Z.k) return;
+    Z.k = Math.abs(k - 1) < 1e-9 ? 1 : k; clampZ(); redraw();
+  }
+  function zoomHome() { if (!S.surf) return; Z.k = 1; Z.want = null; Z.cx = Z.cy = S.surf.L / 2; redraw(); }
+  function zoomUi() { const on = zoomOn(); $('zoomBox').hidden = !on; $('zIn').disabled = Z.k >= ZMAX; $('zOut').disabled = Z.k <= 1; $('zHome').disabled = Z.k <= 1; }
+  /* the zoomed view drawn again from the craters at the screen's own resolution, a moment after the view stops changing */
+  let zImg = null, zKey = '', zTimer = 0;
+  function zoomImage(npx) {
+    const L = S.surf.L, span = L / Z.k, n = Math.max(64, Math.min(1024, Math.round(npx))), key = [offKey, Z.k, Z.cx, Z.cy, n].join();
+    if (zKey === key) return zImg;
+    clearTimeout(zTimer); zTimer = setTimeout(() => {
+      if (!zoomOn() || Z.k <= 1) return;
+      let lo = Infinity, hi = -Infinity; for (const v of hf.h) { if (v < lo) lo = v; if (v > hi) hi = v; }
+      const H2 = surfHeights(n, { x0: Z.cx - span / 2, y0: Z.cy - span / 2, span }); H2.lo = lo; H2.hi = hi;
+      const c = zImg && zImg.width === n ? zImg : document.createElement('canvas'); c.width = n; c.height = n; c.getContext('2d').putImageData(shade(H2, 3), 0, 0);
+      zImg = c; zKey = key; draw();
+    }, 140);
+    return null;
   }
 
   /* heights drawn larger by a round factor, chosen so the relief shows: depth about a tenth of the width */
@@ -541,24 +578,32 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   function drawCountFlat() {
     const p = proj(), cw = cardW(), aw = W - cw, side = Math.min(aw - 24 * p, H - 24 * p), ox = (aw - side) / 2, oy = (H - side) / 2;
-    field = { x: ox, y: oy, s: side / S.surf.L };
-    ctx.imageSmoothingEnabled = true; ctx.drawImage(surfImage(), ox, oy, side, side);
-    ctx.strokeStyle = K.line; ctx.lineWidth = 1; ctx.strokeRect(ox, oy, side, side);
-    const X = (x) => ox + x * field.s, Y = (y) => oy + y * field.s;
+    const L = S.surf.L, s1 = side / L, base = surfImage();
+    if (Z.k > 1) { clampZ(); const s = s1 * Z.k; field = { x: ox + side / 2 - Z.cx * s, y: oy + side / 2 - Z.cy * s, s }; }
+    else field = { x: ox, y: oy, s: s1 };
+    field.box = { x: ox, y: oy, side };
+    const X = (x) => field.x + x * field.s, Y = (y) => field.y + y * field.s;
     ctx.save(); ctx.beginPath(); ctx.rect(ox, oy, side, side); ctx.clip();
+    ctx.imageSmoothingEnabled = true; ctx.drawImage(base, field.x, field.y, L * field.s, L * field.s);
+    if (Z.k > 1) { const zi = zoomImage(side * dpr); if (zi) ctx.drawImage(zi, ox, oy, side, side); }
     ctx.lineWidth = 2 * p; ctx.strokeStyle = K.mark;
     for (const c of S.surf.list) if (S.marks.has(c)) { ctx.beginPath(); ctx.arc(X(c.x), Y(c.y), c.D / 2 * field.s + 2 * p, 0, 2 * Math.PI); ctx.stroke(); }
     if (S.show) { ctx.setLineDash([3 * p, 3 * p]); ctx.strokeStyle = K.gauge; ctx.lineWidth = 1.4 * p;
       for (const c of S.surf.list) if (!c.gone && c.D >= S.Dc && inField(c) && !S.marks.has(c)) { ctx.beginPath(); ctx.arc(X(c.x), Y(c.y), c.D / 2 * field.s + 2 * p, 0, 2 * Math.PI); ctx.stroke(); }
       ctx.setLineDash([]); }
     ctx.restore();
+    ctx.strokeStyle = K.line; ctx.lineWidth = 1; ctx.strokeRect(ox, oy, side, side);
     /* the gauge: a circle as wide as the smallest crater to count, and a scale bar */
     const gr = S.Dc / 2 * field.s, gx = ox + 18 * p + gr, gy = oy + 34 * p + gr;
-    ctx.fillStyle = K.dark ? 'rgba(16,13,10,0.65)' : 'rgba(255,255,255,0.7)'; ctx.fillRect(ox + 6 * p, oy + 6 * p, Math.max(150 * p, 2 * gr + 26 * p), 2 * gr + 66 * p);
-    label(ctx, `count if at least ${S.Dc} km wide`, ox + 12 * p, oy + 18 * p, { col: K.gauge, s: 10.5, halo: false });
+    const gT = `count if at least ${S.Dc} km wide`; ctx.font = `600 ${10.5 * p}px ${K.ui}`;   /* the box fits the label, which runs longer in Spanish */
+    ctx.fillStyle = K.dark ? 'rgba(16,13,10,0.65)' : 'rgba(255,255,255,0.7)'; ctx.fillRect(ox + 6 * p, oy + 6 * p, Math.min(side - 12 * p, Math.max(150 * p, 2 * gr + 26 * p, ctx.measureText(gT).width + 14 * p)), 2 * gr + 66 * p);
+    label(ctx, gT, ox + 12 * p, oy + 18 * p, { col: K.gauge, s: 10.5, halo: false });
     ctx.strokeStyle = K.gauge; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.arc(gx, gy, Math.max(1.5, gr), 0, 2 * Math.PI); ctx.stroke();
     scaleBar(ctx, ox + 12 * p, gy + gr + 26 * p, field.s, Math.min(side * 0.3, 140 * p));
-    label(ctx, `${S.surf.name} · field ${S.surf.L} × ${S.surf.L} km · sunlight from the left`, ox + side - 8 * p, oy + side - 12 * p, { a: 'right', col: K.ink, w: 400, s: 10.5 });
+    /* on two lines where one would run past the left edge of the field (360 px phones, 2026-11-22 student run) */
+    const capL = [S.surf.name, `field ${S.surf.L} × ${S.surf.L} km · sunlight from the left`]; ctx.font = `400 ${10.5 * p}px ${K.ui}`;
+    const capT = capL.join(' · '), capW = ctx.measureText(capT).width > side - 16 * p ? capL : [capT];
+    capW.forEach((t, i) => label(ctx, t, ox + side - 8 * p, oy + side - 12 * p - (capW.length - 1 - i) * 14 * p, { a: 'right', col: K.ink, w: 400, s: 10.5 }));
   }
   /* cooling: the three planets cut open, to scale */
   let cool = null;
@@ -699,7 +744,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       g.add(shell, face); P3[k] = { g, shell, face, cv, tex, key: '' };
     }
     g3 = { S3, geo, col, N, ground, apron, rock, flash, dust, planets, P3 };
-    VD3.orbit(can, G3.o, () => { if (use3()) draw(); }, { phMin: 0.25, phMax: 1.45, zMin: 0.5, zMax: 3 });
+    VD3.orbit(can, G3.o, () => { if (use3()) draw(); }, { phMin: 0.25, phMax: 1.45, zMin: 0.5, zMax: 3, active: use3, grab: () => !use3() });   /* the flat views keep their own wheel, drag and touch (the count view zooms and pans) */
     return true;
   }
   function fillGround(H, exag) {
@@ -839,6 +884,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   $('sL').addEventListener('input', (e) => { S.L = +Lof(+e.target.value).toPrecision(2); changedImpact(); });
   $('sV').addEventListener('input', (e) => { S.v = +e.target.value; changedImpact(); });
   $('sTh').addEventListener('input', (e) => { S.th = +e.target.value; changedImpact(); });
+  /* typed entry on the readouts (2026-11-22 student run: phones have no arrow keys to fine tune the log scale diameter slider) */
+  if (window.VD && VD.typeIn) {
+    VD.typeIn($('oL'), { label: 'Asteroid diameter L', unit: 'km', min: LMIN / 1000, max: LMAX / 1000, step: 0, get: () => S.L / 1000, seed: () => String(+(S.L / 1000).toPrecision(3)), set: (v) => { S.L = +(v * 1000).toPrecision(3); changedImpact(); } });
+    VD.typeIn($('oV'), { label: 'Speed v', unit: 'km/s', min: 5, max: 70, step: 1, get: () => S.v, set: (v) => { S.v = v; changedImpact(); } });
+    VD.typeIn($('oTh'), { label: 'Angle from the ground', unit: '°', min: 15, max: 90, step: 5, get: () => S.th, set: (v) => { S.th = v; changedImpact(); } });
+  }
   $('selDc').addEventListener('change', (e) => { S.Dc = +e.target.value; S.marks = new Set(); sync(); redraw(); });
   $('clearMarks').addEventListener('click', () => { S.marks = new Set(); redraw(); });
   $('showCount').addEventListener('click', () => { S.show = !S.show; sync(); redraw(); });
@@ -856,13 +907,46 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   /* marking craters: the smallest crater still showing whose rim holds the point */
   can.addEventListener('click', (e) => {
     if (S.mode !== 'count' || use3()) return;
-    const r = can.getBoundingClientRect(), x = (e.clientX - r.left - field.x) / field.s, y = (e.clientY - r.top - field.y) / field.s;
+    if (panned) { panned = false; return; }   /* the end of a pan is not a mark */
+    const r = can.getBoundingClientRect(), bx = field.box;
+    if (bx && (e.clientX - r.left < bx.x || e.clientY - r.top < bx.y || e.clientX - r.left > bx.x + bx.side || e.clientY - r.top > bx.y + bx.side)) return;   /* outside the view of the field */
+    const x = (e.clientX - r.left - field.x) / field.s, y = (e.clientY - r.top - field.y) / field.s;
     if (x < 0 || y < 0 || x > S.surf.L || y > S.surf.L) return;
-    const slack = 3 / field.s; let best = null;
+    /* a finger is less exact than a mouse (2026-11-22 student run: on a 360 px phone a third of the taps marked the wrong crater): on touch
+       the reach is 10 px, not 3, and craters smaller than half the counting size, never right to mark, are passed over */
+    const touch = e.pointerType === 'touch' || e.pointerType === 'pen' || (!e.pointerType && window.matchMedia && matchMedia('(pointer: coarse)').matches);
+    const slack = (touch ? 10 : 3) / field.s, minD = touch ? S.Dc / 2 : 0; let best = null;
     let bs = 1;   /* the crater whose center is nearest the click, measured in its own radius */
-    for (const c of S.surf.list) { if (c.gone || !inField(c)) continue; const sc = Math.hypot(c.x - x, c.y - y) / (c.D / 2 + slack); if (sc <= bs) { bs = sc; best = c; } }
+    for (const c of S.surf.list) { if (c.gone || !inField(c) || c.D < minD) continue; const sc = Math.hypot(c.x - x, c.y - y) / (c.D / 2 + slack); if (sc <= bs) { bs = sc; best = c; } }
     if (!best) return; if (S.marks.has(best)) S.marks.delete(best); else S.marks.add(best); redraw();
   });
+  /* zoom and pan the counting field (see Z above). A phone's two fingers come here through VD.twoFinger: their midpoint as a drag,
+     a pinch as wheel steps at the middle of the view; one finger scrolls the page and a tap marks */
+  $('zIn').addEventListener('click', () => zoomBy(1.5));
+  $('zOut').addEventListener('click', () => zoomBy(1 / 1.5));
+  $('zHome').addEventListener('click', zoomHome);
+  can.addEventListener('wheel', (e) => { if (!zoomOn()) return; e.preventDefault(); const d = e.deltaY * (e.deltaMode === 1 ? 33 : e.deltaMode === 2 ? 400 : 1); if (d) zoomBy(Math.exp(-Math.max(-300, Math.min(300, d)) * 0.0015)); }, { passive: false });
+  can.addEventListener('dblclick', () => { if (zoomOn()) zoomHome(); });
+  let pan = null, panned = false;
+  can.addEventListener('pointerdown', (e) => {
+    panned = false; if (!zoomOn() || (e.pointerType === 'mouse' && e.button !== 0)) return;
+    pan = { id: e.pointerId, x: e.clientX, y: e.clientY, cx: Z.cx, cy: Z.cy, moved: false }; try { can.setPointerCapture(e.pointerId); } catch (_) {}
+  });
+  can.addEventListener('pointermove', (e) => {
+    if (!pan || e.pointerId !== pan.id) return; const dx = e.clientX - pan.x, dy = e.clientY - pan.y;
+    if (!pan.moved && Math.hypot(dx, dy) < 5) return; pan.moved = true;
+    if (Z.k > 1) { Z.cx = pan.cx - dx / field.s; Z.cy = pan.cy - dy / field.s; clampZ(); draw(); }
+  });
+  const panEnd = (e) => { if (!pan || e.pointerId !== pan.id) return; if (pan.moved) { panned = true; setTimeout(() => { panned = false; }, 400); } pan = null; };
+  can.addEventListener('pointerup', panEnd); can.addEventListener('pointercancel', panEnd);
+  can.addEventListener('keydown', (e) => {
+    if (!zoomOn() || e.ctrlKey || e.metaKey || e.altKey) return; const st = S.surf.L / Z.k / 8;
+    if (e.key === '+' || e.key === '=') zoomBy(1.5); else if (e.key === '-') zoomBy(1 / 1.5); else if (e.key === '0') zoomHome();
+    else if (Z.k > 1 && /^Arrow/.test(e.key)) { Z.cx += e.key === 'ArrowLeft' ? -st : e.key === 'ArrowRight' ? st : 0; Z.cy += e.key === 'ArrowUp' ? -st : e.key === 'ArrowDown' ? st : 0; clampZ(); draw(); }
+    else return;
+    e.preventDefault();
+  });
+  if (window.VD && VD.twoFinger) VD.twoFinger(can, { grab: () => false, tapHint: false, get hint() { return S.mode === 'count' ? (window.VDI18N ? VDI18N.t('Use two fingers to zoom and move the picture') : 'Use two fingers to zoom and move the picture') : false; } });
 
   /* ---------- readings for the worksheets ---------- */
   const PNAME = { small: 'A 500 m asteroid (Moon)', meteor: 'Meteor Crater', tycho: 'Tycho', copernicus: 'Copernicus', chicxulub: 'Chicxulub', mead: 'Mead', orientale: 'Orientale', caloris: 'Caloris', hellas: 'Hellas', custom: 'Changed by hand' };
@@ -879,7 +963,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   $('about').textContent = 'Model. Crater sizes: the scaling law of Collins, Melosh and Marcus (2005) for rock targets, with the simple to complex transition at 3.2 km on Earth and scaled as 1/g elsewhere (19.4 km on the Moon), and peak ring basins from 200 km on the Moon, scaled the same way. Depths: simple craters from Collins and others (about 0.21 D); complex craters 0.4 km (D/1 km)^0.3 on Earth and 1.044 km (D/1 km)^0.301 on the Moon (Pike 1977), other bodies in between as a power of g. The shapes are schematic, and the pictures draw heights larger by the factor printed under them. The simple and complex crater laws do not meet: where the transient crater passes 0.8 D_c the final diameter drops by 9 % (on the Moon from 19.4 to 17.6 km) for an asteroid only slightly larger, a seam where two fitted laws are joined, not a real shrinking, so sizes near the transition are uncertain by about that much. Target rock 2550 kg/m³ on the Moon, 2700 kg/m³ elsewhere. Left out: the air (which breaks up small asteroids at Earth and Venus), the curvature of the planet (which matters for basins hundreds of km wide, where the law is only a guide), and the flight of the ejecta. The ejecta blanket and rays are drawn, not computed: the blanket\'s thickness falls as (r/R)^−3 outside the rim (McGetchin and others 1973) and it is drawn brighter out to 2.2 crater radii; on the airless Moon and Mercury rays reach 4 to 10 crater radii, in random directions; both darken with age as e^(−age/0.4 Gyr), so young craters such as Tycho are rayed and old ones are not. Crater clock: Neukum, Ivanov and Hartmann (2001) for the Moon, Ivanov (2001) and Hartmann and Neukum (2001) for Mars. The surfaces are simulated: craters placed at random, sizes from the production function and times from the clock, every crater\'s shape fresh (real old craters are worn down), and a new crater erases older smaller ones whose centers it covers, so the oldest surfaces saturate. Counting statistics: a count of N is uncertain by about √N. Cooling: one mantle temperature per planet, the boundary layer convection law Nu = (Ra/Ra_c)^(1/3) with Ra_c = 1000, k = 4 W/(m·K), κ = 10^−6 m²/s, α = 3 × 10^−5 /K, c = 1200 J/(kg·K), viscosity 10^21 Pa·s at 1600 K changing with an activation energy of 300 kJ/mol, and radioactive heating by U, Th and K at bulk silicate Earth levels with half lives 4.47, 0.704, 14.0 and 1.25 Gyr. No heat from the cores, no melting, the same rock and the same convection rule for all three: the real Moon and Mars have a single rigid lid that slows their cooling further. The model gives Earth about 50 mW/m² today against a measured 92 mW/m², because it leaves out the heat from Earth\'s core and the radioactive elements gathered in the continents.';
 
   /* ---------- run, size, theme ---------- */
-  const redraw = () => { draw(); drawPlot(); readouts(); clock(); };
+  const redraw = () => { draw(); drawPlot(); readouts(); clock(); zoomUi(); };
   function draw() {
     if (!K || !W) return; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     if (use3()) { ctx.clearRect(0, 0, W, H); draw3(); return; }
@@ -976,6 +1060,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     });
   }
   window.__cr = { S, PRESETS, SURF, applyPreset, setMode, drop, finish, redraw, sync, buildSurface, trueCount, crater, surface, density, ageFrom, at, cooling, field: () => field,
+    zoom: () => ({ k: Z.k, cx: Z.cx, cy: Z.cy }), zoomBy, zoomHome,
     markAll: () => { S.marks = new Set(S.surf.list.filter((c) => !c.gone && c.D >= S.Dc && inField(c))); redraw(); }, set: (o) => { Object.assign(S, o); sync(); redraw(); },
     px: (x, y) => { const b = can.getBoundingClientRect(); return [b.left + field.x + x * field.s, b.top + field.y + y * field.s]; } };
   requestAnimationFrame(frame);

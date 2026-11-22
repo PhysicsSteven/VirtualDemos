@@ -234,7 +234,7 @@
    "why_math": "Integrals only described; student adds and multiplies"
   },
   "comet-tails": {
-   "min": 65,
+   "min": 70,
    "math": "algebra",
    "level": "intro",
    "needs": "Kepler's third law with P in years and a in au; adding and subtracting speeds",
@@ -834,7 +834,7 @@
    "why_math": "Ratios and fourth powers of given laws"
   },
   "intro-celestial-sphere": {
-   "min": 50,
+   "min": 65,
    "math": "algebra",
    "level": "intro",
    "needs": "Angles and degrees; latitude and longitude on Earth; why stars rise and set",
@@ -850,7 +850,7 @@
    "why_math": "Given logarithm formulas; no derivatives needed"
   },
   "intro-craters": {
-   "min": 60,
+   "min": 75,
    "math": "algebra",
    "level": "intro",
    "needs": "Surface area and volume of a sphere; impacts and gravity; rates and counting",
@@ -890,7 +890,7 @@
    "why_math": "Inverse square plugging in; linear graph"
   },
   "intro-inside-a-planet": {
-   "min": 70,
+   "min": 75,
    "math": "algebra",
    "level": "intro",
    "needs": "Density as mass over volume; floating and buoyancy; heat flow; reading a graph line",
@@ -898,7 +898,7 @@
    "why_math": "Linear graph and ratios"
   },
   "intro-kepler": {
-   "min": 60,
+   "min": 75,
    "math": "algebra",
    "level": "intro",
    "needs": "Ellipses, perihelion and aphelion; Kepler's three laws; graphing a slope",
@@ -1050,7 +1050,7 @@
    "why_math": "Degree arithmetic and given rules"
   },
   "intro-telescope": {
-   "min": 60,
+   "min": 65,
    "math": "algebra",
    "level": "intro",
    "needs": "Lenses and focal length; magnification as a ratio; circle area; reading a slope",
