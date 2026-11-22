@@ -228,6 +228,8 @@ VDI18N.add('es', 'demo/taylor', {
   "Empieza con la serie geométrica {#}/({#} − x) = {#} + x + x² + …, pon −x² en lugar de x para obtener {#}/({#} + x²) = {#} − x² + x⁴ − …, y luego integra término a término desde {#}: arctan x = x − x³/{#} + x⁵/{#} − … La sustitución y la integración conservan el radio {#}. En x = {#} la serie todavía converge, lentamente, a π/{#} (la serie de Leibniz).",
 "Probe x":
   "Sonda x",
+"{lo} < {v} < {hi}, at least; each endpoint needs its own test":
+  "{lo} < {v} < {hi}, por lo menos; cada extremo necesita su propia prueba",
 "branch point":
   "punto de ramificación",
 ", and {z}":
@@ -258,8 +260,6 @@ VDI18N.add('es', 'demo/taylor', {
   "polo",
 "M = largest |f⁽ⁿ⁺¹⁾| from a to h":
   "M = mayor |f⁽ⁿ⁺¹⁾| de a a h",
-"The radius of convergence is {#}.":
-  "El radio de convergencia es {#}.",
 "Charges +q and −q a distance 2d apart, and a point on their axis a distance r from the middle. The exact field is E = kq/(r − d)² − kq/(r + d)², so Er²/kq = {#}/({#} − x)² − {#}/({#} + x)² with x = d/r. The first term, 4x, is the dipole field E = 2kp/r³ with p = 2qd; the next, 8x³, is the first correction. Far away (small x) the dipole term is all you need. The series converges only for r > d: inside that, you have passed a charge.":
   "Cargas +q y −q separadas una distancia 2d, y un punto sobre su eje a una distancia r del centro. El campo exacto es E = kq/(r − d)² − kq/(r + d)², así que Er²/kq = {#}/({#} − x)² − {#}/({#} + x)² con x = d/r. El primer término, 4x, es el campo del dipolo E = 2kp/r³ con p = 2qd; el siguiente, 8x³, es la primera corrección. Lejos (x pequeña) basta con el término del dipolo. La serie converge solo para r > d: más adentro, ya pasaste una carga.",
 "eˣ = {#} + x + x²/{#} + x³/{#} + … Every term is positive for x > {#}, and the polynomials hug the curve further out as terms are added, at any x: the radius of convergence is infinite, because eˣ has no singular point anywhere in the complex plane. For a decay, e^(−t/τ) ≈ {#} − t/τ while t is much less than τ.":
@@ -280,6 +280,8 @@ VDI18N.add('es', 'demo/taylor', {
   "Derivada término a término: el término c xᵏ se vuelve k c xᵏ⁻¹.",
 "Differentiate {#}/({#} − x) = {#} + x + x² + … term by term: {#}/({#} − x)² = {#} + 2x + 3x² + 4x³ + … The radius stays {#}. Multiply by x and you get Σ k xᵏ, the sum behind the average energy of a quantum oscillator.":
   "Deriva {#}/({#} − x) = {#} + x + x² + … término a término: {#}/({#} − x)² = {#} + 2x + 3x² + 4x³ + … El radio sigue siendo {#}. Multiplica por x y obtienes Σ k xᵏ, la suma detrás de la energía promedio de un oscilador cuántico.",
+"The radius of convergence is {#}.":
+  "El radio de convergencia es {#}.",
 "Play is adding terms.":
   "Iniciar está agregando términos.",
 "Move the probe (Shift for ten times as far)":

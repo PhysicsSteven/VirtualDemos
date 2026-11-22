@@ -743,7 +743,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     $('out').innerHTML = h;
     const R = radius(), A = S.a;
     let c = dd(VDI18N.t('Center a'), g6(A)) + dd(VDI18N.t('Radius R'), isFinite(R) ? g6(R) : '∞');
-    c += wide(VDI18N.t('Interval of convergence'), isFinite(R) ? `${g6(A - R)} < ${V} < ${g6(A + R)}` : VDI18N.t('every {v}', { v: V }));
+    c += wide(VDI18N.t('Interval of convergence'), isFinite(R) ? VDI18N.t('{lo} < {v} < {hi}, at least; each endpoint needs its own test', { lo: g6(A - R), v: V, hi: g6(A + R) }) : VDI18N.t('every {v}', { v: V }));
     const pts = S.sing && S.sing.pts ? S.sing.pts : [];
     if (pts.length) {
       const p = pts[0], kind = p.kind === 'pole' ? VDI18N.t('pole') : p.kind === 'corner' ? VDI18N.t('corner') : VDI18N.t('branch point');

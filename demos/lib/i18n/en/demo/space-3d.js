@@ -103,7 +103,7 @@ VDI18N.add('en', 'demo/space-3d', [
 "ρ fixed: a cylinder about z. φ fixed: a half plane. z fixed: a horizontal plane.",
 "r fixed: a sphere. θ fixed: a cone about z. φ fixed: a half plane.",
 "The point is at ({#}, {#}, {#}).",
-"A wrench {#} m long along x, pushed at its end with F = ({#}, {#}, {#}) N. The torque τ = r × F = ({#}, −{#}, {#}) N·m points along the axis the wrench turns the bolt about, by the right hand rule; its size is |r||F| sin θ. Only the part of F at right angles to r turns the bolt: the part along r does nothing. Play turns F about the z axis: the torque is largest with F at right angles to the wrench and zero when F points along it.",
+"A wrench {#} m long along x, pushed at its end with F = ({#}, {#}, {#}) N. The torque τ = r × F = ({#}, −{#}, {#}) N·m points along the axis the wrench turns the bolt about, by the right hand rule; its size is |r||F| sin θ. Only the part of F at right angles to r turns the bolt: the part along r does nothing. Play turns F about the z axis: the torque is largest with F at right angles to the wrench and smallest when the part of F in the xy plane points along it, when only the z part of F turns the bolt.",
 "grid unit",
 "r: {#} grid unit = {#} m",
 "F: {#} grid unit = {#} N",

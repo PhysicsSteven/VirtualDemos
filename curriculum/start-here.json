@@ -3096,6 +3096,415 @@
      "see_es": "Con tiempo muerto el contador registra 16.815 conteos por segundo, pierde más o menos un tercio, y los conteos son demasiado parejos para una distribución de Poisson: χ² = 38.4457 con gl = 13, p = 0.0002. Sin tiempo muerto registra 25.230, y χ² = 15.8613 con gl = 16, p = 0.4627: Poisson se ajusta."
     }
    ]
+  },
+  "limits": {
+   "q": "Does f(a) have to exist for the limit at a to exist?",
+   "q_es": "¿Tiene que existir f(a) para que exista el límite en a?",
+   "setup": "set=showEps~1!epsSlide~695!labBlind~0!g%3Apresets~hole",
+   "do": "<b>A hole: (x² − 1)/(x − 1)</b>, at a = 1. Read <b>f(a)</b> and <b>Limit</b> in the readouts, then look down the <b>Closing in</b> table, where h is the distance from a.",
+   "do_es": "<b>Un hueco: (x² − 1)/(x − 1)</b>, en a = 1. Lee <b>f(a)</b> y <b>Límite</b> en las lecturas, luego recorre la tabla <b>Acercándose</b>, donde h es la distancia a a.",
+   "see": "f(a) is undefined: at x = 1 the formula is 0/0. Yet the values close in on 2 from both sides (1.999 and 2.001 at h = 10⁻³), so the limit is 2. The limit asks what f does near a, never what it does at a. Here f(x) = x + 1 everywhere except x = 1, so the graph is a line with a hole at (1, 2), and <b>Continuous at a?</b> says no: a removable discontinuity.",
+   "see_es": "f(a) no está definida: en x = 1 la fórmula da 0/0. Aun así, los valores se acercan a 2 por los dos lados (1.999 y 2.001 en h = 10⁻³), así que el límite es 2. El límite pregunta qué hace f cerca de a, nunca qué hace en a. Aquí f(x) = x + 1 en todas partes salvo en x = 1, así que la gráfica es una recta con un hueco en (1, 2), y <b>¿Continua en a?</b> dice que no: una discontinuidad removible.",
+   "explore": [
+    {
+     "setup": "set=showEps~1!epsSlide~740!labBlind~0!g%3Apresets~jump",
+     "do": "<b>A jump: a switch closes</b>: a 5 V battery is connected at t = 0. Read <b>f(a)</b>, <b>Limit from the left</b> and <b>Limit from the right</b>.",
+     "do_es": "<b>Un salto: se cierra un interruptor</b>: una batería de 5 V se conecta en t = 0. Lee <b>f(a)</b>, <b>Límite por la izquierda</b> y <b>Límite por la derecha</b>.",
+     "see": "Now f(a) = 2.5 V exists, but the limit from the left is 0 V and from the right 5 V, so there is no limit: the two sides differ, a jump discontinuity. f(a) existing is neither needed nor enough. What counts is that both sides close in on the same value.",
+     "see_es": "Ahora f(a) = 2.5 V sí existe, pero el límite por la izquierda es 0 V y por la derecha 5 V, así que no hay límite: los dos lados no coinciden, una discontinuidad de salto. Que f(a) exista no es necesario ni suficiente. Lo que cuenta es que los dos lados se acerquen al mismo valor."
+    },
+    {
+     "setup": "set=showEps~1!epsSlide~740!labBlind~0!g%3Apresets~osc",
+     "do": "<b>sin(1/x): no limit</b>. Press <b>Play</b> to zoom in on x = 0, and read the <b>Closing in</b> table.",
+     "do_es": "<b>sen(1/x): sin límite</b>. Presiona <b>Iniciar</b> para acercar la vista a x = 0 y lee la tabla <b>Acercándose</b>.",
+     "see": "However close you get, the values keep swinging between −1 and 1. From the left they read −0.8268795 at h = 10⁻³, −0.0357488 at h = 10⁻⁵ and −0.4205478 at h = 10⁻⁷, with no pattern. Both one sided limits read none: the values keep swinging. Closer is not always calmer.",
+     "see_es": "Por más que te acerques, los valores siguen oscilando entre −1 y 1. Por la izquierda dan −0.8268795 en h = 10⁻³, −0.0357488 en h = 10⁻⁵ y −0.4205478 en h = 10⁻⁷, sin ningún patrón. Los dos límites laterales dicen ninguno: los valores siguen oscilando. Más cerca no siempre es más tranquilo."
+    },
+    {
+     "setup": "set=showEps~1!epsSlide~800!labBlind~0!g%3Apresets~avgvel",
+     "do": "<b>Average velocity → instantaneous velocity</b>: a ball falls from rest, and f(Δt) is its average velocity from t = 2 s to 2 s + Δt. Read <b>f(a)</b>, <b>Limit</b> and the <b>Closing in</b> table.",
+     "do_es": "<b>Velocidad media → velocidad instantánea</b>: una pelota cae desde el reposo, y f(Δt) es su velocidad media de t = 2 s a 2 s + Δt. Lee <b>f(a)</b>, <b>Límite</b> y la tabla <b>Acercándose</b>.",
+     "see": "At Δt = 0 the average velocity is 0/0, undefined, yet it closes in on 19.62 m/s (19.1295 and 20.1105 at Δt = 0.1 s). That is the instantaneous velocity at 2 s, g × 2 s with g = 9.81 m/s². A derivative is exactly this kind of limit: a quotient that is undefined at the point itself.",
+     "see_es": "En Δt = 0 la velocidad media es 0/0, no definida, y aun así se acerca a 19.62 m/s (19.1295 y 20.1105 en Δt = 0.1 s). Esa es la velocidad instantánea en 2 s, g × 2 s con g = 9.81 m/s². Una derivada es justo esta clase de límite: un cociente que no está definido en el punto mismo."
+    }
+   ]
+  },
+  "series": {
+   "q": "The terms 1/n go to zero. Does their sum settle to a value?",
+   "q_es": "Los términos 1/n tienden a cero. ¿Su suma se estabiliza en un valor?",
+   "setup": "set=nIn~10!nSlide~10!bound~10!labBlind~0!g%3Apresets~harmonic",
+   "do": "<b>Harmonic: past 10 and beyond</b>, at N = 10. Read <b>a(N)</b> and <b>S_N</b>. Predict S_N after a million terms, then type 1000000 in the <b>Last term N</b> box.",
+   "do_es": "<b>Armónica: más allá de 10 y de todo</b>, en N = 10. Lee <b>a(N)</b> y <b>S_N</b>. Predice S_N después de un millón de términos, luego escribe 1000000 en el cuadro <b>Último término N</b>.",
+   "see": "At N = 10, a(N) = 0.1 and S_N = 2.928968. At N = 1,000,000 the terms are down to 0.000001, but S_N = 14.39273 and still growing, like ln N + 0.5772. <b>S_N first passes 10</b> at N = 12,367, and the verdict is diverges. Terms going to 0 is needed for a sum to settle, but it is not enough.",
+   "see_es": "En N = 10, a(N) = 0.1 y S_N = 2.928968. En N = 1,000,000 los términos ya bajaron a 0.000001, pero S_N = 14.39273 y sigue creciendo, como ln N + 0.5772. <b>S_N rebasa 10 por primera vez</b> en N = 12,367, y el veredicto es que diverge. Que los términos tiendan a 0 es necesario para que la suma se estabilice, pero no es suficiente.",
+   "explore": [
+    {
+     "setup": "set=nIn~6!nSlide~6!bound~!labBlind~0!g%3Apresets~altHarm",
+     "do": "<b>Alternating harmonic: ln 2</b>: the same terms with every other sign flipped. Read <b>S_N</b>, <b>Bound |a(N+1)|</b> and <b>Actual |S − S_N|</b>, then press <b>Play</b> to add terms.",
+     "do_es": "<b>Armónica alternante: ln 2</b>: los mismos términos con un signo sí y otro no cambiado. Lee <b>S_N</b>, <b>Cota |a(N+1)|</b> y <b>|S − S_N| real</b>, luego presiona <b>Iniciar</b> para sumar términos.",
+     "see": "Now the sum settles, at ln 2 = 0.6931472. At N = 6, S_N = 0.6166667, and the actual error, 0.0765, is less than the next term, 0.143. The partial sums zigzag over and under ln 2. Canceling signs make this sum settle, where the same sizes all added would not.",
+     "see_es": "Ahora la suma sí se estabiliza, en ln 2 = 0.6931472. En N = 6, S_N = 0.6166667, y el error real, 0.0765, es menor que el siguiente término, 0.143. Las sumas parciales zigzaguean por encima y por debajo de ln 2. Los signos que se cancelan hacen que esta suma se estabilice, cuando los mismos tamaños, todos sumados, no lo harían."
+    },
+    {
+     "setup": "set=nIn~10!nSlide~10!labBlind~0!g%3AviewSeg~integral!g%3Apresets~nlogn",
+     "do": "<b>Integral test: 1/(n ln n) diverges</b>: terms even smaller than 1/n. Read <b>S_N</b>, then type 1000000 in <b>Last term N</b>.",
+     "do_es": "<b>Criterio de la integral: 1/(n ln n) diverge</b>: términos aún más pequeños que 1/n. Lee <b>S_N</b>, luego escribe 1000000 en <b>Último término N</b>.",
+     "see": "At N = 10, S_N = 1.649908. After a million terms it is only 3.420471, with a(N) = 7.238241×10⁻⁸: it looks settled. But the integral of 1/(x ln x) is ln(ln x), which grows without bound, so the series diverges. No amount of adding shows that; the integral test proves it.",
+     "see_es": "En N = 10, S_N = 1.649908. Después de un millón de términos es apenas 3.420471, con a(N) = 7.238241×10⁻⁸: parece estabilizada. Pero la integral de 1/(x ln x) es ln(ln x), que crece sin límite, así que la serie diverge. Ninguna cantidad de sumas lo muestra; el criterio de la integral lo demuestra."
+    },
+    {
+     "setup": "set=nIn~4!nSlide~4!bound~2!labBlind~0!g%3Apresets~books",
+     "do": "<b>Stacking books past the edge</b>: book k from the top sticks out 1/(2k) of a book length. Read <b>S_N</b> for 4 books, and <b>S_N first passes 2</b>.",
+     "do_es": "<b>Libros apilados más allá del borde</b>: el libro k contando desde arriba sobresale 1/(2k) del largo de un libro. Lee <b>S_N</b> con 4 libros, y <b>S_N rebasa 2 por primera vez</b>.",
+     "see": "4 books reach 1.041667 book lengths past the table: the top book is entirely beyond the edge. The overhang is half the harmonic series, so it grows without bound, slowly: 31 books reach 2.013623 book lengths.",
+     "see_es": "4 libros llegan a 1.041667 largos de libro más allá de la mesa: el libro de arriba queda entero fuera del borde. El saliente es la mitad de la serie armónica, así que crece sin límite, despacio: 31 libros llegan a 2.013623 largos de libro."
+    }
+   ]
+  },
+  "taylor": {
+   "q": "Does adding more terms always make a Taylor polynomial more accurate?",
+   "q_es": "¿Agregar más términos siempre hace más exacto un polinomio de Taylor?",
+   "setup": "set=nIn~3!aIn~0!xIn~0.5!showBand~1!showGood~1!tolSel~0.01!showConv~1!showOld~0!x0in~-1.2!x1in~2.6!y0in~-3.2759!y1in~1.9546!labBlind~0!g%3Apresets~ln",
+   "do": "<b>ln(1 + x) near 0</b>, order 3, with the probe at x = 0.5. Move <b>Order n</b> to 6 and then 10, reading <b>Error f − Tn</b> each time. Then type 1.5 in <b>Probe x</b> and read the error again for n = 3, 6 and 10.",
+   "do_es": "<b>ln(1 + x) cerca de 0</b>, orden 3, con la sonda en x = 0.5. Lleva <b>Orden n</b> a 6 y luego a 10, y lee <b>Error f − Tn</b> cada vez. Luego escribe 1.5 en <b>Sonda x</b> y vuelve a leer el error para n = 3, 6 y 10.",
+   "see": "At x = 0.5 the error shrinks: −0.0112016, then 0.000777608, then 0.0000304603. At x = 1.5 it grows: −0.583709, then 1.0616, then 3.31939. <b>Radius R</b> is 1 and the <b>Interval of convergence</b> reads −1 < x < 1, at least (at x = 1 the series also converges, to ln 2): the singular point at x = −1 (a branch point) limits the series, though ln(1 + x) is smooth at 1.5. More terms help only inside the radius of convergence; outside it, each new term makes the polynomial worse.",
+   "see_es": "En x = 0.5 el error se achica: −0.0112016, luego 0.000777608, luego 0.0000304603. En x = 1.5 crece: −0.583709, luego 1.0616, luego 3.31939. <b>Radio R</b> es 1 y el <b>Intervalo de convergencia</b> dice −1 < x < 1, por lo menos (en x = 1 la serie también converge, a ln 2): el punto singular en x = −1 (un punto de ramificación) limita la serie, aunque ln(1 + x) es suave en 1.5. Más términos solo ayudan dentro del radio de convergencia; fuera de él, cada término nuevo empeora el polinomio.",
+   "explore": [
+    {
+     "setup": "set=nIn~8!aIn~0!xIn~0.9!showBand~1!showGood~1!tolSel~0.01!showConv~1!showOld~0!x0in~-2.2!x1in~2.2!y0in~-0.17965!y1in~1.1777!labBlind~0!g%3Apresets~poles",
+     "do": "<b>1/(1 + x²): poles at ±i</b>, order 8, with the probe at x = 0.9. Read <b>Radius R</b> and <b>Error f − Tn</b>, then type 1 in <b>Center a</b>.",
+     "do_es": "<b>1/(1 + x²): polos en ±i</b>, orden 8, con la sonda en x = 0.9. Lee <b>Radio R</b> y <b>Error f − Tn</b>, luego escribe 1 en <b>Centro a</b>.",
+     "see": "About a = 0, R = 1 although 1/(1 + x²) is smooth along the whole real line, and T8 is off by −0.19264 at x = 0.9. The reason is in the complex plane: poles at ±i, a distance 1 from 0. About a = 1 they are √2 away, so R = 1.41421, the interval is −0.414214 < x < 2.41421, and the error at 0.9 falls to 3.28039×10⁻¹¹.",
+     "see_es": "Alrededor de a = 0, R = 1 aunque 1/(1 + x²) es suave en toda la recta real, y T8 se equivoca por −0.19264 en x = 0.9. La razón está en el plano complejo: polos en ±i, a distancia 1 de 0. Alrededor de a = 1 están a √2, así que R = 1.41421, el intervalo es −0.414214 < x < 2.41421, y el error en 0.9 baja a 3.28039×10⁻¹¹."
+    },
+    {
+     "setup": "",
+     "do": "<b>Pendulum: sin θ ≈ θ</b>. Read <b>Tn within 1% of f</b> and <b>Error f − Tn</b> at θ = 0.5, then set <b>Order n</b> to 3 to add the term −θ³/6.",
+     "do_es": "<b>Péndulo: sen θ ≈ θ</b>. Lee <b>Tn dentro del 1% de f</b> y <b>Error f − Tn</b> en θ = 0.5, luego pon <b>Orden n</b> en 3 para agregar el término −θ³/6.",
+     "see": "sin θ ≈ θ is within 1% only out to 0.2441 rad (13.99°). With θ − θ³/6 the range grows to 1.008 rad (57.74°), and the error at θ = 0.5 falls from −0.0205745 to 0.000258872. sin θ has no singular point anywhere (<b>Radius R</b> is ∞), so here every term helps at every θ.",
+     "see_es": "sen θ ≈ θ está dentro del 1% solo hasta 0.2441 rad (13.99°). Con θ − θ³/6 el rango crece hasta 1.008 rad (57.74°), y el error en θ = 0.5 baja de −0.0205745 a 0.000258872. sen θ no tiene ningún punto singular (<b>Radio R</b> es ∞), así que aquí cada término ayuda en todo θ."
+    },
+    {
+     "setup": "set=nIn~1!aIn~0!xIn~0.0627844!showBand~1!showGood~1!tolSel~0.01!showConv~1!showOld~0!x0in~-0.3!x1in~1.2!y0in~-0.33777!y1in~2.2143!labBlind~0!g%3Apresets~gravity",
+     "do": "<b>Gravity above Earth</b>: the probe is at 400 km, about where the International Space Station orbits. Read <b>Relative error</b> and <b>Tn within 1% of f</b> for the line g ≈ g₀(1 − 2h/R), then set <b>Order n</b> to 2.",
+     "do_es": "<b>Gravedad sobre la Tierra</b>: la sonda está a 400 km, más o menos donde orbita la Estación Espacial Internacional. Lee <b>Error relativo</b> y <b>Tn dentro del 1% de f</b> para la recta g ≈ g₀(1 − 2h/R), luego pon <b>Orden n</b> en 2.",
+     "see": "The exact g is 0.885339 g₀ and the line gives 0.874431 g₀, a relative error of 1.232 %: the line is within 1% only up to 361.1 km. The next term brings the error at 400 km down to 0.1037 % and the 1% range up to 838 km. The series converges only for h < R (<b>Radius R</b> is 1 Earth radius), because of the pole at the center of the Earth.",
+     "see_es": "La g exacta es 0.885339 g₀ y la recta da 0.874431 g₀, un error relativo de 1.232 %: la recta está dentro del 1% solo hasta 361.1 km. El siguiente término baja el error a 400 km a 0.1037 % y sube el rango del 1% hasta 838 km. La serie converge solo para h < R (<b>Radio R</b> es 1 radio terrestre), por el polo en el centro de la Tierra."
+    }
+   ]
+  },
+  "slope-fields": {
+   "q": "Two populations, harvested at 100 a day, start at 300 and 250. Can their solution curves ever cross or meet?",
+   "q_es": "Dos poblaciones, con una cosecha de 100 al día, empiezan en 300 y 250. ¿Pueden sus curvas solución cruzarse o juntarse alguna vez?",
+   "setup": "set=hIn~1!tEndIn~20!showEuler~1!showExact~1!t0In~0!y0In~300!showField~1!showIso~0!showPhase~1!ta~-1!tb~25!ya~-40!yb~1200!labBlind~0!g%3Apresets~harvest",
+   "do": "<b>Logistic growth with harvesting</b>: dP/dt = 0.5P(1 − P/1000) − 100, with curves from 300 and 250. Read <b>Equilibria in view</b>, then click the field at a few more start points, some between 250 and 300, and watch where each curve goes.",
+   "do_es": "<b>Crecimiento logístico con cosecha</b>: dP/dt = 0.5P(1 − P/1000) − 100, con curvas desde 300 y 250. Lee <b>Equilibrios a la vista</b>, luego haz clic en el campo en algunos puntos iniciales más, unos entre 250 y 300, y observa a dónde va cada curva.",
+   "see": "The equilibria are y = 276.393 (unstable) and y = 723.607 (stable). The curve from 300 climbs to 647.532 at t = 20 days (<b>Accurate y there</b>) on its way to 723.607; the one from 250 falls to 0 and dies out. The flat line y = 276.393 is itself a solution, and where f is smooth two solutions of the same equation never cross or touch, so no curve gets past it from either side. Each start point has exactly one curve through it.",
+   "see_es": "Los equilibrios son y = 276.393 (inestable) y y = 723.607 (estable). La curva desde 300 sube a 647.532 en t = 20 días (<b>y precisa ahí</b>) camino a 723.607; la que sale de 250 baja a 0 y se extingue. La recta horizontal y = 276.393 es también una solución, y donde f es suave dos soluciones de la misma ecuación nunca se cruzan ni se tocan, así que ninguna curva la rebasa por ningún lado. Por cada punto inicial pasa exactamente una curva.",
+   "explore": [
+    {
+     "setup": "set=hIn~2!tEndIn~20!showEuler~1!showExact~1!t0In~0!y0In~50!showField~1!showIso~0!showPhase~1!ta~-1!tb~25!ya~-40!yb~1200!labBlind~0!g%3Apresets~logistic",
+     "do": "<b>Logistic growth</b>, with r = 0.5 per day and K = 1,000. Click the field at several start points, above 1,000, just above 0 and in between, and look for two curves that cross.",
+     "do_es": "<b>Crecimiento logístico</b>, con r = 0.5 por día y K = 1,000. Haz clic en el campo en varios puntos iniciales, arriba de 1,000, apenas arriba de 0 y en medio, y busca dos curvas que se crucen.",
+     "see": "None cross. <b>Equilibria in view</b> shows y = 0, unstable, and y = 1,000, stable: curves from above 1,000 fall toward it and curves from below rise toward it. Every curve that starts below 500 bends at P = 500, where the slope is largest. The slope depends only on P, so curves between 0 and 1,000 are copies of one another shifted in time.",
+     "see_es": "Ninguna se cruza. <b>Equilibrios a la vista</b> muestra y = 0, inestable, y y = 1,000, estable: las curvas desde arriba de 1,000 bajan hacia él y las de abajo suben hacia él. Toda curva que empieza abajo de 500 cambia de curvatura en P = 500, donde la pendiente es mayor. La pendiente depende solo de P, así que las curvas entre 0 y 1,000 son copias unas de otras, recorridas en el tiempo."
+    },
+    {
+     "setup": "",
+     "do": "<b>Newton's cooling: a cup of coffee</b>, cooling from 90 °C toward a 20 °C room. Type 12 in <b>Step size h</b>, press <b>Step</b> twice, and read <b>Euler y there</b> and <b>Accurate y there</b>.",
+     "do_es": "<b>Enfriamiento de Newton: una taza de café</b>, que se enfría de 90 °C hacia un cuarto a 20 °C. Escribe 12 en <b>Tamaño de paso h</b>, presiona <b>Paso</b> dos veces y lee <b>y de Euler ahí</b> y <b>y precisa ahí</b>.",
+     "see": "The first step uses the slope at 90 °C, −7 °C per minute, for all 12 min and overshoots to 6 °C, below the room; the second climbs back to 22.8 °C at t = 24 min, against the accurate 26.3503 °C. With h = 12 min each step multiplies T − 20 by 1 − 0.1 × 12 = −0.2. Accurate solutions never cross the equilibrium at 20 °C, but Euler's steps can when h is too large.",
+     "see_es": "El primer paso usa la pendiente en 90 °C, −7 °C por minuto, durante los 12 min completos y se pasa hasta 6 °C, por debajo del cuarto; el segundo regresa a 22.8 °C en t = 24 min, contra 26.3503 °C de la solución precisa. Con h = 12 min cada paso multiplica T − 20 por 1 − 0.1 × 12 = −0.2. Las soluciones precisas nunca cruzan el equilibrio en 20 °C, pero los pasos de Euler sí pueden cuando h es demasiado grande."
+    },
+    {
+     "setup": "set=hIn~0.5!tEndIn~1!showEuler~1!showExact~1!t0In~0!y0In~1!showField~1!showIso~0!showPhase~1!ta~-0.1!tb~1.25!ya~-0.1!yb~3.2!labBlind~0!g%3Apresets~eulerE",
+     "do": "<b>Euler's method and the number e</b>: dy/dt = y from y(0) = 1, so y(1) = e. Read <b>Euler y there</b> and <b>Error, Euler − accurate</b>, then press <b>Halve h</b> twice.",
+     "do_es": "<b>El método de Euler y el número e</b>: dy/dt = y desde y(0) = 1, así que y(1) = e. Lee <b>y de Euler ahí</b> y <b>Error, Euler − precisa</b>, luego presiona <b>h a la mitad</b> dos veces.",
+     "see": "With h = 0.5 Euler gives 2.25 against e = 2.71828, an error of −0.468282. With h = 0.125, 8 steps, it gives 2.56578 = (1 + 1/8)⁸, an error of −0.152497. Each step multiplies y by 1 + h, and each halving of h cuts the error by not quite half: Euler's method is first order, so its error shrinks in proportion to h.",
+     "see_es": "Con h = 0.5 Euler da 2.25 contra e = 2.71828, un error de −0.468282. Con h = 0.125, 8 pasos, da 2.56578 = (1 + 1/8)⁸, un error de −0.152497. Cada paso multiplica y por 1 + h, y cada vez que h se reduce a la mitad el error baja casi a la mitad: el método de Euler es de primer orden, así que su error se reduce en proporción a h."
+    }
+   ]
+  },
+  "integrals": {
+   "q": "Double the number of pieces. Which rule's error falls fastest?",
+   "q_es": "Duplica el número de piezas. ¿El error de qué regla baja más rápido?",
+   "setup": "",
+   "do": "<b>Left and right sums on a rising curve</b>: e^(x/2) from 0 to 3 with n = 4. Click each rule in turn, <b>Left</b>, <b>Midpoint</b>, <b>Trapezoid</b> and <b>Simpson</b>, and read <b>Error, sum − integral</b> and <b>Error ratio, n to 2n</b>. Then press <b>× 2</b> a few times and watch the lower graph, <b>Error against n</b>.",
+   "do_es": "<b>Sumas izquierda y derecha en una curva creciente</b>: e^(x/2) de 0 a 3 con n = 4. Haz clic en cada regla por turno, <b>Izquierda</b>, <b>Punto medio</b>, <b>Trapecio</b> y <b>Simpson</b>, y lee <b>Error, suma − integral</b> y <b>Razón de errores, de n a 2n</b>. Luego presiona <b>× 2</b> unas veces y observa la gráfica inferior, <b>Error contra n</b>.",
+   "see": "Against the integral 6.963378, the errors at n = 4 are −1.22 (Left), −0.0406 (Midpoint), 0.0814 (Trapezoid) and 7.52×10⁻⁴ (Simpson). Doubling n divides them by 1.94, 3.99, 3.99 and 15.8, close to 2, 4, 4 and 16: the errors fall like 1/n, 1/n², 1/n² and 1/n⁴. Simpson's falls fastest. Midpoint's error is half of Trapezoid's, with the opposite sign.",
+   "see_es": "Contra la integral 6.963378, los errores en n = 4 son −1.22 (Izquierda), −0.0406 (Punto medio), 0.0814 (Trapecio) y 7.52×10⁻⁴ (Simpson). Duplicar n los divide entre 1.94, 3.99, 3.99 y 15.8, cerca de 2, 4, 4 y 16: los errores bajan como 1/n, 1/n², 1/n² y 1/n⁴. El de Simpson baja más rápido. El error del punto medio es la mitad del de trapecio, con el signo contrario.",
+   "explore": [
+    {
+     "setup": "set=nIn~2!between~0!nSlide~1!labBlind~0!g%3AruleSeg~simp!g%3Apresets~cubic",
+     "do": "<b>Simpson is exact for a cubic</b>, with n = 2. Read <b>Sum</b> and <b>Error, sum − integral</b>, then click <b>Trapezoid</b>.",
+     "do_es": "<b>Simpson es exacta para una cúbica</b>, con n = 2. Lee <b>Suma</b> y <b>Error, suma − integral</b>, luego haz clic en <b>Trapecio</b>.",
+     "see": "Simpson's sum is 5.25 with an error of 0: exact with only two pieces. Its parabolas also fit a cubic exactly, one degree more than they were built for, which is why its error falls like 1/n⁴. The trapezoids give 6.9375, an error of 1.69, and their error ratio is 4.",
+     "see_es": "La suma de Simpson es 5.25 con un error de 0: exacta con solo dos piezas. Sus parábolas también ajustan exactamente una cúbica, un grado más de aquello para lo que se hicieron, y por eso su error baja como 1/n⁴. Los trapecios dan 6.9375, un error de 1.69, y su razón de errores es 4."
+    },
+    {
+     "setup": "set=nIn~5!between~1!nSlide~4!labBlind~0!g%3AruleSeg~mid!g%3Apresets~between",
+     "do": "<b>Area between √x and x²</b>. Click <b>Simpson</b> and read <b>Error, sum − integral</b> and <b>Error ratio, n to 2n</b>.",
+     "do_es": "<b>Área entre √x y x²</b>. Haz clic en <b>Simpson</b> y lee <b>Error, suma − integral</b> y <b>Razón de errores, de n a 2n</b>.",
+     "see": "Simpson raises n to 6, an even number, and its error is −0.00552 against the area 1/3. The ratio is 2.83, not 16. √x has an infinite slope at x = 0, so the error falls only like 1/n^1.5 for every rule here, and 2^1.5 = 2.83. The error orders hold only for smooth functions.",
+     "see_es": "Simpson sube n a 6, un número par, y su error es −0.00552 contra el área 1/3. La razón es 2.83, no 16. √x tiene pendiente infinita en x = 0, así que el error baja solo como 1/n^1.5 con cualquier regla, y 2^1.5 = 2.83. Los órdenes de error solo valen para funciones suaves."
+    },
+    {
+     "setup": "set=nIn~6!between~0!nSlide~5!labBlind~0!g%3AruleSeg~mid!g%3AtabSeg~imp!g%3Apresets~impDiv",
+     "do": "<b>1/x out to infinity: no limit</b>. Type 1000 in <b>to b =</b> and read <b>Area from a to b</b> and <b>As b goes to infinity</b>. Then press <b>1/x² out to infinity: area 1</b> and type 1000 in <b>to b =</b> again.",
+     "do_es": "<b>1/x hasta el infinito: sin límite</b>. Escribe 1000 en <b>hasta b =</b> y lee <b>Área de a a b</b> y <b>Cuando b tiende a infinito</b>. Luego presiona <b>1/x² hasta el infinito: área 1</b> y vuelve a escribir 1000 en <b>hasta b =</b>.",
+     "see": "For 1/x the area from 1 to 1000 is 6.907755, which is ln 1000, and it is still growing at b = a + 10¹²: no limit, since it gains 2.303 for every factor of ten in b. For 1/x² the area is 0.999, and it converges to 1. Both curves go to zero, but only the one that falls faster has a finite area, just as Σ 1/n diverges and Σ 1/n² converges.",
+     "see_es": "Para 1/x el área de 1 a 1000 es 6.907755, que es ln 1000, y sigue creciendo en b = a + 10¹²: no hay límite, porque gana 2.303 por cada factor de diez en b. Para 1/x² el área es 0.999, y converge a 1. Las dos curvas tienden a cero, pero solo la que baja más rápido tiene área finita, igual que Σ 1/n diverge y Σ 1/n² converge."
+    }
+   ]
+  },
+  "function-families": {
+   "q": "In g(x) = 2 sin(2x − π/2), how far to the right is sin x moved: π/2 or π/4?",
+   "q_es": "En g(x) = 2 sen(2x − π/2), ¿cuánto se mueve sen x a la derecha: π/2 o π/4?",
+   "setup": "set=sa~2!sb~2!sc~0.79!sd~0!labBlind~0!g%3AmodeSeg~transform!g%3Apresets~sine",
+   "do": "<b>sin x: amplitude, period, phase</b>. Predict the shift first. Then read <b>c</b> and the formula for <b>g(x)</b> in the readouts, and follow the orange dot on the peak of sin x to the teal dot on g: <b>Point on f</b> and <b>Lands on g at</b>.",
+   "do_es": "<b>sen x: amplitud, periodo, fase</b>. Primero predice el desplazamiento. Luego lee <b>c</b> y la fórmula de <b>g(x)</b> en las lecturas, y sigue el punto naranja en el pico de sen x hasta el punto verde azulado en g: <b>Punto sobre f</b> y <b>Cae sobre g en</b>.",
+   "see": "c = 0.7854, which is π/4: the graph is moved right by 0.7854, not by π/2. The demo writes g(x) = 2 sin(2(x − 0.78539816)), which multiplies out to 2 sin(2x − π/2). The peak of sin x at (1.571, 1) lands on g at (1.571, 2): x goes to c + x/b = π/4 + (π/2)/2 = π/2. To read a shift, factor b out of the inside first, because b squeezes the shift along with everything else.",
+   "see_es": "c = 0.7854, que es π/4: la gráfica se mueve 0.7854 a la derecha, no π/2. El demo escribe g(x) = 2 sin(2(x − 0.78539816)), que al multiplicar da 2 sen(2x − π/2). El pico de sen x en (1.571, 1) cae sobre g en (1.571, 2): x pasa a c + x/b = π/4 + (π/2)/2 = π/2. Para leer un desplazamiento, primero factoriza b del interior, porque b también comprime el desplazamiento junto con todo lo demás.",
+   "explore": [
+    {
+     "setup": "set=sa~3!sb~3.14!sc~0.33!sd~0!labBlind~0!g%3AmodeSeg~transform!g%3Apresets~shm",
+     "do": "<b>Oscillation: x = A cos(ωt + φ)</b>: cos t with a = A = 3 cm, b = ω = π rad/s and c = 1/3 s. Read <b>Lands on g at</b>, <b>Period T = 2π/|ω|</b> and <b>Phase φ = −ωc</b>.",
+     "do_es": "<b>Oscilación: x = A cos(ωt + φ)</b>: cos t con a = A = 3 cm, b = ω = π rad/s y c = 1/3 s. Lee <b>Cae sobre g en</b>, <b>Periodo T = 2π/|ω|</b> y <b>Fase φ = −ωc</b>.",
+     "see": "The first peak of cos t, at (0, 1), lands at (0.3333, 3): the delay is c = 1/3 s, and the period is 2 s. The phase is φ = −ωc = −1.047 rad, which is −π/3. In x = 3 cos(πt − π/3) the π/3 is an angle, not a time: divide it by ω to get the delay.",
+     "see_es": "El primer pico de cos t, en (0, 1), cae en (0.3333, 3): el retraso es c = 1/3 s, y el periodo es 2 s. La fase es φ = −ωc = −1.047 rad, que es −π/3. En x = 3 cos(πt − π/3) el π/3 es un ángulo, no un tiempo: divídelo entre ω para obtener el retraso."
+    },
+    {
+     "setup": "set=x0Slide~833!showTan~1!labBlind~0!g%3AmodeSeg~inverse!g%3Apresets~cubic",
+     "do": "<b>x³ + x: slope becomes 1/slope</b>, in Inverse mode. Read <b>Slope of f at P</b> and <b>Slope of f⁻¹ at Q, measured</b>, then drag <b>Point x₀</b> and watch both.",
+     "do_es": "<b>x³ + x: la pendiente se vuelve 1/pendiente</b>, en el modo Inversa. Lee <b>Pendiente de f en P</b> y <b>Pendiente de f⁻¹ en Q, medida</b>, luego arrastra <b>Punto x₀</b> y observa las dos.",
+     "see": "At P = (1, 2) the slope of f is 4, and at the mirrored point Q = (2, 1) the measured slope of the inverse is 0.25, which is 1/4. No formula gives f⁻¹ here (the demo finds it by bisection), yet its slope is always 1/f′(f⁻¹(y)): reflecting in y = x swaps rise and run.",
+     "see_es": "En P = (1, 2) la pendiente de f es 4, y en el punto reflejado Q = (2, 1) la pendiente medida de la inversa es 0.25, que es 1/4. Aquí ninguna fórmula da f⁻¹ (el demo la encuentra por bisección), y aun así su pendiente siempre es 1/f′(f⁻¹(y)): reflejar en y = x intercambia la subida y el avance."
+    },
+    {
+     "setup": "set=x0Slide~875!showTan~1!labBlind~0!g%3AmodeSeg~inverse!g%3Apresets~fail",
+     "do": "<b>x² on [−2, 2]: not one to one</b>. Read <b>One to one?</b>, then type 0 in the <b>From</b> box of the domain.",
+     "do_es": "<b>x² en [−2, 2]: no es uno a uno</b>. Lee <b>¿Uno a uno?</b>, luego escribe 0 en el cuadro <b>De</b> del dominio.",
+     "see": "No: f(−0.5) = f(0.5) = 0.25, so a horizontal line meets f twice, and the mirror image fails the vertical line test: it is not a function. With the domain from 0 to 2, x² rises across the whole domain and the inverse is √x. At P = (1.5, 2.25) the slope 3 becomes 1/3 (0.333333) at Q.",
+     "see_es": "No: f(−0.5) = f(0.5) = 0.25, así que una recta horizontal corta a f dos veces, y la imagen reflejada no pasa la prueba de la recta vertical: no es una función. Con el dominio de 0 a 2, x² sube en todo el dominio y la inversa es √x. En P = (1.5, 2.25) la pendiente 3 se vuelve 1/3 (0.333333) en Q."
+    }
+   ]
+  },
+  "rates-and-optimization": {
+   "q": "The foot of a ladder is pulled from the wall at a steady 0.5 m/s. Does the top slide down at a steady speed too?",
+   "q_es": "El pie de una escalera se jala desde la pared a 0.5 m/s constantes. ¿La parte de arriba también baja con rapidez constante?",
+   "setup": "",
+   "do": "<b>A ladder sliding down a wall</b>, 5 m long. Read <b>dy/dt from the motion</b>, then press <b>Play</b> and watch it until the run stops (or drag <b>Clock: time since the start</b> to the end).",
+   "do_es": "<b>Una escalera que resbala por una pared</b>, de 5 m. Lee <b>dy/dt del movimiento</b>, luego presiona <b>Iniciar</b> y obsérvala hasta que se detenga (o arrastra <b>Reloj: tiempo desde el inicio</b> hasta el final).",
+   "see": "At t = 0 the foot is 1.400 m out and the top falls at 0.1458 m/s. At the end, t = 7.15 s, the foot is 4.975 m out, the top is 0.5000 m up, and it falls at 4.975 m/s, 34 times faster, though the foot never sped up. Differentiating x² + y² = L² gives dy/dt = −(x/y)(dx/dt), and x/y grows without limit as the top nears the floor.",
+   "see_es": "En t = 0 el pie está a 1.400 m y la parte de arriba baja a 0.1458 m/s. Al final, en t = 7.15 s, el pie está a 4.975 m, la parte de arriba a 0.5000 m del piso, y baja a 4.975 m/s, 34 veces más rápido, aunque el pie nunca aceleró. Derivar x² + y² = L² da dy/dt = −(x/y)(dx/dt), y x/y crece sin límite cuando la parte de arriba se acerca al piso.",
+   "explore": [
+    {
+     "setup": "set=cs~150!p0~30!p1~20!showTan~1!labBlind~0!g%3Apresets~box",
+     "do": "<b>The biggest box from a sheet</b>: cut a square of side x from each corner of a 30 cm × 20 cm sheet and fold up the sides. Read <b>dV/dx</b>, then drag <b>Side of each corner square</b> until dV/dx changes sign.",
+     "do_es": "<b>La caja más grande de una hoja</b>: corta un cuadrado de lado x de cada esquina de una hoja de 30 cm × 20 cm y dobla los lados hacia arriba. Lee <b>dV/dx</b>, luego arrastra <b>Lado de cada cuadrado de esquina</b> hasta que dV/dx cambie de signo.",
+     "see": "At x = 1.50 cm, V = 688.50 cm³ and dV/dx = 327.0 cm², positive, so a larger x does better. The volume is largest where dV/dx = 0: <b>Best x (dV/dx = 0)</b> is 3.92 cm and <b>Best V</b> is 1,056.3 cm³. Past that, a larger cut takes more floor than it adds in height.",
+     "see_es": "En x = 1.50 cm, V = 688.50 cm³ y dV/dx = 327.0 cm², positiva, así que una x mayor da más. El volumen es máximo donde dV/dx = 0: <b>Mejor x (dV/dx = 0)</b> es 3.92 cm y <b>Mejor V</b> es 1,056.3 cm³. Pasado ese punto, un corte mayor quita más piso de lo que agrega en altura."
+    },
+    {
+     "setup": "set=cs~333!p0~14!p1~2!showTan~1!labBlind~0!g%3Apresets~rangeH",
+     "do": "<b>Longest throw from a height: less than 45°</b>: a shot put leaves the hand 2 m up at 14 m/s. Read <b>Best θ (dR/dθ = 0)</b> and <b>Best R</b>, then drag <b>Launch height h</b> to 50 m.",
+     "do_es": "<b>Lanzamiento más largo desde una altura: menos de 45°</b>: una bala sale de la mano a 2 m de altura a 14 m/s. Lee <b>Mejor θ (dR/dθ = 0)</b> y <b>Mejor R</b>, luego arrastra <b>Altura de lanzamiento h</b> hasta 50 m.",
+     "see": "From 2 m the best angle is 42.39°, for 21.888 m, not 45°: the ball has extra time to fall, so a flatter throw goes further. From 50 m the best angle drops to 22.20°, for 48.961 m. 45° is best only from level ground.",
+     "see_es": "Desde 2 m el mejor ángulo es 42.39°, para 21.888 m, no 45°: la bala tiene tiempo extra para caer, así que un tiro más plano llega más lejos. Desde 50 m el mejor ángulo baja a 22.20°, para 48.961 m. 45° es el mejor solo desde terreno plano."
+    },
+    {
+     "setup": "set=cs~417!p0~6!p1~1.5!p2~30!p3~60!showTan~1!labBlind~0!g%3Apresets~guard",
+     "do": "<b>The lifeguard: fastest way to a swimmer</b>: she runs at 6 m/s and swims at 1.5 m/s. Read <b>Best x (dT/dx = 0)</b>, <b>Best T</b> and <b>At the best point</b>, then drag <b>Swimming speed v₂</b> to 6 m/s.",
+     "do_es": "<b>El salvavidas: el camino más rápido al nadador</b>: corre a 6 m/s y nada a 1.5 m/s. Lee <b>Mejor x (dT/dx = 0)</b>, <b>Mejor T</b> y <b>En el mejor punto</b>, luego arrastra <b>Rapidez nadando v₂</b> hasta 6 m/s.",
+     "see": "Entering the water at x = 25.00 m takes 36.068 s. The best point is 52.79 m along the shore, for 29.978 s, where sin θ₁/v₁ = sin θ₂/v₂ = 0.155855 s/m: Snell's law. She runs further on the sand, where she is fast. With equal speeds the best x is 24.00 m and the fastest path is the straight line.",
+     "see_es": "Entrar al agua en x = 25.00 m toma 36.068 s. El mejor punto está a 52.79 m a lo largo de la orilla, para 29.978 s, donde sin θ₁/v₁ = sin θ₂/v₂ = 0.155855 s/m: la ley de Snell. Corre más por la arena, donde es rápida. Con rapideces iguales la mejor x es 24.00 m y el camino más rápido es la línea recta."
+    }
+   ]
+  },
+  "vector-fields": {
+   "q": "Is the work a force does from A to B the same along every path?",
+   "q_es": "¿El trabajo que hace una fuerza de A a B es el mismo por cualquier trayectoria?",
+   "setup": "set=shape~line!ax~0!ay~0!bx~3!by~2!shape2~xy!rev~0!showPaddle~0!showBox~0!boxSize~2!showArrows~1!showTracers~1!showPot~1!labBlind~0!g%3Apresets~swirl",
+   "do": "<b>A swirl force: work depends on the path</b>: F = (−y, x) N pushes around the origin, and the bead goes from A = (0, 0) to B = (3, 2) m. The first path is a <b>Straight line</b>; the second, set in <b>Compare with</b>, goes <b>Along x, then y</b>. Predict whether the two works match, then read <b>Work W, A → B</b> and <b>Work W₂, A → B</b>. Press <b>Play</b> to watch the bead add up the work.",
+   "do_es": "<b>Una fuerza de remolino: el trabajo depende de la trayectoria</b>: F = (−y, x) N empuja alrededor del origen, y la cuenta va de A = (0, 0) a B = (3, 2) m. La primera trayectoria es una <b>Línea recta</b>; la segunda, elegida en <b>Comparar con</b>, va <b>A lo largo de x, luego y</b>. Predice si los dos trabajos coinciden, luego lee <b>Trabajo W, A → B</b> y <b>Trabajo W₂, A → B</b>. Presiona <b>Iniciar</b> para ver cómo la cuenta va sumando el trabajo.",
+   "see": "0 J along the line and 6 J along x, then y. On the line, F = (−y, x) is at right angles to the path at every point, so it does no work. Along x, then y, the first leg lies on y = 0, where F points straight up, across the motion (0 J); the second leg runs up x = 3, where F has 3 N along the motion for 2 m (6 J). The work depends on the path, so F is not conservative and has no potential energy. The verdict gives the reason: curl F = 2.",
+   "see_es": "0 J por la recta y 6 J a lo largo de x, luego y. Sobre la recta, F = (−y, x) es perpendicular a la trayectoria en cada punto, así que no hace trabajo. A lo largo de x, luego y, el primer tramo está sobre y = 0, donde F apunta hacia arriba, de través al movimiento (0 J); el segundo tramo sube por x = 3, donde F tiene 3 N a lo largo del movimiento durante 2 m (6 J). El trabajo depende de la trayectoria, así que F no es conservativa y no tiene energía potencial. El veredicto da la razón: rot F = 2.",
+   "explore": [
+    {
+     "setup": "set=shape~line!ax~0!ay~0!bx~3!by~2!shape2~xy!rev~0!showPaddle~0!showBox~0!boxSize~2!showArrows~1!showTracers~1!showPot~1!labBlind~0!g%3Apresets~gravity",
+     "do": "<b>Uniform gravity: work depends only on height</b>, the weight of a 1.00 kg mass, F = (0, −9.81) N. Read <b>Work W, A → B</b> and <b>Work W₂, A → B</b>, then set <b>Compare with</b> to <b>Half circle</b> and read them again.",
+     "do_es": "<b>Gravedad uniforme: el trabajo depende solo de la altura</b>, el peso de una masa de 1.00 kg, F = (0, −9.81) N. Lee <b>Trabajo W, A → B</b> y <b>Trabajo W₂, A → B</b>, luego elige <b>Medio círculo</b> en <b>Comparar con</b> y léelos otra vez.",
+     "see": "−19.62 J along the line, along x then y, and along the half circle: −9.81 N times the 2 m rise. The work depends only on the two ends, so gravity is conservative, and f(B) − f(A) = −19.62 gives the same number from the potential alone.",
+     "see_es": "−19.62 J por la recta, a lo largo de x luego y, y por el medio círculo: −9.81 N por la subida de 2 m. El trabajo depende solo de los dos extremos, así que la gravedad es conservativa, y f(B) − f(A) = −19.62 da el mismo número a partir del potencial."
+    },
+    {
+     "setup": "set=shape~circle!cx~0!cy~0!rr~1.5!rev~0!showPaddle~1!showBox~0!boxSize~2!showArrows~1!showTracers~1!showPot~1!labBlind~0!g%3Apresets~wire",
+     "do": "<b>The field around a long wire</b>: B around a current coming out of the screen, in units of μ₀I/2π. Read <b>∮ B·dr</b> around the circle, <b>∬ curl dA</b> and <b>curl F at the paddle</b>. Then type 3 in the first <b>Center</b> box to move the loop off the wire.",
+     "do_es": "<b>El campo alrededor de un alambre largo</b>: B alrededor de una corriente que sale de la pantalla, en unidades de μ₀I/2π. Lee <b>∮ B·dr</b> alrededor del círculo, <b>∬ rot dA</b> y <b>rot F en la rueda de paletas</b>. Luego escribe 3 en el primer cuadro de <b>Centro</b> para sacar el lazo del alambre.",
+     "see": "∮ B·dr = 6.283 = 2π around the wire, yet ∬ curl dA = 0 and the paddle wheel does not turn: the curl is 0 wherever B is defined. Green's theorem does not apply, because B is undefined at the wire inside the loop (the <b>Green's theorem</b> row says so). With the center at (3, 0) the loop no longer goes around the wire, and ∮ B·dr = 0. This is Ampère's law, ∮ B·dr = μ₀I: only the current inside the loop counts.",
+     "see_es": "∮ B·dr = 6.283 = 2π alrededor del alambre, y sin embargo ∬ rot dA = 0 y la rueda de paletas no gira: el rotacional es 0 dondequiera que B esté definido. El teorema de Green no se aplica, porque B no está definido en el alambre dentro del lazo (lo dice el renglón <b>Teorema de Green</b>). Con el centro en (3, 0) el lazo ya no rodea al alambre, y ∮ B·dr = 0. Es la ley de Ampère, ∮ B·dr = μ₀I: solo cuenta la corriente dentro del lazo."
+    },
+    {
+     "setup": "set=shape~circle!cx~0.5!cy~0.3!rr~1.2!rev~0!showPaddle~1!showBox~0!boxSize~2!showArrows~1!showTracers~1!showPot~1!labBlind~0!g%3AshadeSeg~curl!g%3Apresets~rotate",
+     "do": "<b>A rotating fluid</b>, v = ω(−y, x) with ω = 1 rad/s. Read <b>curl F at the paddle</b>, <b>paddle turns at ω</b>, <b>∮ v·dr</b> and <b>∬ curl dA</b>. Then type 0.6 in <b>Radius (half side for the square)</b>.",
+     "do_es": "<b>Un fluido en rotación</b>, v = ω(−y, x) con ω = 1 rad/s. Lee <b>rot F en la rueda de paletas</b>, <b>la rueda gira a ω</b>, <b>∮ v·dr</b> y <b>∬ rot dA</b>. Luego escribe 0.6 en <b>Radio (medio lado para el cuadrado)</b>.",
+     "see": "The curl is 2 and the paddle wheel turns at 1 rad/s, half the curl: the rate the fluid itself turns. Around the circle of radius 1.2 m, ∮ v·dr = ∬ curl dA = 9.048 m²/s = 2 × π(1.2)², which is Green's theorem. With radius 0.6 m both read 2.262 m²/s, a quarter as much, because the circulation goes with the area inside.",
+     "see_es": "El rotacional es 2 y la rueda de paletas gira a 1 rad/s, la mitad del rotacional: la rapidez con que gira el propio fluido. Alrededor del círculo de radio 1.2 m, ∮ v·dr = ∬ rot dA = 9.048 m²/s = 2 × π(1.2)², que es el teorema de Green. Con radio 0.6 m los dos marcan 2.262 m²/s, la cuarta parte, porque la circulación va con el área encerrada."
+    }
+   ]
+  },
+  "curves-and-motion": {
+   "q": "At the bottom of each arch, a point on a rolling tire stops for an instant. Is its acceleration zero there?",
+   "q_es": "En la parte de abajo de cada arco, un punto de una llanta que rueda se detiene un instante. ¿Su aceleración es cero ahí?",
+   "setup": "",
+   "do": "<b>A rolling wheel: the cycloid</b>: a point on a bicycle tire of radius 0.35 m, turning once a second. Press <b>Reset</b> to put the point at t = 0, the bottom of the first arch. Predict, then read <b>Speed |v|</b> and <b>Acceleration |a|</b> and look at the acceleration arrow. Press <b>Play</b> and watch the arrows as it rolls.",
+   "do_es": "<b>Una rueda que rueda: la cicloide</b>: un punto de la llanta de una bicicleta de radio 0.35 m, que da una vuelta por segundo. Presiona <b>Reiniciar</b> para poner el punto en t = 0, la parte de abajo del primer arco. Predice, luego lee <b>Rapidez |v|</b> y <b>Aceleración |a|</b> y mira la flecha de la aceleración. Presiona <b>Iniciar</b> y observa las flechas mientras rueda.",
+   "see": "|v| = 0 m/s, but |a| = 13.82 m/s², pointing straight up at the hub: 4π²R with R = 0.35 m. The point stops for an instant (the curve has a cusp) because its velocity reverses direction there, and changing velocity takes acceleration. As it rolls, the acceleration keeps its size and always points at the hub, while the speed changes. Zero velocity does not mean zero acceleration.",
+   "see_es": "|v| = 0 m/s, pero |a| = 13.82 m/s², apuntando hacia arriba, al eje de la rueda: 4π²R con R = 0.35 m. El punto se detiene un instante (la curva tiene una cúspide) porque ahí su velocidad invierte su dirección, y cambiar la velocidad requiere aceleración. Mientras rueda, la aceleración conserva su tamaño y siempre apunta al eje, mientras la rapidez cambia. Velocidad cero no significa aceleración cero.",
+   "explore": [
+    {
+     "setup": "set=speed~1!showV~1!showA~1!showSplit~0!showTN~0!showOsc~1!showTrail~1!showArea~0!showSlice~0!labBlind~0!g%3Apresets~circle",
+     "do": "<b>Uniform circular motion: a = v²/r</b>, a point on a 2 m circle at 3 rad/s. Press <b>Play</b>, then read <b>Speed |v|</b>, <b>Acceleration |a|</b>, <b>Tangential a_T</b> and <b>Normal a_N</b>.",
+     "do_es": "<b>Movimiento circular uniforme: a = v²/r</b>, un punto en un círculo de 2 m a 3 rad/s. Presiona <b>Iniciar</b>, luego lee <b>Rapidez |v|</b>, <b>Aceleración |a|</b>, <b>Tangencial a_T</b> y <b>Normal a_N</b>.",
+     "see": "The speed stays 6 m/s, yet |a| = 18 m/s² = v²/r = 36/2. a_T = 0 because the speed does not change; all of the acceleration is a_N, toward the center, and it turns the velocity. Constant speed is not constant velocity. The radius of curvature, 1/κ = 2 m, is the circle itself.",
+     "see_es": "La rapidez se queda en 6 m/s, y aun así |a| = 18 m/s² = v²/r = 36/2. a_T = 0 porque la rapidez no cambia; toda la aceleración es a_N, hacia el centro, y hace girar la velocidad. Rapidez constante no es velocidad constante. El radio de curvatura, 1/κ = 2 m, es el propio círculo."
+    },
+    {
+     "setup": "set=speed~1!showV~1!showA~1!showSplit~1!showTN~0!showOsc~1!showTrail~1!showArea~0!showSlice~0!labBlind~0!g%3Apresets~projectile",
+     "do": "<b>A projectile</b> launched at 15 m/s across and 20 m/s up. Press <b>Reset</b> to put the ball at the launch point and read <b>Tangential a_T</b>, <b>Normal a_N</b> and <b>Radius of curvature 1/κ</b>. Then press <b>Play</b> and watch the two parts of a (<b>a split into tangential a<sub>T</sub> and normal a<sub>N</sub></b> is on).",
+     "do_es": "<b>Un proyectil</b> lanzado a 15 m/s horizontal y 20 m/s hacia arriba. Presiona <b>Reiniciar</b> para poner la pelota en el punto de lanzamiento y lee <b>Tangencial a_T</b>, <b>Normal a_N</b> y <b>Radio de curvatura 1/κ</b>. Luego presiona <b>Iniciar</b> y observa las dos partes de a (<b>a dividida en tangencial a<sub>T</sub> y normal a<sub>N</sub></b> está activada).",
+     "see": "At launch |v| = 25 m/s and |a| = 9.81 m/s², split into a_T = −7.848 m/s² (9.81 × 20/25, slowing the ball) and a_N = 5.886 m/s² (9.81 × 15/25, bending its path); the radius of curvature is 106.2 m. Going up a_T is negative, at the top it is 0 and all of g is normal, and coming down it is positive. g never changes; only how it splits does.",
+     "see_es": "Al lanzarla |v| = 25 m/s y |a| = 9.81 m/s², dividida en a_T = −7.848 m/s² (9.81 × 20/25, que frena la pelota) y a_N = 5.886 m/s² (9.81 × 15/25, que curva su trayectoria); el radio de curvatura es 106.2 m. De subida a_T es negativa, arriba es 0 y toda g es normal, y de bajada es positiva. g nunca cambia; solo cambia cómo se divide."
+    },
+    {
+     "setup": "set=speed~1!sE~0.6!sQ~0.6!showV~1!showA~1!showSplit~0!showTN~0!showOsc~0!showTrail~1!showArea~0!showSlice~1!labBlind~0!g%3AmodeSeg~conic!g%3Apresets~orbit",
+     "do": "<b>An elliptical orbit, the Sun at a focus</b>: an asteroid with e = 0.6. Press <b>Reset</b> (it starts at its farthest point, r = 2.4 au) and read <b>Speed</b> and <b>dA/dt</b>. Then press <b>Play</b> and keep an eye on both.",
+     "do_es": "<b>Una órbita elíptica, el Sol en un foco</b>: un asteroide con e = 0.6. Presiona <b>Reiniciar</b> (empieza en su punto más lejano, r = 2.4 au) y lee <b>Rapidez</b> y <b>dA/dt</b>. Luego presiona <b>Iniciar</b> y fíjate en los dos.",
+     "see": "At 2.4 au it moves at 12.16 km/s, and dA/dt = 3.078 au²/yr. As it falls toward the Sun its speed climbs, four times as fast at its closest point, 0.6 au, while dA/dt stays 3.078 au²/yr all the way around: the twelve slices have equal areas, Kepler's second law. The period is 1.837 yr.",
+     "see_es": "A 2.4 au se mueve a 12.16 km/s, y dA/dt = 3.078 au²/año. Al caer hacia el Sol su rapidez aumenta, cuatro veces más rápido en su punto más cercano, 0.6 au, mientras dA/dt se queda en 3.078 au²/año en toda la vuelta: las doce rebanadas tienen áreas iguales, la segunda ley de Kepler. El periodo es 1.837 años."
+    }
+   ]
+  },
+  "solids-of-revolution": {
+   "q": "A washer has outer radius R and inner radius r. Is its volume π(R − r)²Δx?",
+   "q_es": "Una arandela tiene radio exterior R y radio interior r. ¿Su volumen es π(R − r)²Δx?",
+   "setup": "set=nIn~4!axisSel~h!labBlind~0!g%3Apresets~washer",
+   "do": "<b>Washers: between x and x²</b>: the region between y = x and y = x² turned about the x axis, cut into n = 4 slices. First work out π∫(x − x²)² dx from 0 to 1, the volume if each slice were π(R − r)²Δx. Then press <b>Play</b> to double n up to 256, and read <b>Sum of n slices</b> and <b>Volume, the integral</b>.",
+   "do_es": "<b>Arandelas: entre x y x²</b>: la región entre y = x y y = x² girada alrededor del eje x, cortada en n = 4 rebanadas. Primero calcula π∫(x − x²)² dx de 0 a 1, el volumen si cada rebanada fuera π(R − r)²Δx. Luego presiona <b>Iniciar</b> para duplicar n hasta 256, y lee <b>Suma de n rebanadas</b> y <b>Volumen, la integral</b>.",
+   "see": "π(R − r)² gives π/30 = 0.1047. The washers add to 0.4348836 at n = 4 and 0.418883 at n = 256, closing in on 2π/15 = 0.418879, four times as much. A washer is a disk of radius R with a disk of radius r taken out, so its volume is π(R² − r²)Δx; π(R − r)²Δx is a thin disk only as wide as the ring, far too small. Each doubling of n cuts the error by about 4 (<b>Error ratio, n to 2n</b>).",
+   "see_es": "π(R − r)² da π/30 = 0.1047. Las arandelas suman 0.4348836 con n = 4 y 0.418883 con n = 256, acercándose a 2π/15 = 0.418879, cuatro veces más. Una arandela es un disco de radio R al que se le quita un disco de radio r, así que su volumen es π(R² − r²)Δx; π(R − r)²Δx es un disco delgado tan ancho como el anillo, demasiado pequeño. Cada vez que n se duplica, el error baja a cerca de la cuarta parte (<b>Razón de errores, de n a 2n</b>).",
+   "explore": [
+    {
+     "setup": "set=nIn~4!axisSel~v!labBlind~0!g%3AmethodSeg~shells!g%3Apresets~shellsY",
+     "do": "<b>Shells: 2x − x² about the y axis</b>. Press <b>Play</b> and read <b>Volume, the integral</b>. Then press <b>Shells about the line x = −1</b>, the same arch turned about an axis 1 unit farther away, and press <b>Play</b> again. Predict the change first.",
+     "do_es": "<b>Capas: 2x − x² alrededor del eje y</b>. Presiona <b>Iniciar</b> y lee <b>Volumen, la integral</b>. Luego presiona <b>Capas alrededor de la recta x = −1</b>, el mismo arco girado alrededor de un eje 1 unidad más lejos, y presiona <b>Iniciar</b> otra vez. Predice antes el cambio.",
+     "see": "8π/3 = 8.37758 about the y axis and 16π/3 = 16.75516 about x = −1: the same region, twice the volume. Each shell's radius grows from x to x + 1, and the volume ∫2π(radius)(height) dx depends on how far the region is from the axis. At n = 256 the sums read 8.377644 and 16.75529.",
+     "see_es": "8π/3 = 8.37758 alrededor del eje y y 16π/3 = 16.75516 alrededor de x = −1: la misma región, el doble de volumen. El radio de cada capa crece de x a x + 1, y el volumen ∫2π(radio)(altura) dx depende de qué tan lejos está la región del eje. Con n = 256 las sumas marcan 8.377644 y 16.75529."
+    },
+    {
+     "setup": "set=nIn~4!axisSel~h!labBlind~0!g%3AwhatSeg~inertia!g%3Apresets~coneI",
+     "do": "<b>Moment of inertia of a solid cone</b>: 2 kg, radius 0.1 m, height 0.3 m, cut into disks. Press <b>Play</b> and read <b>Sum of n slices</b> at n = 256. Then press <b>The cone again, by shells</b> and press <b>Play</b> again.",
+     "do_es": "<b>Momento de inercia de un cono sólido</b>: 2 kg, radio 0.1 m, altura 0.3 m, cortado en discos. Presiona <b>Iniciar</b> y lee <b>Suma de n rebanadas</b> con n = 256. Luego presiona <b>El cono otra vez, con capas cilíndricas</b> y presiona <b>Iniciar</b> otra vez.",
+     "see": "Disks give 0.005999924 kg·m² and shells 0.006000076 kg·m² at n = 256, one just under and one just over I = (3/10)MR² = 0.006 kg·m². Two different ways to slice the same solid close in on the same integral. The cone's I is less than a cylinder's ½MR² = 0.01 kg·m², because its narrow end puts mass near the axis.",
+     "see_es": "Los discos dan 0.005999924 kg·m² y las capas 0.006000076 kg·m² con n = 256, una apenas abajo y otra apenas arriba de I = (3/10)MR² = 0.006 kg·m². Dos maneras distintas de rebanar el mismo sólido se acercan a la misma integral. La I del cono es menor que la de un cilindro, ½MR² = 0.01 kg·m², porque su extremo angosto pone masa cerca del eje."
+    },
+    {
+     "setup": "set=nIn~4!axisSel~h!labBlind~0!g%3AmethodSeg~surface!g%3Apresets~horn",
+     "do": "<b>Gabriel's horn: finite volume, endless surface</b>: y = 1/x from 1 to b = 10 turned about the x axis. Read <b>Surface area, the integral</b> and <b>Volume to b</b>. Then type 100, and then 1000, in <b>to b =</b> and read the surface area each time; at b = 1000 press <b>Disks and washers</b> and read <b>Volume, the integral</b>.",
+     "do_es": "<b>La trompeta de Gabriel: volumen finito, superficie sin fin</b>: y = 1/x de 1 a b = 10 girada alrededor del eje x. Lee <b>Área de superficie, la integral</b> y <b>Volumen hasta b</b>. Luego escribe 100, y después 1000, en <b>hasta b =</b> y lee el área de superficie cada vez; con b = 1000 presiona <b>Discos y arandelas</b> y lee <b>Volumen, la integral</b>.",
+     "see": "At b = 10 the surface area is 15.17745 and the volume π(1 − 1/b) = 2.827433. The surface area is 29.6451 at b = 100 and 44.11267 at b = 1000: each factor of 10 adds about 2π ln 10 = 14.5, without end. The volume at b = 1000 is 3.138451, still less than π. The horn holds a finite amount of paint, but its surface has no finite area.",
+     "see_es": "Con b = 10 el área de superficie es 15.17745 y el volumen π(1 − 1/b) = 2.827433. El área de superficie es 29.6451 con b = 100 y 44.11267 con b = 1000: cada factor de 10 suma cerca de 2π ln 10 = 14.5, sin fin. El volumen con b = 1000 es 3.138451, todavía menor que π. La trompeta contiene una cantidad finita de pintura, pero su superficie no tiene un área finita."
+    }
+   ]
+  },
+  "surfaces-and-gradients": {
+   "q": "A hiker walks a circle around a hill. Where does her rate of climb dh/dt equal zero?",
+   "q_es": "Una excursionista camina en un círculo alrededor de una colina. ¿Dónde vale cero su rapidez de ascenso dh/dt?",
+   "setup": "set=speed~1!pa~1.2!pb~0!tSl~0!showLevels~1!showShade~1!showField~0!showLevelP~1!labBlind~0!g%3AtoolSeg~chain!g%3Apresets~hike",
+   "do": "<b>A hiker circling the hill: rate of climb</b>: she walks a circle of radius 1.2 km at 60 m/min. Read <b>By the chain rule</b> and its two terms, <b>∂h/∂x · dx/dt</b> and <b>∂h/∂y · dy/dt</b>, at t = 0. Then drag <b>Time t along the path</b> slowly to the right, watching dh/dt and <b>h(x, y)</b>, and stop where dh/dt changes sign.",
+   "do_es": "<b>Una excursionista que rodea la colina: rapidez de ascenso</b>: camina un círculo de radio 1.2 km a 60 m/min. Lee <b>Por la regla de la cadena</b> y sus dos términos, <b>∂h/∂x · dx/dt</b> y <b>∂h/∂y · dy/dt</b>, en t = 0. Luego arrastra <b>Tiempo t a lo largo del camino</b> despacio hacia la derecha, mirando dh/dt y <b>h(x, y)</b>, y detente donde dh/dt cambia de signo.",
+   "see": "At t = 0 she is 208.59 m up and climbs at 2.5009 m/min, all from ∂h/∂y · dy/dt, because she heads due north. dh/dt reaches 3.356 m/min near t = 4.8 min, then turns from + to − between t = 12.82 min (0.036205 m/min) and 12.94 min (−0.050745 m/min), where h = 240.83 m, her highest point. There her path runs along the level curve through the point, at right angles to ∇h, so dh/dt = ∇h · r′ = 0: its two terms, 3.263 and −3.314 m/min at 12.94 min, nearly cancel.",
+   "see_es": "En t = 0 está a 208.59 m de altura y sube a 2.5009 m/min, todo por ∂h/∂y · dy/dt, porque va directo al norte. dh/dt llega a 3.356 m/min cerca de t = 4.8 min, y luego cambia de + a − entre t = 12.82 min (0.036205 m/min) y 12.94 min (−0.050745 m/min), donde h = 240.83 m, su punto más alto. Ahí su camino va a lo largo de la curva de nivel por el punto, perpendicular a ∇h, así que dh/dt = ∇h · r′ = 0: sus dos términos, 3.263 y −3.314 m/min en 12.94 min, casi se cancelan.",
+   "explore": [
+    {
+     "setup": "set=speed~1!pa~0!pb~0!mSl~1!showLevels~1!showShade~1!showField~0!showLevelP~1!labBlind~0!g%3AtoolSeg~limit!g%3Apresets~lim2",
+     "do": "<b>x²y/(x⁴ + y²): every line agrees, still no limit</b>. Press <b>Play</b> to send a point in along each path, and read the values <b>along the x axis</b>, <b>along the y axis</b>, <b>along y = x</b> and <b>along y = x²</b> near the origin. Drag <b>Slope m of the line in</b> to other slopes.",
+     "do_es": "<b>x²y/(x⁴ + y²): todas las rectas coinciden, y aun así no hay límite</b>. Presiona <b>Iniciar</b> para mandar un punto hacia adentro por cada camino, y lee los valores <b>a lo largo del eje x</b>, <b>a lo largo del eje y</b>, <b>a lo largo de y = x</b> y <b>a lo largo de y = x²</b> cerca del origen. Arrastra <b>Pendiente m de la recta de entrada</b> a otras pendientes.",
+     "see": "Every straight line gives values that go to 0: 0 along both axes and 8.485 × 10⁻⁷ along y = x near the origin, and the same happens for every slope m. Along the parabola y = x², though, f = x⁴/(x⁴ + x⁴) = 0.5 at every point. One path that disagrees is enough: the limit does not exist. Checking every straight line does not prove a limit.",
+     "see_es": "Cada recta da valores que tienden a 0: 0 sobre los dos ejes y 8.485 × 10⁻⁷ sobre y = x cerca del origen, y pasa lo mismo con cualquier pendiente m. Sobre la parábola y = x², en cambio, f = x⁴/(x⁴ + x⁴) = 0.5 en cada punto. Basta un camino que no coincida: el límite no existe. Revisar todas las rectas no demuestra que haya límite."
+    },
+    {
+     "setup": "",
+     "do": "<b>A hill and its contour map</b>, at the point (−1, −0.8) km. Read <b>∇h</b>, <b>|∇h|</b> and <b>D_uh = ∇h · u</b>. Then drag <b>Direction u, angle α from +x</b> to 39°, 129° and 219°, reading D_uh each time (or press <b>Play</b> to turn u all the way around).",
+     "do_es": "<b>Una colina y su mapa de contorno</b>, en el punto (−1, −0.8) km. Lee <b>∇h</b>, <b>|∇h|</b> y <b>D_uh = ∇h · u</b>. Luego arrastra <b>Dirección u, ángulo α desde +x</b> a 39°, 129° y 219°, leyendo D_uh cada vez (o presiona <b>Iniciar</b> para que u dé la vuelta completa).",
+     "see": "∇h = (176.2, 140.9) m/km, |∇h| = 225.6 m/km, pointing at 38.66°. D_uh is 176.2 m/km with u along +x, 225.6 m/km at 39° (along ∇h: the steepest climb, a 22.6 % grade), −1.34 m/km at 129° (along the level curve, nearly flat) and −225.6 m/km at 219° (straight downhill). D_uh = |∇h| cos θ, so the gradient gives both the direction of steepest climb and its slope, at right angles to the level curve.",
+     "see_es": "∇h = (176.2, 140.9) m/km, |∇h| = 225.6 m/km, apuntando a 38.66°. D_uh vale 176.2 m/km con u a lo largo de +x, 225.6 m/km en 39° (a lo largo de ∇h: el ascenso más empinado, una pendiente de 22.6 %), −1.34 m/km en 129° (a lo largo de la curva de nivel, casi plano) y −225.6 m/km en 219° (directo cuesta abajo). D_uh = |∇h| cos θ, así que el gradiente da la dirección del ascenso más empinado y su pendiente, perpendicular a la curva de nivel."
+    }
+   ]
+  },
+  "space-3d": {
+   "q": "Does pushing harder on a wrench always turn the bolt harder?",
+   "q_es": "¿Empujar más fuerte una llave siempre hace girar más el tornillo?",
+   "setup": "set=speed~1!ax~0.3!ay~0!az~0!bx~0!by~20!bz~10!showSum~0!showDot~0!showCross~1!labBlind~0!g%3Apresets~torque",
+   "do": "<b>Torque on a wrench: τ = r × F</b>: a wrench r = (0.3, 0, 0) m pushed at its end with F = (0, 20, 10) N. Read <b>τ = r × F</b> and <b>|τ|</b>. Now push harder along the handle: under <b>Components</b>, type 15 in the x box of F. Predict, then read <b>|F|</b>, <b>Part of F along r</b>, τ and |τ| again.",
+   "do_es": "<b>Torca en una llave: τ = r × F</b>: una llave r = (0.3, 0, 0) m empujada en su extremo con F = (0, 20, 10) N. Lee <b>τ = r × F</b> y <b>|τ|</b>. Ahora empuja más fuerte a lo largo del mango: en <b>Componentes</b>, escribe 15 en el cuadro x de F. Predice, luego lee otra vez <b>|F|</b>, <b>Parte de F a lo largo de r</b>, τ y |τ|.",
+   "see": "τ = (0, −3, 6) N·m and |τ| = 6.708 N·m. With F = (15, 20, 10) N, |F| grows from 22.36 N to 26.93 N, but τ stays (0, −3, 6) N·m: the 15 N along the handle does nothing. Only the part of F at right angles to r turns the bolt, |τ| = |r||F| sin θ = 0.3 m × 26.93 N × sin 56.15°. τ itself is at right angles to both r and F, by the right hand rule.",
+   "see_es": "τ = (0, −3, 6) N·m y |τ| = 6.708 N·m. Con F = (15, 20, 10) N, |F| crece de 22.36 N a 26.93 N, pero τ se queda en (0, −3, 6) N·m: los 15 N a lo largo del mango no hacen nada. Solo la parte de F perpendicular a r hace girar el tornillo, |τ| = |r||F| sin θ = 0.3 m × 26.93 N × sin 56.15°. τ es perpendicular a r y a F, por la regla de la mano derecha.",
+   "explore": [
+    {
+     "setup": "set=speed~1!ax~0.3!ay~0!az~0!bx~0!by~20!bz~10!showSum~0!showDot~0!showCross~1!labBlind~0!g%3Apresets~torque",
+     "do": "The same wrench. Under <b>Components</b>, type F = (20, 0, 10) N: the push now leans along the handle, and only its 10 N upward part is across it. Read <b>|F|</b>, <b>Angle θ between them</b>, τ and <b>|τ|</b>. Then press <b>Play</b>, which turns F about the z axis, and watch |τ|.",
+     "do_es": "La misma llave. En <b>Componentes</b>, escribe F = (20, 0, 10) N: el empuje ahora se inclina a lo largo del mango, y solo su parte de 10 N hacia arriba queda de través. Lee <b>|F|</b>, <b>Ángulo θ entre ellos</b>, τ y <b>|τ|</b>. Luego presiona <b>Iniciar</b>, que hace girar F alrededor del eje z, y observa |τ|.",
+     "see": "|F| is 22.36 N, as at the start, but θ = 26.57° and τ = (0, −3, 0) N·m, |τ| = 3 N·m: only the 10 N at right angles to r counts, 0.3 m × 10 N. As F turns, |τ| swings between 3 N·m and 6.708 N·m and never reaches 0, because the 10 N upward part always stays at right angles to the wrench. The same force can give very different torques.",
+     "see_es": "|F| es 22.36 N, como al principio, pero θ = 26.57° y τ = (0, −3, 0) N·m, |τ| = 3 N·m: solo cuentan los 10 N perpendiculares a r, 0.3 m × 10 N. Mientras F gira, |τ| oscila entre 3 N·m y 6.708 N·m y nunca llega a 0, porque la parte de 10 N hacia arriba siempre queda perpendicular a la llave. La misma fuerza puede dar torcas muy distintas."
+    },
+    {
+     "setup": "set=speed~1!ax~2!ay~0!az~1!bx~0!by~0!bz~0.5!showSum~0!showDot~1!showCross~1!labBlind~0!g%3Apresets~lorentz",
+     "do": "<b>A proton in a magnetic field: F = qv × B</b>, v = (2, 0, 1) × 10⁵ m/s in B = 0.50 T along z. Read <b>v × B</b> and <b>F = qv × B</b>. Then under <b>Components</b> type 3 in the z box of v, the part of v along B, and read them again.",
+     "do_es": "<b>Un protón en un campo magnético: F = qv × B</b>, v = (2, 0, 1) × 10⁵ m/s en B = 0.50 T a lo largo de z. Lee <b>v × B</b> y <b>F = qv × B</b>. Luego en <b>Componentes</b> escribe 3 en el cuadro z de v, la parte de v a lo largo de B, y léelos otra vez.",
+     "see": "F = (0, −1.602 × 10⁻¹⁴, 0) N both times, although |v| grows from 2.236 × 10⁵ to 3.606 × 10⁵ m/s. The part of v along B feels no force, so it carries the proton steadily along z while the rest of v turns in a circle: the path is a helix. F is at right angles to v, so the field does no work and the speed never changes.",
+     "see_es": "F = (0, −1.602 × 10⁻¹⁴, 0) N las dos veces, aunque |v| crece de 2.236 × 10⁵ a 3.606 × 10⁵ m/s. La parte de v a lo largo de B no siente fuerza, así que lleva al protón de forma constante a lo largo de z mientras el resto de v gira en un círculo: la trayectoria es una hélice. F es perpendicular a v, así que el campo no hace trabajo y la rapidez nunca cambia."
+    },
+    {
+     "setup": "set=speed~1!c1~1.5!c2~70!c3~20!showSurf~1!labBlind~0!g%3AmodeSeg~coord!g%3Apresets~charge",
+     "do": "<b>A point charge: V and E depend only on r</b>: 1 nC at the origin, the point P at r = 1.5 m, θ = 70°, φ = 20°. Read <b>V = kq/r</b> and <b>|E| = kq/r²</b>. Drag the θ and φ sliders anywhere, then drag r to 3.",
+     "do_es": "<b>Una carga puntual: V y E dependen solo de r</b>: 1 nC en el origen, el punto P en r = 1.5 m, θ = 70°, φ = 20°. Lee <b>V = kq/r</b> y <b>|E| = kq/r²</b>. Arrastra los deslizadores θ y φ a cualquier valor, luego arrastra r a 3.",
+     "see": "V = 5.992 V and |E| = 3.994 V/m for every θ and φ, while the rectangular coordinates of P all change: the equipotentials are the spheres r = constant. At r = 3 m, V = 2.996 V, half as much, and |E| = 0.9986 V/m, a quarter. In spherical coordinates this field depends on one coordinate only, which is why the coordinates suit it.",
+     "see_es": "V = 5.992 V y |E| = 3.994 V/m para cualquier θ y φ, mientras las coordenadas rectangulares de P cambian todas: las equipotenciales son las esferas r = constante. En r = 3 m, V = 2.996 V, la mitad, y |E| = 0.9986 V/m, la cuarta parte. En coordenadas esféricas este campo depende de una sola coordenada, y por eso esas coordenadas le quedan bien."
+    }
+   ]
+  },
+  "multiple-integrals": {
+   "q": "In spherical coordinates a ball of radius 1 is the box 0 ≤ ρ ≤ 1, 0 ≤ φ ≤ π, 0 ≤ θ ≤ 2π. Is its volume 1 × π × 2π = 2π²?",
+   "q_es": "En coordenadas esféricas una bola de radio 1 es la caja 0 ≤ ρ ≤ 1, 0 ≤ φ ≤ π, 0 ≤ θ ≤ 2π. ¿Su volumen es 1 × π × 2π = 2π²?",
+   "setup": "set=nS~2!showCells~1!showElem~1!cut~0!labBlind~0!g%3AmodeSeg~triple!g%3Apresets~ball",
+   "do": "<b>Volume of a ball, three ways</b>, in <b>Spherical</b> coordinates. Read <b>∭ f dV</b> and <b>Cell sum Σ f ΔV</b>, and the <b>dV</b> line under Formulas. Look at the cells: are they all the same size? Then press <b>Cylindrical</b> and <b>Rectangular</b> under <b>Coordinates</b> and read again.",
+   "do_es": "<b>Volumen de una bola, de tres maneras</b>, en coordenadas <b>Esféricas</b>. Lee <b>∭ f dV</b> y <b>Suma de celdas Σ f ΔV</b>, y el renglón <b>dV</b> en Fórmulas. Mira las celdas: ¿son todas del mismo tamaño? Luego presiona <b>Cilíndricas</b> y <b>Rectangulares</b> en <b>Coordenadas</b> y lee otra vez.",
+   "see": "The volume is 4.1887902 = 4π/3, not 2π² = 19.74. A spherical cell has volume ρ² sin φ Δρ Δφ Δθ: the Jacobian ρ² sin φ makes the cells near the center and near the poles tiny. In cylindrical coordinates (dV = r dz dr dθ) and rectangular ones (dz dy dx) the bounds have square roots, but ∭ f dV is 4.1887902 every time. The sums over 64 cells differ, 4.231257, 4.3453 and 4.48163, because each system cuts the ball differently.",
+   "see_es": "El volumen es 4.1887902 = 4π/3, no 2π² = 19.74. Una celda esférica tiene volumen ρ² sin φ Δρ Δφ Δθ: el jacobiano ρ² sin φ hace diminutas las celdas cerca del centro y cerca de los polos. En coordenadas cilíndricas (dV = r dz dr dθ) y rectangulares (dz dy dx) los límites llevan raíces cuadradas, pero ∭ f dV es 4.1887902 todas las veces. Las sumas sobre 64 celdas son distintas, 4.231257, 4.3453 y 4.48163, porque cada sistema corta la bola de otra manera.",
+   "explore": [
+    {
+     "setup": "set=nS~3!posS~350!showSurf~1!showCells~1!showElem~1!labBlind~0!g%3AmodeSeg~slices!g%3AdimSeg~flat!g%3Apresets~mistake",
+     "do": "<b>A common mistake in reversing</b>, with f = 1, so each integral is an area. The second order, <b>Order dx dy: y outside, x inside</b>, has the inner bounds y² ≤ x ≤ 1. Compare <b>∬ f dA, dy dx</b> with <b>∬ f dA, dx dy</b> and read the verdict below the readouts. Then change the second order's inner bounds to 0 ≤ x ≤ sqrt(y).",
+     "do_es": "<b>Un error común al invertir</b>, con f = 1, así que cada integral es un área. El segundo orden, <b>Orden dx dy: y afuera, x adentro</b>, tiene los límites interiores y² ≤ x ≤ 1. Compara <b>∬ f dA, dy dx</b> con <b>∬ f dA, dx dy</b> y lee el veredicto debajo de las lecturas. Luego cambia los límites interiores del segundo orden a 0 ≤ x ≤ sqrt(y).",
+     "see": "Both orders give 0.6666666667, a <b>Difference</b> of 0, yet the verdict says the two regions disagree on about 67 % of it, marked on the picture. y² ≤ x ≤ 1 is the mirror image of the true region across y = x, and it happens to have the same area. With 0 ≤ x ≤ sqrt(y) the regions match and the verdict cites Fubini's theorem. A matching number does not prove the bounds right; the picture of the region does.",
+     "see_es": "Los dos órdenes dan 0.6666666667, una <b>Diferencia</b> de 0, y aun así el veredicto dice que las dos regiones no coinciden en cerca del 67 %, marcado en la imagen. y² ≤ x ≤ 1 es la imagen en espejo de la región correcta respecto a y = x, y resulta tener la misma área. Con 0 ≤ x ≤ sqrt(y) las regiones coinciden y el veredicto cita el teorema de Fubini. Que el número coincida no demuestra que los límites estén bien; la imagen de la región sí."
+    },
+    {
+     "setup": "set=nS~3!showCells~1!showElem~1!labBlind~0!g%3AmodeSeg~cov!g%3Apresets~polarMap",
+     "do": "<b>Polar coordinates as a map</b>: x = u cos v, y = u sin v sends the rectangle 0 ≤ u ≤ 2, 0 ≤ v ≤ π onto a half disk. Read <b>J</b> under Formulas, then compare <b>Marked cell: J at its middle</b>, <b>Its image's area</b> and <b>|J| Δu Δv</b>.",
+     "do_es": "<b>Coordenadas polares como transformación</b>: x = u cos v, y = u sin v manda el rectángulo 0 ≤ u ≤ 2, 0 ≤ v ≤ π a medio disco. Lee <b>J</b> en Fórmulas, luego compara <b>Celda marcada: J en su centro</b>, <b>Área de su imagen</b> y <b>|J| Δu Δv</b>.",
+     "see": "J = u·cos(v)² + u·sin(v)², which is u. Every cell is Δu by Δv in the u, v plane, but its image is u times as big: the marked cell, at u = 1.125, maps to an area of 0.110444, close to |J| Δu Δv = 0.110447. That u is the r in dA = r dr dθ, and with it the half disk's area comes out 6.283185307 = 2π.",
+     "see_es": "J = u·cos(v)² + u·sin(v)², que es u. Cada celda mide Δu por Δv en el plano u, v, pero su imagen es u veces más grande: la celda marcada, en u = 1.125, va a un área de 0.110444, cerca de |J| Δu Δv = 0.110447. Esa u es la r de dA = r dr dθ, y con ella el área del medio disco sale 6.283185307 = 2π."
+    },
+    {
+     "setup": "set=nS~3!showCells~1!showElem~1!labBlind~0!g%3AmodeSeg~cov!g%3Apresets~linear",
+     "do": "<b>A linear map: J is constant</b>: x = 2u + v, y = u − v, with f = x. Read <b>J</b> under Formulas, <b>Area of the image</b> and <b>∬ f dA = ∬ f |J| du dv</b>.",
+     "do_es": "<b>Una transformación lineal: J es constante</b>: x = 2u + v, y = u − v, con f = x. Lee <b>J</b> en Fórmulas, <b>Área de la imagen</b> y <b>∬ f dA = ∬ f |J| du dv</b>.",
+     "see": "J = −3 for every cell, so each square cell becomes a parallelogram 3 times its area, and the unit square maps to a parallelogram of area 3. The minus sign means the map flips orientation; areas use |J| = 3. ∬ x dA = ∬ (2u + v) · 3 du dv = 4.5.",
+     "see_es": "J = −3 para todas las celdas, así que cada celda cuadrada se vuelve un paralelogramo de 3 veces su área, y el cuadrado unitario va a un paralelogramo de área 3. El signo menos indica que la transformación invierte la orientación; las áreas usan |J| = 3. ∬ x dA = ∬ (2u + v) · 3 du dv = 4.5."
+    }
+   ]
   }
  }
 }
