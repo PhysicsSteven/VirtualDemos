@@ -419,7 +419,7 @@ def unit_dates(cid, u):
     """A course week's class days and its required worksheet (unit 'dates', 'required'; Astro 2203, 2026-10-26), for the meta row."""
     out = f'<span>{esc(u["dates"])}</span>' if u.get('dates') else ''
     if u.get('required'):
-        out += (f'<span>Required: <a href="curriculum/labs/students/{u["required"]}.html">'
+        out += (f'<span>Required: <a href="curriculum/labs/students/{u["required"]}.html?course={cid}">'
                 f'{esc(course_label(cid, u["required"]))}</a></span>')
     elif u.get('dates') and not u.get('review'):
         out += '<span>No required worksheet</span>'
@@ -438,7 +438,7 @@ def week_section(u, us, ukeys, names, fresh, seen, activity_names, activities, d
 {card(rdemo, demos[rdemo], ukeys, cards, notes, cid, req, hl=4, only=req)}
     </ul>'''
     elif req:
-        rbody = f'''    <p class="noreq"><a href="curriculum/labs/students/{req}.html">{esc(course_label(cid, req))}</a></p>'''
+        rbody = f'''    <p class="noreq"><a href="curriculum/labs/students/{req}.html?course={cid}">{esc(course_label(cid, req))}</a></p>'''
     else:
         rbody = '    <p class="noreq">Nothing to hand in this week.</p>'
     items, n_demos, n_sheets = [], 0, 0
@@ -450,7 +450,7 @@ def week_section(u, us, ukeys, names, fresh, seen, activity_names, activities, d
         hs = course_handouts(cid, demos[rdemo])
         for i, h in enumerate(hs, 1):
             if h != req:
-                more.append(f'<a href="curriculum/labs/students/{h}.html">{esc(course_label(cid, h, i if len(hs) > 1 else None))}</a>')
+                more.append(f'<a href="curriculum/labs/students/{h}.html?course={cid}">{esc(course_label(cid, h, i if len(hs) > 1 else None))}</a>')
                 n_sheets += 1
         if rdemo in notes:
             more.append(f'<a href="notes/{rdemo}.html">Notes</a>')
@@ -468,7 +468,7 @@ def week_section(u, us, ukeys, names, fresh, seen, activity_names, activities, d
     if seen:
         def sheets(n):
             hs = [h for h in course_handouts(cid, demos[n]) if h in u.get('worksheets', [])]
-            return ''.join(f' with <a href="curriculum/labs/students/{h}.html">{esc(course_label(cid, h))}</a>' for h in hs)
+            return ''.join(f' with <a href="curriculum/labs/students/{h}.html?course={cid}">{esc(course_label(cid, h))}</a>' for h in hs)
         links = ' · '.join(f'<a href="demos/{n}.html?course={cid}">{esc(cards[n]["title"])}</a>{sheets(n)} '
                            f'<span class="where">(card under <a href="#{first_unit[n]["id"]}">{esc(first_unit[n].get("short", first_unit[n]["title"]))}</a>)</span>'
                            for n in seen)
@@ -508,7 +508,7 @@ def card(name, demo, unit_secs, cards, notes, cid=None, required=None, hl=3, onl
     if only:
         meta = f'<span class="wsm">{ACT.sheet_meta(only, lab.get(only))}</span>' if lab.get(only) else ''
         tip = f' title="Before this: {esc(lab[only]["needs"])}"' if lab.get(only) else ''
-        links.append(f'<a class="go2" href="curriculum/labs/students/{only}.html"{tip}>{esc(course_label(cid, only))}{meta}</a>')
+        links.append(f'<a class="go2" href="curriculum/labs/students/{only}.html{q}"{tip}>{esc(course_label(cid, only))}{meta}</a>')
     if name in sh and not only:   # Start here, 5 min (2026-11-16)
         links.append(f'<a href="{ACT.start_href(name, sh[name], "course=" + cid if cid else "")}">Start here<span class="wsm">5 min</span></a>')
     hs = [] if only else course_handouts(cid, demo)
@@ -516,7 +516,7 @@ def card(name, demo, unit_secs, cards, notes, cid=None, required=None, hl=3, onl
         tag = '<strong class="req">Required</strong> ' if h == required else ''
         meta = f'<span class="wsm">{ACT.sheet_meta(h, lab.get(h))}</span>' if lab.get(h) else ''
         tip = f' title="Before this: {esc(lab[h]["needs"])}"' if lab.get(h) else ''
-        links.append(f'<a href="curriculum/labs/students/{h}.html"{tip}>{tag}{esc(course_label(cid, h, i if len(hs) > 1 else None))}{meta}</a>')
+        links.append(f'<a href="curriculum/labs/students/{h}.html{q}"{tip}>{tag}{esc(course_label(cid, h, i if len(hs) > 1 else None))}{meta}</a>')
     if name in notes and not only:
         links.append(f'<a href="notes/{name}.html">Notes</a>')
     role = 'Lab' if demo['role'] == 'lab' else 'Demo'
@@ -591,7 +591,7 @@ def course_page(course, m, cards, notes):
                 return f'(card under <a href="#{first_unit[n]["id"]}">{esc(first_unit[n]["title"])}</a>{"; " + refs if refs else ""})'
             def sheets(n):   # unit.worksheets: a worksheet on a demo carded elsewhere that this unit is about, named on the line
                 hs = [h for h in course_handouts(cid, demos[n]) if h in u.get('worksheets', [])]
-                return ''.join(f' with <a href="curriculum/labs/students/{h}.html">{esc(course_label(cid, h))}</a>' for h in hs)
+                return ''.join(f' with <a href="curriculum/labs/students/{h}.html?course={cid}">{esc(course_label(cid, h))}</a>' for h in hs)
             links = ' · '.join(f'<a href="demos/{n}.html?course={cid}">{esc(cards[n]["title"])}</a>{sheets(n)} <span class="where">{where(n)}</span>' for n in seen)
             items.append(f'      <li class="also">Also used in this unit: {links}</li>')
         if u.get('review'):   # a test week: link back to the demos of the units it covers

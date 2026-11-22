@@ -1661,6 +1661,13 @@
     const md = document.querySelector('.markdown-body') || document.body;
     const link = [...md.querySelectorAll('a[href*="/demos/"]')].find((a) => /virtual apparatus|open the demo/i.test(a.textContent));
     if (link) link.classList.add('ws-open-demo');
+    /* opened from a course page (?course=<id>, Steve 2026-11-22): every demo link on the sheet carries the course, so the demo's
+       Previous and Next step through that course rather than the demo's first course (nav.js) */
+    const course = new URLSearchParams(location.search).get('course');
+    if (course && /^[\w-]+$/.test(course)) md.querySelectorAll('a[href*="/demos/"]').forEach((a) => {
+      const u = new URL(a.href, location.href); if (!/\/demos\/[\w-]+\.html$/.test(u.pathname) || u.searchParams.has('course')) return;
+      u.searchParams.set('course', course); a.href = u.href;
+    });
   })();
   if (m) (function howTo(slug) {
     const root = location.pathname.slice(0, location.pathname.indexOf('/curriculum/labs/students/'));
