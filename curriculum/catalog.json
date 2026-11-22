@@ -337,7 +337,7 @@
     {
      "demo": "comets",
      "title": "Comets and Meteor Showers",
-     "desc": "Fly a real comet from JPL around the Sun: its ion tail points straight back from the Sun while its dust tail curves behind, each grain on its own orbit. Then lay the comet's debris along its orbit and watch Earth cross it on the same date every year, with the shower's radiant and speed computed from the orbits.",
+     "desc": "Fly a real comet from JPL around the Sun: its ion tail points straight away from the Sun while its dust tail curves back along its path, each grain on its own orbit. Then lay the comet's debris along its orbit and watch Earth cross it on the same date every year, with the shower's radiant and speed computed from the orbits.",
      "tags": [
       "comets",
       "comet tails",

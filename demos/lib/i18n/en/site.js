@@ -364,7 +364,7 @@ VDI18N.add('en', 'site', [
 "Craters, Cooling and Surface Ages",
 "Drop an asteroid on the Moon, Mercury, Venus, Earth or Mars and see its crater, from a bowl to a basin with a ring of peaks. Count craters to date lunar and Martian surfaces with the crater clock, and cool a Moon, a Mars and an Earth to see why small worlds go quiet first.",
 "Comets and Meteor Showers",
-"Fly a real comet from JPL around the Sun: its ion tail points straight back from the Sun while its dust tail curves behind, each grain on its own orbit. Then lay the comet's debris along its orbit and watch Earth cross it on the same date every year, with the shower's radiant and speed computed from the orbits.",
+"Fly a real comet from JPL around the Sun: its ion tail points straight away from the Sun while its dust tail curves back along its path, each grain on its own orbit. Then lay the comet's debris along its orbit and watch Earth cross it on the same date every year, with the shower's radiant and speed computed from the orbits.",
 "Giant Planets, Rings and Moons",
 "Jupiter, Saturn, Uranus and Neptune to scale; push a moon inside Saturn's Roche limit and watch it come apart into a ring; follow Io, Europa and Ganymede in their {#}:{#}:{#} resonance and the tides that heat Io; and find where water, ammonium hydrosulfide, ammonia and methane condense into cloud decks.",
 "Finding Exoplanets",

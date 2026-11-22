@@ -64,11 +64,11 @@ No hazards in the virtual lab.
 
 **Part 1. Halley's tails.** The demo opens in Tails. Press the setup **Halley: which way do the tails point?**. It puts Halley 40 days before it rounds the Sun. Tick **Follow the comet** so the comet stays in the middle of the picture, then press **Record reading**.
 
-Now press the **10 days** step button beside Play twice, so the comet moves on 20 days, and press **Record reading** again. Keep going 20 days at a time until the Days column reaches 80. That makes seven readings, at −40, −20, 0, 20, 40, 60 and 80 days. Press **Export to worksheet**, then **Clear**.
+Now press the **10 days** step button beside Play twice, so the comet moves on 20 days, and press **Record reading** again. Keep going 20 days at a time until the **day** column of the demo's Readings list (under the readouts) reaches 80; it counts days from perihelion, while the clock above the picture shows the date. That makes seven readings, at −40, −20, 0, 20, 40, 60 and 80 days. Press **Export to worksheet**, then **Clear**.
 
-Watch the white arrow and the blue ion tail as you step past day 0. Look at the **Heading** and **Angle between ion tail and motion** readouts at day 40, which are in your table. An angle above 90° means the tail streams out behind the comet; below 90° means the tail goes out ahead of it.
+Watch the white arrow and the blue ion tail as you step past day 0. At day 0 the **Heading** readout says sideways: at perihelion, the comet's closest point to the Sun. Look at the **Heading** and **Angle between ion tail and motion** readouts at day 40, which are in your table. An angle above 90° means the tail streams out behind the comet; below 90° means the tail goes out ahead of it.
 
-**Part 2. Orbits.** Choose each of these in turn from the **Comet** menu and press **Record reading** for each: 2P/Encke, 67P/Churyumov-Gerasimenko, 1P/Halley, 109P/Swift-Tuttle and C/1995 O1 Hale-Bopp. Then press the setups **A comet from 1 to 50 au** and **From the Oort cloud**, recording one reading for each. That makes seven readings. Press **Export to worksheet**: they go into Table 2. Press **Clear**.
+**Part 2. Orbits.** Choose each of these in turn from the **Comet** menu (at the top of the card beside the picture, under it on a phone) and press **Record reading** for each: 2P/Encke, 67P/Churyumov-Gerasimenko, 1P/Halley, 109P/Swift-Tuttle and C/1995 O1 Hale-Bopp. Then press the setups **A comet from 1 to 50 au** and **From the Oort cloud**, recording one reading for each. That makes seven readings. Press **Export to worksheet**: they go into Table 2. Press **Clear**.
 
 **Part 3. Meteor showers.** Press **Meteor showers** above the picture. Press the setups **Perseids in August**, **Geminids in December**, **Halley gives two showers**, **Leonids: head on** and **Draconids: catching up from behind** in turn, and press **Record reading** after each. You do not need to run time for a reading. Press **Export to worksheet**: the five readings go into Table 3. If you have time, press Play on the Perseids and watch the date when Earth crosses the stream.
 
@@ -82,7 +82,7 @@ Watch the white arrow and the blue ion tail as you step past day 0. Look at the 
 | | | | | | | | |
 | | | | | | | | |
 
-**Table 2. Orbits.** You work out the last two columns.
+**Table 2. Orbits.** The demo fills in $$q$$, $$Q$$ and the period; you work out the Average distance $$a$$ and $$a^{1.5}$$ columns.
 
 | Reading | Comet | Closest $$q$$ (au) | Farthest $$Q$$ (au) | Average distance $$a$$ (au) | Period $$P$$ from the demo (yr) | $$a^{1.5}$$ (yr) |
 |---|---|---|---|---|---|---|

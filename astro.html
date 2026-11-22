@@ -316,7 +316,7 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
 .more { margin: 40px 0 0; color: var(--muted); }
 .more a { color: var(--accent); font-weight: 700; }
 @media (max-width: 700px) {
-  html { scroll-padding-top: 64px; }
+  html { scroll-padding-top: 210px;   /* the sticky header wraps to about 200 px on a 360 px phone (2026-11-22) */ }
   .jump { flex-basis: 100%; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin: 0 -16px; padding: 0 16px; }
   .gaps li { flex-wrap: wrap; }
   .st { margin-left: 0; }
@@ -975,7 +975,7 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
         <div class="body">
           <p class="kind"><span class="role role-demo">Demo</span></p>
           <h3><a href="demos/comets.html?course=astro">Comets and Meteor Showers</a></h3>
-          <p>Fly a real comet from JPL around the Sun: its ion tail points straight back from the Sun while its dust tail curves behind, each grain on its own orbit. Then lay the comet's debris along its orbit and watch Earth cross it on the same date every year, with the shower's radiant and speed computed from the orbits.</p>
+          <p>Fly a real comet from JPL around the Sun: its ion tail points straight away from the Sun while its dust tail curves back along its path, each grain on its own orbit. Then lay the comet's debris along its orbit and watch Earth cross it on the same date every year, with the shower's radiant and speed computed from the orbits.</p>
           <p class="links"><a class="go" href="demos/comets.html?course=astro">Open demo</a> <a href="demos/comets.html?start=1&course=astro">Start here<span class="wsm">5 min</span></a> <a href="curriculum/labs/students/comet-tails.html" title="Before this: Kepler&#x27;s third law with P in years and a in au; adding and subtracting speeds">Worksheet: Comet Tails, Comet Orbits and Meteor Showers<span class="wsm">65 min · algebra</span></a> <a href="notes/comets.html">Notes</a></p>
         </div>
       </li>

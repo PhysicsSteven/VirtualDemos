@@ -569,5 +569,13 @@ VDI18N.add('es', 'demo/comets', {
 "{#} au":
   "{#} UA",
 "r (au)":
-  "r (UA)"
+  "r (UA)",
+"<span>Show fewer</span>":
+  "<span>Ver menos</span>",
+"<span>Feedback</span>":
+  "<span>Comentarios</span>",
+"sideways: at perihelion":
+  "de lado: en el perihelio",
+"sideways: at aphelion":
+  "de lado: en el afelio"
 });

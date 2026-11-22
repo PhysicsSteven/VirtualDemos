@@ -22,6 +22,7 @@
 .stage-ctl select { font: inherit; font-size: 0.84rem; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 6px; }
 .stage-ctl .clock { margin-left: auto; font-size: 0.8rem; color: var(--muted); }
 .btn.sq { min-width: 32px; padding-inline: 8px; }
+.zoompair { display: inline-flex; gap: 8px; }   /* − and + stay together when the strip wraps */
 .scene { position: relative; flex: 1 1 auto; min-height: 560px; background: var(--space); }
 .scene canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; outline: none; touch-action: none; }
 .scene canvas:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
@@ -64,8 +65,7 @@
           <button type="button" data-mode="tails" aria-pressed="true">Tails</button>
           <button type="button" data-mode="shower" aria-pressed="false">Meteor showers</button>
         </div>
-        <button type="button" class="btn sq" id="zOut" aria-label="Zoom out">−</button>
-        <button type="button" class="btn sq" id="zIn" aria-label="Zoom in">+</button>
+        <span class="zoompair"><button type="button" class="btn sq" id="zOut" aria-label="Zoom out">−</button><button type="button" class="btn sq" id="zIn" aria-label="Zoom in">+</button></span>
         <span class="clock mono" id="clock" aria-live="off"></span>
       </div>
       <div class="scene" id="scene">
@@ -482,8 +482,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         if (ionFits) label('ion tail: straight, blown by the solar wind', lx + 8 * p, Math.min(H - 50 * p, ly - 10 * p), { size: 11, col: '#a9c8ff' });
         else { const ex = nx + Math.cos(ang) * Lt, ey = ny + Math.sin(ang) * Lt; label('ion tail: straight, blown by the solar wind', Math.max(120 * p, Math.min(aw - 120 * p, ex)), Math.min(H - 50 * p, ey + (ey > ny ? 14 : -14) * p), { a: 'center', size: 11, col: '#a9c8ff' }); }
         /* the dust tail's name: at the tail's end, or under the nucleus's name while the tail is still short */
-        const dd = dustTip(); if (dd) { const lx2 = X(dd[0]), ly2 = Y(dd[1]), near = Math.hypot(lx2 - nx, ly2 - ny) < 70 * p, right = near || lx2 < lx;
-          label('dust tail: curved, pushed by sunlight', near ? nx - 10 * p : lx2 + (right ? -10 : 10) * p, near ? ny + 31 * p : ly2 + 4 * p, { a: right ? 'right' : 'left', size: 11, col: '#ffdc9a' }); }
+        const dd = dustTip(); if (dd) { const dn = 'dust tail: curved, pushed by sunlight'; ctx.save(); ctx.font = `600 ${11 * p}px ${K.ui}`; const dw = ctx.measureText(dn).width; ctx.restore();
+          /* written toward the side with room: on a phone a tail ending near the right edge gets its name to the left of the tip */
+          const lx2 = X(dd[0]), ly2 = Y(dd[1]), near = Math.hypot(lx2 - nx, ly2 - ny) < 70 * p, right = near || lx2 < lx || (lx2 + 16 * p + dw > aw && lx2 - 16 * p - dw > 0);
+          label(dn, near ? nx - 10 * p : lx2 + (right ? -10 : 10) * p, near ? ny + 31 * p : ly2 + 4 * p, { a: right ? 'right' : 'left', size: 11, col: '#ffdc9a' }); }
       }
     }
     ctx.fillStyle = '#ffffff'; ctx.beginPath(); ctx.arc(nx, ny, 2.2 * p, 0, 7); ctx.fill();
@@ -547,8 +549,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   /* the sky from Earth around the radiant: simulated meteors streak out from it while Earth is in the stream */
   let meteors = [], lastSky = 0;
+  /* the sky inset takes at most about a third of the picture's width, so on a phone it leaves Earth's orbit in view */
   function drawSky(rate) {
-    const p = proj(), R = Math.min(92 * p, H * 0.2), cx = 14 * p + R, cy = H - 14 * p - R - 16 * p;
+    const p = proj(), R = Math.min(92 * p, H * 0.2, (W - cardW()) * 0.17), cx = 14 * p + R, cy = H - 14 * p - R - 16 * p;
     ctx.save(); ctx.beginPath(); ctx.arc(cx, cy, R, 0, 7); ctx.clip();
     const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, R); g.addColorStop(0, '#0d1626'); g.addColorStop(1, '#04060b'); ctx.fillStyle = g; ctx.fillRect(cx - R, cy - R, 2 * R, 2 * R);
     let s = 5; const r = () => ((s = (s * 16807) % 2147483647) / 2147483647);
@@ -583,7 +586,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const cs = planeState(EL.a, EL.e, S.t), it = ionTail(cs.x, cs.y, cs.vx, cs.vy, S.wind), v = Math.hypot(cs.vx, cs.vy) * KMS;
       const out = (cs.x * cs.vx + cs.y * cs.vy) > 0, tailVsMotion = Math.acos((it.dx * cs.vx + it.dy * cs.vy) / Math.hypot(cs.vx, cs.vy)) / D2R;
       h += dd('Distance from the Sun r', `${f(cs.r, 3)} au`) + dd('Speed', `${f(v, 1)} km/s`);
-      h += dd('Heading', out ? 'away from the Sun' : 'toward the Sun') + dd('Ion tail from straight out', `${f(it.tilt, 1)}°`);
+      const hd = heading(cs), I = typeof VDI18N === 'object';   /* the two sideways words show only at an exact turning point, which the harvest never steps to */
+      h += dd('Heading', !I ? hd : hd === 'sideways: at perihelion' ? VDI18N.t('sideways: at perihelion') : hd === 'sideways: at aphelion' ? VDI18N.t('sideways: at aphelion') : hd) + dd('Ion tail from straight out', `${f(it.tilt, 1)}°`);
       h += dd('Angle between ion tail and motion', `${f(tailVsMotion, 0)}°`, 'hl') + dd('Dust tail length', activity(cs.r) > 0 || dust.length ? `${f(dustLength(), 3)} au` : 'none');
       h += dd('Closest q', `${f(EL.q, 3)} au`) + dd('Farthest Q', `${sig(EL.a * (1 + EL.e), 4)} au`);
       h += dd('Average distance a = (q + Q)/2', `${sig(EL.a, 4)} au`) + dd('Eccentricity e', f(EL.e, 4));
@@ -603,6 +607,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
     $('out').innerHTML = h; window.vdShowCols = SHOWCOLS[S.mode];
   }
+  /* which way the comet heads: by its speed along the Sun line; within 0.05 km/s of zero it is at perihelion (or aphelion), moving
+     sideways, so a rounding error in the time cannot call it toward or away */
+  function heading(cs) { const vr = (cs.x * cs.vx + cs.y * cs.vy) / cs.r * KMS; return Math.abs(vr) < 0.05 ? (cs.r < EL.a ? 'sideways: at perihelion' : 'sideways: at aphelion') : vr > 0 ? 'away from the Sun' : 'toward the Sun'; }
   function clock() { $('clock').textContent = S.mode === 'tails' ? (S.comet === 'own' ? `t = ${f(S.t, 1)} d from perihelion` : dateStr(EL.tp + S.t)) : dateStr(S.jd); }
 
   /* ---------- controls ---------- */
@@ -698,7 +705,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (S.mode === 'tails') {
       const cs = planeState(EL.a, EL.e, S.t), it = ionTail(cs.x, cs.y, cs.vx, cs.vy, S.wind), out = (cs.x * cs.vx + cs.y * cs.vy) > 0;
       const tm = Math.acos((it.dx * cs.vx + it.dy * cs.vy) / Math.hypot(cs.vx, cs.vy)) / D2R;
-      return { part: 'tails', comet: S.comet === 'own' ? `Your comet, ${sig(EL.q, 3)} to ${sig(EL.a * (1 + EL.e), 3)} au` : EL.name, days: +S.t.toFixed(1), r_au: +cs.r.toFixed(3), v_kms: +(Math.hypot(cs.vx, cs.vy) * KMS).toFixed(1), heading: out ? 'away from the Sun' : 'toward the Sun',
+      return { part: 'tails', comet: S.comet === 'own' ? `Your comet, ${sig(EL.q, 3)} to ${sig(EL.a * (1 + EL.e), 3)} au` : EL.name, days: +S.t.toFixed(1), r_au: +cs.r.toFixed(3), v_kms: +(Math.hypot(cs.vx, cs.vy) * KMS).toFixed(1), heading: heading(cs),
         ion_tilt_deg: +it.tilt.toFixed(1), tail_motion_deg: Math.round(tm), q_au: +EL.q.toFixed(3), Q_au: +(EL.a * (1 + EL.e)).toPrecision(4), a_au: +EL.a.toPrecision(4),
         P_yr: S.blind ? '' : +periodYears(EL.a).toPrecision(3), wind_kms: S.wind };
     }
