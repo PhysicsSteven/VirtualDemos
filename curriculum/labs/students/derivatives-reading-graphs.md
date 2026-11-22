@@ -116,7 +116,7 @@ Table 4. The damped oscillation.
 
 1. Compare your sketches from part A with the demo's curves and with Table 1. At which x does your sketch of f′ cross zero, and where does the demo's? What is the size of f′ at the inflection point, and how does that show up on the graph of f? Name one difference between your sketch and the demo, and what it taught you.
 2. From Table 1, give f′ just left and just right of the corner of $$\lvert x\rvert$$ (x = −0.01 and 0.01). Explain why $$\lvert x\rvert$$ has no derivative at x = 0, and why f″ = 0 everywhere except at the corner.
-3. Graph Table 2: velocity (vertical) against t (horizontal), with a straight line fit. What are the slope and intercept, and what do they mean physically? Then graph the height against t with a quadratic fit and compare its coefficients with $$x = 20 - \tfrac12 g t^2$$.
+3. Graph Table 2: velocity (vertical) against t (horizontal), with a straight line fit. What are the slope and intercept, and what do they mean physically?
 4. For each row of Table 3, divide the last column (average − instantaneous) by h. What number do you get, and how is it related to the ball's acceleration? Use it to write the average velocity over [1 s, 1 s + h] as a formula in h, and check it against your answer to Before the lab 3.
 5. Look back at your prediction in Before the lab 4. Which rows of Table 4 have f″/f within 10 % of −16, and which are far off? What do the far off rows have in common (look at the size of f compared with f′)? Explain what you observed using ma = −kx − cv from Background: divide by m, and use two rows of Table 4 to find k/m and c/m. Check your values on a third row.
 
@@ -128,8 +128,7 @@ The demo's derivatives are exact: they come from the rules of calculus applied t
 
 1. A car's position graph has a smooth peak at t = 4 s. What is its velocity at that moment, and what is the sign of its acceleration? Describe what the car is doing.
 2. A ball bounces off a hard floor: its velocity jumps from −5 m/s to +5 m/s in a very short time. Sketch the height against time around the bounce. Which feature of the graph from this lab does the bounce look like, and what does it say about the acceleration (and the force from the floor) during the bounce?
-3. For an undamped spring, x = A cos(ωt), show that x″ = −ω²x exactly, so f″/f is the same at every time. Why can no single constant make f″ = constant × f hold for the damped oscillation of part E?
 
 ## What to hand in
 
-Before the lab answers, your sketches from parts A and B, Tables 1 to 4, the graphs of Table 2 with their fits, and your answers to the Analysis and Questions. Say that the data are computed by the demo, not measured.
+Before the lab answers, your sketches from parts A and B, Tables 1 to 4, the graph of Table 2 with its fit, and your answers to the Analysis and Questions. Say that the data are computed by the demo, not measured.

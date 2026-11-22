@@ -1106,7 +1106,7 @@
       { table: 2, when: (rows) => rows.length > 0 && rows.every((r) => r.mode === 'secant'), cols: ['row', 'h', 'secant', 'tangent', 'diff'] },
       { table: 3, when: (rows) => rows.length > 0 && rows.every((r) => r.mode === 'graph' && r.setup === 'damped'), cols: ['row', 'x', 'f', 'd1', 'd2', 'ratio'] }] },
   });
-  GRAPH_EVERY_TABLE.push('derivatives-reading-graphs');   /* Table 2: the ball's velocity against t (a line of slope −g) and its height (a parabola) */
+  GRAPH_EVERY_TABLE.push('derivatives-reading-graphs');   /* Table 2: the ball's velocity against t (a line of slope −g) */
   CURVE_TABLES['derivatives-reading-graphs'] = [3];   /* the damped oscillation in Table 4: a curve, read rather than fitted */
   /* ==CALCULUS END== */
   /* ==STATS tests START== Statistics for physics worksheets (OpenStax Introductory Statistics, 2026-11-19), in no course yet.

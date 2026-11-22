@@ -89,10 +89,10 @@ Table 2. The pendulum timings with one timing changed.
 ## Analysis
 
 1. For the supermarket distances, compute the IQR from Q1 and Q3 in Table 1 and the two fences Q1 − 1.5 IQR and Q3 + 1.5 IQR. Check them against the demo's **Outlier fences**, and say which distance is an outlier and why.
-2. Draw a box plot of each data set from Table 1 (box from Q1 to Q3, median line, whiskers to the smallest and largest values), each on its own number line with a labeled scale. Mark the mean on each with a small triangle.
-3. For each data set compare the mean with the median, and use the box plot and the Skew readout to say whether the distribution is roughly symmetric, skewed right or skewed left. For the distances, which is the better single number for a "typical" distance, the mean or the median? Explain.
+2. Draw a box plot of the supermarket distances from Table 1 (box from Q1 to Q3, median line, whiskers to the smallest and largest values) on a number line with a labeled scale. Mark the mean with a small triangle.
+3. For each data set compare the mean with the median, and use the box plot (yours for the distances, the demo's for the pendulum) and the Skew readout to say whether the distribution is roughly symmetric, skewed right or skewed left. For the distances, which is the better single number for a "typical" distance, the mean or the median? Explain.
 4. Look back at Before the lab 3. Which of your four predictions were right? For the row with 4.00 s, compute the change in the mean you expect from Background, (4.00 − original largest)/25, and compare it with the change in Table 2.
-5. Graph Table 2: the mean (vertical) against the largest timing (horizontal). Find the slope of the line and compare it with 1/n for n = 25. On the same axes or a second graph, plot s against the largest timing and describe how it grows.
+5. Graph Table 2: the mean (vertical) against the largest timing (horizontal). Find the slope of the line and compare it with 1/n for n = 25. Then, without a graph, write the four values of s from Table 2 and describe in words how s grows as the bad timing moves out.
 6. For the reading at 4.00 s, find its z score using the mean and s from the first row of Table 2 (the clean data). Is it an outlier by the 1.5 IQR rule? Is it more than three standard deviations from the clean mean?
 
 ## Uncertainty
@@ -107,4 +107,4 @@ The supermarket distances are the book's numbers, so their summaries are exact. 
 
 ## What to hand in
 
-Before the lab answers, Tables 1 and 2, the two box plots, the graph of Table 2 with its slope, and your answers to the Analysis and Questions. Say that the pendulum timings are simulated by the demo and the distances are from OpenStax *Introductory Statistics 2e*, §2.1.
+Before the lab answers, Tables 1 and 2, the box plot of the distances, the graph of Table 2 with its slope, and your answers to the Analysis and Questions. Say that the pendulum timings are simulated by the demo and the distances are from OpenStax *Introductory Statistics 2e*, §2.1.

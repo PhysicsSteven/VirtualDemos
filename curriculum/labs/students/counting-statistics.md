@@ -56,16 +56,16 @@ with O the observed and E the expected number in each cell. If the counts follow
 
 Open the demo with the link above, or open Radioactive Decay and press **Counting** in the row of views. Each part starts from the values it names; changing R or Δt clears the counts.
 
-**Part A: counts at a small mean (about 20 minutes).**
+**Part A: counts at a small mean (about 10 minutes).**
 
 1. Check **Blind** in the Counting section. Leave **Count rate R** at 3 counts/s and **Counting time Δt** at 1 s. Press **Play** and watch about 10 counting times: the counter fills, the count drops into the histogram, the tapes show when each count came. Press **Pause**.
 2. Press **Reset** (in the strip), then **Count 100 times**, so n = 100. Compare the histogram with your sketch from Before the lab, item 2.
 3. Uncheck **Blind**. Press **Record reading** (row 1 of Table 1).
 4. Copy the table of counts against the Poisson (its **Count k**, **Observed** and **Poisson expected** columns) into Table 2, one row per cell. Write down the **χ² against the Poisson** readout.
 
-**Part B: the spread against the mean (about 15 minutes).** For each line below, set **Count rate R** and **Counting time Δt**, press **Count 100 times** once, and press **Record reading**: R = 1 counts/s with Δt = 1 s; R = 4 counts/s with Δt = 1 s; R = 5 counts/s with Δt = 5 s; R = 10 counts/s with Δt = 10 s; R = 200 counts/s with Δt = 2 s. That gives rows 2 to 6 of Table 1, at μ = 1, 4, 25, 100 and 400. At μ = 400 compare the histogram with the dashed normal curve and the Poisson dots. Then press **Export to worksheet** and **Clear**.
+**Part B: the spread against the mean (about 10 minutes).** For each line below, set **Count rate R** and **Counting time Δt**, press **Count 100 times** once, and press **Record reading**: R = 1 counts/s with Δt = 1 s; R = 4 counts/s with Δt = 1 s; R = 5 counts/s with Δt = 5 s; R = 10 counts/s with Δt = 10 s; R = 200 counts/s with Δt = 2 s. That gives rows 2 to 6 of Table 1, at μ = 1, 4, 25, 100 and 400. Then press **Export to worksheet** and **Clear**.
 
-**Part C: waiting times (about 15 minutes).**
+**Part C: waiting times (about 10 minutes).**
 
 1. Set **Count rate R** to 2 counts/s and **Counting time Δt** to 10 s, and press **Count 100 times**.
 2. With **Already waited t₀** at 0, record in Table 3 the **Waits between counts** (in the t₀ = 0 row, as the waits longer than 0), the **Mean wait** and the **Standard deviation of the waits**.
@@ -103,9 +103,8 @@ Graph $$s$$ (y) against $$\sqrt{\bar x}$$ (x) and fit a straight line.
 1. Part A: is the histogram of counts at μ = 3 symmetric? Compare $$\bar x$$ with μ = 3 (its standard error is $$\sqrt{3/100}$$ = 0.17), and $$s^2/\bar x$$ with 1. From n counts, $$s^2/\bar x$$ itself scatters by about $$\sqrt{2/(n-1)}$$, 0.14 for n = 100: how many of those is your value from 1?
 2. Fill in the last column of Table 2 and add it up to get $$\chi^2$$. Check it against the demo's readout. With df = (number of cells) − 1, find the p value (a calculator's χ²cdf, or a table). Do the counts fit the Poisson distribution at α = 0.05?
 3. From the fit of $$s$$ against $$\sqrt{\bar x}$$, give the slope and the intercept with their uncertainties. What do you expect for each if $$\sigma = \sqrt\mu$$? Do your values agree within their uncertainties? The fit takes its uncertainties from how far the points sit from the line, but each $$s$$ from 100 counts is itself uncertain by about $$s/\sqrt{2(n-1)}$$, 7 % of s: work that for your μ = 400 point, the one that sets the slope, and say whether the slope's distance from 1 is larger than 7 %.
-4. At μ = 400 (Part B), how well does the normal curve describe the counts? At μ = 1? Explain the difference.
-5. Part C: compare the mean wait with $$1/R$$ = 0.5 s, and the standard deviation of the waits with the mean wait. Fill in the $$e^{-Rt_0}$$ column and compare it with the shares you recorded.
-6. Compare the mean time still to wait at t₀ = 0.5, 1.0 and 1.5 s with the mean wait at t₀ = 0. What does this show about the waits? Answer Before the lab item 3 again.
+4. Part C: compare the mean wait with $$1/R$$ = 0.5 s, and the standard deviation of the waits with the mean wait. Fill in the $$e^{-Rt_0}$$ column and compare it with the shares you recorded.
+5. Compare the mean time still to wait at t₀ = 0.5, 1.0 and 1.5 s with the mean wait at t₀ = 0. What does this show about the waits? Answer Before the lab item 3 again.
 
 ## Questions
 
