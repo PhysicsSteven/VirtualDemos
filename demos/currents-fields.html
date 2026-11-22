@@ -2089,8 +2089,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     'straight-wire-fields': [['setup', 'Setup'], ['r_cm', 'r (cm)'], ['B_uT', '|B| (μT)'], ['circ_uTm', '∮B·dl (μT·m)']],
     'loops-solenoids': [['N', 'N'], ['z_cm', 'z (cm)'], ['Bz_uT', 'B_z (μT)'], ['Bc_uT', 'B center (μT)']]
   };
-  const wsNow = () => ($('magDet').open ? 'magnets-oersted' : S.scene === 'wires' ? 'straight-wire-fields' : 'loops-solenoids');
-  let wsRows = 'straight-wire-fields';
+  /* Straight wires feeds two worksheets (split on 2026-11-16): opened from Ampère's Law and Straight Wires (?ws=straight-wire-fields-ampere)
+     its readings go to that sheet, otherwise to Fields and Forces of Straight Wires. The rows are the same. */
+  const WIRE_WS = new URLSearchParams(location.search).get('ws') === 'straight-wire-fields-ampere' ? 'straight-wire-fields-ampere' : 'straight-wire-fields';
+  WS_COLS['straight-wire-fields-ampere'] = WS_COLS['straight-wire-fields'];
+  const wsNow = () => ($('magDet').open ? 'magnets-oersted' : S.scene === 'wires' ? WIRE_WS : 'loops-solenoids');
+  let wsRows = WIRE_WS;
   window.vdWorksheet = () => wsRows;
   window.vdShowCols = WS_COLS[wsRows];
   const sig = (v, n) => +(+v).toPrecision(n);
@@ -2135,7 +2139,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   window.vdReadingRow = () => {
     const ws = wsNow(), n = typeof window.vdReadings === 'function' ? window.vdReadings() : 0;
     if (n && ws !== wsRows) return 'These readings belong to another worksheet. Export or clear them before recording here.';
-    const r = ws === 'magnets-oersted' ? magRow() : ws === 'straight-wire-fields' ? wireRow() : sideRow();
+    const r = ws === 'magnets-oersted' ? magRow() : ws === WIRE_WS ? wireRow() : sideRow();
     if (typeof r !== 'string') { wsRows = ws; window.vdShowCols = WS_COLS[ws]; }
     return r;
   };
@@ -2232,7 +2236,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       return out;
     }, { label: 'Describe the magnets or compass' });
   }
-  VD.howTo({ src: () => `media/how-this-works/${wsNow()}.mp4`, poster: () => `media/how-this-works/${wsNow()}.jpg`, title: () => `How this works: ${HOW_TITLE[wsNow()]}` });
+  const howWs = () => (wsNow() === 'straight-wire-fields-ampere' ? 'straight-wire-fields' : wsNow());   /* the Ampère sheet shares the Straight wires video */
+  VD.howTo({ src: () => `media/how-this-works/${howWs()}.mp4`, poster: () => `media/how-this-works/${howWs()}.jpg`, title: () => `How this works: ${HOW_TITLE[howWs()]}` });
 
   tokens();
   new ResizeObserver(() => resize()).observe(pane);
