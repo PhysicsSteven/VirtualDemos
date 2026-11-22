@@ -54,18 +54,18 @@ VDI18N.add('es', 'ws/intro-kepler', {
   "¿En qué parte de su órbita se mueve más rápido un planeta, y cuál de las leyes de Kepler te lo dice?",
 "Earth’s orbit is an ellipse. Before you measure it, guess how much farther from the Sun Earth is at aphelion than at perihelion: about {#}%, about {#}%, or about twice as far? What is your guess based on?":
   "La órbita de la Tierra es una elipse. Antes de medirla, adivina cuánto más lejos del Sol está la Tierra en el afelio que en el perihelio: aproximadamente {#}%, aproximadamente {#}% o aproximadamente el doble de lejos. ¿En qué basas tu suposición?",
-"<strong>Set up.</strong> Tick Blind: hide predictions and answers (in the Lab section), so the demo’s own answers are hidden, and tick Ruler (in the Measure section).":
-  "<strong>Preparación.</strong> Marca A ciegas: ocultar predicciones y respuestas (en la sección Laboratorio), para que las respuestas de la propia demo queden ocultas, y marca Regla (en la sección Medir).",
+"<strong>Set up.</strong> Press Flat (above the orbit view; the demo opens in 3D) so you look straight down on the orbit. Tick Blind: hide predictions and answers (in the Lab section), so the demo’s own answers are hidden, and tick Ruler (in the Measure section).":
+  "<strong>Preparación.</strong> Presiona Plano (arriba de la vista de la órbita; la demo abre en 3D) para ver la órbita directamente desde arriba. Marca A ciegas: ocultar predicciones y respuestas (en la sección Laboratorio), para que las respuestas de la propia demo queden ocultas, y marca Regla (en la sección Medir).",
 "<strong>Measure each orbit.</strong> Do the following for Earth, Mars, Vesta, Ceres and Pluto, in that order.":
   "<strong>Mide cada órbita.</strong> Haz lo siguiente para la Tierra, Marte, Vesta, Ceres y Plutón, en ese orden.",
 "Choose the setup, press Pause, then press Reset.":
   "Elige la configuración, presiona Pausa y luego Reiniciar.",
-"Place ruler point {#} on the perihelion, the point of the orbit closest to the Sun, and point {#} on the aphelion, the farthest point. Each of these setups starts the object at its perihelion. With Ruler ticked, a click places the next point and dragging a point moves it; the readouts Point {#} to the star and Point {#} to the star give the two distances. To zoom in on one end: untick Ruler, drag empty space (away from the object and its arrow) to bring that end to the middle of the view, scroll or press + to zoom, then tick Ruler again and place or drag the point exactly onto the path. Fit shows the whole orbit again.":
-  "Coloca el punto {#} de la regla en el perihelio, el punto de la órbita más cercano al Sol, y el punto {#} en el afelio, el punto más lejano. Cada una de estas configuraciones empieza con el objeto en su perihelio. Con Regla marcada, un clic coloca el siguiente punto y arrastrar un punto lo mueve; las lecturas Punto {#} a la estrella y Punto {#} a la estrella dan las dos distancias. Para acercar la vista a un extremo: desmarca Regla, arrastra el espacio vacío (lejos del objeto y de su flecha) para llevar ese extremo al centro de la vista, usa la rueda o presiona + para acercar, luego marca Regla otra vez y coloca o arrastra el punto exactamente sobre la trayectoria. Ajuste vuelve a mostrar toda la órbita.",
+"Place ruler point {#} on the perihelion, the point of the orbit closest to the Sun, and point {#} on the aphelion, the farthest point. Each of these setups starts the object at its perihelion. With Ruler ticked, a click places the next point and dragging a point moves it; the readouts Point {#} to the star and Point {#} to the star give the two distances. To zoom in on one end: untick Ruler, drag empty space (away from the object and its arrow) to bring that end to the middle of the view, scroll or press + to zoom, then tick Ruler again and place or drag the point exactly onto the path. Fit shows the whole orbit again. On a phone, one finger scrolls the page: tap to place a point, and drag a point or the view with two fingers.":
+  "Coloca el punto {#} de la regla en el perihelio, el punto de la órbita más cercano al Sol, y el punto {#} en el afelio, el punto más lejano. Cada una de estas configuraciones empieza con el objeto en su perihelio. Con Regla marcada, un clic coloca el siguiente punto y arrastrar un punto lo mueve; las lecturas Punto {#} a la estrella y Punto {#} a la estrella dan las dos distancias. Para acercar la vista a un extremo: desmarca Regla, arrastra el espacio vacío (lejos del objeto y de su flecha) para llevar ese extremo al centro de la vista, usa la rueda o presiona + para acercar, luego marca Regla otra vez y coloca o arrastra el punto exactamente sobre la trayectoria. Ajuste vuelve a mostrar toda la órbita. En un teléfono, un dedo desplaza la página: toca para colocar un punto y arrastra un punto o la vista con dos dedos.",
 "Time one full orbit: press Zero timer, then Start timer, then Play. Press Pause when the object is back where it started, then Stop timer. The Timer readout gives the period in years.":
   "Mide el tiempo de una órbita completa: presiona Poner en cero, luego Iniciar cronómetro, luego Iniciar. Presiona Pausa cuando el objeto vuelva a donde empezó y luego Detener cronómetro. La lectura Cronómetro da el periodo en años.",
-"Press Record reading.":
-  "Presiona Registrar lectura.",
+"Press Record reading (in the Readings section), with Ruler ticked so the reading keeps both distances.":
+  "Presiona Registrar lectura (en la sección Lecturas), con Regla marcada para que la lectura guarde las dos distancias.",
 "Press Export to worksheet to send all five readings. They fill the perihelion, aphelion and period columns; you fill the other columns in the Analysis.":
   "Presiona Exportar a la hoja para enviar las cinco lecturas. Llenan las columnas de perihelio, afelio y periodo; tú llenas las demás columnas en el Análisis.",
 "<span>A</span>Object":
@@ -124,6 +124,10 @@ VDI18N.add('es', 'ws/intro-kepler', {
   "Cada punto de la regla es tan bueno como tu colocación, y el cronómetro depende de cuándo pausaste. Da la pendiente y la ordenada al origen de tu gráfica del Análisis {#} con sus errores estándar, y di si cada una coincide con la tercera ley dentro de su incertidumbre. ¿Cuál de tus mediciones crees que es la menos segura: una distancia en el extremo cercano de una órbita pequeña, una distancia en el extremo lejano de una grande, o un periodo? ¿Cómo la cambiaría acercar la vista, o medir el tiempo de varias órbitas y dividir?",
 "Prelab answers, the completed Data table and graph, the answers to the analysis section and to the questions (and to Uncertainty, if assigned). Identify simulated data.":
   "Respuestas del prelaboratorio, la tabla de datos completa y la gráfica, las respuestas de la sección de análisis y las respuestas a las preguntas (y de Incertidumbre, si se asigna). Identifica los datos simulados.",
+"<span>Feedback</span>":
+  "<span>Comentarios</span>",
+"Is something on this worksheet or its demo confusing, or not working? <a>Tell us in a short form</a>.":
+  "¿Algo de esta hoja de trabajo o de su demo es confuso o no funciona? <a>Cuéntanos en un formulario corto</a>.",
 "Period of the orbit":
   "Periodo de la órbita",
 "Semi major axis, the average of the perihelion and aphelion distances":
@@ -136,6 +140,12 @@ VDI18N.add('es', 'ws/intro-kepler', {
   "Distancia en el perihelio, la más cercana al Sol",
 "Kepler Orbits":
   "Órbitas de Kepler",
+"<strong>Set up.</strong> Tick Blind: hide predictions and answers (in the Lab section), so the demo’s own answers are hidden, and tick Ruler (in the Measure section).":
+  "<strong>Preparación.</strong> Marca A ciegas: ocultar predicciones y respuestas (en la sección Laboratorio), para que las respuestas de la propia demo queden ocultas, y marca Regla (en la sección Medir).",
+"Place ruler point {#} on the perihelion, the point of the orbit closest to the Sun, and point {#} on the aphelion, the farthest point. Each of these setups starts the object at its perihelion. With Ruler ticked, a click places the next point and dragging a point moves it; the readouts Point {#} to the star and Point {#} to the star give the two distances. To zoom in on one end: untick Ruler, drag empty space (away from the object and its arrow) to bring that end to the middle of the view, scroll or press + to zoom, then tick Ruler again and place or drag the point exactly onto the path. Fit shows the whole orbit again.":
+  "Coloca el punto {#} de la regla en el perihelio, el punto de la órbita más cercano al Sol, y el punto {#} en el afelio, el punto más lejano. Cada una de estas configuraciones empieza con el objeto en su perihelio. Con Regla marcada, un clic coloca el siguiente punto y arrastrar un punto lo mueve; las lecturas Punto {#} a la estrella y Punto {#} a la estrella dan las dos distancias. Para acercar la vista a un extremo: desmarca Regla, arrastra el espacio vacío (lejos del objeto y de su flecha) para llevar ese extremo al centro de la vista, usa la rueda o presiona + para acercar, luego marca Regla otra vez y coloca o arrastra el punto exactamente sobre la trayectoria. Ajuste vuelve a mostrar toda la órbita.",
+"Press Record reading.":
+  "Presiona Registrar lectura.",
 "<a>Virtual Physics Demos</a>":
   "<a>Demos virtuales de física</a>",
 "Kepler found the first law by studying the orbit of Mars. Using your eccentricities, explain why Mars showed that orbits are ellipses more clearly than Earth’s orbit did.":

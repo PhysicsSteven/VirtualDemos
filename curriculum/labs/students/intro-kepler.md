@@ -55,14 +55,14 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**Set up.** Tick Blind: hide predictions and answers (in the Lab section), so the demo's own answers are hidden, and tick Ruler (in the Measure section).
+**Set up.** Press Flat (above the orbit view; the demo opens in 3D) so you look straight down on the orbit. Tick Blind: hide predictions and answers (in the Lab section), so the demo's own answers are hidden, and tick Ruler (in the Measure section).
 
 **Measure each orbit.** Do the following for Earth, Mars, Vesta, Ceres and Pluto, in that order.
 
 - Choose the setup, press Pause, then press Reset.
-- Place ruler point 1 on the perihelion, the point of the orbit closest to the Sun, and point 2 on the aphelion, the farthest point. Each of these setups starts the object at its perihelion. With Ruler ticked, a click places the next point and dragging a point moves it; the readouts Point 1 to the star and Point 2 to the star give the two distances. To zoom in on one end: untick Ruler, drag empty space (away from the object and its arrow) to bring that end to the middle of the view, scroll or press + to zoom, then tick Ruler again and place or drag the point exactly onto the path. Fit shows the whole orbit again.
+- Place ruler point 1 on the perihelion, the point of the orbit closest to the Sun, and point 2 on the aphelion, the farthest point. Each of these setups starts the object at its perihelion. With Ruler ticked, a click places the next point and dragging a point moves it; the readouts Point 1 to the star and Point 2 to the star give the two distances. To zoom in on one end: untick Ruler, drag empty space (away from the object and its arrow) to bring that end to the middle of the view, scroll or press + to zoom, then tick Ruler again and place or drag the point exactly onto the path. Fit shows the whole orbit again. On a phone, one finger scrolls the page: tap to place a point, and drag a point or the view with two fingers.
 - Time one full orbit: press Zero timer, then Start timer, then Play. Press Pause when the object is back where it started, then Stop timer. The Timer readout gives the period in years.
-- Press Record reading.
+- Press Record reading (in the Readings section), with Ruler ticked so the reading keeps both distances.
 
 Press Export to worksheet to send all five readings. They fill the perihelion, aphelion and period columns; you fill the other columns in the Analysis.
 

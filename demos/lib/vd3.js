@@ -80,7 +80,7 @@
      One finger scrolls the page (touch-action pan-y; the first swipe, and later a couple of one finger taps, show a short hint to use two fingers); two fingers call
      h.move(dx, dy, k) with the midpoint's motion in px and k = new spread / old spread (k > 1: fingers apart). h.grab(e), asked
      on a primary touch's pointerdown, may return true when the demo takes that touch for a drag; that touch then does not scroll.
-     A demo's own pointer handlers should ignore touch pointers it does not grab. */
+     A demo's own pointer handlers should ignore touch pointers it does not grab. h.active() returning false (a flat view showing) skips the hint. */
   VD3.touch = function (el, h) {
     var grabbed = false, tm = null, hinted = false, taps = [];
     el.style.touchAction = 'pan-y';
@@ -89,7 +89,7 @@
     (el.__vd3 = el.__vd3 || []).push(h); if (window.VD && VD.twoFinger && VD.twoFinger.scan) setTimeout(VD.twoFinger.scan, 0);
     var mid = function (t) { return { x: (t[0].clientX + t[1].clientX) / 2, y: (t[0].clientY + t[1].clientY) / 2, d: Math.hypot(t[0].clientX - t[1].clientX, t[0].clientY - t[1].clientY) || 1 }; };
     var hint = function (tap) {
-      if (h.hint === false || !el.parentNode) return;
+      if (h.hint === false || !el.parentNode || (h.active && !h.active())) return;   /* no 3D hint while a flat view shows (2026-11-22) */
       /* the first one finger swipe shows it once; after that, a couple of one finger taps show it again (Steve 2026-11-16) */
       if (tap) { var now = Date.now(); taps = taps.filter(function (t) { return now - t < 4000; }); taps.push(now); if (taps.length < 2) return; taps = []; }
       else { if (hinted) return; hinted = true; }
@@ -161,7 +161,7 @@
     var up = function (e) { pts.delete(e.pointerId); if (!pts.size) mode = null; el.style.cursor = 'grab'; };
     el.addEventListener('pointerup', up); el.addEventListener('pointercancel', up);
     el.addEventListener('wheel', function (e) { if (!on()) return; e.preventDefault(); zoomBy(1 / Math.exp(e.deltaY * 0.0012)); onChange(); }, { passive: false });
-    if (two) VD3.touch(el, { grab: opt.grab, move: function (dx, dy, k) {
+    if (two) VD3.touch(el, { grab: opt.grab, active: on, move: function (dx, dy, k) {
       if (!on()) return;
       o.th -= dx * 0.008; o.ph = clamp(o.ph - dy * 0.006, phMin, phMax); o.zoom = clamp(o.zoom * k, zMin, zMax); onChange(); } });
     var reset = function () { o.th = home.th; o.ph = home.ph; o.zoom = home.zoom; onChange(); };

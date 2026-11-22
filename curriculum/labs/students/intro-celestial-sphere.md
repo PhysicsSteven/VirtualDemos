@@ -32,7 +32,7 @@ Use a model of the sky as a great sphere around Earth to explain why the stars c
 
 **Circumpolar stars.** Every star circles the pole once a day. A star close enough to the north celestial pole never dips below the horizon: it is circumpolar. A star close enough to the south celestial pole never rises at all. Seen from latitude φ north, a star of declination δ reaches its highest altitude when it crosses the meridian (the line from north through the point overhead to south): 90° minus the difference between φ and δ, taking the difference as positive. A star of declination 20° seen from 32.5° N, for example, gets as high as 90° − 12.5° = 77.5°.
 
-**The Sun and the Moon.** Earth's axis is tilted 23.4° to its orbit, so the Sun's yearly path among the stars, the ecliptic, is tilted 23.4° to the celestial equator. The Moon moves eastward among the stars much faster, once around the sky in 27.3 days, always within about 5° of the ecliptic.
+**The Sun and the Moon.** Earth's axis is tilted 23.4° to its orbit, so the Sun's yearly path among the stars, the ecliptic, is tilted 23.4° to the celestial equator. The Sun reaches 23.4° north of the celestial equator in June and 23.4° south of it in December, so in the north it climbs higher at noon and stays up longer in June. Sunlight that strikes the ground steeply is spread over less ground than sunlight that arrives at a low slant, so it heats each square meter more. The Moon moves eastward among the stars much faster, once around the sky in 27.3 days, always within about 5° of the ecliptic.
 
 **Precession.** The pull of the Sun and the Moon on Earth's equatorial bulge makes Earth's axis swing slowly around a cone, like a spinning top, once in about 26,000 years. The celestial poles move slowly among the stars, so the pole star changes.
 
@@ -50,7 +50,7 @@ No hazards in the virtual lab. If you go outside to compare with the real sky, s
 
 ## Procedure
 
-**Polaris from different latitudes.** Choose the setup A winter night at Ruston (January 15, 2027, 8:00 pm), which selects Polaris. Press Record reading. Then pick each of these in the Place menu and press Record reading each time: North Pole, Tromsø, Giza, Quito and Sydney (six readings in all; Polaris stays selected). Press Export to worksheet, then Clear.
+**Polaris from different latitudes.** Choose the setup A winter night at Ruston (January 15, 2027, 8:00 pm), which selects Polaris. Press Record reading (in the Readings section). Then pick each of these in the Place menu and press Record reading each time: North Pole, Tromsø, Giza, Quito and Sydney (six readings in all; Polaris stays selected). Press Export to worksheet, then Clear.
 
 **Stars and the Sun from Ruston.** Choose A winter night at Ruston again to go back to Ruston. Pick Kochab in the Find an object menu and press Record reading; do the same for Capella, Sirius and Canopus. Then choose the setup June solstice Sun (it selects the Sun) and press Record reading, and choose December solstice Sun and press Record reading again. While it is chosen, also read the Sun's Distance readout (in AU) under Selected; then choose June solstice Sun and read it again. Write both distances in your answer to Question 1. Press Export to worksheet, then Clear.
 
@@ -76,9 +76,9 @@ No hazards in the virtual lab. If you go outside to compare with the real sky, s
 
 1. Graph Polaris's altitude (vertical axis) against latitude φ (horizontal axis) from the first table. What are the slope and the intercept of the line? Explain them using the Background and your answers to Before the lab 1. At which place was Polaris below the horizon (a negative altitude), and why can no one there see it?
 2. Using the Through a day column, which objects in the second table never set from Ruston, and which rise and set? Compare with your answer to Before the lab 2.
-3. For each star in the second table, check that its highest altitude equals 90° minus the difference between 32.5° and its declination (taken as positive). Canopus is the second brightest star in the night sky. How high does it ever get at Ruston?
+3. For each star in the second table, check that its highest altitude equals 90° minus the difference between Ruston's latitude (32.52° in your first table) and its declination (taken as positive). Canopus is the second brightest star in the night sky. How high does it ever get at Ruston?
 4. From the two Sun readings, how many degrees higher is the noon Sun on June 21 than on December 21? How does that compare with twice the tilt of Earth's axis, 2 × 23.4°?
-5. Give your two Moon readings. By how many hours did the Moon's right ascension grow in the six days? Divide by 6 to get hours per day, convert that to degrees per day, and compare with your answer to Before the lab 3. How did the lit share change through the week?
+5. Give your two Moon readings. By how many hours did the Moon's right ascension grow in the six days? (If it passed 24 h, it started again from 0 h: add 24 h to the second reading before you subtract.) Divide by 6 to get hours per day, convert that to degrees per day, and compare with your answer to Before the lab 3. How did the lit share change through the week?
 6. Give the star nearest the north celestial pole, and its distance from the pole, in 3000 BC, 2027 and AD 14000. Which star was nearest the pole when the pyramids were built, about 2600 BC (a few centuries after your first reading)? Was your guess in Before the lab 4 right?
 
 ## Questions

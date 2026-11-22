@@ -94,6 +94,8 @@ VDI18N.add('es', 'demo/kepler-orbits', {
   "<a>Hoja de trabajo {#}: Las leyes de Kepler de Mercurio a Plutón (Astro {#})</a>",
 "Orbits":
   "Órbitas",
+"<span>Show fewer</span>":
+  "<span>Ver menos</span>",
 "Halley's comet":
   "Cometa Halley",
 "Vesta":
@@ -354,6 +356,8 @@ VDI18N.add('es', 'demo/kepler-orbits', {
   "Cuadros de la cuadrícula de {#} UA. Estrella y planetas dibujados mucho más grandes que a escala.",
 "{#} Msun":
   "{#} Msol",
+"<span>Feedback</span>":
+  "<span>Comentarios</span>",
 "Energy bars, in MJ/kg: Kinetic {#}, Potential −{#}, Total −{#}.":
   "Barras de energía, en MJ/kg: Cinética {#}, Potencial −{#}, Total −{#}.",
 "Energy per kilogram of the planet: bars for kinetic, potential and total energy now, and the three against time since the launch. The total stays flat. Show data table in the Lab section lists the plotted values.":
@@ -396,14 +400,6 @@ VDI18N.add('es', 'demo/kepler-orbits', {
   "No ligada: hipérbola",
 "E > {#}: unbound, a hyperbola":
   "E > {#}: no ligada, una hipérbola",
-"The orbit is a hyperbola: the planet is unbound.":
-  "La órbita es una hipérbola: el planeta no está ligado.",
-"Eccentricity {#}.":
-  "Excentricidad {#}.",
-"Speed far away {#} km/s.":
-  "Rapidez lejos de la estrella {#} km/s.",
-"Kinetic {#} MJ/kg, potential −{#} MJ/kg, total {#} MJ/kg.":
-  "Cinética {#} MJ/kg, potencial −{#} MJ/kg, total {#} MJ/kg.",
 "Nearly a circle: e = {#}, so the empty focus sits almost on top of the Sun. Earth is only {#}% closer at perihelion, in early January.":
   "Casi un círculo: e = {#}, así que el foco vacío queda casi encima del Sol. La Tierra está solo un {#}% más cerca en el perihelio, a principios de enero.",
 "e = {#} is enough to pull the foci apart. Mars moves ({#} + e)/({#} − e) = {#} times faster at perihelion than at aphelion.":
@@ -422,6 +418,10 @@ VDI18N.add('es', 'demo/kepler-orbits', {
   "Un asteroide cercano a la Tierra de unos {#} m de diámetro. Su órbita cruza la de la Tierra: llega a menos de {#} UA en el perihelio y sale más allá en el afelio.",
 "A dwarf planet of the Kuiper belt. Near perihelion it comes closer to the Sun than Neptune ({#} AU), though the two never meet.":
   "Un planeta enano del cinturón de Kuiper. Cerca del perihelio se acerca al Sol más que Neptuno ({#} UA), aunque los dos nunca se encuentran.",
+"Setup: Pluto.":
+  "Configuración: Plutón.",
+"Time {#} yr, distance from the star {#} AU, speed {#} km/s.":
+  "Tiempo {#} años, distancia a la estrella {#} AU, rapidez {#} km/s.",
 "Alpha Centauri, the nearest Sun like stars, {#} light years away. Both stars circle their center of mass; seen from A, star B traces this ellipse once every {#} years. For two stars the third law uses their total mass, {#} + {#} = {#} Suns: P² = a³/M with a = {#} AU (Akeson and others, {#}).":
   "Alfa Centauri, las estrellas parecidas al Sol más cercanas, a {#} años luz. Ambas estrellas giran alrededor de su centro de masa; vista desde A, la estrella B traza esta elipse una vez cada {#} años. Para dos estrellas la tercera ley usa su masa total, {#} + {#} = {#} soles: P² = a³/M con a = {#} UA (Akeson y colaboradores, {#}).",
 "Launch speed equals the circular speed, so the arrow tip sits on the gold circle and the two foci merge at the star. Try {#} or {#} times it.":
@@ -474,8 +474,6 @@ VDI18N.add('es', 'demo/kepler-orbits', {
   "Órbita alrededor de Estrella, como si los dos estuvieran solos",
 "a = {#} AU, e = {#}, P = {#} yr":
   "a = {#} UA, e = {#}, P = {#} años",
-"Total energy −{#}×{#}³⁸ J.":
-  "Energía total −{#}×{#}³⁸ J.",
 "Drag a star from the tray below":
   "Arrastra una estrella desde la bandeja de abajo",
 "Two or more bodies needed":
@@ -582,6 +580,8 @@ VDI18N.add('es', 'demo/kepler-orbits', {
   "La sonda está a {#} UA de Júpiter, a {#} km/s respecto a Júpiter.",
 "The probe is bound to the Sun.":
   "La sonda está ligada al Sol.",
+"Total energy −{#}×{#}³⁸ J.":
+  "Energía total −{#}×{#}³⁸ J.",
 "Chart of the probe’s energy per kilogram against time: its energy around the Sun, and its kinetic energy relative to Jupiter.":
   "Gráfica de la energía por kilogramo de la sonda contra el tiempo: su energía alrededor del Sol y su energía cinética respecto a Júpiter.",
 "Earth added on a circular orbit around Star. On the picture, the arrow keys turn and stretch its velocity.":
@@ -656,24 +656,24 @@ VDI18N.add('es', 'demo/kepler-orbits', {
   "Configuración: Marte.",
 "Setup: Halley’s comet.":
   "Configuración: cometa Halley.",
-"Time {#} yr, distance from the star {#} AU, speed {#} km/s.":
-  "Tiempo {#} años, distancia a la estrella {#} AU, rapidez {#} km/s.",
 "Setup: Ceres.":
   "Configuración: Ceres.",
 "Setup: Apophis.":
   "Configuración: Apofis.",
-"Setup: Pluto.":
-  "Configuración: Plutón.",
 "A star of {#} solar masses sits at the center, seen from above.":
   "Una estrella de {#} masas solares está en el centro, vista desde arriba.",
 "Setup: Binary star.":
   "Configuración: estrella binaria.",
 "Setup: Circular orbit.":
   "Configuración: órbita circular.",
-"Energy bars, in MJ/kg: Kinetic {#}, Potential −{#}, Total {#}.":
-  "Barras de energía, en MJ/kg: cinética {#}, potencial −{#}, total {#}.",
 "Setup: Escape.":
   "Configuración: escape.",
+"The orbit is a hyperbola: the planet is unbound.":
+  "La órbita es una hipérbola: el planeta no está ligado.",
+"Eccentricity {#}.":
+  "Excentricidad {#}.",
+"Speed far away {#} km/s.":
+  "Rapidez lejos de la estrella {#} km/s.",
 "This orbit is not bound, so it has no point.":
   "Esta órbita no es ligada, así que no tiene punto.",
 "Setup: Bound and unbound.":
@@ -700,16 +700,16 @@ VDI18N.add('es', 'demo/kepler-orbits', {
   "T² (años²)",
 "residual (yr²)":
   "residuo (años²)",
-"{#}×{#}⁻¹⁵ of the mean ({#} wedges)":
-  "{#}×{#}⁻¹⁵ de la media ({#} cuñas)",
-"Energy bars, in MJ/kg: Kinetic {#}, Potential −{#}, Total {#}×{#}^-{#}.":
-  "Barras de energía, en MJ/kg: cinética {#}, potencial −{#}, total {#}×{#}^-{#}.",
-"The orbit is a parabola: the planet just escapes.":
-  "La órbita es una parábola: el planeta apenas escapa.",
 "{#}×{#}⁻¹⁶ of the mean ({#} wedges)":
   "{#}×{#}⁻¹⁶ del promedio ({#} sectores)",
-"{#}×{#}⁻¹⁶ of |E|":
-  "{#}×{#}⁻¹⁶ de |E|",
+"The orbit is a parabola: the planet just escapes.":
+  "La órbita es una parábola: el planeta apenas escapa.",
+"Kinetic {#} MJ/kg, potential −{#} MJ/kg, total {#} MJ/kg.":
+  "Cinética {#} MJ/kg, potencial −{#} MJ/kg, total {#} MJ/kg.",
+"{#}×{#}⁻¹⁵ of the mean ({#} wedges)":
+  "{#}×{#}⁻¹⁵ de la media ({#} cuñas)",
+"Energy bars, in MJ/kg: Kinetic {#}, Potential −{#}, Total {#}.":
+  "Barras de energía, en MJ/kg: cinética {#}, potencial −{#}, total {#}.",
 "−{#}×{#}⁻¹⁶ of |E|":
   "−{#}×{#}⁻¹⁶ de |E|",
 "−{#}×{#}⁻¹⁵ of |E|":
@@ -724,6 +724,10 @@ VDI18N.add('es', 'demo/kepler-orbits', {
   "Órbita alrededor de Júpiter",
 "not bound: it escapes":
   "no ligada: escapa",
+"It is {#} AU from Jupiter, moving at {#} km/s around it.":
+  "Está a {#} UA de Júpiter y se mueve a {#} km/s a su alrededor.",
+"It is not bound to Jupiter.":
+  "No está ligada a Júpiter.",
 "ε > {#}: unbound":
   "ε > {#}: no ligada",
 "{#} MJ/kg: unbound, it leaves the solar system":
@@ -734,18 +738,22 @@ VDI18N.add('es', 'demo/kepler-orbits', {
   "No está ligada a la estrella.",
 "The probe is unbound: it leaves the solar system.":
   "La sonda no está ligada: sale del sistema solar.",
+"{#}×{#}⁻¹⁶ of |E|":
+  "{#}×{#}⁻¹⁶ de |E|",
 "{#}×{#}⁻¹⁵ of |E|":
   "{#}×{#}⁻¹⁵ de |E|",
 "{#}×{#}⁻¹⁴ of |E|":
   "{#}×{#}⁻¹⁴ de |E|",
 "Kepler's third law: orbital period against semi major axis on log scales, with the planets of the solar system and the current orbit.":
   "Tercera ley de Kepler: periodo orbital en función del semieje mayor en escalas logarítmicas, con los planetas del sistema solar y la órbita actual.",
+"Star and planets far larger than to scale.":
+  "Estrella y planetas mucho más grandes que a escala.",
+"Grid squares {#} AU.":
+  "Cuadros de la cuadrícula de {#} UA.",
+"Energy bars, in MJ/kg: Kinetic {#}, Potential −{#}, Total {#}×{#}^-{#}.":
+  "Barras de energía, en MJ/kg: cinética {#}, potencial −{#}, total {#}×{#}^-{#}.",
 "{#} of |E|":
   "{#} de |E|",
-"It is {#} AU from Jupiter, moving at {#} km/s around it.":
-  "Está a {#} UA de Júpiter y se mueve a {#} km/s a su alrededor.",
-"It is not bound to Jupiter.":
-  "No está ligada a Júpiter.",
 "Describe the picture":
   "Describir la imagen",
 "Running.":

@@ -341,7 +341,7 @@
      a window 820 px wide or less, a canvas or svg in the stage that takes touches and is at least 60 % of the window's width and
      200 px or a quarter of its height works like a map in a web page: one finger scrolls the page, two fingers drive the picture. The demo needs
      no change: while two fingers are down it gets one pointer at their midpoint, so a two finger drag is the demo's own one
-     finger drag. A one finger tap still reaches the demo as a press and release, so tapping a number to type, a chip drawn in the
+     finger drag, and a pinch is its wheel (one notch about the center for each 15 % change in spread). A one finger tap still reaches the demo as a press and release, so tapping a number to type, a chip drawn in the
      picture or a place to drop something still works. A finger that lands on something the demo can drag (a handle whose hover
      cursor is grab, move, a resize arrow or pointer, and is not the same all around it) still drags it with one finger. A couple of one finger taps or a sideways swipe
      on the picture show a short hint, "Use two fingers to move things in the picture". Mouse and pen are unchanged, and so are
@@ -453,6 +453,15 @@
       return HANDLE.test(c) && same < 3;
     };
     var mid = function () { var p = []; g.f.forEach(function (v) { p.push(v); }); return p.length > 1 ? { x: (p[0].x + p[1].x) / 2, y: (p[0].y + p[1].y) / 2 } : p[0]; };
+    /* a pinch zooms: each time the fingers' spread grows or shrinks by 15 %, the picture gets one wheel notch at the view's
+       center (2026-11-22), so a demo whose wheel zooms (Kepler's Laws, the orbit and map views) zooms on a phone too */
+    var spread = function () { var p = []; g.f.forEach(function (v) { p.push(v); }); return p.length > 1 ? Math.hypot(p[0].x - p[1].x, p[0].y - p[1].y) : 0; };
+    var pinch = function () {
+      var s = spread(); if (!s) return; if (!g.s0) { g.s0 = s; return; }
+      var r = s / g.s0; if (r < 1.15 && r > 1 / 1.15) return; g.s0 = s;
+      var b = g.el.getBoundingClientRect(), x = b.left + b.width / 2, y = b.top + b.height / 2;
+      g.el.dispatchEvent(new WheelEvent('wheel', { bubbles: true, cancelable: true, composed: true, clientX: x, clientY: y, screenX: x, screenY: y, deltaMode: 0, deltaY: r > 1 ? -100 : 100 }));
+    };
     var hint = function (why) {
       var o = g && g.el.__vd2 || {}; if (o.hint === false) return;
       if (why === 'tap') { if (o.tapHint === false) return; var now = Date.now(); taps = taps.filter(function (t) { return now - t < 4000; }); taps.push(now); if (taps.length < 2) return; taps = []; }
@@ -464,7 +473,7 @@
       if (g) {
         if (g.mode === 'grab') return;
         if (g.mode === 'wait' && g.f.size === 1) {   /* the second finger: the demo gets a press at the midpoint */
-          g.f.set(e.pointerId, { x: e.clientX, y: e.clientY }); g.mode = 'two'; var m = mid(); capt[g.id] = null;
+          g.f.set(e.pointerId, { x: e.clientX, y: e.clientY }); g.mode = 'two'; var m = mid(); capt[g.id] = null; g.s0 = spread();
           fire('pointerdown', m.x, m.y, g.id); g.mx = m.x; g.my = m.y;
         } else g.f.set(e.pointerId, { x: e.clientX, y: e.clientY });
         stop(e); return;
@@ -480,7 +489,10 @@
     window.addEventListener('pointermove', function (e) {
       if (!g || !e.isTrusted || e.pointerType !== 'touch' || !g.f.has(e.pointerId) || g.mode === 'grab') return;
       g.f.set(e.pointerId, { x: e.clientX, y: e.clientY }); stop(e);
-      if (g.mode === 'two') { var m = mid(); if (Math.abs(m.x - g.mx) + Math.abs(m.y - g.my) > 0.5) { g.mx = m.x; g.my = m.y; fire('pointermove', m.x, m.y, g.id); } }
+      if (g.mode === 'two') {
+        var m = mid(); if (Math.abs(m.x - g.mx) + Math.abs(m.y - g.my) > 0.5) { g.mx = m.x; g.my = m.y; fire('pointermove', m.x, m.y, g.id); }
+        pinch();
+      }
       else if (g.mode === 'wait' && !g.side && Math.abs(e.clientX - g.x0) > 24 && Math.abs(e.clientX - g.x0) > 2 * Math.abs(e.clientY - g.y0)) { g.side = true; hint('side'); }
     }, true);
     var end = function (e) {
