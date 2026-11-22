@@ -83,6 +83,8 @@
     MbolSun:[4.74, 'mag', 'solar absolute bolometric magnitude', 'IAU 2015 B2'],
     MVsun:  [4.81, 'mag', 'solar absolute V magnitude', 'Willmer 2018'],
     GMmoon: [4.9028001e12, 'm³/s²', 'Moon mass parameter', 'JPL DE430 (Folkner et al. 2014)'],
+    Rmoon:  [1.7374e6, 'm', 'Moon mean radius', 'NASA GSFC Moon Fact Sheet (D. R. Williams)'],
+    aMoon:  [3.844e8, 'm', 'Moon mean distance from Earth (semimajor axis)', 'NASA GSFC Moon Fact Sheet (D. R. Williams)'],
     GMearth:[3.986004e14, 'm³/s²', 'Earth mass parameter (nominal)', 'IAU 2015 B3'],
     GMearthWGS:[3.986004418e14, 'm³/s²', 'Earth mass parameter with the atmosphere, the value GPS orbits use', 'WGS 84 (NGA.STND.0036, 2014)'],
     Mearth: [3.986004e14 / 6.67430e-11, 'kg', 'Earth mass, GM/G', 'IAU 2015 B3 with CODATA 2022 G'],

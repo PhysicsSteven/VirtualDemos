@@ -1083,6 +1083,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   typed('oZ', { label: 'Position z', unit: 'cm', min: -30, max: 150, step: 0.01, get: () => (selPart() ? selPart().z : S.obj.z || 0), set: (v) => { const e = selPart(); if (e) e.z = v; else if (S.sel === 'obj' && S.obj.kind === 'near') S.obj.z = v; changed({ keepView: true }); } });
   typed('oF', { label: 'Focal length |f|', unit: 'cm', min: 0.5, max: 100, step: 0.01, get: () => Math.abs(selPart() ? selPart().f : 10), set: (v) => { const e = selPart(); if (e) { e.f = Math.sign(e.f) * v; changed({ keepView: true }); } } });
   typed('oD', { label: 'Clear diameter D', unit: 'cm', min: 0.1, max: 8, step: 0.01, get: () => (selPart() ? selPart().D : 1), set: (v) => { const e = selPart(); if (e) { e.D = v; changed({ keepView: true }); } } });
+  typed('oP', { label: 'Eye pupil diameter', unit: 'mm', min: 2, max: 7, step: 0.1, get: () => S.pupil * 10, set: (v) => { S.pupil = v / 10; changed({ keepView: true }); } });
   typed('oE', { label: 'Distance behind the last part', unit: 'cm', min: 0.2, max: 200, step: 0.01, get: () => S.zV - lastZ(), set: (v) => { S.zV = lastZ() + v; changed({ keepView: true }); } });
 
   /* ---------- 3D: the rail on a bench, real size, with bundles of skew rays ---------- */

@@ -126,6 +126,18 @@ VDI18N.add('es', 'demo/instrument-builder', {
   "Ojo",
 "Position z":
   "Posición z",
+"Eye pupil diameter: click, or press Enter, to type a value":
+  "Diámetro de la pupila del ojo: haz clic, o pulsa Enter, para escribir un valor",
+"Objective: position z":
+  "Objetivo: posición z",
+"Eyepiece: position z":
+  "Ocular: posición z",
+"Field stop: position z":
+  "Diafragma de campo: posición z",
+"Erector: position z":
+  "Inversora: posición z",
+"Object: position z":
+  "Objeto: posición z",
 "Position z: click, or press Enter, to type a value":
   "Posición z: haz clic, o pulsa Enter, para escribir un valor",
 "Kind of lens":

@@ -191,6 +191,8 @@ rule('howto-video', 'Every worksheet has its How this works video: demos/media/h
    data tables (the files below, and lines over 1500 characters) are not constants. */
 const CONST_DATA = new Set(['lib/sky-bsc.js', 'lib/sky-dist.js', 'lib/nubase.js', 'lib/photondata.js', 'lib/earth.js', 'lib/i18n.js', 'star-slice.html']);
 const CONST_ALLOW = {      /* 'file literal': reason */
+  'giant-planets.html 1.742e6': 'Fray and Schmitt (2009) ammonia vapor pressure fit coefficient, not the Moon radius',
+  'solar-system-formation.html 1.742e6': 'Fray and Schmitt (2009) ammonia vapor pressure fit coefficient, not the Moon radius',
   'dosimetry.html 273.2': 'AAPM TG-51 writes the temperature correction with 273.2',
   'giant-planets.html 1898.13e24': 'NASA Planetary Fact Sheet value, cited on the page',
   'exoplanets.html 86.71': 'HD 209458 b inclination in degrees (Torres et al. 2008), not a rubidium mass',
