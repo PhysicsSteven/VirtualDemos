@@ -1372,5 +1372,7 @@ VDI18N.add('en', 'common', [
 "Hide",
 "Show or hide the controls panel",
 "Drag to move the panel",
-"Hide the controls panel"
+"Hide the controls panel",
+"Range {lo} to {hi}",
+"Set to {v}, in steps of {st}"
 ]);

@@ -2745,5 +2745,9 @@ VDI18N.add('es', 'common', {
 "Drag to move the panel":
   "Arrastra para mover el panel",
 "Hide the controls panel":
-  "Ocultar el panel de controles"
+  "Ocultar el panel de controles",
+"Range {lo} to {hi}":
+  "Intervalo de {lo} a {hi}",
+"Set to {v}, in steps of {st}":
+  "Se puso en {v}, en pasos de {st}"
 });

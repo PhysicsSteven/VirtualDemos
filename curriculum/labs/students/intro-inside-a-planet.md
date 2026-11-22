@@ -10,7 +10,7 @@ Student worksheet · Astro 2203
 
 **Using the demo.**
 
-- The demo has three parts, chosen at the top of the picture: Layers, Convection and Floating crust. Each shows the planet cut in half in 3D, or a flat drawing.
+- The demo has four parts, chosen at the top of the picture: Layers, Convection, Floating crust and Magnetic field; this worksheet uses the first three. Each shows the planet cut in half in 3D, or a flat drawing.
 - **Layers** builds a planet from two layers, an iron core and a rock mantle, each with one density. The core's radius and the two densities can be changed. The readouts give the model planet's mean density and its moment of inertia factor C/MR² next to the values measured for the real planet, and the share of the volume and of the mass that is in the core. The graph shows density against distance from the center; for Earth it also shows PREM, the layers found from earthquake waves.
 - **Convection** runs a real calculation of rock flowing in half of a planet's mantle, heated by the core below and by radioactive decay inside, and cooled at the surface. Colors show the temperature, white arrows the flow, and orange arrows outside the rim how fast the surface itself moves. The readouts give the time in the model in millions of years (Myr), the surface speed in cm per year, the heat coming out of the top compared with a mantle that does not move, the mantle's mean temperature, the number of rising plumes and whether the lid moves. Play runs it; changing a setting starts the mantle again.
 - **Floating crust** floats a block of continent and a block of ocean floor on the mantle and gives how high each stands and how deep its root goes.
@@ -52,7 +52,7 @@ No hazards in the virtual lab.
 
 **Part 2: five worlds.** (1) Choose each of the setups Mercury: a huge core, Venus, Earth: core and mantle, Mars and Moon: a tiny core in turn, and press Record reading once for each without changing anything. (2) Press Export to worksheet (the second Data table), then Clear.
 
-**Part 3: plates or a lid.** (1) Choose Convection and the setup Earth: moving plates, set Steps a frame to 4 (it runs faster), and press Play. (2) Press Record reading when the clock passes 3000 Myr and again at about 3600 Myr; it keeps running while you record. (3) Do the same for the setups Venus: one stiff lid and Mars: plumes that stay put. While each runs, watch the orange arrows at the surface and where the hot rock rises. (4) Press Export to worksheet to send the six readings to the third Data table, then Clear.
+**Part 3: plates or a lid.** (1) Choose Convection and the setup Earth: moving plates, set Steps a frame to 4 (it runs faster), and press Play. (2) Watch the clock above the picture (t = … Myr). When it passes 3000 Myr, press Pause (the Play button), then Record reading, then Play again; do the same at about 3600 Myr. (3) Do the same for the setups Venus: one stiff lid and Mars: plumes that stay put; their clocks run much faster, reaching 3000 Myr within a few seconds, so be ready to pause. While each runs, watch the orange arrows at the surface and where the hot rock rises. (4) Press Export to worksheet to send the six readings to the third Data table, then Clear.
 
 **Part 4: floating crust.** (1) Choose Floating crust and the setup Continent and ocean floor, and press Record reading (it records a row for each block). (2) Set Continent: crust thickness to 20, 50 and 70 km in turn (click its readout to type the value) and record a reading at each. (3) Press Export to worksheet (the fourth Data table).
 
@@ -94,7 +94,7 @@ No hazards in the virtual lab.
 
 ## Questions
 
-1. Venus is about the same size as Earth but has no plate tectonics. Water weakens rock. In Part 3, which setup gets the most heat out of its top, and which has the hottest mantle? Use the link between the two to suggest how the lack of water on Venus changes the way it loses its heat.
+1. Venus is about the same size as Earth but has no plate tectonics. Water weakens rock. In Part 3, which setup gets the most heat out of its top, and which has the hottest mantle at your later reading (about 3600 Myr)? Use the link between the two to suggest how the lack of water on Venus changes the way it loses its heat.
 2. Look at your continent readings at 20, 50 and 70 km in the fourth table. What did the Height above the mantle and the Root below do as the crust got thicker, and how much higher did the continent stand for each extra 10 km of crust? Was your answer to Before the lab 4 right? Using the Background's idea of floating crust, explain why the thicker, heavier block stands higher, and what happens to its root.
 
 ## Uncertainty

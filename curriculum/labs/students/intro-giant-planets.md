@@ -52,9 +52,9 @@ No hazards in the virtual lab.
 
 **Part 2: the four giants.** Press Planets in the strip. Click each of Jupiter, Saturn, Uranus, Neptune and Earth in the picture in turn (Show Earth for scale must be ticked for Earth) and press Record reading after each. Press Export to worksheet, then Clear.
 
-**Part 3: tearing a moon apart.** (1) Press Rings in the strip, set Planet to Saturn and press the Ice button under Test moon's density (0.92 g/cm³). (2) Set Test moon's distance to 2.00 R: drag the slider close, then use the arrow keys, which step 0.01. (3) Press Play and watch Orbits so far in the Readouts; when it passes 3, press Pause, then Record reading. (4) Repeat steps 2 and 3 with the distance at 1.60, 1.50 and 1.40 R; moving the slider puts the moon back together. (5) Press the Rock button (3.00 g/cm³), set the distance to 1.50 R and do step 3 once more. (6) Press Export to worksheet, then Clear.
+**Part 3: tearing a moon apart.** (1) Press Rings in the strip, set Planet to Saturn and press the Ice button under Test moon's density (0.92 g/cm³). (2) Set Test moon's distance to 2.00 R: click its readout (the number beside the slider), type 2.00 and press Enter. (3) Press Play and watch Orbits so far in the Readouts; when it passes 3, press Pause, then Record reading. (4) Repeat steps 2 and 3 with the distance at 1.60, 1.50 and 1.40 R; moving the slider puts the moon back together. (5) Press the Rock button (3.00 g/cm³), set the distance to 1.50 R and do step 3 once more. (6) Press Export to worksheet, then Clear.
 
-**Part 4: Io's tidal heating.** Press Io's tides in the strip. Set the Io's eccentricity e slider to 0, 0.002, 0.004 (Io's real value) and 0.008 in turn (the arrow keys step 0.0005) and press Record reading at each. Press Export to worksheet.
+**Part 4: Io's tidal heating.** Press Io's tides in the strip. Set Io's eccentricity e to 0, 0.002, 0.004 (Io's real value) and 0.008 in turn (click its readout beside the slider to type each value, then press Enter) and press Record reading at each. Press Export to worksheet.
 
 ## Data
 

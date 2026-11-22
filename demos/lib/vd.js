@@ -230,7 +230,8 @@
           var lo = +f(o.min), hi = +f(o.max), st = +f(o.step), v = p.v, r = Math.max(lo, Math.min(hi, v));
           if (st > 0) { r = lo + Math.round((r - lo) / st) * st; if (r > hi + 1e-9) r -= st; r = +r.toFixed(6); }
           var dp = st > 0 ? Math.max(0, Math.min(6, Math.ceil(-Math.log10(st) - 1e-9))) : null, fmt = function (x) { return (dp === null ? String(x) : x.toFixed(dp)).replace('-', '−') + (unit ? (/^(°|%)$/.test(unit) ? '' : ' ') + unit : ''); };
-          var said = v < lo || v > hi ? 'Range ' + fmt(lo) + ' to ' + fmt(hi) : Math.abs(r - v) > 1e-9 ? 'Set to ' + fmt(r) + ', in steps of ' + fmt(st) : '';
+          var T = function (s, o) { return window.VDI18N && VDI18N.t ? VDI18N.t(s, o) : s.replace(/\{(\w+)\}/g, function (_, k) { return o[k]; }); };   /* Spanish too (2026-11-22) */
+          var said = v < lo || v > hi ? T('Range {lo} to {hi}', { lo: fmt(lo), hi: fmt(hi) }) : Math.abs(r - v) > 1e-9 ? T('Set to {v}, in steps of {st}', { v: fmt(r), st: fmt(st) }) : '';
         }
       }
       var e = ed; ed = null; e.remove(); host.done();

@@ -590,6 +590,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (o.halo !== false) { c.lineWidth = 3.5 * p; c.strokeStyle = o.haloCol || K.canvas; c.lineJoin = 'round'; c.strokeText(s, x, y); }
     c.fillStyle = o.col || K.ink; c.fillText(s, x, y); c.restore();
   }
+  /* the color key's two end labels; when they would overlap (longer words in another language) the right one drops a line */
+  function keyLabels(c, l, r, kx, kw, y, o) {
+    const p = proj(); c.save(); c.font = `${o.w || 600} ${(o.size || 12) * p}px ${K.ui}`; const lw = c.measureText(VDI18N.t(l)).width, rw = c.measureText(VDI18N.t(r)).width; c.restore();
+    label(c, l, kx, y, o); label(c, r, kx + kw, lw + rw + 8 * p > kw ? y + (o.size || 12) * 1.3 * p : y, Object.assign({}, o, { a: 'right' }));
+  }
   /* a title that does not fit the picture's width breaks before its bracket onto a second line */
   function titleFit(s, x, y, o) {
     const p = proj(), t = VDI18N.t(s); ctx.save(); ctx.font = `${o.w || 600} ${(o.size || 12) * p}px ${K.ui}`; const fits = ctx.measureText(t).width <= W - x - 8 * p; ctx.restore();
@@ -684,8 +689,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     /* the color key */
     const kx = area().x0 + 14 * p, ky = 34 * p, kw = 120 * p, kh = 8 * p, L = S.look === 'eta' ? LUT_E : LUT_T;
     for (let i = 0; i < kw; i++) { const k = Math.round((i / kw) * 255) * 3; ctx.fillStyle = `rgb(${L[k]},${L[k + 1]},${L[k + 2]})`; ctx.fillRect(kx + i, ky, 1.5, kh); }
-    label(ctx, S.look === 'eta' ? 'runny' : 'surface temp.', kx, ky + kh + 9 * p, { size: 10, col: K.muted });
-    label(ctx, S.look === 'eta' ? 'stiff' : 'core temp.', kx + kw, ky + kh + 9 * p, { size: 10, col: K.muted, a: 'right' });
+    keyLabels(ctx, S.look === 'eta' ? 'runny' : 'surface temp.', S.look === 'eta' ? 'stiff' : 'core temp.', kx, kw, ky + kh + 9 * p, { size: 10, col: K.muted });
   }
 
   function drawCrust() {
@@ -1113,8 +1117,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       }
       const kx = area().x0 + 14 * p, ky = 34 * p, kw = 150 * p, kh = 8 * p, L = S.look === 'eta' ? LUT_E : LUT_T;
       for (let i = 0; i < kw; i++) { const k = Math.round((i / kw) * 255) * 3; ctx.fillStyle = `rgb(${L[k]},${L[k + 1]},${L[k + 2]})`; ctx.fillRect(kx + i, ky, 1.5, kh); }
-      label(ctx, S.look === 'eta' ? 'runny' : 'surface temp.', kx, ky + kh + 9 * p, { size: 10, col: '#cfc6ba', haloCol: '#0b0906' });
-      label(ctx, S.look === 'eta' ? 'stiff' : 'core temp.', kx + kw, ky + kh + 9 * p, { size: 10, col: '#cfc6ba', haloCol: '#0b0906', a: 'right' });
+      keyLabels(ctx, S.look === 'eta' ? 'runny' : 'surface temp.', S.look === 'eta' ? 'stiff' : 'core temp.', kx, kw, ky + kh + 9 * p, { size: 10, col: '#cfc6ba', haloCol: '#0b0906' });
     }
     /* words over the picture */
     if (!crustMode) {

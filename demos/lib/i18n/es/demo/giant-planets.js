@@ -757,5 +757,11 @@ VDI18N.add('es', 'demo/giant-planets', {
 "Planets, moons and rings: NASA's planetary, satellite and ring fact sheets (D. R. Williams, NSSDCA, Goddard Space Flight Center). Where the moons of Jupiter and Saturn start: JPL's mean orbital elements for noon on {#} January {#} (ssd.jpl.nasa.gov). The Roche limit for a fluid moon: S. Chandrasekhar, Ellipsoidal Figures of Equilibrium ({#}). Io's tidal response k₂/Q = {#} ± {#}: V. Lainey and others, Nature {#}, {#} ({#}). Io's heat flow, more than {#} W/m²: G. J. Veeder and others, Journal of Geophysical Research {#}, {#} ({#}). Earth's heat flow, {#} TW: J. H. Davies and D. R. Davies, Solid Earth {#}, {#} ({#}). Tidal heating and resonances: C. D. Murray and S. F. Dermott, Solar System Dynamics ({#}).":
   "Planetas, lunas y anillos: hojas de datos planetarios, de satélites y de anillos de la NASA (D. R. Williams, NSSDCA, Goddard Space Flight Center). Dónde empiezan las lunas de Júpiter y Saturno: elementos orbitales medios del JPL para el mediodía del {#} de enero de {#} (ssd.jpl.nasa.gov). El límite de Roche para una luna fluida: S. Chandrasekhar, Ellipsoidal Figures of Equilibrium ({#}). Respuesta de marea de Ío k₂/Q = {#} ± {#}: V. Lainey y colaboradores, Nature {#}, {#} ({#}). Flujo de calor de Ío, más de {#} W/m²: G. J. Veeder y colaboradores, Journal of Geophysical Research {#}, {#} ({#}). Flujo de calor de la Tierra, {#} TW: J. H. Davies y D. R. Davies, Solid Earth {#}, {#} ({#}). Calentamiento por marea y resonancias: C. D. Murray y S. F. Dermott, Solar System Dynamics ({#}).",
 "Close":
-  "Cerrar"
+  "Cerrar",
+"Test moon's density: click, or press Enter, to type a value":
+  "Densidad de la luna de prueba: haz clic, o pulsa Enter, para escribir un valor",
+"Test moon's distance: click, or press Enter, to type a value":
+  "Distancia de la luna de prueba: haz clic, o pulsa Enter, para escribir un valor",
+"Io's eccentricity e: click, or press Enter, to type a value":
+  "Excentricidad de Ío e: haz clic, o pulsa Enter, para escribir un valor"
 });

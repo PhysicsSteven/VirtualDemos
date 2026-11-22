@@ -45,7 +45,7 @@
 .readout .warn { color: var(--roche); }
 @media (min-width: 821px) { .stage { min-height: 720px; } }
 @media (max-width: 820px) { .scene { min-height: 0; height: 440px; flex: none; } .setup-card { position: static; width: auto; margin: 8px; max-height: none; } }
-@media (max-width: 420px) { .scene { height: 380px; } }
+@media (max-width: 420px) { .scene { height: 380px; } #modeSeg { flex-wrap: wrap; } }   /* the five mode names wrap on a 360 px phone: in Spanish Nubes was cut off at the right (2026-11-22) */
 </style>
 <link rel="stylesheet" id="vd-look" href="lib/look.css">
 <script id="vd-gear" src="lib/gear.js"></script>
@@ -810,6 +810,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       ls.forEach((l, q) => { const th = l * Math.PI / 180; ctx.save(); ctx.strokeStyle = n ? K.rigid : K.roche; ctx.globalAlpha = 0.85 - q * 0.12; ctx.lineWidth = 1.5 * pp; ctx.setLineDash([5, 4]);
         ctx.beginPath(); ctx.moveTo(o.cx + p.Req * o.s * Math.cos(th), o.cy - p.Req * o.s * Math.sin(th)); ctx.lineTo(o.cx + r * Math.cos(th), o.cy - r * Math.sin(th)); ctx.stroke(); ctx.restore(); });
       if (ls.length) label(`${ms[i].name} passes ${ms[j].name}`, 16 * pp, H - (40 + 16 * n + bOff) * pp, { col: n ? K.rigid : K.roche, w: 700, size: 11 }); });
+    const big = X === 1 ? 'moons to scale too' : `moons drawn ${X} times larger`;
+    const capL = narrow() ? [`${p.name}'s orbits to scale, ${big}`, 'gold mostly rock, tan rock and ice, white mostly ice',
+      ms[0].lam != null ? (nbOn() ? 'Computed: the moons pull on each other' : 'Starting places: noon, 1 January 2000') : 'Starting places spread out, not from a date'] :
+      [`${p.name} and its orbits to scale, seen from above, ${big}.`, 'Colored by density: gold mostly rock, tan rock and ice, white mostly ice.',
+      ms[0].lam != null ? (nbOn() ? 'Computed: the moons pull on each other; they start on circles at their places of noon, 1 January 2000' : 'Starting places: noon, 1 January 2000 (JPL mean elements)') : 'Starting places spread out for clarity, not from a date'];
+    /* the caption's box at the top left: a moon's name that would cross it goes below the moon instead (360 px phones, 2026-11-22) */
+    ctx.font = `400 ${10 * pp}px ${K.ui}`; const capR = 16 * pp + Math.max(...capL.map((t) => ctx.measureText(window.VDI18N ? VDI18N.t(t) : t).width)) + 4 * pp, capB = (18 + 15 * (capL.length - 1) + 8) * pp;
     ms.forEach((m, i) => {
       ctx.save(); ctx.strokeStyle = i === S.moon ? K.sel : K.line; ctx.lineWidth = (i === S.moon ? 1.6 : 1.1) * pp; if (nbGone(i)) { ctx.globalAlpha = 0.3; ctx.setLineDash([3, 5]); } ctx.beginPath();
       const sk = m.M ? mk : 1, ox = m.M ? o.cx : pcx, oy = m.M ? o.cy : pcy;
@@ -819,15 +826,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const z = moonPos(m, i), x = ox + sk * z.x * o.s, y = oy - sk * z.y * o.s, r = Math.max(2.5 * pp, m.R * X * o.s);
       ctx.fillStyle = m.rho == null ? K.moon : m.rho > 2800 ? '#c9a24a' : m.rho > 1400 ? '#a99f8f' : '#e5dfd7'; ctx.beginPath(); ctx.arc(x, y, r, 0, 2 * Math.PI); ctx.fill();
       ctx.strokeStyle = i === S.moon ? K.sel : shade('#5b6573', 0); ctx.lineWidth = (i === S.moon ? 2.5 : 1) * pp; ctx.stroke();
-      label(m.name, x + r + 4, y - r - 2, { col: i === S.moon ? K.sel : K.ink, w: i === S.moon ? 700 : 600, size: 11 });
+      ctx.font = `700 ${11 * pp}px ${K.ui}`; const nw = ctx.measureText(window.VDI18N ? VDI18N.t(m.name) : m.name).width, under = x + r + 4 < capR && y - r - 2 - 8 * pp < capB && x + r + 4 + nw > 16 * pp;
+      label(m.name, x + r + 4, under ? y + r + 9 * pp : y - r - 2, { col: i === S.moon ? K.sel : K.ink, w: i === S.moon ? 700 : 600, size: 11 });
     });
     scaleBar(o.s, 16 * pp, H - (14 + bOff) * pp, 150 * pp);
     if (nbOn()) drawEccGraph();
-    const big = X === 1 ? 'moons to scale too' : `moons drawn ${X} times larger`;
-    const capL = narrow() ? [`${p.name}'s orbits to scale, ${big}`, 'gold mostly rock, tan rock and ice, white mostly ice',
-      ms[0].lam != null ? (nbOn() ? 'Computed: the moons pull on each other' : 'Starting places: noon, 1 January 2000') : 'Starting places spread out, not from a date'] :
-      [`${p.name} and its orbits to scale, seen from above, ${big}.`, 'Colored by density: gold mostly rock, tan rock and ice, white mostly ice.',
-      ms[0].lam != null ? (nbOn() ? 'Computed: the moons pull on each other; they start on circles at their places of noon, 1 January 2000' : 'Starting places: noon, 1 January 2000 (JPL mean elements)') : 'Starting places spread out for clarity, not from a date'];
     capL.forEach((t, i) => label(t, 16 * pp, (18 + 15 * i) * pp, { col: K.muted, w: 400, size: 10 }));
     moonsHit = o;
   }
@@ -1243,6 +1246,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   $('chkNoEu').addEventListener('change', (e) => { custom(); S.noEu = e.target.checked; S.t = 0; NB = null; sync(); readouts(); clock(); draw(); });
   $('sEcc').addEventListener('input', (e) => { custom(); S.e = +e.target.value; sync(); readouts(); draw(); });
   $('chkExag').addEventListener('change', (e) => { S.exag = e.target.checked; draw(); });
+  /* click a readout to type an exact value (the worksheet sets 1.50 R and e = 0.004, which a phone slider can't hit without arrow keys) */
+  if (window.VD && VD.typeIn) for (const [id, k, unit, dp] of [['sRho', 1000, 'g/cm³', 2], ['sDist', 1, 'R', 2], ['sEcc', 1, '', 4]]) {
+    const inp = $(id), out = document.querySelector(`output[for="${id}"]`), lab = document.querySelector(`label[for="${id}"]`);
+    VD.typeIn(out, { get: () => +inp.value / k, set: (v) => { inp.value = Math.round(v * k / +inp.step) * +inp.step; inp.dispatchEvent(new Event('input', { bubbles: true })); },
+      min: () => +inp.min / k, max: () => +inp.max / k, step: () => +inp.step / k, unit, label: lab.textContent, seed: () => (+inp.value / k).toFixed(dp), can: () => true });
+  }
   $('selSpeed').addEventListener('change', (e) => { S.speed = +e.target.value; });
   for (const g of CLOUD_GASES) $(GAS_SLIDER[g]).addEventListener('input', (e) => { custom(); S.cm = Object.assign({}, S.cm, { [g]: Math.pow(10, +e.target.value) }); sync(); readouts(); clock(); draw(); });
 
