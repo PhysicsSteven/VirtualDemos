@@ -32,7 +32,7 @@ session with `bash tools/cloud/setup.sh` (add `--site` for worksheets or keys) a
 
 ## Update one worksheet key
 
-In the TeacherKeys clone, with the local site running (`setup.sh --site`):
+In the TeachingLibrary clone's `library/virtualdemos/` folder (`$TEACHERKEYS` after `setup.sh`), with the local site running (`setup.sh --site`):
 
     bash worksheet-keys/tools/rekey.sh <slug>            # shows data cells and key words that moved
     bash worksheet-keys/tools/rekey.sh <slug> --apply    # keeps the new data, key .json and PDF

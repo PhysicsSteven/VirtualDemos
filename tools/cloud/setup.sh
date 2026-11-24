@@ -6,7 +6,9 @@
 # --site is needed only for worksheets and key captures (they are Jekyll pages); demo checks read the files directly.
 set -e
 REPO=$(cd "$(dirname "$0")/../.." && pwd)
-KEYS=${TEACHERKEYS:-$(cd "$REPO/.." && for d in teacherkeys TeacherKeys; do [ -d "$d/worksheet-keys" ] && echo "$PWD/$d" && break; done; true)}
+# The keys folder is TeachingLibrary's library/virtualdemos/ (2026-11-24); TEACHERKEYS may name it or the clone itself
+KEYS=${TEACHERKEYS:-$(cd "$REPO/.." && for d in teachinglibrary TeachingLibrary teacherkeys TeacherKeys; do [ -d "$d" ] && echo "$PWD/$d" && break; done; true)}
+[ -n "$KEYS" ] && [ -d "$KEYS/library/virtualdemos/worksheet-keys" ] && KEYS=$KEYS/library/virtualdemos
 V=${VD_VENDOR:-$HOME/vendor}
 SITE=${VD_SITE:-$HOME/vd-site/VirtualDemos}
 RUBY=/opt/rbenv/versions/3.3.6/bin

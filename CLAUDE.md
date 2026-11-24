@@ -17,8 +17,9 @@ the decisions. This file holds the rules; detail lives in the files it points to
 - This repo is public and served by GitHub Pages: `demos/`, `notes/`, `curriculum/`, `tools/` and the course pages. Claude writes
   the demos, notes, tools, course pages and student handouts (`curriculum/labs/students/`). No other assistant works here
   (the GPT collaboration ended 2026-11-01; `COLLABORATION.md` is in git history).
-- `PhysicsSteven/TeacherKeys` (private) holds demo answer keys (`demo-keys/`), worksheet keys from real demo runs
-  (`worksheet-keys/`), lab guides, TA guides and practice exams.
+- `PhysicsSteven/TeachingLibrary` (private, was TeacherKeys) holds the keys in `library/virtualdemos/`: demo answer keys
+  (`demo-keys/`), worksheet keys from real demo runs (`worksheet-keys/`), lab guides and TA guides; and Steve's courses in
+  `library/classes/`. `--keys`/`TEACHERKEYS` take either the clone or its `library/virtualdemos/` folder (2026-11-24).
 - **Never put answers, keys or instructor guides in this repo.** [checked; `--keys <TeacherKeys clone>` also looks for copied answers]
 - Never read, use or publish anything from Steve's thesis repo (`wd-thesis`) or his other private work.
 - A change to `.github/workflows` goes by pull request for Steve to merge.
@@ -93,7 +94,7 @@ the decisions. This file holds the rules; detail lives in the files it points to
 - Every worksheet has a How this works video or a `HOWTO_VIDEO` entry [checked]. One video: `bash tools/howto/take.sh <name>`;
   recipe in `tools/howto/README.md`. Night look only.
 - After a handout edit, reprint its key; after a demo change, rerun the key captures democheck names. Both with
-  `worksheet-keys/tools/rekey.sh <slug>` in TeacherKeys [checked with `--keys`]. Steve wants substantive key fixes only, not
+  `worksheet-keys/tools/rekey.sh <slug>` in TeachingLibrary `library/virtualdemos/` [checked with `--keys`]. Steve wants substantive key fixes only, not
   last digit differences.
 
 ## Tools and generated files
