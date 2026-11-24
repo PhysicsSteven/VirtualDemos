@@ -3,7 +3,7 @@
    having to remember them. Fast (a few seconds), no browser, no packages. Run before every commit:
 
      node tools/rules.cjs                      every rule on the working tree
-     node tools/rules.cjs --keys ../teacherkeys  also look for key answers copied into this repo (needs a TeacherKeys clone)
+     node tools/rules.cjs --keys ../teachinglibrary  also look for key answers copied into this repo (needs a TeachingLibrary clone)
      node tools/rules.cjs --only hyphens,optional
      node tools/rules.cjs --list               the rules and what each one reads
 
@@ -18,7 +18,9 @@ const fs = require('fs'), path = require('path'), { execFileSync } = require('ch
 const ROOT = path.resolve(__dirname, '..');
 const args = process.argv.slice(2);
 const opt = (k) => { const i = args.indexOf(k); return i < 0 ? null : args[i + 1]; };
-const ONLY = opt('--only') ? new Set(opt('--only').split(',')) : null, KEYS = opt('--keys');
+const ONLY = opt('--only') ? new Set(opt('--only').split(',')) : null;
+// --keys takes the keys folder (TeachingLibrary library/virtualdemos/, 2026-11-24) or the TeachingLibrary clone itself
+const KEYS = ((k) => k && !fs.existsSync(path.join(k, 'demo-keys')) && fs.existsSync(path.join(k, 'library/virtualdemos/demo-keys')) ? path.join(k, 'library/virtualdemos') : k)(opt('--keys'));
 const rel = (p) => path.relative(ROOT, p);
 const read = (p) => fs.readFileSync(path.join(ROOT, p), 'utf8');
 const tracked = execFileSync('git', ['ls-files', '-z'], { cwd: ROOT, encoding: 'utf8' }).split('\0').filter(Boolean)

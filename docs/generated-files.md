@@ -8,7 +8,7 @@ Moved from COLLABORATION.md on 2026-11-01, when Steve removed that file.
 | `demos/star-slice.html` | `tools/star-slice/star-slice.template.html` + `tools/star-slice/data/` | `python3 tools/star-slice/build.py` |
 | QR code block in every demo header (`<!-- vd-qr -->` and `/* vd-qr */`) | `tools/qr.py` | `python3 tools/qr.py <demo>`, then rebuild Star Slice |
 | `notes/<demo>.html`, `notes/index.html` | `notes/src/<demo>.md` | `python3 tools/notes.py <demo>` (needs `pip install markdown`) |
-| `demo-keys/key/<demo>.html` in TeacherKeys | `demo-keys/answers/<demo>.md` in TeacherKeys | `python3 tools/notes.py <demo> --keys <TeacherKeys clone>/demo-keys` |
+| `demo-keys/key/<demo>.html` in TeacherKeys | `demo-keys/answers/<demo>.md` in TeacherKeys | `python3 tools/notes.py <demo> --keys <TeachingLibrary clone>/library/virtualdemos/demo-keys` |
 | `thumbs/<demo>-light.webp`, `-dark.webp` | the demo itself | `python3 tools/thumbs.py <demo>` (add `--three <path>` for three.js demos) |
 | course, topic and OpenStax pages, `courses.html`, `index.html` (below the hero), `search.js`, `404.html`, `demos/lib/nav.js` | `curriculum/` maps (textbook and astronomy), catalog and topics | `python3 tools/courses.py` (`--check`) |
 | the `paper.css` link in every demo | `demos/lib/paper.css` (the site skin, the lab look) | `python3 tools/paper.py` (`--check`) |
@@ -19,5 +19,6 @@ Moved from COLLABORATION.md on 2026-11-01, when Steve removed that file.
 - `demos/` (one HTML file per demo, shared library in `demos/lib/`), `notes/` (short teaching notes), `curriculum/` (map,
   catalog, topics, student handouts in `labs/students/`, tests in `validation/`), `tools/` (build and check scripts), `docs/`
   (detail moved out of `CLAUDE.md`).
-- TeacherKeys: `demo-keys/`, `worksheet-keys/`, `lab-guides/`, `ta-guides/`, `practice-exams/`, `audits/`.
+- TeachingLibrary (was TeacherKeys), reorganized 2026-11-24: `library/virtualdemos/{demo-keys,worksheet-keys,lab-guides,ta-guides}/`,
+  courses in `library/classes/`, audit stamp in `audit/`.
 

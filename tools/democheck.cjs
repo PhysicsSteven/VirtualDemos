@@ -20,7 +20,9 @@ const fs = require('node:fs'), path = require('node:path'), cp = require('node:c
 const ROOT = path.resolve(__dirname, '..');
 const args = process.argv.slice(2), FAST = args.includes('--fast'), demos = args.filter((a) => !a.startsWith('--'));
 if (!demos.length) { console.error('usage: node tools/democheck.cjs demo... [--fast]'); process.exit(2); }
-const KEYS = process.env.TEACHERKEYS || ['../teacherkeys', '../TeacherKeys'].map((d) => path.resolve(ROOT, d)).find((d) => fs.existsSync(path.join(d, 'worksheet-keys')));
+// The keys folder: TeachingLibrary's library/virtualdemos/ (2026-11-24; older clones kept worksheet-keys/ at the top)
+const KEYS = [process.env.TEACHERKEYS && path.resolve(process.env.TEACHERKEYS), ...['../teachinglibrary', '../TeachingLibrary', '../teacherkeys', '../TeacherKeys'].map((d) => path.resolve(ROOT, d))]
+  .filter(Boolean).flatMap((d) => [path.join(d, 'library/virtualdemos'), d]).find((d) => fs.existsSync(path.join(d, 'worksheet-keys')));
 const results = [];
 const step = (demo, name, status, note) => { results.push([demo, name, status, note || '']); console.log(status.padEnd(5) + ' ' + (demo || '(site)').padEnd(24) + name.padEnd(14) + (note || '')); };
 const run = (cmd, a) => { try { return { ok: true, out: cp.execFileSync(cmd, a, { cwd: ROOT, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'], maxBuffer: 64e6 }) }; }
